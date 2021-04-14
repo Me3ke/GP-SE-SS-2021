@@ -36,11 +36,9 @@ public class Envelop implements Iterable<Document> {
         this.envelopPath = Paths.get(path);
         this.envelopFile = new File(path);
         this.name = envelopFile.getName();
-        File[] files = envelopFile.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            Document currentDocument = new Document(files[i].getPath());
-            addDocument(currentDocument);
-        }
+        File[] filesArr = envelopFile.listFiles();
+        List<File> files = new ArrayList<>();
+        createEnvelop(filesArr, files);
     }
 
     /**
@@ -53,9 +51,56 @@ public class Envelop implements Iterable<Document> {
     public Envelop(String name, List<String> paths) throws IOException {
         documentList = new ArrayList<>();
         this.name = name;
+        List<File> files = new ArrayList<>();
+        File[] filesArr = new File[paths.size()];
         for (int i = 0; i < paths.size(); i++) {
-            Document currentDocument = new Document(paths.get(i));
-            documentList.add(currentDocument);
+            filesArr[i] = new File(paths.get(i));
+        }
+        createEnvelop(filesArr, files);
+    }
+
+    /**
+     * The createEnvelop method creates the envelop. It distinguishes between
+     * directories and files and uses the listf method to put all files from all
+     * directories together.
+     * @param filesArr The array in which the files are stored.
+     * @param files The list of files which is used as an intermediate for the recursion.
+     * @throws IOException is thrown if a name of a path is invalid.
+     */
+    private void createEnvelop(File[] filesArr, List<File> files) throws IOException {
+        for (int i = 0; i < filesArr.length; i++) {
+            File currentFile = filesArr[i];
+            if (currentFile.isDirectory()) {
+                listf(currentFile, files);
+            }
+            else if (currentFile.isFile() && currentFile.exists()){
+                files.add(currentFile);
+            }
+        }
+        for (int i = 0; i < files.size(); i++) {
+            Document currentDocument = new Document(files.get(i).getPath());
+            addDocument(currentDocument);
+        }
+    }
+
+    /**
+     * The listf method is called if an envelop should be created from files
+     * which include one or several directories. It uses recursion to add every
+     * file in every subdirectory into the list.
+     * @param directory the file which is found to be a directory.
+     * @param files the list in which all files in subdirectories are added.
+     */
+    public void listf(File directory, List<File> files) {
+        File[] fList = directory.listFiles();
+        if(fList != null) {
+            for (File file : fList) {
+                if (file.isFile()) {
+                    files.add(file);
+                }
+                else if (file.isDirectory()) {
+                    listf(file, files);
+                }
+            }
         }
     }
 
