@@ -14,6 +14,12 @@ public class DocumentMetaData {
     private final Timestamp metaTimeStampUpload;
     private final String metaDocumentTitle;
     private String identifier;
+    private int documentID;
+    private String documentType;
+    private String creationDate;
+    private String lastModified;
+    private String lastAccess;
+    private long size;
 
     /**
      * The constructor responsible for creating an identifier out of existing meta data.
@@ -35,14 +41,27 @@ public class DocumentMetaData {
      * @param metaUserID          the String containing the user id
      * @param metaTimeStampUpload the Timestamp created during the upload
      * @param metaDocumentTitle   the document file name
-     * @param identifier          the already existing identifier
+     * @param documentID          the String containing the readable ID of the document
+     * @param documentType        the String describing the file extension
+     * @param creationDate        the date of creation of the document
+     * @param lastModified        the date of last modification on the document
+     * @param lastAccess          the date of last access on the document
+     * @param size                the size of the document
      */
     public DocumentMetaData(String metaUserID, Timestamp metaTimeStampUpload,
-                            String metaDocumentTitle, String identifier) {
+                            String metaDocumentTitle, int documentID,
+                            String documentType, String creationDate, String lastModified,
+                            String lastAccess, long size) {
         this.metaUserID = metaUserID;
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
-        this.identifier = identifier;
+        this.documentID = documentID;
+        this.documentType = documentType;
+        this.creationDate = creationDate;
+        this.lastModified = lastModified;
+        this.lastAccess = lastAccess;
+        this.size = size;
+        generateHashString();
     }
 
     private void generateHashString() {
@@ -69,5 +88,45 @@ public class DocumentMetaData {
                 && Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
                 && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
                 && Objects.equals(identifier, that.identifier);
+    }
+
+    public String getMetaUserID() {
+        return metaUserID;
+    }
+
+    public Timestamp getMetaTimeStampUpload() {
+        return metaTimeStampUpload;
+    }
+
+    public String getMetaDocumentTitle() {
+        return metaDocumentTitle;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public int getDocumentID() {
+        return documentID;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public String getLastAccess() {
+        return lastAccess;
+    }
+
+    public long getSize() {
+        return size;
     }
 }
