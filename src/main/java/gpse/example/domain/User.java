@@ -2,7 +2,6 @@ package gpse.example.domain;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -40,10 +39,11 @@ public class User implements UserDetails {
 
     /**
      * The constructor for a user.
-     * @param email for communication. Is also used as an ID.
+     *
+     * @param email     for communication. Is also used as an ID.
      * @param firstname the firstname of the user.
-     * @param lastname the lastname of the user.
-     * @param password the password that is used for actions that need security.
+     * @param lastname  the lastname of the user.
+     * @param password  the password that is used for actions that need security.
      */
     public User(final String email, final String firstname, final String lastname, final String password) {
         this.email = email;
@@ -55,12 +55,13 @@ public class User implements UserDetails {
 
     /**
      * the Method used to fill in information that is not necessarily needed.
-     * @param street the street the user lives in.
+     *
+     * @param street      the street the user lives in.
      * @param houseNumber the house number of the user.
-     * @param postCode the postcode for the hometown of the user
-     * @param homeTown the hometown of the user
-     * @param country the country the user lives in
-     * @param birthday the birthday of the user
+     * @param postCode    the postcode for the hometown of the user
+     * @param homeTown    the hometown of the user
+     * @param country     the country the user lives in
+     * @param birthday    the birthday of the user
      */
     public void addVoluntaryInformation(final String street, final int houseNumber, final int postCode,
                                         final String homeTown, final String country, final LocalDate birthday) {
@@ -70,6 +71,28 @@ public class User implements UserDetails {
         this.homeTown = homeTown;
         this.country = country;
         this.birthday = birthday;
+    }
+
+    /**
+     * The method used to give a user another role.
+     *
+     * @param newRole the role that needs to be added
+     */
+    public void addRole(String newRole) {
+        if (!this.roles.contains(newRole)) {
+            this.roles.add(newRole);
+        }
+    }
+
+    /**
+     * The method used to take a role from a user.
+     *
+     * @param delRole the role that should be taken from the user
+     */
+    public void deleteRole(String delRole) {
+        if (this.roles.contains(delRole)) {
+            this.roles.remove(delRole);
+        }
     }
 
     // Methods that are required for using the interface
