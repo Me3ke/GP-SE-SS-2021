@@ -1,5 +1,7 @@
 package gpse.example.domain;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +29,7 @@ public class User implements UserDetails {
     private int postCode;
     private String homeTown;
     private String country;
-    private Date birthday;
+    private LocalDate birthday;
 
     //Todo: Maybe add a role interface for more specific elements in the list.
     private List<String> roles;
@@ -48,6 +50,7 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.roles = new ArrayList<>();
     }
 
     /**
@@ -60,7 +63,7 @@ public class User implements UserDetails {
      * @param birthday the birthday of the user
      */
     public void addVoluntaryInformation(final String street, final int houseNumber, final int postCode,
-                                        final String homeTown, final String country, final Date birthday) {
+                                        final String homeTown, final String country, final LocalDate birthday) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.postCode = postCode;
@@ -179,11 +182,11 @@ public class User implements UserDetails {
         this.country = country;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(final Date birthday) {
+    public void setBirthday(final LocalDate birthday) {
         this.birthday = birthday;
     }
 
