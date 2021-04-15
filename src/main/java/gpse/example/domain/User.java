@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String street;
     private int houseNumber;
     private int postCode;
+    private int phoneNumber;
     private String homeTown;
     private String country;
     private LocalDate birthday;
@@ -62,15 +63,18 @@ public class User implements UserDetails {
      * @param homeTown    the hometown of the user
      * @param country     the country the user lives in
      * @param birthday    the birthday of the user
+     * @param phoneNumber the phoneNumber of the user
      */
     public void addVoluntaryInformation(final String street, final int houseNumber, final int postCode,
-                                        final String homeTown, final String country, final LocalDate birthday) {
+                                        final String homeTown, final String country, final LocalDate birthday,
+                                        final int phoneNumber) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.postCode = postCode;
         this.homeTown = homeTown;
         this.country = country;
         this.birthday = birthday;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -78,7 +82,7 @@ public class User implements UserDetails {
      *
      * @param newRole the role that needs to be added
      */
-    public void addRole(String newRole) {
+    public void addRole(final String newRole) {
         if (!this.roles.contains(newRole)) {
             this.roles.add(newRole);
         }
@@ -89,7 +93,7 @@ public class User implements UserDetails {
      *
      * @param delRole the role that should be taken from the user
      */
-    public void deleteRole(String delRole) {
+    public void deleteRole(final String delRole) {
         if (this.roles.contains(delRole)) {
             this.roles.remove(delRole);
         }
@@ -215,5 +219,13 @@ public class User implements UserDetails {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(final int phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
