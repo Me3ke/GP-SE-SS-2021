@@ -1,5 +1,7 @@
 package gpse.example.domain;
 
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -7,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.KeyPair;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
+    private static final int KEY_SIZE = 2048;
     private String email;
     private String firstname;
     private String lastname;
@@ -30,6 +34,8 @@ public class User implements UserDetails {
     private String homeTown;
     private String country;
     private LocalDate birthday;
+    private KeyPair activeKeyPair;
+    private List<KeyPair> keyPairs = new ArrayList<>();
 
     //Todo: Maybe add a role interface for more specific elements in the list.
     private List<String> roles;
@@ -85,6 +91,28 @@ public class User implements UserDetails {
     public void addRole(final String newRole) {
         if (!this.roles.contains(newRole)) {
             this.roles.add(newRole);
+        }
+    }
+
+    private void newKeypair() {
+        try {
+            final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+            generator.initialize(KEY_SIZE);
+            if (activeKeyPair == null) {
+                activeKeyPair = generator.generateKeyPair();
+                keyPairs.add(activeKeyPair);
+            } else {
+                keyPairs.add(generator.generateKeyPair());
+                changeActiveKeyPair(keyPairs.size() - 1);
+            }
+        } catch (NoSuchAlgorithmException exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    private void changeActiveKeyPair(final int index) {
+        if (index < keyPairs.size()) {
+            activeKeyPair = keyPairs.get(index);
         }
     }
 
