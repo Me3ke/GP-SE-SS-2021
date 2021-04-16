@@ -62,7 +62,7 @@ class DocumentMetaDataTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 20:47:55");
+        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 19:46:37");
     }
 
     @Test
@@ -73,7 +73,7 @@ class DocumentMetaDataTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Assertions.assertEquals(document.getDocumentMetaData().getLastAccess(), "16.04.2021 20:47:55");
+        Assertions.assertEquals(document.getDocumentMetaData().getLastAccess(), "16.04.2021 19:46:43");
     }
 
     @Test
@@ -84,7 +84,7 @@ class DocumentMetaDataTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 20:47:55");
+        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 19:46:37");
     }
 
     @Test
