@@ -6,13 +6,17 @@ import java.time.format.FormatStyle;
 
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The welcome controller.
+ */
 @CrossOrigin
 @RestController
 public class WelcomeController {
 
     @GetMapping("/hello-world")
     public String welcome() {
-        return "Hallo aus dem Backend! " + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+        return "Hallo aus dem Backend! "
+            + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
     }
 
 }

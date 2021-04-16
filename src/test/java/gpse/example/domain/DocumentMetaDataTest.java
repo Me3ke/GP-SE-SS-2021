@@ -3,6 +3,7 @@ package gpse.example.domain;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -52,4 +53,50 @@ class DocumentMetaDataTest {
                 new Timestamp(millis), "GoodByeWorld");
         Assertions.assertFalse(documentMetaData1.equalsTo(documentMetaData2));
     }
+
+    @Test
+    public void testSize() {
+        Document document = null;
+        try {
+            document = new Document("src/main/resources/Manf.pdf", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(document.getDocumentMetaData().getSize(), 28207);
+    }
+
+    /*
+    @Test
+    public void testCreationDate() {
+        Document document = null;
+        try {
+            document = new Document("src/main/resources/Manf.pdf");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 19:46:37");
+    }
+
+    @Test
+    public void testLastAccess() {
+        Document document = null;
+        try {
+            document = new Document("src/main/resources/Manf.pdf");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(document.getDocumentMetaData().getLastAccess(), "16.04.2021 19:46:43");
+    }
+
+    @Test
+    public void testLastModified() {
+        Document document = null;
+        try {
+            document = new Document("src/main/resources/Manf.pdf");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(document.getDocumentMetaData().getLastModified(), "16.04.2021 19:46:37");
+    }
+    */
 }
