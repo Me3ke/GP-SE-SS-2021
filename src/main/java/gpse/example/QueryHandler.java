@@ -72,8 +72,8 @@ public class QueryHandler {
     }
 
     /**
-     * Sign the document
-     * @param input the input
+     * Sign the document.
+     * @param input the input.
      */
     private void sign(final String[] input) {
         //Sign the document
