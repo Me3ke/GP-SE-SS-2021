@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.techfak.gpse-4-1</groupId>
-    <artifactId>4-1</artifactId>
+    <artifactId>elsa</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -399,7 +399,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
