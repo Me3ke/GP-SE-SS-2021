@@ -15,13 +15,11 @@ import java.util.List;
 public class Envelop implements Iterable<Document> {
 
     /**
-     * The documentList containing all the documents
-     * The envelopPath which is the path to the envelop
-     * The name of the envelop
-     * The envelopFile which the envelop as a directory
+     * The documentList containing all the documents.
+     * The name of the envelop.
+     * The envelopFile which the envelop as a directory.
      */
     private List<Document> documentList;
-    private Path envelopPath;
     private String name;
     private File envelopFile;
 
@@ -31,9 +29,9 @@ public class Envelop implements Iterable<Document> {
      * @param path the path leading to the directory.
      * @throws IOException if the path was invalid.
      */
-    public Envelop(String path) throws IOException {
+    public Envelop(final String path) throws IOException {
         documentList = new ArrayList<>();
-        this.envelopPath = Paths.get(path);
+        Path envelopPath = Paths.get(path);
         this.envelopFile = new File(path);
         this.name = envelopFile.getName();
         File[] filesArr = envelopFile.listFiles();
@@ -48,7 +46,7 @@ public class Envelop implements Iterable<Document> {
      * @param paths A List of paths of all files in the envelop to be created.
      * @throws IOException if the path was invalid.
      */
-    public Envelop(String name, List<String> paths) throws IOException {
+    public Envelop(final String name, final List<String> paths) throws IOException {
         documentList = new ArrayList<>();
         this.name = name;
         List<File> files = new ArrayList<>();
@@ -67,19 +65,17 @@ public class Envelop implements Iterable<Document> {
      * @param files The list of files which is used as an intermediate for the recursion.
      * @throws IOException is thrown if a name of a path is invalid.
      */
-    private void createEnvelop(File[] filesArr, List<File> files) throws IOException {
-        for (int i = 0; i < filesArr.length; i++) {
-            File currentFile = filesArr[i];
+    private void createEnvelop(final File[] filesArr, final List<File> files) throws IOException {
+        for (File currentFile : filesArr) {
             if (currentFile.isDirectory()) {
                 listf(currentFile, files);
-            }
-            else if (currentFile.isFile() && currentFile.exists()){
+            } else if (currentFile.isFile() && currentFile.exists()) {
                 files.add(currentFile);
             }
         }
-        for (int i = 0; i < files.size(); i++) {
-            Document currentDocument = new Document(files.get(i).getPath());
-            addDocument(currentDocument);
+        for (File currentFile: files) {
+            Document currentDocument = new Document(currentFile.getPath());
+            documentList.add(currentDocument);
         }
     }
 
@@ -90,25 +86,24 @@ public class Envelop implements Iterable<Document> {
      * @param directory the file which is found to be a directory.
      * @param files the list in which all files in subdirectories are added.
      */
-    public void listf(File directory, List<File> files) {
+    private void listf(final File directory, final List<File> files) {
         File[] fList = directory.listFiles();
-        if(fList != null) {
+        if (fList != null) {
             for (File file : fList) {
                 if (file.isFile()) {
                     files.add(file);
-                }
-                else if (file.isDirectory()) {
+                } else if (file.isDirectory()) {
                     listf(file, files);
                 }
             }
         }
     }
 
-    public void addDocument(Document document) {
+    public void addDocument(final Document document) {
         documentList.add(document);
     }
 
-    public void removeDocument(Document document) {
+    public void removeDocument(final Document document) {
         documentList.remove(document);
     }
 
@@ -123,5 +118,9 @@ public class Envelop implements Iterable<Document> {
 
     public String getName() {
         return name;
+    }
+
+    public File getEnvelopFile() {
+        return envelopFile;
     }
 }

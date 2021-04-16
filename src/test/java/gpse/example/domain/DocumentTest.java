@@ -11,9 +11,9 @@ class DocumentTest {
     public void testDocument() {
         try {
             Document document = new Document("src/main/resources/Manf.pdf");
-            Assertions.assertThat(document.getDocumentMetaData().getDocumentID()).isEqualTo(1);
+            Assertions.assertThat(document.getDocumentID()).isEqualTo(1);
             Assertions.assertThat(document.getDocumentMetaData().getMetaUserID()).isEqualTo("01");
-            Assertions.assertThat(document.getDocumentMetaData().getDocumentType()).isEqualTo("pdf");
+            Assertions.assertThat(document.getDocumentType()).isEqualTo("pdf");
             Assertions.assertThat(document.getDocumentMetaData().getMetaDocumentTitle()).isEqualTo("Manf");
             Assertions.assertThat(document.getDocumentMetaData().getCreationDate()).isEqualTo("14.04.2021 16:28:16");
             Assertions.assertThat(document.getDocumentMetaData().getLastAccess()).isEqualTo("14.04.2021 16:28:18");

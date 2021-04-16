@@ -23,6 +23,9 @@ public class Document {
     private DocumentMetaData documentMetaData;
     private Path documentPath;
     private File documentFile;
+    private int documentID;
+    private String documentTitle;
+    private String documentType;
 
     public Document() {
     }
@@ -36,21 +39,24 @@ public class Document {
      * Additionally formats some of the metadata. Uses placeholders for
      * metaUserID, upload timestamp and documentID, for later implementation.
      * Also has to be checked for harmful content in the future.
+     * This works only if documentTitle has no dot.
      * @param path The path leading to the file.
      * @throws IOException throws the exception if filepath was invalid.
      */
     public Document(String path) throws IOException {
         this.documentPath = Paths.get(path);
         this.documentFile = new File(path);
-        BasicFileAttributes attr = Files.readAttributes( documentPath, BasicFileAttributes.class);
-        String[] filename = documentFile.getName().split("\\.");                                                    //only if documentTitle has no dot
+        this.documentID = 1;
+        BasicFileAttributes attr = Files.readAttributes(documentPath, BasicFileAttributes.class);
+        String[] filename = documentFile.getName().split("\\.");
         String title = filename[0];
-        String extension = filename[1];
+        this.documentTitle = title;
+        this.documentType = filename[1];
         String timeOfCreation = formatDateTime(attr.creationTime());
         String timeOfLastMod = formatDateTime(attr.lastModifiedTime());
         String timeOfLastAccess = formatDateTime(attr.lastAccessTime());
-        this.documentMetaData = new DocumentMetaData( "01", new Timestamp(1),title, 1, extension,
-                                                        timeOfCreation, timeOfLastMod, timeOfLastAccess, attr.size());
+        this.documentMetaData = new DocumentMetaData("01", new Timestamp(1), title, timeOfCreation,
+                                                        timeOfLastMod, timeOfLastAccess, attr.size());
     }
 
     /**
@@ -58,7 +64,7 @@ public class Document {
      * @param fileTime the file time.
      * @return returns a String of the time in a new format.
      */
-    public String formatDateTime(FileTime fileTime) {
+    private String formatDateTime(FileTime fileTime) {
         LocalDateTime localDateTime = fileTime
             .toInstant()
             .atZone(ZoneId.systemDefault())
@@ -77,5 +83,17 @@ public class Document {
 
     public File getDocumentFile() {
         return documentFile;
+    }
+
+    public int getDocumentID() {
+        return documentID;
+    }
+
+    public String getDocumentTitle() {
+        return documentTitle;
+    }
+
+    public String getDocumentType() {
+        return documentType;
     }
 }
