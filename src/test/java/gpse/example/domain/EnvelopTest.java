@@ -14,13 +14,23 @@ class EnvelopTest {
         try {
             Envelop envelop = new Envelop("src/main/resources");
             List<Document> documentList = new ArrayList<>();
-            documentList.add(new Document("src/main/resources/application.properties"));
             documentList.add(new Document("src/main/resources/Manf.pdf"));
             documentList.add(new Document("src/main/resources/Test/Goin.docx"));
             documentList.add(new Document("src/main/resources/Theben.txt"));
+            documentList.add(new Document("src/main/resources/application.properties"));
+            List<String> titleList = new ArrayList<>();
             for (int i = 0; i < documentList.size(); i++) {
-                Assertions.assertThat(envelop.getDocumentList().get(i).getDocumentTitle()).isEqualTo(documentList.get(i).getDocumentTitle());
+                titleList.add(documentList.get(i).getDocumentTitle());
             }
+            List<Document> envelopDocumentList = envelop.getDocumentList();
+            List<String> envelopTitleList = new ArrayList<>();
+            for (int i = 0; i < envelopDocumentList.size(); i++) {
+                envelopTitleList.add(envelopDocumentList.get(i).getDocumentTitle());
+            }
+            for (int i = 0; i < envelopTitleList.size(); i++) {
+                Assertions.assertThat(titleList.contains(envelopTitleList.get(i)));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
