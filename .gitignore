@@ -177,6 +177,8 @@ buildNumber.properties
 ### Node ###
 node
 
+# Package
+package-lock.json
 # Logs
 logs
 npm-debug.log*

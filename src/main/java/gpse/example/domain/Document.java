@@ -1,7 +1,5 @@
 package gpse.example.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +11,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The model for the document responsible for initialising the necessary details about the document file.
@@ -21,17 +21,17 @@ public class Document {
     /**
      * The documentMetaData containing the identifier as well as other information.
      * The path leading to the document.
-     *
-     *
      */
-    private DocumentMetaData documentMetaData;
+    private final DocumentMetaData documentMetaData;
     private List<String> unsignedSignatories;
     private List<String> signedSignatories;
-    private Path documentPath;
-    private File documentFile;
-    private int documentID;
-    private String documentTitle;
-    private String documentType;
+    private final Path documentPath;
+    private final File documentFile;
+    private final int documentID;
+    private final String documentTitle;
+    private final String documentType;
+    private SignatureType signatureType = SignatureType.NO_SIGNATURE;
+
 
     /**
      * The constructor for a document with a given path to a file.
@@ -39,11 +39,12 @@ public class Document {
      * metaUserID, upload timestamp and documentID, for later implementation.
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
-     * @param path The path leading to the file.
+     *
+     * @param path        The path leading to the file.
      * @param signatories The list of signatories for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
-    @SuppressWarnings("PMD.AvoidReassigningParameters")
+    //@SuppressWarnings("PMD.AvoidReassigningParameters")
     public Document(final String path, List<String> signatories) throws IOException {
         if (signatories == null) {
             signatories = new ArrayList<>();
@@ -63,12 +64,13 @@ public class Document {
         String timeOfCreation = formatDateTime(attr.creationTime());
         String timeOfLastMod = formatDateTime(attr.lastModifiedTime());
         String timeOfLastAccess = formatDateTime(attr.lastAccessTime());
-        this.documentMetaData = new DocumentMetaData("01", new Timestamp(1), title, timeOfCreation,
-                                                        timeOfLastMod, timeOfLastAccess, attr.size());
+        this.documentMetaData = new DocumentMetaData("01", new Timestamp(1), documentTitle, timeOfCreation,
+            timeOfLastMod, timeOfLastAccess, attr.size());
     }
 
     /**
      * The formatDateTime methods converts the file times to a more readable format.
+     *
      * @param fileTime the file time.
      * @return returns a String of the time in a new format.
      */
@@ -117,9 +119,7 @@ public class Document {
      * @param signatory the ID (e-Mail address) of the signatory
      */
     public void deleteUnsignedSignatory(final String signatory) {
-        if (unsignedSignatories.contains(signatory)) {
-            unsignedSignatories.remove(signatory);
-        }
+        unsignedSignatories.remove(signatory);
     }
 
     /**
@@ -128,9 +128,7 @@ public class Document {
      * @param signatory the ID (e-Mail address) of the signatory
      */
     public void deleteSignedSignatory(final String signatory) {
-        if (signedSignatories.contains(signatory)) {
-            signedSignatories.remove(signatory);
-        }
+        signedSignatories.remove(signatory);
     }
 
     /**
@@ -175,4 +173,14 @@ public class Document {
     public String getDocumentType() {
         return documentType;
     }
+
+    public SignatureType getSignatureType() {
+        return signatureType;
+    }
+
+    public void setSignatureType(SignatureType signatureType) {
+        this.signatureType = signatureType;
+    }
+
 }
+

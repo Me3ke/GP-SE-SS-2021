@@ -11,9 +11,11 @@ import java.util.Objects;
  */
 public class DocumentMetaData {
     private final String metaUserID;
+    //TODO: optional: make UserIdentifier an class
     private final Timestamp metaTimeStampUpload;
     private final String metaDocumentTitle;
     private String identifier;
+    //TODO: optional: make DocumentIdentifier an class
     private String creationDate;
     private String lastModified;
     private String lastAccess;
@@ -59,14 +61,13 @@ public class DocumentMetaData {
     }
 
     private void generateHashString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(metaUserID).append(metaTimeStampUpload.toString()).append(metaDocumentTitle);
         HashSHA hashSHA = new HashSHA();
-        this.identifier = hashSHA.computeHash(stringBuilder.toString());
+        this.identifier = hashSHA.computeHash(metaUserID + metaTimeStampUpload.toString() + metaDocumentTitle);
     }
 
     /**
      * Method responsible for comparing two documentMetaData objects.
+     *
      * @param object any other object
      * @return boolean, true if same, false otherwise
      */
@@ -79,9 +80,9 @@ public class DocumentMetaData {
         }
         DocumentMetaData that = (DocumentMetaData) object;
         return Objects.equals(metaUserID, that.metaUserID)
-                && Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
-                && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
-                && Objects.equals(identifier, that.identifier);
+            && Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
+            && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
+            && Objects.equals(identifier, that.identifier);
     }
 
     public String getMetaUserID() {
