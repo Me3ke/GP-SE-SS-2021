@@ -280,4 +280,12 @@ public class User implements UserDetails {
         }
         return keys;
     }
+
+    public KeyPair getActiveKeyPair() {
+        return activeKeyPair;
+    }
+
+    public List<KeyPair> getKeyPairs() {
+        return keyPairs;
+    }
 }

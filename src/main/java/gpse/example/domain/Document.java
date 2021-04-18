@@ -135,4 +135,8 @@ public class Document {
         signatories.addAll(signedSignatories);
         return signatories;
     }
+
+    public Map<String, byte[]> getAdvancedSignatures() {
+        return advancedSignatures;
+    }
 }
