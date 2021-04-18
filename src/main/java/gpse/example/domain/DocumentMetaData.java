@@ -61,7 +61,7 @@ public class DocumentMetaData {
     }
 
     private void generateHashString() {
-        HashSHA hashSHA = new HashSHA();
+        final HashSHA hashSHA = new HashSHA();
         this.identifier = hashSHA.computeHash(metaUserID + metaTimeStampUpload.toString() + metaDocumentTitle);
     }
 
@@ -78,7 +78,7 @@ public class DocumentMetaData {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        DocumentMetaData that = (DocumentMetaData) object;
+        final DocumentMetaData that = (DocumentMetaData) object;
         return Objects.equals(metaUserID, that.metaUserID)
             && Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
             && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
@@ -116,4 +116,5 @@ public class DocumentMetaData {
     public long getSize() {
         return size;
     }
+
 }

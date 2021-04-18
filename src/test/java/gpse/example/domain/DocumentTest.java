@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DocumentTest {
 
-    private final static String MAIL = "superCooleMail@yoohooo.de";
+    private final static String MAIL = "superCooleMAIL@yoohooo.de";
     private final static String PATH_INVALID = "Document Path is invalid";
     private final static String PATH = "src/main/resources/Manf.pdf";
     private final static String TITLE_TEST = "Manf";
@@ -59,24 +59,15 @@ class DocumentTest {
 
         @Test
         public void addIsNotInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addUnsignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().contains(MAIL));
         }
 
         @Test
         public void addIsInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
+
             document.addUnsignedSignatory(MAIL);
             document.addUnsignedSignatory(MAIL);
             final ArrayList<String> expected = new ArrayList<>();
@@ -86,12 +77,7 @@ class DocumentTest {
 
         @Test
         public void addIsInSigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addSignedSignatory(MAIL);
             document.addUnsignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().contains(MAIL));
@@ -101,12 +87,7 @@ class DocumentTest {
 
         @Test
         public void delIsInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addUnsignedSignatory(MAIL);
             document.deleteUnsignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().isEmpty());
@@ -114,12 +95,7 @@ class DocumentTest {
 
         @Test
         public void delIsNotInUnsigned(){
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.deleteUnsignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().isEmpty());
         }
@@ -131,12 +107,7 @@ class DocumentTest {
 
         @Test
         public void addIsNotInSignedIsInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addUnsignedSignatory(MAIL);
             document.addSignedSignatory(MAIL);
             assertTrue(document.getSignedSignatories().contains(MAIL) && document.getUnsignedSignatories().isEmpty());
@@ -144,12 +115,7 @@ class DocumentTest {
 
         @Test
         public void addIsInSigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addUnsignedSignatory(MAIL);
             document.addSignedSignatory(MAIL);
             document.addSignedSignatory(MAIL);
@@ -160,12 +126,7 @@ class DocumentTest {
 
         @Test
         public void addIsNotInSignedIsNotInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addSignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().isEmpty());
 
@@ -173,12 +134,7 @@ class DocumentTest {
 
         @Test
         public void addIsInSignedIsNotInUnsigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addSignedSignatory(MAIL);
             document.addSignedSignatory(MAIL);
             assertTrue(document.getUnsignedSignatories().isEmpty());
@@ -186,12 +142,7 @@ class DocumentTest {
 
         @Test
         public void delIsInSigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.addUnsignedSignatory(MAIL);
             document.addSignedSignatory(MAIL);
             document.deleteSignedSignatory(MAIL);
@@ -200,14 +151,44 @@ class DocumentTest {
 
         @Test
         public void delIsNotInSigned() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println(PATH_INVALID);
-            }
+            final Document document = new Document();
             document.deleteSignedSignatory(MAIL);
             assertTrue(document.getSignedSignatories().isEmpty());
         }
+    }
+
+    @Nested
+    public class AdvancedSignature {
+
+        // Cannot be tested yet, because DocumentMEtaData needs a Timestamp, which cannot be generated because it has been deprecated
+        /*
+        @Test
+        public void userIsSignatory() {
+            final DocumentMetaData documentMetaData = new DocumentMetaData();
+            final Document document = new Document(documentMetaData);
+            final User user = new User("HansSchnider1@bla.com", "Hs", "Sneier", "15");
+            user.newKeypair();
+            document.addUnsignedSignatory(user.getEMAIL());
+            document.advancedSignature(user);
+            assertTrue(document.getUnsignedSignatories().isEmpty()
+                && document.getSignedSignatories().contains(user.getEMAIL())
+                && document.getAdvancedSignatures().containsKey(user.getEMAIL()));
+        }*/
+
+        @Test
+        public void userIsNotSignatory() {
+            final Document document = new Document();
+            final User user = new User("ansSchnider1@bla.com", "s", "Snier", "5");
+            user.newKeypair();
+            document.advancedSignature(user);
+            assertTrue(document.getSignedSignatories().isEmpty()
+                && document.getAdvancedSignatures().isEmpty());
+        }
+
+        // To be added when signatures can be made and Timestamp does not cause problems anymore
+        /*
+        @Test
+        public void verifySignature
+         */
     }
 }

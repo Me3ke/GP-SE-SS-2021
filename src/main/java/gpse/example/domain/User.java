@@ -1,5 +1,6 @@
 package gpse.example.domain;
 
+import java.security.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -19,6 +20,8 @@ import java.util.List;
 public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
+    private static final int KEY_SIZE = 2048;
+    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
     private String email;
     private String firstname;
     private String lastname;
@@ -30,6 +33,9 @@ public class User implements UserDetails {
     private String homeTown;
     private String country;
     private LocalDate birthday;
+    private KeyPair activeKeyPair;
+    private PrivateKey activePrivate;
+    private List<KeyPair> keyPairs = new ArrayList<>();
 
     //Todo: Maybe add a role interface for more specific elements in the list.
     private List<String> roles;
@@ -86,6 +92,57 @@ public class User implements UserDetails {
         if (!this.roles.contains(newRole)) {
             this.roles.add(newRole);
         }
+    }
+
+    /**
+     * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
+     * the new ones.
+     */
+    public void newKeypair() {
+        try {
+            final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+            generator.initialize(KEY_SIZE);
+            if (activeKeyPair == null) {
+                activeKeyPair = generator.generateKeyPair();
+                keyPairs.add(activeKeyPair);
+                activePrivate = activeKeyPair.getPrivate();
+            } else {
+                keyPairs.add(generator.generateKeyPair());
+                changeActiveKeyPair(keyPairs.size() - 1);
+            }
+        } catch (NoSuchAlgorithmException exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    /**
+     * the Method used to change the active key-pair to an existing one.
+     * @param index the id of the new active key-pair
+     */
+    public void changeActiveKeyPair(final int index) {
+        //avoid outOfBounds exceptions
+        if (index < keyPairs.size()) {
+            activeKeyPair = keyPairs.get(index);
+            activePrivate = activeKeyPair.getPrivate();
+        }
+    }
+
+    /**
+     * the method used to generate an advanced signature, using the active private key.
+     * @param hash the id of the document that needs a signature
+     * @return the signature represented by a byte list
+     */
+    public byte[] advancedSign(final String hash) {
+        byte[] signature = null;
+        try {
+            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
+            sign.initSign(activePrivate);
+            sign.update(hash.getBytes());
+            signature = sign.sign();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return signature;
     }
 
     /**
@@ -227,5 +284,25 @@ public class User implements UserDetails {
 
     public void setPhoneNumber(final int phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * getter for all public keys.
+     * @return all public keys associated with this user
+     */
+    public PublicKey[] getAllPublicKeys() {
+        PublicKey[] keys = new PublicKey[keyPairs.size()];
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = keyPairs.get(i).getPublic();
+        }
+        return keys;
+    }
+
+    public KeyPair getActiveKeyPair() {
+        return activeKeyPair;
+    }
+
+    public List<KeyPair> getKeyPairs() {
+        return keyPairs;
     }
 }
