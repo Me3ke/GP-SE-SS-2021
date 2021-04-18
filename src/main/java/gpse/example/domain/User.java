@@ -94,6 +94,10 @@ public class User implements UserDetails {
         }
     }
 
+    /**
+     * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
+     * the new ones.
+     */
     public void newKeypair() {
         try {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -111,6 +115,10 @@ public class User implements UserDetails {
         }
     }
 
+    /**
+     * the Method used to change the active key-pair to an existing one.
+     * @param index the id of the new active key-pair
+     */
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
         if (index < keyPairs.size()) {
@@ -119,6 +127,11 @@ public class User implements UserDetails {
         }
     }
 
+    /**
+     * the method used to generate an advanced signature, using the active private key.
+     * @param hash the id of the document that needs a signature
+     * @return the signature represented by a byte list
+     */
     public byte[] advancedSign(final String hash) {
         byte[] signature = null;
         try {
@@ -273,6 +286,10 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * getter for all public keys.
+     * @return all public keys associated with this user
+     */
     public PublicKey[] getAllPublicKeys() {
         PublicKey[] keys = new PublicKey[keyPairs.size()];
         for (int i = 0; i < keys.length; i++) {
