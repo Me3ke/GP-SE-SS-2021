@@ -3,6 +3,7 @@ package gpse.example.domain;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +52,7 @@ class DocumentTest {
         }
 
         @Test
-        public void delIsNotInUnsigned(){
+        public void delIsNotInUnsigned() {
             final Document document = new Document();
             document.deleteUnsignedSignatory(mail);
             assertTrue(document.getUnsignedSignatories().isEmpty());
@@ -112,5 +113,40 @@ class DocumentTest {
             document.deleteSignedSignatory(mail);
             assertTrue(document.getSignedSignatories().isEmpty());
         }
+    }
+
+    @Nested
+    public class AdvancedSignature {
+
+        // Cannot be tested yet, because DocumentMEtaData needs a Timestamp, which cannot be generated because it has been deprecated
+        /*
+        @Test
+        public void userIsSignatory() {
+            final DocumentMetaData documentMetaData = new DocumentMetaData();
+            final Document document = new Document(documentMetaData);
+            final User user = new User("HansSchnider1@bla.com", "Hs", "Sneier", "15");
+            user.newKeypair();
+            document.addUnsignedSignatory(user.getEmail());
+            document.advancedSignature(user);
+            assertTrue(document.getUnsignedSignatories().isEmpty()
+                && document.getSignedSignatories().contains(user.getEmail())
+                && document.getAdvancedSignatures().containsKey(user.getEmail()));
+        }*/
+
+        @Test
+        public void userIsNotSignatory() {
+            final Document document = new Document();
+            final User user = new User("ansSchnider1@bla.com", "s", "Snier", "5");
+            user.newKeypair();
+            document.advancedSignature(user);
+            assertTrue(document.getSignedSignatories().isEmpty()
+                && document.getAdvancedSignatures().isEmpty());
+        }
+
+        // To be added when signatures can be made and Timestamp does not cause problems anymore
+        /*
+        @Test
+        public void verifySignature
+         */
     }
 }
