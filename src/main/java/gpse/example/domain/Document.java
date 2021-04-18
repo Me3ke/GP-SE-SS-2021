@@ -1,18 +1,25 @@
 package gpse.example.domain;
 
+import java.security.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The model for the document responsible for initialising the necessary details about the document file.
  */
 public class Document {
+
+    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
     /**
      * The documentMetaData containing the identifier as well as other information.
      */
     private DocumentMetaData documentMetaData;
     private List<String> unsignedSignatories = new ArrayList<>();
     private List<String> signedSignatories = new ArrayList<>();
+    private Map<String, byte[]> advancedSignatures = new HashMap<>();
+
 
     public Document() {
     }
@@ -54,6 +61,38 @@ public class Document {
             deleteUnsignedSignatory(signatory);
             signedSignatories.add(signatory);
         }
+    }
+
+    public void advancedSignature(final User user) {
+        final String mail = user.getEmail();
+        if (unsignedSignatories.contains(mail)) {
+            advancedSignatures.put(mail, user.advancedSign(this.documentMetaData.getIdentifier()));
+            addSignedSignatory(mail);
+        }
+    }
+
+    public boolean verifySignature(final User user) {
+        final String mail = user.getEmail();
+        final byte[] signature = advancedSignatures.get(mail);
+        boolean valid = false;
+        if (advancedSignatures.containsKey(mail)) {
+            try {
+                final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
+                final byte[] id = this.documentMetaData.getIdentifier().getBytes();
+                final PublicKey[] publicKeys = user.getAllPublicKeys();
+                for (final PublicKey publicKey : publicKeys) {
+                    sign.initVerify(publicKey);
+                    sign.update(id);
+                    valid |= sign.verify(signature);
+                    if (valid) {
+                        break;
+                    }
+                }
+            } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+                System.out.println(exception.getMessage());
+            }
+        }
+        return valid;
     }
 
     /**

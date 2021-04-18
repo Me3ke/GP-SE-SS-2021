@@ -1,7 +1,6 @@
 package gpse.example.domain;
 
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -9,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.KeyPair;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +21,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
     private static final int KEY_SIZE = 2048;
+    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
     private String email;
     private String firstname;
     private String lastname;
@@ -35,6 +34,7 @@ public class User implements UserDetails {
     private String country;
     private LocalDate birthday;
     private KeyPair activeKeyPair;
+    private PrivateKey activePrivate;
     private List<KeyPair> keyPairs = new ArrayList<>();
 
     //Todo: Maybe add a role interface for more specific elements in the list.
@@ -94,13 +94,14 @@ public class User implements UserDetails {
         }
     }
 
-    private void newKeypair() {
+    public void newKeypair() {
         try {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(KEY_SIZE);
             if (activeKeyPair == null) {
                 activeKeyPair = generator.generateKeyPair();
                 keyPairs.add(activeKeyPair);
+                activePrivate = activeKeyPair.getPrivate();
             } else {
                 keyPairs.add(generator.generateKeyPair());
                 changeActiveKeyPair(keyPairs.size() - 1);
@@ -110,10 +111,25 @@ public class User implements UserDetails {
         }
     }
 
-    private void changeActiveKeyPair(final int index) {
+    public void changeActiveKeyPair(final int index) {
+        //avoid outOfBounds exceptions
         if (index < keyPairs.size()) {
             activeKeyPair = keyPairs.get(index);
+            activePrivate = activeKeyPair.getPrivate();
         }
+    }
+
+    public byte[] advancedSign(final String hash) {
+        byte[] signature = null;
+        try {
+            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
+            sign.initSign(activePrivate);
+            sign.update(hash.getBytes());
+            signature = sign.sign();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return signature;
     }
 
     /**
@@ -255,5 +271,13 @@ public class User implements UserDetails {
 
     public void setPhoneNumber(final int phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public PublicKey[] getAllPublicKeys() {
+        PublicKey[] keys = new PublicKey[keyPairs.size()];
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = keyPairs.get(i).getPublic();
+        }
+        return keys;
     }
 }
