@@ -3,6 +3,7 @@ package gpse.example;
 import gpse.example.domain.Document;
 import gpse.example.domain.Envelop;
 import gpse.example.domain.SignatureType;
+import gpse.example.domain.User;
 import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import org.springframework.boot.SpringApplication;
 
@@ -32,10 +33,12 @@ public class QueryHandler {
     private final List<Document> documentList;
     private final List<Envelop> envelopList;
     private Scanner scanner;
+    private final User hans;
 
     public QueryHandler() {
         documentList = new ArrayList<>();
         envelopList = new ArrayList<>();
+        hans = new User("emailadresse@email.de", "Hans", "Schneider", "1234567898765");
     }
 
     /**
