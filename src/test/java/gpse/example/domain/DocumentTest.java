@@ -179,7 +179,6 @@ class DocumentTest {
         public void userIsNotSignatory() {
             final Document document = new Document();
             final User user = new User("ansSchnider1@bla.com", "s", "Snier", "5");
-            user.newKeypair();
             document.advancedSignature(user);
             assertTrue(document.getSignedSignatories().isEmpty()
                 && document.getAdvancedSignatures().isEmpty());

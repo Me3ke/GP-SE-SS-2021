@@ -57,7 +57,6 @@ class UserTest {
         @Test
         public void generateNewKeypairBecomesActive() {
             final User user = new User("HansSchneider1@bla.com", "Hss", "Sneider", "125");
-            user.newKeypair();
             assertTrue(user.getKeyPairs().contains(user.getActiveKeyPair())
                 && user.getKeyPairs().size() == 1);
         }
@@ -66,8 +65,7 @@ class UserTest {
         @Test
         public void changeActiveKeyPair() {
             final User user = new User("HansSchneider1@bla.com", "Hss", "Sneider", "125");
-            user.newKeypair();
-            user.newKeypair();
+            user.generateKeyPair();
             user.changeActiveKeyPair(0);
             assertTrue(user.getKeyPairs().size() == 2
                 && user.getActiveKeyPair().equals(user.getKeyPairs().get(user.getKeyPairs().size() - 2)));
@@ -79,7 +77,6 @@ class UserTest {
     public void advancedSign() {
         final String hash = "DiesIstEinWunderbarerHash";
         final User user = new User("HansSchnider1@bla.com", "Hs", "Sneier", "15");
-        user.newKeypair();
         final byte[] returnValue = user.advancedSign(hash);
         assertNotNull(returnValue);
     }

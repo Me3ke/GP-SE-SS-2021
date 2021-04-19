@@ -35,6 +35,9 @@ public class QueryHandler {
     private Scanner scanner;
     private final User hans;
 
+    /**
+     * the standard constructor for the QueryHandler.
+     */
     public QueryHandler() {
         documentList = new ArrayList<>();
         envelopList = new ArrayList<>();
@@ -52,8 +55,8 @@ public class QueryHandler {
         scanner = new Scanner(System.in);
         while (true) {
             System.out.print("Input: ");
-            String line = getInput();
-            String[] input = line.split(" ");
+            final String line = getInput();
+            final String[] input = line.split(" ");
             switch (input[0]) {
                 case "help":
                     help();
@@ -91,8 +94,31 @@ public class QueryHandler {
      *
      * @param input the input.
      */
-    private void sign(final String[] input) {
-        //Sign the document
+    private void sign(final String... input) {
+        boolean seenDocument = false;
+        final int validInputLength = 2;
+        if (input.length != validInputLength) {
+            System.out.println("Wrong use of: sign");
+            System.out.println("Use: sign exampleTitle.txt ");
+            return;
+        }
+
+        for (final Document document : documentList) {
+            if ((document.getDocumentTitle() + "." + document.getDocumentType()).equals(input[1])) {
+                seenDocument = true;
+                if (document.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)) {
+                    document.addSignedSignatory(hans.getEmail());
+                } else if (document.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                    document.advancedSignature(hans);
+                } else {
+                    System.out.println("The Document couldn't be signed, because it doesn't have a signature type");
+                }
+                break;
+            }
+        }
+        if (!seenDocument) {
+            System.out.printf("The Document %s wasn't found.%n", input[1]);
+        }
     }
 
     /**
@@ -101,9 +127,9 @@ public class QueryHandler {
      *
      * @param input the the path(s) of the file(s) to be imported.
      */
-    private void importDocEnv(final String[] input) {
+    private void importDocEnv(final String... input) {
         if (input.length > 1) {
-            File file = new File(input[1]);
+            final File file = new File(input[1]);
             if (file.exists() && file.isFile() && input.length == 2) {
                 importDoc(input);
             } else if (file.isDirectory() || input.length > 2) {
@@ -123,12 +149,12 @@ public class QueryHandler {
      *
      * @param input the the path(s) of the file(s) to be imported.
      */
-    private void importEnv(final String[] input) {
+    private void importEnv(final String... input) {
         Envelop envelop;
         try {
             if (input.length > 2) {
                 System.out.println("Type in the name of the envelop: ");
-                String name = getInput();
+                final String name = getInput();
                 envelop = new Envelop(name, Arrays.asList(input).subList(1, input.length));
                 envelopList.add(envelop);
             } else {
@@ -146,11 +172,13 @@ public class QueryHandler {
      *
      * @param input the path(s) of the file(s) to be imported.
      */
-    private void importDoc(final String[] input) {
+    private void importDoc(final String... input) {
         Document document;
         try {
-            document = new Document(input[1], null);
-            String title = document.getDocumentMetaData().getMetaDocumentTitle();
+            final ArrayList<String> signatories = new ArrayList<>();
+            signatories.add(hans.getEmail());
+            document = new Document(input[1], signatories);
+            final String title = document.getDocumentMetaData().getMetaDocumentTitle();
             System.out.println("import of " + title + " successful.");
             documentList.add(document);
         } catch (IOException e) {
@@ -165,7 +193,7 @@ public class QueryHandler {
     private void help() {
         System.out.println("exit              -terminates the programm");
         System.out.println("import <path>     -imports a document or an envelop");
-        System.out.println("sign <?>          -signs a document");
+        System.out.println("sign <name>          -signs a document");
         System.out.println("server            -starts the server");
         System.out.println("list              -lists all imported documents and envelops");
         System.out.println("envelop <name>    -lists all documents of the specified envelop");
@@ -178,18 +206,18 @@ public class QueryHandler {
      * @return The String from the command line.
      */
     private String getInput() {
-        String line = scanner.nextLine();
+        final String line = scanner.nextLine();
         return line;
     }
 
     private void list() {
         System.out.println("Imported Documents: ");
-        for (Document document : documentList) {
+        for (final Document document : documentList) {
             System.out.print(document.getDocumentMetaData().getMetaDocumentTitle() + ".");
             System.out.println(document.getDocumentType());
         }
         System.out.println("Imported Envelops: ");
-        for (Envelop envelop : envelopList) {
+        for (final Envelop envelop : envelopList) {
             System.out.println(envelop.getName());
         }
     }
@@ -199,18 +227,18 @@ public class QueryHandler {
      *
      * @param input the inputs which contains the name of the envelop to be listed.
      */
-    private void listEnvelop(final String[] input) {
+    private void listEnvelop(final String... input) {
         System.out.println("listing documents of envelop " + input[1]);
-        for (Envelop envelop : envelopList) {
+        for (final Envelop envelop : envelopList) {
             if (envelop.getName().equals(input[1])) {
-                for (Document document : envelop) {
+                for (final Document document : envelop) {
                     System.out.println(document.getDocumentMetaData().getMetaDocumentTitle());
                 }
             }
         }
     }
 
-    private void setSignatureType(final String[] input) {
+    private void setSignatureType(final String... input) {
         boolean seenDocument = false;
         final int validInputLength = 3;
         if (input.length != validInputLength) {
@@ -219,7 +247,7 @@ public class QueryHandler {
             return;
         }
 
-        for (Document document : documentList) {
+        for (final Document document : documentList) {
             if ((document.getDocumentTitle() + "." + document.getDocumentType()).equals(input[1])) {
                 try {
                     document.setSignatureType(SignatureType.fromInteger(Integer.parseInt(input[2])));

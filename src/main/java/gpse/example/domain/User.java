@@ -58,6 +58,7 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.roles = new ArrayList<>();
+        newKeypair();
     }
 
     /**
@@ -98,7 +99,7 @@ public class User implements UserDetails {
      * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
      * the new ones.
      */
-    public void newKeypair() {
+    private void newKeypair() {
         try {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(KEY_SIZE);
@@ -113,6 +114,11 @@ public class User implements UserDetails {
         } catch (NoSuchAlgorithmException exception) {
             System.out.println(exception.getMessage());
         }
+    }
+
+    //newKeyPair needs private access, but in future we probably need the function publicly available.
+    public void generateKeyPair() {
+        newKeypair();
     }
 
     /**
