@@ -1,5 +1,8 @@
 package gpse.example.util;
 
+/**
+ * thrown if an Error occures while PDF conversion
+ */
 public class PDFConversionException extends Exception {
 
     static final long serialVersionUID = 202;

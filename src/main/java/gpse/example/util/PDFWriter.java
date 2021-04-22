@@ -25,6 +25,14 @@ import org.apache.fop.apps.MimeConstants;
 
 public class PDFWriter {
 
+    /**
+     * generating xmlfile containing content of Protocol
+     * @param owner the Owner,
+     * @param signatures the signatures,
+     * @param history the history  of protocoled document
+     * @param protocolID the protocol identifier for genrating unique file
+     * @throws XMLTransformationException
+     */
     public void generateXML(String owner, List<String> signatures, List<String> history, int protocolID)
         throws XMLTransformationException {
 
@@ -43,24 +51,24 @@ public class PDFWriter {
             ownerElem.appendChild(doc.createTextNode(owner));
             protocolBody.appendChild(ownerElem);
 
-            Element sigs = doc.createElement("sigs");
-            protocolBody.appendChild(sigs);
+            Element sigParent = doc.createElement("sigs");
+            protocolBody.appendChild(sigParent);
 
             Element[] sig = new Element[signatures.size()];
             for (int i = 0; i < signatures.size(); i++) {
                 sig[i] = doc.createElement("sigElem");
                 sig[i].appendChild(doc.createTextNode(signatures.get(i)));
-                sigs.appendChild(sig[i]);
+                sigParent.appendChild(sig[i]);
             }
 
-            Element h = doc.createElement("hist");
-            protocolBody.appendChild(h);
+            Element histParent = doc.createElement("hist");
+            protocolBody.appendChild(histParent);
 
             Element[] hist = new Element[history.size()];
             for (int i = 0; i < signatures.size(); i++) {
                 hist[i] = doc.createElement("histElem");
                 hist[i].appendChild(doc.createTextNode(history.get(i)));
-                h.appendChild(hist[i]);
+                histParent.appendChild(hist[i]);
             }
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -74,6 +82,12 @@ public class PDFWriter {
             throw new XMLTransformationException(exc);
         }
     }
+
+    /**
+     * converting the xml-file together with xsl-template to pdf-file
+     * @param protocolID protocol identifier to find the correct xml-file
+     * @throws PDFConversionException
+     */
 
     public void convertToPDF(int protocolID) throws PDFConversionException {
 

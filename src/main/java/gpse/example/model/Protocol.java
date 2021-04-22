@@ -7,6 +7,9 @@ import gpse.example.util.XMLTransformationException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class modeling the protocol of an document
+ */
 public class Protocol {
     private List<Document> history;
     private final int id;
@@ -15,6 +18,10 @@ public class Protocol {
     private List<Signature> signatures;
     private List<Signature> oldSignatures;
 
+    /**
+     * constructor of protocol getting information from specified document
+     * @param env  should be changed to document
+     */
     public Protocol(Envelope env) {
         signatures = new ArrayList<>();
         oldSignatures = new ArrayList<>();
