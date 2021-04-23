@@ -16,4 +16,7 @@ public class Document {
         this.documentMetaData = documentMetaData;
     }
 
+    DocumentMetaData getDocumentMetaData(){
+        return documentMetaData;
+    }
 }

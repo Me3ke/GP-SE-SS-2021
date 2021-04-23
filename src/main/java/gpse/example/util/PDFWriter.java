@@ -25,6 +25,11 @@ import org.apache.fop.apps.MimeConstants;
 
 public class PDFWriter {
 
+    FopFactory fopFactory;
+
+    public PDFWriter(){
+        fopFactory = FopFactory.newInstance(new File(".").toURI());
+    }
     /**
      * generating xmlfile containing content of Protocol
      * @param owner the Owner,
@@ -79,7 +84,7 @@ public class PDFWriter {
             transformer.transform(source, result);
 
         } catch (ParserConfigurationException | TransformerException exc) {
-            throw new XMLTransformationException(exc);
+            throw new XMLTransformationException("Error while building XML sourcefile");
         }
     }
 
@@ -98,7 +103,7 @@ public class PDFWriter {
             StreamSource xmlFile = new StreamSource(
                 new File("src/main/resources/output/Protocol_" + protocolID + ".xml"));
 
-            FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
@@ -111,7 +116,7 @@ public class PDFWriter {
             transformer.transform(xmlFile, res);
 
         } catch (FOPException | TransformerException | IOException exc) {
-            throw new PDFConversionException(exc);
+            throw new PDFConversionException("XML source could not be converted");
         }
     }
 }

@@ -70,4 +70,12 @@ public class DocumentMetaData {
                 && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
                 && Objects.equals(identifier, that.identifier);
     }
+
+    public String getMetaUserID() {
+        return metaUserID;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
 }
