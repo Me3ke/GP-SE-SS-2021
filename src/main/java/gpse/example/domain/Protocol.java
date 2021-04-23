@@ -1,5 +1,6 @@
 package gpse.example.domain;
 
+import com.sun.istack.NotNull;
 import gpse.example.model.Signature;
 import gpse.example.util.PDFConversionException;
 import gpse.example.util.PDFWriter;
@@ -13,10 +14,9 @@ import java.util.List;
  */
 public class Protocol {
     private List<Document> history;
-    private final int id;
+    private final String id;
     private Document document;
     private DocumentMetaData documentMetaData;
-    private String ownerID;
     private List<Signature> signatures;
     private List<Signature> oldSignatures;
     private PDFWriter pdfWriter;
@@ -25,11 +25,11 @@ public class Protocol {
      * constructor of protocol getting information from specified document
      * @param doc  document that should be protocoled
      */
-    public Protocol(Document doc) {
+    public Protocol(@NotNull Document doc) {
         document = doc;
         signatures = new ArrayList<>();
         oldSignatures = new ArrayList<>();
-        id = generateID();
+        id = new HashSHA().computeHash(doc.getDocumentMetaData().getIdentifier());
         pdfWriter = new PDFWriter();
 
 
@@ -72,12 +72,6 @@ public class Protocol {
         } catch (PDFConversionException pce) {
             System.out.println(pce.getMessage());
         }
-    }
-
-
-
-    private int generateID() {
-        return (int) (Math.random()*100);
     }
 
 
