@@ -24,8 +24,8 @@ public class ELSA {
      */
     public static void main(final String... args) {
         System.out.println("Welcome to ELSA! Type help to get help");
-        QueryHandler queryHandler = new QueryHandler();
-        int exitValue = queryHandler.query(args);
+        final QueryHandler queryHandler = new QueryHandler();
+        final int exitValue = queryHandler.query(args);
         if (exitValue == DEFAULT_EXIT) {
             System.exit(exitValue);
         }

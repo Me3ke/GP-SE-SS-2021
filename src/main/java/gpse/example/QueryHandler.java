@@ -1,18 +1,10 @@
 package gpse.example;
 
-import gpse.example.domain.Document;
-import gpse.example.domain.Envelop;
-import gpse.example.domain.SignatureType;
-import gpse.example.domain.User;
+import gpse.example.domain.*;
 import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import org.springframework.boot.SpringApplication;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The QueryHandler class is responsible for reading the command line arguments and
@@ -25,6 +17,9 @@ public class QueryHandler {
 
 
     private static final int DEFAULT_EXIT = 100;
+    private static final String DOCUMENT_NOT_FOUND = "The Document %s wasn't found.%n";
+    private static final int INPUT_THREE = 3;
+    private static final String NOT_EXISTS = " does not exist.";
 
     /**
      * The documentList contains all imported documents.
@@ -34,6 +29,9 @@ public class QueryHandler {
     private final List<Envelop> envelopList;
     private Scanner scanner;
     private final User hans;
+    private final DocumentCreator documentCreator;
+    //changed to global because of integration in all methods.
+    private final List<String> signatories;
 
     /**
      * the standard constructor for the QueryHandler.
@@ -41,7 +39,10 @@ public class QueryHandler {
     public QueryHandler() {
         documentList = new ArrayList<>();
         envelopList = new ArrayList<>();
+        signatories = new ArrayList<>();
+        documentCreator = new DocumentCreator();
         hans = new User("emailadresse@email.de", "Hans", "Schneider", "1234567898765");
+        signatories.add(hans.getEmail());
     }
 
     /**
@@ -65,7 +66,7 @@ public class QueryHandler {
                     scanner.close();
                     return DEFAULT_EXIT;
                 case "import":
-                    importDocEnv(input);
+                    importDoc(input);
                     break;
                 case "sign":
                     sign(input);
@@ -73,8 +74,11 @@ public class QueryHandler {
                 case "server":
                     SpringApplication.run(ELSA.class, args);
                     break;
-                case "list":
-                    list();
+                case "add":
+                    add(input);
+                    break;
+                case "remove":
+                    remove(input);
                     break;
                 case "envelop":
                     listEnvelop(input);
@@ -86,6 +90,61 @@ public class QueryHandler {
                     System.out.println("Unknown command");
                     break;
             }
+        }
+    }
+
+    /**
+     * Adds one or more documents into an envelop.
+     * @param input the command line input containing a name and the paths of the documents.
+     */
+    private void add(final String... input) {
+        if (input.length >= INPUT_THREE) {
+            for (final Envelop envelop : envelopList) {
+                if (envelop.getName().equals(input[1])) {
+                    final Map<String, List<String>> map = new HashMap<>();
+                    final List<String> inputList = Arrays.asList(input).subList(2, input.length);
+                    for (final String currentInput : inputList) {
+                        map.put(currentInput, signatories);
+                    }
+                    final List<Document> documentList = documentCreator.convertPathsToDocuments(map);
+                    for (final Document document : documentList) {
+                        envelop.addDocument(document);
+                        System.out.println("added " + document.getDocumentTitle() + " to " + envelop.getName());
+                    }
+                } else {
+                    System.out.println(input[1] + NOT_EXISTS);
+                }
+            }
+        } else {
+            System.out.println("parameters invalid. Try add <envelop name> <paths>.");
+        }
+    }
+
+    /**
+     * Removes one or more documents from an envelop.
+     * @param input the command line input containing a name and the paths of the documents.
+     */
+    private void remove(final String... input) {
+        if (input.length >= INPUT_THREE) {
+            for (final Envelop envelop : envelopList) {
+                if (envelop.getName().equals(input[1])) {
+                    final List<String> inputList = Arrays.asList(input).subList(2, input.length);
+                    for (final String currentInput : inputList) {
+                        final List<Document> documentList = new ArrayList<>(envelop.getDocumentList());
+                        for (final Document document : documentList) {
+                            if (currentInput.equals(document.getDocumentTitle())) {
+                                envelop.removeDocument(envelop.getDocumentList().indexOf(document));
+                                System.out.println("removed " + document.getDocumentTitle()
+                                                    + " from " + envelop.getName());
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println(input[1] + NOT_EXISTS);
+                }
+            }
+        } else {
+            System.out.println("parameters invalid. Try remove <envelop name> <names>.");
         }
     }
 
@@ -117,26 +176,26 @@ public class QueryHandler {
             }
         }
         if (!seenDocument) {
-            System.out.printf("The Document %s wasn't found.%n", input[1]);
+            System.out.printf(DOCUMENT_NOT_FOUND, input[1]);
         }
     }
 
     /**
-     * The importDocEnv method decides whether a single document or
-     * an envelop should be imported and calls the responding import methods.
-     *
+     * The importDoc method creates an envelop from the specified paths.
      * @param input the the path(s) of the file(s) to be imported.
      */
-    private void importDocEnv(final String... input) {
+    private void importDoc(final String... input) {
         if (input.length > 1) {
-            final File file = new File(input[1]);
-            if (file.exists() && file.isFile() && input.length == 2) {
-                importDoc(input);
-            } else if (file.isDirectory() || input.length > 2) {
-                importEnv(input);
-            } else {
-                System.out.println("document not found");
+            System.out.print("Type in the name of the envelop: ");
+            final String name = getInput();
+            final Map<String, List<String>> map = new HashMap<>();
+            final List<String> inputList = Arrays.asList(input).subList(1, input.length);
+            for (final String currentInput : inputList) {
+                map.put(currentInput, signatories);
+
             }
+            final Envelop envelop = documentCreator.createEnvelop(name, documentCreator.convertPathsToDocuments(map));
+            envelopList.add(envelop);
         } else {
             System.out.println("no path specified. Use import <path>");
         }
@@ -144,60 +203,19 @@ public class QueryHandler {
     }
 
     /**
-     * The importEnv method is responsible for creating an envelop
-     * from a given path and adding it to the envelop list.
-     *
-     * @param input the the path(s) of the file(s) to be imported.
-     */
-    private void importEnv(final String... input) {
-        Envelop envelop;
-        try {
-            if (input.length > 2) {
-                System.out.println("Type in the name of the envelop: ");
-                final String name = getInput();
-                envelop = new Envelop(name, Arrays.asList(input).subList(1, input.length));
-                envelopList.add(envelop);
-            } else {
-                envelop = new Envelop(input[1]);
-                envelopList.add(envelop);
-            }
-        } catch (IOException e) {
-            System.out.println("Some paths were invalid.");
-        }
-    }
-
-    /**
-     * The importDoc method is responsible for creating a document
-     * from a given path and adding it to the document list.
-     *
-     * @param input the path(s) of the file(s) to be imported.
-     */
-    private void importDoc(final String... input) {
-        Document document;
-        try {
-            final ArrayList<String> signatories = new ArrayList<>();
-            signatories.add(hans.getEmail());
-            document = new Document(input[1], signatories);
-            final String title = document.getDocumentMetaData().getMetaDocumentTitle();
-            System.out.println("import of " + title + " successful.");
-            documentList.add(document);
-        } catch (IOException e) {
-            System.out.println("invalid path");
-        }
-    }
-
-    /**
      * The help method prints out the necessary information about
      * how the command line inputs work.
      */
     private void help() {
-        System.out.println("exit              -terminates the programm");
-        System.out.println("import <path>     -imports a document or an envelop");
-        System.out.println("sign <name>          -signs a document");
-        System.out.println("server            -starts the server");
-        System.out.println("list              -lists all imported documents and envelops");
-        System.out.println("envelop <name>    -lists all documents of the specified envelop");
+        System.out.println("exit                               -terminates the programm");
+        System.out.println("import <path>                      -imports a document or an envelop");
+        System.out.println("sign <name>                        -signs a document");
+        System.out.println("server                             -starts the server");
+        System.out.println("list                               -lists all imported documents and envelops");
+        System.out.println("envelop <name>                     -lists all documents of the specified envelop");
         System.out.println("setSignatureType <name> <value>    -sets the Signature type, value: 0: simple 1: advanced");
+        System.out.println("add <envelop name> <paths>         -adds documents in an existing envelop.");
+        System.out.println("remove <envelop name> <names>      -removes documents from an existing envelop.");
     }
 
     /**
@@ -210,31 +228,25 @@ public class QueryHandler {
         return line;
     }
 
-    private void list() {
-        System.out.println("Imported Documents: ");
-        for (final Document document : documentList) {
-            System.out.print(document.getDocumentMetaData().getMetaDocumentTitle() + ".");
-            System.out.println(document.getDocumentType());
-        }
-        System.out.println("Imported Envelops: ");
-        for (final Envelop envelop : envelopList) {
-            System.out.println(envelop.getName());
-        }
-    }
-
     /**
      * The listEnvelop method lists all documents of an envelop in order.
      *
      * @param input the inputs which contains the name of the envelop to be listed.
      */
     private void listEnvelop(final String... input) {
-        System.out.println("listing documents of envelop " + input[1]);
-        for (final Envelop envelop : envelopList) {
-            if (envelop.getName().equals(input[1])) {
-                for (final Document document : envelop) {
-                    System.out.println(document.getDocumentMetaData().getMetaDocumentTitle());
+        if (input.length > 1) {
+            System.out.println("listing documents of envelop " + input[1]);
+            for (final Envelop envelop : envelopList) {
+                if (envelop.getName().equals(input[1])) {
+                    int counter = 0;
+                    for (final Document document : envelop) {
+                        System.out.println(counter + ". " + document.getDocumentTitle());
+                        counter++;
+                    }
                 }
             }
+        } else {
+            System.out.println("envelop name needs to be specified.");
         }
     }
 
@@ -262,10 +274,9 @@ public class QueryHandler {
             }
         }
         if (!seenDocument) {
-            System.out.printf("The Document %s wasn't found.%n", input[1]);
+            System.out.printf(DOCUMENT_NOT_FOUND, input[1]);
         }
     }
-
 
     public List<Document> getDocumentList() {
         return documentList;
