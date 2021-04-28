@@ -1,15 +1,15 @@
 <template>
-    <div id="app">
-        <router-view></router-view>
+    <div>
+        {{$t('TestPage.message')}}
     </div>
 </template>
 
 <script>
-
 export default {
-    name: 'App'
+    name: "TestPage"
 }
 </script>
 
-<style>
+<style scoped>
+
 </style>

@@ -23,5 +23,15 @@ module.exports = {
     /*     Change build paths to make them Maven compatible
          see https://cli.vuejs.org/config/*/
     outputDir: 'target/classes/public',
-    assetsDir: 'static'
+
+    assetsDir: 'static',
+
+    pluginOptions: {
+      i18n: {
+        locale: 'de',
+        fallbackLocale: 'en',
+        localeDir: 'locales',
+        enableInSFC: false
+      }
+    }
 };
