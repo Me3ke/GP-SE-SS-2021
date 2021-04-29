@@ -16,7 +16,9 @@
     text-align: center;
     color: var(--dark-grey);
     background-color: whitesmoke;
-    margin-top: 60px;
+    margin-top: 1vw;
+    margin-left: 0.066vw;
+    margin-right: 0.066vw;
 }
 
 
@@ -24,36 +26,36 @@
 .dark-btn {
     background-color: var(--dark-grey);
     color: whitesmoke;
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
-    border-radius: 5px;
-    width: 210px;
-    height: 65px;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+    width: 14vw;
+    height: 4.33vw;
 }
 
 .dark-btn:focus {
     background-color: var(--dark-grey);
     color: whitesmoke;
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
 .light-btn {
     background-color: whitesmoke;
     color: var(--dark-grey);
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
-    border-radius: 5px;
-    width: 210px;
-    height: 65px;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+    width: 14vw;
+    height: 4.33vw;
 }
 
 .light-btn:focus {
     background-color: whitesmoke;
     color: var(--dark-grey);
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
@@ -66,36 +68,36 @@
 .elsa-blue-btn {
     background-color: var(--elsa-blue);
     color: whitesmoke;
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
-    border-radius: 5px;
-    width: 210px;
-    height: 65px;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+    width: 14vw;
+    height: 4.33vw;
 }
 
 .elsa-blue-btn:focus {
     background-color: var(--elsa-blue);
     color: whitesmoke;
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
 .green-btn {
     background-color: var(--green);
     color: var(--light-grey);
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
-    border-radius: 5px;
-    width: 210px;
-    height: 65px;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+    width: 14vw;
+    height: 4.33vw;
 }
 
 .green-btn:focus {
     background-color: var(--green);
     color: var(--light-grey);
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
@@ -117,36 +119,36 @@
 .active-filter {
     background-color: var(--dark-grey);
     color: whitesmoke;
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
     border-radius: 70px;
-    width: 160px;
-    height: 45px;
+    width: 10.66vw;
+    height: 2.99vw;
 }
 
 .active-filter:focus {
     background-color: var(--dark-grey);
     color: whitesmoke;
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
 .inactive-filter {
     background-color: whitesmoke;
     color: var(--dark-grey);
-    box-shadow: 0 3px 5px var(--shadow-grey);
-    border: 2px solid var(--dark-grey);
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.13vw solid var(--dark-grey);
     border-radius: 70px;
-    width: 160px;
-    height: 45px;
+    width: 10.66vw;
+    height: 2.99vw;
 }
 
 .inactive-filter:focus {
     background-color: whitesmoke;
     color: var(--dark-grey);
-    border: 2px solid var(--dark-grey);
-    outline: 1px solid var(--light-grey);
+    border: 0.13vw solid var(--dark-grey);
+    outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
 
