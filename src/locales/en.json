@@ -1,6 +1,7 @@
 {
-  "TestPage":{
-      "message": "Hello! This is a test!",
-      "btn": "Button"
-  }
+    "TestPage": {
+        "message": "Hello! This is a test!",
+        "btn": "Button",
+        "heading": "Heading"
+    }
 }

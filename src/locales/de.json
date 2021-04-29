@@ -1,6 +1,7 @@
 {
-    "TestPage":{
+    "TestPage": {
         "message": "Hallo! Das ist ein Test!",
-        "btn": "Knopf"
+        "btn": "Knopf",
+        "heading": "Ueberschrift"
     }
 }
