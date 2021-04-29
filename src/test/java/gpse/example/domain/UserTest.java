@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
 
+    /*
+
     @Nested
     public class AddingRole {
 
@@ -80,4 +82,5 @@ class UserTest {
         final byte[] returnValue = user.advancedSign(hash);
         assertNotNull(returnValue);
     }
+     */
 }

@@ -11,9 +11,6 @@ import java.util.*;
  * getting the responding actions done.
  */
 public class QueryHandler {
-    //TODO: !!! NICHT HARDCODED !!! guckt euch mal Apache !CommonsCLI!
-    // oder picocli oder args4j an bitte, das hier wird schnell zu komplex
-    //TODO: !Unit Tests!
 
 
     private static final int DEFAULT_EXIT = 100;
@@ -30,8 +27,7 @@ public class QueryHandler {
     private Scanner scanner;
     private final User hans;
     private final DocumentCreator documentCreator;
-    //changed to global because of integration in all methods.
-    private final List<String> signatories;
+    private final List<Signatory> signatories;
 
     /**
      * the standard constructor for the QueryHandler.
@@ -42,7 +38,7 @@ public class QueryHandler {
         signatories = new ArrayList<>();
         documentCreator = new DocumentCreator();
         hans = new User("emailadresse@email.de", "Hans", "Schneider", "1234567898765");
-        signatories.add(hans.getEmail());
+        signatories.add(new Signatory(null, hans));
     }
 
     /**
@@ -101,13 +97,13 @@ public class QueryHandler {
         if (input.length >= INPUT_THREE) {
             for (final Envelop envelop : envelopList) {
                 if (envelop.getName().equals(input[1])) {
-                    final Map<String, List<String>> map = new HashMap<>();
+                    final Map<String, List<Signatory>> map = new HashMap<>();
                     final List<String> inputList = Arrays.asList(input).subList(2, input.length);
                     for (final String currentInput : inputList) {
                         map.put(currentInput, signatories);
                     }
-                    final List<Document> documentList = documentCreator.convertPathsToDocuments(map);
-                    for (final Document document : documentList) {
+                    final Envelop temporaryEnvelop = documentCreator.convertPathsToDocuments(map, "");
+                    for (final Document document : temporaryEnvelop.getDocumentList()) {
                         envelop.addDocument(document);
                         System.out.println("added " + document.getDocumentTitle() + " to " + envelop.getName());
                     }
@@ -132,7 +128,9 @@ public class QueryHandler {
                     for (final String currentInput : inputList) {
                         final List<Document> documentList = new ArrayList<>(envelop.getDocumentList());
                         for (final Document document : documentList) {
-                            if (currentInput.equals(document.getDocumentTitle())) {
+                            if (currentInput.equals(document.getDocumentTitle())
+                                || currentInput.equals(document.getDocumentTitle()
+                                .concat(document.getDocumentType()))) {
                                 envelop.removeDocument(envelop.getDocumentList().indexOf(document));
                                 System.out.println("removed " + document.getDocumentTitle()
                                                     + " from " + envelop.getName());
@@ -153,7 +151,9 @@ public class QueryHandler {
      *
      * @param input the input.
      */
+    //TODO
     private void sign(final String... input) {
+        /*
         boolean seenDocument = false;
         final int validInputLength = 2;
         if (input.length != validInputLength) {
@@ -178,6 +178,8 @@ public class QueryHandler {
         if (!seenDocument) {
             System.out.printf(DOCUMENT_NOT_FOUND, input[1]);
         }
+
+         */
     }
 
     /**
@@ -188,13 +190,13 @@ public class QueryHandler {
         if (input.length > 1) {
             System.out.print("Type in the name of the envelop: ");
             final String name = getInput();
-            final Map<String, List<String>> map = new HashMap<>();
+            final Map<String, List<Signatory>> map = new HashMap<>();
             final List<String> inputList = Arrays.asList(input).subList(1, input.length);
             for (final String currentInput : inputList) {
                 map.put(currentInput, signatories);
 
             }
-            final Envelop envelop = documentCreator.createEnvelop(name, documentCreator.convertPathsToDocuments(map));
+            final Envelop envelop = documentCreator.convertPathsToDocuments(map, name);
             envelopList.add(envelop);
         } else {
             System.out.println("no path specified. Use import <path>");
@@ -211,7 +213,6 @@ public class QueryHandler {
         System.out.println("import <path>                      -imports a document or an envelop");
         System.out.println("sign <name>                        -signs a document");
         System.out.println("server                             -starts the server");
-        System.out.println("list                               -lists all imported documents and envelops");
         System.out.println("envelop <name>                     -lists all documents of the specified envelop");
         System.out.println("setSignatureType <name> <value>    -sets the Signature type, value: 0: simple 1: advanced");
         System.out.println("add <envelop name> <paths>         -adds documents in an existing envelop.");
@@ -246,7 +247,10 @@ public class QueryHandler {
                 }
             }
         } else {
-            System.out.println("envelop name needs to be specified.");
+            System.out.println("These envelops exist:");
+            for (final Envelop envelop : envelopList) {
+                System.out.println(envelop.getName());
+            }
         }
     }
 

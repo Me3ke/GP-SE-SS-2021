@@ -14,16 +14,16 @@ public class DocumentCreator {
      * uses the recursive directoryToDocuments method to create files from
      * these and all (sub-)directories.
      * @param associateSignatories a map which maps the paths to a list of signatories.
-     * @return returns the list of all instantiated Documents.
+     * @return returns an envelop.
      */
-    public List<Document> convertPathsToDocuments(final Map<String, List<String>> associateSignatories) {
+    public Envelop convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, String name) {
         final List<Document> documentList = new ArrayList<>();
         try {
             final Set<String> keys = new HashSet<>(associateSignatories.keySet());
             for (final String path : keys) {
                 final File file = new File(path);
                 if (file.isDirectory()) {
-                    final List<String> signatories = associateSignatories.get(file.getPath());
+                    final List<Signatory> signatories = associateSignatories.get(file.getPath());
                     associateSignatories.remove(file.getPath());
                     documentList.addAll(directoryToDocuments(file, signatories));
                 } else {
@@ -34,19 +34,7 @@ public class DocumentCreator {
         } catch (IOException e) {
             System.out.println("path invalid.");
         }
-        return documentList;
-    }
-
-    /**
-     * The create envelop methods creates an envelop from a given name and
-     * a list of all documents to be in the envelop.
-     * @param name the name of the envelop.
-     * @param documentList the list which contains the documents to be in the envelop.
-     * @return the instantiated envelop.
-     */
-    public Envelop createEnvelop(final String name, final List<Document> documentList) {
-        final Envelop envelop = new Envelop(name, documentList);
-        return envelop;
+        return new Envelop(name, documentList);
     }
 
     /**
@@ -58,7 +46,7 @@ public class DocumentCreator {
      * @throws IOException if a path was invalid.
      */
     private List<Document> directoryToDocuments(final File directory,
-                                                final List<String> associatedSig) throws IOException {
+                                                final List<Signatory> associatedSig) throws IOException {
         final List<Document> directoryFileList = new ArrayList<>();
         final List<File> directoryFiles = Arrays.asList(directory.listFiles().clone());
         for (final File directoryFile : directoryFiles) {

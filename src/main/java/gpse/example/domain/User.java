@@ -22,23 +22,14 @@ public class User implements UserDetails {
     private static final long serialVersionUID = -8161342821150699353L;
     private static final int KEY_SIZE = 2048;
     private static final String SIGNING_ALGORITHM = "SHA256withRSA";
+    private PersonalData personalData;
     private String email;
     private String firstname;
     private String lastname;
+    private List<KeyPair> keys = new ArrayList<>();
     private String password;
-    private String street;
-    private int houseNumber;
-    private int postCode;
-    private int phoneNumber;
-    private String homeTown;
-    private String country;
-    private LocalDate birthday;
-    private KeyPair activeKeyPair;
-    private PrivateKey activePrivate;
-    private List<KeyPair> keyPairs = new ArrayList<>();
-
-    //Todo: Maybe add a role interface for more specific elements in the list.
-    private List<String> roles;
+    private KeyPair activePair;
+    private boolean admin;
 
     public User() {
 
@@ -57,8 +48,6 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
-        this.roles = new ArrayList<>();
-        newKeypair();
     }
 
     /**
@@ -72,34 +61,20 @@ public class User implements UserDetails {
      * @param birthday    the birthday of the user
      * @param phoneNumber the phoneNumber of the user
      */
-    public void addVoluntaryInformation(final String street, final int houseNumber, final int postCode,
+    public void setPersonalData(final String street, final int houseNumber, final int postCode,
                                         final String homeTown, final String country, final LocalDate birthday,
                                         final int phoneNumber) {
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.postCode = postCode;
-        this.homeTown = homeTown;
-        this.country = country;
-        this.birthday = birthday;
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * The method used to give a user another role.
-     *
-     * @param newRole the role that needs to be added
-     */
-    public void addRole(final String newRole) {
-        if (!this.roles.contains(newRole)) {
-            this.roles.add(newRole);
-        }
+        final PersonalData personalData = new PersonalData (street, houseNumber, postCode, homeTown,
+                                                        country, birthday, phoneNumber);
     }
 
     /**
      * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
      * the new ones.
      */
-    private void newKeypair() {
+    //TODO
+    private void addKeyPair(String pathToPrivate, PublicKey publicKey) {
+        /*
         try {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(KEY_SIZE);
@@ -114,23 +89,23 @@ public class User implements UserDetails {
         } catch (NoSuchAlgorithmException exception) {
             System.out.println(exception.getMessage());
         }
-    }
 
-    //newKeyPair needs private access, but in future we probably need the function publicly available.
-    public void generateKeyPair() {
-        newKeypair();
+         */
     }
 
     /**
      * the Method used to change the active key-pair to an existing one.
      * @param index the id of the new active key-pair
      */
+    //TODO
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
+        /*
         if (index < keyPairs.size()) {
             activeKeyPair = keyPairs.get(index);
             activePrivate = activeKeyPair.getPrivate();
         }
+         */
     }
 
     /**
@@ -138,6 +113,8 @@ public class User implements UserDetails {
      * @param hash the id of the document that needs a signature
      * @return the signature represented by a byte list
      */
+    //no private Key in backend -> delete
+    /*
     public byte[] advancedSign(final String hash) {
         byte[] signature = null;
         try {
@@ -151,21 +128,18 @@ public class User implements UserDetails {
         return signature;
     }
 
-    /**
-     * The method used to take a role from a user.
-     *
-     * @param delRole the role that should be taken from the user
      */
-    public void deleteRole(final String delRole) {
-        if (this.roles.contains(delRole)) {
-            this.roles.remove(delRole);
-        }
-    }
 
+
+    //TODO
     // Methods that are required for using the interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        /*
         return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
+
+         */
+        return null;
     }
 
     @Override
@@ -197,8 +171,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    // getter and setter for all the variables that describe the user
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -232,83 +204,4 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(final String street) {
-        this.street = street;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(final int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public int getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(final int postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getHomeTown() {
-        return homeTown;
-    }
-
-    public void setHomeTown(final String homeTown) {
-        this.homeTown = homeTown;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(final String country) {
-        this.country = country;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(final LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(final int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * getter for all public keys.
-     * @return all public keys associated with this user
-     */
-    public PublicKey[] getAllPublicKeys() {
-        PublicKey[] keys = new PublicKey[keyPairs.size()];
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = keyPairs.get(i).getPublic();
-        }
-        return keys;
-    }
-
-    public KeyPair getActiveKeyPair() {
-        return activeKeyPair;
-    }
-
-    public List<KeyPair> getKeyPairs() {
-        return keyPairs;
-    }
 }

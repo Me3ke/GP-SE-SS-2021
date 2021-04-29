@@ -1,6 +1,10 @@
 package gpse.example.domain;
 
+import java.nio.file.attribute.FileTime;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -10,15 +14,13 @@ import java.util.Objects;
  * @since 04-13-2021
  */
 public class DocumentMetaData {
-    private final String metaUserID;
-    //TODO: optional: make UserIdentifier an class
+    //TODO change to localDateTime
     private final Timestamp metaTimeStampUpload;
     private final String metaDocumentTitle;
     private String identifier;
-    //TODO: optional: make DocumentIdentifier an class
-    private String creationDate;
-    private String lastModified;
-    private String lastAccess;
+    private LocalDateTime creationDate;
+    private LocalDateTime lastModified;
+    private LocalDateTime lastAccess;
     private long size;
 
     /**
@@ -30,16 +32,13 @@ public class DocumentMetaData {
      */
     public DocumentMetaData(final String metaUserID, final Timestamp metaTimeStampUpload,
                             final String metaDocumentTitle) {
-        this.metaUserID = metaUserID;
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
-        generateHashString();
     }
 
     /**
      * The constructor responsible for instancing meta data with an existing identifier.
      *
-     * @param metaUserID          the String containing the user id
      * @param metaTimeStampUpload the Timestamp created during the upload
      * @param metaDocumentTitle   the document file name
      * @param creationDate        the date of creation of the document
@@ -47,22 +46,31 @@ public class DocumentMetaData {
      * @param lastAccess          the date of last access on the document
      * @param size                the size of the document
      */
-    public DocumentMetaData(final String metaUserID, final Timestamp metaTimeStampUpload,
-                            final String metaDocumentTitle, final String creationDate, final String lastModified,
-                            final String lastAccess, final long size) {
-        this.metaUserID = metaUserID;
+    public DocumentMetaData(final Timestamp metaTimeStampUpload, final String metaDocumentTitle,
+                            final FileTime creationDate, final FileTime lastModified,
+                            final FileTime lastAccess, final long size) {
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
-        this.creationDate = creationDate;
-        this.lastModified = lastModified;
-        this.lastAccess = lastAccess;
+        this.creationDate = formatDateTime(creationDate);
+        this.lastModified = formatDateTime(lastModified);
+        this.lastAccess = formatDateTime(lastAccess);
         this.size = size;
-        generateHashString();
+        final HashSHA hashSHA = new HashSHA();
+        this.identifier = hashSHA.computeHash( metaTimeStampUpload.toString() + metaDocumentTitle);
     }
 
-    private void generateHashString() {
-        final HashSHA hashSHA = new HashSHA();
-        this.identifier = hashSHA.computeHash(metaUserID + metaTimeStampUpload.toString() + metaDocumentTitle);
+    /**
+     * The formatDateTime methods converts the file times to a more readable format.
+     *
+     * @param fileTime the file time.
+     * @return returns a String of the time in a new format.
+     */
+    private LocalDateTime formatDateTime(final FileTime fileTime) {
+        final LocalDateTime localDateTime = fileTime
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime();
+        return localDateTime;
     }
 
     /**
@@ -79,14 +87,9 @@ public class DocumentMetaData {
             return false;
         }
         final DocumentMetaData that = (DocumentMetaData) object;
-        return Objects.equals(metaUserID, that.metaUserID)
-            && Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
+        return Objects.equals(metaTimeStampUpload, that.metaTimeStampUpload)
             && Objects.equals(metaDocumentTitle, that.metaDocumentTitle)
             && Objects.equals(identifier, that.identifier);
-    }
-
-    public String getMetaUserID() {
-        return metaUserID;
     }
 
     public Timestamp getMetaTimeStampUpload() {
@@ -101,15 +104,15 @@ public class DocumentMetaData {
         return identifier;
     }
 
-    public String getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public String getLastModified() {
+    public LocalDateTime getLastModified() {
         return lastModified;
     }
 
-    public String getLastAccess() {
+    public LocalDateTime getLastAccess() {
         return lastAccess;
     }
 

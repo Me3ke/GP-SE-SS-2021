@@ -19,17 +19,8 @@ class DocumentTest {
 
     @Nested
     public class DocumentData {
+        /*
 
-        @Test
-        public void testDocumentID() {
-            Document document = null;
-            try {
-                document = new Document(PATH, null);
-            } catch (IOException e) {
-                System.out.println();
-            }
-            Assertions.assertThat(document.getDocumentID()).isEqualTo(ID_TEST);
-        }
 
         @Test
         public void testDocumentTitle() {
@@ -175,6 +166,7 @@ class DocumentTest {
                 && document.getAdvancedSignatures().containsKey(user.getEMAIL()));
         }*/
 
+        /*
         @Test
         public void userIsNotSignatory() {
             final Document document = new Document();

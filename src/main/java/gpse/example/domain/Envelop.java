@@ -15,6 +15,7 @@ public class Envelop implements Iterable<Document> {
      * The name of the envelop.
      * The envelopFile which the envelop as a directory.
      */
+    private User Owner;
     private List<Document> documentList = new ArrayList<>();
     private String name;
 
@@ -26,6 +27,7 @@ public class Envelop implements Iterable<Document> {
      */
     public Envelop(final String name, final List<Document> documents) {
         this.name = name;
+        //TODO owner erhalten
         for (final Document document : documents) {
             this.documentList.add(document);
         }
