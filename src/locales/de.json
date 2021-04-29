@@ -3,5 +3,8 @@
         "message": "Hallo! Das ist ein Test!",
         "btn": "Knopf",
         "heading": "Ueberschrift"
+    },
+    "AboutPage": {
+        "name": "Impressum"
     }
 }

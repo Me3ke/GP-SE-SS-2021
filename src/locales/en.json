@@ -3,5 +3,8 @@
         "message": "Hello! This is a test!",
         "btn": "Button",
         "heading": "Heading"
+    },
+    "AboutPage": {
+        "name": "About us"
     }
 }

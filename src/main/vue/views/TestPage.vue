@@ -15,17 +15,19 @@
             <b-button class="active-filter">{{ $t('TestPage.btn') }}</b-button>
             <b-button class="inactive-filter">{{ $t('TestPage.btn') }}</b-button>
         </div>
-
-
+        <Footer style="position: fixed; margin-top: 47vw"></Footer>
     </div>
 </template>
 
 <script>
+import Footer from "@/main/vue/components/Footer";
+
 export default {
-    name: "TestPage"
+    name: "TestPage",
+    components: {Footer}
 }
 </script>
 
 <style scoped>
-
 </style>
+.
