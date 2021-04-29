@@ -1,5 +1,6 @@
 {
     "TestPage":{
-        "message": "Hallo! Das ist ein Test!"
+        "message": "Hallo! Das ist ein Test!",
+        "btn": "Knopf"
     }
 }

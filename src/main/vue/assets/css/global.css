@@ -1,0 +1,164 @@
+/* Global Variables */
+:root {
+    --dark-grey: #47525E;
+    --elsa-blue: #436495;
+    --light-grey: #D8D8D9;
+    --shadow-grey: #ACACAC;
+    --green: #5D9543;
+}
+
+
+/* App Settings */
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: var(--dark-grey);
+    background-color: whitesmoke;
+    margin-top: 60px;
+}
+
+
+/* Buttons */
+.dark-btn {
+    background-color: var(--dark-grey);
+    color: whitesmoke;
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 5px;
+    width: 210px;
+    height: 65px;
+}
+
+.dark-btn:focus {
+    background-color: var(--dark-grey);
+    color: whitesmoke;
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.light-btn {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 5px;
+    width: 210px;
+    height: 65px;
+}
+
+.light-btn:focus {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.dark-btn:hover, .light-btn:hover {
+    background-color: var(--elsa-blue);
+    color: whitesmoke;
+    transition-duration: 0.4s;
+}
+
+.elsa-blue-btn {
+    background-color: var(--elsa-blue);
+    color: whitesmoke;
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 5px;
+    width: 210px;
+    height: 65px;
+}
+
+.elsa-blue-btn:focus {
+    background-color: var(--elsa-blue);
+    color: whitesmoke;
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.green-btn {
+    background-color: var(--green);
+    color: var(--light-grey);
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 5px;
+    width: 210px;
+    height: 65px;
+}
+
+.green-btn:focus {
+    background-color: var(--green);
+    color: var(--light-grey);
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.elsa-blue-btn:hover:enabled, .green-btn:hover:enabled {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    transition-duration: 0.4s;
+}
+
+.dark-btn:disabled, .light-btn:disabled, .elsa-blue-btn:disabled, .green-btn:disabled {
+    color: var(--light-grey);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Filter Buttons*/
+
+.active-filter {
+    background-color: var(--dark-grey);
+    color: whitesmoke;
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 70px;
+    width: 160px;
+    height: 45px;
+}
+
+.active-filter:focus {
+    background-color: var(--dark-grey);
+    color: whitesmoke;
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.inactive-filter {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    box-shadow: 0 3px 5px var(--shadow-grey);
+    border: 2px solid var(--dark-grey);
+    border-radius: 70px;
+    width: 160px;
+    height: 45px;
+}
+
+.inactive-filter:focus {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    border: 2px solid var(--dark-grey);
+    outline: 1px solid var(--light-grey);
+    outline-offset: 0;
+}
+
+.active-filter:hover:enabled {
+    background-color: whitesmoke;
+    color: var(--dark-grey);
+    transition-duration: 0.4s;
+}
+
+.inactive-filter:hover:enabled {
+    background-color: var(--dark-grey);
+    color: whitesmoke;
+    transition-duration: 0.4s;
+}
+
