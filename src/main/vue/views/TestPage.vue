@@ -1,8 +1,9 @@
 <template>
-    <div style="position:relative">
+    <div>
+        <Header></Header>
         <!-- To use translation for props, type in the string which would be inside of $t() as a prop -->
         <BaseHeading name="TestPage.heading"></BaseHeading>
-        <div style="position: fixed; margin-top: 50px; margin-left: 50px">
+        <div style="position: relative; margin-top: 7vw;">
             {{ $t('TestPage.message') }}
             <p>
                 <BaseIcon name="book" color="red" stroke-width="1"></BaseIcon>
@@ -15,16 +16,17 @@
             <b-button class="active-filter">{{ $t('TestPage.btn') }}</b-button>
             <b-button class="inactive-filter">{{ $t('TestPage.btn') }}</b-button>
         </div>
-        <Footer style="position: fixed; margin-top: 47vw"></Footer>
+        <Footer></Footer>
     </div>
 </template>
 
 <script>
 import Footer from "@/main/vue/components/Footer";
+import Header from "@/main/vue/components/Header";
 
 export default {
     name: "TestPage",
-    components: {Footer}
+    components: {Header, Footer}
 }
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-    <div class="container">
-        <BaseIcon name="arrow-left" color="var(--dark-grey)" width="30" height="30" stroke-width="3"
+    <div id="container">
+        <BaseIcon id="icon" name="arrow-left" color="var(--dark-grey)" width="30" height="30" stroke-width="3"
                   @click.native="historyThere()  ? $router.go(-1) : $router.push('/')"></BaseIcon>
-        <h4 class="heading">{{ $t(name) }}</h4>
+        <h4 id="heading">{{ $t(name) }}</h4>
     </div>
 </template>
 
@@ -24,5 +24,23 @@ export default {
 </script>
 
 <style scoped>
-@import '~@/main/vue/assets/css/baseHeading.css';
+
+#container {
+    display: flex;
+    align-items: center;
+    line-height: 2vw;
+    position: fixed;
+    left: 1.33vw;
+    top: 4.7vw;
+}
+
+#heading {
+    font-size: 2vw;
+    vertical-align: middle;
+    line-height: 2vw;
+    display: inline-block;
+    padding-top: 0.33vw;
+    padding-left: 0.33vw;
+}
+
 </style>

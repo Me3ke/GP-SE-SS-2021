@@ -8,6 +8,58 @@
 }
 
 
+/* Global changes */
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    /* CSS in here for mobile only */
+    body {
+        font-size: 3.5vw;
+    }
+
+    h1 {
+        font-size: 10vw;
+    }
+
+    h3 {
+        font-size: 6vw;
+    }
+
+    h6 {
+        font-size: 5vw;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* CSS in here for tablet only */
+    /* To be added by someone who can check how it looks like */
+}
+
+@media (min-width: 1025px) {
+    /* CSS in here for desktop only */
+    body {
+        font-size: 1.2vw;
+    }
+
+    h1 {
+        font-size: 3.2vw;
+    }
+
+    h3 {
+        font-size: 2.3vw;
+    }
+
+    h6 {
+        font-size: 1.7vw;
+    }
+}
+
 /* App Settings */
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -15,10 +67,20 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: var(--dark-grey);
-    background-color: whitesmoke;
-    margin-top: 1vw;
-    margin-left: 0.066vw;
-    margin-right: 0.066vw;
+    margin: 0;
+    padding-bottom: 0;
+    max-width: 100%;
+}
+
+
+/* Router Links */
+.link {
+    color: var(--elsa-blue);
+}
+
+.link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--elsa-blue);
 }
 
 

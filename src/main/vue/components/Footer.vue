@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <router-link :to="`/${$i18n.locale}/about`" class="text">{{ $t('AboutPage.name') }}</router-link>
+    <div id="container">
+        <router-link :to="`/${$i18n.locale}/test-page`" id="text">{{ $t('AboutPage.name') }}</router-link>
     </div>
 </template>
 
@@ -11,16 +11,17 @@ export default {
 </script>
 
 <style scoped>
-.container {
+#container {
     background-color: var(--dark-grey);
     opacity: 65%;
-    box-sizing: border-box;
-    width: 97vw;
-    max-width: 97%;
-    display: block;
+    width: 100%;
+    margin-left: 0;
+    padding-top: 0.2vw;
+    position: fixed;
+    bottom: 0;
 }
 
-.text {
+#text {
     color: whitesmoke;
 }
 </style>

@@ -6,5 +6,17 @@
     },
     "AboutPage": {
         "name": "Impressum"
+    },
+    "NotFoundPage": {
+        "h1": "Ups!",
+        "h3": "Wir konnten die gesuchte Seite nicht finden.",
+        "errorCode": "Fehlercode: 404",
+        "start": "Zurück zur Startseite",
+        "back": "Zurück zur letzten Seite"
+    },
+    "NoConnectionPage": {
+        "h1": "Oh-Oh!",
+        "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
+        "back": "Zurück zur letzten Seite"
     }
 }
