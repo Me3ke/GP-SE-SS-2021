@@ -1,16 +1,50 @@
 package gpse.example.domain;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * the class that should contain all data concerning a user that is not necessarily needed.
+ */
+@Entity
 public class PersonalData {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private long id;
+
+    @Column
     private String street;
+
+    @Column
     private int houseNumber;
+
+    @Column
     private int postCode;
+
+    @Column
     private int phoneNumber;
+
+    @Column
     private String homeTown;
+
+    @Column
     private String country;
+
+    @Column
     private LocalDate birthday;
 
+    /**
+     * the standard constructor for personal data.
+     * @param street
+     * @param houseNumber
+     * @param postCode
+     * @param homeTown
+     * @param country
+     * @param birthday
+     * @param phoneNumber
+     */
     public PersonalData(final String street, final int houseNumber, final int postCode,
                         final String homeTown, final String country, final LocalDate birthday,
                         final int phoneNumber) {
@@ -23,11 +57,15 @@ public class PersonalData {
         this.birthday = birthday;
     }
 
+    protected PersonalData() {
+
+    }
+
     public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(final String street) {
         this.street = street;
     }
 
@@ -35,7 +73,7 @@ public class PersonalData {
         return houseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
+    public void setHouseNumber(final int houseNumber) {
         this.houseNumber = houseNumber;
     }
 
@@ -43,7 +81,7 @@ public class PersonalData {
         return postCode;
     }
 
-    public void setPostCode(int postCode) {
+    public void setPostCode(final int postCode) {
         this.postCode = postCode;
     }
 
@@ -51,7 +89,7 @@ public class PersonalData {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(final int phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -59,7 +97,7 @@ public class PersonalData {
         return homeTown;
     }
 
-    public void setHomeTown(String homeTown) {
+    public void setHomeTown(final String homeTown) {
         this.homeTown = homeTown;
     }
 
@@ -67,7 +105,7 @@ public class PersonalData {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(final String country) {
         this.country = country;
     }
 
@@ -75,7 +113,7 @@ public class PersonalData {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(final LocalDate birthday) {
         this.birthday = birthday;
     }
 }

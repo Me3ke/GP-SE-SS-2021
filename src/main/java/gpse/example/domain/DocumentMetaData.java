@@ -1,10 +1,11 @@
 package gpse.example.domain;
 
+import javax.persistence.*;
 import java.nio.file.attribute.FileTime;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -13,14 +14,37 @@ import java.util.Objects;
  * @author Jan Kronsbein & Alexander Heide
  * @since 04-13-2021
  */
+@Entity
 public class DocumentMetaData {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private long id;
+
     //TODO change to localDateTime
-    private final Timestamp metaTimeStampUpload;
-    private final String metaDocumentTitle;
+    @Column
+    private Timestamp metaTimeStampUpload;
+
+    @Column
+    private String metaDocumentTitle;
+
+    @Column
+    private String metaUserID;
+
+    @Column
     private String identifier;
+
+    @Column
     private LocalDateTime creationDate;
+
+    @Column
     private LocalDateTime lastModified;
+
+    @Column
     private LocalDateTime lastAccess;
+
+    @Column
     private long size;
 
     /**
@@ -32,8 +56,10 @@ public class DocumentMetaData {
      */
     public DocumentMetaData(final String metaUserID, final Timestamp metaTimeStampUpload,
                             final String metaDocumentTitle) {
+        this.metaUserID = metaUserID;
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
+        generateHashString();
     }
 
     /**
@@ -56,7 +82,12 @@ public class DocumentMetaData {
         this.lastAccess = formatDateTime(lastAccess);
         this.size = size;
         final HashSHA hashSHA = new HashSHA();
-        this.identifier = hashSHA.computeHash( metaTimeStampUpload.toString() + metaDocumentTitle);
+        this.identifier = hashSHA.computeHash(metaTimeStampUpload.toString() + metaDocumentTitle);
+        this.metaUserID = "placeholder";
+    }
+
+    protected DocumentMetaData() {
+
     }
 
     /**
@@ -71,6 +102,11 @@ public class DocumentMetaData {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         return localDateTime;
+    }
+
+    private void generateHashString() {
+        final HashSHA hashSHA = new HashSHA();
+        this.identifier = hashSHA.computeHash(metaUserID + metaTimeStampUpload.toString() + metaDocumentTitle);
     }
 
     /**

@@ -23,7 +23,7 @@ public class QueryHandler {
      * The envelopList contains all imported envelops.
      */
     private final List<Document> documentList;
-    private final List<Envelop> envelopList;
+    private final List<Envelope> envelopeList;
     private Scanner scanner;
     private final User hans;
     private final DocumentCreator documentCreator;
@@ -34,7 +34,7 @@ public class QueryHandler {
      */
     public QueryHandler() {
         documentList = new ArrayList<>();
-        envelopList = new ArrayList<>();
+        envelopeList = new ArrayList<>();
         signatories = new ArrayList<>();
         documentCreator = new DocumentCreator();
         hans = new User("emailadresse@email.de", "Hans", "Schneider", "1234567898765");
@@ -95,17 +95,17 @@ public class QueryHandler {
      */
     private void add(final String... input) {
         if (input.length >= INPUT_THREE) {
-            for (final Envelop envelop : envelopList) {
-                if (envelop.getName().equals(input[1])) {
+            for (final Envelope envelope : envelopeList) {
+                if (envelope.getName().equals(input[1])) {
                     final Map<String, List<Signatory>> map = new HashMap<>();
                     final List<String> inputList = Arrays.asList(input).subList(2, input.length);
                     for (final String currentInput : inputList) {
                         map.put(currentInput, signatories);
                     }
-                    final Envelop temporaryEnvelop = documentCreator.convertPathsToDocuments(map, "");
-                    for (final Document document : temporaryEnvelop.getDocumentList()) {
-                        envelop.addDocument(document);
-                        System.out.println("added " + document.getDocumentTitle() + " to " + envelop.getName());
+                    final Envelope temporaryEnvelope = documentCreator.convertPathsToDocuments(map, "");
+                    for (final Document document : temporaryEnvelope.getDocumentList()) {
+                        envelope.addDocument(document);
+                        System.out.println("added " + document.getDocumentTitle() + " to " + envelope.getName());
                     }
                 } else {
                     System.out.println(input[1] + NOT_EXISTS);
@@ -122,18 +122,18 @@ public class QueryHandler {
      */
     private void remove(final String... input) {
         if (input.length >= INPUT_THREE) {
-            for (final Envelop envelop : envelopList) {
-                if (envelop.getName().equals(input[1])) {
+            for (final Envelope envelope : envelopeList) {
+                if (envelope.getName().equals(input[1])) {
                     final List<String> inputList = Arrays.asList(input).subList(2, input.length);
                     for (final String currentInput : inputList) {
-                        final List<Document> documentList = new ArrayList<>(envelop.getDocumentList());
+                        final List<Document> documentList = new ArrayList<>(envelope.getDocumentList());
                         for (final Document document : documentList) {
                             if (currentInput.equals(document.getDocumentTitle())
                                 || currentInput.equals(document.getDocumentTitle()
                                 .concat(document.getDocumentType()))) {
-                                envelop.removeDocument(envelop.getDocumentList().indexOf(document));
+                                envelope.removeDocument(envelope.getDocumentList().indexOf(document));
                                 System.out.println("removed " + document.getDocumentTitle()
-                                                    + " from " + envelop.getName());
+                                                    + " from " + envelope.getName());
                             }
                         }
                     }
@@ -196,8 +196,8 @@ public class QueryHandler {
                 map.put(currentInput, signatories);
 
             }
-            final Envelop envelop = documentCreator.convertPathsToDocuments(map, name);
-            envelopList.add(envelop);
+            final Envelope envelope = documentCreator.convertPathsToDocuments(map, name);
+            envelopeList.add(envelope);
         } else {
             System.out.println("no path specified. Use import <path>");
         }
@@ -237,10 +237,10 @@ public class QueryHandler {
     private void listEnvelop(final String... input) {
         if (input.length > 1) {
             System.out.println("listing documents of envelop " + input[1]);
-            for (final Envelop envelop : envelopList) {
-                if (envelop.getName().equals(input[1])) {
+            for (final Envelope envelope : envelopeList) {
+                if (envelope.getName().equals(input[1])) {
                     int counter = 0;
-                    for (final Document document : envelop) {
+                    for (final Document document : envelope) {
                         System.out.println(counter + ". " + document.getDocumentTitle());
                         counter++;
                     }
@@ -248,8 +248,8 @@ public class QueryHandler {
             }
         } else {
             System.out.println("These envelops exist:");
-            for (final Envelop envelop : envelopList) {
-                System.out.println(envelop.getName());
+            for (final Envelope envelope : envelopeList) {
+                System.out.println(envelope.getName());
             }
         }
     }
@@ -286,7 +286,7 @@ public class QueryHandler {
         return documentList;
     }
 
-    public List<Envelop> getEnvelopList() {
-        return envelopList;
+    public List<Envelope> getEnvelopList() {
+        return envelopeList;
     }
 }

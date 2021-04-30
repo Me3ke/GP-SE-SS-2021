@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,18 +17,35 @@ import java.util.List;
  * @author Tobias Kröcker & Hannah Schweizer
  * @since 14.04.2021
  */
+
+@Entity
 public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
-    private static final int KEY_SIZE = 2048;
-    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
+
+    @OneToOne
     private PersonalData personalData;
+
+    @Id
+    @Column
     private String email;
+
+    @Column
     private String firstname;
+
+    @Column
     private String lastname;
-    private List<KeyPair> keys = new ArrayList<>();
+
+    @OneToMany
+    private List<Keys> keys = new ArrayList<>();
+
+    @Column
     private String password;
-    private KeyPair activePair;
+
+    @OneToOne
+    private Keys activePair;
+
+    @Column
     private boolean admin;
 
     public User() {
@@ -62,10 +79,10 @@ public class User implements UserDetails {
      * @param phoneNumber the phoneNumber of the user
      */
     public void setPersonalData(final String street, final int houseNumber, final int postCode,
-                                        final String homeTown, final String country, final LocalDate birthday,
-                                        final int phoneNumber) {
-        final PersonalData personalData = new PersonalData (street, houseNumber, postCode, homeTown,
-                                                        country, birthday, phoneNumber);
+                                final String homeTown, final String country, final LocalDate birthday,
+                                final int phoneNumber) {
+        final PersonalData personalData = new PersonalData(street, houseNumber, postCode, homeTown,
+            country, birthday, phoneNumber);
     }
 
     /**
@@ -73,44 +90,28 @@ public class User implements UserDetails {
      * the new ones.
      */
     //TODO
-    private void addKeyPair(String pathToPrivate, PublicKey publicKey) {
-        /*
-        try {
-            final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            generator.initialize(KEY_SIZE);
-            if (activeKeyPair == null) {
-                activeKeyPair = generator.generateKeyPair();
-                keyPairs.add(activeKeyPair);
-                activePrivate = activeKeyPair.getPrivate();
-            } else {
-                keyPairs.add(generator.generateKeyPair());
-                changeActiveKeyPair(keyPairs.size() - 1);
-            }
-        } catch (NoSuchAlgorithmException exception) {
-            System.out.println(exception.getMessage());
+    private void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
+        if (publicKey.getAlgorithm().equals("RSA")) {
+            keys.add(new Keys(publicKey, pathToPrivate));
         }
-
-         */
     }
 
     /**
      * the Method used to change the active key-pair to an existing one.
+     *
      * @param index the id of the new active key-pair
      */
     //TODO
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
-        /*
-        if (index < keyPairs.size()) {
-            activeKeyPair = keyPairs.get(index);
-            activePrivate = activeKeyPair.getPrivate();
+        if (index < keys.size()) {
+            activePair = keys.get(index);
         }
-         */
     }
 
     /**
      * the method used to generate an advanced signature, using the active private key.
-     * @param hash the id of the document that needs a signature
+     *
      * @return the signature represented by a byte list
      */
     //no private Key in backend -> delete
@@ -202,6 +203,10 @@ public class User implements UserDetails {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public PublicKey getPublicKey(final int index) {
+        return keys.get(index).getPublicKey();
     }
 
 }

@@ -14,9 +14,10 @@ public class DocumentCreator {
      * uses the recursive directoryToDocuments method to create files from
      * these and all (sub-)directories.
      * @param associateSignatories a map which maps the paths to a list of signatories.
+     * @param name the name of the envelope that is created in the method
      * @return returns an envelop.
      */
-    public Envelop convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, String name) {
+    public Envelope convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, final String name) {
         final List<Document> documentList = new ArrayList<>();
         try {
             final Set<String> keys = new HashSet<>(associateSignatories.keySet());
@@ -34,7 +35,7 @@ public class DocumentCreator {
         } catch (IOException e) {
             System.out.println("path invalid.");
         }
-        return new Envelop(name, documentList);
+        return new Envelope(name, documentList);
     }
 
     /**
