@@ -37,8 +37,9 @@ public class Envelope implements Iterable<Document> {
      * @param name      The name of the envelop to be created.
      * @param documents the list of documents for the envelop. At least one.
      */
-    public Envelope(final String name, final List<Document> documents) {
+    public Envelope(final String name, final List<Document> documents, final User owner) {
         this.name = name;
+        this.owner = owner;
         //TODO owner erhalten
         for (final Document document : documents) {
             this.documentList.add(document);

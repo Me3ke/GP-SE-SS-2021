@@ -102,7 +102,7 @@ public class QueryHandler {
                     for (final String currentInput : inputList) {
                         map.put(currentInput, signatories);
                     }
-                    final Envelope temporaryEnvelope = documentCreator.convertPathsToDocuments(map, "");
+                    final Envelope temporaryEnvelope = hans.createNewEnvelope(map, " ");
                     for (final Document document : temporaryEnvelope.getDocumentList()) {
                         envelope.addDocument(document);
                         System.out.println("added " + document.getDocumentTitle() + " to " + envelope.getName());
@@ -196,7 +196,7 @@ public class QueryHandler {
                 map.put(currentInput, signatories);
 
             }
-            final Envelope envelope = documentCreator.convertPathsToDocuments(map, name);
+            final Envelope envelope = hans.createNewEnvelope(map, name);
             envelopeList.add(envelope);
         } else {
             System.out.println("no path specified. Use import <path>");

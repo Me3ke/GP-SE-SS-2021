@@ -17,7 +17,8 @@ public class DocumentCreator {
      * @param name the name of the envelope that is created in the method
      * @return returns an envelop.
      */
-    public Envelope convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, final String name) {
+    public Envelope convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, final User owner,
+                                            final String name) {
         final List<Document> documentList = new ArrayList<>();
         try {
             final Set<String> keys = new HashSet<>(associateSignatories.keySet());
@@ -26,16 +27,16 @@ public class DocumentCreator {
                 if (file.isDirectory()) {
                     final List<Signatory> signatories = associateSignatories.get(file.getPath());
                     associateSignatories.remove(file.getPath());
-                    documentList.addAll(directoryToDocuments(file, signatories));
+                    documentList.addAll(directoryToDocuments(file, signatories, owner));
                 } else {
-                    final Document document = new Document(path, associateSignatories.get(path));
+                    final Document document = new Document(path, associateSignatories.get(path), owner.getEmail());
                     documentList.add(document);
                 }
             }
         } catch (IOException e) {
             System.out.println("path invalid.");
         }
-        return new Envelope(name, documentList);
+        return new Envelope(name, documentList, owner);
     }
 
     /**
@@ -47,15 +48,15 @@ public class DocumentCreator {
      * @throws IOException if a path was invalid.
      */
     private List<Document> directoryToDocuments(final File directory,
-                                                final List<Signatory> associatedSig) throws IOException {
+                                                final List<Signatory> associatedSig, User owner) throws IOException {
         final List<Document> directoryFileList = new ArrayList<>();
         final List<File> directoryFiles = Arrays.asList(directory.listFiles().clone());
         for (final File directoryFile : directoryFiles) {
             if (directoryFile.isDirectory()) {
-                final List<Document> directoryList = directoryToDocuments(directoryFile, associatedSig);
+                final List<Document> directoryList = directoryToDocuments(directoryFile, associatedSig, owner);
                 directoryFileList.addAll(directoryList);
             } else {
-                final Document document = new Document(directoryFile.getPath(), associatedSig);
+                final Document document = new Document(directoryFile.getPath(), associatedSig, owner.getEmail());
                 directoryFileList.add(document);
             }
         }

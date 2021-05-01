@@ -24,7 +24,7 @@ public class DocumentMetaData {
 
     //TODO change to localDateTime
     @Column
-    private Timestamp metaTimeStampUpload;
+    private LocalDateTime metaTimeStampUpload;
 
     @Column
     private String metaDocumentTitle;
@@ -48,21 +48,6 @@ public class DocumentMetaData {
     private long size;
 
     /**
-     * The constructor responsible for creating an identifier out of existing meta data.
-     *
-     * @param metaUserID          the String containing the user id
-     * @param metaTimeStampUpload the Timestamp created during the upload
-     * @param metaDocumentTitle   the document file name
-     */
-    public DocumentMetaData(final String metaUserID, final Timestamp metaTimeStampUpload,
-                            final String metaDocumentTitle) {
-        this.metaUserID = metaUserID;
-        this.metaTimeStampUpload = metaTimeStampUpload;
-        this.metaDocumentTitle = metaDocumentTitle;
-        generateHashString();
-    }
-
-    /**
      * The constructor responsible for instancing meta data with an existing identifier.
      *
      * @param metaTimeStampUpload the Timestamp created during the upload
@@ -72,18 +57,17 @@ public class DocumentMetaData {
      * @param lastAccess          the date of last access on the document
      * @param size                the size of the document
      */
-    public DocumentMetaData(final Timestamp metaTimeStampUpload, final String metaDocumentTitle,
+    public DocumentMetaData(final LocalDateTime metaTimeStampUpload, final String metaDocumentTitle,
                             final FileTime creationDate, final FileTime lastModified,
-                            final FileTime lastAccess, final long size) {
+                            final FileTime lastAccess, final long size, final String metaUserID) {
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
         this.creationDate = formatDateTime(creationDate);
         this.lastModified = formatDateTime(lastModified);
         this.lastAccess = formatDateTime(lastAccess);
         this.size = size;
-        final HashSHA hashSHA = new HashSHA();
-        this.identifier = hashSHA.computeHash(metaTimeStampUpload.toString() + metaDocumentTitle);
-        this.metaUserID = "placeholder";
+        this.metaUserID = metaUserID;
+        generateHashString();
     }
 
     protected DocumentMetaData() {
@@ -128,7 +112,7 @@ public class DocumentMetaData {
             && Objects.equals(identifier, that.identifier);
     }
 
-    public Timestamp getMetaTimeStampUpload() {
+    public LocalDateTime getMetaTimeStampUpload() {
         return metaTimeStampUpload;
     }
 

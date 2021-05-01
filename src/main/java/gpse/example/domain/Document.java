@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class Document {
      * @param signatories The list of signatories for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
-    public Document(final String path, final List<Signatory> signatories) throws IOException {
+    public Document(final String path, final List<Signatory> signatories, final String ownerID) throws IOException {
         this.signatories = signatories;
         final Path documentPath = Paths.get(path);
         this.documentFile = new File(path);
@@ -82,8 +83,8 @@ public class Document {
         final String[] filename = documentFile.getName().split("\\.");
         final String title = filename[0];
         this.documentType = filename[1];
-        this.documentMetaData = new DocumentMetaData(new Timestamp(1), title, attr.creationTime(),
-            attr.lastModifiedTime(), attr.lastAccessTime(), attr.size());
+        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), title, attr.creationTime(),
+            attr.lastModifiedTime(), attr.lastAccessTime(), attr.size(), ownerID);
     }
 
     /**

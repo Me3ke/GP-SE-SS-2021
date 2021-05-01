@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The model for a user, responsible for initializing new Users with all the information given by them.
@@ -47,6 +48,9 @@ public class User implements UserDetails {
 
     @Column
     private boolean admin;
+
+    @OneToMany
+    private List<Envelope> myEnvelopes = new ArrayList<>();
 
     public User() {
 
@@ -86,27 +90,31 @@ public class User implements UserDetails {
     }
 
     /**
-     * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
-     * the new ones.
+     * The Method to add a new keyPair to the list of existing ones
      */
-    //TODO
-    private void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
+    public void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
         if (publicKey.getAlgorithm().equals("RSA")) {
             keys.add(new Keys(publicKey, pathToPrivate));
+            changeActiveKeyPair(keys.size() - 1);
         }
     }
 
     /**
      * the Method used to change the active key-pair to an existing one.
-     *
      * @param index the id of the new active key-pair
      */
-    //TODO
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
         if (index < keys.size()) {
             activePair = keys.get(index);
         }
+    }
+
+    public Envelope createNewEnvelope(Map<String, List<Signatory>> paths, String name) {
+        DocumentCreator creator = new DocumentCreator();
+        Envelope envelope = creator.convertPathsToDocuments(paths, this, name);
+        myEnvelopes.add(envelope);
+        return envelope;
     }
 
     /**
@@ -209,4 +217,7 @@ public class User implements UserDetails {
         return keys.get(index).getPublicKey();
     }
 
+    public List<Keys> getKeys() {
+        return keys;
+    }
 }
