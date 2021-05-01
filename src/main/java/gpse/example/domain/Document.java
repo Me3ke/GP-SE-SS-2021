@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +70,7 @@ public class Document {
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
      *
+     * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
      * @param path        The path leading to the file.
      * @param signatories The list of signatories for a document.
      * @throws IOException throws the exception if filepath was invalid.
@@ -99,9 +99,9 @@ public class Document {
     /**
      * the Method to add an advanced signature for a specific user to the document.
      *
-     * @param user the user that signs the document
+     * @param user      the user that signs the document
      * @param signature the signature that has been made
-     * @param index the index of the key the signature has been made with
+     * @param index     the index of the key the signature has been made with
      */
     //TODO
     public void advancedSignature(final String user, final byte[] signature, final int index) {

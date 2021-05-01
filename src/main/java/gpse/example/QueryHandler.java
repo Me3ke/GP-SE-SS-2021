@@ -53,7 +53,7 @@ public class QueryHandler {
         while (true) {
             System.out.print("Input: ");
             final String line = getInput();
-            final String[] input = line.split(" ");
+            final String[] input = line.split("  ");
             switch (input[0]) {
                 case "help":
                     help();
@@ -91,6 +91,7 @@ public class QueryHandler {
 
     /**
      * Adds one or more documents into an envelop.
+     *
      * @param input the command line input containing a name and the paths of the documents.
      */
     private void add(final String... input) {
@@ -118,6 +119,7 @@ public class QueryHandler {
 
     /**
      * Removes one or more documents from an envelop.
+     *
      * @param input the command line input containing a name and the paths of the documents.
      */
     private void remove(final String... input) {
@@ -133,7 +135,7 @@ public class QueryHandler {
                                 .concat(document.getDocumentType()))) {
                                 envelope.removeDocument(envelope.getDocumentList().indexOf(document));
                                 System.out.println("removed " + document.getDocumentTitle()
-                                                    + " from " + envelope.getName());
+                                    + " from " + envelope.getName());
                             }
                         }
                     }
@@ -151,7 +153,6 @@ public class QueryHandler {
      *
      * @param input the input.
      */
-    //TODO
     private void sign(final String... input) {
         /*
         boolean seenDocument = false;
@@ -184,6 +185,7 @@ public class QueryHandler {
 
     /**
      * The importDoc method creates an envelop from the specified paths.
+     *
      * @param input the the path(s) of the file(s) to be imported.
      */
     private void importDoc(final String... input) {

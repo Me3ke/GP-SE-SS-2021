@@ -36,6 +36,7 @@ public class Envelope implements Iterable<Document> {
      *
      * @param name      The name of the envelop to be created.
      * @param documents the list of documents for the envelop. At least one.
+     * @param owner     the owner of this envelope
      */
     public Envelope(final String name, final List<Document> documents, final User owner) {
         this.name = name;
@@ -69,5 +70,9 @@ public class Envelope implements Iterable<Document> {
 
     public String getName() {
         return name;
+    }
+
+    public String getOwnerID() {
+        return owner.getEmail();
     }
 }

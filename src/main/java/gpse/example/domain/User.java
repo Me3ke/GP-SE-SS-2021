@@ -90,7 +90,11 @@ public class User implements UserDetails {
     }
 
     /**
-     * The Method to add a new keyPair to the list of existing ones
+     * The Method to add a new keyPair to the list of existing ones.
+     *
+     * @param pathToPrivate a filePath referring to the file of the private key that relates to the public key that
+     *                      should be stored
+     * @param publicKey     the public key that should be stored
      */
     public void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
         if (publicKey.getAlgorithm().equals("RSA")) {
@@ -101,6 +105,7 @@ public class User implements UserDetails {
 
     /**
      * the Method used to change the active key-pair to an existing one.
+     *
      * @param index the id of the new active key-pair
      */
     public void changeActiveKeyPair(final int index) {
@@ -110,9 +115,16 @@ public class User implements UserDetails {
         }
     }
 
-    public Envelope createNewEnvelope(Map<String, List<Signatory>> paths, String name) {
-        DocumentCreator creator = new DocumentCreator();
-        Envelope envelope = creator.convertPathsToDocuments(paths, this, name);
+    /**
+     * the method to create a new envelope with the user object, that calls this as the owner.
+     * @param paths the filepaths of the documents that the envelope should be initialized with combined with a list of
+     *              signatories for each document
+     * @param name the name of the envelope
+     * @return the new envelope.
+     */
+    public Envelope createNewEnvelope(final Map<String, List<Signatory>> paths, final String name) {
+        final DocumentCreator creator = new DocumentCreator();
+        final Envelope envelope = creator.convertPathsToDocuments(paths, this, name);
         myEnvelopes.add(envelope);
         return envelope;
     }

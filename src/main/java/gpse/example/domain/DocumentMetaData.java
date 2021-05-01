@@ -2,7 +2,6 @@ package gpse.example.domain;
 
 import javax.persistence.*;
 import java.nio.file.attribute.FileTime;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 //import java.time.format.DateTimeFormatter;
@@ -56,6 +55,7 @@ public class DocumentMetaData {
      * @param lastModified        the date of last modification on the document
      * @param lastAccess          the date of last access on the document
      * @param size                the size of the document
+     * @param metaUserID          an ID referring to the owner of the envelope this document is a part of.
      */
     public DocumentMetaData(final LocalDateTime metaTimeStampUpload, final String metaDocumentTitle,
                             final FileTime creationDate, final FileTime lastModified,
