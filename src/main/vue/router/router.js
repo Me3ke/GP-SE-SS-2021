@@ -8,7 +8,7 @@ import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
-
+import ImpressumPage from "@/main/vue/views/ImpressumPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -66,6 +66,11 @@ const router = new VueRouter({
                     path: 'no-connection',
                     name: 'no-connection',
                     component: NoConnectionPage
+                },
+                {
+                    path: 'impressum',
+                    name: 'impressum',
+                    component: ImpressumPage
                 },
                 {
                     path: '*',
