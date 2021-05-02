@@ -22,7 +22,7 @@
 
 <script>
 import Footer from "@/main/vue/components/Footer";
-import Header from "@/main/vue/components/Header";
+import Header from "@/main/vue/components/header/Header";
 
 export default {
     name: "TestPage",

@@ -1,12 +1,16 @@
 <template>
     <div id="container">
-        Hallo
-    </div>
+        <b-nav>
+        <language-switcher></language-switcher>
+    </b-nav>
+        </div>
 </template>
 
 <script>
+import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 export default {
-    name: "Header"
+    name: "Header",
+    components: {LanguageSwitcher}
 }
 </script>
 

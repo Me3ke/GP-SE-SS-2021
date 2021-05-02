@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import Header from "@/main/vue/components/Header";
+import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 
 export default {

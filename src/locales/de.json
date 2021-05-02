@@ -18,5 +18,13 @@
         "h1": "Oh-Oh!",
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
+    },
+    "Header" : {
+        "LanguageSwitcher" : {
+            "de": "Deutsch",
+            "en": "Englisch",
+            "flag": "Flagge",
+            "language": "Sprache"
+        }
     }
 }
