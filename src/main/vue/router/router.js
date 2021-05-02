@@ -3,6 +3,7 @@ import i18n from "@/i18n";
 import TestPage from "@/main/vue/views/TestPage";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
+import ImpressumPage from "@/main/vue/views/ImpressumPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -33,6 +34,11 @@ const router = new VueRouter({
                     path: 'no-connection',
                     name: 'no-connection',
                     component: NoConnectionPage
+                },
+                {
+                    path: 'impressum',
+                    name: 'impressum',
+                    component: ImpressumPage
                 },
                 {
                     path: '*',
