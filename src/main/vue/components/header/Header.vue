@@ -1,13 +1,14 @@
 <template>
     <div id="container">
         <b-nav>
-        <language-switcher></language-switcher>
-    </b-nav>
-        </div>
+            <language-switcher id="switcher"></language-switcher>
+        </b-nav>
+    </div>
 </template>
 
 <script>
 import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
+
 export default {
     name: "Header",
     components: {LanguageSwitcher}
@@ -20,9 +21,14 @@ export default {
     width: 100%;
     margin-left: 0;
     margin-bottom: 2vw;
-    padding-top: 1.2vw;
-    padding-bottom: 1.2vw;
+    padding-top: 0.7vw;
+    padding-bottom: 0.7vw;
     position: fixed;
     top: 0;
+}
+
+#switcher {
+    padding-left: 30vw;
+    margin-left: 30vw;
 }
 </style>
