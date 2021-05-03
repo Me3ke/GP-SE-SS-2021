@@ -1,59 +1,44 @@
 package gpse.example.domain;
 
 import com.sun.istack.NotNull;
-import gpse.example.model.Signature;
-import gpse.example.util.PDFConversionException;
-import gpse.example.util.PDFWriter;
-import gpse.example.util.XMLTransformationException;
+import gpse.example.util.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * class modeling the protocol of an document
+ * able to print a PDF protocol
  */
 public class Protocol {
-    private List<Document> history;
-    private final String id;
-    private Document document;
-    private DocumentMetaData documentMetaData;
-    private List<Signature> signatures;
-    private List<Signature> oldSignatures;
-    private PDFWriter pdfWriter;
+    String envName;
+    Envelope envelope;
+    private PDFWriter writer;
 
     /**
-     * constructor of protocol getting information from specified document
-     * @param doc  document that should be protocoled
+     * constructor of protocol
+     * @param env  envelope that should be protocoled
      */
-    public Protocol(@NotNull Document doc) {
-        document = doc;
-        signatures = new ArrayList<>();
-        oldSignatures = new ArrayList<>();
-        id = new HashSHA().computeHash(doc.getDocumentMetaData().getIdentifier());
-        pdfWriter = new PDFWriter();
-
-
-
+    public Protocol(@NotNull Envelope env) {
+        envelope = env;
+        envName = envelope.getName();
+        writer = new PDFWriter();
     }
 
-    void addNewVersion(Document newDoc) {
-        history.add(document);
-        for (int i = 0; i < signatures.size(); i++) {
-            oldSignatures.add(signatures.get(i));
-            signatures.remove(i);
-            i--;
 
+    public void printProtocol(){
+        for(int i = 0; i < envelope.getDocumentList().size(); i++) {
+            printDocumentProtocol(envelope.getDocumentList().get(i), i);
         }
-        this.document = newDoc;
     }
 
-    void printPDF() {
+    void printDocumentProtocol(Document document, int num) {
 
         ArrayList<String> signatoryNames = new ArrayList<>();
         ArrayList<String> historyIDs = new ArrayList<>();
 
-        for (int i = 0; i < signatures.size(); i++) {
-            signatoryNames.add(signatures.get(i).getUser().getName());
+        for (int i = 0; i < document.getSignatories().size(); i++) {
+            signatoryNames.add(document.getSignatories().get(i).getUser().getName());
         }
 
         for (int i = 0; i < history.size(); i++) {
@@ -61,23 +46,10 @@ public class Protocol {
         }
 
         try {
-            pdfWriter.generateXML(documentMetaData.getMetaUserID(), signatoryNames, historyIDs, this.id);
-        } catch (XMLTransformationException xte) {
-            System.out.println(xte.getMessage());
-            return;
-        }
-
-        try {
-            pdfWriter.convertToPDF(this.id);
-        } catch (PDFConversionException pce) {
-            System.out.println(pce.getMessage());
+            writer.printPDF(envName + "/" + num, document.getDocumentMetaData().getMetaUserID(),
+                signatoryNames, historyIDs, document.getDocumentMetaData().getIdentifier());
+        } catch (IOException ioe) {
+            System.out.println("Something went wrong");
         }
     }
-
-
-    /*void addSignature(Signature sig, Document doc) {
-        if (doc.isCorrectSignature(sig)){
-            signatures.add(sig);
-        }
-    }*/
 }
