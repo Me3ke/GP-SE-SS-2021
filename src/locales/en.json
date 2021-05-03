@@ -19,11 +19,10 @@
         "h3": "It looks like you might be experiencing some network connection issues, please click the back button and try again.",
         "back": "Go back"
     },
-    "Header" : {
-        "LanguageSwitcher" : {
+    "Header": {
+        "LanguageSwitcher": {
             "de": "German",
             "en": "English",
-            "flag": "Flag",
             "language": "Language"
         }
     }

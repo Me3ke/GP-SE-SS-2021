@@ -1,8 +1,16 @@
 <template>
-    <div id="container">
-        <b-nav>
-            <language-switcher id="switcher"></language-switcher>
-        </b-nav>
+    <div>
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+            <b-navbar-brand href="#">NavBar</b-navbar-brand>
+
+            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+            <b-collapse id="nav-collapse" is-nav>
+                <b-navbar-nav class="ml-auto">
+                    <LanguageSwitcher></LanguageSwitcher>
+                </b-navbar-nav>
+            </b-collapse>
+        </b-navbar>
     </div>
 </template>
 
@@ -16,19 +24,4 @@ export default {
 </script>
 
 <style scoped>
-#container {
-    background-color: #5D9543;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 2vw;
-    padding-top: 0.7vw;
-    padding-bottom: 0.7vw;
-    position: fixed;
-    top: 0;
-}
-
-#switcher {
-    padding-left: 30vw;
-    margin-left: 30vw;
-}
 </style>
