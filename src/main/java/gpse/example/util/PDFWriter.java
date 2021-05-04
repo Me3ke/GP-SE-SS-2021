@@ -9,74 +9,122 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class PDFWriter{
+/**
+ * PDFWriter writes protocol pdf files with specified data with printPDF(data ...).
+ */
+public class PDFWriter {
 
-    public void printPDF(String docTitle, String owner, List<String> signatures, List<String> history, String protocolID)
-        throws IOException{
+    /**
+     * Location of output file.
+     */
+    private static final String PROTOCOL_OUTPUT_PATH = "./src/main/resources/output/Protocol_";
 
-        int lineCount = 700;
+    /**
+     * file type postfix.
+     */
+    private static final String PDF = ".pdf";
+
+    /**
+     * vertical position of first line.
+     */
+    private static final int TOP_OF_PAGE = 700;
+
+    /**
+     * distance between to regular lines.
+     */
+    private static final int LINE_DIST = 25;
+
+    /**
+     * Text margin to left side.
+     */
+    private static final int MARGIN_LEFT = 75;
+
+    /**
+     * standard font size.
+     */
+    private static final int FONT_SIZE = 12;
+
+    /**
+     * printing the protocol with specified user data.
+     * @param docTitle Title of Document
+     * @param owner name of owner
+     * @param signatures List with signature names
+     * @param history List with old version document title
+     * @param protocolID id of the document getting protocoled
+     * @throws IOException
+     */
+    public void printPDF(final String docTitle, final String owner, final List<String> signatures,
+                         final List<String> history, final String protocolID) throws IOException {
+
+        int lineCount = TOP_OF_PAGE;
         File file;
-        if (!(new File("./src/main/resources/output/Protocol_" + protocolID + ".pdf")).exists()) {
+        if (!(new File(PROTOCOL_OUTPUT_PATH + protocolID + PDF)).exists()) {
             createPDF(protocolID);
         }
-        file = new File("./src/main/resources/output/Protocol_" + protocolID + ".pdf");
+        file = new File(PROTOCOL_OUTPUT_PATH + protocolID + PDF);
 
-        PDDocument protocol = PDDocument.load(file);
-        PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(0));
-        try {
+
+        try (PDDocument protocol = PDDocument.load(file);
+             PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(0))) {
             // (x|y) = (0|0) bottom left; new line forbidden
             contentStream.beginText();
-            contentStream.setFont(PDType1Font.TIMES_BOLD, 20);
-            contentStream.newLineAtOffset(250, lineCount);
-            contentStream.showText( "Protokoll: " + protocolID);
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
+            contentStream.newLineAtOffset(3 * MARGIN_LEFT, lineCount);
+            contentStream.showText("Protokoll: " + protocolID);
             contentStream.endText();
 
-            lineCount = lineCount - 50;
+            lineCount = lineCount - 2 * LINE_DIST;
             addLine("Bezüglich Dokument " +  docTitle, lineCount, contentStream);
 
-            lineCount = lineCount - 25;
+            lineCount = lineCount - LINE_DIST;
             addLine("Dokumenteneigentümer: " +  owner, lineCount, contentStream);
 
-            lineCount = lineCount - 25;
+            lineCount = lineCount - LINE_DIST;
             addLine("Signiert von: ", lineCount, contentStream);
 
-            for(int i = 0; i< signatures.size(); i++){
-                lineCount = lineCount - 25;
-                addLine(signatures.get(i), lineCount, contentStream);
+            for (String signature : signatures) {
+                lineCount = lineCount - LINE_DIST;
+                addLine(signature, lineCount, contentStream);
             }
 
-            lineCount = lineCount - 25;
+            lineCount = lineCount - LINE_DIST;
             addLine("Historie: ", lineCount, contentStream);
 
-            for(int i = 0; i< history.size(); i++){
-                lineCount = lineCount - 25;
-                addLine(history.get(i), lineCount, contentStream);
+            for (String docVersion : history) {
+                lineCount = lineCount - LINE_DIST;
+                addLine(docVersion, lineCount, contentStream);
             }
-        } finally {
-        contentStream.close();
-        protocol.save(file);
-        protocol.close();
+            protocol.save(file);
         }
-
     }
 
-    void addLine(String value, int offSet, PDPageContentStream contentStream) throws IOException {
+    /**
+     * adding a line to pdf document at specified offset with specified value.
+     * @param value value to add to pdf file
+     * @param offSet line offset from 0 to 700 from bottom of page
+     * @param contentStream Stream that knows the file to that is written
+     * @throws IOException
+     */
+    private void addLine(final String value, final int offSet,
+                         final PDPageContentStream contentStream) throws IOException {
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-        contentStream.newLineAtOffset(75, offSet);
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, FONT_SIZE);
+        contentStream.newLineAtOffset(MARGIN_LEFT, offSet);
         contentStream.showText(value);
         contentStream.endText();
     }
 
-    private void createPDF(String protocolID) throws IOException {
-        PDDocument protocol = new PDDocument();
-        try {
-            PDPage page1 = new PDPage();
-            protocol.addPage(page1);
-            protocol.save("./src/main/resources/output/Protocol_" + protocolID + ".pdf");
+    /**
+     * creating new pdf file in case it does not exist.
+     * @param protocolID Id of protocol that should be created
+     * @throws IOException
+     */
+    private void createPDF(final String protocolID) throws IOException {
 
-        } finally {
-            protocol.close();
+        try (PDDocument protocol = new PDDocument()) {
+            final PDPage page = new PDPage();
+            protocol.addPage(page);
+            protocol.save(PROTOCOL_OUTPUT_PATH + protocolID + PDF);
         }
     }
 }
