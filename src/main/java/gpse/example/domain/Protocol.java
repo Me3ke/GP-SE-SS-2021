@@ -43,7 +43,7 @@ public class Protocol {
      * stored in /resources/protocolID/.
      */
     public void printProtocol() {
-        File file = new File("./src/main/resources/output/" + protocolID);
+        File file = new File(pathProtocolDir);
         if ((!file.exists()) && (!file.mkdirs())) {
            System.out.println("Verzeichnis wurde nicht angelegt");
            return;
