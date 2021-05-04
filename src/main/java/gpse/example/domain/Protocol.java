@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import gpse.example.util.*;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 @Entity
 public class Protocol {
 
+    private PDFWriter writer;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -22,7 +25,8 @@ public class Protocol {
     @OneToOne
     private Envelope envelope;
 
-    private PDFWriter writer;
+    @Column
+    private String pathProtocolDir;
 
     /**
      * constructor of protocol.
@@ -30,20 +34,26 @@ public class Protocol {
      */
     public Protocol(@NotNull final Envelope env) {
         envelope = env;
-        envName = envelope.getName();
+        pathProtocolDir = "./src/main/resources/out/" + protocolID;
         writer = new PDFWriter();
     }
 
     /**
      * print protocol file for all documents in envelope.
+     * stored in /resources/protocolID/.
      */
     public void printProtocol() {
+        File file = new File("./src/main/resources/output/" + protocolID);
+        if ((!file.exists()) && (!file.mkdirs())) {
+           System.out.println("Verzeichnis wurde nicht angelegt");
+           return;
+        }
         for (int i = 0; i < envelope.getDocumentList().size(); i++) {
-            printDocumentProtocol(envelope.getDocumentList().get(i), i);
+            printDocumentProtocol(envelope.getDocumentList().get(i));
         }
     }
 
-    private void printDocumentProtocol(final Document document, final int num) {
+    private void printDocumentProtocol(final Document document) {
 
         final ArrayList<String> signatoryNames = new ArrayList<>();
         final ArrayList<String> historyIDs = new ArrayList<>();
@@ -57,7 +67,7 @@ public class Protocol {
         }
 
         try {
-            writer.printPDF(protocolID + "." + num, document.getDocumentMetaData().getMetaUserID(),
+            writer.printPDF(protocolID, document.getDocumentMetaData().getMetaUserID(),
                 signatoryNames, historyIDs, document.getDocumentMetaData().getIdentifier());
         } catch (IOException ioe) {
             System.out.println("print protocol failed");
@@ -78,5 +88,13 @@ public class Protocol {
 
     public void setEnvelope(Envelope envelope) {
         this.envelope = envelope;
+    }
+
+    public String getPathProtocolDir() {
+        return pathProtocolDir;
+    }
+
+    public void setPathProtocolDir(String pathProtocolDir) {
+        this.pathProtocolDir = pathProtocolDir;
     }
 }

@@ -17,7 +17,7 @@ public class PDFWriter {
     /**
      * Location of output file.
      */
-    private static final String PROTOCOL_OUTPUT_PATH = "./src/main/resources/output/Protocol_";
+    private static final String PROTOCOL_OUTPUT_PATH = "./src/main/resources/output/";
 
     /**
      * file type postfix.
@@ -46,22 +46,22 @@ public class PDFWriter {
 
     /**
      * printing the protocol with specified user data.
-     * @param docTitle Title of Document
+     * @param protocolID id of Protocol class / protocolEnvelope
      * @param owner name of owner
      * @param signatures List with signature names
      * @param history List with old version document title
-     * @param protocolID id of the document getting protocoled
+     * @param documentID id of the document getting protocoled
      * @throws IOException
      */
-    public void printPDF(final String docTitle, final String owner, final List<String> signatures,
-                         final List<String> history, final String protocolID) throws IOException {
+    public void printPDF(final long protocolID, final String owner, final List<String> signatures,
+                         final List<String> history, final String documentID) throws IOException {
 
         int lineCount = TOP_OF_PAGE;
         File file;
-        if (!(new File(PROTOCOL_OUTPUT_PATH + protocolID + PDF)).exists()) {
-            createPDF(protocolID);
+        if (!(new File(PROTOCOL_OUTPUT_PATH + protocolID + "/" + documentID + PDF)).exists()) {
+            createPDF(protocolID, documentID);
         }
-        file = new File(PROTOCOL_OUTPUT_PATH + protocolID + PDF);
+        file = new File(PROTOCOL_OUTPUT_PATH + protocolID + "/" + documentID + PDF);
 
 
         try (PDDocument protocol = PDDocument.load(file);
@@ -70,11 +70,11 @@ public class PDFWriter {
             contentStream.beginText();
             contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
             contentStream.newLineAtOffset(3 * MARGIN_LEFT, lineCount);
-            contentStream.showText("Protokoll: " + protocolID);
+            contentStream.showText("Protokoll: " + documentID);
             contentStream.endText();
 
             lineCount = lineCount - 2 * LINE_DIST;
-            addLine("Bezüglich Dokument " +  docTitle, lineCount, contentStream);
+            addLine("Bezüglich Dokument " +  protocolID, lineCount, contentStream);
 
             lineCount = lineCount - LINE_DIST;
             addLine("Dokumenteneigentümer: " +  owner, lineCount, contentStream);
@@ -119,12 +119,12 @@ public class PDFWriter {
      * @param protocolID Id of protocol that should be created
      * @throws IOException
      */
-    private void createPDF(final String protocolID) throws IOException {
+    private void createPDF(final long protocolID, final String documentID) throws IOException {
 
         try (PDDocument protocol = new PDDocument()) {
             final PDPage page = new PDPage();
             protocol.addPage(page);
-            protocol.save(PROTOCOL_OUTPUT_PATH + protocolID + PDF);
+            protocol.save(PROTOCOL_OUTPUT_PATH + protocolID + "/" + documentID + PDF);
         }
     }
 }
