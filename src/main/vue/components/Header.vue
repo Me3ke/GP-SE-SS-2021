@@ -1,24 +1,24 @@
 <template>
-    <div id="container">
-        Hallo
+    <div>
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+            <b-navbar-brand href="#">NavBar</b-navbar-brand>
+
+            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+            <b-collapse id="nav-collapse" is-nav>
+                <b-navbar-nav class="ml-auto">
+                </b-navbar-nav>
+            </b-collapse>
+        </b-navbar>
     </div>
 </template>
 
 <script>
+
 export default {
-    name: "Header"
+    name: "Header",
 }
 </script>
 
 <style scoped>
-#container {
-    background-color: #5D9543;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 2vw;
-    padding-top: 1.2vw;
-    padding-bottom: 1.2vw;
-    position: fixed;
-    top: 0;
-}
 </style>
