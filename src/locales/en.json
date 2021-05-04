@@ -24,6 +24,12 @@
             "de": "German",
             "en": "English",
             "language": "Language"
+        },
+        "Avatar": {
+            "profile": "My Profile",
+            "settings": "Settings",
+            "help": "Help",
+            "logout": "Logout"
         }
     }
 }

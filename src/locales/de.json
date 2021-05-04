@@ -24,6 +24,12 @@
             "de": "Deutsch",
             "en": "Englisch",
             "language": "Sprache"
+        },
+        "Avatar": {
+            "profile": "Mein Konto",
+            "settings": "Einstellungen",
+            "help": "Benutzerhandbuch",
+            "logout": "Abmelden"
         }
     }
 }

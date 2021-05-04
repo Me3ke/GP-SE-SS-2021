@@ -1,6 +1,5 @@
 import VueRouter from "vue-router";
 import i18n from "@/i18n";
-import TestPage from "@/main/vue/views/TestPage";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 
@@ -19,11 +18,6 @@ const router = new VueRouter({
                 }
             },
             children: [
-                {
-                    path: 'test-page',
-                    name: 'test-page',
-                    component: TestPage
-                },
                 {
                     path: '404',
                     name: '404',

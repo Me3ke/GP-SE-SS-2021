@@ -8,6 +8,7 @@
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav class="ml-auto">
                     <LanguageSwitcher></LanguageSwitcher>
+                    <Avatar></Avatar>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
@@ -16,10 +17,11 @@
 
 <script>
 import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
+import Avatar from "@/main/vue/components/header/Avatar";
 
 export default {
     name: "Header",
-    components: {LanguageSwitcher}
+    components: {Avatar, LanguageSwitcher}
 }
 </script>
 

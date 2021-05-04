@@ -1,5 +1,5 @@
 <template>
-    <b-nav-item-dropdown right class="my-dropdown-menu">
+    <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
             <img :src="getFlag()" class="responsive-img" :alt="$t('Header.LanguageSwitcher.language')">
         </template>
@@ -54,6 +54,8 @@ export default {
 .responsive-img {
     width: 4vw;
     height: auto;
+    margin-top: 0.3vw;
+    margin-bottom: 0.3vw;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {
@@ -62,12 +64,7 @@ export default {
     padding-bottom: 0.1vw;
     margin: 0;
     border-color: var(--elsa-blue);
-}
-
-.my-divider >>> .dropdown-divider {
-    margin-top: 0.1vw;
-    margin-bottom: 0.1vw;
-    background-color: var(--elsa-blue);
+    min-width: 0;
 }
 
 .my-dropdown-item >>> .dropdown-item {
