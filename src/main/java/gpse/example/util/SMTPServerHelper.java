@@ -15,19 +15,33 @@ import java.util.Properties;
 @Entity
 public class SMTPServerHelper {
 
+    /**
+     * Template for a test e-mail.
+     */
     public static final String TEST_TEMPLATE = "Dies ist ein Test %s !!! \n ELSA";
+    /**
+     * Template for a test e-mail.
+     */
     public static final String TEST_SUBJECT = "Test";
+    private static final String TRUE = "true";
     private static JavaMailSenderImpl mailSender;
 
     @Column
     private static String hostServer;
+
     @Column
     private static int port;
+
     @Id
     @Column
     private static String userName;
+
     @Column
     private static String password;
+
+    protected SMTPServerHelper() {
+
+    }
 
     /**
      * set up and log in the the mailSender object.
@@ -35,13 +49,14 @@ public class SMTPServerHelper {
      * WHATCH OUT:
      * if using gmail set up gmail account with no two-factor-Authentification and
      * activate access from unsecure apps.
+     *
      * @param hostServer the SMTPServer that is used f.ex. smtp.gmail.com
-     * @param port the port at specified server in case of gmail 587
-     * @param username the username in case of gmail its the gmail address user@gmail.com
-     * @param password the password of the account
+     * @param port       the port at specified server in case of gmail 587
+     * @param username   the username in case of gmail its the gmail address user@gmail.com
+     * @param password   the password of the account
      */
 
-    public static void setMailSender(String hostServer, int port, String username, String password) {
+    public static void setMailSender(final String hostServer, final int port, final String username, final String password) {
         mailSender = new JavaMailSenderImpl();
         mailSender.setHost(hostServer);
         mailSender.setPort(port);
@@ -49,20 +64,21 @@ public class SMTPServerHelper {
         mailSender.setUsername(username);
         mailSender.setPassword(password);
 
-        Properties props = mailSender.getJavaMailProperties();
+        final Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.put("mail.smtp.auth", TRUE);
+        props.put("mail.smtp.starttls.enable", TRUE);
+        props.put("mail.debug", TRUE);
     }
 
 
     /**
      * sending an email to the specified address.
+     *
      * @param toAddress the email address of the recieving person.
      */
-    public static void sendEmail(String toAddress) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    public static void sendEmail(final String toAddress) {
+        final SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
         message.setSubject(TEST_SUBJECT);
@@ -79,7 +95,7 @@ public class SMTPServerHelper {
         return port;
     }
 
-    public static void setPort(int port) {
+    public static void setPort(final int port) {
         SMTPServerHelper.port = port;
     }
 
@@ -87,7 +103,7 @@ public class SMTPServerHelper {
         return hostServer;
     }
 
-    public static void setHostServer(String hostServer) {
+    public static void setHostServer(final String hostServer) {
         SMTPServerHelper.hostServer = hostServer;
     }
 
@@ -95,7 +111,7 @@ public class SMTPServerHelper {
         return userName;
     }
 
-    public static void setUserName(String userName) {
+    public static void setUserName(final String userName) {
         SMTPServerHelper.userName = userName;
     }
 
@@ -103,7 +119,7 @@ public class SMTPServerHelper {
         return password;
     }
 
-    public static void setPassword(String password) {
+    public static void setPassword(final String password) {
         SMTPServerHelper.password = password;
     }
 }
