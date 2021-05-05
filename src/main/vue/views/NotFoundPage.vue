@@ -61,7 +61,7 @@ export default {
 }
 
 #container {
-    padding-right: 1vw;
+    padding-right: 0;
     padding-left: 0;
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="lg" type="dark" variant="dark" id="background">
+    <b-navbar toggleable="sm" id="background" sticky>
         <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="$router.push(`/`)">
             <b-img :src="logo" id="responsive-img" :alt="$t('Header.logo')"></b-img>
@@ -39,7 +39,8 @@ export default {
 }
 
 #background {
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2),   rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2),  rgba(0, 0, 0, 0.1)), url(../../assets/header_background.png);
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)),
+    url(../../assets/header_background.png);
     background-size: cover;
 }
 </style>

@@ -3,26 +3,30 @@
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon" font-scale="2"></b-icon>
         </template>
-        <b-dropdown-item v-b-hover="handleHover" class="my-dropdown-item">
-            <b-icon icon="person-circle" v-if="isHovered" class="my-icon-hovered" font-scale="2"></b-icon>
+        <b-dropdown-item @mouseover.native="handleHover(0)" @mouseleave.native="handleHover(-1)"
+                         class="my-dropdown-item">
+            <b-icon icon="person-circle" v-if="isHovered === 0" class="my-icon-hovered" font-scale="2"></b-icon>
             <b-icon icon="person-circle" v-else class="my-icon" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item v-b-hover="handleHoverTwo" class="my-dropdown-item">
-            <b-icon icon="gear" v-if="isHoveredTwo" class="my-icon-hovered" font-scale="2"></b-icon>
+        <b-dropdown-item @mouseover.native="handleHover(1)" @mouseleave.native="handleHover(-1)"
+                         class="my-dropdown-item">
+            <b-icon icon="gear" v-if="isHovered === 1" class="my-icon-hovered" font-scale="2"></b-icon>
             <b-icon icon="gear" v-else class="my-icon" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item v-b-hover="handleHoverThree" class="my-dropdown-item">
-            <b-icon icon="question-circle" v-if="isHoveredThree" class="my-icon-hovered" font-scale="2"></b-icon>
+        <b-dropdown-item @mouseover.native="handleHover(2)" @mouseleave.native="handleHover(-1)"
+                         class="my-dropdown-item">
+            <b-icon icon="question-circle" v-if="isHovered === 2" class="my-icon-hovered" font-scale="2"></b-icon>
             <b-icon icon="question-circle" v-else class="my-icon" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item v-b-hover="handleHoverFour" class="my-dropdown-item">
-            <b-icon icon="box-arrow-right" v-if="isHoveredFour" class="my-icon-hovered" font-scale="2"></b-icon>
+        <b-dropdown-item @mouseover.native="handleHover(3)" @mouseleave.native="handleHover(-1)"
+                         class="my-dropdown-item">
+            <b-icon icon="box-arrow-right" v-if="isHovered === 3" class="my-icon-hovered" font-scale="2"></b-icon>
             <b-icon icon="box-arrow-right" v-else class="my-icon" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.logout') }} </span>
         </b-dropdown-item>
@@ -34,24 +38,12 @@ export default {
     name: "Avatar",
     data() {
         return {
-            isHovered: false,
-            isHoveredTwo: false,
-            isHoveredThree: false,
-            isHoveredFour: false
+            isHovered: -1
         }
     },
     methods: {
-        handleHover(hovered) {
-            this.isHovered = hovered
-        },
-        handleHoverTwo(hovered) {
-            this.isHoveredTwo = hovered
-        },
-        handleHoverThree(hovered) {
-            this.isHoveredThree = hovered
-        },
-        handleHoverFour(hovered) {
-            this.isHoveredFour = hovered
+        handleHover(ele) {
+            this.isHovered = ele
         }
     }
 }
@@ -65,6 +57,7 @@ export default {
 
 .my-icon-hovered {
     fill: whitesmoke;
+    transition-duration: 0.4s;
 }
 
 .letters {
@@ -79,6 +72,11 @@ export default {
     padding-bottom: 0;
     margin: 0;
     border-color: var(--elsa-blue);
+}
+
+.my-divider >>> .dropdown-divider {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .my-dropdown-item >>> .dropdown-item {
