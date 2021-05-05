@@ -1,8 +1,7 @@
 package gpse.example.domain;
 
 import javax.persistence.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //TODO alle Kommentare und Tests Überarbeiten
@@ -51,6 +51,9 @@ public class Document {
     @Column
     private SignatureType signatureType = SignatureType.NO_SIGNATURE;
 
+    @Lob
+    private byte[] data;
+
     public Document() {
     }
 
@@ -83,8 +86,36 @@ public class Document {
         final String[] filename = documentFile.getName().split("\\.");
         final String title = filename[0];
         this.documentType = filename[1];
+        this.data = Files.readAllBytes(documentPath);
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), title, attr.creationTime(),
             attr.lastModifiedTime(), attr.lastAccessTime(), attr.size(), ownerID);
+    }
+
+    /**
+     * The writeInNewFile methods creates a new File from a given byte array and file extension.
+     * @param bytes the byte array from another file.
+     * @param type the file extension from another file.
+     * @return the newly created File
+     * @throws IOException if FileInputStream creates an error.
+     */
+    @SuppressWarnings("PMD.AvoidFileStream")
+    public File writeInNewFile(final byte[] bytes, final String type) {
+        final File file = new File("src/main/resources/TestOutput/Sipan" + "." + type);
+        FileOutputStream fos = null;
+        try {
+            file.createNewFile();
+            fos = new FileOutputStream(file);
+            fos.write(bytes);
+        } catch (IOException e) {
+            System.out.println("something went wrong while writing.");
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                System.out.println("something went wrong while closing.");
+            }
+        }
+        return file;
     }
 
     /**
@@ -103,7 +134,6 @@ public class Document {
      * @param signature the signature that has been made
      * @param index     the index of the key the signature has been made with
      */
-    //TODO
     public void advancedSignature(final String user, final byte[] signature, final int index) {
         boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
@@ -124,7 +154,6 @@ public class Document {
      * @param user the user who relates to the signature that needs to be checked
      * @return true, if one of the public keys matches with the signature.If thet is not the case we return false.
      */
-    //TODO
     public boolean verifySignature(final User user) {
 
         final AdvancedSignature signatureInfo = getUsersSignature(user.getEmail());
@@ -152,6 +181,14 @@ public class Document {
             }
         }
         return null;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public byte[] getData() {
+        return Arrays.copyOf(data, data.length);
     }
 
     public void setSigned(final int index) {

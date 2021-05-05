@@ -1,24 +1,46 @@
 package gpse.example.domain;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.assertj.core.api.Assertions;
-import java.io.IOException;
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 class DocumentTest {
 
     private final static String MAIL = "superCooleMAIL@yoohooo.de";
     private final static String PATH_INVALID = "Document Path is invalid";
-    private final static String PATH = "src/main/resources/Manf.pdf";
+    private final static String PATH = "src/main/resources/Theben.txt";
     private final static String TITLE_TEST = "Manf";
     private final static String TYPE_TEST = "pdf";
     private final static int ID_TEST = 1;
 
     @Nested
     public class DocumentData {
+        @Test
+        public void testDocumentData() {
+            Document document = null;
+            File newFile = null;
+            try {
+                document = new Document("src/main/resources/Manf.pdf", null, null);
+                newFile = document.writeInNewFile(document.getData(), document.getDocumentType());
+                byte[] expectedTest = document.getData();
+                Path newFilePath = Paths.get(newFile.getAbsolutePath());
+                byte[] actualTest = Files.readAllBytes(newFilePath);
+                for (int i = 0; i < expectedTest.length; i++) {
+                    Assertions.assertEquals(expectedTest[i], actualTest[i]);
+                }
+            } catch (IOException e) {
+                System.out.println("something went wrong");
+            }
+        }
+    }
         /*
 
 
@@ -180,6 +202,7 @@ class DocumentTest {
         /*
         @Test
         public void verifySignature
-         */
+
     }
+         */
 }
