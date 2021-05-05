@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private static final long serialVersionUID = -8161342821150699353L;
 
     @OneToOne
+    @Column
     private PersonalData personalData;
 
     @Id
