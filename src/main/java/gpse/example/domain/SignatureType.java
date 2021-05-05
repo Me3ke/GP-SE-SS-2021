@@ -26,7 +26,7 @@ public enum SignatureType {
     private final int intRepresentation;
 
 
-    SignatureType(int intRepresentation) {
+    SignatureType(final int intRepresentation) {
         this.intRepresentation = intRepresentation;
     }
 
@@ -35,7 +35,7 @@ public enum SignatureType {
      * @param intRepresentation Integer value to define a SignatureType. Valid inputs: -1, 0, 1
      * @return new instance of SignatureType
      */
-    public static SignatureType fromInteger(int intRepresentation)
+    public static SignatureType fromInteger(final int intRepresentation)
         throws SignatureTypeFromIntegerException {
         switch (intRepresentation) {
             case -1:
