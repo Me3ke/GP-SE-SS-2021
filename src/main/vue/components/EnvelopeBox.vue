@@ -13,10 +13,10 @@
                 <div style="text-align: left;">
                     <h6>
                         <span>
-                            Besitzer: {{this.env.owner.name}}
+                            {{$t('Document.owner')}}: {{this.env.owner.name}}
                         </span>
                         <span style="margin-left: 3vw">
-                            Erstellungsdatum: {{this.env.dateCreated}}
+                            {{$t('Document.date')}}: {{this.env.dateCreated}}
                         </span>
                     </h6>
                 </div>
@@ -35,5 +35,16 @@ export default {
 </script>
 
 <style scoped>
+.card {
+    width: 96.5%
+}
 
+.card:hover {
+    background-color: var(--light-grey);
+    transition-duration: 0.4s;
+}
+
+.bi-envelope {
+    margin: 1.5vh 0.7vw;
+}
 </style>

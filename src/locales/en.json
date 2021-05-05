@@ -18,5 +18,12 @@
         "h1": "Whooops!",
         "h3": "It looks like you might be experiencing some network connection issues, please click the back button and try again.",
         "back": "Go back"
+    },
+    "OverviewPage": {
+        "heading": "Overview"
+    },
+    "Document": {
+        "owner": "Owner",
+        "date": "Created on"
     }
 }
