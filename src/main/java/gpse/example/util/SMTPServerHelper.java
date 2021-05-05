@@ -3,16 +3,11 @@ package gpse.example.util;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.Properties;
 
 /**
  * SMTPServer class representing the connection to smtpserver.
  */
-
-@Entity
 public class SMTPServerHelper {
 
     /**
@@ -26,17 +21,12 @@ public class SMTPServerHelper {
     private static final String TRUE = "true";
     private static JavaMailSenderImpl mailSender;
 
-    @Column
     private static String hostServer;
 
-    @Column
     private static int port;
 
-    @Id
-    @Column
     private static String userName;
 
-    @Column
     private static String password;
 
     protected SMTPServerHelper() {
