@@ -9,14 +9,27 @@ import javax.persistence.Id;
 import java.util.Properties;
 
 /**
- * SMTPServer class representing the connection to smtpserver.
+ * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
 
 @Entity
 public class SMTPServerHelper {
 
-    public static final String TEST_TEMPLATE = "Dies ist ein Test %s !!! \n ELSA";
-    public static final String TEST_SUBJECT = "Test";
+    /**
+     * Template for sending RegisterValidationEmail.
+     */
+    public static final String INITIAL_REGISTER_TEMPLATE = "Hallo %s, \n"
+        + "um deine Emailadresse zu bestätigen klicke auf den Bestätigungslink. \n"
+        + "Hier bestätigen: %s \n"
+        + "Dein ELSA-Team";
+
+
+    /**
+     * The subject of Elsas emails.
+     */
+    public static final String ELSA_SUBJECT = "ELSA - noreply";
+
+
     private static JavaMailSenderImpl mailSender;
 
     @Column
@@ -24,9 +37,17 @@ public class SMTPServerHelper {
     @Column
     private static int port;
     @Id
+    @Column
     private static String userName;
     @Column
     private static String password;
+
+    /**
+     * contructor of theSMTPServerHelper.
+     */
+    protected SMTPServerHelper() {
+
+    }
 
     /**
      * set up and log in the the mailSender object.
@@ -59,13 +80,15 @@ public class SMTPServerHelper {
     /**
      * sending an email to the specified address.
      * @param toAddress the email address of the recieving person.
+     * @param customer name of the new user.
+     * @param link validation link.
      */
-    public static void sendEmail(String toAddress) {
+    public static void sendRegisterEmail(String toAddress, String customer, String link) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
-        message.setSubject(TEST_SUBJECT);
-        message.setText(String.format(TEST_TEMPLATE, toAddress));
+        message.setSubject(ELSA_SUBJECT);
+        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, customer, link));
 
         if (mailSender == null) {
             System.out.println("Fehler es muss erst ein Server angemeldet werden. (Im Frontend anzeigen)");
