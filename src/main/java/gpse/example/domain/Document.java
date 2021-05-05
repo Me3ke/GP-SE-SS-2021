@@ -131,11 +131,10 @@ public class Document {
         boolean valid = false;
         if (signatureInfo != null) {
             final byte[] signature = signatureInfo.getSignature();
-            final int keyIndex = signatureInfo.getKeyIndex();
             try {
                 final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
                 final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-                final PublicKey publicKey = user.getPublicKey(keyIndex);
+                final PublicKey publicKey = user.getPublicKey();
                 sign.initVerify(publicKey);
                 sign.update(id);
                 valid = sign.verify(signature);

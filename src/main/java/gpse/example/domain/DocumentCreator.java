@@ -51,7 +51,8 @@ public class DocumentCreator {
      * @throws IOException if a path was invalid.
      */
     private List<Document> directoryToDocuments(final File directory,
-                                                final List<Signatory> associatedSig, final User owner) throws IOException {
+                                                final List<Signatory> associatedSig,
+                                                final User owner) throws IOException {
         final List<Document> directoryFileList = new ArrayList<>();
         final List<File> directoryFiles = Arrays.asList(directory.listFiles().clone());
         for (final File directoryFile : directoryFiles) {

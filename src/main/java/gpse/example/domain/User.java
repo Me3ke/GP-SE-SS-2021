@@ -37,14 +37,17 @@ public class User implements UserDetails {
     @Column
     private String lastname;
 
-    @OneToMany
-    private List<Keys> keys = new ArrayList<>();
+    //@OneToMany
+    //private List<Keys> keys = new ArrayList<>();
+
+    @Column
+    private PublicKey publicKey;
 
     @Column
     private String password;
 
-    @OneToOne
-    private Keys activePair;
+    //@OneToOne
+    //private Keys activePair;
 
     @Column
     private boolean admin;
@@ -85,35 +88,35 @@ public class User implements UserDetails {
     public void setPersonalData(final String street, final int houseNumber, final int postCode,
                                 final String homeTown, final String country, final LocalDate birthday,
                                 final int phoneNumber) {
-        final PersonalData personalData = new PersonalData(street, houseNumber, postCode, homeTown,
+        this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
             country, birthday, phoneNumber);
     }
 
-    /**
+    /*
      * The Method to add a new keyPair to the list of existing ones.
      *
-     * @param pathToPrivate a filePath referring to the file of the private key that relates to the public key that
+     * param pathToPrivate a filePath referring to the file of the private key that relates to the public key that
      *                      should be stored
-     * @param publicKey     the public key that should be stored
-     */
+     * param publicKey     the public key that should be stored
+
     public void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
         if (publicKey.getAlgorithm().equals("RSA")) {
             keys.add(new Keys(publicKey, pathToPrivate));
             changeActiveKeyPair(keys.size() - 1);
         }
-    }
+    } */
 
-    /**
+    /*
      * the Method used to change the active key-pair to an existing one.
      *
-     * @param index the id of the new active key-pair
-     */
+     * param index the id of the new active key-pair
+
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
         if (index < keys.size()) {
             activePair = keys.get(index);
         }
-    }
+    }*/
 
     /**
      * the method to create a new envelope with the user object, that calls this as the owner.
@@ -225,11 +228,15 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public PublicKey getPublicKey(final int index) {
-        return keys.get(index).getPublicKey();
+
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
+    /*
     public List<Keys> getKeys() {
         return keys;
     }
+
+     */
 }
