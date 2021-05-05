@@ -24,6 +24,7 @@ public class SMTPServerHelper {
     @Column
     private static int port;
     @Id
+    @Column
     private static String userName;
     @Column
     private static String password;
