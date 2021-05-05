@@ -31,5 +31,12 @@
             "help": "Help",
             "logout": "Logout"
         }
+    },
+    "OverviewPage": {
+        "heading": "Overview"
+    },
+    "Document": {
+        "owner": "Owner",
+        "date": "Created on"
     }
 }

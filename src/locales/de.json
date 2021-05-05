@@ -31,5 +31,12 @@
             "help": "Benutzerhandbuch",
             "logout": "Abmelden"
         }
+    },
+    "OverviewPage": {
+        "heading": "Übersicht"
+    },
+    "Document": {
+        "owner": "Bersitzer",
+        "date": "Erstellungsdatum"
     }
 }
