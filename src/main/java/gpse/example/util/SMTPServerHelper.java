@@ -68,7 +68,7 @@ public class SMTPServerHelper {
         message.setText(String.format(TEST_TEMPLATE, toAddress));
 
         if (mailSender == null) {
-            System.out.println("erst anmeldend du dulli");
+            System.out.println("Fehler es muss erst ein Server angemeldet werden. (Im Frontend anzeigen)");
         } else {
             mailSender.send(message);
         }
