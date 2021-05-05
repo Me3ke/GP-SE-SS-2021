@@ -43,7 +43,7 @@
 import DocumentBox from "@/main/vue/components/DocumentBox";
 import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import Footer from "@/main/vue/components/Footer";
-import Header from "@/main/vue/components/Header";
+import Header from "@/main/vue/components/header/Header";
 export default {
     name: "OverviewPage",
     components:{DocumentBox, EnvelopeBox, Footer, Header},
