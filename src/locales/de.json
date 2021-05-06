@@ -40,7 +40,9 @@
         }
     },
     "OverviewPage": {
-        "heading": "Übersicht"
+        "heading": "Übersicht",
+        "filterClosed": "Abgeschlossen",
+        "filterOpen": "Offen"
     },
     "Document": {
         "owner": "Bersitzer",
