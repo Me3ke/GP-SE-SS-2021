@@ -18,5 +18,8 @@
         "h1": "Oh-Oh!",
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
+    },
+    "UserGuide": {
+        "name": "Benutzerhandbuch"
     }
 }
