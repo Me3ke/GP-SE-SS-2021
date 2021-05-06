@@ -20,6 +20,7 @@
         "back": "Zurück zur letzten Seite"
     },
     "Header": {
+        "logo": "ELSA Logo",
         "LanguageSwitcher": {
             "de": "Deutsch",
             "en": "Englisch",
@@ -30,6 +31,12 @@
             "settings": "Einstellungen",
             "help": "Benutzerhandbuch",
             "logout": "Abmelden"
+        },
+        "Messages": {
+            "msg": "Benachrichtigungen",
+            "noMsg": "Keine neuen Nachrichten!",
+            "newMsg": "Neue Benachrichtigungen!",
+            "toDoc": "Zum Dokument"
         }
     },
     "OverviewPage": {

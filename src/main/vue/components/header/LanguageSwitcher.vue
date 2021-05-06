@@ -56,6 +56,7 @@ export default {
     height: auto;
     margin-top: 0.3vw;
     margin-bottom: 0.3vw;
+    min-width: 4vw;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {
@@ -65,6 +66,11 @@ export default {
     margin: 0;
     border-color: var(--elsa-blue);
     min-width: 0;
+}
+
+.my-divider >>> .dropdown-divider {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .my-dropdown-item >>> .dropdown-item {
