@@ -16,7 +16,8 @@
             <span class="letters"> {{ $t('Header.Messages.newMsg') }}</span>
         </b-dropdown-item>
         <b-dropdown-item class="my-dropdown-item" v-for="msg in messages" :key="msg.id"
-                         @mouseover.native="handleHover(msg.id)" @mouseleave.native="handleHover(-1)">
+                         @mouseover.native="handleHover(msg.id)" @mouseleave.native="handleHover(-1)"
+                         @click="showMsg(msg)">
 
             <!-- For reminder messages -->
             <b-iconstack v-if="isHovered === msg.id && msg.category === 'Reminder'" font-scale="2">
@@ -51,13 +52,15 @@
             </b-iconstack>
 
             <!-- For all messages -->
-            <span class="letters">{{ msg.dateSent}}: </span>
+            <span class="letters">{{ msg.dateSent }}: </span>
             <span class="letters">{{ msg.correspondingDocument.title }}</span>
         </b-dropdown-item>
     </b-nav-item-dropdown>
 </template>
 
 <script>
+import i18n from '@/i18n'
+
 export default {
     name: "Messages",
     data() {
@@ -69,7 +72,7 @@ export default {
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein. Hier geht es zum Dokument.",
+                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
                     "correspondingDocument": {
                         "id": "00",
                         "title": "Mein super Dokument",
@@ -81,7 +84,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden. Hier geht es zum DOkument.",
+                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
                         "title": "Mein besseres Dokument",
@@ -93,7 +96,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
-                    "content": "Das folgende Dokument wurde erfolgreich gegengelesen. Hier geht es zum DOkument.",
+                    "content": "Das folgende Dokument wurde erfolgreich gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
                         "title": "Mein bestes Dokument",
@@ -106,6 +109,23 @@ export default {
     methods: {
         handleHover(ele) {
             this.isHovered = ele
+        },
+        showMsg(msg) {
+            this.$swal.fire({
+                titleText: msg.correspondingDocument.title,
+                text: msg.content,
+                customClass: {
+                    titleText: 'var(--elsa-blue)',
+                },
+                showCloseButton: true,
+                confirmButtonText: i18n.t('Header.Messages.toDoc'),
+                confirmButtonColor: 'var(--dark-grey)'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    // To-Do: Add correct link
+                    this.$router.push('/')
+                }
+            })
         }
     }
 }

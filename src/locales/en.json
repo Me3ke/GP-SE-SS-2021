@@ -35,7 +35,8 @@
         "Messages": {
             "msg": "Messages",
             "noMsg": "No new messages!",
-            "newMsg": "New Messages!"
+            "newMsg": "New Messages!",
+            "toDoc": "Go to document"
         }
     }
 }
