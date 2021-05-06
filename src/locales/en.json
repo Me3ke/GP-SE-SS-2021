@@ -33,7 +33,9 @@
             "logout": "Logout"
         },
         "Messages": {
-            "msg": "Messages"
+            "msg": "Messages",
+            "noMsg": "No new messages!",
+            "newMsg": "New Messages!"
         }
     }
 }

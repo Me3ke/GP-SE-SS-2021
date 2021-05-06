@@ -51,20 +51,7 @@ export default {
 
 <style scoped>
 
-.my-icon {
-    fill: var(--elsa-blue);
-}
-
-.my-icon-hovered {
-    fill: whitesmoke;
-    transition-duration: 0.4s;
-}
-
-.letters {
-    margin-left: 0.75vw;
-    position: relative;
-    bottom: 0.5vw;
-}
+@import "../../assets/css/dropdown.css";
 
 .my-dropdown-menu >>> .dropdown-menu {
     color: var(--dark-grey);
