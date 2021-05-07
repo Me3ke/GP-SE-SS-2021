@@ -1,4 +1,9 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
+
+import gpse.example.domain.signature.AdvancedSignature;
+import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatureType;
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.io.*;
@@ -42,6 +47,9 @@ public class Document {
     @OneToMany
     private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
+    @OneToMany
+    private List<User> readers = new ArrayList<>();
+
     @Column
     private File documentFile;
 
@@ -54,16 +62,11 @@ public class Document {
     @Lob
     private byte[] data;
 
+    private boolean orderRelevant;
+
+    private LocalDateTime endDate;
+
     public Document() {
-    }
-
-    public Document(final DocumentMetaData documentMetaData) {
-        this.documentMetaData = documentMetaData;
-    }
-
-    public Document(final DocumentMetaData documentMetaData, final List<Signatory> signatories) {
-        this.documentMetaData = documentMetaData;
-        this.signatories = signatories;
     }
 
     /**
@@ -76,10 +79,13 @@ public class Document {
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
      * @param path        The path leading to the file.
      * @param signatories The list of signatories for a document.
+     * @param readers     The list of readers for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
-    public Document(final String path, final List<Signatory> signatories, final String ownerID) throws IOException {
+    public Document(final String path, final List<Signatory> signatories,
+                    final String ownerID, final List<User> readers) throws IOException {
         this.signatories = signatories;
+        this.readers = readers;
         final Path documentPath = Paths.get(path);
         this.documentFile = new File(path);
         final BasicFileAttributes attr = Files.readAttributes(documentPath, BasicFileAttributes.class);
@@ -89,33 +95,6 @@ public class Document {
         this.data = Files.readAllBytes(documentPath);
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), title, attr.creationTime(),
             attr.lastModifiedTime(), attr.lastAccessTime(), attr.size(), ownerID);
-    }
-
-    /**
-     * The writeInNewFile methods creates a new File from a given byte array and file extension.
-     * @param bytes the byte array from another file.
-     * @param type the file extension from another file.
-     * @return the newly created File
-     * @throws IOException if FileInputStream creates an error.
-     */
-    @SuppressWarnings("PMD.AvoidFileStream")
-    public File writeInNewFile(final byte[] bytes, final String type) {
-        final File file = new File("src/main/resources/TestOutput/Sipan" + "." + type);
-        FileOutputStream fos = null;
-        try {
-            file.createNewFile();
-            fos = new FileOutputStream(file);
-            fos.write(bytes);
-        } catch (IOException e) {
-            System.out.println("something went wrong while writing.");
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                System.out.println("something went wrong while closing.");
-            }
-        }
-        return file;
     }
 
     /**
@@ -225,6 +204,26 @@ public class Document {
 
     public List<Signatory> getSignatories() {
         return signatories;
+    }
+
+    public List<User> getReaders() {
+        return readers;
+    }
+
+    public boolean isOrderRelevant() {
+        return orderRelevant;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setOrderRelevant(final boolean orderRelevant) {
+        this.orderRelevant = orderRelevant;
+    }
+
+    public void setEndDate(final LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }
 

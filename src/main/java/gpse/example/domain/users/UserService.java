@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.domain.users;
 
 import java.util.List;
 

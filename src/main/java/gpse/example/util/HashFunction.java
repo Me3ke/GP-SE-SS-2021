@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.util;
 
 /**
  * This interface is responsible for designate hash functions.

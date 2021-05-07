@@ -1,13 +1,82 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+
 
 /**
  * The DocumentCreator is a factory method responsible for creating documents and envelops.
  */
 public class DocumentCreator {
+
+    /**
+     * The createDocFromData creates a document from an existing byte array or an existing path.
+     * @param documentCmd the command object which keeps the information for the document.
+     * @param ownerID the email adress of the User who want to create the document.
+     * @return the created document.
+     * @throws IOException if the data is incorrect.
+     */
+    public Document createDocument(final DocumentCmd documentCmd, final String ownerID) throws IOException {
+        Document document;
+        if (documentCmd.getPath().equals("")) {
+            File documentFile;
+            if (documentCmd.getData() == null) {
+                throw new IOException();
+            } else {
+                documentFile = writeInNewFile(documentCmd.getData(), documentCmd.getType(),
+                    documentCmd.getTitle());
+            }
+            document = new Document(documentFile.getAbsolutePath(), documentCmd.getSignatories(),
+                                        ownerID, documentCmd.getReaders());
+        } else {
+            final File file = new File(documentCmd.getPath());
+            if (file.exists() && file.isFile()) {
+                document = new Document(documentCmd.getPath(), documentCmd.getSignatories(), ownerID,
+                    documentCmd.getReaders());
+            } else {
+                throw new IOException();
+            }
+        }
+        document.setEndDate(documentCmd.getEndDate());
+        document.setOrderRelevant(documentCmd.isOrderRelevant());
+        return document;
+    }
+
+    /**
+     * The writeInNewFile methods creates a new File from a given byte array and file extension.
+     *
+     * @param bytes the byte array from another file.
+     * @param type  the file extension from another file.
+     * @return the newly created File
+     * @throws IOException if FileInputStream creates an error.
+     */
+    //TODO more Exception handling
+    @SuppressWarnings({"PMD.AvoidFileStream"})
+    private File writeInNewFile(final byte[] bytes, final String type, final String name) throws IOException {
+        final File file = new File("src/main/resources/Downloads/" + name + "." + type);
+        FileOutputStream fos = null;
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            file.createNewFile();
+            fos = new FileOutputStream(file);
+            fos.write(bytes);
+        } catch (IOException e) {
+            throw new IOException(e);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                System.out.println("something went wrong while closing.");
+            }
+        }
+
+
+        return file;
+    }
+/*
 
     /**
      * The convertPathsToDocuments method gets the paths of the documents and
@@ -18,9 +87,8 @@ public class DocumentCreator {
      * @param name                 the name of the envelope that is created in the method
      * @param owner                the owner of the envelope that will be created by this method
      * @return returns an envelop.
-     */
-    public Envelope convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, final User owner,
-                                            final String name) {
+public List<Document> convertPathsToDocuments(final Map<String, List<Signatory>> associateSignatories, final User owner,
+                                                  final String name) {
         final List<Document> documentList = new ArrayList<>();
         try {
             final Set<String> keys = new HashSet<>(associateSignatories.keySet());
@@ -41,6 +109,7 @@ public class DocumentCreator {
         return new Envelope(name, documentList, owner);
     }
 
+
     /**
      * The directoryToDocuments method is called if a path to be converted is a directory.
      * The method will call itself to create all documents from the files in all (sub) directories.
@@ -49,7 +118,7 @@ public class DocumentCreator {
      * @param associatedSig a list of signatories associated with the given directory.
      * @return returns the instantiated list of documents in this directory.
      * @throws IOException if a path was invalid.
-     */
+
     private List<Document> directoryToDocuments(final File directory,
                                                 final List<Signatory> associatedSig,
                                                 final User owner) throws IOException {
@@ -66,4 +135,6 @@ public class DocumentCreator {
         }
         return directoryFileList;
     }
+    */
 }
+

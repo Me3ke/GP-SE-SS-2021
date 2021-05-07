@@ -1,4 +1,6 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
+
+import gpse.example.util.HashSHA;
 
 import javax.persistence.*;
 import java.nio.file.attribute.FileTime;

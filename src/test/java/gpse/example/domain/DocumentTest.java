@@ -1,15 +1,13 @@
 package gpse.example.domain;
 
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentCmd;
+import gpse.example.domain.documents.DocumentCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 
 class DocumentTest {
@@ -26,13 +24,17 @@ class DocumentTest {
         @Test
         public void testDocumentData() {
             Document document = null;
-            File newFile = null;
+            Document newDocument = null;
             try {
-                document = new Document("src/main/resources/Manf.pdf", null, null);
-                newFile = document.writeInNewFile(document.getData(), document.getDocumentType());
+                document = new Document("src/main/resources/Manf.pdf", null, null, null);
+                DocumentCreator documentCreator = new DocumentCreator();
+                DocumentCmd documentCmd = new DocumentCmd();
+                documentCmd.setData(document.getData());
+                documentCmd.setTitle(document.getDocumentTitle());
+                documentCmd.setType(document.getDocumentType());
+                newDocument = documentCreator.createDocument(documentCmd, null);
                 byte[] expectedTest = document.getData();
-                Path newFilePath = Paths.get(newFile.getAbsolutePath());
-                byte[] actualTest = Files.readAllBytes(newFilePath);
+                byte[] actualTest = newDocument.getData();
                 for (int i = 0; i < expectedTest.length; i++) {
                     Assertions.assertEquals(expectedTest[i], actualTest[i]);
                 }

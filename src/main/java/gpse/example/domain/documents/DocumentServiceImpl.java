@@ -1,13 +1,11 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * the class that implements the DocumentService interface for communication with the database.
@@ -22,12 +20,15 @@ public class DocumentServiceImpl implements DocumentService {
         this.repo = repo;
     }
 
-    public Document store(File file) throws IOException {
-        Document document = new Document(file.getPath(), null, null);
+    @Override
+    public Document store(final DocumentCmd documentCmd, final String ownerID) throws IOException {
+        final DocumentCreator documentCreator = new DocumentCreator();
+        final Document document = documentCreator.createDocument(documentCmd, ownerID);
         return repo.save(document);
     }
 
-    public Document getDocument(long id) {
+    @Override
+    public Document getDocument(final long id) {
         return repo.findById(id).get();
     }
 

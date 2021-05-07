@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

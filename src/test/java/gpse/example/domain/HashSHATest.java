@@ -1,5 +1,6 @@
 package gpse.example.domain;
 
+import gpse.example.util.HashSHA;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

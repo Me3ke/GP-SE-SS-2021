@@ -1,5 +1,6 @@
 package gpse.example.domain;
 
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

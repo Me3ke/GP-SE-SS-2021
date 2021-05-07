@@ -1,4 +1,7 @@
-package gpse.example.domain;
+package gpse.example.domain.envelopes;
+
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import java.util.List;
  */
 @Entity
 public class Envelope implements Iterable<Document> {
-
+//TODO creationDate
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -41,10 +44,14 @@ public class Envelope implements Iterable<Document> {
     public Envelope(final String name, final List<Document> documents, final User owner) {
         this.name = name;
         this.owner = owner;
-        //TODO owner erhalten
         for (final Document document : documents) {
             this.documentList.add(document);
         }
+    }
+
+    public Envelope(final String name, final User owner) {
+        this.name = name;
+        this.owner = owner;
     }
 
     protected Envelope() {
