@@ -22,8 +22,8 @@
                         </b-form-group>
                         <b-form-group id="input-group-password">
                             <b-form-input
-                                id="input-paswword"
-                                v-model="form.name"
+                                id="input-password"
+                                v-model="form.password"
                                 type="password"
                                 placeholder="Password"
                                 required
@@ -76,7 +76,8 @@ export default {
             image: image,
             show: true,
             form: {
-                email: ''
+                email: '',
+                password: ''
             },
             showlogin: true
         }
