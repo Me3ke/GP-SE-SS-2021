@@ -2,6 +2,7 @@ import VueRouter from "vue-router";
 import i18n from "@/i18n";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
+import LoginPage from "@/main/vue/views/LoginPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -18,6 +19,11 @@ const router = new VueRouter({
                 }
             },
             children: [
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: LoginPage
+                },
                 {
                     path: '404',
                     name: '404',
