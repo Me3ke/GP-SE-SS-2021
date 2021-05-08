@@ -48,15 +48,15 @@ export default {
 <style scoped>
 .letters {
     margin-left: 0.75vw;
-    margin-right: 0;
+    position: relative;
+    bottom: 0.1vw;
 }
 
 .responsive-img {
-    width: 4vw;
+    width: calc((7vh + 4vw) / 2);
     height: auto;
     margin-top: 0.3vw;
     margin-bottom: 0.3vw;
-    min-width: 4vw;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {

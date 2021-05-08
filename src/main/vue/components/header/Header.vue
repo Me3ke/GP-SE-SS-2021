@@ -34,7 +34,7 @@ export default {
 <style scoped>
 
 #responsive-img {
-    width: 8vw;
+    width: calc((10vh + 7vw) / 2);
     height: auto;
 }
 
@@ -42,5 +42,6 @@ export default {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)),
     url(../../assets/header_background.png);
     background-size: cover;
+    align-content: center;
 }
 </style>
