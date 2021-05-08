@@ -46,5 +46,10 @@
     "Document": {
         "owner": "Owner",
         "date": "Created on"
+    },
+    "MessagePage": {
+        "sentBy": "From",
+        "sentOn": "On",
+        "concerns": "Concerns"
     }
 }

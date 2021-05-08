@@ -46,5 +46,10 @@
     "Document": {
         "owner": "Bersitzer",
         "date": "Erstellungsdatum"
+    },
+    "MessagePage": {
+        "sentBy": "Von",
+        "sentOn": "Am",
+        "concerns": "Betrifft"
     }
 }
