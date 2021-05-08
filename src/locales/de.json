@@ -50,6 +50,7 @@
     "MessagePage": {
         "sentBy": "Von",
         "sentOn": "Am",
-        "concerns": "Betrifft"
+        "concerns": "Betrifft",
+        "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen."
     }
 }

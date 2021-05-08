@@ -1,18 +1,30 @@
 <template>
     <div>
         <Header></Header>
+        <b-container fluid style="margin: 0; padding: 0">
+            <b-row>
 
-        <div class="container-fluid">
-            <div style="margin-top:1vh; margin-right: 70vw">
-                <div class="overflow-auto" style="height: 85vh">
-                    <div v-for="msg in messages" :key="msg.id"
-                         style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                        <MessageBox :msg="msg"></MessageBox>
+                <b-col cols="3" style="margin-top:1vh;">
+                    <div class="overflow-auto" style="height: 85vh">
+                        <div v-for="msg in messages" :key="msg.id"
+                             @click="selectMsg(msg)"
+                             style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
+                            <MessageBox :msg="msg"></MessageBox>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </b-col>
 
+                <b-col cols="8" style="margin-top:2vh;">
+                    <MessageContentBox v-if="selected" :msg="selectedMsg" style="height: 85vh;"></MessageContentBox>
+                    <b-container v-else fluid class="card" style="padding:0.5vh; height: 85vh;">
+                        <h4 style="margin-top: 15vh">
+                            {{ $t('MessagePage.nonSelected') }}
+                        </h4>
+                    </b-container>
+                </b-col>
+
+            </b-row>
+        </b-container>
 
         <Footer></Footer>
     </div>
@@ -22,19 +34,22 @@
 import Header from "@/main/vue/components/header/Header";
 import MessageBox from "@/main/vue/components/MessageBox";
 import Footer from "@/main/vue/components/Footer";
+import MessageContentBox from "@/main/vue/components/MessageContentBox";
 
 export default {
     name: "MessagePage",
-    components: {Footer, MessageBox, Header},
+    components: {MessageContentBox, Footer, MessageBox, Header},
     data() {
         return {
+            selected: false,
+            selectedMsg: Object,
             "messages": [
                 {
                     "id": 0,
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
+                    "content": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
                     "correspondingDocument": {
                         "id": "00",
                         "title": "Mein super Dokument"
@@ -249,6 +264,12 @@ export default {
                     }
                 }
             ]
+        }
+    },
+    methods: {
+        selectMsg(msg) {
+            this.selected = true
+            this.selectedMsg = msg
         }
     }
 }

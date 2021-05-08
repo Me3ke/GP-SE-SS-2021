@@ -50,6 +50,7 @@
     "MessagePage": {
         "sentBy": "From",
         "sentOn": "On",
-        "concerns": "Concerns"
+        "concerns": "Concerns",
+        "nonSelected": "Select a message to show its content."
     }
 }
