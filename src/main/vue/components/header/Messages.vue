@@ -1,7 +1,7 @@
 <template>
     <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
-            <b-icon icon="envelope" class="my-icon" font-scale="2"></b-icon>
+            <b-icon icon="bell" class="my-icon" font-scale="2"></b-icon>
         </template>
 
         <!-- If there are no new messages -->
@@ -15,6 +15,9 @@
             <b-icon icon="chat-left-dots" class="my-icon-hovered" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Messages.newMsg') }}</span>
         </b-dropdown-item>
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
         <b-dropdown-item class="my-dropdown-item" v-for="msg in messages" :key="msg.id"
                          @mouseover.native="handleHover(msg.id)" @mouseleave.native="handleHover(-1)"
                          @click="showMsg(msg)">
@@ -54,6 +57,13 @@
             <!-- For all messages -->
             <span class="letters">{{ msg.dateSent }}: </span>
             <span class="letters">{{ msg.correspondingDocument.title }}</span>
+        </b-dropdown-item>
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+        <!-- Show all messages -->
+        <b-dropdown-item class="my-dropdown-item" style="text-align: center">
+            <span>  {{ $t('Header.Messages.show') }}</span>
         </b-dropdown-item>
     </b-nav-item-dropdown>
 </template>
@@ -152,6 +162,8 @@ export default {
     color: whitesmoke;
     background-color: var(--elsa-blue);
     padding-left: 0.5vw;
+    text-align: center;
+    opacity: 80%;
 }
 
 .my-dropdown-item-header:hover >>> .dropdown-item {

@@ -36,7 +36,8 @@
             "msg": "Benachrichtigungen",
             "noMsg": "Keine neuen Nachrichten!",
             "newMsg": "Neue Benachrichtigungen!",
-            "toDoc": "Zum Dokument"
+            "toDoc": "Zum Dokument",
+            "show": "Alle anzeigen"
         }
     },
     "OverviewPage": {

@@ -36,7 +36,8 @@
             "msg": "Messages",
             "noMsg": "No new messages!",
             "newMsg": "New Messages!",
-            "toDoc": "Go to document"
+            "toDoc": "Go to document",
+            "show": "Show all"
         }
     },
     "OverviewPage": {
