@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document store(final DocumentCmd documentCmd, final String ownerID) throws IOException {
+    public Document store(final DocumentCmd documentCmd, final String ownerID) {
+        /*
         final DocumentCreator documentCreator = new DocumentCreator();
         final Document document = documentCreator.createDocument(documentCmd, ownerID);
         return repo.save(document);
+         */
+        return null;
     }
 
     @Override

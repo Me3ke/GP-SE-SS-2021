@@ -4,6 +4,7 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Entity
 public class Envelope implements Iterable<Document> {
-//TODO creationDate
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -33,6 +34,9 @@ public class Envelope implements Iterable<Document> {
     @Column
     private String name;
 
+    @Column
+    private LocalDateTime creationDate;
+
     /**
      * Constructor which creates an envelop containing all files in the
      * list and the name.
@@ -44,14 +48,21 @@ public class Envelope implements Iterable<Document> {
     public Envelope(final String name, final List<Document> documents, final User owner) {
         this.name = name;
         this.owner = owner;
+        this.creationDate = LocalDateTime.now();
         for (final Document document : documents) {
             this.documentList.add(document);
         }
     }
 
+    /**
+     * Creates an envelope without any documents.
+     * @param name
+     * @param owner
+     */
     public Envelope(final String name, final User owner) {
         this.name = name;
         this.owner = owner;
+        this.creationDate = LocalDateTime.now();
     }
 
     protected Envelope() {
@@ -81,5 +92,9 @@ public class Envelope implements Iterable<Document> {
 
     public String getOwnerID() {
         return owner.getEmail();
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 }

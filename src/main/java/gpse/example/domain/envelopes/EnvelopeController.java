@@ -1,12 +1,13 @@
 package gpse.example.domain.envelopes;
 
-import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentCmd;
-import gpse.example.domain.documents.DocumentCreator;
+import gpse.example.domain.exceptions.CreatingFileException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.domain.exceptions.UploadFileException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -37,10 +38,10 @@ public class EnvelopeController {
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            final Envelope envelope = envelopeService.store(name, owner);
+            final Envelope envelope = envelopeService.addEnvelope(name, owner);
             System.out.println("Uploaded the envelope successfully: " + envelope.getName());
             return envelope;
-        } catch (IOException e) {
+        } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
     }
@@ -53,20 +54,14 @@ public class EnvelopeController {
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    //TODO Error if user or envelope not found.
     @PutMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                  final @PathVariable("userID") String ownerID,
                                  final @RequestBody DocumentCmd documentCmd) throws UploadFileException {
         try {
-            final DocumentCreator documentCreator = new DocumentCreator();
-            final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-            final Document document = documentCreator.createDocument(documentCmd, ownerID);
-            envelope.addDocument(document);
-            System.out.println("Uploaded the file " + documentCmd.getTitle() + " successfully"
-                               + " into " + envelope.getName());
-            return envelope;
-        } catch (IOException e) {
+            userService.getUser(ownerID);
+            return envelopeService.updateEnvelope(envelopeID, documentCmd, ownerID);
+        } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
     }

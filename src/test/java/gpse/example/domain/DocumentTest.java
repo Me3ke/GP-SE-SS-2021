@@ -38,7 +38,7 @@ class DocumentTest {
                 for (int i = 0; i < expectedTest.length; i++) {
                     Assertions.assertEquals(expectedTest[i], actualTest[i]);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("something went wrong");
             }
         }

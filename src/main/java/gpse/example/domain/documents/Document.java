@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO alle Kommentare und Tests Überarbeiten
-//TODO evtl Packages erstellen?
-
 /**
  * The model for the document responsible for initialising the necessary details about the document file.
  */

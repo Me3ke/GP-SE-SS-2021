@@ -23,7 +23,6 @@ public class DocumentMetaData {
     @Column
     private long id;
 
-    //TODO change to localDateTime
     @Column
     private LocalDateTime metaTimeStampUpload;
 

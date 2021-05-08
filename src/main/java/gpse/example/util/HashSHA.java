@@ -1,6 +1,5 @@
 package gpse.example.util;
 
-import gpse.example.util.HashFunction;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

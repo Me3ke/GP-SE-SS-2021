@@ -1,5 +1,8 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.exceptions.CreatingFileException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +11,7 @@ import java.io.IOException;
 /**
  * The DocumentCreator is a factory method responsible for creating documents and envelops.
  */
+@SuppressWarnings("PMD.AvoidFileStream")
 public class DocumentCreator {
 
     /**
@@ -17,12 +21,14 @@ public class DocumentCreator {
      * @return the created document.
      * @throws IOException if the data is incorrect.
      */
-    public Document createDocument(final DocumentCmd documentCmd, final String ownerID) throws IOException {
+    //does not include directories.
+    public Document createDocument(final DocumentCmd documentCmd, final String ownerID)
+                                    throws DocumentNotFoundException, CreatingFileException, IOException {
         Document document;
         if (documentCmd.getPath().equals("")) {
             File documentFile;
             if (documentCmd.getData() == null) {
-                throw new IOException();
+                throw new CreatingFileException(new IOException());
             } else {
                 documentFile = writeInNewFile(documentCmd.getData(), documentCmd.getType(),
                     documentCmd.getTitle());
@@ -35,7 +41,7 @@ public class DocumentCreator {
                 document = new Document(documentCmd.getPath(), documentCmd.getSignatories(), ownerID,
                     documentCmd.getReaders());
             } else {
-                throw new IOException();
+                throw new DocumentNotFoundException();
             }
         }
         document.setEndDate(documentCmd.getEndDate());
@@ -51,9 +57,8 @@ public class DocumentCreator {
      * @return the newly created File
      * @throws IOException if FileInputStream creates an error.
      */
-    //TODO more Exception handling
-    @SuppressWarnings({"PMD.AvoidFileStream"})
-    private File writeInNewFile(final byte[] bytes, final String type, final String name) throws IOException {
+    @SuppressWarnings("PMD.AvoidFileStream")
+    private File writeInNewFile(final byte[] bytes, final String type, final String name) throws CreatingFileException {
         final File file = new File("src/main/resources/Downloads/" + name + "." + type);
         FileOutputStream fos = null;
         if (file.exists()) {
@@ -64,7 +69,7 @@ public class DocumentCreator {
             fos = new FileOutputStream(file);
             fos.write(bytes);
         } catch (IOException e) {
-            throw new IOException(e);
+            throw new CreatingFileException(e);
         } finally {
             try {
                 fos.close();
@@ -72,8 +77,6 @@ public class DocumentCreator {
                 System.out.println("something went wrong while closing.");
             }
         }
-
-
         return file;
     }
 /*
