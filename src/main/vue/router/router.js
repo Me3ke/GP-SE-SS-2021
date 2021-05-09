@@ -34,6 +34,7 @@ const router = new VueRouter({
                 {
                     path: 'messages',
                     name: 'messages',
+                    props: true,
                     component: MessagePage
                 },
                 {

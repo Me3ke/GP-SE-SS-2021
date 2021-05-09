@@ -79,14 +79,15 @@
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
         <!-- Show all messages -->
-        <b-dropdown-item class="my-dropdown-item" style="text-align: center">
+        <b-dropdown-item class="my-dropdown-item" style="text-align: center"
+                         @click="showMsg({})">
             <span>  {{ $t('Header.Messages.show') }}</span>
         </b-dropdown-item>
     </b-nav-item-dropdown>
 </template>
 
 <script>
-import i18n from '@/i18n'
+import _ from 'lodash';
 
 export default {
     name: "Messages",
@@ -321,20 +322,18 @@ export default {
         handleHover(ele) {
             this.isHovered = ele
         },
-        showMsg(msg) {
-            this.$swal.fire({
-                titleText: msg.correspondingDocument.title,
-                text: msg.content,
-                customClass: {
-                    titleText: 'var(--elsa-blue)',
-                },
-                showCloseButton: true,
-                confirmButtonText: i18n.t('Header.Messages.toDoc'),
-                confirmButtonColor: 'var(--dark-grey)'
-            }).then((result) => {
-                if (result['isConfirmed']) {
-                    // To-Do: Add correct link
-                    this.$router.push('/')
+        showMsg: function (msg) {
+            // navigates to messages page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'messages',
+                params: {'selectedMsg': msg, 'selected': !_.isEmpty(msg)}
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
                 }
             })
         }

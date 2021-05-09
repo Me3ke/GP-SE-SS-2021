@@ -39,10 +39,12 @@ import MessageContentBox from "@/main/vue/components/MessageContentBox";
 export default {
     name: "MessagePage",
     components: {MessageContentBox, Footer, MessageBox, Header},
+    props: {
+        selectedMsg: Object,
+        selected: Boolean
+    },
     data() {
         return {
-            selected: false,
-            selectedMsg: Object,
             "messages": [
                 {
                     "id": 0,
@@ -268,7 +270,6 @@ export default {
     },
     methods: {
         selectMsg(msg) {
-            this.selected = true
             this.selectedMsg = msg
         }
     }
