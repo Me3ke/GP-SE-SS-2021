@@ -36,7 +36,7 @@ import MessageBox from "@/main/vue/components/MessageBox";
 import Footer from "@/main/vue/components/Footer";
 import MessageContentBox from "@/main/vue/components/MessageContentBox";
 
-import {mapState, mapGetters} from 'vuex';
+import {mapState} from 'vuex';
 import _ from "lodash";
 
 export default {
@@ -56,8 +56,7 @@ export default {
         ...mapState({
             messages: state => state.messages.messages,
             selectedMsg: state => state.messages.selectedMsg
-        }),
-        ...mapGetters(["getUnwatchedMessages"])
+        })
     }
 }
 </script>

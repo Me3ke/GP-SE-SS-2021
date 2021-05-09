@@ -52,7 +52,7 @@ export const state = {
             "sentBy": "superMail@mailService.de",
             "category": "Reminder",
             "dateSent": "30.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
             "correspondingDocument": {
                 "id": "00",
@@ -64,7 +64,7 @@ export const state = {
             "sentBy": "bessereMail@mailService.de",
             "category": "Updated",
             "dateSent": "27.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
             "correspondingDocument": {
                 "id": "11",
@@ -76,7 +76,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Checked",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
             "correspondingDocument": {
                 "id": "22",
@@ -88,7 +88,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Sign",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
             "correspondingDocument": {
                 "id": "22",
@@ -100,7 +100,7 @@ export const state = {
             "sentBy": "superMail@mailService.de",
             "category": "Reminder",
             "dateSent": "30.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
             "correspondingDocument": {
                 "id": "00",
@@ -112,7 +112,7 @@ export const state = {
             "sentBy": "bessereMail@mailService.de",
             "category": "Updated",
             "dateSent": "27.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
             "correspondingDocument": {
                 "id": "11",
@@ -124,7 +124,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Checked",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
             "correspondingDocument": {
                 "id": "22",
@@ -136,7 +136,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Sign",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
             "correspondingDocument": {
                 "id": "22",
@@ -148,7 +148,7 @@ export const state = {
             "sentBy": "superMail@mailService.de",
             "category": "Reminder",
             "dateSent": "30.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
             "correspondingDocument": {
                 "id": "00",
@@ -160,7 +160,7 @@ export const state = {
             "sentBy": "bessereMail@mailService.de",
             "category": "Updated",
             "dateSent": "27.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
             "correspondingDocument": {
                 "id": "11",
@@ -172,7 +172,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Checked",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
             "correspondingDocument": {
                 "id": "22",
@@ -184,7 +184,7 @@ export const state = {
             "sentBy": "besteMail@mailService.de",
             "category": "Sign",
             "dateSent": "21.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
             "correspondingDocument": {
                 "id": "22",
@@ -196,7 +196,7 @@ export const state = {
             "sentBy": "superMail@mailService.de",
             "category": "Reminder",
             "dateSent": "30.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
             "correspondingDocument": {
                 "id": "00",
@@ -208,7 +208,7 @@ export const state = {
             "sentBy": "bessereMail@mailService.de",
             "category": "Updated",
             "dateSent": "27.04.2021",
-            "watched": "False",
+            "watched": "True",
             "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
             "correspondingDocument": {
                 "id": "11",
@@ -269,9 +269,6 @@ export const actions = {
 
 
 export const getters = {
-    getUnwatchedMessages: (state) => {
-        return state.messages.filter(msg => msg.watched === "False")
-    },
     unwatchedCount: (state) => {
         return state.messages.filter(msg => msg.watched === "False").length
     },

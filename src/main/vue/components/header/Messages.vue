@@ -1,7 +1,7 @@
 <template>
     <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
-            <b-icon v-if="unwatchedMsgs.length === 0" icon="bell" class="my-icon" font-scale="2"></b-icon>
+            <b-icon v-if="count === 0" icon="bell" class="my-icon" font-scale="2"></b-icon>
             <b-iconstack v-else font-scale="2">
                 <b-icon stacked icon="bell" class="my-icon" scale="0.95"></b-icon>
                 <b-icon stacked icon="exclamation-circle-fill" class="my-icon" scale="0.5" shift-v="3"
@@ -10,7 +10,7 @@
         </template>
 
         <!-- If there are no new messages -->
-        <b-dropdown-item class="my-dropdown-item-header" v-if="unwatchedMsgs.length === 0">
+        <b-dropdown-item class="my-dropdown-item-header" v-if="count === 0">
             <b-icon icon="emoji-laughing" class="my-icon-hovered" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Messages.noMsg') }}</span>
         </b-dropdown-item>
@@ -23,7 +23,7 @@
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-        <b-dropdown-item class="my-dropdown-item" v-for="msg in cutOffMessages" :key="msg.id"
+        <b-dropdown-item class="my-dropdown-item" v-for="msg in getMessages(7)" :key="msg.id"
                          @mouseover.native="handleHover(msg.id)" @mouseleave.native="handleHover(-1)"
                          @click="showMsg(msg)">
 
@@ -106,256 +106,13 @@
 </template>
 
 <script>
-import _ from 'lodash';
+import {mapGetters} from 'vuex';
 
 export default {
     name: "Messages",
     data() {
         return {
-            isHovered: -1,
-            cutOffMessages: [],
-            unwatchedMsgs: [],
-            "messages": [
-                {
-                    "id": 0,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "watched": "False",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 1,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 2,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 3,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                }, {
-                    "id": 4,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 5,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 6,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 7,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 8,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 9,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 10,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 11,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 12,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 13,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 14,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 15,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 16,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 17,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 18,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "True",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 19,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "True",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                }
-            ]
+            isHovered: -1
         }
     },
     methods: {
@@ -363,12 +120,13 @@ export default {
             this.isHovered = ele
         },
         showMsg: function (msg) {
-            //changes watched status
-            msg.watched = 'True'
+            //changes selected message and its watched status
+            this.$store.dispatch('patchChangeSelectedMsg', msg)
+            this.$store.dispatch('patchChangeWatchedStatus', msg)
+
             // navigates to messages page, passes msg as selectedMsg as prop to MessagePage
             this.$router.push({
-                name: 'messages',
-                params: {'selectedMsg': msg, 'selected': !_.isEmpty(msg)}
+                name: 'messages'
             }).catch(e => {
                 // Avoids displaying of navigation duplicate error that arises due to the :lang
                 if (
@@ -380,9 +138,13 @@ export default {
             })
         }
     },
-    mounted() {
-        this.cutOffMessages = this.messages.slice(0, 7)
-        this.unwatchedMsgs = this.messages.filter(msg => msg.watched === "False")
+    computed: {
+        getMessages() {
+            return this.$store.getters.getFirstNMessages
+        },
+        ...mapGetters({
+            count: 'unwatchedCount'
+        })
     }
 }
 </script>
