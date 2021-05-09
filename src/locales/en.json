@@ -48,6 +48,7 @@
         "date": "Created on"
     },
     "MessagePage": {
+        "heading": "Messages",
         "sentBy": "From",
         "sentOn": "On",
         "concerns": "Concerns",

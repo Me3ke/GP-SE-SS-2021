@@ -48,6 +48,7 @@
         "date": "Erstellungsdatum"
     },
     "MessagePage": {
+        "heading": "Benachrichtigungen",
         "sentBy": "Von",
         "sentOn": "Am",
         "concerns": "Betrifft",

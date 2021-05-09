@@ -1,11 +1,13 @@
 <template>
     <div>
         <Header></Header>
-        <b-container fluid style="margin: 0; padding: 0">
-            <b-row>
 
+        <BaseHeading name="MessagePage.heading"></BaseHeading>
+
+        <b-container fluid style="margin-left: 3vw; padding: 0">
+            <b-row>
                 <b-col cols="3" style="margin-top:1vh;">
-                    <div class="overflow-auto" style="height: 85vh">
+                    <div class="overflow-auto" style="height: 75vh">
                         <div v-for="msg in messages" :key="msg.id"
                              @click="selectMsg(msg)"
                              style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
@@ -16,8 +18,8 @@
                 </b-col>
 
                 <b-col cols="8" style="margin-top:2vh;">
-                    <MessageContentBox v-if="isSelected()" :msg="selectedMsg" style="height: 85vh;"></MessageContentBox>
-                    <b-container v-else fluid class="card" style="padding:0.5vh; height: 85vh;">
+                    <MessageContentBox v-if="isSelected()" :msg="selectedMsg" style="height: 75vh;"></MessageContentBox>
+                    <b-container v-else fluid class="card" style="padding:0.5vh; height: 75vh;">
                         <h4 style="margin-top: 15vh">
                             {{ $t('MessagePage.nonSelected') }}
                         </h4>
