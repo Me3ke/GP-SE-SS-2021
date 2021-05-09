@@ -7,6 +7,8 @@
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For signed messages -->
@@ -14,6 +16,8 @@
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For checked messages -->
@@ -21,6 +25,8 @@
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For updated messages -->
@@ -28,7 +34,8 @@
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="file-earmark" scale="1"></b-icon>
                 <b-icon style="fill: var(--elsa-blue)" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4"
                         rotate="45"></b-icon>
-                <b-icon style="fill: var(--elsa-blue)" stacked icon="exclamation" scale="0.5" shift-v="-0.4"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <div class="media-body">

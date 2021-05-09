@@ -1,11 +1,16 @@
 <template>
     <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
-            <b-icon icon="bell" class="my-icon" font-scale="2"></b-icon>
+            <b-icon v-if="unwatchedMsgs.length === 0" icon="bell" class="my-icon" font-scale="2"></b-icon>
+            <b-iconstack v-else font-scale="2">
+                <b-icon stacked icon="bell" class="my-icon" scale="0.95"></b-icon>
+                <b-icon stacked icon="exclamation-circle-fill" class="my-icon" scale="0.5" shift-v="3"
+                        shift-h="-5"></b-icon>
+            </b-iconstack>
         </template>
 
         <!-- If there are no new messages -->
-        <b-dropdown-item class="my-dropdown-item-header" v-if="messages.length === 0">
+        <b-dropdown-item class="my-dropdown-item-header" v-if="unwatchedMsgs.length === 0">
             <b-icon icon="emoji-laughing" class="my-icon-hovered" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Messages.noMsg') }}</span>
         </b-dropdown-item>
@@ -27,11 +32,15 @@
                 <b-icon class="my-icon-hovered" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon class="my-icon-hovered" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
             <b-iconstack v-else-if="msg.category === 'Reminder'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For signed messages -->
@@ -39,11 +48,15 @@
                 <b-icon class="my-icon-hovered" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon-hovered" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
             <b-iconstack v-else-if="msg.category === 'Sign'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For checked messages -->
@@ -51,11 +64,15 @@
                 <b-icon class="my-icon-hovered" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon-hovered" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
             <b-iconstack v-else-if="msg.category === 'Checked'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
                         rotate="5"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For updated messages -->
@@ -63,12 +80,14 @@
                 <b-icon class="my-icon-hovered" stacked icon="file-earmark" scale="1"></b-icon>
                 <b-icon class="my-icon-hovered" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4"
                         rotate="45"></b-icon>
-                <b-icon class="my-icon-hovered" stacked icon="exclamation" scale="0.5" shift-v="-0.4"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
             <b-iconstack v-else font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4" rotate="45"></b-icon>
-                <b-icon class="my-icon" stacked icon="exclamation" scale="0.5" shift-v="-0.4"></b-icon>
+                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For all messages -->
@@ -95,6 +114,7 @@ export default {
         return {
             isHovered: -1,
             cutOffMessages: [],
+            unwatchedMsgs: [],
             "messages": [
                 {
                     "id": 0,
@@ -102,6 +122,7 @@ export default {
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
                     "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
+                    "watched": "False",
                     "correspondingDocument": {
                         "id": "00",
                         "title": "Mein super Dokument"
@@ -112,6 +133,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
@@ -123,6 +145,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
@@ -134,6 +157,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Sign",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
                     "correspondingDocument": {
                         "id": "22",
@@ -144,6 +168,7 @@ export default {
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
                     "correspondingDocument": {
                         "id": "00",
@@ -155,6 +180,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
@@ -166,6 +192,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
@@ -177,6 +204,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Sign",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
                     "correspondingDocument": {
                         "id": "22",
@@ -188,6 +216,7 @@ export default {
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
                     "correspondingDocument": {
                         "id": "00",
@@ -199,6 +228,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
@@ -210,6 +240,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
@@ -221,6 +252,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Sign",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
                     "correspondingDocument": {
                         "id": "22",
@@ -232,6 +264,7 @@ export default {
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
                     "correspondingDocument": {
                         "id": "00",
@@ -243,6 +276,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
@@ -254,6 +288,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
@@ -265,6 +300,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Sign",
                     "dateSent": "21.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
                     "correspondingDocument": {
                         "id": "22",
@@ -276,6 +312,7 @@ export default {
                     "sentBy": "superMail@mailService.de",
                     "category": "Reminder",
                     "dateSent": "30.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
                     "correspondingDocument": {
                         "id": "00",
@@ -287,6 +324,7 @@ export default {
                     "sentBy": "bessereMail@mailService.de",
                     "category": "Updated",
                     "dateSent": "27.04.2021",
+                    "watched": "False",
                     "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
                     "correspondingDocument": {
                         "id": "11",
@@ -298,6 +336,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Checked",
                     "dateSent": "21.04.2021",
+                    "watched": "True",
                     "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
                     "correspondingDocument": {
                         "id": "22",
@@ -309,6 +348,7 @@ export default {
                     "sentBy": "besteMail@mailService.de",
                     "category": "Sign",
                     "dateSent": "21.04.2021",
+                    "watched": "True",
                     "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
                     "correspondingDocument": {
                         "id": "22",
@@ -323,6 +363,8 @@ export default {
             this.isHovered = ele
         },
         showMsg: function (msg) {
+            //changes watched status
+            msg.watched = 'True'
             // navigates to messages page, passes msg as selectedMsg as prop to MessagePage
             this.$router.push({
                 name: 'messages',
@@ -340,6 +382,7 @@ export default {
     },
     mounted() {
         this.cutOffMessages = this.messages.slice(0, 7)
+        this.unwatchedMsgs = this.messages.filter(msg => msg.watched === "False")
     }
 }
 </script>
