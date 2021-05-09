@@ -53,13 +53,46 @@ export default {
 
 <style scoped>
 
-h4 {
-    font-size: 3.5vh;
-    text-overflow-mode: ellipse;
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
 }
 
-h6 {
-    font-size: 2vh;
-    text-overflow-mode: ellipse;
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    h4 {
+        font-size: 1.2em;
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        font-size: .87em;
+        text-overflow-mode: ellipse;
+    }
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    h4 {
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        text-overflow-mode: ellipse;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+    h4 {
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        text-overflow-mode: ellipse;
+    }
 }
 </style>
