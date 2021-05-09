@@ -61,8 +61,21 @@ export default {
 @media (min-width: 576px) and (max-width: 767.98px) {
 }
 
+/* Large Phones in landscape mode */
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    h4 {
+        font-size: .77em;
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        font-size: .54em;
+        text-overflow-mode: ellipse;
+    }
+}
+
 /* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) and (max-width: 991.98px) {
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
     h4 {
         font-size: 1.2em;
         text-overflow-mode: ellipse;

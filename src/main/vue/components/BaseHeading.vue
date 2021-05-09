@@ -37,4 +37,25 @@ export default {
     margin-top: calc((2vh + 1vw) / 2);
     margin-bottom: calc((2vh + 1vw) / 1.5);
 }
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    h3 {
+        font-size: 1.1em;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    h3 {
+        font-size: 1.1em;
+    }
+}
+
+/* Large Phones in landscape mode */
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    h3 {
+        font-size: 1.1em;
+    }
+}
 </style>

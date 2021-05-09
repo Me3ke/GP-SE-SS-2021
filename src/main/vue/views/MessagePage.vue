@@ -58,8 +58,8 @@
             </b-container>
         </div>
 
-        <!-- Weired Tablets Version -->
-        <div class="inBetween">
+        <!-- Not high enough Tablets Version -->
+        <div class="inBetweenTablets">
             <b-container fluid style="margin-left: 3vw; padding: 0">
                 <b-row>
                     <b-col cols="4" style="margin-top:2vh;">
@@ -86,8 +86,87 @@
             </b-container>
         </div>
 
-        <!-- Mobile Version -->
-        <div class="mobile"></div>
+        <!-- Mobile Version - Landscape for large phones-->
+        <div class="mobileLandscapeBig">
+            <b-container fluid style="margin-left: 3vw; padding: 0">
+                <b-row>
+                    <b-col cols="4" style="margin-top:3.7vh;">
+                        <div class="overflow-auto" style="height: 60vh">
+                            <div v-for="msg in messages" :key="msg.id"
+                                 @click="selectMsg(msg)"
+                                 style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
+                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
+                                <MessageBox v-else :msg="msg"></MessageBox>
+                            </div>
+                        </div>
+                    </b-col>
+
+                    <b-col cols="7" style="margin-top:4.7vh;">
+                        <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
+                                           style="height: 60vh;"></MessageContentBox>
+                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 60vh;">
+                            <h4 style="margin-top: 15vh">
+                                {{ $t('MessagePage.nonSelected') }}
+                            </h4>
+                        </b-container>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
+
+        <!-- Mobile Version - Landscape-->
+        <div class="mobileLandscape">
+            <b-container fluid style="margin-left: 3vw; padding: 0;">
+                <b-row cols="1">
+                    <b-col style="margin-top:2.5vh;">
+                        <div class="overflow-auto" style="height: 60vh">
+                            <div v-for="msg in messages" :key="msg.id"
+                                 @click="selectMsg(msg)"
+                                 style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
+                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
+                                <MessageBox v-else :msg="msg"></MessageBox>
+                            </div>
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
+
+        <!-- Mobile Version - Landscape for small phones-->
+        <div class="mobileLandscapeSmall">
+            <b-container fluid style="margin-left: 3vw; padding: 0;">
+                <b-row cols="1">
+                    <b-col style="margin-top:2.5vh;">
+                        <div class="overflow-auto" style="height: 60vh">
+                            <div v-for="msg in messages" :key="msg.id"
+                                 @click="selectMsg(msg)"
+                                 style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
+                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
+                                <MessageBox v-else :msg="msg"></MessageBox>
+                            </div>
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
+
+        <!-- Mobile Version - Portrait-->
+        <div class="mobilePortrait">
+            <b-container fluid style="margin-left: 3vw; padding: 0">
+                <b-row cols="1">
+                    <b-col style="margin-top:1.5vh;">
+                        <div class="overflow-auto" style="height: 75vh">
+                            <div v-for="msg in messages" :key="msg.id"
+                                 @click="selectMsg(msg)"
+                                 style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
+                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
+                                <MessageBox v-else :msg="msg"></MessageBox>
+                            </div>
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
 
         <Footer></Footer>
     </div>
@@ -129,10 +208,10 @@ export default {
     background-color: var(--light-grey);
 }
 
-/* Bootstrap vue standard breaks */
+/* Settings for differently sized screens */
 
-/* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 575.98px) {
+/* Really small phones in landscape */
+@media (max-width: 575.98px) and (max-height: 479.98px) {
     .desktop {
         display: none;
     }
@@ -141,7 +220,46 @@ export default {
         display: none;
     }
 
-    .inBetween {
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobilePortrait {
+        display: none;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) and (min-height: 480px) {
+    .desktop {
+        display: none;
+    }
+
+    .tablet {
+        display: none;
+    }
+
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
         display: none;
     }
 }
@@ -156,68 +274,161 @@ export default {
         display: none;
     }
 
-    .inBetween {
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobilePortrait {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+}
+
+/* Large Phones in landscape mode */
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .desktop {
+        display: none;
+    }
+
+    .tablet {
+        display: none;
+    }
+
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobilePortrait {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+
+    h4 {
+        font-size: .85em;
+        text-overflow-mode: ellipse;
+    }
+}
+
+/* Medium Devices that are not high enough */
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) and (max-height: 645px) {
+    .desktop {
+        display: none;
+    }
+
+    .tablet {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+
+    .mobilePortrait {
         display: none;
     }
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 645px) {
-    .mobile {
-        display: none;
-    }
-
     .desktop {
         display: none;
     }
 
-    .inBetween {
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+
+    .mobilePortrait {
         display: none;
     }
 }
 
-@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 654px) {
-    .mobile {
-        display: none;
-    }
-
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-}
 
 /* Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) and (max-width: 1199.98px) {
-    .mobile {
-        display: none;
-    }
-
     .tablet {
         display: none;
     }
 
-    .inBetween {
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+
+    .mobilePortrait {
         display: none;
     }
 }
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
-    .mobile {
-        display: none;
-    }
-
     .tablet {
         display: none;
     }
 
-    .inBetween {
+    .inBetweenTablets {
+        display: none;
+    }
+
+    .mobileLandscapeBig {
+        display: none;
+    }
+
+    .mobileLandscape {
+        display: none;
+    }
+
+    .mobileLandscapeSmall {
+        display: none;
+    }
+
+    .mobilePortrait {
         display: none;
     }
 }
-
 </style>
