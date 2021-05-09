@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * the class that implements the UserService interface for communication with the database.
@@ -24,5 +25,10 @@ public class UserServiceImpl implements UserService {
         final List<User> userList = new ArrayList<>();
         repo.findAll().forEach(userList::add);
         return userList;
+    }
+
+    @Override
+    public Optional<User> getUser(String email) {
+        return repo.findById(email);
     }
 }
