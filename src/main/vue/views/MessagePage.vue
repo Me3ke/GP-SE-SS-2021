@@ -15,7 +15,7 @@
                 </b-col>
 
                 <b-col cols="8" style="margin-top:2vh;">
-                    <MessageContentBox v-if="selected" :msg="selectedMsg" style="height: 85vh;"></MessageContentBox>
+                    <MessageContentBox v-if="isSelected()" :msg="selectedMsg" style="height: 85vh;"></MessageContentBox>
                     <b-container v-else fluid class="card" style="padding:0.5vh; height: 85vh;">
                         <h4 style="margin-top: 15vh">
                             {{ $t('MessagePage.nonSelected') }}
@@ -36,266 +36,28 @@ import MessageBox from "@/main/vue/components/MessageBox";
 import Footer from "@/main/vue/components/Footer";
 import MessageContentBox from "@/main/vue/components/MessageContentBox";
 
+import {mapState, mapGetters} from 'vuex';
+import _ from "lodash";
+
 export default {
     name: "MessagePage",
     components: {MessageContentBox, Footer, MessageBox, Header},
-    props: {
-        selectedMsg: Object,
-        selected: Boolean
-    },
-    data() {
-        return {
-            unwatchedMsgs: [],
-            "messages": [
-                {
-                    "id": 0,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "watched": "False",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 1,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 2,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 3,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                }, {
-                    "id": 4,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 5,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 6,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 7,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 8,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 9,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 10,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 11,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 12,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 13,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 14,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 15,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                },
-                {
-                    "id": 16,
-                    "sentBy": "superMail@mailService.de",
-                    "category": "Reminder",
-                    "dateSent": "30.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument muss in 3 Tagen signiert sein.",
-                    "correspondingDocument": {
-                        "id": "00",
-                        "title": "Mein super Dokument"
-                    }
-                },
-                {
-                    "id": 17,
-                    "sentBy": "bessereMail@mailService.de",
-                    "category": "Updated",
-                    "dateSent": "27.04.2021",
-                    "watched": "False",
-                    "content": "Das folgende Dokument wurde aktualisiert und alle Unterschirften müssen neu getätigt werden.",
-                    "correspondingDocument": {
-                        "id": "11",
-                        "title": "Mein besseres Dokument"
-                    }
-                },
-                {
-                    "id": 18,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Checked",
-                    "dateSent": "21.04.2021",
-                    "watched": "True",
-                    "content": "Das folgende Dokument wurde erfolgreich von Batman gegengelesen.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein bestes Dokument"
-                    }
-                },
-                {
-                    "id": 19,
-                    "sentBy": "besteMail@mailService.de",
-                    "category": "Sign",
-                    "dateSent": "21.04.2021",
-                    "watched": "True",
-                    "content": "Das folgende Dokument wurde erfolgreich von Superman unterschrieben.",
-                    "correspondingDocument": {
-                        "id": "22",
-                        "title": "Mein drittes Dokument"
-                    }
-                }
-            ]
-        }
-    },
     methods: {
         selectMsg(msg) {
-            this.selectedMsg = msg
+            this.$store.dispatch('patchChangeSelectedMsg', msg)
+            this.$store.dispatch('patchChangeWatchedStatus', msg)
+
+        },
+        isSelected() {
+            return !_.isEmpty(this.selectedMsg);
         }
     },
-    mounted() {
-        this.unwatchedMsgs = this.messages.filter(msg => msg.watched === "False")
+    computed: {
+        ...mapState({
+            messages: state => state.messages.messages,
+            selectedMsg: state => state.messages.selectedMsg
+        }),
+        ...mapGetters(["getUnwatchedMessages"])
     }
 }
 </script>
