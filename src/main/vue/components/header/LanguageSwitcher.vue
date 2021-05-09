@@ -79,15 +79,9 @@ export default {
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-    opacity: 80%;
+    background-color: var(--light-grey);
     transition-duration: 0.4s;
 }
 
-.my-dropdown-item:active >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-}
 
 </style>

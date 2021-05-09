@@ -24,18 +24,10 @@
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
         <b-dropdown-item class="my-dropdown-item" v-for="msg in getMessages(7)" :key="msg.id"
-                         @mouseover.native="handleHover(msg.id)" @mouseleave.native="handleHover(-1)"
                          @click="showMsg(msg)">
 
             <!-- For reminder messages -->
-            <b-iconstack v-if="isHovered === msg.id && msg.category === 'Reminder'" font-scale="2">
-                <b-icon class="my-icon-hovered" stacked icon="file-earmark-text" scale="1"></b-icon>
-                <b-icon class="my-icon-hovered" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
-                        rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
-                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
-            </b-iconstack>
-            <b-iconstack v-else-if="msg.category === 'Reminder'" font-scale="2">
+            <b-iconstack v-if="msg.category === 'Reminder'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
@@ -44,13 +36,6 @@
             </b-iconstack>
 
             <!-- For signed messages -->
-            <b-iconstack v-else-if="isHovered === msg.id && msg.category === 'Sign'" font-scale="2">
-                <b-icon class="my-icon-hovered" stacked icon="file-earmark-check" scale="1"></b-icon>
-                <b-icon class="my-icon-hovered" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
-                        rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
-                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
-            </b-iconstack>
             <b-iconstack v-else-if="msg.category === 'Sign'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
@@ -60,13 +45,6 @@
             </b-iconstack>
 
             <!-- For checked messages -->
-            <b-iconstack v-else-if="isHovered === msg.id && msg.category === 'Checked'" font-scale="2">
-                <b-icon class="my-icon-hovered" stacked icon="file-earmark-check" scale="1"></b-icon>
-                <b-icon class="my-icon-hovered" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
-                        rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
-                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
-            </b-iconstack>
             <b-iconstack v-else-if="msg.category === 'Checked'" font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
@@ -76,13 +54,6 @@
             </b-iconstack>
 
             <!-- For updated messages -->
-            <b-iconstack v-else-if="isHovered === msg.id && msg.category === 'Updated'" font-scale="2">
-                <b-icon class="my-icon-hovered" stacked icon="file-earmark" scale="1"></b-icon>
-                <b-icon class="my-icon-hovered" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4"
-                        rotate="45"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon-hovered"
-                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
-            </b-iconstack>
             <b-iconstack v-else font-scale="2">
                 <b-icon class="my-icon" stacked icon="file-earmark" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4" rotate="45"></b-icon>
@@ -110,15 +81,7 @@ import {mapGetters} from 'vuex';
 
 export default {
     name: "Messages",
-    data() {
-        return {
-            isHovered: -1
-        }
-    },
     methods: {
-        handleHover(ele) {
-            this.isHovered = ele
-        },
         showMsg: function (msg) {
             //changes selected message and its watched status
             this.$store.dispatch('patchChangeSelectedMsg', msg)
@@ -151,7 +114,15 @@ export default {
 
 <style scoped>
 
-@import "../../assets/css/dropdown.css";
+.letters {
+    margin-left: 0.75vw;
+    position: relative;
+    bottom: 0.5vw;
+}
+
+.my-icon {
+    fill: var(--elsa-blue);
+}
 
 .my-divider >>> .dropdown-divider {
     margin-top: 0;
@@ -185,14 +156,8 @@ export default {
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-    opacity: 80%;
+    background-color: var(--light-grey);
     transition-duration: 0.4s;
 }
 
-.my-dropdown-item:active >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-}
 </style>
