@@ -3,10 +3,8 @@
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon" font-scale="2"></b-icon>
         </template>
-        <b-dropdown-item @mouseover.native="handleHover(0)" @mouseleave.native="handleHover(-1)"
-                         class="my-dropdown-item">
-            <b-icon icon="person-circle" v-if="isHovered === 0" class="my-icon-hovered" font-scale="2"></b-icon>
-            <b-icon icon="person-circle" v-else class="my-icon" font-scale="2"></b-icon>
+        <b-dropdown-item class="my-dropdown-item">
+            <b-icon icon="person-circle" class="my-icon" font-scale="2"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
