@@ -1,9 +1,10 @@
 import VueRouter from "vue-router";
 import i18n from "@/i18n";
-import TestPage from "@/main/vue/views/TestPage";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 import UserGuide from "@/main/vue/views/UserGuide";
+import OverviewPage from "@/main/vue/views/OverviewPage";
+import LoginPage from "@/main/vue/views/LoginPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -19,11 +20,16 @@ const router = new VueRouter({
                     return c('router-view')
                 }
             },
-            children: [
+            children:[
                 {
-                    path: 'test-page',
-                    name: 'test-page',
-                    component: TestPage
+                    path: 'overview',
+                    name: 'overview',
+                    component: OverviewPage
+                },
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: LoginPage
                 },
                 {
                     path: '404',

@@ -21,5 +21,33 @@
     },
     "UserGuide": {
         "name": "Benutzerhandbuch"
+    },
+
+    "Header": {
+        "logo": "ELSA Logo",
+        "LanguageSwitcher": {
+            "de": "Deutsch",
+            "en": "Englisch",
+            "language": "Sprache"
+        },
+        "Avatar": {
+            "profile": "Mein Konto",
+            "settings": "Einstellungen",
+            "help": "Benutzerhandbuch",
+            "logout": "Abmelden"
+        },
+        "Messages": {
+            "msg": "Benachrichtigungen",
+            "noMsg": "Keine neuen Nachrichten!",
+            "newMsg": "Neue Benachrichtigungen!",
+            "toDoc": "Zum Dokument"
+        }
+    },
+    "OverviewPage": {
+        "heading": "Übersicht"
+    },
+    "Document": {
+        "owner": "Bersitzer",
+        "date": "Erstellungsdatum"
     }
 }

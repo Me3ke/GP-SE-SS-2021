@@ -18,5 +18,32 @@
         "h1": "Whooops!",
         "h3": "It looks like you might be experiencing some network connection issues, please click the back button and try again.",
         "back": "Go back"
+    },
+    "Header": {
+        "logo": "ELSA Logo",
+        "LanguageSwitcher": {
+            "de": "German",
+            "en": "English",
+            "language": "Language"
+        },
+        "Avatar": {
+            "profile": "My Profile",
+            "settings": "Settings",
+            "help": "Help",
+            "logout": "Logout"
+        },
+        "Messages": {
+            "msg": "Messages",
+            "noMsg": "No new messages!",
+            "newMsg": "New Messages!",
+            "toDoc": "Go to document"
+        }
+    },
+    "OverviewPage": {
+        "heading": "Overview"
+    },
+    "Document": {
+        "owner": "Owner",
+        "date": "Created on"
     }
 }

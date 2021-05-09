@@ -1,7 +1,9 @@
+<!-- Do be redone -->
+<!-- Icon click does not work yet -->
 <template>
     <div id="container">
-        <BaseIcon id="icon" name="arrow-left" color="var(--dark-grey)" width="30" height="30" stroke-width="3"
-                  @click.native="historyThere()  ? $router.go(-1) : $router.push('/')"></BaseIcon>
+        <b-icon id="icon" icon="arrow-left"
+                @click.native="historyThere()  ? $router.go(-1) : $router.push('/')"></b-icon>
         <h4 id="heading">{{ $t(name) }}</h4>
     </div>
 </template>

@@ -5,11 +5,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The model for a user, responsible for initializing new Users with all the information given by them.
@@ -17,28 +18,42 @@ import java.util.List;
  * @author Tobias Kröcker & Hannah Schweizer
  * @since 14.04.2021
  */
+
+@Entity
 public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
-    private static final int KEY_SIZE = 2048;
-    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
-    private String email;
-    private String firstname;
-    private String lastname;
-    private String password;
-    private String street;
-    private int houseNumber;
-    private int postCode;
-    private int phoneNumber;
-    private String homeTown;
-    private String country;
-    private LocalDate birthday;
-    private KeyPair activeKeyPair;
-    private PrivateKey activePrivate;
-    private List<KeyPair> keyPairs = new ArrayList<>();
 
-    //Todo: Maybe add a role interface for more specific elements in the list.
-    private List<String> roles;
+    @OneToOne
+    private PersonalData personalData;
+
+    @Id
+    @Column
+    private String email;
+
+    @Column
+    private String firstname;
+
+    @Column
+    private String lastname;
+
+    //@OneToMany
+    //private List<Keys> keys = new ArrayList<>();
+
+    @Column
+    private PublicKey publicKey;
+
+    @Column
+    private String password;
+
+    //@OneToOne
+    //private Keys activePair;
+
+    @Column
+    private boolean admin;
+
+    @OneToMany
+    private List<Envelope> myEnvelopes = new ArrayList<>();
 
     public User() {
 
@@ -57,8 +72,6 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
-        this.roles = new ArrayList<>();
-        newKeypair();
     }
 
     /**
@@ -72,72 +85,60 @@ public class User implements UserDetails {
      * @param birthday    the birthday of the user
      * @param phoneNumber the phoneNumber of the user
      */
-    public void addVoluntaryInformation(final String street, final int houseNumber, final int postCode,
-                                        final String homeTown, final String country, final LocalDate birthday,
-                                        final int phoneNumber) {
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.postCode = postCode;
-        this.homeTown = homeTown;
-        this.country = country;
-        this.birthday = birthday;
-        this.phoneNumber = phoneNumber;
+    public void setPersonalData(final String street, final int houseNumber, final int postCode,
+                                final String homeTown, final String country, final LocalDate birthday,
+                                final int phoneNumber) {
+        this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
+            country, birthday, phoneNumber);
     }
 
-    /**
-     * The method used to give a user another role.
+    /*
+     * The Method to add a new keyPair to the list of existing ones.
      *
-     * @param newRole the role that needs to be added
-     */
-    public void addRole(final String newRole) {
-        if (!this.roles.contains(newRole)) {
-            this.roles.add(newRole);
+     * param pathToPrivate a filePath referring to the file of the private key that relates to the public key that
+     *                      should be stored
+     * param publicKey     the public key that should be stored
+
+    public void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
+        if (publicKey.getAlgorithm().equals("RSA")) {
+            keys.add(new Keys(publicKey, pathToPrivate));
+            changeActiveKeyPair(keys.size() - 1);
         }
-    }
+    } */
 
-    /**
-     * the Method used to generate a new key-pair, and to change the active keypair and also the active private key to
-     * the new ones.
-     */
-    private void newKeypair() {
-        try {
-            final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            generator.initialize(KEY_SIZE);
-            if (activeKeyPair == null) {
-                activeKeyPair = generator.generateKeyPair();
-                keyPairs.add(activeKeyPair);
-                activePrivate = activeKeyPair.getPrivate();
-            } else {
-                keyPairs.add(generator.generateKeyPair());
-                changeActiveKeyPair(keyPairs.size() - 1);
-            }
-        } catch (NoSuchAlgorithmException exception) {
-            System.out.println(exception.getMessage());
-        }
-    }
-
-    //newKeyPair needs private access, but in future we probably need the function publicly available.
-    public void generateKeyPair() {
-        newKeypair();
-    }
-
-    /**
+    /*
      * the Method used to change the active key-pair to an existing one.
-     * @param index the id of the new active key-pair
-     */
+     *
+     * param index the id of the new active key-pair
+
     public void changeActiveKeyPair(final int index) {
         //avoid outOfBounds exceptions
-        if (index < keyPairs.size()) {
-            activeKeyPair = keyPairs.get(index);
-            activePrivate = activeKeyPair.getPrivate();
+        if (index < keys.size()) {
+            activePair = keys.get(index);
         }
+    }*/
+
+    /**
+     * the method to create a new envelope with the user object, that calls this as the owner.
+     * @param paths the filepaths of the documents that the envelope should be initialized with combined with a list of
+     *              signatories for each document
+     * @param name the name of the envelope
+     * @return the new envelope.
+     */
+    public Envelope createNewEnvelope(final Map<String, List<Signatory>> paths, final String name) {
+        final DocumentCreator creator = new DocumentCreator();
+        final Envelope envelope = creator.convertPathsToDocuments(paths, this, name);
+        myEnvelopes.add(envelope);
+        return envelope;
     }
 
     /**
      * the method used to generate an advanced signature, using the active private key.
-     * @param hash the id of the document that needs a signature
+     *
      * @return the signature represented by a byte list
      */
+    //no private Key in backend -> delete
+    /*
     public byte[] advancedSign(final String hash) {
         byte[] signature = null;
         try {
@@ -151,21 +152,18 @@ public class User implements UserDetails {
         return signature;
     }
 
-    /**
-     * The method used to take a role from a user.
-     *
-     * @param delRole the role that should be taken from the user
      */
-    public void deleteRole(final String delRole) {
-        if (this.roles.contains(delRole)) {
-            this.roles.remove(delRole);
-        }
-    }
 
+
+    //TODO
     // Methods that are required for using the interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        /*
         return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
+
+         */
+        return null;
     }
 
     @Override
@@ -197,8 +195,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    // getter and setter for all the variables that describe the user
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -232,83 +228,15 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getStreet() {
-        return street;
+
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
-    public void setStreet(final String street) {
-        this.street = street;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(final int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public int getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(final int postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getHomeTown() {
-        return homeTown;
-    }
-
-    public void setHomeTown(final String homeTown) {
-        this.homeTown = homeTown;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(final String country) {
-        this.country = country;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(final LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(final int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * getter for all public keys.
-     * @return all public keys associated with this user
-     */
-    public PublicKey[] getAllPublicKeys() {
-        PublicKey[] keys = new PublicKey[keyPairs.size()];
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = keyPairs.get(i).getPublic();
-        }
+    /*
+    public List<Keys> getKeys() {
         return keys;
     }
 
-    public KeyPair getActiveKeyPair() {
-        return activeKeyPair;
-    }
-
-    public List<KeyPair> getKeyPairs() {
-        return keyPairs;
-    }
+     */
 }

@@ -16,11 +16,11 @@ public class HashSHA implements HashFunction {
     private static final String SHA_VERSION = "SHA-512";
 
     @Override
-    public String computeHash(String input) {
+    public String computeHash(final String input) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance(SHA_VERSION);
-            byte[] byteCode = messageDigest.digest(input.getBytes());
-            BigInteger bigInteger = new BigInteger(1, byteCode);
+            final MessageDigest messageDigest = MessageDigest.getInstance(SHA_VERSION);
+            final byte[] byteCode = messageDigest.digest(input.getBytes());
+            final BigInteger bigInteger = new BigInteger(1, byteCode);
             String hashText = bigInteger.toString(BASE_SIXTEEN);
             while (hashText.length() < HASH_LENGTH) {
                 hashText = "0" + hashText;

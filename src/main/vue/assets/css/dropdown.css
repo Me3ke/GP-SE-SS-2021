@@ -1,0 +1,14 @@
+.letters {
+    margin-left: 0.75vw;
+    position: relative;
+    bottom: 0.5vw;
+}
+
+.my-icon {
+    fill: var(--elsa-blue);
+}
+
+.my-icon-hovered {
+    fill: whitesmoke;
+    transition-duration: 0.4s;
+}
