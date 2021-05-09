@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export const state = {
     messages: [
         {
@@ -261,7 +263,7 @@ export const actions = {
         }
     },
     patchChangeWatchedStatus({state, commit}) {
-        if (state.selectedMsg.watched !== "True") {
+        if (!_.isEmpty(state.selectedMsg) && state.selectedMsg.watched !== "True") {
             commit('CHANGE_WATCHED_STATUS')
         }
     }
