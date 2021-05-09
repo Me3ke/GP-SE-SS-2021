@@ -9,7 +9,8 @@
                         <div v-for="msg in messages" :key="msg.id"
                              @click="selectMsg(msg)"
                              style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                            <MessageBox :msg="msg"></MessageBox>
+                            <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
+                            <MessageBox v-else :msg="msg"></MessageBox>
                         </div>
                     </div>
                 </b-col>
@@ -62,5 +63,7 @@ export default {
 </script>
 
 <style scoped>
-
+.selectedMsg {
+    background-color: var(--light-grey);
+}
 </style>
