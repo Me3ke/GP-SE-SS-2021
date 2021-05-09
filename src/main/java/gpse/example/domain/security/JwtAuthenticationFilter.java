@@ -16,13 +16,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter { //<1>
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
     private final SecurityConstants securityConstants;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, final SecurityConstants securityConstants) { //<2>
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, final SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
 
@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) { //<3>
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .setIssuer(securityConstants.getTokenIssuer())
             .setAudience(securityConstants.getTokenAudience())
             .setSubject(user.getUsername())
-            .setExpiration(new Date(System.currentTimeMillis() + 864000000)) // + 10 Tage
+            .setExpiration(new Date(System.currentTimeMillis() + 60000)) // + 1 minute
             .claim("rol", roles)
             .compact();
 

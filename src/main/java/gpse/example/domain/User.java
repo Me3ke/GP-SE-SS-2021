@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -29,6 +30,9 @@ public class User implements UserDetails {
     private PersonalData personalData;
 
     @Id
+    @Column
+    private String username;
+
     @Column
     private String email;
 
@@ -70,6 +74,7 @@ public class User implements UserDetails {
      * @param password  the password that is used for actions that need security.
      */
     public User(final String email, final String firstname, final String lastname, final String password) {
+        this.username = email;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -161,11 +166,11 @@ public class User implements UserDetails {
     // Methods that are required for using the interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*
-        return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
-
-         */
-        return null;
+        if (admin) {
+            return AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
+        } else {
+            return AuthorityUtils.createAuthorityList("ROLE_USER");
+        }
     }
 
     @Override
@@ -175,7 +180,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
@@ -206,7 +211,8 @@ public class User implements UserDetails {
         return email;
     }
 
-    public void setEmail(final String email) {
+    public void setUsername(final String email) {
+        this.username = email;
         this.email = email;
     }
 

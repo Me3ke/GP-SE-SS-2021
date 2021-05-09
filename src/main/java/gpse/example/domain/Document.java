@@ -107,7 +107,7 @@ public class Document {
     public void advancedSignature(final String user, final byte[] signature, final int index) {
         boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
-            if (signatories.get(i).getUser().getEmail().equals(user)) {
+            if (signatories.get(i).getUser().getUsername().equals(user)) {
                 userIsSignatory = true;
                 advancedSignatures.add(new AdvancedSignature(user, signature, index));
                 setSigned(i);
@@ -127,7 +127,7 @@ public class Document {
     //TODO
     public boolean verifySignature(final User user) {
 
-        final AdvancedSignature signatureInfo = getUsersSignature(user.getEmail());
+        final AdvancedSignature signatureInfo = getUsersSignature(user.getUsername());
         boolean valid = false;
         if (signatureInfo != null) {
             final byte[] signature = signatureInfo.getSignature();

@@ -31,7 +31,7 @@ public class DocumentCreator {
                     associateSignatories.remove(file.getPath());
                     documentList.addAll(directoryToDocuments(file, signatories, owner));
                 } else {
-                    final Document document = new Document(path, associateSignatories.get(path), owner.getEmail());
+                    final Document document = new Document(path, associateSignatories.get(path), owner.getUsername());
                     documentList.add(document);
                 }
             }
@@ -60,7 +60,7 @@ public class DocumentCreator {
                 final List<Document> directoryList = directoryToDocuments(directoryFile, associatedSig, owner);
                 directoryFileList.addAll(directoryList);
             } else {
-                final Document document = new Document(directoryFile.getPath(), associatedSig, owner.getEmail());
+                final Document document = new Document(directoryFile.getPath(), associatedSig, owner.getUsername());
                 directoryFileList.add(document);
             }
         }

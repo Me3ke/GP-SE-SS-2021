@@ -73,6 +73,6 @@ public class Envelope implements Iterable<Document> {
     }
 
     public String getOwnerID() {
-        return owner.getEmail();
+        return owner.getUsername();
     }
 }

@@ -69,5 +69,5 @@ public final class SecurityConstants {
         this.tokenAudience = tokenAudience;
     }
 
-    // Getter und Setter für die Attribute <9>
+
 }

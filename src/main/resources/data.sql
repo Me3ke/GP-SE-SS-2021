@@ -1,2 +1,2 @@
-INSERT INTO user (email, firstname, lastname, password, admin) VALUES ('hans.schneider@mail.com', 'hans', 'schneider', '12345678', false);
-INSERT INTO user (email, firstname, lastname, password, admin) VALUES ('peter.müller@mail.com', 'peter', 'müller', '87654321', true);
+INSERT INTO user (username, email, firstname, lastname, password, admin) VALUES ('hans.schneider@mail.com', 'hans.schneider@mail.com', 'hans', 'schneider', '{bcrypt}$2a$04$iIX1Rjca.HkjW3Kvkds81uSsn9R.kLVJaC1y32SSOMPLdlvVbubRm', false);
+INSERT INTO user (username, email, firstname, lastname, password, admin) VALUES ('peter.müller@mail.com', 'peter.müller@mail.com', 'peter', 'müller', '{bcrypt}$2a$04$hiwM.UVDphmIyvigGN8leOLJUKy06yiLCqe.51thRFTckcV2Fvkm.', true);

@@ -1,5 +1,7 @@
 package gpse.example.domain;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,5 +10,5 @@ import java.util.Optional;
  */
 public interface UserService {
     List<User> getUserList();
-    Optional<User> getUser(String email);
+    UserDetails loadUserByUsername(String username);
 }
