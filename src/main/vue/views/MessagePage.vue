@@ -1,7 +1,9 @@
 <template>
     <div>
+        <!-- On all devices -->
         <Header></Header>
         <BaseHeading name="MessagePage.heading"></BaseHeading>
+
         <!-- Desktop version -->
         <div class="desktop">
             <b-container fluid style="margin-left: 3vw; padding: 0">
@@ -63,7 +65,7 @@
             <b-container fluid style="margin-left: 3vw; padding: 0">
                 <b-row>
                     <b-col cols="4" style="margin-top:2vh;">
-                        <div class="overflow-auto" style="height: 70vh">
+                        <div class="overflow-auto" style="height: 75vh">
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
@@ -75,8 +77,8 @@
 
                     <b-col cols="7" style="margin-top:3vh;">
                         <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
-                                           style="height: 70vh;"></MessageContentBox>
-                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 70vh;">
+                                           style="height: 75vh;"></MessageContentBox>
+                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 75vh;">
                             <h4 style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
@@ -119,13 +121,19 @@
             <b-container fluid style="margin-left: 3vw; padding: 0;">
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
-                        <div class="overflow-auto" style="height: 60vh">
+                        <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
                                 <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
                                 <MessageBox v-else :msg="msg"></MessageBox>
                             </div>
+                        </div>
+
+                        <div class="overflow-auto" style="height: 60vh; margin-right: 6vw" v-else>
+                            <MessageContentBox :msg="selectedMsg"></MessageContentBox>
+                            <b-card-text class="backCard" @click="selectMsg({})">{{ $t('MessagePage.toAll') }}
+                            </b-card-text>
                         </div>
                     </b-col>
                 </b-row>
@@ -137,13 +145,19 @@
             <b-container fluid style="margin-left: 3vw; padding: 0;">
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
-                        <div class="overflow-auto" style="height: 60vh">
+                        <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
                                 <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
                                 <MessageBox v-else :msg="msg"></MessageBox>
                             </div>
+                        </div>
+
+                        <div class="overflow-auto" style="height: 60vh; margin-right: 6vw" v-else>
+                            <MessageContentBox :msg="selectedMsg"></MessageContentBox>
+                            <b-card-text class="backCard" @click="selectMsg({})">{{ $t('MessagePage.toAll') }}
+                            </b-card-text>
                         </div>
                     </b-col>
                 </b-row>
@@ -153,21 +167,27 @@
         <!-- Mobile Version - Portrait-->
         <div class="mobilePortrait">
             <b-container fluid style="margin-left: 3vw; padding: 0">
-                <b-row cols="1">
+                <b-row key="msgList" cols="1">
                     <b-col style="margin-top:1.5vh;">
-                        <div class="overflow-auto" style="height: 75vh">
+                        <div class="overflow-auto" style="height: 75vh" v-if="!isSelected()">
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
+                        </div>
+
+                        <div class="overflow-auto" style="height: 75vh; margin-right: 6vw" v-else>
+                            <MessageContentBox :msg="selectedMsg"></MessageContentBox>
+                            <b-card-text class="backCard" @click="selectMsg({})">{{ $t('MessagePage.toAll') }}
+                            </b-card-text>
                         </div>
                     </b-col>
                 </b-row>
             </b-container>
         </div>
 
+        <!-- On all devices -->
         <Footer></Footer>
     </div>
 </template>
@@ -188,7 +208,6 @@ export default {
         selectMsg(msg) {
             this.$store.dispatch('patchChangeSelectedMsg', msg)
             this.$store.dispatch('patchChangeWatchedStatus', msg)
-
         },
         isSelected() {
             return !_.isEmpty(this.selectedMsg);
@@ -206,6 +225,15 @@ export default {
 <style scoped>
 .selectedMsg {
     background-color: var(--light-grey);
+}
+
+.backCard {
+    font-size: .53em;
+    background-color: var(--elsa-blue);
+    color: whitesmoke;
+    margin-top: 0.5vh;
+    padding-top: 0.7vh;
+    padding-bottom: 0.7vh;
 }
 
 /* Settings for differently sized screens */

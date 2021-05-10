@@ -53,12 +53,31 @@ export default {
 
 <style scoped>
 
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
+    h4 {
+        font-size: .62em;
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        font-size: .43em;
+        text-overflow-mode: ellipse;
+    }
 }
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
+    h4 {
+        font-size: .52em;
+        text-overflow-mode: ellipse;
+    }
+
+    h6 {
+        font-size: .33em;
+        text-overflow-mode: ellipse;
+    }
 }
 
 /* Large Phones in landscape mode */

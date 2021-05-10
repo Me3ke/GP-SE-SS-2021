@@ -52,6 +52,7 @@
         "sentBy": "From",
         "sentOn": "On",
         "concerns": "Concerns",
-        "nonSelected": "Select a message to show its content."
+        "nonSelected": "Select a message to show its content.",
+        "toAll": "Back to all messages"
     }
 }

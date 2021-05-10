@@ -52,6 +52,7 @@
         "sentBy": "Von",
         "sentOn": "Am",
         "concerns": "Betrifft",
-        "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen."
+        "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
+        "toAll": "Zurück zu allen Benachrichtigungen"
     }
 }
