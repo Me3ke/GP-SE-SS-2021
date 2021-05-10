@@ -234,114 +234,35 @@ export default {
     margin-top: 0.5vh;
     padding-top: 0.7vh;
     padding-bottom: 0.7vh;
+    border-radius: 3.5px;
 }
 
 /* Settings for differently sized screens */
 
 /* Really small phones in landscape */
 @media (max-width: 575.98px) and (max-height: 479.98px) {
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobilePortrait {
+    .desktop, .tablet, .inBetweenTablets, .mobileLandscapeBig, .mobileLandscape, .mobilePortrait {
         display: none;
     }
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) and (min-height: 480px) {
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
+    .desktop, .tablet, .inBetweenTablets, .mobileLandscapeBig, .mobileLandscape, .mobileLandscapeSmall {
         display: none;
     }
 }
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobilePortrait {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
+    .desktop, .tablet, .inBetweenTablets, .mobileLandscapeBig, .mobilePortrait, .mobileLandscapeSmall {
         display: none;
     }
 }
 
 /* Large Phones in landscape mode */
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobilePortrait {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
+    .desktop, .tablet, .inBetweenTablets, .mobileLandscape, .mobilePortrait, .mobileLandscapeSmall {
         display: none;
     }
 
@@ -353,109 +274,22 @@ export default {
 
 /* Medium Devices that are not high enough */
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) and (max-height: 645px) {
-    .desktop {
-        display: none;
-    }
-
-    .tablet {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
-        display: none;
-    }
-
-    .mobilePortrait {
+    .desktop, .tablet, .mobileLandscapeBig, .mobileLandscape, .mobilePortrait, .mobileLandscapeSmall {
         display: none;
     }
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 645px) {
-    .desktop {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
-        display: none;
-    }
-
-    .mobilePortrait {
+    .desktop, .inBetweenTablets, .mobileLandscapeBig, .mobileLandscape, .mobilePortrait, .mobileLandscapeSmall {
         display: none;
     }
 }
 
 
 /* Large devices (desktops, 992px and up)*/
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
-        display: none;
-    }
-
-    .mobilePortrait {
-        display: none;
-    }
-}
-
-/* Extra large devices (large desktops, 1200px and up)*/
-@media (min-width: 1200px) {
-    .tablet {
-        display: none;
-    }
-
-    .inBetweenTablets {
-        display: none;
-    }
-
-    .mobileLandscapeBig {
-        display: none;
-    }
-
-    .mobileLandscape {
-        display: none;
-    }
-
-    .mobileLandscapeSmall {
-        display: none;
-    }
-
-    .mobilePortrait {
+@media (min-width: 992px) {
+    .tablet, .inBetweenTablets, .mobileLandscapeBig, .mobileLandscape, .mobilePortrait, .mobileLandscapeSmall {
         display: none;
     }
 }

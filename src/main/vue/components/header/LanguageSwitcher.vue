@@ -53,10 +53,8 @@ export default {
 }
 
 .responsive-img {
-    width: calc((7vh + 4vw) / 2);
-    height: auto;
-    margin-top: 0.3vw;
-    margin-bottom: 0.3vw;
+    height: 2em;
+    width: auto;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {
@@ -84,4 +82,34 @@ export default {
 }
 
 
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .dropdown-menu > li {
+        font-size: 0.5em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+}
 </style>

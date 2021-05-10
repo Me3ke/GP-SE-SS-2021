@@ -5,9 +5,9 @@
             <b-img :src="logo" id="responsive-img" :alt="$t('Header.logo')"></b-img>
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-        <b-collapse id="nav-collapse" is-nav>
+        <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
-                <LanguageSwitcher></LanguageSwitcher>
+                <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
                 <Messages></Messages>
                 <Avatar></Avatar>
             </b-navbar-nav>
@@ -34,8 +34,8 @@ export default {
 <style scoped>
 
 #responsive-img {
-    width: calc((10vh + 7vw) / 2);
-    height: auto;
+    height: 2em;
+    width: auto;
 }
 
 #background {
@@ -43,5 +43,36 @@ export default {
     url(../../assets/header_background.png);
     background-size: cover;
     align-content: center;
+}
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .navbar-brand, .collapse, .navbar-toggler {
+        font-size: 0.5em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .navbar-brand, .collapse, .navbar-toggler {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .navbar-brand, .collapse, .navbar-toggler {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .navbar-brand, .collapse, .navbar-toggler {
+        font-size: 0.75em;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-brand, .collapse, .navbar-toggler {
+        font-size: 0.75em;
+    }
 }
 </style>
