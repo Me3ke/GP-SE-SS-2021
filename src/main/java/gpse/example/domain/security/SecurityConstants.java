@@ -1,5 +1,9 @@
-package gpse.example.domain.security;import org.springframework.boot.context.properties.ConfigurationProperties;
+package gpse.example.domain.security;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * the class that contains all constants that are needed for the server security.
+ */
 @ConfigurationProperties("security")
 public final class SecurityConstants {
 
@@ -12,6 +16,7 @@ public final class SecurityConstants {
     private String tokenType;
     private String tokenIssuer;
     private String tokenAudience;
+    private int tokenLifetime;
 
     public String getAuthLoginUrl() {
         return authLoginUrl;
@@ -69,5 +74,11 @@ public final class SecurityConstants {
         this.tokenAudience = tokenAudience;
     }
 
+    public int getTokenLifetime() {
+        return tokenLifetime;
+    }
 
+    public void setTokenLifetime(int tokenLifetime) {
+        this.tokenLifetime = tokenLifetime;
+    }
 }

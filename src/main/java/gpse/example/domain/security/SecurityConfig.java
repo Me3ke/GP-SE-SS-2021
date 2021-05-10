@@ -13,11 +13,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.web.cors.*;
 
 import java.util.Arrays;
 
+/**
+ * the security configuration specific for this server.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableAutoConfiguration
@@ -58,6 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    /**
+     * a method for the cors configuration source.
+     * @return the specific source
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

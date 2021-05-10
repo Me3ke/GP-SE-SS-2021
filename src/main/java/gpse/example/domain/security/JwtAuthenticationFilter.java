@@ -1,4 +1,5 @@
 package gpse.example.domain.security;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -15,18 +16,27 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The filter for the authentification of users who send a login request.
+ */
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
     private final SecurityConstants securityConstants;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, final SecurityConstants securityConstants) {
+    /**
+     * the standard constructor for this filter.
+     *
+     * @param authenticationManager the standard spring authentication manager
+     * @param securityConstants     the security constants that are specific for this server.
+     */
+    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager,
+                                   final SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
 
@@ -34,51 +44,55 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response) {
         String username = "";
         String password = "";
-        StringBuffer jasonBody = new StringBuffer();
+        final StringBuffer jasonBody = new StringBuffer();
         String line = null;
         try {
-            BufferedReader reader = request.getReader();
-            while ((line = reader.readLine()) != null)
+            final BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null) {
                 jasonBody.append(line);
-        } catch (Exception e) {System.out.println("Exception String parsing to JSON");}
+            }
+        } catch (Exception e) {
+            System.out.println("Exception String parsing from JSON-body");
+        }
         try {
-            JSONObject jsonObject = new JSONObject(jasonBody.toString().trim());
+            final JSONObject jsonObject = new JSONObject(jasonBody.toString().trim());
             username = jsonObject.getString("username");
             password = jsonObject.getString("password");
-        }catch (JSONException err){
+        } catch (JSONException err) {
             System.out.println("Exception String parsing to JSON");
         }
         System.out.println(jasonBody.toString());
         System.out.println(username);
         System.out.println(password);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        final UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(username, password);
 
         return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain filterChain, Authentication authentication) { //<4>
-        UserDetails user = (UserDetails) authentication.getPrincipal();
+    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+                                            final FilterChain filterChain, final Authentication authentication) {
+        final UserDetails user = (UserDetails) authentication.getPrincipal();
 
-        List<String> roles = user.getAuthorities()
+        final List<String> roles = user.getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
 
-        String token = Jwts.builder()
+        final String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityConstants.getTokenType())
             .setIssuer(securityConstants.getTokenIssuer())
             .setAudience(securityConstants.getTokenAudience())
             .setSubject(user.getUsername())
-            .setExpiration(new Date(System.currentTimeMillis() + 60000)) // + 1 minute
+            .setExpiration(new Date(System.currentTimeMillis() + securityConstants.getTokenLifetime()))
             .claim("rol", roles)
             .compact();
 

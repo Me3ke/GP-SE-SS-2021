@@ -26,6 +26,8 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
 
+    private static final String ROLE_USER = "ROLE_USER";
+
     @OneToOne
     private PersonalData personalData;
 
@@ -127,9 +129,10 @@ public class User implements UserDetails {
 
     /**
      * the method to create a new envelope with the user object, that calls this as the owner.
+     *
      * @param paths the filepaths of the documents that the envelope should be initialized with combined with a list of
      *              signatories for each document
-     * @param name the name of the envelope
+     * @param name  the name of the envelope
      * @return the new envelope.
      */
     public Envelope createNewEnvelope(final Map<String, List<Signatory>> paths, final String name) {
@@ -167,9 +170,9 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (admin) {
-            return AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
+            return AuthorityUtils.createAuthorityList("ROLE_ADMIN", ROLE_USER);
         } else {
-            return AuthorityUtils.createAuthorityList("ROLE_USER");
+            return AuthorityUtils.createAuthorityList(ROLE_USER);
         }
     }
 
