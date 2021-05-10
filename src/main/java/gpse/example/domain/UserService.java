@@ -1,14 +1,16 @@
 package gpse.example.domain;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * the interface for UserServices.
  */
-public interface UserService {
+public interface UserService extends UserDetailsService {
     List<User> getUserList();
+
+    @Override
     UserDetails loadUserByUsername(String username);
 }

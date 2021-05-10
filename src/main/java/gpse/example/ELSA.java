@@ -28,13 +28,14 @@ public class ELSA {
      * @param args The program arguments
      */
     public static void main(final String... args) {
-        System.out.println("Welcome to ELSA! Type help to get help");
+        System.out.println("Welcome to ELSA!");
         SpringApplication.run(ELSA.class, args);
+        /*
         final QueryHandler queryHandler = new QueryHandler();
         final int exitValue = queryHandler.query(args);
         if (exitValue == DEFAULT_EXIT) {
             System.exit(exitValue);
         }
-
+         */
     }
 }
