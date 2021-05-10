@@ -20,7 +20,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document store(final DocumentCmd documentCmd, final String ownerID) {
+    public Document store(final DocumentPut documentPut, final String ownerID) {
         /*
         final DocumentCreator documentCreator = new DocumentCreator();
         final Document document = documentCreator.createDocument(documentCmd, ownerID);

@@ -69,6 +69,10 @@ public class Envelope implements Iterable<Document> {
 
     }
 
+    public long getId() {
+        return id;
+    }
+
     public void addDocument(final Document document) {
         documentList.add(document);
     }

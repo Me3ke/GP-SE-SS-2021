@@ -230,6 +230,14 @@ public class User implements UserDetails {
         return publicKey;
     }
 
+    public PersonalData getPersonalData() {
+        return personalData;
+    }
+
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
+    }
+
     /*
     public List<Keys> getKeys() {
         return keys;

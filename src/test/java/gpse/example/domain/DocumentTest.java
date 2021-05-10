@@ -1,13 +1,25 @@
 package gpse.example.domain;
 
+import gpse.example.DatabaseInitializer;
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentCmd;
+import gpse.example.domain.documents.DocumentPut;
 import gpse.example.domain.documents.DocumentCreator;
+import gpse.example.domain.envelopes.*;
+import gpse.example.domain.exceptions.CreatingFileException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.exceptions.UploadFileException;
+import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class DocumentTest {
@@ -21,25 +33,33 @@ class DocumentTest {
 
     @Nested
     public class DocumentData {
+
         @Test
         public void testDocumentData() {
             Document document = null;
             Document newDocument = null;
             try {
-                document = new Document("src/main/resources/Manf.pdf", null, null, null);
+
                 DocumentCreator documentCreator = new DocumentCreator();
-                DocumentCmd documentCmd = new DocumentCmd();
-                documentCmd.setData(document.getData());
-                documentCmd.setTitle(document.getDocumentTitle());
-                documentCmd.setType(document.getDocumentType());
-                newDocument = documentCreator.createDocument(documentCmd, null);
+                DocumentPut documentPut = new DocumentPut();
+                documentPut.setPath("src/main/resources/Manf.pdf");
+                document = documentCreator.createDocument(documentPut, null, null, null);
+                documentPut.setPath("");
+                documentPut.setData(document.getData());
+                documentPut.setTitle(document.getDocumentTitle());
+                documentPut.setType(document.getDocumentType());
+                newDocument = documentCreator.createDocument(documentPut, null, null, null);
                 byte[] expectedTest = document.getData();
                 byte[] actualTest = newDocument.getData();
                 for (int i = 0; i < expectedTest.length; i++) {
                     Assertions.assertEquals(expectedTest[i], actualTest[i]);
                 }
-            } catch (Exception e) {
-                System.out.println("something went wrong");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CreatingFileException e) {
+                e.printStackTrace();
+            } catch (DocumentNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }

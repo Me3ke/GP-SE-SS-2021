@@ -1,7 +1,7 @@
 package gpse.example.domain.envelopes;
 
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentCmd;
+import gpse.example.domain.documents.DocumentPut;
 import gpse.example.domain.documents.DocumentCreator;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
@@ -39,12 +39,13 @@ public class EnvelopeServiceImpl implements EnvelopeService {
     }
 
     @Override
-    public Envelope updateEnvelope(final long id, final DocumentCmd documentCmd, final String ownerID)
+    public Envelope updateEnvelope(final long id, final DocumentPut documentPut, final String ownerID,
+                                   final List<User> signatories, final List<User> readers)
                                     throws CreatingFileException, DocumentNotFoundException, IOException {
         final DocumentCreator documentCreator = new DocumentCreator();
         final Envelope envelope = getEnvelope(id)
             .orElseThrow(DocumentNotFoundException::new);
-        final Document document = documentCreator.createDocument(documentCmd, ownerID);
+        final Document document = documentCreator.createDocument(documentPut, ownerID, signatories, readers);
         envelope.addDocument(document);
         return repo.save(envelope);
     }

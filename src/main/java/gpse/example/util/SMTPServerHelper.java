@@ -12,20 +12,15 @@ import java.util.Properties;
  * SMTPServer class representing the connection to smtpserver.
  */
 
-@Entity
 public class SMTPServerHelper {
 
     public static final String TEST_TEMPLATE = "Dies ist ein Test %s !!! \n ELSA";
     public static final String TEST_SUBJECT = "Test";
     private static JavaMailSenderImpl mailSender;
 
-    @Column
     private static String hostServer;
-    @Column
     private static int port;
-    @Id
     private static String userName;
-    @Column
     private static String password;
 
     /**

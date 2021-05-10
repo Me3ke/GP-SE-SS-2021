@@ -2,10 +2,13 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.users.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,36 +19,48 @@ public class DocumentCreator {
 
     /**
      * The createDocFromData creates a document from an existing byte array or an existing path.
-     * @param documentCmd the command object which keeps the information for the document.
+     * @param documentPut the command object which keeps the information for the document.
      * @param ownerID the email adress of the User who want to create the document.
+     * @param signatories the list of signatories for this document.
+     * @param readers the list of readers for this document.
      * @return the created document.
      * @throws IOException if the data is incorrect.
      */
     //does not include directories.
-    public Document createDocument(final DocumentCmd documentCmd, final String ownerID)
+    public Document createDocument(final DocumentPut documentPut, final String ownerID, final List<User> signatories,
+                                   final List<User> readers)
                                     throws DocumentNotFoundException, CreatingFileException, IOException {
         Document document;
-        if (documentCmd.getPath().equals("")) {
+        if (documentPut.getPath().equals("")) {
+            // for creating documents which are not located on the local pc.
             File documentFile;
-            if (documentCmd.getData() == null) {
+            if (documentPut.getData() == null) {
                 throw new CreatingFileException(new IOException());
             } else {
-                documentFile = writeInNewFile(documentCmd.getData(), documentCmd.getType(),
-                    documentCmd.getTitle());
+                // to upload a file is created in the downloads directory.
+                documentFile = writeInNewFile(documentPut.getData(), documentPut.getType(),
+                    documentPut.getTitle());
             }
-            document = new Document(documentFile.getAbsolutePath(), documentCmd.getSignatories(),
-                                        ownerID, documentCmd.getReaders());
+            document = new Document(documentFile.getAbsolutePath(), new ArrayList<>(),
+                                        ownerID, readers);
+            for (int i = 0; i < document.getSignatories().size(); i++) {
+                document.addSignatory(signatories.get(i));
+            }
         } else {
-            final File file = new File(documentCmd.getPath());
+            // for creating documents which have to be uploaded.
+            final File file = new File(documentPut.getPath());
             if (file.exists() && file.isFile()) {
-                document = new Document(documentCmd.getPath(), documentCmd.getSignatories(), ownerID,
-                    documentCmd.getReaders());
+                document = new Document(documentPut.getPath(), new ArrayList<>(), ownerID,
+                    new ArrayList<>());
+                for (int i = 0; i < document.getSignatories().size(); i++) {
+                    document.addSignatory(signatories.get(i));
+                }
             } else {
                 throw new DocumentNotFoundException();
             }
         }
-        document.setEndDate(documentCmd.getEndDate());
-        document.setOrderRelevant(documentCmd.isOrderRelevant());
+        document.setEndDate(documentPut.getEndDate());
+        document.setOrderRelevant(documentPut.isOrderRelevant());
         return document;
     }
 

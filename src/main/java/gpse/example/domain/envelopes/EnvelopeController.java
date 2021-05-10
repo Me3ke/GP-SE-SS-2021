@@ -1,6 +1,6 @@
 package gpse.example.domain.envelopes;
 
-import gpse.example.domain.documents.DocumentCmd;
+import gpse.example.domain.documents.DocumentPut;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.users.User;
@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The envelopeController class handles the request from the frontend and
@@ -20,11 +22,14 @@ import java.io.IOException;
 @CrossOrigin("http://localhost:8088")
 public class EnvelopeController {
 
-    @Autowired
     private EnvelopeServiceImpl envelopeService;
+    private UserServiceImpl userService;
 
     @Autowired
-    private UserServiceImpl userService;
+    public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService) {
+        this.envelopeService = envelopeService;
+        this.userService = userService;
+    }
 
     /**
      * The createEnvelope method does a post request to create a new envelope.
@@ -39,7 +44,6 @@ public class EnvelopeController {
         try {
             final User owner = userService.getUser(ownerID);
             final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            System.out.println("Uploaded the envelope successfully: " + envelope.getName());
             return envelope;
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
@@ -50,33 +54,53 @@ public class EnvelopeController {
      * The fillEnvelope method does a put request to add a Document to an existing envelope.
      * @param envelopeID the ID of the envelope.
      * @param ownerID the email of the document creator
-     * @param documentCmd the command object keeping the information for a document to be created
+     * @param documentPut the command object keeping the information for a document to be created
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
     @PutMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                  final @PathVariable("userID") String ownerID,
-                                 final @RequestBody DocumentCmd documentCmd) throws UploadFileException {
+                                 final @RequestBody DocumentPut documentPut) throws UploadFileException {
         try {
             userService.getUser(ownerID);
-            return envelopeService.updateEnvelope(envelopeID, documentCmd, ownerID);
+            final List<User> signatories = new ArrayList<>();
+            final List<String> signatoriesID = documentPut.getSignatoriesID();
+            final List<User> readers = new ArrayList<>();
+            final List<String> readersID = documentPut.getReadersID();
+            for (final String currentID : signatoriesID) {
+                signatories.add(userService.getUser(currentID));
+            }
+            for (final String currentID : readersID) {
+                readers.add(userService.getUser(currentID));
+            }
+            return envelopeService.updateEnvelope(envelopeID, documentPut, ownerID, signatories, readers);
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
     }
-
-        /*
-        @GetMapping("/files")
-        public ResponseEntity<List<ResponseFile>> getListFiles() {
-            List<ResponseFile> files = storageService.getDocuments().stream().map(document -> {
+/*
+        @GetMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+        public Document getDocumentFromEnvelope(final @PathVariable ("envelopeID") long envelopeID,
+                                                final @PathVariable ("userID") String ownerID,
+                                                final @PathVariable ("documentID") long documentID) {
+        userService.getUser(ownerID);
+        Optional<Envelope> envelope = envelopeService.getEnvelope(envelopeID);
+        if (envelope.isPresent()) {
+            List<Document> documentList = envelope.get().getDocumentList();
+        }
+        DocumentServiceImpl documentService;
+        Document = documentService.getDocument(documentID);
+            /*
+            .stream().map(document -> {
                 String documentDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files/")
                     .path(Long.toString(document.getId()))
                     .toUriString();
-
-                return new ResponseFile(
+                    */
+/*
+                return new DocumentResponse(
                     document.getDocumentTitle(),
                     documentDownloadUri,
                     document.getDocumentType(),

@@ -1,23 +1,21 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * The documentCmd class is a CommandPattern class to specify the the Rest-Api.
+ * The documentPut class is a CommandPattern class to specify the the Rest-Api.
  */
-public class DocumentCmd {
+public class DocumentPut {
 
     private String path;
     private String title;
     private String type;
-    private List<Signatory> signatories;
-    private List<User> readers;
+    private List<String> signatoriesID;
+    private List<String> readersID;
     private SignatureType signatureType;
     private LocalDateTime endDate;
     private boolean orderRelevant;
@@ -47,20 +45,20 @@ public class DocumentCmd {
         this.type = type;
     }
 
-    public List<Signatory> getSignatories() {
-        return signatories;
+    public List<String> getSignatoriesID() {
+        return signatoriesID;
     }
 
-    public void setSignatories(final List<Signatory> signatories) {
-        this.signatories = signatories;
+    public void setSignatoriesID(final List<String> signatoriesID) {
+        this.signatoriesID = signatoriesID;
     }
 
-    public List<User> getReaders() {
-        return readers;
+    public List<String> getReadersID() {
+        return readersID;
     }
 
-    public void setReaders(final List<User> readers) {
-        this.readers = readers;
+    public void setReadersID(final List<String> readersID) {
+        this.readersID = readersID;
     }
 
     public SignatureType getSignatureType() {
