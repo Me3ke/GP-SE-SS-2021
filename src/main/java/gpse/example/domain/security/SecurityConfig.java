@@ -1,4 +1,5 @@
 package gpse.example.domain.security;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.web.cors.*;
 
 import java.util.Arrays;
@@ -32,11 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/**").permitAll()
-            .and()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
+            .authorizeRequests(authorizeRequests ->
+                authorizeRequests
+                    .antMatchers("/api/authenticate").permitAll()
+                    .anyRequest().authenticated()
+            )
+            //.addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
