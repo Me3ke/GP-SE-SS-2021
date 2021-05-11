@@ -33,24 +33,19 @@ class DocumentTest {
 
     @Nested
     public class DocumentData {
-
         @Test
         public void testDocumentData() {
-            Document document = null;
-            Document newDocument = null;
+            /*
             try {
-
                 DocumentCreator documentCreator = new DocumentCreator();
                 DocumentPut documentPut = new DocumentPut();
                 documentPut.setPath("src/main/resources/Manf.pdf");
-                document = documentCreator.createDocument(documentPut, null, null, null);
-                documentPut.setPath("");
-                documentPut.setData(document.getData());
-                documentPut.setTitle(document.getDocumentTitle());
-                documentPut.setType(document.getDocumentType());
-                newDocument = documentCreator.createDocument(documentPut, null, null, null);
+                documentPut.setTitle("Manf");
+                documentPut.setType("pdf");
+                Document document = documentCreator.createDocument(documentPut, null, null, null);
+                Document documentFromLocal = new Document("src/main/resources/Manf.pdf", null, null,null);
                 byte[] expectedTest = document.getData();
-                byte[] actualTest = newDocument.getData();
+                byte[] actualTest = documentFromLocal.getData();
                 for (int i = 0; i < expectedTest.length; i++) {
                     Assertions.assertEquals(expectedTest[i], actualTest[i]);
                 }
@@ -58,12 +53,15 @@ class DocumentTest {
                 e.printStackTrace();
             } catch (CreatingFileException e) {
                 e.printStackTrace();
-            } catch (DocumentNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+            } */
+           }
+
+
     }
-        /*
+}
+/*
+
+    }
 
 
         @Test
@@ -226,5 +224,6 @@ class DocumentTest {
         public void verifySignature
 
     }
-         */
+
 }
+*/

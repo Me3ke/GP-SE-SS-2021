@@ -45,7 +45,8 @@ public class EnvelopeServiceImpl implements EnvelopeService {
         final DocumentCreator documentCreator = new DocumentCreator();
         final Envelope envelope = getEnvelope(id)
             .orElseThrow(DocumentNotFoundException::new);
-        final Document document = documentCreator.createDocument(documentPut, ownerID, signatories, readers);
+        final Document document = documentCreator.createDocument(documentPut, ownerID,
+                                                                    signatories, readers);
         envelope.addDocument(document);
         return repo.save(envelope);
     }

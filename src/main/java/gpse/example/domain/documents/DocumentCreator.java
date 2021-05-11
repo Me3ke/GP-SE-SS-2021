@@ -1,7 +1,6 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.users.User;
 
 import java.io.File;
@@ -17,47 +16,27 @@ import java.util.List;
 @SuppressWarnings("PMD.AvoidFileStream")
 public class DocumentCreator {
 
+    private static final String PATH_TO_DOWNLOADS = "src/main/resources/Downloads/";
+
     /**
      * The createDocFromData creates a document from an existing byte array or an existing path.
+     *
      * @param documentPut the command object which keeps the information for the document.
-     * @param ownerID the email adress of the User who want to create the document.
+     * @param ownerID     the email adress of the User who want to create the document.
      * @param signatories the list of signatories for this document.
-     * @param readers the list of readers for this document.
+     * @param readers     the list of readers for this document.
      * @return the created document.
      * @throws IOException if the data is incorrect.
      */
     //does not include directories.
     public Document createDocument(final DocumentPut documentPut, final String ownerID, final List<User> signatories,
-                                   final List<User> readers)
-                                    throws DocumentNotFoundException, CreatingFileException, IOException {
-        Document document;
+                                   final List<User> readers) throws CreatingFileException, IOException {
         if (documentPut.getPath().equals("")) {
-            // for creating documents which are not located on the local pc.
-            File documentFile;
-            if (documentPut.getData() == null) {
-                throw new CreatingFileException(new IOException());
-            } else {
-                // to upload a file is created in the downloads directory.
-                documentFile = writeInNewFile(documentPut.getData(), documentPut.getType(),
-                    documentPut.getTitle());
-            }
-            document = new Document(documentFile.getAbsolutePath(), new ArrayList<>(),
-                                        ownerID, readers);
-            for (int i = 0; i < document.getSignatories().size(); i++) {
-                document.addSignatory(signatories.get(i));
-            }
-        } else {
-            // for creating documents which have to be uploaded.
-            final File file = new File(documentPut.getPath());
-            if (file.exists() && file.isFile()) {
-                document = new Document(documentPut.getPath(), new ArrayList<>(), ownerID,
-                    new ArrayList<>());
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    document.addSignatory(signatories.get(i));
-                }
-            } else {
-                throw new DocumentNotFoundException();
-            }
+            throw new CreatingFileException(new IOException());
+        }
+        final Document document = new Document(documentPut.getPath(), new ArrayList<>(), ownerID, readers);
+        for (int i = 0; i < document.getSignatories().size(); i++) {
+            document.addSignatory(signatories.get(i));
         }
         document.setEndDate(documentPut.getEndDate());
         document.setOrderRelevant(documentPut.isOrderRelevant());
@@ -74,7 +53,7 @@ public class DocumentCreator {
      */
     @SuppressWarnings("PMD.AvoidFileStream")
     private File writeInNewFile(final byte[] bytes, final String type, final String name) throws CreatingFileException {
-        final File file = new File("src/main/resources/Downloads/" + name + "." + type);
+        final File file = new File(PATH_TO_DOWNLOADS + name + "." + type);
         FileOutputStream fos = null;
         if (file.exists()) {
             file.delete();
@@ -94,6 +73,7 @@ public class DocumentCreator {
         }
         return file;
     }
+
 /*
 
     /**

@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,7 +18,6 @@ public class DocumentPut {
     private SignatureType signatureType;
     private LocalDateTime endDate;
     private boolean orderRelevant;
-    private byte[] data;
 
     public String getPath() {
         return path;
@@ -85,11 +83,4 @@ public class DocumentPut {
         this.orderRelevant = orderRelevant;
     }
 
-    public byte[] getData() {
-        return Arrays.copyOf(data, data.length);
-    }
-
-    public void setData(final byte[] data) {
-        this.data = Arrays.copyOf(data, data.length);
-    }
 }

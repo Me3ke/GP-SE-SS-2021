@@ -47,7 +47,8 @@ public class SMTPServerHelper {
      * @param password   the password of the account
      */
 
-    public static void setMailSender(final String hostServer, final int port, final String username, final String password) {
+    public static void setMailSender(final String hostServer, final int port, final String username,
+                                     final String password) {
         mailSender = new JavaMailSenderImpl();
         mailSender.setHost(hostServer);
         mailSender.setPort(port);
