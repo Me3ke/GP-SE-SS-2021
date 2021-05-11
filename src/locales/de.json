@@ -14,14 +14,49 @@
         "start": "Zurück zur Startseite",
         "back": "Zurück zur letzten Seite"
     },
+
     "NoConnectionPage": {
         "h1": "Oh-Oh!",
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
     },
+
     "UserGuide": {
-        "name": "Benutzerhandbuch"
-    },
+        "name": "Benutzerhandbuch",
+        "section-1": "Allgemeine Information",
+        "question1": "Was ist ELSA?",
+        "section0": [
+            {
+                "question": "Was ist ELSA? 12345678902ddddddddddd2222ede ededede edededed ededed2",
+                "answer": "Antwort 2 ajdnajs  ajsdnajd jasdn jadnjsdjnaj nda ajdnasjdn a sdnajsd n"
+            },
+            {
+                "question": "Wie funktioniert ELSA?",
+                "answer": "Antwort 1"
+            }
+        ],
+        "section1": [
+            {
+                "question": "Section 2.1",
+                "answer": "Antwort 2"
+            },
+            {
+                "question": "Section 2.2",
+                "answer": "Antwort 2"
+            }
+        ],
+        "section2": [
+            {
+                "question": "Section 2.1",
+                "answer": "Antwort 2"
+            },
+            {
+                "question": "Section 2.2",
+                "answer": "Antwort 2"
+            }
+        ]
+
+},
 
     "Header": {
         "logo": "ELSA Logo",

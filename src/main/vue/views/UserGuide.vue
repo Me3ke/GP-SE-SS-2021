@@ -2,76 +2,144 @@
     <div id="app">
         <Header class="top-header"></Header>
         <BaseHeading class="base-header" name=""></BaseHeading>
-        <h2 class="h2-user-guide"> Benutzerhandbuch </h2>
+        <h2 class="h2-user-guide"> {{ $t('UserGuide.name') }} </h2>
 
         <div class="generalInfo">
-            <h2 class="h2-general-info">Allgemeine Information</h2>
+            <h2 class="h2-general-info">{{ $t('UserGuide.section-1') }}</h2>
             <b-col class="col-for-mobile">
                 <Accordion
-                    v-for="(generalInfo, i) in generalInfos"
+                    v-for="(generalInfo, key) in testInfos"
                     :general-info="generalInfo"
-                    :index="i"
-                    :key="i"
+                    :index="key"
+                    :key="key"
+                    :section="0"
                     :open="generalInfo.open"
                     @toggleOpen="toggleOpen"
                 />
             </b-col>
         </div>
+        <div class="generalInfo">
+            <h2 class="h2-general-info">Signieren</h2>
+            <b-col class="col-for-mobile">
+                <Accordion
+                    v-for="(generalInfo, key) in testInfos2"
+                    :general-info="generalInfo"
+                    :index="key"
+                    :key="key"
+                    :section="1"
+                    :open="generalInfo.open"
+                    @toggleOpen="toggleOpen2"
+                />
+            </b-col>
+        </div>
+
+        <div class="generalInfo" style="margin-bottom: 10em">
+            <h2 class="h2-general-info">Dokumente</h2>
+            <b-col class="col-for-mobile">
+                <Accordion
+                    v-for="(generalInfo, key) in testInfos3"
+                    :general-info="generalInfo"
+                    :index="key"
+                    :key="key"
+                    :section="2"
+                    :open="generalInfo.open"
+                    @toggleOpen="toggleOpen3"
+                />
+            </b-col>
+        </div>
+
 
     </div>
 </template>
 
 <script>
 import Accordion from "@/main/vue/components/Accordion";
-import Header from "@/main/vue/components/Header";
+import Header from "@/main/vue/components/header/Header";
 export default {
     name: "UserGuide",
     components: {Header, Accordion},
     data: function () {
         return {
-            generalInfos: [
 
+            testInfos: [
                 {
+                    key: 0,
                     open: false,
-                    question: 'My journey with Vue',
-                    answer: 'QUnit is by calling one of the object that are embedded in JavaScript\n'
+                    question: this.$t('UserGuide.test.0'),
+                    answer: "TEST0"
                 },
                 {
+                    key: 1,
                     open: false,
-                    question: 'Blogging with Vue',
-                    answer: 'QUnit is by calling one of the object that are embedded in JavaScript\n'
-
+                    question: this.$t('UserGuide.test.1'),
+                    answer: "TEST1"
+                    }
+                ],
+            testInfos2: [
+                {
+                    key: 0,
+                    open: false,
+                    question: this.$t('UserGuide.test.0'),
+                    answer: "TEST0"
                 },
                 {
+                    key: 1,
                     open: false,
-                    question: 'Why Vue is so fun',
-                    answer: 'QUnit is by calling one of the object that are embedded in JavaScript\n'
-
-                },
-                // Section for Signature
-                {
-                    open: false,
-                    question: "Wie unterschreibe ich ein Dokument?",
-                    answer: "halloooo"
-                },
-                {
-                    open: false,
-                    question: "Ist das digitale Unterschreiben überhaupt sicher?",
-                    answer: "Halloooo 2"
-                },
-                {
-                    open: false,
-                    question: "Wie funktioniert die kryptographische Signatur?",
-                    answer: "halloooo 3"
+                    question: this.$t('UserGuide.test.1'),
+                    answer: "TEST1"
                 }
             ],
-        }
-    },
+            testInfos3: [
+                {
+                    key: 0,
+                    open: false,
+                    question: this.$t('UserGuide.test.0'),
+                    answer: "TEST0"
+                },
+                {
+                    key: 1,
+                    question: this.$t('UserGuide.test.1'),
+                    answer: "TEST1"
+                }
+            ]
+            }
+        },
     methods: {
+        // perhaps find a another method to use one method for the each data
+
+
         toggleOpen: function (index) {
-            this.generalInfos = this.generalInfos.map((generalInfo, i) => {
+            // iterate through list and set the open boolean to true or false by considering the clicked index
+            this.testInfos = this.testInfos.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
+
+                } else {
+                    generalInfo.open = false;
+                }
+                return generalInfo;
+            });
+
+        },
+        toggleOpen2: function (index) {
+            // iterate through list and set the open boolean to true or false by considering the clicked index
+            this.testInfos2 = this.testInfos2.map((generalInfo, i) => {
+                if (index === i) {
+                    generalInfo.open = !generalInfo.open;
+
+                } else {
+                    generalInfo.open = false;
+                }
+                return generalInfo;
+            });
+
+        },
+        toggleOpen3: function (index) {
+            // iterate through list and set the open boolean to true or false by considering the clicked index
+            this.testInfos3 = this.testInfos3.map((generalInfo, i) => {
+                if (index === i) {
+                    generalInfo.open = !generalInfo.open;
+
                 } else {
                     generalInfo.open = false;
                 }
@@ -102,7 +170,7 @@ export default {
     content: '';
     flex: 1;
     margin-left: .5rem;
-    height: .1rem;
+    height: 1px;
     width: 100%;
     background-color: #000;
 }
@@ -111,9 +179,6 @@ export default {
     font-size: 1.6em;
     margin-top: 1.2em;
     color: #436495;
-}
-.generalInfo .header-section-2 {
-    font-size: 1.4em;
 }
 
 .generalInfo {
@@ -127,6 +192,12 @@ export default {
     margin-top: -20px;
 }
 
+.generalInfo .open .question .ui-icon-caret-1-n {
+    transform: translateY(30%) rotate(90deg);
+    color: #436495;
+    width: 15px;
+    height: 15px;
+}
 
 body {
     background-color: #EEE;
@@ -145,14 +216,33 @@ body {
     margin-top: -1em;
     transition: all 0.4s linear;
     margin-left: -1.3em;
-    cursor: pointer;
+    /*cursor: pointer;*/
+}
+
+.generalInfo .open .question {
+    margin-bottom: 0px;
+}
+
+.generalInfo .answer {
+    color: #3c3c3c;
+    font-size: 18px;
+    margin-left: 15.5rem;
+    text-align: left;
+    opacity: 0;
+    max-height: 0;
+    overflow-y: hidden;
+    /*transition: all 0.5s ease-in-out;*/
+}
+.generalInfo .open .answer {
+    opacity: 1;
+    max-height: 1000px;
 }
 
 /* for screen width which are equal 500px or less*/
-@media only screen and (max-width: 500px) {
+@media screen and (max-width: 500px) {
     /* For the Right Arrow (Go Back arrow)*/
     .base-header {
-        margin-top: 3em;
+        margin-top: 4.3em;
     }
 
     .top-header {
@@ -161,23 +251,31 @@ body {
 
     /* for user guide headers */
     .h2-user-guide {
-        margin-top: 2.4em;
+        margin-top: .8em;
         margin-left: 2em;
-        font-size: 1.8em;
+        font-size: 1.7em;
     }
 
     .generalInfo {
         margin-left: -1.4em;
     }
 
+
     /* for faq section (general infos) */
     .h2-general-info {
-        font-size: 1.6em;
+        font-size: 1.3em;
+        margin-left: 4.4em;
         margin-top: 1.6em;
+    }
+    /* for the faq section (signaure) */
+    .generalInfo .header-section-2 {
+        font-size: 1.3em;
+        margin-left: 3.4em;
+
     }
     /* for faq headers */
     .generalInfo .question{
-        font-size: 1.5em;
+        font-size: 1.7em;
         margin-left: -4em;
         transition: top 4s ease 0s;
 
@@ -217,25 +315,26 @@ body {
         width: 10px;
         height: 10px;
     }
-    /* for the faq section (signaure) */
-    .generalInfo .header-section-2 {
-        font-size: 10em;
-    }
 }
 
-.generalInfo .open .question {
-    margin-bottom: 0px;
-}
 /* for screen width of 550px or greater than 550px */
-@media screen and (min-width: 550px ) {
+@media screen and (min-width: 501px ) {
     .top-header {
         height: 10%;
+    }
+    .base-header {
+        margin-top: 3em;
+    }
+    .h2-user-guide {
+        margin-top: 1em;
     }
     .generalInfo .col-for-mobile {
         margin-left: -3em;
     }
     .generalInfo .header-section-2 {
-        padding-left: 2em;
+        font-size: 1.6em;
+        margin-left: 5.2em;
+
     }
     .generalInfo .question {
         font-size: 1.5em;
@@ -252,20 +351,5 @@ body {
         margin-left: 11.4em;
         font-size: .9em;
     }
-}
-
-.generalInfo .answer {
-    color: #3c3c3c;
-    font-size: 18px;
-    margin-left: 15.5rem;
-    text-align: left;
-    opacity: 0;
-    max-height: 0;
-    overflow-y: hidden;
-    /*transition: all 0.5s ease-in-out;*/
-}
-.generalInfo .open .answer {
-    opacity: 1;
-    max-height: 1000px;
 }
 </style>

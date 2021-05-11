@@ -45,5 +45,86 @@
     "Document": {
         "owner": "Owner",
         "date": "Created on"
+    },
+    "UserGuide": {
+        "name": "User Guide",
+        "section-1": "General Information",
+        "generalInfos": [
+            {
+                "question": "Was ist ELSA?",
+                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
+            },
+            {
+                "question": "Wie funktioniert ELSA?",
+                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
+            },
+            {
+                "question": "Wie unterschreibe ich ein Dokument",
+                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
+            },
+            {
+                "question": "Ist das digitale Unterschreiben überhaupt sicher?",
+                "answer": "halloooo"
+            },
+            {
+                "question": "Wie funktioniert die kryptographische Signatur?",
+                "answer": "Halloooo 2"
+            },
+            {
+                "question": "Wie lade ich ein Dokument hoch?",
+                "answer": "halloooo 3"
+            },
+            {
+                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
+                "answer": "halloooo 4"
+            },
+            {
+                "question": "Welche Dokumententypen werden unterschützt?",
+                "answer": "halloooo 6"
+            },
+            {
+                "question": "Wer hat alles Zugriff auf mein Dokument?",
+                "answer": "halloooo 7"
+            },
+            {
+                "question": "Wie fühe ich jemanden hinzu mein Dokument zu unterschreiben?",
+                "answer": "halloooo 8"
+            },
+            {
+                "question": "Was ist der Unterschied zwichen einer einfachen und einer erweiterten(fortgeschrittenen) Signatur?",
+                "answer": "halloooo 10"
+            }
+        ],
+        "section0": [
+            {
+                "question": "What is ELSA?",
+                "answer": "Answer 0"
+            },
+            {
+                "question": "How does ELSA work?",
+                "answer": "Answer 1"
+            }
+        ],
+        "section1": [
+            {
+                "question": "Section 2.1",
+                "answer": "Antwort 2"
+            },
+            {
+                "question": "Section 2.2",
+                "answer": "Antwort 2"
+            }
+        ],
+        "section2": [
+            {
+                "question": "Section 2.1",
+                "answer": "Antwort 2"
+            },
+            {
+                "question": "Section 2.2",
+                "answer": "Antwort 2"
+            }
+        ]
+
     }
 }
