@@ -5,6 +5,7 @@ import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
+import LandingPage from "@/main/vue/views/LandingPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -21,6 +22,11 @@ const router = new VueRouter({
                 }
             },
             children: [
+                {
+                    path: 'landing',
+                    name: 'landing',
+                    component: LandingPage
+                },
                 {
                     path: 'overview',
                     name: 'overview',
