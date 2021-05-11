@@ -12,13 +12,20 @@
                             <b-row align-h="between">
                                 <div class="col-auto">
                                     <h4>
-                                        {{this.doc.name}}
+                                        {{this.doc.title}}
                                     </h4>
                                 </div>
                                 <div class="col-auto">
-                                    <div style="text-align: right; margin-left: 1vw">
+                                    <div v-if="doc.state === 'closed'" style="text-align: right; margin-left: 1vw">
                                         <h6>
-                                            Fällig in 50 Tagen
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('Document.closed')}}
+                                        </h6>
+                                    </div>
+                                    <div v-if="doc.state === 'open'" style="text-align: right; margin-left: 1vw">
+                                        <h6>
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('Document.open')}}
                                         </h6>
                                     </div>
                                 </div>
@@ -31,7 +38,7 @@
                                 </div>
                                 <div class="col-auto" style="margin-left: 1vw">
                                     <h6>
-                                        {{$t('Document.date')}}: {{this.doc.dateCreated}}
+                                        {{$t('Document.date')}}: {{this.doc.creationDate}}
                                     </h6>
                                 </div>
                             </b-row>
@@ -47,7 +54,7 @@
 export default {
     name: 'DocumentBox',
     props: {
-        doc: String
+        doc: Object
     }
 }
 </script>

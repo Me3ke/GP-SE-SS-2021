@@ -12,12 +12,8 @@
 export default {
     name: 'FilterButton',
     props: {
-        text: Object
-    },
-    data() {
-        return {
-            isActive: false
-        }
+        text: String,
+        isActive: Boolean
     }
 }
 </script>

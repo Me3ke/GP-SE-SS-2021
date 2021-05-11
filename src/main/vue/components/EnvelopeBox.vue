@@ -15,10 +15,17 @@
                                     </h4>
                                 </div>
                                 <div class="col-auto">
-                                    <div style="text-align: right">
-                                       <h6>
-                                           Fällig in 50 Tagen
-                                       </h6>
+                                    <div v-if="!this.open" style="text-align: right; margin-left: 1vw">
+                                        <h6>
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('Document.closed')}}
+                                        </h6>
+                                    </div>
+                                    <div v-if="this.open" style="text-align: right; margin-left: 1vw">
+                                        <h6>
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('Document.open')}}
+                                        </h6>
                                     </div>
                                 </div>
                             </b-row>
@@ -30,7 +37,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6>
-                                        {{$t('Document.date')}}: {{this.env.dateCreated}}
+                                        {{$t('Document.date')}}: {{this.env.creationDate}}
                                     </h6>
                                 </div>
                             </b-row>
@@ -46,7 +53,47 @@
 export default {
     name: 'EnvelopeBox',
     props: {
-        env: String
+        env: {
+            id: Object,
+            name: String,
+            owner: {
+                id: Object,
+                eMail: String,
+                firstname: String,
+                lastname: String
+            },
+            creationDate: Date,
+            documents: [
+                {
+                    id: Object,
+                    title: String,
+                    creationDate: Date,
+                    owner: {
+                        id: Object,
+                        eMail: String,
+                        firstname: String,
+                        lastname: String
+                    },
+                    state: String,
+                    endDate: Date,
+                    dataType: String,
+                    signatureType: String,
+                    signatory: Boolean,
+                    reader: Boolean,
+                    signed: Boolean,
+                    read: Boolean
+                }
+            ]
+        }
+    },
+    data() {
+        let i;
+        for(i = 0; i < this.env.documents.length; i++) {
+            if (this.env.documents[i].state === "open") {
+                return {open: true}
+            }
+        }
+        return {open: false};
     }
 }
 </script>

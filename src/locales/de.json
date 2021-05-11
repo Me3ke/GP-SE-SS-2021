@@ -46,6 +46,8 @@
     },
     "Document": {
         "owner": "Bersitzer",
-        "date": "Erstellungsdatum"
+        "date": "Erstellungsdatum",
+        "open": "Offen",
+        "closed": "Abgeschlossen"
     }
 }
