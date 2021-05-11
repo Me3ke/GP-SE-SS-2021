@@ -141,4 +141,7 @@ public class DocumentMetaData {
         return size;
     }
 
+    public String getMetaUserID() {
+        return metaUserID;
+    }
 }
