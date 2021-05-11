@@ -1,14 +1,14 @@
 package gpse.example.domain;
 
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentMetaData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.attribute.FileTime;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 class DocumentMetaDataTest {
     @Test
@@ -64,7 +64,7 @@ class DocumentMetaDataTest {
         Document document = null;
         String owner = "someID";
         try {
-            document = new Document("src/main/resources/Manf.pdf", null, owner);
+            document = new Document("src/main/resources/Manf.pdf", null, owner, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

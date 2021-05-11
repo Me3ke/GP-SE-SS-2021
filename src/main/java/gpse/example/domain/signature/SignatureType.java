@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.domain.signature;
 
 import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 

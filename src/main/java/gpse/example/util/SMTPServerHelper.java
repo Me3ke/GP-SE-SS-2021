@@ -8,6 +8,7 @@ import java.util.Properties;
 /**
  * SMTPServer class representing the connection to smtpserver.
  */
+
 public class SMTPServerHelper {
 
     /**

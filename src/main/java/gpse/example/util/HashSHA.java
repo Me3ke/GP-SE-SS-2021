@@ -1,4 +1,5 @@
-package gpse.example.domain;
+package gpse.example.util;
+
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

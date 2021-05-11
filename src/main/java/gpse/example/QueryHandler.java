@@ -1,27 +1,21 @@
 package gpse.example;
 
-import gpse.example.domain.*;
-import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
-import org.springframework.boot.SpringApplication;
-
-import java.util.*;
-
 /**
  * The QueryHandler class is responsible for reading the command line arguments and
  * getting the responding actions done.
  */
 public class QueryHandler {
 
-
+    /*
     private static final int DEFAULT_EXIT = 100;
     private static final String DOCUMENT_NOT_FOUND = "The Document %s wasn't found.%n";
     private static final int INPUT_THREE = 3;
     private static final String NOT_EXISTS = " does not exist.";
-
     /**
      * The documentList contains all imported documents.
      * The envelopList contains all imported envelops.
      */
+    /*
     private final List<Document> documentList;
     private final List<Envelope> envelopeList;
     private Scanner scanner;
@@ -32,6 +26,7 @@ public class QueryHandler {
     /**
      * the standard constructor for the QueryHandler.
      */
+    /*
     public QueryHandler() {
         documentList = new ArrayList<>();
         envelopeList = new ArrayList<>();
@@ -47,7 +42,7 @@ public class QueryHandler {
      * @param args the programm arguments
      * @return returns the exit value if the query stops.
      */
-
+    /*
     public int query(final String... args) {
         scanner = new Scanner(System.in);
         while (true) {
@@ -94,6 +89,7 @@ public class QueryHandler {
      *
      * @param input the command line input containing a name and the paths of the documents.
      */
+    /*
     private void add(final String... input) {
         if (input.length >= INPUT_THREE) {
             for (final Envelope envelope : envelopeList) {
@@ -122,6 +118,7 @@ public class QueryHandler {
      *
      * @param input the command line input containing a name and the paths of the documents.
      */
+    /*
     private void remove(final String... input) {
         if (input.length >= INPUT_THREE) {
             for (final Envelope envelope : envelopeList) {
@@ -153,6 +150,7 @@ public class QueryHandler {
      *
      * @param input the input.
      */
+    /*
     private void sign(final String... input) {
         /*
         boolean seenDocument = false;
@@ -162,7 +160,6 @@ public class QueryHandler {
             System.out.println("Use: sign exampleTitle.txt ");
             return;
         }
-
         for (final Document document : documentList) {
             if ((document.getDocumentTitle() + "." + document.getDocumentType()).equals(input[1])) {
                 seenDocument = true;
@@ -179,15 +176,14 @@ public class QueryHandler {
         if (!seenDocument) {
             System.out.printf(DOCUMENT_NOT_FOUND, input[1]);
         }
-
          */
-    }
-
+    /*
     /**
      * The importDoc method creates an envelop from the specified paths.
      *
      * @param input the the path(s) of the file(s) to be imported.
      */
+    /*
     private void importDoc(final String... input) {
         if (input.length > 1) {
             System.out.print("Type in the name of the envelop: ");
@@ -196,20 +192,19 @@ public class QueryHandler {
             final List<String> inputList = Arrays.asList(input).subList(1, input.length);
             for (final String currentInput : inputList) {
                 map.put(currentInput, signatories);
-
             }
             final Envelope envelope = hans.createNewEnvelope(map, name);
             envelopeList.add(envelope);
         } else {
             System.out.println("no path specified. Use import <path>");
         }
-
     }
 
     /**
      * The help method prints out the necessary information about
      * how the command line inputs work.
      */
+    /*
     private void help() {
         System.out.println("exit                               -terminates the programm");
         System.out.println("import <path>                      -imports a document or an envelop");
@@ -226,6 +221,7 @@ public class QueryHandler {
      *
      * @return The String from the command line.
      */
+    /*
     private String getInput() {
         final String line = scanner.nextLine();
         return line;
@@ -236,6 +232,7 @@ public class QueryHandler {
      *
      * @param input the inputs which contains the name of the envelop to be listed.
      */
+    /*
     private void listEnvelop(final String... input) {
         if (input.length > 1) {
             System.out.println("listing documents of envelop " + input[1]);
@@ -264,7 +261,6 @@ public class QueryHandler {
             System.out.println("Use: setSignatureType exampleTitle.txt 1");
             return;
         }
-
         for (final Document document : documentList) {
             if ((document.getDocumentTitle() + "." + document.getDocumentType()).equals(input[1])) {
                 try {
@@ -291,4 +287,5 @@ public class QueryHandler {
     public List<Envelope> getEnvelopList() {
         return envelopeList;
     }
+} */
 }
