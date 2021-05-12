@@ -49,80 +49,114 @@
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General Information",
-        "generalInfos": [
-            {
-                "question": "Was ist ELSA?",
-                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
-            },
-            {
-                "question": "Wie funktioniert ELSA?",
-                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
-            },
-            {
-                "question": "Wie unterschreibe ich ein Dokument",
-                "answer": "QUnit is by calling one of the object that are embedded in JavaScript\n"
-            },
-            {
-                "question": "Ist das digitale Unterschreiben überhaupt sicher?",
-                "answer": "halloooo"
-            },
-            {
-                "question": "Wie funktioniert die kryptographische Signatur?",
-                "answer": "Halloooo 2"
-            },
-            {
-                "question": "Wie lade ich ein Dokument hoch?",
-                "answer": "halloooo 3"
-            },
-            {
-                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
-                "answer": "halloooo 4"
-            },
-            {
-                "question": "Welche Dokumententypen werden unterschützt?",
-                "answer": "halloooo 6"
-            },
-            {
-                "question": "Wer hat alles Zugriff auf mein Dokument?",
-                "answer": "halloooo 7"
-            },
-            {
-                "question": "Wie fühe ich jemanden hinzu mein Dokument zu unterschreiben?",
-                "answer": "halloooo 8"
-            },
-            {
-                "question": "Was ist der Unterschied zwichen einer einfachen und einer erweiterten(fortgeschrittenen) Signatur?",
-                "answer": "halloooo 10"
-            }
-        ],
+        "section-2": "Signature",
+        "section-3": "Documents",
+        "section-4": "Helpful Controls",
+        "section-5": "Account Management",
         "section0": [
             {
                 "question": "What is ELSA?",
-                "answer": "Answer 0"
+                "answer": "Answer 0.1"
             },
             {
                 "question": "How does ELSA work?",
-                "answer": "Answer 1"
+                "answer": "Answer 0.2"
             }
         ],
         "section1": [
             {
-                "question": "Section 2.1",
-                "answer": "Antwort 2"
+                "question": "How do I sign a Document?",
+                "answer": "Answer 2.1"
             },
             {
-                "question": "Section 2.2",
-                "answer": "Antwort 2"
+                "question": "How secure is this method?",
+                "answer": "Answer 2.2"
+            },
+            {
+                "question": "How does the crytographic Signature work?",
+                "answer": "Answer 2.3"
             }
         ],
         "section2": [
             {
-                "question": "Section 2.1",
-                "answer": "Antwort 2"
+                "question": "How do I upload a Document?",
+                "answer": "Answer 3.1"
             },
             {
-                "question": "Section 2.2",
-                "answer": "Antwort 2"
+                "question": "What is an Envelope?",
+                "answer": "Answer 3.2"
+            },
+            {
+                "question": "Which kind of Document types will be supported?",
+                "answer": "Answer 3.3"
+            },
+            {
+                "question": "Who has access to my Documents?",
+                "answer": "Answer 3.4"
+            },
+            {
+                "question": "How do I add People to sign my Document?",
+                "answer": "Answer 3.5"
+            },
+            {
+                "question": "What are the differences of 'Simple Signature' and 'Advanced Signature'?",
+                "answer": "Answer 3.6"
+            },
+            {
+                "question": "Can I change the Signature type?",
+                "answer": "Answer 3.7"
+            },
+            {
+                "question": "Where do I find Information about my Document?",
+                "answer": "Answer 3.8"
+            },
+            {
+                "question": "Where can I see the Document History?",
+                "answer": "Answer 3.9"
+            }
+        ],
+        "section3": [
+            {
+                "question": "How do I search for Documents",
+                "answer": "Answer 4.1"
+            },
+            {
+                "question": "What are the filter above the Documents?",
+                "answer": "Answer 4.2"
+            },
+            {
+                "question": "How can I filter manually?",
+                "answer": "Answer 4.3"
+            },
+            {
+                "question": "What does the grey scope next to Documents mean?",
+                "answer": "Answer 4.4"
+            }
+        ],
+        "section4": [
+            {
+                "question": "Where do I find my Account Information?",
+                "answer": "Mit einem Klick oben auf Ihren Avatar öffnet sich ein Menü. Wählen Sie hier nun den obersten Punkt 'Mein Konto' aus, um Ihre Kontoinformationen einzusehen. \nHier können Sie auch Ihre Information ändern."
+            },
+            {
+                "question": "How can I set up my Notifications?",
+                "answer": "Answer 5.2"
+            },
+            {
+                "question": "Where do I change the language?",
+                "answer": "Answer 5.3"
+            },
+            {
+                "question": "How do I change my Password?",
+                "answer": "Answer 5.4"
+            },
+            {
+                "question": "Is there an Opportunity to change my Email-Address?",
+                "answer": "Answer 5.6"
+            },
+            {
+                "question": "What does it mean: 'Your Account is not activated by the Admin'?",
+                "answer": "Answer 5.7"
             }
         ]
 

@@ -9,7 +9,11 @@
 
                     <h2 class="h2-head">{{$t('UserGuide.section'+section+'['+index+'].question')}}</h2>
                 </div>
-                <div class="answer" style="margin-left: 3em">{{$t('UserGuide.section'+section+'['+index+'].answer')}}</div>
+                <div class="answer" style="margin-left: 3em">
+                    {{$t('UserGuide.section'+section+'['+index+'].answer')}} <br>
+                    <img class="answer-image" v-if="generalInfo.img != null" :src="require('../assets/faq/' + generalInfo.img + '')"
+                         alt="">
+                </div>
         </div>
     </div>
 </template>

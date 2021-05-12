@@ -24,35 +24,115 @@
     "UserGuide": {
         "name": "Benutzerhandbuch",
         "section-1": "Allgemeine Information",
-        "question1": "Was ist ELSA?",
+        "section-2": "Signieren",
+        "section-3": "Dokumente",
+        "section-4": "Hilfreiche Bedienelemente",
+        "section-5": "Kontoverwaltung",
+
         "section0": [
             {
-                "question": "Was ist ELSA? 12345678902ddddd dddddd2 222ede ededede ededededjdjj jdjdjjdjdjdjjd jdjdjdjdjjdjd djdjdjjdjdjdj jdjdjdjdj jdjdjdd ededed2",
-                "answer": "Antwort 2 ajdnajs  ajsdnajd jasdn jadnjsdjnaj nda ajdnasjdn a sdnajsd n"
+                "question": "Was ist ELSA?",
+                "answer": "Antwort 1.1"
             },
             {
                 "question": "Wie funktioniert ELSA?",
-                "answer": "Antwort 1"
+                "answer": "Antwort 1.2"
             }
         ],
         "section1": [
             {
-                "question": "Section 2.1",
-                "answer": "Antwort 2"
+                "question": "Wie unterschreibe ich ein Dokument?",
+                "answer": "Antwort 2.1"
             },
             {
-                "question": "Section 2.2",
-                "answer": "Antwort 2"
+                "question": "Ist das digitale Unterschreiben überhaupt sicher?",
+                "answer": "Antwort 2.2"
+            },
+            {
+                "question": "Wie funktioniert die kryptographische Signatur?",
+                "answer": "Antwort 2.3"
             }
         ],
         "section2": [
             {
-                "question": "Section 2.1",
-                "answer": "Antwort 2"
+                "question": "Wie lade ich ein Dokument hoch?",
+                "answer": "Antwort 3.1"
             },
             {
-                "question": "Section 2.2",
-                "answer": "Antwort 2"
+                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
+                "answer": "Antwort 3.2"
+            },
+            {
+                "question": "Welche Dokumententypen werden unterstützt?",
+                "answer": "Antwort 3.3"
+            },
+            {
+                "question": "Wer hat alles Zugriff auf mein Dokument?",
+                "answer": "Antwort 3.4"
+            },
+            {
+                "question": "Wie füge ich jemanden hinzu mein Dokument zu unterschreiben?",
+                "answer": "Antwort 3.5"
+            },
+            {
+                "question": "Was ist der Unterschied zwischen einer einfachen und einer fortgeschrittenen Signatur?",
+                "answer": "Antwort 3.6"
+            },
+            {
+                "question": "Ich habe die falsche Signaturart gewählt, kann ich das im Nachhinein ändern?",
+                "answer": "Antwort 3.7"
+            },
+            {
+                "question": "Wo kann ich die Informationen zu meinem Dokument einsehen?",
+                "answer": "Antwort 3.8"
+            },
+            {
+                "question": "Wo sehe ich die Dokumentenhistorie ein?",
+                "answer": "Antwort 3.9"
+            }
+        ],
+        "section3": [
+            {
+                "question": "Wie suche ich nach einem Dokument?",
+                "answer": "Antwort 4.1"
+            },
+            {
+                "question": "Was bedeuten die Filter überhalb meiner Dokumente?",
+                "answer": "Antwort 4.2"
+            },
+            {
+                "question": "Wie filtere ich meine Dokumnete manuell?",
+                "answer": "Antwort 4.3"
+            },
+            {
+                "question": "Die Lupe neben manchen Dokumenten ist ausgegraut, was hat das zu bedeuten?",
+                "answer": "Antwort 4.4"
+            }
+        ],
+        "section4": [
+            {
+                "question": "Wo sehe ich meine Kontoinformationen?",
+                "answer": "Mit einem Klick oben auf Ihren Avatar öffnet sich ein Menü. Wählen Sie hier nun den obersten Punkt 'Mein Konto' aus, um Ihre Kontoinformationen einzusehen. \nHier können Sie auch Ihre Information ändern."
+            },
+            {
+                "question": "Wie stelle ich meine Mitteilungen ein?",
+                "answer": "Antwort 5.2"
+            },
+            {
+                "question": "Wie stelle ich die Sprache ein?",
+                "answer": "Antwort 5.3"
+            },
+            {
+                "question": "Wie stelle ich mein Passwort um?",
+                "answer": "Antwort 5.4"
+            },
+            {
+                "question": "Wie kann ich meine E-Mail Adresse ändern?",
+                "answer": "Antwort 5.6"
+            },
+            {
+                "question": "Was bedeutet es, dass mein Konto noch nicht vom Admin freigeschaltet ist?",
+                "answer": "Antwort 5.7"
             }
         ]
 
