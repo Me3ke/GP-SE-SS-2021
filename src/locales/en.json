@@ -41,11 +41,15 @@
         }
     },
     "OverviewPage": {
-        "heading": "Overview"
+        "heading": "Overview",
+        "filterClosed": "Closed",
+        "filterOpen": "Open"
     },
     "Document": {
         "owner": "Owner",
-        "date": "Created on"
+        "date": "Created on",
+        "open": "Open",
+        "closed": "Closed"
     },
     "MessagePage": {
         "heading": "Messages",

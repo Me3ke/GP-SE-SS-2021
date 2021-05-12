@@ -41,11 +41,15 @@
         }
     },
     "OverviewPage": {
-        "heading": "Übersicht"
+        "heading": "Übersicht",
+        "filterClosed": "Abgeschlossen",
+        "filterOpen": "Offen"
     },
     "Document": {
         "owner": "Bersitzer",
-        "date": "Erstellungsdatum"
+        "date": "Erstellungsdatum",
+        "open": "Offen",
+        "closed": "Abgeschlossen"
     },
     "MessagePage": {
         "heading": "Benachrichtigungen",
