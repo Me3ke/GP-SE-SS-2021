@@ -12,7 +12,6 @@ import java.util.Properties;
  * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
 
-@Entity
 public class SMTPServerHelper {
 
     /**
@@ -27,19 +26,14 @@ public class SMTPServerHelper {
     /**
      * The subject of Elsas emails.
      */
-    public static final String ELSA_SUBJECT = "ELSA - noreply";
+    public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
 
     private static JavaMailSenderImpl mailSender;
 
-    @Column
     private static String hostServer;
-    @Column
     private static int port;
-    @Id
-    @Column
     private static String userName;
-    @Column
     private static String password;
 
     /**
@@ -80,15 +74,15 @@ public class SMTPServerHelper {
     /**
      * sending an email to the specified address.
      * @param toAddress the email address of the recieving person.
-     * @param customer name of the new user.
+     * @param userName name of the new user.
      * @param link validation link.
      */
-    public static void sendRegisterEmail(String toAddress, String customer, String link) {
+    public static void sendRegistrationEmail(String toAddress, String userName, String link) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
-        message.setSubject(ELSA_SUBJECT);
-        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, customer, link));
+        message.setSubject(REGISTRATION_SUBJECT);
+        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, userName, link));
 
         if (mailSender == null) {
             System.out.println("Fehler es muss erst ein Server angemeldet werden. (Im Frontend anzeigen)");
