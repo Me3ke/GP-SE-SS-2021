@@ -160,11 +160,10 @@ body {
 .base-header {
     margin-top: 2.2em;
 }
-
 .h2-user-guide {
     display: flex;
     align-items: center;
-    margin-top: 3em;
+    margin-top: .8em;
     font-size: 2em;
     margin-left: 5rem;
     text-align: left;
@@ -196,7 +195,7 @@ body {
     font-size: .8em;
     text-align: left;
     margin-left: 1.2em;
-    margin-top: -20px;
+    margin-top: -1.4em;
 }
 /* for the faq question*/
 .generalInfo .question {
@@ -205,7 +204,7 @@ body {
     width: 99%;
     left: 7em;
     font-size: 30px;
-    margin-top: -1em;
+    margin-top: 0;
     transition: all 0.4s linear;
     margin-left: 20em;
     cursor: pointer;
@@ -214,11 +213,15 @@ body {
 
 /* standard */
 .generalInfo .question .ui-icon-caret-1-n {
-    margin-left: 40em;
+    margin-left: 0.2em;
+    transform: translateY(-40%) rotate(0);
+    color: #436495;
+    width: 15px;
+    height: 15px;
 }
 /* open case */
 .generalInfo .open .question .ui-icon-caret-1-n {
-    transform: translateY(30%) rotate(90deg);
+    transform: translateY(-40%) rotate(90deg);
     color: #436495;
     width: 15px;
     height: 15px;
@@ -234,158 +237,66 @@ body {
 .generalInfo .answer {
     color: #3c3c3c;
     font-size: 18px;
-    margin-left: 15.5rem;
     text-align: left;
     opacity: 0;
     max-height: 0;
     overflow-y: hidden;
-    /*transition: all 0.5s ease-in-out;*/
 }
 /* open cause*/
 .generalInfo .open .answer {
     opacity: 1;
     max-height: 1000px;
+    margin-left: 2em !important;
 }
 .wrapper {
     padding-bottom: 0;
-    margin-left: 10em;
+    margin-left: 6em;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
 }
 
-/* for screen width which are equal 500px or less*/
-/*
-@media screen and (max-width: 500px) {
-    /* For the Right Arrow (Go Back arrow)*/
-/*
-    .base-header {
-        margin-top: 4.3em;
-    }
+@media screen and (min-width: 769px){
+    .wrapper {
+        margin-top: -1em;
 
-    .top-header {
-        height: 7%;
-    }
-
-    /* for user guide headers */
-/*
-    .h2-user-guide {
-        margin-top: .8em;
-        margin-left: 2em;
-        font-size: 1.7em;
-    }
-
-    .generalInfo {
-        margin-left: -1.4em;
-    }
-
-
-    /* for faq section (general infos) */
-/*
-    .h2-general-info {
-        font-size: 1.3em;
-        margin-left: 4.4em;
-        margin-top: 1.6em;
-    }
-    /* for the faq section (signaure) */
-/*
-    .generalInfo .header-section-2 {
-        font-size: 1.3em;
-        margin-left: 3.4em;
-
-    }
-    /* for faq headers */
-/*
-    .generalInfo .question{
-        font-size: 1.7em;
-        margin-left: -4em;
-        transition: top 4s ease 0s;
-
-    }
-    /* for faq answer of the headers */
-/*
-    .generalInfo .answer {
-        font-size: 1em;
-        margin-left: 10em;
-        overflow-y: hidden;
-        text-align: left;
-        opacity: 0;
-        max-height: 0;
-        transition: top 4s ease 0s;
-    }
-    /* for faq answer for the open cause (collapsed) */
-/*
-    .generalInfo .open .answer {
-        opacity: 1;
-        font-size: .9em;
-        max-height: 1000px;
-        margin-left: 7em;
-        transform: translateY(-10%);
-
-    }
-    /* for the icon in the faq header */
-/*
-    .generalInfo .question .ui-icon-caret-1-n {
-        content: '';
-        transform: translateX(20%) translateY(0%) rotate(0deg);
-        width: 10px;
-        height: 10px;
-        color: #436495;
-    }
-    /* for the icon in the faq header open cause (collapsed) */
-/*
-    .generalInfo .open .question .ui-icon-caret-1-n {
-        transform: translateY(5%) rotate(90deg);
-        color: #436495;
-        width: 10px;
-        height: 10px;
-    }
-}*/
-
-/* for screen width of 550px or greater than 550px */
-/*@media screen and (min-width: 501px ) {
-    .top-header {
-        height: 10%;
     }
     .base-header {
-        margin-top: 3em;
+        margin-top: 3.3em;
     }
     .h2-user-guide {
-        margin-top: .5em;
-    }
-    .generalInfo .col-for-mobile {
-        margin-left: -3em;
-    }
-    .generalInfo .header-section-2 {
-        font-size: 1.6em;
-        margin-left: 5.2em;
-
+        margin-top: 0.5em;
     }
     .generalInfo .question {
         font-size: 1.5em;
     }
-    .wrapper {
-        margin-left: 10em;
-        margin-top: -1em;
-        width: 80%;
-    }
+    /* standard */
     .generalInfo .question .ui-icon-caret-1-n {
-        content: '';
-        margin-left: 0em;
-        transform: translateY(30%) rotate(0deg);
-        width: 15px;
-        height: 15px;
-        color: #436495;
+        transform: translateY(-30%);
+        margin-left: 0;
+        width: 13px;
+        height: 13px;
     }
-    .generalInfo .open .answer {
-        margin-left: 11.4em;
-        font-size: .9em;
-    }
-}*/
 
-@media screen and (max-width: 768px) {
+    /* open case */
+    .generalInfo .open .question .ui-icon-caret-1-n {
+        transform: translateY(-30%) rotate(90deg);
+        color: #436495;
+        width: 13px;
+        height: 13px;
+    }
+
+
+}
+
+@media screen and (max-width: 768px) and (min-width: 481px){
+    .base-header {
+        margin-top: 3.4em;
+    }
+
     .generalInfo .question .h2-head {
         font-size: .5em;
         margin-top: -2.7em;
+        margin-left: 0.9em;
     }
     .generalInfo {
         margin-left: 10em;
@@ -396,11 +307,12 @@ body {
         font-size: .5em;
     }
     .h2-user-guide {
-        font-size: 1.6em;
+        font-size: 1.8em;
         margin-top: .5em;
+        margin-left: 1.4em;
     }
     .h2-general-info {
-        font-size: 1em;
+        font-size: 1.3em;
         margin-left: -6em;
     }
 
@@ -408,40 +320,46 @@ body {
         padding-bottom: 0em;
     }
     .wrapper {
-        margin-left: -2.9em;
+        margin-left: -8em;
         margin-top: -1em;
-        width: 60%;
+        width: 86%;
     }
 
     /* for the arrow icon */
 
     /* standard */
     .generalInfo .question .ui-icon-caret-1-n {
-        transform: translateY(-160%);
+        transform: translateY(-130%);
+        margin-left: -0.1em;
+        width: 13px;
+        height: 13px;
     }
 
     /* open case */
     .generalInfo .open .question .ui-icon-caret-1-n {
-        transform: translateY(-160%) rotate(90deg);
+        transform: translateY(-130%) rotate(90deg);
         color: #436495;
-        width: 15px;
-        height: 15px;
+        width: 13px;
+        height: 13px;
     }
 
 
 }
-
-@media screen and (max-width: 440px) {
+/* for phone screen*/
+@media screen and (max-width: 480px) {
+    .base-header {
+        margin-top: 4em;
+    }
     .generalInfo .question .h2-head {
         font-size: .8em;
-        margin-top: -1.8em;
+        margin-top: -1.7em;
     }
     .generalInfo {
         margin-left: 10em;
     }
 
     .generalInfo .open .answer {
-        font-size: 1.2em !important;
+        font-size: 1.5em !important;
         margin-left: 2em !important;
     }
     .h2-user-guide {
@@ -480,6 +398,64 @@ body {
         transform: translateY(-50%) rotate(90deg);
         width: 20px;
         height: 20px;
+    }
+}
+
+/* for phone screen*/
+@media screen and (max-width: 280px) {
+    .base-header {
+        margin-top: 1em;
+    }
+    .generalInfo .question .h2-head {
+        font-size: .4em;
+        margin-top: -3.2em;
+    }
+    .generalInfo {
+        margin-left: 10em;
+    }
+
+    .generalInfo .open .answer {
+        font-size: 1.1em !important;
+        margin-left: 2em !important;
+        margin-top: -0.6em;
+    }
+    .h2-user-guide {
+        font-size: 2.2em;
+        margin-top: .3em;
+        margin-left: 1em;
+    }
+    .h2-general-info {
+        font-size: 1.7em;
+        margin-left: -4.4em;
+    }
+
+    .generalInfo {
+        padding-bottom: 0;
+    }
+    .wrapper {
+        margin-left: -8.5em;
+        margin-top: -1em;
+        width: 90%;
+        height: 20%;
+    }
+
+    /* for the arrow icon */
+
+    /* standard */
+    .generalInfo .question .ui-icon-caret-1-n {
+        transform: translateY(-185%);
+        margin-left: 0;
+        width: 10px;
+        height: 10px;
+        color: #436495 ;
+
+    }
+
+    /* open case */
+    .generalInfo .open .question .ui-icon-caret-1-n {
+        transform: translateY(-185%) rotate(90deg);
+        width: 10px;
+        height: 10px;
     }
 }
 
