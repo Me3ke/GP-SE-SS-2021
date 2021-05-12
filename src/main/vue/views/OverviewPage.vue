@@ -20,8 +20,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col >
-                            <!-- Upload Button TODO -->
-                            Hochladen
+                            <UploadButton v-bind:text="$t('OverviewPage.upload')"></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -70,10 +69,11 @@ import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
+import UploadButton from "@/main/vue/components/UploadButton";
 
 export default {
     name: "OverviewPage",
-    components:{DocumentBox, EnvelopeBox, Footer, Header, FilterButton},
+    components:{DocumentBox, EnvelopeBox, Footer, Header, FilterButton, UploadButton},
     data() {
         return {
             // Needs to be replaced with API Request TODO

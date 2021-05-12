@@ -43,7 +43,8 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen"
+        "filterOpen": "Offen",
+        "upload": "Hochladen"
     },
     "Document": {
         "owner": "Bersitzer",

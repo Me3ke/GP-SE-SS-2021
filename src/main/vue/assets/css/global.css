@@ -89,16 +89,14 @@ body {
     background-color: var(--elsa-blue);
     color: whitesmoke;
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
-    width: 14vw;
-    height: 4.33vw;
 }
 
 .elsa-blue-btn:focus {
     background-color: var(--elsa-blue);
     color: whitesmoke;
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
