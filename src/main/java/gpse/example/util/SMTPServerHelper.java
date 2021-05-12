@@ -6,19 +6,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 /**
- * SMTPServer class representing the connection to smtpserver.
+ * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
 
 public class SMTPServerHelper {
 
-    /**
-     * Template for a test e-mail.
-     */
-    public static final String TEST_TEMPLATE = "Dies ist ein Test %s !!! \n ELSA";
-    /**
-     * Template for a test e-mail.
-     */
-    public static final String TEST_SUBJECT = "Test";
     private static final String TRUE = "true";
     private static JavaMailSenderImpl mailSender;
 
@@ -28,8 +20,24 @@ public class SMTPServerHelper {
 
     private static String userName;
 
+    /**
+     * Template for sending RegisterValidationEmail.
+     */
+    public static final String INITIAL_REGISTER_TEMPLATE = "Hallo %s, \n"
+        + "um deine Emailadresse zu bestätigen klicke auf den Bestätigungslink. \n"
+        + "Hier bestätigen: %s \n"
+        + "Dein ELSA-Team";
+
+    /**
+     * The subject of Elsas emails.
+     */
+    public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
+
     private static String password;
 
+    /**
+     * contructor of theSMTPServerHelper.
+     */
     protected SMTPServerHelper() {
 
     }
@@ -68,13 +76,16 @@ public class SMTPServerHelper {
      * sending an email to the specified address.
      *
      * @param toAddress the email address of the recieving person.
+     * @param userName name of the new user.
+     * @param link validation link.
      */
-    public static void sendEmail(final String toAddress) {
-        final SimpleMailMessage message = new SimpleMailMessage();
+
+    public static void sendRegistrationEmail(String toAddress, String userName, String link) {
+        SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
-        message.setSubject(TEST_SUBJECT);
-        message.setText(String.format(TEST_TEMPLATE, toAddress));
+        message.setSubject(REGISTRATION_SUBJECT);
+        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, userName, link));
 
         if (mailSender == null) {
             System.out.println("Fehler es muss erst ein Server angemeldet werden. (Im Frontend anzeigen)");
