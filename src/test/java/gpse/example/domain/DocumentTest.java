@@ -56,6 +56,25 @@ class DocumentTest {
             } */
            }
 
+        @Test
+        public void testDocumentDownload() {
+            try {
+                DocumentCreator documentCreator = new DocumentCreator();
+                DocumentPut documentPut = new DocumentPut();
+                documentPut.setPath("src/main/resources/Test/Goin.docx");
+                documentPut.setTitle("Goin");
+                documentPut.setType("docx");
+                Document document = documentCreator.createDocument(documentPut, null, null, null);
+                documentCreator.download(document);
+                Assertions.assertNotNull(document.getDocumentFile());
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (CreatingFileException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
     }
 }

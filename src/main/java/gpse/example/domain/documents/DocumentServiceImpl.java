@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.exceptions.DocumentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +20,15 @@ public class DocumentServiceImpl implements DocumentService {
         this.repo = repo;
     }
 
+    //TODO
     @Override
     public Document store(final DocumentPut documentPut, final String ownerID) {
-        /*
-        final DocumentCreator documentCreator = new DocumentCreator();
-        final Document document = documentCreator.createDocument(documentCmd, ownerID);
-        return repo.save(document);
-         */
         return null;
     }
 
     @Override
-    public Document getDocument(final long id) {
-        return repo.findById(id).get();
+    public Document getDocument(final long id) throws DocumentNotFoundException {
+        return repo.findById(id).orElseThrow(DocumentNotFoundException::new);
     }
 
     @Override

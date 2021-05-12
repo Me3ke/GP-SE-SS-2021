@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * the interface for EnvelopeServices.
  */
 @Service
 public interface EnvelopeService {
-    Optional<Envelope> getEnvelope(long id);
+    Envelope getEnvelope(long id) throws DocumentNotFoundException;
 
     List<Envelope> getEnvelopes();
 

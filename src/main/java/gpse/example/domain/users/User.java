@@ -225,7 +225,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-
     public PublicKey getPublicKey() {
         return publicKey;
     }
@@ -234,7 +233,7 @@ public class User implements UserDetails {
         return personalData;
     }
 
-    public void setPersonalData(PersonalData personalData) {
+    public void setPersonalData(final PersonalData personalData) {
         this.personalData = personalData;
     }
 

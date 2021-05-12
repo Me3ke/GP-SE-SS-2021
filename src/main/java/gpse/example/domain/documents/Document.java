@@ -45,7 +45,7 @@ public class Document {
     private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToMany
-    private List<User> readers = new ArrayList<>();
+    private List<Signatory> readers = new ArrayList<>();
 
     @Column
     private File documentFile;
@@ -62,6 +62,8 @@ public class Document {
     private boolean orderRelevant;
 
     private LocalDateTime endDate;
+
+    private DocumentState state;
 
     public Document() {
     }
@@ -80,7 +82,7 @@ public class Document {
      * @throws IOException throws the exception if filepath was invalid.
      */
     public Document(final String path, final List<Signatory> signatories,
-                    final String ownerID, final List<User> readers) throws IOException {
+                    final String ownerID, final List<Signatory> readers) throws IOException {
         this.signatories = signatories;
         this.readers = readers;
         final Path documentPath = Paths.get(path);
@@ -101,6 +103,15 @@ public class Document {
      */
     public void addSignatory(final User signatory) {
         signatories.add(new Signatory(this, signatory));
+    }
+
+    /**
+     * adds a new user as a reader to the reader list.
+     *
+     * @param reader the user object that is needed as a reader
+     */
+    public void addReader(final User reader) {
+        readers.add(new Signatory(this, reader));
     }
 
     /**
@@ -163,6 +174,10 @@ public class Document {
         return id;
     }
 
+    public String getOwner() {
+        return documentMetaData.getMetaUserID();
+    }
+
     public byte[] getData() {
         return Arrays.copyOf(data, data.length);
     }
@@ -203,7 +218,7 @@ public class Document {
         return signatories;
     }
 
-    public List<User> getReaders() {
+    public List<Signatory> getReaders() {
         return readers;
     }
 
@@ -221,6 +236,18 @@ public class Document {
 
     public void setEndDate(final LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public void setDocumentFile(final File documentFile) {
+        this.documentFile = documentFile;
+    }
+
+    public DocumentState getState() {
+        return state;
+    }
+
+    public void setState(final DocumentState documentState) {
+        this.state = documentState;
     }
 }
 
