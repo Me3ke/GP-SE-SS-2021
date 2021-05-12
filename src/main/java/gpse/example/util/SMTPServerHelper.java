@@ -11,14 +11,7 @@ import java.util.Properties;
 
 public class SMTPServerHelper {
 
-    private static final String TRUE = "true";
-    private static JavaMailSenderImpl mailSender;
 
-    private static String hostServer;
-
-    private static int port;
-
-    private static String userName;
 
     /**
      * Template for sending RegisterValidationEmail.
@@ -34,6 +27,16 @@ public class SMTPServerHelper {
     public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
     private static String password;
+
+    private static final String TRUE = "true";
+
+    private static JavaMailSenderImpl mailSender;
+
+    private static String hostServer;
+
+    private static int port;
+
+    private static String userName;
 
     /**
      * contructor of theSMTPServerHelper.

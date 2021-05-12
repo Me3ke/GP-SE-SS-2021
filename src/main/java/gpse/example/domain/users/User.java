@@ -24,6 +24,9 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
 
+    @Column
+    private boolean enabled;
+
     @OneToOne
     private PersonalData personalData;
 
@@ -236,6 +239,14 @@ public class User implements UserDetails {
 
     public void setPersonalData(PersonalData personalData) {
         this.personalData = personalData;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /*
