@@ -1,17 +1,17 @@
 package gpse.example.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
 /**
  * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
-
+@Component
 public class SMTPServerHelper {
-
-
 
     /**
      * Template for sending RegisterValidationEmail.
@@ -26,17 +26,21 @@ public class SMTPServerHelper {
      */
     public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
+    @Value("${smtp.password}")
     private static String password;
 
     private static final String TRUE = "true";
 
     private static JavaMailSenderImpl mailSender;
 
+    @Value("${smtp.host}")
     private static String hostServer;
 
+    @Value("${smtp.port}")
     private static int port;
 
-    private static String userName;
+    @Value("${smtp.username}")
+    private static String username;
 
     /**
      * contructor of theSMTPServerHelper.
@@ -51,15 +55,9 @@ public class SMTPServerHelper {
      * WHATCH OUT:
      * if using gmail set up gmail account with no two-factor-Authentification and
      * activate access from unsecure apps.
-     *
-     * @param hostServer the SMTPServer that is used f.ex. smtp.gmail.com
-     * @param port       the port at specified server in case of gmail 587
-     * @param username   the username in case of gmail its the gmail address user@gmail.com
-     * @param password   the password of the account
      */
 
-    public static void setMailSender(final String hostServer, final int port, final String username,
-                                     final String password) {
+    public static void setMailSender() {
         mailSender = new JavaMailSenderImpl();
         mailSender.setHost(hostServer);
         mailSender.setPort(port);
@@ -91,7 +89,7 @@ public class SMTPServerHelper {
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, userName, link));
 
         if (mailSender == null) {
-            System.out.println("Fehler es muss erst ein Server angemeldet werden. (Im Frontend anzeigen)");
+            setMailSender();
         } else {
             mailSender.send(message);
         }
@@ -113,12 +111,12 @@ public class SMTPServerHelper {
         SMTPServerHelper.hostServer = hostServer;
     }
 
-    public static String getUserName() {
-        return userName;
+    public static String getUsername() {
+        return username;
     }
 
-    public static void setUserName(final String userName) {
-        SMTPServerHelper.userName = userName;
+    public static void setUsername(final String username) {
+        SMTPServerHelper.username = username;
     }
 
     public static String getPassword() {
