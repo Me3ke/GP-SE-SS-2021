@@ -17,24 +17,6 @@ body {
     position: relative;
 }
 
-@media (max-width: 768px) {
-    /* CSS in here for mobile only */
-    body {
-        font-size: 3.5vw;
-    }
-
-    h1 {
-        font-size: 5vw;
-    }
-
-    h4 {
-        font-size: 3vw;
-    }
-
-    h6 {
-        font-size: 2vw;
-    }
-}
 
 /* App Settings */
 #app {
@@ -150,55 +132,3 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
 }
-
-
-/* Filter Buttons*/
-
-.active-filter {
-    background-color: var(--dark-grey);
-    color: whitesmoke;
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
-    border: 0.13vw solid var(--dark-grey);
-    border-radius: 70px;
-    width: 10.66vw;
-    height: 2.99vw;
-}
-
-.active-filter:focus {
-    background-color: var(--dark-grey);
-    color: whitesmoke;
-    border: 0.13vw solid var(--dark-grey);
-    outline: 0.06vw solid var(--light-grey);
-    outline-offset: 0;
-}
-
-.inactive-filter {
-    background-color: whitesmoke;
-    color: var(--dark-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
-    border: 0.13vw solid var(--dark-grey);
-    border-radius: 70px;
-    width: 10.66vw;
-    height: 2.99vw;
-}
-
-.inactive-filter:focus {
-    background-color: whitesmoke;
-    color: var(--dark-grey);
-    border: 0.13vw solid var(--dark-grey);
-    outline: 0.06vw solid var(--light-grey);
-    outline-offset: 0;
-}
-
-.active-filter:hover:enabled {
-    background-color: whitesmoke;
-    color: var(--dark-grey);
-    transition-duration: 0.4s;
-}
-
-.inactive-filter:hover:enabled {
-    background-color: var(--dark-grey);
-    color: whitesmoke;
-    transition-duration: 0.4s;
-}
-

@@ -48,15 +48,13 @@ export default {
 <style scoped>
 .letters {
     margin-left: 0.75vw;
-    margin-right: 0;
+    position: relative;
+    bottom: 0.1vw;
 }
 
 .responsive-img {
-    width: 4vw;
-    height: auto;
-    margin-top: 0.3vw;
-    margin-bottom: 0.3vw;
-    min-width: 4vw;
+    height: 2em;
+    width: auto;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {
@@ -79,15 +77,39 @@ export default {
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-    opacity: 80%;
+    background-color: var(--light-grey);
     transition-duration: 0.4s;
 }
 
-.my-dropdown-item:active >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .dropdown-menu > li {
+        font-size: 0.5em;
+    }
 }
 
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+}
 </style>

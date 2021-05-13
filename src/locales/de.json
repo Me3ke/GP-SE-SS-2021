@@ -155,14 +155,33 @@
             "msg": "Benachrichtigungen",
             "noMsg": "Keine neuen Nachrichten!",
             "newMsg": "Neue Benachrichtigungen!",
-            "toDoc": "Zum Dokument"
+            "toDoc": "Zum Dokument",
+            "show": "Alle anzeigen"
         }
     },
     "OverviewPage": {
-        "heading": "Übersicht"
+        "heading": "Übersicht",
+        "filterClosed": "Abgeschlossen",
+        "filterOpen": "Offen"
     },
     "Document": {
         "owner": "Bersitzer",
-        "date": "Erstellungsdatum"
+        "date": "Erstellungsdatum",
+        "open": "Offen",
+        "closed": "Abgeschlossen"
+    },
+    "MessagePage": {
+        "heading": "Benachrichtigungen",
+        "sentBy": "Von",
+        "sentOn": "Am",
+        "concerns": "Betrifft",
+        "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
+        "toAll": "Zurück zu allen Benachrichtigungen"
+    },
+    "LoginButton": {
+        "content": "Anmelden"
+    },
+    "RegisterButton": {
+        "content": "Registrieren"
     }
 }

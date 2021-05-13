@@ -1,4 +1,7 @@
-package gpse.example.domain;
+package gpse.example.domain.signature;
+
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 

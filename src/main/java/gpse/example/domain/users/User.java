@@ -1,16 +1,16 @@
-package gpse.example.domain;
+package gpse.example.domain.users;
 
 import java.security.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import gpse.example.domain.envelopes.Envelope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The model for a user, responsible for initializing new Users with all the information given by them.
@@ -120,14 +120,11 @@ public class User implements UserDetails {
 
     /**
      * the method to create a new envelope with the user object, that calls this as the owner.
-     * @param paths the filepaths of the documents that the envelope should be initialized with combined with a list of
-     *              signatories for each document
      * @param name the name of the envelope
      * @return the new envelope.
      */
-    public Envelope createNewEnvelope(final Map<String, List<Signatory>> paths, final String name) {
-        final DocumentCreator creator = new DocumentCreator();
-        final Envelope envelope = creator.convertPathsToDocuments(paths, this, name);
+    public Envelope createNewEnvelope(final String name) {
+        final Envelope envelope = new Envelope(name, this);
         myEnvelopes.add(envelope);
         return envelope;
     }
@@ -231,6 +228,14 @@ public class User implements UserDetails {
 
     public PublicKey getPublicKey() {
         return publicKey;
+    }
+
+    public PersonalData getPersonalData() {
+        return personalData;
+    }
+
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
     }
 
     /*

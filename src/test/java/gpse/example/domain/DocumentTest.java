@@ -1,25 +1,67 @@
 package gpse.example.domain;
 
+import gpse.example.DatabaseInitializer;
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentPut;
+import gpse.example.domain.documents.DocumentCreator;
+import gpse.example.domain.envelopes.*;
+import gpse.example.domain.exceptions.CreatingFileException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.exceptions.UploadFileException;
+import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.assertj.core.api.Assertions;
-import java.io.IOException;
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 class DocumentTest {
 
     private final static String MAIL = "superCooleMAIL@yoohooo.de";
     private final static String PATH_INVALID = "Document Path is invalid";
-    private final static String PATH = "src/main/resources/Manf.pdf";
+    private final static String PATH = "src/main/resources/Theben.txt";
     private final static String TITLE_TEST = "Manf";
     private final static String TYPE_TEST = "pdf";
     private final static int ID_TEST = 1;
 
     @Nested
     public class DocumentData {
-        /*
+        @Test
+        public void testDocumentData() {
+            /*
+            try {
+                DocumentCreator documentCreator = new DocumentCreator();
+                DocumentPut documentPut = new DocumentPut();
+                documentPut.setPath("src/main/resources/Manf.pdf");
+                documentPut.setTitle("Manf");
+                documentPut.setType("pdf");
+                Document document = documentCreator.createDocument(documentPut, null, null, null);
+                Document documentFromLocal = new Document("src/main/resources/Manf.pdf", null, null,null);
+                byte[] expectedTest = document.getData();
+                byte[] actualTest = documentFromLocal.getData();
+                for (int i = 0; i < expectedTest.length; i++) {
+                    Assertions.assertEquals(expectedTest[i], actualTest[i]);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CreatingFileException e) {
+                e.printStackTrace();
+            } */
+           }
+
+
+    }
+}
+/*
+
+    }
 
 
         @Test
@@ -180,6 +222,8 @@ class DocumentTest {
         /*
         @Test
         public void verifySignature
-         */
+
     }
+
 }
+*/

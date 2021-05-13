@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,21 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     public DocumentServiceImpl(final DocumentRepository repo) {
         this.repo = repo;
+    }
+
+    @Override
+    public Document store(final DocumentPut documentPut, final String ownerID) {
+        /*
+        final DocumentCreator documentCreator = new DocumentCreator();
+        final Document document = documentCreator.createDocument(documentCmd, ownerID);
+        return repo.save(document);
+         */
+        return null;
+    }
+
+    @Override
+    public Document getDocument(final long id) {
+        return repo.findById(id).get();
     }
 
     @Override

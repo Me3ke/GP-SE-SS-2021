@@ -36,16 +36,16 @@
             "msg": "Messages",
             "noMsg": "No new messages!",
             "newMsg": "New Messages!",
-            "toDoc": "Go to document"
+            "toDoc": "Go to document",
+            "show": "Show all"
         }
     },
     "OverviewPage": {
-        "heading": "Overview"
+        "heading": "Overview",
+        "filterClosed": "Closed",
+        "filterOpen": "Open"
     },
-    "Document": {
-        "owner": "Owner",
-        "date": "Created on"
-    },
+
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General Information",
@@ -159,6 +159,27 @@
                 "answer": "Answer 5.7"
             }
         ]
+    },
 
+
+    "Document": {
+        "owner": "Owner",
+        "date": "Created on",
+        "open": "Open",
+        "closed": "Closed"
+    },
+    "MessagePage": {
+        "heading": "Messages",
+        "sentBy": "From",
+        "sentOn": "On",
+        "concerns": "Concerns",
+        "nonSelected": "Select a message to show its content.",
+        "toAll": "Back to all messages"
+    },
+    "LoginButton": {
+        "content": "Login"
+    },
+    "RegisterButton": {
+        "content": "Register"
     }
 }

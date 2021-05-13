@@ -1,33 +1,25 @@
 <template>
     <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
-            <b-icon icon="person-circle" class="my-icon" font-scale="2"></b-icon>
+            <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
-        <b-dropdown-item @mouseover.native="handleHover(0)" @mouseleave.native="handleHover(-1)"
-                         class="my-dropdown-item">
-            <b-icon icon="person-circle" v-if="isHovered === 0" class="my-icon-hovered" font-scale="2"></b-icon>
-            <b-icon icon="person-circle" v-else class="my-icon" font-scale="2"></b-icon>
+        <b-dropdown-item class="my-dropdown-item">
+            <b-icon icon="person-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @mouseover.native="handleHover(1)" @mouseleave.native="handleHover(-1)"
-                         class="my-dropdown-item">
-            <b-icon icon="gear" v-if="isHovered === 1" class="my-icon-hovered" font-scale="2"></b-icon>
-            <b-icon icon="gear" v-else class="my-icon" font-scale="2"></b-icon>
+        <b-dropdown-item class="my-dropdown-item">
+            <b-icon icon="gear" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @mouseover.native="handleHover(2)" @mouseleave.native="handleHover(-1)"
-                         class="my-dropdown-item">
-            <b-icon icon="question-circle" v-if="isHovered === 2" class="my-icon-hovered" font-scale="2"></b-icon>
-            <b-icon icon="question-circle" v-else class="my-icon" font-scale="2"></b-icon>
+        <b-dropdown-item class="my-dropdown-item">
+            <b-icon icon="question-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @mouseover.native="handleHover(3)" @mouseleave.native="handleHover(-1)"
-                         class="my-dropdown-item">
-            <b-icon icon="box-arrow-right" v-if="isHovered === 3" class="my-icon-hovered" font-scale="2"></b-icon>
-            <b-icon icon="box-arrow-right" v-else class="my-icon" font-scale="2"></b-icon>
+        <b-dropdown-item class="my-dropdown-item">
+            <b-icon icon="box-arrow-right" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.logout') }} </span>
         </b-dropdown-item>
     </b-nav-item-dropdown>
@@ -35,23 +27,23 @@
 
 <script>
 export default {
-    name: "Avatar",
-    data() {
-        return {
-            isHovered: -1
-        }
-    },
-    methods: {
-        handleHover(ele) {
-            this.isHovered = ele
-        }
-    }
+    name: "Avatar"
 }
 </script>
 
 <style scoped>
 
-@import "../../assets/css/dropdown.css";
+.letters {
+    margin-left: 0.75vw;
+    position: relative;
+    bottom: 0.5vw;
+}
+
+.my-icon {
+    fill: var(--elsa-blue);
+    height: 2em;
+    width: auto;
+}
 
 .my-dropdown-menu >>> .dropdown-menu {
     color: var(--dark-grey);
@@ -72,14 +64,39 @@ export default {
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
-    opacity: 80%;
+    background-color: var(--light-grey);
     transition-duration: 0.4s;
 }
 
-.my-dropdown-item:active >>> .dropdown-item {
-    color: whitesmoke;
-    background-color: var(--elsa-blue);
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .dropdown-menu > li {
+        font-size: 0.5em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
 }
 </style>

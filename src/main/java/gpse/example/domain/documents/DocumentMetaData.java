@@ -1,4 +1,6 @@
-package gpse.example.domain;
+package gpse.example.domain.documents;
+
+import gpse.example.util.HashSHA;
 
 import javax.persistence.*;
 import java.nio.file.attribute.FileTime;
@@ -21,7 +23,6 @@ public class DocumentMetaData {
     @Column
     private long id;
 
-    //TODO change to localDateTime
     @Column
     private LocalDateTime metaTimeStampUpload;
 
@@ -140,4 +141,7 @@ public class DocumentMetaData {
         return size;
     }
 
+    public String getMetaUserID() {
+        return metaUserID;
+    }
 }
