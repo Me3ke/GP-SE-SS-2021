@@ -54,5 +54,11 @@
         "concerns": "Betrifft",
         "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
         "toAll": "Zurück zu allen Benachrichtigungen"
+    },
+    "LoginButton": {
+        "content": "Anmelden"
+    },
+    "RegisterButton": {
+        "content": "Registrieren"
     }
 }

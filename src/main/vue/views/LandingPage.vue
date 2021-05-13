@@ -1,6 +1,7 @@
 <template>
   <div class= "background">
     <div class = img-wrap>
+      <LandingPageHeader></LandingPageHeader>
       <img :src = "image"  class="header-image"/>
     </div>
 
@@ -8,10 +9,10 @@
       <b-container fluid="100" class = button-Box>
         <b-row class="text-center" align-v="center" align-h="center" cols="3">
           <b-col cols="3" sm="auto">
-            <b-button id ="loginButton" @click="routeToLogin">Anmelden</b-button>
+            <b-button id ="loginButton" @click="routeToLogin">{{$t('LoginButton.content')}}</b-button>
           </b-col>
           <b-col cols="3" sm="auto">
-            <b-button id ="registerButton" @click="routeToRegister">Registrieren</b-button>
+            <b-button id ="registerButton" @click="routeToRegister">{{$t('RegisterButton.content')}}</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -43,10 +44,11 @@
 
 import image from "../assets/logos/ELSA_big.svg";
 import Footer from "@/main/vue/components/Footer";
+import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 
 export default {
   name: "LandingPage",
-  components: {Footer},
+  components: {LandingPageHeader, Footer},
   methods:{
     routeToLogin(){
       this.$router.push('/'+this.$i18n.locale + '/login')
