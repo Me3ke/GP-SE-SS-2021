@@ -58,5 +58,11 @@
         "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
         "toAll": "Back to all messages"
+    },
+    "LoginButton": {
+        "content": "Login"
+    },
+    "RegisterButton": {
+        "content": "Register"
     }
 }
