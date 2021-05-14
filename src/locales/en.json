@@ -18,5 +18,51 @@
         "h1": "Whooops!",
         "h3": "It looks like you might be experiencing some network connection issues, please click the back button and try again.",
         "back": "Go back"
+    },
+    "Header": {
+        "logo": "ELSA Logo",
+        "LanguageSwitcher": {
+            "de": "German",
+            "en": "English",
+            "language": "Language"
+        },
+        "Avatar": {
+            "profile": "My Profile",
+            "settings": "Settings",
+            "help": "Help",
+            "logout": "Logout"
+        },
+        "Messages": {
+            "msg": "Messages",
+            "noMsg": "No new messages!",
+            "newMsg": "New Messages!",
+            "toDoc": "Go to document",
+            "show": "Show all"
+        }
+    },
+    "OverviewPage": {
+        "heading": "Overview",
+        "filterClosed": "Closed",
+        "filterOpen": "Open"
+    },
+    "Document": {
+        "owner": "Owner",
+        "date": "Created on",
+        "open": "Open",
+        "closed": "Closed"
+    },
+    "MessagePage": {
+        "heading": "Messages",
+        "sentBy": "From",
+        "sentOn": "On",
+        "concerns": "Concerns",
+        "nonSelected": "Select a message to show its content.",
+        "toAll": "Back to all messages"
+    },
+    "LoginButton": {
+        "content": "Login"
+    },
+    "RegisterButton": {
+        "content": "Register"
     }
 }

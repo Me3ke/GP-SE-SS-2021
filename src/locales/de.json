@@ -27,5 +27,51 @@
         "h1": "Oh-Oh!",
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
+    },
+    "Header": {
+        "logo": "ELSA Logo",
+        "LanguageSwitcher": {
+            "de": "Deutsch",
+            "en": "Englisch",
+            "language": "Sprache"
+        },
+        "Avatar": {
+            "profile": "Mein Konto",
+            "settings": "Einstellungen",
+            "help": "Benutzerhandbuch",
+            "logout": "Abmelden"
+        },
+        "Messages": {
+            "msg": "Benachrichtigungen",
+            "noMsg": "Keine neuen Nachrichten!",
+            "newMsg": "Neue Benachrichtigungen!",
+            "toDoc": "Zum Dokument",
+            "show": "Alle anzeigen"
+        }
+    },
+    "OverviewPage": {
+        "heading": "Übersicht",
+        "filterClosed": "Abgeschlossen",
+        "filterOpen": "Offen"
+    },
+    "Document": {
+        "owner": "Bersitzer",
+        "date": "Erstellungsdatum",
+        "open": "Offen",
+        "closed": "Abgeschlossen"
+    },
+    "MessagePage": {
+        "heading": "Benachrichtigungen",
+        "sentBy": "Von",
+        "sentOn": "Am",
+        "concerns": "Betrifft",
+        "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
+        "toAll": "Zurück zu allen Benachrichtigungen"
+    },
+    "LoginButton": {
+        "content": "Anmelden"
+    },
+    "RegisterButton": {
+        "content": "Registrieren"
     }
 }

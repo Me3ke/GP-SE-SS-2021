@@ -1,9 +1,12 @@
 import VueRouter from "vue-router";
 import i18n from "@/i18n";
-import TestPage from "@/main/vue/views/TestPage";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
+import OverviewPage from "@/main/vue/views/OverviewPage";
+import LoginPage from "@/main/vue/views/LoginPage";
+import MessagePage from "@/main/vue/views/MessagePage";
+import LandingPage from "@/main/vue/views/LandingPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -21,9 +24,25 @@ const router = new VueRouter({
             },
             children: [
                 {
-                    path: 'test-page',
-                    name: 'test-page',
-                    component: TestPage
+                    path: 'landing',
+                    name: 'landing',
+                    component: LandingPage
+                },
+                {
+                    path: 'overview',
+                    name: 'overview',
+                    component: OverviewPage
+                },
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: LoginPage
+                },
+                {
+                    path: 'messages',
+                    name: 'messages',
+                    props: true,
+                    component: MessagePage
                 },
                 {
                     path: '404',

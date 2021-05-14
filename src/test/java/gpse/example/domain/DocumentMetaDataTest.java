@@ -1,64 +1,70 @@
 package gpse.example.domain;
 
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentMetaData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 class DocumentMetaDataTest {
     @Test
     public void testSameMetaData() {
-        Date date = new Date();
-        long millis = date.getTime();
-        DocumentMetaData documentMetaData1 = new DocumentMetaData("1",
-                new Timestamp(millis), "HelloWorld");
+        FileTime time = FileTime.from(Instant.now());
+        long size = 729810;
+        DocumentMetaData documentMetaData1 = new DocumentMetaData(
+                LocalDateTime.now(), "HelloWorld", time, time , time, size, "1");
         Assertions.assertTrue(documentMetaData1.equalsTo(documentMetaData1));
     }
     @Test
     public void testDifferentDates() {
-        Date date1 = new Date();
-        long millis1 = date1.getTime();
+        LocalDateTime date1 = LocalDateTime.now();
+        FileTime time = FileTime.from(Instant.now());
+        long size = 729810;
         try {
-            Thread.sleep(100);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             Assertions.fail();
         }
-        Date date2 = new Date();
-        long millis2 = date2.getTime();
-        DocumentMetaData documentMetaData1 = new DocumentMetaData("1",
-                new Timestamp(millis1), "HelloWorld");
-        DocumentMetaData documentMetaData2 = new DocumentMetaData("1",
-                new Timestamp(millis2), "HelloWorld");
+        LocalDateTime date2 = LocalDateTime.now();
+        DocumentMetaData documentMetaData1 = new DocumentMetaData(
+                date1, "HelloWorld", time, time , time, size, "1");
+        DocumentMetaData documentMetaData2 = new DocumentMetaData(
+                date2, "HelloWorld", time, time , time, size, "1");
         Assertions.assertFalse(documentMetaData1.equalsTo(documentMetaData2));
     }
     @Test
     public void testDifferentIDs() {
-        Date date = new Date();
-        long millis = date.getTime();
-        DocumentMetaData documentMetaData1 = new DocumentMetaData("1",
-                new Timestamp(millis), "HelloWorld");
-        DocumentMetaData documentMetaData2 = new DocumentMetaData("2",
-                new Timestamp(millis), "HelloWorld");
+        LocalDateTime date = LocalDateTime.now();
+        FileTime time = FileTime.from(Instant.now());
+        long size = 729810;
+        DocumentMetaData documentMetaData1 = new DocumentMetaData(
+                date, "HelloWorld", time, time , time, size, "1");
+        DocumentMetaData documentMetaData2 = new DocumentMetaData(
+                date, "HelloWorld", time, time , time, size, "2");
         Assertions.assertFalse(documentMetaData1.equalsTo(documentMetaData2));
     }
     @Test
     public void testDifferentTitle() {
-        Date date = new Date();
-        long millis = date.getTime();
-        DocumentMetaData documentMetaData1 = new DocumentMetaData("1",
-                new Timestamp(millis), "HelloWorld");
-        DocumentMetaData documentMetaData2 = new DocumentMetaData("1",
-                new Timestamp(millis), "GoodByeWorld");
+        LocalDateTime date = LocalDateTime.now();
+        FileTime time = FileTime.from(Instant.now());
+        long size = 729810;
+        DocumentMetaData documentMetaData1 = new DocumentMetaData(
+                date, "HelloWorld", time, time , time, size, "1");
+        DocumentMetaData documentMetaData2 = new DocumentMetaData(
+                date, "GoodByeWorld", time, time , time, size,"1");
         Assertions.assertFalse(documentMetaData1.equalsTo(documentMetaData2));
     }
 
     @Test
     public void testSize() {
         Document document = null;
+        String owner = "someID";
         try {
-            document = new Document("src/main/resources/Manf.pdf", null);
+            document = new Document("src/main/resources/Manf.pdf", null, owner, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
