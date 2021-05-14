@@ -21,15 +21,35 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    public User getUser(final String username) throws UsernameNotFoundException {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
+    }
+
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        System.out.println("The right one is used");
+        for (User user : this.getUsers()) {
+            System.out.println("User in Datenbank:" + user.getUsername());
+        }
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
     }
+
     @Override
-    public List<User> getUserList() {
-        final List<User> userList = new ArrayList<>();
-        userRepository.findAll().forEach(userList::add);
-        return userList;
+    public List<User> getUsers() {
+        final List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+        return users;
+    }
+    @Override
+    public User createUser(final String username, final String password,
+                           final String firstname, final String lastname, final String... roles) {
+        final User user = new User(username, firstname, lastname, password);
+        for (final String role : roles) {
+            user.addRole(role);
+        }
+        final User saved = userRepository.save(user);
+        return saved;
     }
 }

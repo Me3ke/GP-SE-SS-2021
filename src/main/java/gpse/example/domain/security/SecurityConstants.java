@@ -82,7 +82,8 @@ public final class SecurityConstants {
     public long getTokenTimeout() {
         return tokenTimeout;
     }
-    public long setTokenTimeout(long tokenTimeout) {
+
+    public void setTokenTimeout(long tokenTimeout) {
         this.tokenTimeout = tokenTimeout;
     }
 }
