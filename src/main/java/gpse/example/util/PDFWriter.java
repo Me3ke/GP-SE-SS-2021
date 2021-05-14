@@ -45,6 +45,11 @@ import java.util.List;
     private static final int FONT_SIZE = 12;
 
     /**
+     * just a factor for multiply margin at the topic.
+     */
+    private static final int THREE = 3;
+
+    /**
      * printing the protocol with specified user data.
      * @param protocolID id of Protocol class / protocolEnvelope
      * @param owner name of owner
@@ -69,28 +74,28 @@ import java.util.List;
             // (x|y) = (0|0) bottom left; new line forbidden
             contentStream.beginText();
             contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-            contentStream.newLineAtOffset(3 * MARGIN_LEFT, lineCount);
+            contentStream.newLineAtOffset(THREE * MARGIN_LEFT, lineCount);
             contentStream.showText("Protokoll: " + documentID);
             contentStream.endText();
 
-            lineCount = lineCount - 2 * LINE_DIST;
+            lineCount -= 2 * LINE_DIST;
             addLine("Bezüglich Dokument " +  protocolID, lineCount, contentStream);
 
-            lineCount = lineCount - LINE_DIST;
+            lineCount -= LINE_DIST;
             addLine("Dokumenteneigentümer: " +  owner, lineCount, contentStream);
 
-            lineCount = lineCount - LINE_DIST;
+            lineCount -= LINE_DIST;
             addLine("Signiert von: ", lineCount, contentStream);
 
-            for (String signature : signatures) {
-                lineCount = lineCount - LINE_DIST;
+            for (final String signature : signatures) {
+                lineCount -= LINE_DIST;
                 addLine(signature, lineCount, contentStream);
             }
 
             lineCount = lineCount - LINE_DIST;
             addLine("Historie: ", lineCount, contentStream);
 
-            for (String docVersion : history) {
+            for (final String docVersion : history) {
                 lineCount = lineCount - LINE_DIST;
                 addLine(docVersion, lineCount, contentStream);
             }
