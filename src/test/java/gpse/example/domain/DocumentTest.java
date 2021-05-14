@@ -54,13 +54,18 @@ class DocumentTest {
                 documentPutRequest.setTitle("Goin");
                 documentPutRequest.setType("docx");
                 Document document = documentCreator.createDocument(documentPutRequest, null, null, null);
-                documentCreator.download(document);
+                documentCreator.download(document, null);
                 Assertions.assertNotNull(document.getDocumentFile());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             } catch (CreatingFileException e) {
                 e.printStackTrace();
             }
+
+        }
+
+        @Test
+        public void testEnvelopeDownload() {
 
         }
 

@@ -39,7 +39,6 @@ public class DocumentController {
     }
 
     //TODO path for downloads?
-    //Mark as read if downloaded?
     //TODO User has permission to download
     /**
      * The getDocumentFromEnvelope method gets a get request and creates an appropriate response.
@@ -63,7 +62,7 @@ public class DocumentController {
             try {
                 final DocumentCreator documentCreator = new DocumentCreator();
                 document = documentService.getDocument(documentID);
-                documentCreator.download(document);
+                documentCreator.download(document, null);
             } catch (CreatingFileException | IOException e) {
                 throw new DownloadFileException(e);
             }
@@ -84,41 +83,3 @@ public class DocumentController {
         }
     }
 }
-
-
-
-            /*
-            .stream().map(document -> {
-                String documentDownloadUri = ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
-                    .path("/files/")
-                    .path(Long.toString(document.getId()))
-                    .toUriString();
-                    */
-/*
-                return new DocumentResponse(
-                    document.getDocumentTitle(),
-                    documentDownloadUri,
-                    document.getDocumentType(),
-                    document.getData().length);
-            }).collect(Collectors.toList());
-
-            return ResponseEntity.status(HttpStatus.OK).body(files);
-        }
-
-        @GetMapping("/files/{id}")
-        public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-            Document document = null;
-            try {
-                document = storageService.getDocument(Long.parseLong(id));
-            } catch (NumberFormatException e) {
-                return null;
-
-            }
-
-            return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getDocumentTitle() + "\"")
-                .body(document.getData());
-        }
-        */
-

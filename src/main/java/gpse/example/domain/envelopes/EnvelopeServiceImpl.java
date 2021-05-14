@@ -44,7 +44,7 @@ public class EnvelopeServiceImpl implements EnvelopeService {
     @Override
     public Envelope updateEnvelope(final long id, final DocumentPutRequest documentPutRequest, final String ownerID,
                                    final List<User> signatories, final List<User> readers)
-                                    throws CreatingFileException, DocumentNotFoundException, IOException {
+        throws CreatingFileException, DocumentNotFoundException, IOException {
         final Envelope envelope = getEnvelope(id);
         final DocumentCreator documentCreator = new DocumentCreator();
         final Document document = documentCreator.createDocument(documentPutRequest, ownerID,

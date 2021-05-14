@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.users.User;
 
@@ -21,17 +22,20 @@ public class DocumentCreator {
 
     /**
      * The download methods creates a new File of the document given using the writeInNewFileMethod.
+     *
      * @param document the document for the new File.
+     * @param path the in which the document should be downloaded.
      * @return the document with a new documentFile.
      * @throws CreatingFileException if creating the file failed.
-     * @throws IOException if creating the file failed.
+     * @throws IOException           if creating the file failed.
      */
-    public Document download(final Document document)
+    public Document download(final Document document, final String path)
         throws CreatingFileException, IOException {
         if (document.getData() == null) {
             throw new CreatingFileException(new IOException());
         }
-        final File file = writeInNewFile(document.getData(), document.getDocumentType(), document.getDocumentTitle());
+        final File file = writeInNewFile(document.getData(), document.getDocumentType(),
+            document.getDocumentTitle(), path);
         document.setDocumentFile(file);
         return document;
     }
@@ -40,19 +44,23 @@ public class DocumentCreator {
      * The createDocFromData creates a document if it has been uploaded, using the put request body.
      *
      * @param documentPutRequest the command object which keeps the information for the document.
-     * @param ownerID     the email adress of the User who want to create the document.
-     * @param signatories the list of signatories for this document.
-     * @param readers     the list of readers for this document.
+     * @param ownerID            the email adress of the User who want to create the document.
+     * @param signatories        the list of signatories for this document.
+     * @param readers            the list of readers for this document.
      * @return the created document.
      * @throws IOException if the data is incorrect.
+     * @throws CreatingFileException if the path is not specified.
      */
     //does not include directories.
-    public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID, final List<User> signatories,
-                                   final List<User> readers) throws CreatingFileException, IOException {
+    public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
+                                   final List<User> signatories, final List<User> readers)
+                                    throws CreatingFileException, IOException {
         if (documentPutRequest.getPath().equals("")) {
             throw new CreatingFileException(new IOException());
         }
-        final Document document = new Document(documentPutRequest.getPath(), new ArrayList<>(), ownerID, new ArrayList<>());
+        //TODO should not get title from path
+        final Document document = new Document(documentPutRequest.getPath(), new ArrayList<>(),
+            ownerID, new ArrayList<>());
         setDocumentState(signatories, readers, document);
         setReadersAndSignatories(signatories, readers, document);
         document.setEndDate(documentPutRequest.getEndDate());
@@ -63,9 +71,10 @@ public class DocumentCreator {
     /**
      * The setReadersAndSignatories method creates signatory objects and refers them to the documents.
      * A reader uses the same class as Signatory because both processes are similar.
+     *
      * @param signatories a list of users containing all the people to sign the document.
-     * @param readers a list of users containing all the people to read the document before signing.
-     * @param document the document itself.
+     * @param readers     a list of users containing all the people to read the document before signing.
+     * @param document    the document itself.
      */
     private void setReadersAndSignatories(final List<User> signatories, final List<User> readers,
                                           final Document document) {
@@ -84,9 +93,10 @@ public class DocumentCreator {
     /**
      * The setDocumentState method evaluates the readers and signatories and creates an
      * initial state of the document based on that.
+     *
      * @param signatories a list of users containing all the people to sign the document.
-     * @param readers a list of users containing all the people to read the document before signing
-     * @param document the document itself.
+     * @param readers     a list of users containing all the people to read the document before signing
+     * @param document    the document itself.
      */
     private void setDocumentState(final List<User> signatories, final List<User> readers, final Document document) {
         if (readers == null && signatories == null) {
@@ -106,11 +116,17 @@ public class DocumentCreator {
      * @param bytes the byte array from another file.
      * @param type  the file extension from another file.
      * @return the newly created File
-     * @throws IOException if FileInputStream creates an error.
+     * @throws CreatingFileException if FileInputStream creates an error.
      */
     @SuppressWarnings("PMD.AvoidFileStream")
-    private File writeInNewFile(final byte[] bytes, final String type, final String name) throws CreatingFileException {
-        final File file = new File(PATH_TO_DOWNLOADS + name + "." + type);
+    private File writeInNewFile(final byte[] bytes, final String type,
+                                final String name, final String path) throws CreatingFileException {
+        File file;
+        if (path == null) {
+            file = new File(PATH_TO_DOWNLOADS + name + "." + type);
+        } else {
+            file = new File(path);
+        }
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
         if (file.exists()) {
@@ -136,6 +152,19 @@ public class DocumentCreator {
             }
         }
         return file;
+    }
+
+    /**
+     * The downloadEnvelope methods downloads a whole envelope.
+     * @param envelope the envelope to be downloaded.
+     * @throws IOException if the data is incorrect.
+     * @throws CreatingFileException if the path is not specified.
+     */
+    public void downloadEnvelope(final Envelope envelope) throws IOException, CreatingFileException {
+        final List<Document> documentList = envelope.getDocumentList();
+        for (final Document document : documentList) {
+            download(document, PATH_TO_DOWNLOADS + envelope.getName());
+        }
     }
 
 /*

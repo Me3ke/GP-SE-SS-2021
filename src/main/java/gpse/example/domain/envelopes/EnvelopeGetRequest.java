@@ -12,8 +12,16 @@ import java.util.List;
  */
 public class EnvelopeGetRequest {
 
+    /**
+     * Everything that you dont want to be filtered has to be either
+     * "" if it is from String type, 0 if it is from long type or
+     * null if it is any other type. If these conditions are not fulfilled
+     * the filter method will throw a Null pointer Exception.
+     */
+    //TODO sort
     private String titleFilter;
-    private String envelopeIDFilter;
+    private String nameFilter;
+    private long envelopeIDFilter;
     private DocumentState stateFilter;
     private String ownerIDFilter;
     private LocalDateTime creationDateFilterFrom;
@@ -24,9 +32,19 @@ public class EnvelopeGetRequest {
     private String dataType;
     private List<String> signatoryIDs;
     private List<String> readerIDs;
+    private boolean signed;
+    private boolean read;
     private int pageLimit;
     private int page;
     private String sort;
+
+    public String getNameFilter() {
+        return nameFilter;
+    }
+
+    public void setNameFilter(final String nameFilter) {
+        this.nameFilter = nameFilter;
+    }
 
     public String getTitleFilter() {
         return titleFilter;
@@ -36,11 +54,11 @@ public class EnvelopeGetRequest {
         this.titleFilter = titleFilter;
     }
 
-    public String getEnvelopeIDFilter() {
+    public long getEnvelopeIDFilter() {
         return envelopeIDFilter;
     }
 
-    public void setEnvelopeIDFilter(final String envelopeIDFilter) {
+    public void setEnvelopeIDFilter(final long envelopeIDFilter) {
         this.envelopeIDFilter = envelopeIDFilter;
     }
 
@@ -140,11 +158,27 @@ public class EnvelopeGetRequest {
         this.page = page;
     }
 
+    public boolean isSigned() {
+        return signed;
+    }
+
+    public void setSigned(final boolean signed) {
+        this.signed = signed;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(final boolean read) {
+        this.read = read;
+    }
+
     public String getSort() {
         return sort;
     }
 
-    public void setSort(final String sort) {
+    public void setSort(String sort) {
         this.sort = sort;
     }
 }
