@@ -18,12 +18,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This Class is a custom Filter for the spring-security FilterChain.
+ * It secures the Authorization with ROLES.
+ */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private final  SecurityConstants securityConstants;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, final SecurityConstants securityConstants) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+                                  final SecurityConstants securityConstants) {
         super(authenticationManager);
         this.securityConstants = securityConstants;
     }
