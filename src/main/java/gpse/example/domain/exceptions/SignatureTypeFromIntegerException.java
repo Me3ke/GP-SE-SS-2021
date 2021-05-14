@@ -8,7 +8,6 @@ package gpse.example.domain.exceptions;
  */
 public class SignatureTypeFromIntegerException extends Exception {
     static final long serialVersionUID = 42L;
-
     /**
      * This message hold a description of the Exception.
      */
@@ -16,7 +15,6 @@ public class SignatureTypeFromIntegerException extends Exception {
     public SignatureTypeFromIntegerException() {
         super();
     }
-
     @Override
     public String getMessage() {
         return MESSAGE;

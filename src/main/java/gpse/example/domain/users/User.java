@@ -1,14 +1,14 @@
 package gpse.example.domain.users;
 
-import java.security.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import gpse.example.domain.envelopes.Envelope;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.security.PublicKey;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class User implements UserDetails {
     private boolean admin;
 
     @OneToMany
-    private List<Envelope> myEnvelopes = new ArrayList<>();
+    private final List<Envelope> myEnvelopes = new ArrayList<>();
 
     public User() {
 
@@ -74,22 +74,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    /**
-     * the Method used to fill in information that is not necessarily needed.
-     *
-     * @param street      the street the user lives in.
-     * @param houseNumber the house number of the user.
-     * @param postCode    the postcode for the hometown of the user
-     * @param homeTown    the hometown of the user
-     * @param country     the country the user lives in
-     * @param birthday    the birthday of the user
-     * @param phoneNumber the phoneNumber of the user
-     */
-    public void setPersonalData(final String street, final int houseNumber, final int postCode,
-                                final String homeTown, final String country, final LocalDate birthday,
-                                final int phoneNumber) {
-        this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
-            country, birthday, phoneNumber);
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     /*
@@ -119,17 +105,24 @@ public class User implements UserDetails {
     }*/
 
     /**
-     * the method to create a new envelope with the user object, that calls this as the owner.
-     * @param name the name of the envelope
-     * @return the new envelope.
+     * the Method used to fill in information that is not necessarily needed.
+     *
+     * @param street      the street the user lives in.
+     * @param houseNumber the house number of the user.
+     * @param postCode    the postcode for the hometown of the user
+     * @param homeTown    the hometown of the user
+     * @param country     the country the user lives in
+     * @param birthday    the birthday of the user
+     * @param phoneNumber the phoneNumber of the user
      */
-    public Envelope createNewEnvelope(final String name) {
-        final Envelope envelope = new Envelope(name, this);
-        myEnvelopes.add(envelope);
-        return envelope;
+    public void setPersonalData(final String street, final int houseNumber, final int postCode,
+                                final String homeTown, final String country, final LocalDate birthday,
+                                final int phoneNumber) {
+        this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
+                country, birthday, phoneNumber);
     }
 
-    /**
+    /*
      * the method used to generate an advanced signature, using the active private key.
      *
      * @return the signature represented by a byte list
@@ -154,18 +147,43 @@ public class User implements UserDetails {
 
     //TODO
     // Methods that are required for using the interface
+
+    /**
+     * the method to create a new envelope with the user object, that calls this as the owner.
+     *
+     * @param name the name of the envelope
+     * @return the new envelope.
+     */
+    public Envelope createNewEnvelope(final String name) {
+        final Envelope envelope = new Envelope(name, this);
+        myEnvelopes.add(envelope);
+        return envelope;
+    }
+
+    /**
+     * This Mehtod allows access to the users ROLES, whom'st define
+     * the users authority.
+     *
+     * @return Collection of objects extending GrantedAuthority containing the users authority roles.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*
-        return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
-
-         */
-        return null;
+        final String roleUser = "ROLE_USER";
+        final String roleAdmin = "ROLE_ADMIN";
+        if (this.admin) {
+            return AuthorityUtils.createAuthorityList(roleUser, roleAdmin);
+        } else {
+            return AuthorityUtils.createAuthorityList(roleUser);
+        }
     }
 
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 
     @Override
@@ -193,10 +211,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -220,11 +234,6 @@ public class User implements UserDetails {
     public void setLastname(final String lastname) {
         this.lastname = lastname;
     }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
 
     public PublicKey getPublicKey() {
         return publicKey;

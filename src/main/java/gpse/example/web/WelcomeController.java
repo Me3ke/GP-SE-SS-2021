@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 public class WelcomeController {
-
     @GetMapping("/hello-world")
     public String welcome() {
         return "Hallo aus dem Backend! "
