@@ -45,7 +45,7 @@ import java.util.List;
     private static final int FONT_SIZE = 12;
 
     /**
-     * just a factor for multiply margin at the topic
+     * just a factor for multiply margin at the topic.
      */
     private static final int THREE = 3;
 
@@ -87,7 +87,7 @@ import java.util.List;
             lineCount -= LINE_DIST;
             addLine("Signiert von: ", lineCount, contentStream);
 
-            for (String signature : signatures) {
+            for (final String signature : signatures) {
                 lineCount -= LINE_DIST;
                 addLine(signature, lineCount, contentStream);
             }
@@ -95,7 +95,7 @@ import java.util.List;
             lineCount = lineCount - LINE_DIST;
             addLine("Historie: ", lineCount, contentStream);
 
-            for (String docVersion : history) {
+            for (final String docVersion : history) {
                 lineCount = lineCount - LINE_DIST;
                 addLine(docVersion, lineCount, contentStream);
             }

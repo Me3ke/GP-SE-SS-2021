@@ -82,7 +82,7 @@ public class SMTPServerHelper {
      */
 
     public static void sendRegistrationEmail(final String toAddress, final String userName, final String link) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        final SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
         message.setSubject(REGISTRATION_SUBJECT);
