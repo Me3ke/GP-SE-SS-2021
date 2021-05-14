@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +14,23 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(final UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public User getUser(final String userID) {
-        return repo.findById(userID)
-            .orElseThrow(() -> new UsernameNotFoundException("User email: " + userID + " not found."));
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        return userRepository.findById(username) //<1>
+            .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found.")); //<2>
     }
 
     @Override
     public List<User> getUserList() {
         final List<User> userList = new ArrayList<>();
-        repo.findAll().forEach(userList::add);
+        userRepository.findAll().forEach(userList::add);
         return userList;
     }
 }
