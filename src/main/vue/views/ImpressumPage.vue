@@ -1,46 +1,55 @@
 <template>
     <div>
-    <Header></Header>
-    <b-container id="impressum-container">
-        <BaseHeading style="margin-top: 2ex;" name=""></BaseHeading>
-        <h1 id='AboutPage-heading'>{{$t('AboutPage.name')}}</h1>
-        <b-row id="b-row-class">
-            <b-container id="impressum-provider-class">
-                <b-col>
-                    <!-- provisionally (because of newline) -->
-                    <p>{{$t('AboutPage.provider')}}</p>
-                    <p>{{info[0].surname}} {{info[0].lastname}}</p>
-                    <p>{{info[0].address}}</p>
-                    <p>{{info[0].zip}} {{info[0].city}} </p>
-                </b-col>
-            </b-container>
-            <b-container id="impressum-contact-class">
-                <b-col>
-                    <!-- provisionally (because of newline) -->
-                    <p>{{$t('AboutPage.contact')}}</p>
-                    <p>Telefon: {{info[0].tel}}</p>
-                    <p>Telefax: {{info[0].fax }}</p>
-                    <p>E-Mail: {{info[0].mail}}</p>
-                    <p>Website: {{info[0].web}}</p>
-                </b-col>
-            </b-container>
-            <b-container id="redaktionell-text">
-                <b-col>
-                    <!-- provisionally (because of newline) -->
-                    <p> Bei redaktionellen Inhalten:</p>
-                    <p>Verantwortlich nach § 55 Abs.2 RStV</p>
-                    <p>Moritz Schreiberling</p>
-                    <p>Musterstraße 2</p>
-                    <p>80999 München</p>
-                </b-col>
-            </b-container>
-        </b-row>
-    </b-container>
+        <Header></Header>
+        <b-container>
+                <b-row class="base-header-row">
+                    <BaseHeading class="baseHeader" :name="$t('AboutPage.name')" style="margin-top: 0.5em; margin-left: 0"></BaseHeading>
+                </b-row>
+
+                <b-container class="content-container" style="margin-top: 2em">
+                    <b-col style="margin-top: 2em; margin-left: 4em">
+                        <b-row class="provider-row" style="">
+                            <b-col v-for="(inf, c) in info" :key="c">
+                                <b-row style="margin-bottom: -.4em"> <h5 class="row-header">{{$t('AboutPage.provider')}}</h5></b-row>
+                                <b-row> {{inf.surname}} {{inf.lastname}} </b-row>
+                                <b-row> {{inf.address}} </b-row>
+                                <b-row> {{inf.zip}} {{inf.city}} </b-row>
+                            </b-col>
+                        </b-row>
+
+                        <b-row class="contact-row">
+                            <b-col v-for="(con, a) in contact" :key="a">
+                                <b-row style="margin-bottom: -.4em"> <h5 class="row-header">{{$t('AboutPage.contact')}}</h5></b-row>
+                                <b-row> {{con.tel}} </b-row>
+                                <b-row> {{con.fax}} </b-row>
+                                <b-row> {{con.mail}} </b-row>
+                                <b-row> {{con.web}} </b-row>
+                            </b-col>
+
+                        </b-row>
+
+                        <b-row class="redak-row">
+                            <b-col v-for="(red, i) in redInfos" :key="i">
+                                <b-row style="margin-bottom: -.4em"><h5 class="row-header">{{ $t('AboutPage.editorial') }}</h5></b-row>
+                                <b-row> <h6 class="row-header">{{red.resp}}</h6> </b-row>
+                                <b-row> {{red.surname}} {{red.lastname}} </b-row>
+                                <b-row> {{red.address}} </b-row>
+                                <b-row> {{red.zip}} {{red.city}} </b-row>
+                            </b-col>
+
+                        </b-row>
+
+
+                    </b-col>
+
+                </b-container>
+        </b-container>
     </div>
+
 </template>
 
 <script>
-import Header from "@/main/vue/components/Header";
+import Header from "@/main/vue/components/header/Header";
 export default {
     name: "Impressum",
     components: {Header},
@@ -53,11 +62,25 @@ export default {
                 address: "Musterstraße 1",
                 zip: "80999",
                 city: "München",
-                tel: "089/1234567-8",
-                fax: "089/1234567-9",
-                mail: "mail@mustermann.de",
-                web: "www.mustermann.de"
             }
+            ],
+            contact: [
+                {
+                    tel: "089/1234567-8",
+                    fax: "089/1234567-9",
+                    mail: "mail@mustermann.de",
+                    web: "www.mustermann.de"
+                }
+            ],
+            redInfos: [
+                {
+                    resp: "Verantwortlich nach § 55 Abs.2",
+                    surname: "Moritz",
+                    lastname: "Schreiberling",
+                    address: "Musterstraße 2",
+                    zip: "80999",
+                    city: "München"
+                }
             ]
 
         }
@@ -66,45 +89,25 @@ export default {
 </script>
 
 <style scoped>
-#impressum-container {
-    margin-top: 10em;
+.provider-row {
+    max-width: 100%;
+    padding-bottom: 2em
 }
-#impressum-provider-class {
-    color: #47525E;
-    line-height: 15px;
-    text-align: left;
-    margin-top: 2em;
+.redak-row {
+    max-width: 100%;
+
+    padding-bottom: 2em;
+}
+.contact-row {
+    max-width: 100%;
     margin-bottom: 2em;
 
 }
-#impressum-contact-class {
-    color: #47525E;
-    line-height: 15px;
-    text-align: left;
-    margin-bottom: 2em;
-}
-#redaktionell-text {
-    color: #47525E;
-    line-height: 15px;
-    text-align: left;
-    margin-bottom: 2em
-}
-#AboutPage-heading {
-    font-size: 30px;
-    margin-top: -70px;
-}
 
-@media only screen and (max-width: 1600px) {
-    #AboutPage-heading {
-        margin-top: -70px;
-    }
-
+.base-header-row {
+    margin-left: -5em;
 }
-@media only screen and (max-width: 766px) {
-    #AboutPage-heading {
-        margin-top: -100px;
-
-    }
+.content-container {
+    margin-left: -5em;
 }
-
 </style>

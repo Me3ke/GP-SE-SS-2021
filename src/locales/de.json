@@ -9,10 +9,7 @@
         "name": "Impressum",
         "provider" : "Anbieter: ",
         "contact": "Kontakt: ",
-        "contact-tel": "Telefon: ",
-        "contact-fax": "Telefax: ",
-        "contact-mail": "E-Mail: ",
-        "contact-website": "Website: "
+        "editorial": "Bei Redaktionellen Inhalten: "
 
 
     },
