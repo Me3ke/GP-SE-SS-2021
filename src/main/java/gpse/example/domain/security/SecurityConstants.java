@@ -2,21 +2,26 @@ package gpse.example.domain.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * This Class loads Constants to proived for different security features.
+ */
 @ConfigurationProperties("security")
 public final class SecurityConstants {
 
     private String authLoginUrl;
 
     // Signing key für den HS512-Algorithm
-    // Eigene Schlüssel könnt ihr unter http://www.allkeysgenerator.com/ erstellen lassen.
     private String jwtSecret;
 
+    // Haltbarkeit in millis
+    private long tokenTimeout;
     // JWT Token-Standardwerte
     private String tokenHeader;
     private String tokenPrefix;
     private String tokenType;
     private String tokenIssuer;
     private String tokenAudience;
+
 
     public String getAuthLoginUrl() {
         return authLoginUrl;
@@ -72,5 +77,12 @@ public final class SecurityConstants {
 
     public void setTokenAudience(String tokenAudience) {
         this.tokenAudience = tokenAudience;
+    }
+
+    public long getTokenTimeout() {
+        return tokenTimeout;
+    }
+    public long setTokenTimeout(long tokenTimeout) {
+        this.tokenTimeout = tokenTimeout;
     }
 }
