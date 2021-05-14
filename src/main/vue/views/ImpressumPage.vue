@@ -110,4 +110,93 @@ export default {
 .content-container {
     margin-left: -5em;
 }
+
+@media screen and (min-width: 1194px) and (max-width: 1279px) {
+    .base-header-row {
+        margin-left: -3em;
+    }
+    .content-container {
+        margin-left: -4em;
+    }
+
+}
+@media screen and (min-width: 921px) and (max-width: 1190px) {
+    .base-header-row {
+
+        font-size: 1.3em;
+    }
+    .content-container {
+        margin-left: -5em;
+    }
+
+}
+
+
+@media screen and (max-width: 768px) and (min-width: 679px) {
+    .base-header-row {
+        margin-left: -4.3em;
+        font-size: 1.3em;
+    }
+    .content-container {
+        margin-left: -3em;
+    }
+
+}
+
+@media screen and (min-width: 576px) and (max-width: 678px) {
+    .base-header-row {
+        margin-left: -1.6em;
+        font-size: 1.4em;
+    }
+    .content-container {
+        margin-left: -3em;
+    }
+}
+
+@media screen and (min-width: 415px) and (max-width: 575px) {
+    .base-header-row {
+        margin-left: -1em;
+        font-size: 1.4em;
+    }
+    .content-container {
+        margin-left: -3em;
+    }
+}
+
+@media screen and (max-width: 414px) {
+    .baseHeader {
+        font-size: 1.5em;
+    }
+    .base-header-row {
+        margin-left: -1em;
+    }
+
+    .content-container {
+        margin-left: -3em;
+    }
+    .redak-row {
+        max-width: 100%;
+    }
+    .contact-row {
+    }
+    .provider-row {
+        max-width: 80%;
+    }
+}
+
+@media screen and (max-width: 342px) {
+    .base-header-row {
+        margin-left: -2em;
+        font-size: .6em;
+    }
+    .content-container {
+        margin-left: -3em;
+        font-size: .8em;
+    }
+
+    .row-header {
+        font-size: 1.2em;
+    }
+}
+
 </style>
