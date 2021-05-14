@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A class which represents a Response for a Document Get request.
  */
-public class DocumentGet {
+public class DocumentGetResponse {
 
     private String title;
     private DocumentState state;
@@ -30,7 +30,7 @@ public class DocumentGet {
      * @param document the corresponding document for the request.
      * @param owner the user, who created the request.
      */
-    public DocumentGet(final Document document, final User owner) {
+    public DocumentGetResponse(final Document document, final User owner) {
         this.title = document.getDocumentTitle();
         this.owner = owner;
         final DocumentMetaData metaData = document.getDocumentMetaData();
@@ -39,14 +39,14 @@ public class DocumentGet {
         this.signatureType = document.getSignatureType();
         this.dataType = document.getDocumentType();
         final List<Signatory> signatories = document.getSignatories();
-        this.signed = false;
+        this.signed = true;
         for (final Signatory signatory : signatories) {
             if (!signatory.isStatus()) {
                 this.signed = false;
             }
         }
         final List<Signatory> readers = document.getReaders();
-        this.read = false;
+        this.read = true;
         for (final Signatory reader : readers) {
             if (!reader.isStatus()) {
                 this.read = false;

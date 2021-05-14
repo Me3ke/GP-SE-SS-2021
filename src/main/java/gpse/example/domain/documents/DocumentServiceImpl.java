@@ -22,7 +22,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     //TODO
     @Override
-    public Document store(final DocumentPut documentPut, final String ownerID) {
+    public Document store(final DocumentPutRequest documentPutRequest, final String ownerID) {
         return null;
     }
 

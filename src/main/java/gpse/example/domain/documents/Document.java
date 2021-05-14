@@ -59,10 +59,13 @@ public class Document {
     @Lob
     private byte[] data;
 
+    @Column
     private boolean orderRelevant;
 
+    @Column
     private LocalDateTime endDate;
 
+    @Column
     private DocumentState state;
 
     public Document() {

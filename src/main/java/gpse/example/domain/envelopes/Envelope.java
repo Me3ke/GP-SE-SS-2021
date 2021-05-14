@@ -1,6 +1,7 @@
 package gpse.example.domain.envelopes;
 
 import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
@@ -37,6 +38,9 @@ public class Envelope implements Iterable<Document> {
     @Column
     private LocalDateTime creationDate;
 
+    @Column
+    private DocumentState state;
+
     /**
      * Constructor which creates an envelop containing all files in the
      * list and the name.
@@ -63,6 +67,7 @@ public class Envelope implements Iterable<Document> {
         this.name = name;
         this.owner = owner;
         this.creationDate = LocalDateTime.now();
+        this.state = DocumentState.OPEN;
     }
 
     protected Envelope() {
@@ -100,5 +105,13 @@ public class Envelope implements Iterable<Document> {
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public DocumentState getState() {
+        return state;
+    }
+
+    public void setState(final DocumentState state) {
+        this.state = state;
     }
 }

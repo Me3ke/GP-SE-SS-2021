@@ -40,11 +40,11 @@ public class DocumentController {
 
     //TODO path for downloads?
     //Mark as read if downloaded?
-
+    //TODO User has permission to download
     /**
      * The getDocumentFromEnvelope method gets a get request and creates an appropriate response.
      * @param envelopeID the id of the envelope which contains the document.
-     * @param ownerID the id of the owner doing the request.
+     * @param userID the id of the owner doing the request.
      * @param documentID the id of the document asked for.
      * @param download a boolean which indicates if a document should be downloaded.
      * @return the DocumentGet response
@@ -53,10 +53,10 @@ public class DocumentController {
      * @throws DownloadFileException if something went wrong while downloading the file.
      */
     @GetMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
-    public DocumentGet getDocumentFromEnvelope(final @PathVariable("envelopeID") long envelopeID,
-                                               final @PathVariable("userID") String ownerID,
-                                               final @PathVariable("documentID") long documentID,
-                                               final @RequestParam("download") boolean download)
+    public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable("envelopeID") long envelopeID,
+                                                       final @PathVariable("userID") String userID,
+                                                       final @PathVariable("documentID") long documentID,
+                                                       final @RequestParam("download") boolean download)
                                                 throws DocumentNotFoundException, DownloadFileException {
         Document document;
         if (download) {
@@ -78,7 +78,7 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
-            return new DocumentGet(document, userService.getUser(ownerID));
+            return new DocumentGetResponse(document, userService.getUser(userID));
         } else {
             throw new DocumentNotFoundException();
         }

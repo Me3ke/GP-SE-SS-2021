@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The documentPut class is a CommandPattern class to specify the the Rest-Api.
  */
-public class DocumentPut {
+public class DocumentPutRequest {
 
     private String path;
     private String title;

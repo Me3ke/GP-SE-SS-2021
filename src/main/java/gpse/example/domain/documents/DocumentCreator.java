@@ -39,7 +39,7 @@ public class DocumentCreator {
     /**
      * The createDocFromData creates a document if it has been uploaded, using the put request body.
      *
-     * @param documentPut the command object which keeps the information for the document.
+     * @param documentPutRequest the command object which keeps the information for the document.
      * @param ownerID     the email adress of the User who want to create the document.
      * @param signatories the list of signatories for this document.
      * @param readers     the list of readers for this document.
@@ -47,16 +47,16 @@ public class DocumentCreator {
      * @throws IOException if the data is incorrect.
      */
     //does not include directories.
-    public Document createDocument(final DocumentPut documentPut, final String ownerID, final List<User> signatories,
+    public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID, final List<User> signatories,
                                    final List<User> readers) throws CreatingFileException, IOException {
-        if (documentPut.getPath().equals("")) {
+        if (documentPutRequest.getPath().equals("")) {
             throw new CreatingFileException(new IOException());
         }
-        final Document document = new Document(documentPut.getPath(), new ArrayList<>(), ownerID, new ArrayList<>());
+        final Document document = new Document(documentPutRequest.getPath(), new ArrayList<>(), ownerID, new ArrayList<>());
         setDocumentState(signatories, readers, document);
         setReadersAndSignatories(signatories, readers, document);
-        document.setEndDate(documentPut.getEndDate());
-        document.setOrderRelevant(documentPut.isOrderRelevant());
+        document.setEndDate(documentPutRequest.getEndDate());
+        document.setOrderRelevant(documentPutRequest.isOrderRelevant());
         return document;
     }
 
@@ -96,7 +96,7 @@ public class DocumentCreator {
         } else if (readers == null) {
             document.setState(DocumentState.READ);
         } else {
-            document.setState(DocumentState.NO_STATE);
+            document.setState(DocumentState.OPEN);
         }
     }
 
@@ -128,6 +128,7 @@ public class DocumentCreator {
             throw new CreatingFileException(e);
         } finally {
             try {
+                assert bos != null;
                 bos.close();
                 fos.close();
             } catch (IOException e) {

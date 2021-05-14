@@ -1,23 +1,5 @@
 package gpse.example.domain;
 
-import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.documents.DocumentPut;
-import gpse.example.domain.envelopes.Envelope;
-import gpse.example.domain.envelopes.EnvelopeController;
-import gpse.example.domain.envelopes.EnvelopeServiceImpl;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.users.UserServiceImpl;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 public class EnvelopeControllerTest {
     /*
 

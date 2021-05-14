@@ -6,9 +6,9 @@ package gpse.example.domain.documents;
 public enum DocumentState {
 
     /**
-     * If the there are unsigned signatories and readers left it has no state.
+     * If the there are unsigned signatories and readers left it has open state.
      */
-    NO_STATE(-1),
+    OPEN(-1),
     /**
      * Changes to read state if all users have read the document.
      */
@@ -38,7 +38,7 @@ public enum DocumentState {
     public static DocumentState fromInteger(final int intRepresentation) {
         switch (intRepresentation) {
             case -1:
-                return DocumentState.NO_STATE;
+                return DocumentState.OPEN;
             case 0:
                 return DocumentState.READ;
             case 1:
