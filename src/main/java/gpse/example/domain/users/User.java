@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import gpse.example.domain.envelopes.Envelope;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -154,13 +155,22 @@ public class User implements UserDetails {
 
     //TODO
     // Methods that are required for using the interface
+
+
+    /**
+     * This Mehtod allows access to the users ROLES, whom'st define
+     * the users authority.
+     * @return Collection of objects extending GrantedAuthority,
+     * containing the users authority roles.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*
-        return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
 
-         */
-        return null;
+        if(this.admin){
+            return AuthorityUtils.createAuthorityList(new String[]{"ROLE_USER", "ROLE_ADMIN"});
+        } else {
+            return AuthorityUtils.createAuthorityList(new String[]{"ROLE_USER"});
+        }
     }
 
     @Override
