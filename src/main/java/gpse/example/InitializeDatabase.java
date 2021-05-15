@@ -2,6 +2,7 @@ package gpse.example;
 
 import gpse.example.domain.*;
 import gpse.example.domain.users.PersonalData;
+import gpse.example.domain.users.PersonalDataService;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,11 +19,13 @@ import java.time.LocalDate;
 public class InitializeDatabase implements InitializingBean {
 
     private final UserService userService;
+    private final PersonalDataService personalDataService;
 
 
     @Autowired
-    public InitializeDatabase(final UserService userService) {
+    public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService) {
         this.userService = userService;
+        this.personalDataService = personalDataService;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class InitializeDatabase implements InitializingBean {
                     "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
                     "Hans",
                     "Schneider",
-                    personalData,
+                    personalDataService.savePersonalData(personalData),
                     "ROLE_USER"
             );
 
