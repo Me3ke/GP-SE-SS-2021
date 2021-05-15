@@ -8,7 +8,7 @@
         "name": "About us",
         "provider": "Provider:",
         "contact": "Contact:",
-        "editorial": "For editorial content:"
+        "editorial": "For Editorial Content:"
     },
     "NotFoundPage": {
         "h1": "Ops!",
