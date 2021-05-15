@@ -76,6 +76,7 @@ export default {
                 {
                     //Verantwortlich nach § 55 Abs.2
                     respDE: "Verantwortlich nach § 55 Abs.2",
+                    // set the english resp text
                     respEN: "TEST",
                     surname: "Moritz",
                     lastname: "Schreiberling",

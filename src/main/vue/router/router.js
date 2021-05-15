@@ -2,7 +2,6 @@ import VueRouter from "vue-router";
 import i18n from "@/i18n";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
-import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
