@@ -1,10 +1,20 @@
 <template>
     <div>
         <Header></Header>
-        <b-container>
-                <b-row class="base-header-row">
-                    <BaseHeading class="baseHeader" :name="$t('AboutPage.name')" style="margin-top: 0.5em; margin-left: 0"></BaseHeading>
-                </b-row>
+        <b-container class="full-container">
+                <b-container class="head-with-arrow">
+                    <b-row class="base-header-row">
+                        <b-col>
+                            <BaseHeading class="baseHeader" name="" ></BaseHeading>
+                            <!--<h2 class="baseHeader-h2">{{$t('AboutPage.name')}}</h2>-->
+                        </b-col>
+                    </b-row>
+                    <b-col style="margin-left: 2em; padding-left: 2em">
+                        <h2 class="baseHeader-h2">{{$t('AboutPage.name')}}</h2>
+
+                    </b-col>
+                </b-container>
+
 
                 <b-container class="content-container" style="margin-top: 2em">
                     <b-col style="margin-top: 2em; margin-left: 4em">
@@ -31,7 +41,8 @@
                         <b-row class="redak-row">
                             <b-col v-for="(red, i) in redInfos" :key="i">
                                 <b-row style="margin-bottom: -.4em"><h5 class="row-header">{{ $t('AboutPage.editorial') }}</h5></b-row>
-                                <b-row> <h6 class="row-header">{{red.resp}}</h6> </b-row>
+                                <b-row v-if="$i18n.locale === 'de'"> <h6 class="row-header">{{red.resp}}</h6> </b-row>
+                                <b-row v-else> <h6 class="row-header">{{red.respEN}}</h6> </b-row>
                                 <b-row> {{red.surname}} {{red.lastname}} </b-row>
                                 <b-row> {{red.address}} </b-row>
                                 <b-row> {{red.zip}} {{red.city}} </b-row>
@@ -39,9 +50,22 @@
 
                         </b-row>
 
+                        <b-container class="text-input-class">
+                            <b-row style="margin-top: 1em">
+                                <label style="padding-right: .5em">
+                                    <input type="text" v-model="redInfos[0].resp"> <b-button>Enter</b-button>
+                                </label>
+                            </b-row>
+                            <b-row style="padding-bottom: 3em">
+                                <label>
+                                    <input type="text" v-model="redInfos[0].respEN"> <b-button>Enter</b-button>
+                                </label>
+
+
+                            </b-row>
+                        </b-container>
 
                     </b-col>
-
                 </b-container>
         </b-container>
     </div>
@@ -74,7 +98,9 @@ export default {
             ],
             redInfos: [
                 {
-                    resp: "Verantwortlich nach § 55 Abs.2",
+                    //Verantwortlich nach § 55 Abs.2
+                    resp: "",
+                    respEN: "",
                     surname: "Moritz",
                     lastname: "Schreiberling",
                     address: "Musterstraße 2",
@@ -94,7 +120,8 @@ export default {
     padding-bottom: 2em
 }
 .redak-row {
-    max-width: 100%;
+    max-width: 50%;
+    text-align: left;
 
     padding-bottom: 2em;
 }
@@ -105,97 +132,176 @@ export default {
 }
 
 .base-header-row {
-    margin-left: -5em;
+    margin-left: 0;
+    padding-left: -2em;
 }
 .content-container {
-    margin-left: -5em;
+    margin-left: 0em;
+}
+.baseHeader {
+    margin-top: 0.5em;
+    margin-left: -3em
 }
 
-@media screen and (min-width: 1194px) and (max-width: 1279px) {
+.baseHeader-h2 {
+    margin-left: -30em;
+    margin-top: -1em
+}
+
+
+@media screen and (min-width: 1200px){
     .base-header-row {
-        margin-left: -3em;
+        margin-left: -1em;
+    }
+    .full-container {
+        margin-left: 2em;
+    }
+    .content-container {
+        margin-left: -2.4em;
+    }
+    .baseHeader-h2 {
+        margin-top: -1em !important;
+        margin-left: -31em !important;
+    }
+
+}
+
+@media screen and (min-width: 1191px) and (max-width: 1199px) {
+    .base-header-row {
+        margin-left: -6em;
+    }
+    .content-container {
+        margin-left: -8em;
+    }
+    .baseHeader-h2 {
+        margin-left: -42em;
+    }
+
+}
+
+
+
+@media screen and (min-width: 992px) and (max-width: 1190px) {
+    .full-container {
+        margin-left: 4em;
+    }
+    .baseHeader-h2 {
+        margin-left: -23.5em;
+        margin-top: -1em;
     }
     .content-container {
         margin-left: -4em;
     }
-
 }
-@media screen and (min-width: 921px) and (max-width: 1190px) {
-    .base-header-row {
 
+@media screen and (min-width: 801px) and (max-width: 991px) {
+    .full-container {
+        margin-left: 4em;
+    }
+    .baseHeader-h2 {
+        margin-left: -12em;
+    }
+}
+
+
+
+
+
+@media screen and (min-width: 768px) {
+    .base-header-row {
+        margin-left: -0.8em !important;
         font-size: 1.3em;
     }
     .content-container {
-        margin-left: -5em;
+        margin-left: -1.8em;
     }
-
-}
-
-
-@media screen and (max-width: 768px) and (min-width: 679px) {
-    .base-header-row {
-        margin-left: -4.3em;
-        font-size: 1.3em;
+    .baseHeader-h2 {
+        margin-left: -19em;
+        margin-top: -0.8em;
     }
-    .content-container {
-        margin-left: -3em;
-    }
-
-}
-
-@media screen and (min-width: 576px) and (max-width: 678px) {
-    .base-header-row {
-        margin-left: -1.6em;
-        font-size: 1.4em;
-    }
-    .content-container {
-        margin-left: -3em;
+    .full-container {
+        margin-left: 4em;
     }
 }
 
-@media screen and (min-width: 415px) and (max-width: 575px) {
+@media screen and (max-width: 767px) and (min-width: 501px) {
     .base-header-row {
         margin-left: -1em;
-        font-size: 1.4em;
+        font-size: 1.3em;
     }
     .content-container {
-        margin-left: -3em;
+        margin-left: -1.8em;
+    }
+    .baseHeader-h2 {
+        margin-left: -12.5em;
+        margin-top: -0.7em;
+    }
+    .full-container {
+        margin-left: 4em;
     }
 }
 
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 500px) and (min-width: 460px) {
+    .base-header-row {
+        font-size: 1.3em;
+        margin-left: -.6em;
+    }
+    .content-container {
+        margin-left: -4em;
+    }
+    .baseHeader-h2 {
+        margin-left: -13em;
+        margin-top: -0.7em;
+    }
+    .full-container {
+        margin-left: 3em;
+    }
+}
+
+@media screen and (max-width: 459px) {
+    .baseHeader-h2 {
+        margin-top: -0.9em;
+        font-size: 1.6em;
+        margin-left: -10.5em;
+    }
+
     .baseHeader {
-        font-size: 1.5em;
+        margin-left: -2.8em;
+        margin-top: 0em;
     }
-    .base-header-row {
+    .full-container {
         margin-left: -1em;
     }
-
     .content-container {
-        margin-left: -3em;
+        padding-right: 2em;
+    }
+    .text-input-class {
+        margin-left: -2em;
+    }
+
+    .head-with-arrow {
+        margin-left: 1em;
+    }
+
+}
+
+@media screen and (max-width: 377px) {
+    .baseHeader-h2 {
+        font-size: 1.5em;
+        margin-left: -8em;
+        margin-top: -.8em;
     }
     .redak-row {
-        max-width: 100%;
+        font-size: .7em;
     }
     .contact-row {
+        font-size: .7em;
     }
     .provider-row {
-        max-width: 80%;
+        font-size: .7em;
     }
-}
-
-@media screen and (max-width: 342px) {
-    .base-header-row {
-        margin-left: -2em;
-        font-size: .6em;
-    }
-    .content-container {
-        margin-left: -3em;
-        font-size: .8em;
-    }
-
     .row-header {
-        font-size: 1.2em;
+        font-size: 1.3em;
     }
 }
 
