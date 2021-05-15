@@ -6,6 +6,7 @@ import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
+import DocumentPage from "@/main/vue/views/DocumentPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -42,6 +43,12 @@ const router = new VueRouter({
                     name: 'messages',
                     props: true,
                     component: MessagePage
+                },
+                {
+                    path: '/document/:docId',
+                    name: 'document',
+                    component: DocumentPage,
+                    props: true
                 },
                 {
                     path: '404',
