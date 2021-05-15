@@ -113,10 +113,6 @@ public class DocumentMetaData {
             && Objects.equals(identifier, that.identifier);
     }
 
-    public String getMetaUserID() {
-        return metaUserID;
-    }
-
     public LocalDateTime getMetaTimeStampUpload() {
         return metaTimeStampUpload;
     }

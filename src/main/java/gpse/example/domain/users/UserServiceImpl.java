@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Override
     public User getUser(final String username) throws UsernameNotFoundException {
         return userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
