@@ -18,7 +18,6 @@ public class EnvelopeGetRequest {
      * null if it is any other type. If these conditions are not fulfilled
      * the filter method will throw a Null pointer Exception.
      */
-    //TODO sort
     private String titleFilter;
     private String nameFilter;
     private long envelopeIDFilter;
@@ -178,7 +177,7 @@ public class EnvelopeGetRequest {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(final String sort) {
         this.sort = sort;
     }
 }

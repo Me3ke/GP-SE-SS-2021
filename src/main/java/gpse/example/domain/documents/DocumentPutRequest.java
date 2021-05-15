@@ -18,6 +18,7 @@ public class DocumentPutRequest {
     private SignatureType signatureType;
     private LocalDateTime endDate;
     private boolean orderRelevant;
+    private DocumentState state;
 
     public String getPath() {
         return path;
@@ -83,4 +84,11 @@ public class DocumentPutRequest {
         this.orderRelevant = orderRelevant;
     }
 
+    public DocumentState getState() {
+        return state;
+    }
+
+    public void setState(final DocumentState state) {
+        this.state = state;
+    }
 }

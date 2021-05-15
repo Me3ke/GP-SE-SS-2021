@@ -23,5 +23,7 @@ public interface EnvelopeService {
     Envelope updateEnvelope(final long id, final DocumentPutRequest documentPutRequest, final String ownerID,
                             final List<User> signatories, final List<User> readers)
         throws CreatingFileException, DocumentNotFoundException, IOException;
+
+    void remove(Envelope envelope);
 }
 

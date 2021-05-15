@@ -6,6 +6,7 @@ import gpse.example.domain.documents.DocumentCreator;
 import gpse.example.domain.documents.DocumentRepository;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,12 @@ public class EnvelopeServiceImpl implements EnvelopeService {
         final Document document = documentCreator.createDocument(documentPutRequest, ownerID,
                                                                     signatories, readers);
         envelope.addDocument(document);
-        documentRepository.save(document);
-        //TODO expiry of Signatures
+        for (final Document currentDocument : envelope.getDocumentList()) {
+            for (final Signatory signatory : currentDocument.getSignatories()) {
+                signatory.setStatus(false);
+            }
+            documentRepository.save(document);
+        }
         return envelopeRepository.save(envelope);
     }
 
@@ -60,5 +65,10 @@ public class EnvelopeServiceImpl implements EnvelopeService {
         final List<Envelope> envelopes = new ArrayList<>();
         envelopeRepository.findAll().forEach(envelopes::add);
         return envelopes;
+    }
+
+    @Override
+    public void remove(final Envelope envelope) {
+        envelopeRepository.delete(envelope);
     }
 }

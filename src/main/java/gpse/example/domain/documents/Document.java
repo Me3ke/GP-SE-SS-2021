@@ -142,7 +142,7 @@ public class Document {
      * the method used to verify a signature for a specific user, by checking all public keys a user has.
      *
      * @param user the user who relates to the signature that needs to be checked
-     * @return true, if one of the public keys matches with the signature.If thet is not the case we return false.
+     * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
      */
     public boolean verifySignature(final User user) {
 

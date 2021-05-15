@@ -20,12 +20,6 @@ public class DocumentServiceImpl implements DocumentService {
         this.repo = repo;
     }
 
-    //TODO
-    @Override
-    public Document store(final DocumentPutRequest documentPutRequest, final String ownerID) {
-        return null;
-    }
-
     @Override
     public Document getDocument(final long id) throws DocumentNotFoundException {
         return repo.findById(id).orElseThrow(DocumentNotFoundException::new);
@@ -36,5 +30,15 @@ public class DocumentServiceImpl implements DocumentService {
         final List<Document> documents = new ArrayList<>();
         repo.findAll().forEach(documents :: add);
         return documents;
+    }
+
+    @Override
+    public void remove(final Document document) {
+        repo.delete(document);
+    }
+
+    @Override
+    public Document addDocument(final Document document) {
+        return repo.save(document);
     }
 }

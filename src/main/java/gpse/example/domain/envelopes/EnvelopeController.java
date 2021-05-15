@@ -52,10 +52,6 @@ public class EnvelopeController {
         }
     }
 
-    //TODO User has permission to add Document into envelope?
-    //TODO deleteDocumentFrom envelope?
-    //TODO sorting the envelopelist.
-
     /**
      * The fillEnvelope method does a put request to add a Document to an existing envelope.
      *
@@ -116,8 +112,6 @@ public class EnvelopeController {
             throw new DownloadFileException(e);
         }
     }
-
-    //TODO pagelimit etc?
 
     /**
      * The getAllEnvelopes methods gets all envelopes from the database and filters

@@ -73,8 +73,8 @@ public class Envelope implements Iterable<Document> {
         documentList.add(document);
     }
 
-    public void removeDocument(final int index) {
-        documentList.remove(index);
+    public void removeDocument(final Document document) {
+        documentList.remove(document);
     }
 
     //--------- Filter methods ------------
