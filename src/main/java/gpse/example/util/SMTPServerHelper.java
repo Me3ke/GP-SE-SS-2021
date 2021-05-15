@@ -11,15 +11,6 @@ import java.util.Properties;
 
 public class SMTPServerHelper {
 
-    private static final String TRUE = "true";
-    private static JavaMailSenderImpl mailSender;
-
-    private static String hostServer;
-
-    private static int port;
-
-    private static String userName;
-
     /**
      * Template for sending RegisterValidationEmail.
      */
@@ -32,6 +23,16 @@ public class SMTPServerHelper {
      * The subject of Elsas emails.
      */
     public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
+
+    private static final String TRUE = "true";
+
+    private static JavaMailSenderImpl mailSender;
+
+    private static String hostServer;
+
+    private static int port;
+
+    private static String userName;
 
     private static String password;
 
@@ -80,8 +81,8 @@ public class SMTPServerHelper {
      * @param link validation link.
      */
 
-    public static void sendRegistrationEmail(String toAddress, String userName, String link) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    public static void sendRegistrationEmail(final String toAddress, final String userName, final String link) {
+        final SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
         message.setSubject(REGISTRATION_SUBJECT);

@@ -8,7 +8,7 @@
             <b-row align-h="start">
                 <b-col>
                     <h2>
-                        {{$t('OverviewPage.heading')}}
+                        {{ $t('OverviewPage.heading') }}
                     </h2>
                 </b-col>
             </b-row>
@@ -20,8 +20,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col >
-                            <!-- Upload Button TODO -->
-                            Hochladen
+                            <UploadButton></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -30,12 +29,14 @@
                         <!-- Filter Buttons -->
                         <b-col>
                             <span @click="filterOpen()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterOpen')" :isActive="this.filter.open"></FilterButton>
+                                <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
+                                              :isActive="this.filter.open"></FilterButton>
                             </span>
                         </b-col>
-                        <b-col >
+                        <b-col>
                             <span @click="filterClosed()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterClosed')" :isActive="this.filter.closed"></FilterButton>
+                                <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
+                                              :isActive="this.filter.closed"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -46,10 +47,13 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 71.75vh">
-                    <div v-for="envelope in envelopes" :key="envelope.id" style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
+                    <div v-for="envelope in envelopes" :key="envelope.id"
+                         style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <!-- Different styles for open/closed documents -->
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentBox :doc="envelope.documents[0]">
+                            <DocumentBox
+                                @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
+                                :doc="envelope.documents[0]">
                             </DocumentBox>
                         </div>
                         <div v-if="!(envelope.documents.length === 1)">
@@ -70,35 +74,36 @@ import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
+import UploadButton from "@/main/vue/components/UploadMenu";
 
 export default {
     name: "OverviewPage",
-    components:{DocumentBox, EnvelopeBox, Footer, Header, FilterButton},
+    components:{DocumentBox, EnvelopeBox, Footer, Header, FilterButton, UploadButton},
     data() {
         return {
             // Needs to be replaced with API Request TODO
-            envelopes:[{
+            envelopes: [{
                 id: 1,
-                name:"Titel dieses Envelopes!",
+                name: "Titel dieses Envelopes!",
                 owner: {
-                    id:11,
+                    id: 11,
                     eMail: "sehrTolle@email.com",
                     firstname: "Otto",
                     lastname: "Wehner"
                 },
-                creationDate:"03.03.2021",
-                documents:[
+                creationDate: "03.03.2021",
+                documents: [
                     {
-                        id:12,
-                        title:"Titel dieses Dokumentes",
-                        creationDate:"03.03.2021",
+                        id: 12,
+                        title: "Titel dieses Dokumentes",
+                        creationDate: "03.03.2021",
                         owner: {
-                            id:11,
+                            id: 11,
                             eMail: "sehrTolle@email.com",
                             firstname: "Otto",
                             lastname: "Wehner"
                         },
-                        state:"open",
+                        state: "open",
                         endDate: "25.05.2021",
                         dataType: "PDF",
                         signatureType: "simple",
@@ -108,16 +113,16 @@ export default {
                         read: false
                     },
                     {
-                        id:13,
-                        title:"Titel dieses Dokumentes",
-                        creationDate:"03.03.2021",
+                        id: 13,
+                        title: "Titel dieses Dokumentes",
+                        creationDate: "03.03.2021",
                         owner: {
-                            id:11,
+                            id: 11,
                             eMail: "sehrTolle@email.com",
                             firstname: "Otto",
                             lastname: "Wehner"
                         },
-                        state:"open",
+                        state: "open",
                         endDate: "25.05.2021",
                         dataType: "PDF",
                         signatureType: "simple",
@@ -127,28 +132,28 @@ export default {
                         read: false
                     }
                 ]
-            },{
+            }, {
                 id: 2,
-                name:"Titel dieses tollen Envelopes!",
+                name: "Titel dieses tollen Envelopes!",
                 owner: {
-                    id:11,
+                    id: 11,
                     eMail: "sehrTolle@email.com",
                     firstname: "Otto",
                     lastname: "Wehner"
                 },
-                creationDate:"03.03.2021",
+                creationDate: "03.03.2021",
                 documents: [
                     {
-                        id:21,
-                        title:"Titel dieses Dokumentes",
-                        creationDate:"03.03.2021",
+                        id: 21,
+                        title: "Titel dieses Dokumentes",
+                        creationDate: "03.03.2021",
                         owner: {
-                            id:11,
+                            id: 11,
                             eMail: "sehrTolle@email.com",
                             firstname: "Otto",
                             lastname: "Wehner"
                         },
-                        state:"closed",
+                        state: "closed",
                         endDate: "05.05.2021",
                         dataType: "PDF",
                         signatureType: "simple",
@@ -159,38 +164,38 @@ export default {
                     }
                 ]
             }],
-            filters:{
+            filters: {
                 open: false,
                 closed: false
             }
         }
     },
-    methods:{
+    methods: {
         filter() {
             // Needs to be replaced with API Request TODO
             if (this.filter.open) {
                 this.envelopes = [{
                     id: 1,
-                    name:"Titel dieses Envelopes!",
+                    name: "Titel dieses Envelopes!",
                     owner: {
-                        id:11,
+                        id: 11,
                         eMail: "sehrTolle@email.com",
                         firstname: "Otto",
                         lastname: "Wehner"
                     },
-                    creationDate:"03.03.2021",
-                    documents:[
+                    creationDate: "03.03.2021",
+                    documents: [
                         {
-                            id:12,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 12,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"open",
+                            state: "open",
                             endDate: "25.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -200,16 +205,16 @@ export default {
                             read: false
                         },
                         {
-                            id:13,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 13,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"open",
+                            state: "open",
                             endDate: "25.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -223,26 +228,26 @@ export default {
             } else if (this.filter.closed) {
                 this.envelopes = [{
                     id: 2,
-                    name:"Titel dieses tollen Envelopes!",
+                    name: "Titel dieses tollen Envelopes!",
                     owner: {
-                        id:11,
+                        id: 11,
                         eMail: "sehrTolle@email.com",
                         firstname: "Otto",
                         lastname: "Wehner"
                     },
-                    creationDate:"03.03.2021",
+                    creationDate: "03.03.2021",
                     documents: [
                         {
-                            id:21,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 21,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"closed",
+                            state: "closed",
                             endDate: "05.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -256,26 +261,26 @@ export default {
             } else {
                 this.envelopes = [{
                     id: 1,
-                    name:"Titel dieses Envelopes!",
+                    name: "Titel dieses Envelopes!",
                     owner: {
-                        id:11,
+                        id: 11,
                         eMail: "sehrTolle@email.com",
                         firstname: "Otto",
                         lastname: "Wehner"
                     },
-                    creationDate:"03.03.2021",
-                    documents:[
+                    creationDate: "03.03.2021",
+                    documents: [
                         {
-                            id:12,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 12,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"open",
+                            state: "open",
                             endDate: "25.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -285,16 +290,16 @@ export default {
                             read: false
                         },
                         {
-                            id:13,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 13,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"open",
+                            state: "open",
                             endDate: "25.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -304,28 +309,28 @@ export default {
                             read: false
                         }
                     ]
-                },{
+                }, {
                     id: 2,
-                    name:"Titel dieses tollen Envelopes!",
+                    name: "Titel dieses tollen Envelopes!",
                     owner: {
-                        id:11,
+                        id: 11,
                         eMail: "sehrTolle@email.com",
                         firstname: "Otto",
                         lastname: "Wehner"
                     },
-                    creationDate:"03.03.2021",
+                    creationDate: "03.03.2021",
                     documents: [
                         {
-                            id:21,
-                            title:"Titel dieses Dokumentes",
-                            creationDate:"03.03.2021",
+                            id: 21,
+                            title: "Titel dieses Dokumentes",
+                            creationDate: "03.03.2021",
                             owner: {
-                                id:11,
+                                id: 11,
                                 eMail: "sehrTolle@email.com",
                                 firstname: "Otto",
                                 lastname: "Wehner"
                             },
-                            state:"closed",
+                            state: "closed",
                             endDate: "05.05.2021",
                             dataType: "PDF",
                             signatureType: "simple",
@@ -341,7 +346,7 @@ export default {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
             this.filter.open = !this.filter.open;
-            if (this.filter.closed && this.filter.open ) {
+            if (this.filter.closed && this.filter.open) {
                 this.filter.closed = false;
             }
             this.filter();

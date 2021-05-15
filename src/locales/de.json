@@ -79,8 +79,13 @@
         "country": "Land:",
         "city": "Stadt:",
         "street": "Straße:",
-        "houseNumber":"Hausnummer:",
+        "houseNumber": "Hausnummer:",
         "publicKey": "Öffentlicher Schlüssel:",
         "phoneNumber": "Telefonnummer:"
+    },
+    "UploadDoc": {
+        "upload": "Hochladen",
+        "menuTitle": "Dokument hochladen",
+        "close": "Schließen"
     }
 }

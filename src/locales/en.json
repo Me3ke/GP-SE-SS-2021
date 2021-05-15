@@ -82,5 +82,10 @@
         "houseNumber":"House number:",
         "publicKey": "Public Key:",
         "phoneNumber": "Phone number:"
+    },
+    "UploadDoc": {
+        "upload": "Upload",
+        "menuTitle": "Upload document",
+        "close": "Close"
     }
 }

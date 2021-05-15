@@ -25,9 +25,15 @@ public class Signatory {
     @Column
     private boolean status;
 
+    /**
+     * Default constructor for a Signatory. Status is initialized with false.
+     * @param document The Document to which the signatory belongs to.
+     * @param user the user which has to sign the corresponding document.
+     */
     public Signatory(final Document document, final User user) {
         this.document = document;
         this.user = user;
+        this.status = false;
     }
 
     protected Signatory() {

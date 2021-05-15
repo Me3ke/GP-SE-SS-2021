@@ -1,5 +1,6 @@
 package gpse.example.domain.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -24,10 +25,10 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -8161342821150699353L;
 
-    @OneToOne
-    private PersonalData personalData;
-
     @Id
+    @Column
+    private String username;
+
     @Column
     private String email;
 
@@ -52,23 +53,31 @@ public class User implements UserDetails {
     @Column
     private boolean admin;
 
+    @OneToOne
+    private PersonalData personalData;
+
     @OneToMany
     private final List<Envelope> myEnvelopes = new ArrayList<>();
 
-    public User() {
+    @JsonIgnore
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
+    protected User() {
 
     }
 
     /**
      * The constructor for a user.
      *
-     * @param email     for communication. Is also used as an ID.
+     * @param username the username equal the email
      * @param firstname the firstname of the user.
      * @param lastname  the lastname of the user.
      * @param password  the password that is used for actions that need security.
      */
-    public User(final String email, final String firstname, final String lastname, final String password) {
-        this.email = email;
+    public User(final String username, final String firstname, final String lastname, final String password) {
+        this.email = username;
+        this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
@@ -166,50 +175,47 @@ public class User implements UserDetails {
      *
      * @return Collection of objects extending GrantedAuthority containing the users authority roles.
      */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        final String roleUser = "ROLE_USER";
-        final String roleAdmin = "ROLE_ADMIN";
-        if (this.admin) {
-            return AuthorityUtils.createAuthorityList(roleUser, roleAdmin);
-        } else {
-            return AuthorityUtils.createAuthorityList(roleUser);
-        }
+        return AuthorityUtils.createAuthorityList(roles.toArray(new String[0]));
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
+    @JsonIgnore
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
+
 
     public String getEmail() {
         return email;
@@ -235,22 +241,23 @@ public class User implements UserDetails {
         this.lastname = lastname;
     }
 
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
     public PublicKey getPublicKey() {
         return publicKey;
     }
 
-    public PersonalData getPersonalData() {
-        return personalData;
-    }
 
-    public void setPersonalData(PersonalData personalData) {
-        this.personalData = personalData;
-    }
-
-    /*
-    public List<Keys> getKeys() {
-        return keys;
-    }
-
+    /**
+     * This method adds Role to an user.
+     * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
      */
+    public void addRole(String role) {
+        if (roles == null) {
+            this.roles = new ArrayList<>();
+        }
+        this.roles.add(role);
+    }
 }

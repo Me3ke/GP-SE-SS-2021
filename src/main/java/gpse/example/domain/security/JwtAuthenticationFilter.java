@@ -55,10 +55,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain filterChain, Authentication authentication) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
 
+
         List<String> roles = user.getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
+        System.out.println(roles.get(0));
 
         byte[] signingKey = securityConstants.getJwtSecret().getBytes();
 

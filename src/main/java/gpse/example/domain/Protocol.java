@@ -52,7 +52,7 @@ public class Protocol {
      * stored in /resources/protocolID/.
      */
     public void printProtocol() {
-        File file = new File(pathProtocolDir);
+        final File file = new File(pathProtocolDir);
         if ((!file.exists()) && (!file.mkdirs())) {
            System.out.println("Verzeichnis wurde nicht angelegt");
            return;
@@ -87,7 +87,7 @@ public class Protocol {
         return protocolID;
     }
 
-    public void setProtocolID(long protocolID) {
+    public void setProtocolID(final long protocolID) {
         this.protocolID = protocolID;
     }
 
@@ -95,7 +95,7 @@ public class Protocol {
         return envelope;
     }
 
-    public void setEnvelope(Envelope envelope) {
+    public void setEnvelope(final Envelope envelope) {
         this.envelope = envelope;
     }
 
@@ -103,7 +103,7 @@ public class Protocol {
         return pathProtocolDir;
     }
 
-    public void setPathProtocolDir(String pathProtocolDir) {
+    public void setPathProtocolDir(final String pathProtocolDir) {
         this.pathProtocolDir = pathProtocolDir;
     }
 }
