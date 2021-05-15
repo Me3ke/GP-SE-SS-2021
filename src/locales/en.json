@@ -64,5 +64,10 @@
     },
     "RegisterButton": {
         "content": "Register"
+    },
+    "UploadDoc": {
+        "upload": "Upload",
+        "menuTitle": "Upload document",
+        "close": "Close"
     }
 }

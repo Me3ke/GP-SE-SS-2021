@@ -64,5 +64,10 @@
     },
     "RegisterButton": {
         "content": "Registrieren"
+    },
+    "UploadDoc": {
+        "upload": "Hochladen",
+        "menuTitle": "Dokument hochladen",
+        "close": "Schließen"
     }
 }
