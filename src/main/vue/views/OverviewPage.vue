@@ -47,9 +47,9 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 71.75vh">
-                    <div v-for="envelope in envelopes" :key="envelope.id"
+                    <div v-for="envelope in this.envelopes" :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                        <!-- Different styles for open/closed documents -->
+                        <!-- Different styles for open/closed documents TODO-->
                         <div v-if="envelope.documents.length === 1">
                             <DocumentBox
                                 @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
@@ -57,7 +57,9 @@
                             </DocumentBox>
                         </div>
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeBox :env="envelope">s
+                            <EnvelopeBox
+                                @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
+                                :env="envelope" >
                             </EnvelopeBox>
                         </div>
                     </div>

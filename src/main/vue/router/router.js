@@ -7,6 +7,7 @@ import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
+import EnvelopePage from "@/main/vue/views/EnvelopePage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -45,7 +46,7 @@ const router = new VueRouter({
                     component: MessagePage
                 },
                 {
-                    path: '/document/:docId',
+                    path: 'document/:docId',
                     name: 'document',
                     component: DocumentPage,
                     props: true
@@ -59,6 +60,12 @@ const router = new VueRouter({
                     path: 'no-connection',
                     name: 'no-connection',
                     component: NoConnectionPage
+                },
+                {
+                    path: 'envelope/:envId',
+                    name: 'envelope',
+                    component: EnvelopePage,
+                    props: true
                 },
                 {
                     path: '*',
