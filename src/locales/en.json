@@ -64,5 +64,8 @@
     },
     "RegisterButton": {
         "content": "Register"
+    },
+    "UserPage": {
+        "content": "User information:"
     }
 }

@@ -6,6 +6,7 @@ import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
+import UserPage from "@/main/vue/views/UserPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -22,6 +23,11 @@ const router = new VueRouter({
                 }
             },
             children: [
+                {
+                    path: 'userPage',
+                    name: 'userPage',
+                    component: UserPage
+                },
                 {
                     path: 'landing',
                     name: 'landing',
