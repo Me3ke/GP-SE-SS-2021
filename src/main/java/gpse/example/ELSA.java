@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class ELSA {
 
-    private static final int DEFAULT_EXIT = 100;
     /**
      * The main method which starts a query to evaluate the command line inputs.
      * Commands:

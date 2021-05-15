@@ -131,6 +131,21 @@ public class User implements UserDetails {
                 country, birthday, phoneNumber);
     }
 
+    public void setPersonalData(final PersonalData personalData) {
+        this.personalData = personalData;
+    }
+
+    /**
+     * This method adds Role to an user.
+     * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
+     */
+    public void addRole(String role) {
+        if (roles == null) {
+            this.roles = new ArrayList<>();
+        }
+        this.roles.add(role);
+    }
+
     /*
      * the method used to generate an advanced signature, using the active private key.
      *
@@ -249,15 +264,7 @@ public class User implements UserDetails {
         return publicKey;
     }
 
-
-    /**
-     * This method adds Role to an user.
-     * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
-     */
-    public void addRole(String role) {
-        if (roles == null) {
-            this.roles = new ArrayList<>();
-        }
-        this.roles.add(role);
+    public PersonalData getPersonalData() {
+        return personalData;
     }
 }
