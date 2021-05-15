@@ -40,7 +40,7 @@ public class EnvelopeController {
      * @return the new envelope.
      * @throws UploadFileException if the envelope could not be uploaded.
      */
-    @PostMapping("api.elsa.de/user/{userID:\\d+}/envelopes/envelopes")
+    @PostMapping("api.elsa.de/user/{*userID}/envelopes/envelopes")
     public Envelope createEnvelope(final @PathVariable("userID") String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
@@ -61,7 +61,7 @@ public class EnvelopeController {
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    @PutMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}")
+    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                  final @PathVariable("userID") String ownerID,
                                  final @RequestBody DocumentPutRequest documentPutRequest)
@@ -94,7 +94,7 @@ public class EnvelopeController {
      * @throws DocumentNotFoundException if the envelope was not found.
      * @throws DownloadFileException     if the download goes wrong.
      */
-    @GetMapping("api.elsa.de/user/{userID:\\d+}/envelopes/{envelopeID:\\d+}")
+    @GetMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}")
     public EnvelopeGetResponse getEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                            final @PathVariable("userID") String userID,
                                            final @RequestParam("download") boolean download)
@@ -121,7 +121,7 @@ public class EnvelopeController {
      * @param request the Request object which keeps the filter data.
      * @return the filtered envelope list.
      */
-    @GetMapping("api.elsa.de/user/{userID:\\d+}/envelopes")
+    @GetMapping("api.elsa.de/user/{*userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable String userID,
                                                      final @RequestBody EnvelopeGetRequest request) {
         userService.getUser(userID);
