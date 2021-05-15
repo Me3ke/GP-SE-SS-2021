@@ -29,10 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        System.out.println("The right one is used");
-        for (User user : this.getUsers()) {
-            System.out.println("User in Datenbank:" + user.getUsername());
-        }
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
     }
@@ -50,6 +46,19 @@ public class UserServiceImpl implements UserService {
         for (final String role : roles) {
             user.addRole(role);
         }
+        final User saved = userRepository.save(user);
+        return saved;
+    }
+
+    @Override
+    public User createUser(final String username, final String password,
+                           final String firstname, final String lastname,
+                           final PersonalData personalData, final String... roles) {
+        final User user = new User(username, firstname, lastname, password);
+        for (final String role : roles) {
+            user.addRole(role);
+        }
+        user.setPersonalData(personalData);
         final User saved = userRepository.save(user);
         return saved;
     }
