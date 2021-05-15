@@ -43,8 +43,7 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen",
-        "upload": "Hochladen"
+        "filterOpen": "Offen"
     },
     "Document": {
         "owner": "Bersitzer",
@@ -59,5 +58,10 @@
         "concerns": "Betrifft",
         "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
         "toAll": "Zurück zu allen Benachrichtigungen"
+    },
+    "UploadDoc": {
+        "upload": "Hochladen",
+        "menuTitle": "Dokument hochladen",
+        "close": "Schließen"
     }
 }

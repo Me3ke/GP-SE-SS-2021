@@ -43,8 +43,7 @@
     "OverviewPage": {
         "heading": "Overview",
         "filterClosed": "Closed",
-        "filterOpen": "Open",
-        "upload": "Upload"
+        "filterOpen": "Open"
     },
     "Document": {
         "owner": "Owner",
@@ -59,5 +58,10 @@
         "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
         "toAll": "Back to all messages"
+    },
+    "UploadDoc": {
+        "upload": "Upload",
+        "menuTitle": "Upload document",
+        "close": "Close"
     }
 }

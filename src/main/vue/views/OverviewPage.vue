@@ -20,7 +20,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col >
-                            <UploadButton v-bind:text="$t('OverviewPage.upload')"></UploadButton>
+                            <UploadButton></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -69,7 +69,7 @@ import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
-import UploadButton from "@/main/vue/components/UploadButton";
+import UploadButton from "@/main/vue/components/UploadMenu";
 
 export default {
     name: "OverviewPage",
