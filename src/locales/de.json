@@ -67,5 +67,20 @@
     },
     "UserPage": {
         "content": "Benutzerinformationen:"
+    },
+    "UserInfoBox": {
+        "profileInformation": "Profilinformationen",
+        "accountInformation": "Kontoinformationen",
+        "publicKeys": "Öffentliche Schlüssel",
+        "email": "E-Mail:",
+        "firstName": "Vorname:",
+        "lastName": "Nachname:",
+        "birthday": "Geburtsdatum:",
+        "country": "Land:",
+        "city": "Stadt:",
+        "street": "Straße:",
+        "houseNumber":"Hausnummer:",
+        "publicKey": "Öffentlicher Schlüssel:",
+        "phoneNumber": "Telefonnummer:"
     }
 }

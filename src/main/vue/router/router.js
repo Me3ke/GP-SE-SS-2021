@@ -24,8 +24,8 @@ const router = new VueRouter({
             },
             children: [
                 {
-                    path: 'userPage',
-                    name: 'userPage',
+                    path: 'user',
+                    name: 'user',
                     component: UserPage
                 },
                 {

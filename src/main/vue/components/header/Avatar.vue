@@ -3,9 +3,9 @@
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="routeToProfile">
             <b-icon icon="person-circle" class="my-icon"></b-icon>
-            <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
+            <span class="letters" > {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
         <b-dropdown-item class="my-dropdown-item">
@@ -27,7 +27,12 @@
 
 <script>
 export default {
-    name: "Avatar"
+    name: "Avatar",
+    methods:{
+      routeToProfile(){
+        this.$router.push('/'+this.$i18n.locale + '/user')
+      }
+    }
 }
 </script>
 

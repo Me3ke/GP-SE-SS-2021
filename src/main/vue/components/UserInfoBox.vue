@@ -1,39 +1,46 @@
 <template>
-  <div>
+  <b-container fluid="100">
 
-    <div class="card" style="width: 20vw; margin-bottom: 5vh">
-      <div class="card-header" style="text-align: left" >
-        Profilinformationen
+    <b-row class="text-center" align-v="center" align-h="center">
+      <div class="card">
+        <div class="card-header">
+          {{$t('UserInfoBox.profileInformation')}}
+        </div>
+        <b-list-group flush>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.email')}} {{this.userInformation.email}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.firstName')}} {{this.userInformation.firstname}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.lastName')}} {{this.userInformation.lastname}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.birthday')}} {{this.userInformation.birthday}}</b-list-group-item>
+        </b-list-group>
       </div>
-      <b-list-group flush>
-        <b-list-group-item style="text-align: left">Email: {{this.userInformation.email}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Vorname: {{this.userInformation.firstname}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Nachname: {{this.userInformation.lastname}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Geburtsdatum: {{this.userInformation.birthday}}</b-list-group-item>
-      </b-list-group>
-    </div>
+    </b-row>
 
-    <div class="card" style="width: 20vw; margin-bottom: 5vh">
-      <div class="card-header" style="text-align: left" >
-        Kontoinformationen
+    <b-row class="text-center" align-v="center" align-h="center">
+      <div class="card">
+        <div class="card-header">
+          {{$t('UserInfoBox.accountInformation')}}
+        </div>
+        <b-list-group flush>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.phoneNumber')}} {{this.userInformation.phoneNumber}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.country')}} {{this.userInformation.country}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.city')}} {{this.userInformation.hometown}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.street')}} {{this.userInformation.street}}</b-list-group-item>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.houseNumber')}} {{this.userInformation.houseNumber}}</b-list-group-item>
+        </b-list-group>
       </div>
-      <b-list-group flush>
-        <b-list-group-item style="text-align: left">Land: {{this.userInformation.country}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Stadt: {{this.userInformation.hometown}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Straße: {{this.userInformation.street}}</b-list-group-item>
-        <b-list-group-item style="text-align: left">Hausnummer: {{this.userInformation.houseNumber}}</b-list-group-item>
-      </b-list-group>
-    </div>
+    </b-row>
 
-    <div class="card" style="width: 20vw;">
-      <div class="card-header" style="text-align: left" >
-        Öffentliche Schlüssel
+    <b-row class="text-center" align-v="center" align-h="center">
+      <div class="card">
+        <div class="card-header">
+          {{$t('UserInfoBox.publicKeys')}}
+        </div>
+        <b-list-group flush>
+          <b-list-group-item style="text-align: left">{{$t('UserInfoBox.publicKey')}} {{this.userInformation.publicKey}}</b-list-group-item>
+        </b-list-group>
       </div>
-      <b-list-group flush>
-        <b-list-group-item style="text-align: left">Öffentlicher Schlüssel: {{this.userInformation.publicKey}}</b-list-group-item>
-      </b-list-group>
-    </div>
-  </div>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -41,11 +48,14 @@ export default {
   name: "UserInfoBox",
   props: {
     userInformation: Object,
-
   }
 }
 </script>
 
 <style scoped>
 
+.card{
+  width: 40vw;
+  margin-bottom: 5vh;
+}
 </style>
