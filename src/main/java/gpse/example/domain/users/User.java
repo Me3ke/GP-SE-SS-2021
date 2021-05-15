@@ -221,13 +221,34 @@ public class User implements UserDetails {
         return email;
     }
 
-    public PublicKey getPublicKey() {
-        return publicKey;
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(final String firstname) {
+        this.firstname = firstname;
     }
 
     public String getLastname() {
         return lastname;
     }
+
+    public void setLastname(final String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+
 
     /**
      * This method adds Role to an user.
@@ -237,7 +258,6 @@ public class User implements UserDetails {
         if (roles == null) {
             this.roles = new ArrayList<>();
         }
-
         this.roles.add(role);
     }
 }
