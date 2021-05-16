@@ -31,7 +31,7 @@
                                 <b-row> {{con.web}} </b-row>
                             </b-col>
                         </b-row>
-                        <b-row class="redak-row">
+                        <b-row class="imprint-row">
                             <b-col v-for="(imprintInfo, i) in imprintInfos" :key="i">
                                 <b-row style="margin-bottom: -.4em"><h5 class="row-header">{{ $t('AboutPage.editorial') }}</h5></b-row>
                                 <b-row v-if="$i18n.locale === 'de'"> <h6 class="row-header2">{{imprintInfo.respDE}}</h6> </b-row>
@@ -55,6 +55,8 @@ export default {
     components: {Header},
     data() {
         return {
+
+            // Example Data for the About us Page
             info: [
             {
                 surname: "Max",
@@ -77,7 +79,7 @@ export default {
                     //Verantwortlich nach § 55 Abs.2
                     respDE: "Verantwortlich nach § 55 Abs.2",
                     // set the english resp text
-                    respEN: "TEST",
+                    respEN: "Responsible according to § 55 Abs. 2",
                     surname: "Moritz",
                     lastname: "Schreiberling",
                     address: "Musterstraße 2",
@@ -96,7 +98,7 @@ export default {
     max-width: 100%;
     padding-bottom: 2em
 }
-.redak-row {
+.imprint-row {
     max-width: 50%;
     text-align: left;
 
@@ -126,6 +128,7 @@ export default {
 }
 
 
+
 @media screen and (min-width: 1200px){
     .base-header-row {
         margin-left: -1em;
@@ -135,6 +138,7 @@ export default {
     }
     .content-container {
         margin-left: -.6em;
+        margin-top: 8em !important;
     }
     .baseHeader-h2 {
         margin-top: -1em !important;
@@ -145,14 +149,14 @@ export default {
 
 @media screen and (min-width: 1191px) and (max-width: 1199px) {
     .base-header-row {
-        margin-left: -6em;
+        margin-left: -6.8em;
     }
     .content-container {
         margin-left: -5.8em;
     }
     .baseHeader-h2 {
         margin-left: -30em;
-        margin-top: -.9em;
+        margin-top: -1em;
     }
 
 }
@@ -165,7 +169,7 @@ export default {
     }
     .baseHeader-h2 {
         margin-left: -23.5em;
-        margin-top: -.8em;
+        margin-top: -.9em;
     }
     .content-container {
         margin-left: .6em;
@@ -175,13 +179,15 @@ export default {
 @media screen and (min-width: 801px) and (max-width: 991px) {
     .full-container {
         margin-left: 1em;
+
     }
     .baseHeader-h2 {
-        margin-left: -17em;
-        margin-top: -.7em;
+        margin-left: -15em;
+        margin-top: -.8em;
     }
     .content-container {
         margin-left: 1em;
+        padding-top: 1.2em;
     }
 }
 
@@ -193,10 +199,11 @@ export default {
     }
     .content-container {
         margin-left: -1.8em;
+        padding-top: 1.2em;
     }
     .baseHeader-h2 {
-        margin-left: -20em;
-        margin-top: -0.8em;
+        margin-left: -19em;
+        margin-top: -.8em;
     }
     .full-container {
         margin-left: 4em;
@@ -205,33 +212,38 @@ export default {
 
 @media screen and (max-width: 767px) and (min-width: 501px) {
     .base-header-row {
-        margin-left: -1em;
         font-size: 1.3em;
+        margin-left: -2em;
     }
     .content-container {
-        margin-left: -1.8em;
+        margin-left: -2.7em;
+        padding-top: .7em;
     }
     .baseHeader-h2 {
-        margin-left: -12.5em;
-        margin-top: -0.7em;
+        margin-left: -14em;
+        margin-top: -.8em;
     }
     .full-container {
         margin-left: 4em;
     }
 }
 
-@media screen and (max-width: 500px) and (min-width: 460px) {
+@media screen and (max-width: 500px) and (min-width: 459px) {
     .base-header-row {
         font-size: 1em;
         margin-left: -3em;
     }
+    .row-header {
+        font-size: 1.1em;
+    }
     .content-container {
-        margin-left: -3em;
+        margin-left: -4em;
     }
     .baseHeader-h2 {
         margin-left: -17em;
-        margin-top: -0.9em;
+        margin-top: -.9em;
         font-size: 1.6em;
+        padding-left: 0;
     }
     .full-container {
         margin-left: 3em;
@@ -239,68 +251,60 @@ export default {
 
 }
 
-@media screen and (min-width: 459px) and (max-width: 499px) {
-    .baseHeader-h2 {
-        margin-top: -0.9em;
-        font-size: 1.6em;
-        margin-left: -12.5em;
-    }
 
-    .baseHeader {
-        margin-left: -2.8em;
-        margin-top: 0;
-    }
-    .full-container {
-        margin-left: -1em;
-    }
-    .content-container {
-        padding-right: 2em;
-    }
-    .head-with-arrow {
-        margin-left: 1em;
-    }
-
-}
 @media screen and (min-width: 410px) and (max-width: 458px) {
     .baseHeader-h2 {
-        font-size: 1.5em;
-        margin-left: -13em;
-        margin-top: -.8em;
+        font-size: 1.8em;
+        margin-left: -10em;
+        margin-top: -.9em;
+        padding-left: .4em;
     }
-    .redak-row {
-        font-size: .7em;
+    .imprint-row {
+        font-size: 1em;
+        max-width: 100%;
     }
     .base-header-row {
-        margin-left: 0.5em;
+        margin-left: 0.1em;
     }
     .contact-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
+
     }
     .provider-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
+
     }
     .row-header {
         font-size: 1.3em;
     }
     .row-header2 {
-        font-size: .8em;
+        font-size: 1em;
+    }
+    .content-container {
+        padding-left: 0;
     }
 }
 
 @media screen and (max-width: 409px) and (min-width: 355px) {
     .baseHeader-h2 {
-        font-size: 1.5em;
-        margin-left: -11em;
-        margin-top: -.8em;
+        font-size: 1.8em;
+        margin-top: -.9em;
+        padding-left: 21.8em;
+
     }
-    .redak-row {
-        font-size: .7em;
+    .imprint-row {
+        font-size: 1em;
+        max-width: 100%;
     }
     .contact-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
     }
     .provider-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
     }
     .row-header {
         font-size: 1.3em;
@@ -308,22 +312,36 @@ export default {
     .row-header2 {
         font-size: .8em;
     }
+    .content-container {
+        padding-top: .7em;
+        padding-left: 0;
+        margin-left: -1.3em;
+    }
 }
 
 @media screen and (max-width: 354px) and (min-width: 330px){
     .baseHeader-h2 {
-        font-size: 1.5em;
-        margin-left: -10em;
-        margin-top: -.8em;
+        font-size: 1.7em;
+        margin-left: -8em;
+        margin-top: -.9em;
+        padding-left: .5em;
+        padding-bottom: .6em;
     }
-    .redak-row {
-        font-size: .7em;
+
+    .imprint-row {
+        font-size: 1em;
+        max-width: 100%;
+        margin-left: -3.5em;
     }
     .contact-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
+        margin-left: -3.5em;
     }
     .provider-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%;
+        margin-left: -3.5em;
     }
     .row-header {
         font-size: 1.3em;
@@ -335,18 +353,23 @@ export default {
 
 @media screen and (max-width: 329px) {
     .baseHeader-h2 {
-        font-size: 1.5em;
-        margin-left: -9em;
-        margin-top: -.8em;
+        font-size: 1.7em;
+        margin-left: -7.5em;
+        margin-top: -.9em;
+        padding-left: .5em;
+        padding-bottom: .6em;
     }
-    .redak-row {
-        font-size: .7em;
+    .imprint-row {
+        font-size: 1em;
+        max-width: 100%;
     }
     .contact-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%
     }
     .provider-row {
-        font-size: .7em;
+        font-size: 1em;
+        max-width: 100%
     }
     .row-header {
         font-size: 1.3em;
@@ -355,12 +378,35 @@ export default {
         font-size: .8em;
     }
     .content-container {
-        margin-left: -1em;
+        margin-left: -2em;
     }
 }
 
-@media screen and (max-width: 304px) {
-    .redak-row {
+@media screen and (max-width: 304px) and (min-width: 294px) {
+    .imprint-row {
+        font-size: .9em;
+        max-width: 80%;
+    }
+    .contact-row {
+        font-size: .9em;
+        max-width: 80%;
+    }
+    .provider-row {
+        font-size: .9em;
+        max-width: 80%;
+    }
+    .baseHeader-h2 {
+        margin-left: -6.5em;
+        margin-top: -.8em;
+    }
+    .content-container {
+        margin-left: -2em;
+    }
+
+}
+
+@media screen and (max-width: 293px) and (min-width: 289px) {
+    .imprint-row {
         font-size: .8em;
         max-width: 80%;
     }
@@ -371,9 +417,44 @@ export default {
         font-size: .8em;
     }
     .baseHeader-h2 {
-        margin-left: -7em;
-        margin-top: -.7em;
+        margin-left: -6.7em;
+        margin-top: -.8em;
     }
 
 }
+@media screen and (max-width: 288px) and (min-width: 240px) {
+    .imprint-row {
+        font-size: .8em;
+        max-width: 80%;
+    }
+    .contact-row {
+        font-size: .8em;
+    }
+    .provider-row {
+        font-size: .8em;
+    }
+    .baseHeader-h2 {
+        margin-left: -6em;
+        margin-top: -.9em;
+        padding-left: .9em;
+    }
+    .full-container {
+        padding-left: 1em;
+    }
+
+}
+
+@media screen and (max-width: 239px) {
+    .baseHeader-h2 {
+        position: center;
+        margin-left: -5em;
+        margin-top: .4em;
+        padding-bottom: 0;
+    }
+    .content-container {
+        margin-left: -4em;
+    }
+
+}
+
 </style>
