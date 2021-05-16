@@ -87,5 +87,14 @@
         "upload": "Upload",
         "menuTitle": "Upload document",
         "close": "Close"
+    },
+    "Login": {
+        "email": "e-mail",
+        "password": "password",
+        "login": "login",
+        "sign-in": "login",
+        "feedback-invalid-email": "Please enter an valid e-mail.",
+        "feedback-invalid-password": "Minimum password length is 4 characters.",
+        "fail": "Login failed."
     }
 }

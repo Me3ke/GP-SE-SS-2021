@@ -87,5 +87,14 @@
         "upload": "Hochladen",
         "menuTitle": "Dokument hochladen",
         "close": "Schließen"
+    },
+    "Login": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "login": "Anmeldung",
+        "sign-in": "Anmelden",
+        "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
+        "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
+        "fail": "Anmeldung fehlgeschlagen."
     }
 }
