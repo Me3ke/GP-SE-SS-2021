@@ -86,7 +86,13 @@
     "UploadDoc": {
         "upload": "Hochladen",
         "menuTitle": "Dokument hochladen",
-        "close": "Schließen"
+        "close": "Schließen",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "newEnv": "Neuen Verbund anlegen",
+        "selectEnv": "Bestehenden Verbund auswählen",
+        "newEnvPlaceholder": "Name des Verbundes",
+        "configureDoc": "Dokumenteneinstellungen"
     },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",

@@ -30,13 +30,13 @@
                         <b-col>
                             <span @click="filterOpen()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filter.open"></FilterButton>
+                                              :isActive="this.filters.open"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
-                                              :isActive="this.filter.closed"></FilterButton>
+                                              :isActive="this.filters.closed"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -47,7 +47,7 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 71.75vh">
-                    <div v-for="envelope in this.getEnvs" :key="envelope.id"
+                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)" :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <!-- Different styles for open/closed documents TODO-->
                         <div v-if="envelope.documents.length === 1">
@@ -91,201 +91,28 @@ export default {
         }
     },
     methods: {
-        filter() {
-            // Needs to be replaced with API Request TODO
-            if (this.filter.open) {
-                this.envelopes = [{
-                    id: 1,
-                    name: "Titel dieses Envelopes!",
-                    owner: {
-                        id: 11,
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    creationDate: "03.03.2021",
-                    documents: [
-                        {
-                            id: 12,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "open",
-                            endDate: "25.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        },
-                        {
-                            id: 13,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "open",
-                            endDate: "25.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        }
-                    ]
-                }]
-            } else if (this.filter.closed) {
-                this.envelopes = [{
-                    id: 2,
-                    name: "Titel dieses tollen Envelopes!",
-                    owner: {
-                        id: 11,
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    creationDate: "03.03.2021",
-                    documents: [
-                        {
-                            id: 21,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "closed",
-                            endDate: "05.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        }
-                    ]
-                }]
-            } else {
-                this.envelopes = [{
-                    id: 1,
-                    name: "Titel dieses Envelopes!",
-                    owner: {
-                        id: 11,
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    creationDate: "03.03.2021",
-                    documents: [
-                        {
-                            id: 12,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "open",
-                            endDate: "25.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        },
-                        {
-                            id: 13,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "open",
-                            endDate: "25.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        }
-                    ]
-                }, {
-                    id: 2,
-                    name: "Titel dieses tollen Envelopes!",
-                    owner: {
-                        id: 11,
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    creationDate: "03.03.2021",
-                    documents: [
-                        {
-                            id: 21,
-                            title: "Titel dieses Dokumentes",
-                            creationDate: "03.03.2021",
-                            owner: {
-                                id: 11,
-                                eMail: "sehrTolle@email.com",
-                                firstname: "Otto",
-                                lastname: "Wehner"
-                            },
-                            state: "closed",
-                            endDate: "05.05.2021",
-                            dataType: "PDF",
-                            signatureType: "simple",
-                            signatory: true,
-                            reader: false,
-                            signed: false,
-                            read: false
-                        }
-                    ]
-                }]
-            }
-        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            this.filter.open = !this.filter.open;
-            if (this.filter.closed && this.filter.open) {
-                this.filter.closed = false;
+            this.filters.open = !this.filters.open;
+            if (this.filters.closed && this.filters.open) {
+                this.filters.closed = false;
             }
-            this.filter();
+            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         },
         filterClosed() {
-            this.filter.closed = !this.filter.closed;
-            if (this.filter.open && this.filter.closed) {
-                this.filter.open = false;
+            this.filters.closed = !this.filters.closed;
+            if (this.filters.open && this.filters.closed) {
+                this.filters.open = false;
             }
-            this.filter();
+            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         }
     },
     computed: {
         getEnvs() {
-            return this.$store.getters.getEnvelopes
+            return this.$store.getters.getEnvelopesFiltered
         }
     }
 }
-
 
 </script>
 

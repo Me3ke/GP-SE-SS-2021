@@ -86,7 +86,13 @@
     "UploadDoc": {
         "upload": "Upload",
         "menuTitle": "Upload document",
-        "close": "Close"
+        "close": "Close",
+        "continue": "Continue",
+        "back": "Back",
+        "newEnv": "Create a new envelope",
+        "selectEnv": "Select an existing envelope",
+        "newEnvPlaceholder": "Name of new envelope",
+        "configureDoc": "Configure document"
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
