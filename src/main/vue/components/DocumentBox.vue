@@ -30,7 +30,7 @@
                             <b-row align-h="start">
                                 <div class="col-auto">
                                     <h6>
-                                        {{$t('Document.owner')}}: {{this.doc.owner.name}}
+                                        {{$t('Document.owner')}}: {{this.doc.owner.firstname}} {{this.doc.owner.lastname}}
                                     </h6>
                                 </div>
                                 <div class="col-auto" style="margin-left: 1vw">

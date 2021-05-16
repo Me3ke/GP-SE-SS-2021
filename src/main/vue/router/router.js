@@ -9,6 +9,7 @@ import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
+import EnvelopePage from "@/main/vue/views/EnvelopePage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -52,7 +53,7 @@ const router = new VueRouter({
                     component: MessagePage
                 },
                 {
-                    path: '/document/:docId',
+                    path: 'document/:docId',
                     name: 'document',
                     component: DocumentPage,
                     props: true
@@ -71,6 +72,12 @@ const router = new VueRouter({
                     path: 'impressum',
                     name: 'impressum',
                     component: ImpressumPage
+                },
+                {
+                    path: 'envelope/:envId',
+                    name: 'envelope',
+                    component: EnvelopePage,
+                    props: true
                 },
                 {
                     path: '*',

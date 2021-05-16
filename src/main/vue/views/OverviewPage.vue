@@ -47,9 +47,9 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 71.75vh">
-                    <div v-for="envelope in envelopes" :key="envelope.id"
+                    <div v-for="envelope in this.getEnvs" :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                        <!-- Different styles for open/closed documents -->
+                        <!-- Different styles for open/closed documents TODO-->
                         <div v-if="envelope.documents.length === 1">
                             <DocumentBox
                                 @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
@@ -57,7 +57,9 @@
                             </DocumentBox>
                         </div>
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeBox :env="envelope">s
+                            <EnvelopeBox
+                                @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
+                                :env="envelope" >
                             </EnvelopeBox>
                         </div>
                     </div>
@@ -78,92 +80,10 @@ import UploadButton from "@/main/vue/components/UploadMenu";
 
 export default {
     name: "OverviewPage",
-    components:{DocumentBox, EnvelopeBox, Footer, Header, FilterButton, UploadButton},
+    components: {DocumentBox, EnvelopeBox, Footer, Header, FilterButton, UploadButton},
     data() {
         return {
             // Needs to be replaced with API Request TODO
-            envelopes: [{
-                id: 1,
-                name: "Titel dieses Envelopes!",
-                owner: {
-                    id: 11,
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                creationDate: "03.03.2021",
-                documents: [
-                    {
-                        id: 12,
-                        title: "Titel dieses Dokumentes",
-                        creationDate: "03.03.2021",
-                        owner: {
-                            id: 11,
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "25.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    },
-                    {
-                        id: 13,
-                        title: "Titel dieses Dokumentes",
-                        creationDate: "03.03.2021",
-                        owner: {
-                            id: 11,
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "25.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    }
-                ]
-            }, {
-                id: 2,
-                name: "Titel dieses tollen Envelopes!",
-                owner: {
-                    id: 11,
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                creationDate: "03.03.2021",
-                documents: [
-                    {
-                        id: 21,
-                        title: "Titel dieses Dokumentes",
-                        creationDate: "03.03.2021",
-                        owner: {
-                            id: 11,
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "closed",
-                        endDate: "05.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    }
-                ]
-            }],
             filters: {
                 open: false,
                 closed: false
@@ -358,8 +278,15 @@ export default {
             }
             this.filter();
         }
+    },
+    computed: {
+        getEnvs() {
+            return this.$store.getters.getEnvelopes
+        }
     }
 }
+
+
 </script>
 
 <style scoped>

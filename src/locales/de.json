@@ -93,5 +93,15 @@
         "upload": "Hochladen",
         "menuTitle": "Dokument hochladen",
         "close": "Schließen"
+    },
+    "DocumentPage": {
+        "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
+        "download": "Herunterladen",
+        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
+        "sign": "Unterschreiben",
+        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
+        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
+        "read": "Gegengelesen",
+        "didRead": "Sie haben das Dokument erfolgreich gegengelesen."
     }
 }

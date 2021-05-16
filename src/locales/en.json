@@ -82,7 +82,7 @@
         "country": "Country:",
         "city": "City:",
         "street": "Street:",
-        "houseNumber":"House number:",
+        "houseNumber": "House number:",
         "publicKey": "Public Key:",
         "phoneNumber": "Phone number:"
     },
@@ -90,5 +90,15 @@
         "upload": "Upload",
         "menuTitle": "Upload document",
         "close": "Close"
+    },
+    "DocumentPage": {
+        "noView": "No preview available. Download the document instead.",
+        "download": "Download",
+        "doSign": "You have not signed this document yet. Sign now.",
+        "sign": "Sign",
+        "didSign": "You have successfully signed this document.",
+        "doRead": "You have not proofread this document yet. Confirm now that you have.",
+        "read": "Proofread",
+        "didRead": "You have successfully proofread this document."
     }
 }
