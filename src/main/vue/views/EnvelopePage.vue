@@ -27,7 +27,7 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
-import DocumentBox from "@/main/vue/components/DocumentBox";
+import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
 
 export default {
     name: "EnvelopePage",

@@ -49,7 +49,12 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen"
+        "filterOpen": "Offen",
+        "toSign1": "Bis zum",
+        "toSign2": "signieren",
+        "toRead1": "Bis zum",
+        "toRead2": "gegenlesen",
+        "envReadSign": "Dokumente zum unterschreiben oder gegenlesen"
     },
     "Document": {
         "owner": "Bersitzer",

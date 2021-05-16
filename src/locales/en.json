@@ -46,7 +46,12 @@
     "OverviewPage": {
         "heading": "Overview",
         "filterClosed": "Closed",
-        "filterOpen": "Open"
+        "filterOpen": "Open",
+        "toSign1": "Sign until",
+        "toSign2": "",
+        "toRead1": "Read until",
+        "toRead2": "",
+        "envReadSign": "There are documents to sign or read"
     },
     "Document": {
         "owner": "Owner",
