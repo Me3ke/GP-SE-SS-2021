@@ -52,7 +52,7 @@ public class DocumentController {
      * The getDocumentFromEnvelope method gets a get request and creates an appropriate response.
      *
      * @param envelopeID the id of the envelope which contains the document.
-     * @param userID     the id of the owner doing the request.
+     * @param userID     the id of the user doing the request.
      * @param documentID the id of the document asked for.
      * @param download   a boolean which indicates if a document should be downloaded.
      * @return the DocumentGet response
@@ -87,6 +87,7 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
+            //TODO change to get owner
             return new DocumentGetResponse(document, userService.getUser(userID));
         } else {
             throw new DocumentNotFoundException();

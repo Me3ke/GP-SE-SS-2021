@@ -121,6 +121,7 @@ public class EnvelopeController {
      * @param request the Request object which keeps the filter data.
      * @return the filtered envelope list.
      */
+    //TODO Change to returning only envelopes that relate to the current User
     @GetMapping("api.elsa.de/user/{*userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable String userID,
                                                      final @RequestBody EnvelopeGetRequest request) {
