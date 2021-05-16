@@ -8,6 +8,7 @@ import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
+import EnvelopePage from "@/main/vue/views/EnvelopePage";
 
 
 const router = new VueRouter({
@@ -66,6 +67,12 @@ const router = new VueRouter({
                     path: 'no-connection',
                     name: 'no-connection',
                     component: NoConnectionPage
+                },
+                {
+                    path: 'envelope/:envId',
+                    name: 'envelope',
+                    component: EnvelopePage,
+                    props: true
                 },
                 {
                     path: '*',
