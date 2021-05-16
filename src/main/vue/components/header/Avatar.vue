@@ -13,7 +13,7 @@
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="routeToHelp">
             <b-icon icon="question-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
@@ -31,6 +31,9 @@ export default {
     methods:{
       routeToProfile(){
         this.$router.push('/'+this.$i18n.locale + '/user')
+      },
+      routeToHelp(){
+          this.$router.push('/'+this.$i18n.locale + '/help')
       }
     }
 }

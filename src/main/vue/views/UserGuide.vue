@@ -77,17 +77,17 @@
                 />
             </b-col>
         </div>
-
-
+        <Footer></Footer>
     </div>
 </template>
 
 <script>
 import Accordion from "@/main/vue/components/Accordion";
 import Header from "@/main/vue/components/header/Header";
+import Footer from "@/main/vue/components/Footer";
 export default {
     name: "UserGuide",
-    components: {Header, Accordion},
+    components: {Footer,Header, Accordion},
     data: function () {
         return {
 
@@ -232,9 +232,6 @@ export default {
             this.sectionData = this.sectionData.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
-
-                } else {
-                    generalInfo.open = false;
                 }
                 return generalInfo;
             });
@@ -245,9 +242,6 @@ export default {
             this.sectionData2 = this.sectionData2.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
-
-                } else {
-                    generalInfo.open = false;
                 }
                 return generalInfo;
             });
@@ -258,9 +252,6 @@ export default {
             this.sectionData3 = this.sectionData3.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
-
-                } else {
-                    generalInfo.open = false;
                 }
                 return generalInfo;
             });
@@ -271,9 +262,6 @@ export default {
             this.sectionData4 = this.sectionData4.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
-
-                } else {
-                    generalInfo.open = false;
                 }
                 return generalInfo;
             });
@@ -284,13 +272,9 @@ export default {
             this.sectionData5 = this.sectionData5.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
-
-                } else {
-                    generalInfo.open = false;
                 }
                 return generalInfo;
             });
-
         }
     }
 }
