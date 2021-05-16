@@ -80,8 +80,9 @@
         "city": "City:",
         "street": "Street:",
         "houseNumber":"House number:",
-        "publicKey": "Public Key:",
-        "phoneNumber": "Phone number:"
+        "publicKey": "Public key:",
+        "phoneNumber": "Phone number:",
+        "newKeypair": "New Keypair"
     },
     "UploadDoc": {
         "upload": "Upload",

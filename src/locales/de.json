@@ -81,7 +81,8 @@
         "street": "Straße:",
         "houseNumber": "Hausnummer:",
         "publicKey": "Öffentlicher Schlüssel:",
-        "phoneNumber": "Telefonnummer:"
+        "phoneNumber": "Telefonnummer:",
+        "newKeypair": "Neues Schlüsselpaar"
     },
     "UploadDoc": {
         "upload": "Hochladen",
