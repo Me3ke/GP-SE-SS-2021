@@ -5,7 +5,13 @@
         "heading": "Ueberschrift"
     },
     "AboutPage": {
-        "name": "Impressum"
+        "h1": "Impressum",
+        "name": "Impressum",
+        "provider" : "Anbieter: ",
+        "contact": "Kontakt: ",
+        "editorial": "Bei Redaktionellen Inhalten: "
+
+
     },
     "NotFoundPage": {
         "h1": "Ups!",

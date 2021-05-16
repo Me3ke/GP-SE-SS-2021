@@ -5,7 +5,10 @@
         "heading": "Heading"
     },
     "AboutPage": {
-        "name": "About us"
+        "name": "About us",
+        "provider": "Provider:",
+        "contact": "Contact:",
+        "editorial": "For Editorial Content:"
     },
     "NotFoundPage": {
         "h1": "Ops!",

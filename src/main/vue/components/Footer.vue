@@ -1,7 +1,6 @@
 <template>
     <div id="container">
-        <!-- TO-Do: Add real route to about page -->
-        <router-link :to="`/`" id="text">{{ $t('AboutPage.name') }}</router-link>
+        <router-link :to="$i18n.locale === 'de' ? '/de/impressum' : '/en/impressum' " id="text">{{ $t('AboutPage.name') }}</router-link>
     </div>
 </template>
 
