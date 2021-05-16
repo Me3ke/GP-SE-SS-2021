@@ -5,9 +5,7 @@ import gpse.example.domain.users.ConfirmationTokenService;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -15,7 +13,9 @@ import java.util.Optional;
 /**
  * UserController class.
  */
-@Controller
+@RestController
+@CrossOrigin
+@RequestMapping("/api.elsa.de") // ? Was ist die basis?
 public class UserController {
 
     private final UserService userService;
