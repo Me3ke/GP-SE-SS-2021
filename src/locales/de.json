@@ -5,7 +5,13 @@
         "heading": "Ueberschrift"
     },
     "AboutPage": {
-        "name": "Impressum"
+        "h1": "Impressum",
+        "name": "Impressum",
+        "provider" : "Anbieter: ",
+        "contact": "Kontakt: ",
+        "editorial": "Bei Redaktionellen Inhalten: "
+
+
     },
     "NotFoundPage": {
         "h1": "Ups!",
@@ -183,5 +189,44 @@
     },
     "RegisterButton": {
         "content": "Registrieren"
+    },
+    "UserPage": {
+        "content": "Benutzerinformationen:"
+    },
+    "UserInfoBox": {
+        "profileInformation": "Profilinformationen",
+        "accountInformation": "Kontoinformationen",
+        "publicKeys": "Öffentliche Schlüssel",
+        "email": "E-Mail:",
+        "firstName": "Vorname:",
+        "lastName": "Nachname:",
+        "birthday": "Geburtsdatum:",
+        "country": "Land:",
+        "city": "Stadt:",
+        "street": "Straße:",
+        "houseNumber": "Hausnummer:",
+        "publicKey": "Öffentlicher Schlüssel:",
+        "phoneNumber": "Telefonnummer:"
+    },
+    "UploadDoc": {
+        "upload": "Hochladen",
+        "menuTitle": "Dokument hochladen",
+        "close": "Schließen",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "newEnv": "Neuen Verbund anlegen",
+        "selectEnv": "Bestehenden Verbund auswählen",
+        "newEnvPlaceholder": "Name des Verbundes",
+        "configureDoc": "Dokumenteneinstellungen"
+    },
+    "DocumentPage": {
+        "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
+        "download": "Herunterladen",
+        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
+        "sign": "Unterschreiben",
+        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
+        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
+        "read": "Gegengelesen",
+        "didRead": "Sie haben das Dokument erfolgreich gegengelesen."
     }
 }

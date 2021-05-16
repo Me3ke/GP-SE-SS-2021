@@ -1,25 +1,14 @@
 package gpse.example.domain;
 
-import gpse.example.DatabaseInitializer;
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentPut;
+import gpse.example.domain.documents.DocumentPutRequest;
 import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.envelopes.*;
 import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.users.User;
-import gpse.example.domain.users.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 class DocumentTest {
@@ -56,7 +45,27 @@ class DocumentTest {
             } */
            }
 
+        @Test
+        public void testDocumentDownload() {
+            /*
+            try {
+                DocumentCreator documentCreator = new DocumentCreator();
+                DocumentPutRequest documentPutRequest = new DocumentPutRequest();
+                documentPutRequest.setPath("src/main/resources/Test/Goin.docx");
+                documentPutRequest.setTitle("Goin");
+                documentPutRequest.setType("docx");
+                Document document = documentCreator.createDocument(documentPutRequest, null, null, null);
+                documentCreator.download(document, null);
+                Assertions.assertNotNull(document.getDocumentFile());
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (CreatingFileException e) {
+                e.printStackTrace();
+            }
 
+             */
+
+        }
     }
 }
 /*

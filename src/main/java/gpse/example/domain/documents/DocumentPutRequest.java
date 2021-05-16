@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The documentPut class is a CommandPattern class to specify the the Rest-Api.
  */
-public class DocumentPut {
+public class DocumentPutRequest {
 
     private String path;
     private String title;
@@ -18,6 +18,7 @@ public class DocumentPut {
     private SignatureType signatureType;
     private LocalDateTime endDate;
     private boolean orderRelevant;
+    private DocumentState state;
 
     public String getPath() {
         return path;
@@ -83,4 +84,11 @@ public class DocumentPut {
         this.orderRelevant = orderRelevant;
     }
 
+    public DocumentState getState() {
+        return state;
+    }
+
+    public void setState(final DocumentState state) {
+        this.state = state;
+    }
 }

@@ -6,7 +6,8 @@
                     <b-icon icon="arrow-left" style="fill: var(--dark-grey); font-weight: bolder;"
                             @click="historyThere()  ? $router.go(-1) : $router.push('/')">
                     </b-icon>
-                    {{ $t(name) }}
+                    <span v-if="translate">{{ $t(name) }}</span>
+                    <span v-else>{{ name }}</span>
                 </h3>
             </b-row>
         </b-container>
@@ -20,6 +21,10 @@ export default {
         name: {
             type: String,
             default: "Insert Heading"
+        },
+        translate: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {
