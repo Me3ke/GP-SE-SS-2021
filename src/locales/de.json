@@ -38,7 +38,7 @@
         "section0": [
             {
                 "question": "Was ist ELSA?",
-                "answer": "Antwort 1.1"
+                "answer": "ELSA ist eine ELektronische Signier Anwendung, die es ermöglicht beliebige Dokumente einfach, schnell und sicher elektronisch zu signieren"
             },
             {
                 "question": "Wie funktioniert ELSA?",
@@ -48,7 +48,7 @@
         "section1": [
             {
                 "question": "Wie unterschreibe ich ein Dokument?",
-                "answer": "Antwort 2.1"
+                "answer": "Durch das Klicken auf dem Signier Knopf, neben der Dokumentenvorschau, können Sie das Dokument unterschreiben."
             },
             {
                 "question": "Ist das digitale Unterschreiben überhaupt sicher?",
@@ -86,7 +86,7 @@
             },
             {
                 "question": "Ich habe die falsche Signaturart gewählt, kann ich das im Nachhinein ändern?",
-                "answer": "Antwort 3.7"
+                "answer": "Ja, die Signaturart kann im Nachhinein geändernt werden. Jedoch verfallen dann alle schon gegebenen Signaturen und müssen neu angefordert werden. Aber keine Sorge, ELSA kümmert sich hierum und informiert Ihre Vertragspartner."
             },
             {
                 "question": "Wo kann ich die Informationen zu meinem Dokument einsehen?",
@@ -118,7 +118,7 @@
         "section4": [
             {
                 "question": "Wo sehe ich meine Kontoinformationen?",
-                "answer": "Mit einem Klick oben auf Ihren Avatar öffnet sich ein Menü. Wählen Sie hier nun den obersten Punkt 'Mein Konto' aus, um Ihre Kontoinformationen einzusehen. \nHier können Sie auch Ihre Information ändern."
+                "answer": "Mit einem Klick oben rechts auf den Avatar öffnet sich ein Menü, klicken Sie auf \"Mein Konto\". Es öffnet sich eine Seite auf der Sie all' Ihre Konotoinformationen einsehen und zum Teil auch verändern können."
             },
             {
                 "question": "Wie stelle ich meine Mitteilungen ein?",
@@ -126,7 +126,7 @@
             },
             {
                 "question": "Wie stelle ich die Sprache ein?",
-                "answer": "Antwort 5.3"
+                "answer": "Mit einem Klick auf die Flagge oben rechts öffnet sich ein Menü zum Umstellen der Sprache. Im Moment ist ELSA auf deutsch und auf englisch bedienbar."
             },
             {
                 "question": "Wie stelle ich mein Passwort um?",
@@ -134,11 +134,11 @@
             },
             {
                 "question": "Wie kann ich meine E-Mail Adresse ändern?",
-                "answer": "Antwort 5.6"
+                "answer": "Es ist nicht möglich Ihre E-Mail-Adresse im Nachhinein zu verändern. Möchten Sie ELSA unter einer anderen E-Mail-Adresse nutzen, müssen Sie sich mit dieser neu registrieren. Ihre Daten sind nicht auf das neue Konto übertragbar."
             },
             {
                 "question": "Was bedeutet es, dass mein Konto noch nicht vom Admin freigeschaltet ist?",
-                "answer": "Antwort 5.7"
+                "answer": "Um firmeninterne Dokumente gut schützen zu können, ist es notwendig, dass ein Admin firmenexterne E-Mail-Adressen händisch freischaltet. So wird die Sicherheit vertraulicher Informationen gewährt."
             }
         ]
 
