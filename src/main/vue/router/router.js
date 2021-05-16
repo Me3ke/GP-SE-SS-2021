@@ -52,7 +52,7 @@ const router = new VueRouter({
                     component: MessagePage
                 },
                 {
-                    path: '/document/:docId',
+                    path: 'document/:docId',
                     name: 'document',
                     component: DocumentPage,
                     props: true
