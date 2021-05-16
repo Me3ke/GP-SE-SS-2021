@@ -108,7 +108,7 @@
         "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
         "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
         "read": "Gegengelesen",
-        "didRead": "Sie haben das Dokument erfolgreich gegengelesen."
+        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
         "close": "Schließen"
     },
     "Login": {
