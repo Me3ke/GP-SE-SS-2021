@@ -106,5 +106,15 @@
         "doRead": "You have not proofread this document yet. Confirm now that you have.",
         "read": "Proofread",
         "didRead": "You have successfully proofread this document."
+        "close": "Close"
+    },
+    "Login": {
+        "email": "e-mail",
+        "password": "password",
+        "login": "login",
+        "sign-in": "login",
+        "feedback-invalid-email": "Please enter an valid e-mail.",
+        "feedback-invalid-password": "Minimum password length is 4 characters.",
+        "fail": "Login failed."
     }
 }
