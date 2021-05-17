@@ -1,9 +1,4 @@
 {
-    "TestPage": {
-        "message": "Hallo! Das ist ein Test!",
-        "btn": "Knopf",
-        "heading": "Ueberschrift"
-    },
     "AboutPage": {
         "h1": "Impressum",
         "name": "Impressum",
