@@ -1,11 +1,12 @@
 <template>
-    <div>
+    <div style="width: 100%">
         <Header></Header>
 
         <BaseHeading :name="document.title" :translate="false" style="position: fixed;"></BaseHeading>
 
         <!-- Displays that preview is possible -->
-        <b-container v-if="document.dataType === 'PDF'" fluid style="margin:auto; padding: 0;">
+        <b-container v-if="document.dataType === 'PDF'"
+                     style="width: 100%; margin-top: 0; margin-right: auto; margin-left: auto; padding: 0;">
             <b-row style="width: 100%; margin: auto; padding: 0">
                 <b-col cols="9">
                     <PDFViewer :pdf-src=src></PDFViewer>
