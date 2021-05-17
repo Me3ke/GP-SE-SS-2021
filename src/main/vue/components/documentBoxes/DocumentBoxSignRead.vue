@@ -15,17 +15,24 @@
                                     </div>
                                     <div class="col-auto">
                                         <div style="text-align: right; margin-left: 1vw; color: var(--red)"
-                                             v-if="doc.signatory === true && doc.reader === false">
+                                             v-if="doc.signatory === true && doc.signed === false && (doc.reader === false || doc.read === true)">
                                             <h6>
                                                 <!-- Time until document needs to be signed TODO -->
                                                 {{$t('OverviewPage.toSign1')}} {{this.doc.endDate}} {{$t('OverviewPage.toSign2')}}
                                             </h6>
                                         </div>
                                         <div style="text-align: right; margin-left: 1vw; color: var(--red)"
-                                             v-if="doc.reader === true">
+                                             v-if="doc.reader === true && doc.read === false && (doc.signatory === false || doc.signed === true)">
                                             <h6>
                                                 <!-- Time until document needs to be signed TODO -->
                                                 {{$t('OverviewPage.toRead1')}} {{this.doc.endDate}} {{$t('OverviewPage.toRead2')}}
+                                            </h6>
+                                        </div>
+                                        <div style="text-align: right; margin-left: 1vw; color: var(--red)"
+                                             v-if="doc.reader === true && doc.read === false && doc.signatory === true && doc.signed === false">
+                                            <h6>
+                                                <!-- Time until document needs to be signed TODO -->
+                                                {{$t('OverviewPage.toSignRead1')}} {{this.doc.endDate}} {{$t('OverviewPage.toSignRead2')}}
                                             </h6>
                                         </div>
                                     </div>

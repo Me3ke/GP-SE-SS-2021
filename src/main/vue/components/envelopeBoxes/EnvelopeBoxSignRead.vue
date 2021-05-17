@@ -13,10 +13,30 @@
                                     </h4>
                                 </div>
                                 <div class="col-auto">
-                                    <div style="text-align: right; margin-left: 1vw; color: var(--red)">
+                                    <!-- Documents to sign and read -->
+                                    <div style="text-align: right; margin-left: 1vw; color: var(--red)"
+                                    v-if="signatory && reader">
                                         <h6>
                                             <!-- Time until document needs to be signed TODO -->
                                             {{$t('OverviewPage.envReadSign')}}
+                                        </h6>
+                                    </div>
+
+                                    <!-- Documents to sign -->
+                                    <div style="text-align: right; margin-left: 1vw; color: var(--red)"
+                                         v-if="signatory && !reader">
+                                        <h6>
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('OverviewPage.envSign')}}
+                                        </h6>
+                                    </div>
+
+                                    <!-- Documents to read -->
+                                    <div style="text-align: right; margin-left: 1vw; color: var(--red)"
+                                         v-if="reader && !signatory">
+                                        <h6>
+                                            <!-- Time until document needs to be signed TODO -->
+                                            {{$t('OverviewPage.envRead')}}
                                         </h6>
                                     </div>
                                 </div>
@@ -87,10 +107,10 @@ export default {
             if (this.env.documents[i].state === "open") {
                 open = true;
             }
-            if (this.env.documents[i].signatory === true) {
+            if (this.env.documents[i].signatory === true && this.env.documents[i].signed === false) {
                 toSign = true
             }
-            if (this.env.documents[i].reader === true) {
+            if (this.env.documents[i].reader === true && this.env.documents[i].read === false) {
                 toRead = true
             }
         }
