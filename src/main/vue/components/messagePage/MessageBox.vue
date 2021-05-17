@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="card" style="padding:0.5vh">
+    <b-container fluid class="card" style="padding:0.5vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
         <div class="media">
 
             <!-- For reminder messages -->

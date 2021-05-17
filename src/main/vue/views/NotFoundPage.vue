@@ -71,6 +71,8 @@ export default {
 #my-container {
     padding: 0;
     margin: 0;
+    height: 100vh;
+    background-color: var(--whitesmoke);
 }
 
 .responsive-img {

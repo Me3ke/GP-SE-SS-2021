@@ -3,9 +3,27 @@
     --dark-grey: #47525E;
     --elsa-blue: #436495;
     --elsa-blue-transparent: rgba(67, 100, 149, 0.1);
+    --whitesmoke: whitesmoke;
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
     --green: #5D9543;
+
+    --headerFadeOne: rgba(0, 0, 0, 0.1);
+    --headerFadeTwo: rgba(0, 0, 0, 0.2);
+    --headerFadeThree: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="darkMode"] {
+    --dark-grey: #D8D8D9;
+    --elsa-blue: whitesmoke;
+    --elsa-blue-transparent: rgba(245, 245, 245, 0.3);
+    --whitesmoke: #23292f;
+    --light-grey: #ACACAC;
+    --shadow-grey: #D8D8D9;
+
+    --headerFadeOne: rgba(0, 0, 0, 0.5);
+    --headerFadeTwo: rgba(0, 0, 0, 0.6);
+    --headerFadeThree: rgba(0, 0, 0, 0.7);
 }
 
 
@@ -46,14 +64,14 @@ body {
 /* Buttons */
 .dark-btn {
     background-color: var(--dark-grey);
-    color: whitesmoke;
+    color: var(--whitesmoke);
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .light-btn {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
@@ -61,7 +79,7 @@ body {
 }
 
 .light-btn:focus {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
     border: 0.13vw solid var(--dark-grey);
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
@@ -75,7 +93,7 @@ body {
 
 .elsa-blue-btn {
     background-color: var(--elsa-blue);
-    color: whitesmoke;
+    color: var(--whitesmoke);
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
@@ -83,7 +101,7 @@ body {
 
 .elsa-blue-btn:focus {
     background-color: var(--elsa-blue);
-    color: whitesmoke;
+    color: var(--whitesmoke);
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.03vw solid var(--dark-grey);
     outline: 0.06vw solid var(--light-grey);
@@ -106,7 +124,7 @@ body {
 }
 
 .elsa-blue-btn:hover:enabled, .green-btn:hover:enabled {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
     transition-duration: 0.4s;
 }

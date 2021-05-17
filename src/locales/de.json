@@ -150,7 +150,9 @@
             "profile": "Mein Konto",
             "settings": "Einstellungen",
             "help": "Benutzerhandbuch",
-            "logout": "Abmelden"
+            "logout": "Abmelden",
+            "darkmode": "Dunkeler Modus",
+            "lightmode": "Heller Modus"
         },
         "Messages": {
             "msg": "Benachrichtigungen",

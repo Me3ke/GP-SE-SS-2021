@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-color: var(--whitesmoke); height: 100vh">
         <div>
             <Header></Header>
         </div>

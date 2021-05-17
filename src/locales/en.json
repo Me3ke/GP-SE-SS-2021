@@ -28,7 +28,9 @@
             "profile": "My Profile",
             "settings": "Settings",
             "help": "Help",
-            "logout": "Logout"
+            "logout": "Logout",
+            "darkmode": "Dark mode",
+            "lightmode": "Light mode"
         },
         "Messages": {
             "msg": "Messages",

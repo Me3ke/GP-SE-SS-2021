@@ -74,6 +74,7 @@ export default {
 .my-dropdown-item >>> .dropdown-item {
     color: var(--dark-grey);
     padding-left: 0.5vw;
+    background-color: var(--whitesmoke);
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {

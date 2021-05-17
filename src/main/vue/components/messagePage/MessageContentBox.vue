@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="card" style="padding:0.5vh">
+    <b-container fluid class="card" style="padding:0.5vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
         <div class="media">
             <div class="media-body">
                 <b-container fluid style="overflow:hidden;">
@@ -25,7 +25,7 @@
                                 </div>
                             </b-row>
 
-                            <hr style="width: 100%">
+                            <hr style="width: 100%; background-color: var(--dark-grey)">
 
                             <b-row style="margin-top: 3vh; overflow:hidden; display: flex; text-align: left">
                                 <div class="col-auto">

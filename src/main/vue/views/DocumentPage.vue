@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%">
+    <div style="width: 100%; height: 100vh; background-color: var(--whitesmoke)">
         <Header></Header>
 
         <BaseHeading :name="document.title" :translate="false" style="position: fixed;"></BaseHeading>
