@@ -8,6 +8,7 @@ import java.util.UUID;
 /**
  * the confirmationtoken-class.
  */
+@Entity
 public class ConfirmationToken {
 
     @Id
@@ -26,6 +27,10 @@ public class ConfirmationToken {
         this.user = user;
         this.createdDate = LocalDate.now();
         this.confirmationToken = UUID.randomUUID().toString();
+    }
+
+    public ConfirmationToken() {
+
     }
 
     public Long getId() {
