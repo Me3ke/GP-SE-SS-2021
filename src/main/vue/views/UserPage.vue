@@ -24,27 +24,25 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import UserInfoBox from "@/main/vue/components/UserInfoBox";
+import {mapState} from "vuex"
 
 export default {
   name: "UserPage",
   components:{Header,UserInfoBox},
-  data(){
-    return {
-      user: {
-        email: "sehrTolle@email.com",
-        firstname: "Otto",
-        lastname: "Wehner",
-        street: "Siegwardsweg",
-        houseNumber: 42,
-        postcode: 55555,
-        hometown: "Ownerhausen",
-        country: "Deutschland",
-        birthday: "30-04-2021",
-        phoneNumber: "+49 93483932",
-        publicKey: "z10f8dh736rz98712c6tz7r983t"
-      }
-    }
+  computed: mapState({
+    user: state => state.user
+  }),
+  /*
+  methods: {
+    ...mapActions([
+      'requestUser' //<1>
+    ]),
+  },
+  created() {
+    this.id = 'hans.schneider@mail.de'
+    this.requestUser(this.id) //<2>
   }
+   */
 }
 </script>
 
