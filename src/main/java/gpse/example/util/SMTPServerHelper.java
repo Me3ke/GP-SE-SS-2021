@@ -90,9 +90,9 @@ public class SMTPServerHelper {
 
         if (mailSender == null) {
             setMailSender();
-        } else {
-            mailSender.send(message);
         }
+        mailSender.send(message);
+
     }
 
     public static int getPort() {
