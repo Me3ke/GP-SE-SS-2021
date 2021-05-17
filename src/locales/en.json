@@ -46,7 +46,16 @@
     "OverviewPage": {
         "heading": "Overview",
         "filterClosed": "Closed",
-        "filterOpen": "Open"
+        "filterOpen": "Open",
+        "toSign1": "Sign until",
+        "toSign2": "",
+        "toRead1": "Read until",
+        "toRead2": "",
+        "toSignRead1": "Read and sign until",
+        "toSignRead2": "",
+        "envReadSign": "There are documents to sign or read",
+        "envRead": "There are documents to read",
+        "envSign": "There are documents to sign"
     },
 
     "UserGuide": {

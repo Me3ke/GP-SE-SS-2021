@@ -168,7 +168,16 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen"
+        "filterOpen": "Offen",
+        "toSign1": "Bis zum",
+        "toSign2": "signieren",
+        "toRead1": "Bis zum",
+        "toRead2": "gegenlesen",
+        "toSignRead1": "Bis zum",
+        "toSignRead2": "gegenlesen und signieren",
+        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
+        "envRead": "Enthält Dokumente zum gegenlesen",
+        "envSign": "Enthält Dokumente zum signieren"
     },
     "Document": {
         "owner": "Bersitzer",
