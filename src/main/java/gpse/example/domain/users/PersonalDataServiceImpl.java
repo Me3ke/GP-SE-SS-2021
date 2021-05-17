@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * standard personalDataService used to save PersonalData
+ * standard personalDataService used to save PersonalData.
  */
 @Service
 public class PersonalDataServiceImpl implements PersonalDataService {
