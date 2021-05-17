@@ -25,7 +25,7 @@ const store = new Vuex.Store({
             postcode: 55555,
             hometown: "Ownerhausen",
             country: "Deutschland",
-            birthday: "30-04-2021",
+            birthday: "30-04-1989",
             phoneNumber: "+49 93483932",
             publicKey: "z10f8dh736rz98712c6tz7r983t"
         },
