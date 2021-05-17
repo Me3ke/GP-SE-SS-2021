@@ -43,6 +43,7 @@
                 </div>
             </b-row>
         </b-container>
+
         <!-- Documents -->
         <div class="container-fluid">
             <div style="margin-top:1vh">
@@ -85,8 +86,8 @@
                         <div v-if="!(envelope.documents.length === 1)">
                             <!-- Default -->
                             <div
-                                v-if="getEnvData(envelope).signatory === false
-                                && getEnvData(envelope).reader === false
+                                v-if="(getEnvData(envelope).needToSign === false)
+                                && getEnvData(envelope).needToRead === false
                                 && getEnvData(envelope).open === true">
                                 <EnvelopeBox
                                     @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
@@ -105,8 +106,8 @@
 
                             <!-- To sign/read -->
                             <div
-                                v-if="(getEnvData(envelope).signatory === true
-                                || getEnvData(envelope).reader === true)
+                                v-if="(getEnvData(envelope).needToSign === true
+                                || getEnvData(envelope).needToRead === true)
                                 && getEnvData(envelope).open === true">
                                 <EnvelopeBoxSignRead
                                     @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
@@ -172,14 +173,14 @@ export default {
                 if (env.documents[i].state === "open") {
                     open = true;
                 }
-                if (env.documents[i].signatory === true) {
+                if (env.documents[i].signatory === true && env.documents[i].signed === false) {
                     toSign = true
                 }
-                if (env.documents[i].reader === true) {
+                if (env.documents[i].reader === true && env.documents[i].read === false) {
                     toRead = true
                 }
             }
-            return {open: open, signatory: toSign, reader: toRead};
+            return {open: open, needToSign: toSign, needToRead: toRead};
         }
     },
     computed: {
