@@ -54,8 +54,8 @@
                         <div v-if="envelope.documents.length === 1">
                             <!-- Default -->
                             <div
-                                v-if="envelope.documents[0].signatory === false
-                                && envelope.documents[0].reader === false
+                                v-if="(envelope.documents[0].signatory === false || envelope.documents[0].signed === true)
+                                && (envelope.documents[0].reader === false || envelope.documents[0].read === true)
                                 && envelope.documents[0].state === 'open'">
                                 <DocumentBox
                                     @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
@@ -74,8 +74,8 @@
 
                             <!-- To sign/read -->
                             <div
-                                v-if="(envelope.documents[0].signatory === true
-                                || envelope.documents[0].reader === true)
+                                v-if="((envelope.documents[0].signatory === true && envelope.documents[0].signed === false)
+                                || (envelope.documents[0].reader === true && envelope.documents[0].read === false))
                                 && envelope.documents[0].state === 'open'">
                                 <DocumentBoxSignRead
                                     @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
