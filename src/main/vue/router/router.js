@@ -17,7 +17,7 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: `/${i18n.locale}`
+            redirect: `/${i18n.locale}/landing`
         },
         {
             path: '/:lang',
