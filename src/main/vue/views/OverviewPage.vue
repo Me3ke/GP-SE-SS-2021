@@ -19,7 +19,7 @@
             <b-row align-h="between" no-gutters>
                 <div class="col-auto">
                     <b-row align-h="start">
-                        <b-col >
+                        <b-col>
                             <UploadButton></UploadButton>
                         </b-col>
                     </b-row>
@@ -47,19 +47,20 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 71.75vh">
-                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)" :key="envelope.id"
+                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)"
+                         :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <!-- Different styles for open/closed documents TODO-->
                         <div v-if="envelope.documents.length === 1">
                             <DocumentBox
-                                @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
+                                @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.eMail}})"
                                 :doc="envelope.documents[0]">
                             </DocumentBox>
                         </div>
                         <div v-if="!(envelope.documents.length === 1)">
                             <EnvelopeBox
                                 @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                :env="envelope" >
+                                :env="envelope">
                             </EnvelopeBox>
                         </div>
                     </div>

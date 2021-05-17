@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header></Header>
-        <BaseHeading :name="getEnv(envId).name" style="position: fixed"></BaseHeading>
+        <BaseHeading :name="getEnv(envId).name" :translate="false" style="position: fixed"></BaseHeading>
 
         <!-- Documents -->
         <div class="container-fluid">

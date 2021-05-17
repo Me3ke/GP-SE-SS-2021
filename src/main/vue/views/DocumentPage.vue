@@ -5,7 +5,7 @@
         <BaseHeading :name="document.title" :translate="false" style="position: fixed;"></BaseHeading>
 
         <!-- Displays that preview is possible -->
-        <b-container v-if="document.datatype === 'PDF'" fluid style="margin:auto; padding: 0;">
+        <b-container v-if="document.dataType === 'PDF'" fluid style="margin:auto; padding: 0;">
             <b-row style="width: 100%; margin: auto; padding: 0">
                 <b-col cols="9">
                     <PDFViewer :pdf-src=src></PDFViewer>
@@ -14,26 +14,26 @@
                 <b-col cols="3" id="textCol">
                     <!-- Displays if user already proofread -->
                     <b-row style="margin: auto; display: block"
-                           v-if="document.reader === 'True' && document.read === 'True'">
+                           v-if="document.reader === true && document.read === true">
                         <h6>
                             {{ $t("DocumentPage.didRead") }}
                         </h6>
-                        <hr v-if="document.signatory === 'True' || document.signed === 'True'">
+                        <hr v-if="document.signatory === true || document.signed === true">
                     </b-row>
 
                     <!-- Displays if user should proofread -->
                     <b-row style="margin: auto; display: block"
-                           v-else-if="document.reader === 'True' && document.read === 'False'">
+                           v-else-if="document.reader === true && document.read === false">
                         <h6>
                             {{ $t("DocumentPage.doRead") }}
                         </h6>
                         <LightButtonIconText icon="eyeglasses" text="DocumentPage.read"></LightButtonIconText>
-                        <hr v-if="document.signatory === 'True' || document.signed === 'True'">
+                        <hr v-if="document.signatory === true || document.signed === true">
                     </b-row>
 
                     <!-- Displays if user already signed -->
                     <b-row style="margin: auto; display: block"
-                           v-if="document.signatory === 'True' && document.signed === 'True'">
+                           v-if="document.signatory === true && document.signed === true">
                         <h6>
                             {{ $t("DocumentPage.didSign") }}
                         </h6>
@@ -41,7 +41,7 @@
 
                     <!-- Displays if user should sign -->
                     <b-row style="margin: auto; display: block"
-                           v-else-if="document.signatory === 'True' && document.signed === 'False'">
+                           v-else-if="document.signatory === true && document.signed === false">
                         <h6>
                             {{ $t("DocumentPage.doSign") }}
                         </h6>
@@ -52,35 +52,35 @@
         </b-container>
 
         <!-- Displays that preview is not possible -->
-        <b-container v-if="document.datatype !== 'PDF'" fluid="sm" class="container">
+        <b-container v-if="document.dataType !== 'PDF'" fluid="sm" class="container">
             <b-row style="margin: auto; display: block">
                 <h6>
                     {{ $t("DocumentPage.noView") }}
                 </h6>
                 <LightButtonIconText icon="download" text="DocumentPage.download"></LightButtonIconText>
-                <hr v-if="document.signatory === 'True' || document.signed === 'True' || document.reader === 'True' || document.read === 'True'">
+                <hr v-if="document.signatory === true || document.signed === true || document.reader === true || document.read === true">
             </b-row>
 
             <!-- Displays if user already proofread -->
-            <b-row v-if="document.reader === 'True' && document.read === 'True'" style="margin: auto; display: block">
+            <b-row v-if="document.reader === true && document.read === true" style="margin: auto; display: block">
                 <h6>
                     {{ $t("DocumentPage.didRead") }}
                 </h6>
-                <hr v-if="document.signatory === 'True' || document.signed === 'True'">
+                <hr v-if="document.signatory === true || document.signed === true">
             </b-row>
 
             <!-- Displays if user should proofread -->
-            <b-row v-else-if="document.reader === 'True' && document.read === 'False'"
+            <b-row v-else-if="document.reader === true && document.read === false"
                    style="margin: auto; display: block">
                 <h6>
                     {{ $t("DocumentPage.doRead") }}
                 </h6>
                 <LightButtonIconText icon="eyeglasses" text="DocumentPage.read"></LightButtonIconText>
-                <hr v-if="document.signatory === 'True' || document.signed === 'True'">
+                <hr v-if="document.signatory === true || document.signed === true">
             </b-row>
 
             <!-- Displays if user already signed -->
-            <b-row v-if="document.signatory === 'True' && document.signed === 'True'"
+            <b-row v-if="document.signatory === true && document.signed === true"
                    style="margin: auto; display: block">
                 <h6>
                     {{ $t("DocumentPage.didSign") }}
@@ -88,7 +88,7 @@
             </b-row>
 
             <!-- Displays if user should sign -->
-            <b-row v-else-if="document.signatory === 'True' && document.signed === 'False'"
+            <b-row v-else-if="document.signatory === true && document.signed === false"
                    style="margin: auto; display: block">
                 <h6>
                     {{ $t("DocumentPage.doSign") }}
@@ -108,6 +108,7 @@ import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
 import LightButtonIconText from "@/main/vue/components/LightButtonIconText";
 
+import {mapGetters} from 'vuex';
 
 export default {
     name: "DocumentPage",
@@ -125,30 +126,17 @@ export default {
     components: {LightButtonIconText, PDFViewer, Footer, Header},
     data() {
         return {
-            document: {
-                "title": "Ich bin ein Dokument",
-                "state": "open",
-                "owner": {
-                    "e-mail": "superMail@mailService.de",
-                    "firstname": "Samuel",
-                    "lastname": "Ignatory",
-                },
-                "creationDate": "12.04.2021",
-                "endDate": "23.05.2021",
-                "signatureType": "simple",
-                "datatype": "PDF",
-                "signatory": "True",
-                "reader": "True",
-                "signed": "False",
-                "read": "True",
-                "data": ""
-            },
-            pdf: undefined,
-            pages: [],
             src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS"
         }
+    },
+    created() {
+        this.$store.dispatch('fetchDocument', this.docId)
+    },
+    computed: {
+        ...mapGetters({
+            document: 'document'
+        })
     }
-
 }
 </script>
 
