@@ -227,6 +227,16 @@
         "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
         "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
         "read": "Gegengelesen",
-        "didRead": "Sie haben das Dokument erfolgreich gegengelesen."
+        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
+        "close": "Schließen"
+    },
+    "Login": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "login": "Anmeldung",
+        "sign-in": "Anmelden",
+        "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
+        "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
+        "fail": "Anmeldung fehlgeschlagen."
     }
 }
