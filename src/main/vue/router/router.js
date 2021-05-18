@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import VueRouter from "vue-router";
 import i18n from "@/i18n";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
@@ -11,6 +12,9 @@ import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
+import store from "@/main/vue/store/store";
+
+Vue.use(VueRouter)
 
 const router = new VueRouter({
     mode: 'history',
@@ -30,62 +34,95 @@ const router = new VueRouter({
                 {
                     path: 'user',
                     name: 'user',
-                    component: UserPage
+                    component: UserPage,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: 'landing',
                     name: 'landing',
-                    component: LandingPage
+                    component: LandingPage,
+                    meta: {
+                        guest: true
+                    }
                 },
                 {
                     path: 'overview',
                     name: 'overview',
-                    component: OverviewPage
+                    component: OverviewPage,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: 'login',
                     name: 'login',
-                    component: LoginPage
+                    component: LoginPage,
+                    meta: {
+                        guest: true
+                    }
                 },
                 {
                     path: 'messages',
                     name: 'messages',
                     props: true,
-                    component: MessagePage
+                    component: MessagePage,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: 'document/:docId',
                     name: 'document',
                     component: DocumentPage,
-                    props: true
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: '404',
                     name: '404',
-                    component: NotFoundPage
+                    component: NotFoundPage,
+                    meta: {
+                        guest: true
+                    }
                 },
                 {
                     path: 'no-connection',
                     name: 'no-connection',
-                    component: NoConnectionPage
+                    component: NoConnectionPage,
+                    meta: {
+                        guest: true
+                    }
                 },
                 {
                     // url address h for help/hilfe
                     path: 'help',
                     name: 'help',
-                    component: UserGuide
+                    component: UserGuide,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
 
                     path: 'impressum',
                     name: 'impressum',
-                    component: ImpressumPage
+                    component: ImpressumPage,
+                    meta: {
+                        guest: true
+                    }
                 },
                 {
                     path: 'envelope/:envId',
                     name: 'envelope',
                     component: EnvelopePage,
-                    props: true
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: '*',
@@ -103,7 +140,19 @@ router.beforeEach((to, from, next) => {
     }
     // setting current language
     i18n.locale = language
-    next()
+
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+        console.log(store.state.token)
+        if (store.state.token !== null || store.state.token !== "") {
+            next({
+                path: '/'+language+'/login',
+                params: { nextUrl: to.fullPath }
+            })
+        }
+    }
+        next()
+
+
 })
 
 export default router
