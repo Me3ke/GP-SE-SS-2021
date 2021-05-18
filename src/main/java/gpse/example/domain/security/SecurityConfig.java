@@ -35,20 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/authenticate").permitAll()
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .authorizeRequests()
+            .antMatchers("/api/authenticate").permitAll()
+            .and()
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
-
 
 
     @Autowired
@@ -56,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 final PasswordEncoder passwordEncoder,
                                 final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+            .passwordEncoder(passwordEncoder);
     }
 
     @Bean
@@ -65,10 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
-
     /**
      * This method returns a configured state for cors.
+     *
      * @return a configured CorsConfigurationSource
      */
     @Bean
@@ -77,11 +74,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
         corsConfiguration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
 
-        corsConfiguration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin",
+            "Content-Type", "Accept", "Authorization"));
 
-            // This allow us to expose the headers
-        corsConfiguration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, " +
-                    "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"));
+        // This allow us to expose the headers
+        corsConfiguration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers",
+            "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, "
+                + "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"));
 
 
         source.registerCorsConfiguration("/**", corsConfiguration);
