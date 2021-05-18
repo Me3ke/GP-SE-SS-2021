@@ -27,6 +27,9 @@
     --landing-back-two: rgba(255, 255, 255, 0.3);
 
     --user-info: whitesmoke;
+
+    /* Login */
+    --header-login: #D8D8D9;
 }
 
 [data-theme="darkMode"] {
@@ -54,6 +57,8 @@
     --landing-back-two: rgba(35, 41, 47, 0.3);
 
     --user-info: #363f48;
+
+    --header-login: #6a6a6d;
 }
 
 

@@ -4,12 +4,12 @@
             <b-icon v-if="theme === ''" icon="sun" class="my-icon"></b-icon>
             <b-icon v-else icon="moon" class="my-icon"></b-icon>
         </template>
-        <b-dropdown-item @click.prevent="toggleTheme()" class="my-dropdown-item">
+        <b-dropdown-item @click.prevent="toggleTheme('darkMode')" class="my-dropdown-item">
             <b-icon icon="moon" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @click.prevent="toggleTheme()" class="my-dropdown-item">
+        <b-dropdown-item @click.prevent="toggleTheme('lightMode')" class="my-dropdown-item">
             <b-icon icon="sun" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
         </b-dropdown-item>
@@ -25,7 +25,10 @@ export default {
         }
     },
     methods: {
-        toggleTheme() {
+        toggleTheme(mode) {
+            if (mode === 'darkMode' && this.theme === 'darkMode' || mode === 'lightMode' && this.theme === '') {
+                return
+            }
             this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
             document.documentElement.setAttribute('data-theme', this.theme);
             localStorage.setItem('theme', this.theme);

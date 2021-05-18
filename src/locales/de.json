@@ -170,7 +170,7 @@
         "envSign": "Enthält Dokumente zum signieren"
     },
     "Document": {
-        "owner": "Bersitzer",
+        "owner": "Besitzer",
         "date": "Erstellungsdatum",
         "open": "Offen",
         "closed": "Abgeschlossen"

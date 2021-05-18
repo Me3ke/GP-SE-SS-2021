@@ -1,10 +1,10 @@
 <template>
     <section>
-        <div class="background">
+        <div class="background" style="height: 100vh; overflow: hidden">
 
             <LandingPageHeader></LandingPageHeader>
-            <div class = img-wrap>
-                <img :src = "image"  class="header-image"/>
+            <div class=img-wrap>
+                <img :src="image" alt="logo" class="header-image"/>
             </div>
             <div class="login-division">
                 <login-component></login-component>
@@ -21,6 +21,7 @@ import Footer from "@/main/vue/components/Footer";
 import image from "../assets/logos/ELSA_big.svg";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import LoginComponent from "@/main/vue/components/LoginComponent";
+
 export default {
     data: function () {
         return {
@@ -29,13 +30,11 @@ export default {
     },
     name: "LoginPage",
     components: {LoginComponent, LandingPageHeader, Footer},
-    methods: {
-    }
+    methods: {}
 }
 </script>
 
 <style scoped>
-
 
 
 .background {
@@ -43,12 +42,12 @@ export default {
     margin: 0;
     width: 100%;
     min-height: 100vh;
-    background-image: linear-gradient(to bottom, rgba(255,153,153,0) 0%,rgba(255,255,255,1) 30%, rgb(255, 255, 255) 100%), url(../assets/background.png);
+    background-image: linear-gradient(to bottom, var(--background-fade-one) 0%, var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
     background-repeat: no-repeat;
     background-size: 100% auto;
 }
 
-.login-division{
+.login-division {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,12 +57,12 @@ export default {
     border-top-width: 1px;
     border-top-style: solid;
     border-top-color: var(--shadow-grey);
-    background-color: rgba(0,0,0,0.1);
+    background-color: var(--headerFadeOne);
     background-size: 100% auto;
 }
 
 
-.header-image{
+.header-image {
     padding-top: 2vw;
     padding-bottom: 2vw;
     width: 25%;
