@@ -3,9 +3,9 @@
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="routeToProfile">
             <b-icon icon="person-circle" class="my-icon"></b-icon>
-            <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
+            <span class="letters" > {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
         <b-dropdown-item class="my-dropdown-item">
@@ -13,12 +13,12 @@
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="routeToHelp">
             <b-icon icon="question-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="logout">
             <b-icon icon="box-arrow-right" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.logout') }} </span>
         </b-dropdown-item>
@@ -27,7 +27,20 @@
 
 <script>
 export default {
-    name: "Avatar"
+    name: "Avatar",
+    methods:{
+      routeToProfile(){
+        this.$router.push('/'+this.$i18n.locale + '/user')
+      },
+      routeToHelp(){
+          this.$router.push('/'+this.$i18n.locale + '/help')
+      },
+      logout(){
+          localStorage.removeItem('store')
+          localStorage.clear()
+          this.$router.push('/'+this.$i18n.locale + '/login')
+      }
+    }
 }
 </script>
 

@@ -1,13 +1,15 @@
 package gpse.example.domain.documents;
 
-import java.io.IOException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
+
 import java.util.List;
 
 /**
  * the interface for Document Services.
  */
 public interface DocumentService {
-    Document store(DocumentPut documentPut, String ownerID) throws IOException;
-    Document getDocument(long id);
+    Document addDocument(Document document);
+    Document getDocument(long id) throws DocumentNotFoundException;
     List<Document> getDocuments();
+    void remove(Document document);
 }

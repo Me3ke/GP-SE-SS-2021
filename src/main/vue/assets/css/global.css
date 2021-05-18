@@ -2,9 +2,15 @@
 :root {
     --dark-grey: #47525E;
     --elsa-blue: #436495;
+    --elsa-blue-transparent: rgba(67, 100, 149, 0.1);
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
     --green: #5D9543;
+    --closed-doc: #EBEBEB;
+    --closed-doc-hover: #C9C9C9;
+    --sign-doc: #FFE3E3;
+    --sign-doc-hover: #FFBABA;
+    --red: #C93A3A;
 }
 
 
@@ -49,16 +55,6 @@ body {
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
-    width: 14vw;
-    height: 4.33vw;
-}
-
-.dark-btn:focus {
-    background-color: var(--dark-grey);
-    color: whitesmoke;
-    border: 0.13vw solid var(--dark-grey);
-    outline: 0.06vw solid var(--light-grey);
-    outline-offset: 0;
 }
 
 .light-btn {
@@ -67,21 +63,18 @@ body {
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
-    width: 14vw;
-    height: 4.33vw;
 }
 
 .light-btn:focus {
     background-color: whitesmoke;
     color: var(--dark-grey);
     border: 0.13vw solid var(--dark-grey);
-    outline: 0.06vw solid var(--light-grey);
-    outline-offset: 0;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
 }
 
 .dark-btn:hover, .light-btn:hover {
-    background-color: var(--elsa-blue);
-    color: whitesmoke;
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
     transition-duration: 0.4s;
 }
 
@@ -89,16 +82,15 @@ body {
     background-color: var(--elsa-blue);
     color: whitesmoke;
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
-    width: 14vw;
-    height: 4.33vw;
 }
 
 .elsa-blue-btn:focus {
     background-color: var(--elsa-blue);
     color: whitesmoke;
-    border: 0.13vw solid var(--dark-grey);
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    border: 0.03vw solid var(--dark-grey);
     outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
 }
@@ -109,16 +101,13 @@ body {
     box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
-    width: 14vw;
-    height: 4.33vw;
 }
 
 .green-btn:focus {
     background-color: var(--green);
     color: var(--light-grey);
     border: 0.13vw solid var(--dark-grey);
-    outline: 0.06vw solid var(--light-grey);
-    outline-offset: 0;
+    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
 }
 
 .elsa-blue-btn:hover:enabled, .green-btn:hover:enabled {

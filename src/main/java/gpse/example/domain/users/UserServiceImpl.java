@@ -3,6 +3,7 @@ package gpse.example.domain.users;
 import gpse.example.util.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
      */
     private ConfirmationTokenService confirmationTokenService;
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
 
     @Lazy
     @Autowired
@@ -29,21 +30,50 @@ public class UserServiceImpl implements UserService {
 
     @Lazy
     @Autowired
-    public UserServiceImpl(final UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public User getUser(final String userID) {
-        return repo.findById(userID)
-            .orElseThrow(() -> new UsernameNotFoundException("User email: " + userID + " not found."));
+    public User getUser(final String username) throws UsernameNotFoundException {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
     }
 
     @Override
-    public List<User> getUserList() {
-        final List<User> userList = new ArrayList<>();
-        repo.findAll().forEach(userList::add);
-        return userList;
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        return userRepository.findById(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
+    }
+
+    @Override
+    public List<User> getUsers() {
+        final List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+        return users;
+    }
+    @Override
+    public User createUser(final String username, final String password,
+                           final String firstname, final String lastname, final String... roles) {
+        final User user = new User(username, firstname, lastname, password);
+        for (final String role : roles) {
+            user.addRole(role);
+        }
+        final User saved = userRepository.save(user);
+        return saved;
+    }
+
+    @Override
+    public User createUser(final String username, final String password,
+                           final String firstname, final String lastname,
+                           final PersonalData personalData, final String... roles) {
+        final User user = new User(username, firstname, lastname, password);
+        for (final String role : roles) {
+            user.addRole(role);
+        }
+        user.setPersonalData(personalData);
+        final User saved = userRepository.save(user);
+        return saved;
     }
 
     @Override
@@ -52,7 +82,7 @@ public class UserServiceImpl implements UserService {
         //user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPassword(user.getPassword());
 
-        final User createdUser = repo.save(user);
+        final User createdUser = userRepository.save(user);
 
         final ConfirmationToken token = new ConfirmationToken(user);
 
@@ -66,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEnabled(true);
 
-        repo.save(user);
+        userRepository.save(user);
 
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
 

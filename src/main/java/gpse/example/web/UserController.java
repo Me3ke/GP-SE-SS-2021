@@ -1,9 +1,11 @@
 package gpse.example.web;
 
+
 import gpse.example.domain.users.ConfirmationToken;
 import gpse.example.domain.users.ConfirmationTokenService;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
+import gpse.example.domain.users.PersonalData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,4 +47,10 @@ public class UserController {
 
         return "/login";
     }
+
+    @GetMapping("/user/{*userID}/personal")
+    public PersonalData showPersonalData(@PathVariable("userID") final String username) {
+        return userService.getUser(username).getPersonalData();
+    }
+
 }

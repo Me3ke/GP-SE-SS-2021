@@ -81,8 +81,8 @@ public class SMTPServerHelper {
      * @param link validation link.
      */
 
-    public static void sendRegistrationEmail(String toAddress, String userName, String link) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    public static void sendRegistrationEmail(final String toAddress, final String userName, final String link) {
+        final SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
         message.setTo(toAddress);
         message.setSubject(REGISTRATION_SUBJECT);

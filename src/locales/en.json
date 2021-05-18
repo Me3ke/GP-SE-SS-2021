@@ -5,7 +5,10 @@
         "heading": "Heading"
     },
     "AboutPage": {
-        "name": "About us"
+        "name": "About us",
+        "provider": "Provider:",
+        "contact": "Contact:",
+        "editorial": "For Editorial Content:"
     },
     "NotFoundPage": {
         "h1": "Ops!",
@@ -43,8 +46,134 @@
     "OverviewPage": {
         "heading": "Overview",
         "filterClosed": "Closed",
-        "filterOpen": "Open"
+        "filterOpen": "Open",
+        "toSign1": "Sign until",
+        "toSign2": "",
+        "toRead1": "Read until",
+        "toRead2": "",
+        "toSignRead1": "Read and sign until",
+        "toSignRead2": "",
+        "envReadSign": "There are documents to sign or read",
+        "envRead": "There are documents to read",
+        "envSign": "There are documents to sign"
     },
+
+    "UserGuide": {
+        "name": "User Guide",
+        "section-1": "General Information",
+        "section-2": "Signature",
+        "section-3": "Documents",
+        "section-4": "Helpful Controls",
+        "section-5": "Account Management",
+        "section0": [
+            {
+                "question": "What is ELSA?",
+                "answer": "ELSA is an electronic signature application that enables any document to be electronically signed easily, quickly, and securely"
+            },
+            {
+                "question": "How does ELSA work?",
+                "answer": "Answer 0.2"
+            }
+        ],
+        "section1": [
+            {
+                "question": "How do I sign a Document?",
+                "answer": "You can sign the document by clicking the sign button next to the document preview."
+            },
+            {
+                "question": "How secure is this method?",
+                "answer": "Answer 2.2"
+            },
+            {
+                "question": "How does the crytographic Signature work?",
+                "answer": "Answer 2.3"
+            }
+        ],
+        "section2": [
+            {
+                "question": "How do I upload a Document?",
+                "answer": "Answer 3.1"
+            },
+            {
+                "question": "What is an Envelope?",
+                "answer": "Answer 3.2"
+            },
+            {
+                "question": "Which kind of Document types will be supported?",
+                "answer": "Answer 3.3"
+            },
+            {
+                "question": "Who has access to my Documents?",
+                "answer": "Answer 3.4"
+            },
+            {
+                "question": "How do I add People to sign my Document?",
+                "answer": "Answer 3.5"
+            },
+            {
+                "question": "What are the differences of 'Simple Signature' and 'Advanced Signature'?",
+                "answer": "Answer 3.6"
+            },
+            {
+                "question": "Can I change the signing type afterward?",
+                "answer": "Yes, the signature type can be changed afterward. However, then all signatures are already given expire and must be requested again. But don't worry, ELSA will take care of this and inform your contractual partners."
+            },
+            {
+                "question": "Where do I find Information about my Document?",
+                "answer": "Answer 3.8"
+            },
+            {
+                "question": "Where can I see the Document History?",
+                "answer": "Answer 3.9"
+            }
+        ],
+        "section3": [
+            {
+                "question": "How do I search for Documents",
+                "answer": "Answer 4.1"
+            },
+            {
+                "question": "What are the filter above the Documents?",
+                "answer": "Answer 4.2"
+            },
+            {
+                "question": "How can I filter manually?",
+                "answer": "Answer 4.3"
+            },
+            {
+                "question": "What does the grey scope next to Documents mean?",
+                "answer": "Answer 4.4"
+            }
+        ],
+        "section4": [
+            {
+                "question": "Where do I find my Account Information?",
+                "answer": "By a click on the avatar at the top right, a menu opens, click on \"My Account.\" Then, a page opens on which you can view all of your Konoto information and change some of it."
+            },
+            {
+                "question": "How can I set up my Notifications?",
+                "answer": "Answer 5.2"
+            },
+            {
+                "question": "Where do I change the language?",
+                "answer": "Clicking on the flag in the top right opens a menu for changing the language. At the moment, ELSA can be operated in German and English."
+            },
+            {
+                "question": "How do I change my Password?",
+                "answer": "Answer 5.4"
+            },
+            {
+                "question": "Is there an Opportunity to change my Email-Address?",
+                "answer": "It is not possible to change your email address afterward. If you would like to use ELSA under a different e-mail address, you must register again with this address. Your data cannot be transferred to the new account."
+            },
+            {
+                "question": "What does it mean: 'Your Account is not activated by the Admin'?",
+                "answer": "In order to be able to protect company-internal documents, it is necessary for an admin to manually activate company-external e-mail addresses. This ensures the security of confidential information."
+            }
+        ]
+    },
+
+
     "Document": {
         "owner": "Owner",
         "date": "Created on",
@@ -58,5 +187,73 @@
         "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
         "toAll": "Back to all messages"
-    }
+    },
+    "LoginButton": {
+        "content": "Login"
+    },
+    "RegisterButton": {
+        "content": "Register"
+    },
+    "UserPage": {
+        "content": "User information:"
+    },
+    "UserInfoBox": {
+        "profileInformation": "Profile information",
+        "accountInformation": "Account information",
+        "publicKeys": "Public Keys",
+        "email": "E-Mail:",
+        "firstName": "First name:",
+        "lastName": "Last name:",
+        "birthday": "Birthday:",
+        "country": "Country:",
+        "city": "City:",
+        "street": "Street:",
+        "houseNumber":"House number:",
+        "publicKey": "Public key:",
+        "phoneNumber": "Phone number:",
+        "newKeypair": "New Keypair"
+    },
+    "UploadDoc": {
+        "upload": "Upload",
+        "menuTitle": "Upload document",
+        "close": "Close",
+        "continue": "Continue",
+        "back": "Back",
+        "newEnv": "Create a new envelope",
+        "selectEnv": "Select an existing envelope",
+        "newEnvPlaceholder": "Name of new envelope",
+        "configureDoc": "Configure document"
+    },
+    "DocumentPage": {
+        "noView": "No preview available. Download the document instead.",
+        "download": "Download",
+        "doSign": "You have not signed this document yet. Sign now.",
+        "sign": "Sign",
+        "didSign": "You have successfully signed this document.",
+        "doRead": "You have not proofread this document yet. Confirm now that you have.",
+        "read": "Proofread",
+        "didRead": "You have successfully proofread this document.",
+        "close": "Close"
+    },
+    "Login": {
+        "email": "e-mail",
+        "password": "password",
+        "login": "login",
+        "sign-in": "login",
+        "feedback-invalid-email": "Please enter an valid e-mail.",
+        "feedback-invalid-password": "Minimum password length is 4 characters.",
+        "fail": "Login failed."
+    },
+    "KeypairAlert": {
+      "generate": "Generate Keypair",
+      "upload": "Upload Keypair",
+      "selectOption": "Select option",
+      "cancelText": "Cancel",
+      "forceChoose": "You need to choose something!",
+      "warning": "Warning",
+      "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
+      "continueText": "Continue",
+      "generatingText": "Generating...",
+      "uploadText": "Uploading"
+  }
 }

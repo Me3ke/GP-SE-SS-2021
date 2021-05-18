@@ -14,6 +14,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BaseHeading from "@/main/vue/components/BaseHeading";
 import "@/main/vue/assets/css/global.css";
 import 'sweetalert2/dist/sweetalert2.min.css';
+import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false
 
@@ -22,6 +23,7 @@ Vue.use(BootstrapVueIcons)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueSweetalert2);
+Vue.use(Vuelidate);
 
 Vue.component('BaseHeading', BaseHeading)
 
