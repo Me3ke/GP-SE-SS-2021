@@ -43,7 +43,16 @@
     "OverviewPage": {
         "heading": "Overview",
         "filterClosed": "Closed",
-        "filterOpen": "Open"
+        "filterOpen": "Open",
+        "toSign1": "Sign until",
+        "toSign2": "",
+        "toRead1": "Read until",
+        "toRead2": "",
+        "toSignRead1": "Read and sign until",
+        "toSignRead2": "",
+        "envReadSign": "There are documents to sign or read",
+        "envRead": "There are documents to read",
+        "envSign": "There are documents to sign"
     },
 
     "UserGuide": {
@@ -196,9 +205,10 @@
         "country": "Country:",
         "city": "City:",
         "street": "Street:",
-        "houseNumber": "House number:",
-        "publicKey": "Public Key:",
-        "phoneNumber": "Phone number:"
+        "houseNumber":"House number:",
+        "publicKey": "Public key:",
+        "phoneNumber": "Phone number:",
+        "newKeypair": "New Keypair"
     },
     "UploadDoc": {
         "upload": "Upload",
@@ -230,5 +240,17 @@
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
         "fail": "Login failed."
-    }
+    },
+    "KeypairAlert": {
+      "generate": "Generate Keypair",
+      "upload": "Upload Keypair",
+      "selectOption": "Select option",
+      "cancelText": "Cancel",
+      "forceChoose": "You need to choose something!",
+      "warning": "Warning",
+      "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
+      "continueText": "Continue",
+      "generatingText": "Generating...",
+      "uploadText": "Uploading"
+  }
 }

@@ -165,7 +165,16 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen"
+        "filterOpen": "Offen",
+        "toSign1": "Bis zum",
+        "toSign2": "signieren",
+        "toRead1": "Bis zum",
+        "toRead2": "gegenlesen",
+        "toSignRead1": "Bis zum",
+        "toSignRead2": "gegenlesen und signieren",
+        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
+        "envRead": "Enthält Dokumente zum gegenlesen",
+        "envSign": "Enthält Dokumente zum signieren"
     },
     "Document": {
         "owner": "Bersitzer",
@@ -203,7 +212,8 @@
         "street": "Straße:",
         "houseNumber": "Hausnummer:",
         "publicKey": "Öffentlicher Schlüssel:",
-        "phoneNumber": "Telefonnummer:"
+        "phoneNumber": "Telefonnummer:",
+        "newKeypair": "Neues Schlüsselpaar"
     },
     "UploadDoc": {
         "upload": "Hochladen",
@@ -235,5 +245,17 @@
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen."
-    }
+    },
+  "KeypairAlert": {
+    "generate": "Generiere Schlüsselpaar",
+    "upload": "Lade Schlüsselpaar hoch",
+    "selectOption": "Wähle Option",
+    "cancelText": "Abbruch",
+    "forceChoose": "Es muss etwas ausgewählt werden!",
+    "warning": "Warnung",
+    "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
+    "continueText": "Fortfahren",
+    "generatingText": "Generieren...",
+    "uploadText": "Hochladen..."
+  }
 }
