@@ -43,9 +43,13 @@ const store = new Vuex.Store({
                 this.state.authenticated = false
             }
         },
-        initializeStore(state) { //<3>
+        initializeStore(state) {
             if (localStorage.getItem('store')) {
                 this.replaceState(Object.assign(state, JSON.parse(localStorage.getItem('store'))))
+            } else {
+                state.authenticated = null
+                state.token = null
+                state.username = null
             }
         }
     },
@@ -53,8 +57,10 @@ const store = new Vuex.Store({
         requestToken({commit}, credentials) { //<4>
             return new Promise((resolve, reject) => {
                 api.auth.login(credentials.username, credentials.password).then(res => {
+                    this.state.authenticated = true
                     let token = res.headers.authorization
                     commit('authenticate', token)
+                    console.log(res.headers)
                     resolve()
                 }).catch(() => {
                     commit('authenticate', null)

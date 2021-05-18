@@ -1,5 +1,6 @@
 <template>
-    <b-card id="login-form" v-bind:header="$t('Login.login')">
+    <b-card id="login-form" v-bind:header="$t('Login.login')"
+    header-class="headerText">
         <b-alert :show="showDismissibleAlert" variant="danger" dismissible>
             {{$t('Login.fail')}}
         </b-alert>
@@ -7,6 +8,8 @@
             <b-form-group
                 id="input-group-username"
                 v-bind:label="$t('Login.email')"
+                label-align="left"
+                label-size="lg"
             >
                 <b-form-input
                     id="input-username"
@@ -14,8 +17,8 @@
                     type="email"
                     v-bind:placeholder="$t('Login.email')"
                     required
-                    :state="validateState('username')"
                     aria-describedby="input-username-live-feedback"
+                    class="input"
                 ></b-form-input>
                 <b-form-invalid-feedback
                     id="input-username-live-feedback"
@@ -26,6 +29,8 @@
             <b-form-group
                 id="input-group-password"
                 v-bind:label="$t('Login.password')"
+                label-align="left"
+                label-size="lg"
             >
                 <b-form-input
                     id="input-password"
@@ -33,7 +38,6 @@
                     type="password"
                     v-bind:placeholder="$t('Login.password')"
                     required
-                    :state="validateState('password')"
                     aria-describedby="input-password-live-feedback"
 
                 ></b-form-input>
@@ -102,9 +106,14 @@ export default {
             this.login()
         },
         ...mapActions(['requestToken']),
-        login() {
-            this.requestToken(this.auth).then(() => this.$router.push('/'+this.$i18n.locale + '/overview'))
-            this.showAlert()
+        async login() {
+            await this.requestToken(this.auth)
+                .then(() => {
+                    this.$router.push('/' + this.$i18n.locale + '/overview')
+                })
+                .catch(() => {
+                    this.showAlert()
+                })
         }
     }
 
@@ -119,6 +128,20 @@ export default {
 #login-form{
     width: 100%;
     max-width: 400px;
+}
+#left-child{
+    float: left;
+}
+
+input::placeholder {
+    color: var(--light-grey);
+}
+
+.headerText{
+    float: left;
+    text-align: left;
+    font-size: x-large;
+    text-transform: capitalize;
 }
 
 </style>
