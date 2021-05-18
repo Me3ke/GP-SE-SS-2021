@@ -134,8 +134,8 @@ export const state = {
             creationDate: "03.03.2021",
             owner: {
                 eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
+                firstname: "Hans",
+                lastname: "Schneider"
             },
             state: "open",
             endDate: "25.05.2021",
@@ -152,8 +152,8 @@ export const state = {
             creationDate: "03.03.2021",
             owner: {
                 eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
+                firstname: "Hans",
+                lastname: "Schneider"
             },
             state: "open",
             endDate: "25.05.2021",
@@ -171,8 +171,8 @@ export const state = {
             creationDate: "10.01.2021",
             owner: {
                 eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
+                firstname: "Hans",
+                lastname: "Schneider"
             },
             state: "open",
             endDate: "23.06.2021",
@@ -209,8 +209,8 @@ export const state = {
             creationDate: "05.01.2021",
             owner: {
                 eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
+                firstname: "Hans",
+                lastname: "Schneider"
             },
             state: "closed",
             endDate: "01.05.2021",

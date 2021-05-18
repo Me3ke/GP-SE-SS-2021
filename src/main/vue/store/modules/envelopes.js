@@ -1,72 +1,72 @@
 export const state = {
     envelopes: [
         {
-                id: 1,
-                name: "Wichtige Änderungen der Essenspläne",
-                owner: {
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                creationDate: "01.05.2021",
-                documents: [
-                    {
-                        id: 1,
-                        title: "Essensplan KW 25",
-                        creationDate: "01.05.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "15.06.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
+            id: 1,
+            name: "Wichtige Änderungen der Essenspläne",
+            owner: {
+                eMail: "sehrTolle@email.com",
+                firstname: "Otto",
+                lastname: "Wehner"
+            },
+            creationDate: "01.05.2021",
+            documents: [
+                {
+                    id: 1,
+                    title: "Essensplan KW 25",
+                    creationDate: "01.05.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Otto",
+                        lastname: "Wehner"
                     },
-                    {
-                        id: 2,
-                        title: "Essensplan KW 26",
-                        creationDate: "22.05.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "25.06.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    }
-                    ,{
-                        id: 3,
-                        title: "Essensplan KW 24",
-                        creationDate: "01.05.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "closed",
-                        endDate: "15.06.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: true,
-                        read: false
-                    }
-                ]
-            }
-        ,{
+                    state: "open",
+                    endDate: "15.06.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: true,
+                    reader: false,
+                    signed: false,
+                    read: false
+                },
+                {
+                    id: 2,
+                    title: "Essensplan KW 26",
+                    creationDate: "22.05.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Otto",
+                        lastname: "Wehner"
+                    },
+                    state: "open",
+                    endDate: "25.06.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: true,
+                    reader: false,
+                    signed: false,
+                    read: false
+                }
+                , {
+                    id: 3,
+                    title: "Essensplan KW 24",
+                    creationDate: "01.05.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Otto",
+                        lastname: "Wehner"
+                    },
+                    state: "closed",
+                    endDate: "15.06.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: true,
+                    reader: false,
+                    signed: true,
+                    read: false
+                }
+            ]
+        }
+        , {
             id: 10,
             name: "Nutzungsbedingungen der Gemeinschafts-Kühlschränke",
             owner: {
@@ -114,37 +114,37 @@ export const state = {
                 }
             ]
         }
-        ,{
-                id: 4,
-                name: "Bedienungsanleitung Wasserspender",
-                owner: {
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                creationDate: "15.04.2021",
-                documents: [
-                    {
-                        id: 6,
-                        title: "Bedienungsanleitung Wasserspender",
-                        creationDate: "15.04.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "19.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: true,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    }
-                ]
-            }
-        ,{
+        , {
+            id: 4,
+            name: "Bedienungsanleitung Wasserspender",
+            owner: {
+                eMail: "sehrTolle@email.com",
+                firstname: "Otto",
+                lastname: "Wehner"
+            },
+            creationDate: "15.04.2021",
+            documents: [
+                {
+                    id: 6,
+                    title: "Bedienungsanleitung Wasserspender",
+                    creationDate: "15.04.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Otto",
+                        lastname: "Wehner"
+                    },
+                    state: "open",
+                    endDate: "19.05.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: true,
+                    reader: false,
+                    signed: false,
+                    read: false
+                }
+            ]
+        }
+        , {
             id: 11,
             name: "Kantinenordnung",
             owner: {
@@ -174,55 +174,55 @@ export const state = {
                 }
             ]
         }
-        ,{
-                id: 5,
-                name: "International Congress 2021",
-                owner: {
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                creationDate: "03.03.2021",
-                documents: [
-                    {
-                        id: 8,
-                        title: "Hygienics and reduced amount of visitor passes",
-                        creationDate: "03.03.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "25.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: false,
-                        reader: false,
-                        signed: false,
-                        read: false
+        , {
+            id: 5,
+            name: "International Congress 2021",
+            owner: {
+                eMail: "sehrTolle@email.com",
+                firstname: "Otto",
+                lastname: "Wehner"
+            },
+            creationDate: "03.03.2021",
+            documents: [
+                {
+                    id: 8,
+                    title: "Hygienics and reduced amount of visitor passes",
+                    creationDate: "03.03.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Hans",
+                        lastname: "Schneider"
                     },
-                    {
-                        id: 9,
-                        title: "Programme",
-                        creationDate: "03.03.2021",
-                        owner: {
-                            eMail: "sehrTolle@email.com",
-                            firstname: "Otto",
-                            lastname: "Wehner"
-                        },
-                        state: "open",
-                        endDate: "25.05.2021",
-                        dataType: "PDF",
-                        signatureType: "simple",
-                        signatory: false,
-                        reader: false,
-                        signed: false,
-                        read: false
-                    }
-                ]
-            }
-        ,{
+                    state: "open",
+                    endDate: "25.05.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: false,
+                    reader: false,
+                    signed: false,
+                    read: false
+                },
+                {
+                    id: 9,
+                    title: "Programme",
+                    creationDate: "03.03.2021",
+                    owner: {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Hans",
+                        lastname: "Schneider"
+                    },
+                    state: "open",
+                    endDate: "25.05.2021",
+                    dataType: "PDF",
+                    signatureType: "simple",
+                    signatory: false,
+                    reader: false,
+                    signed: false,
+                    read: false
+                }
+            ]
+        }
+        , {
             id: 2,
             name: "Mietvertrag Büroräume",
             owner: {
@@ -238,8 +238,8 @@ export const state = {
                     creationDate: "10.01.2021",
                     owner: {
                         eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
+                        firstname: "Hans",
+                        lastname: "Schneider"
                     },
                     state: "open",
                     endDate: "23.06.2021",
@@ -252,7 +252,7 @@ export const state = {
                 }
             ]
         }
-        ,{
+        , {
             id: 3,
             name: "Abgabe für das 2. Kundengespräch",
             owner: {
@@ -282,7 +282,7 @@ export const state = {
                 }
             ]
         }
-        ,{
+        , {
             id: 9,
             name: "Pläne die Weltherrschaft zu eroberen",
             owner: {
@@ -298,8 +298,8 @@ export const state = {
                     creationDate: "05.01.2021",
                     owner: {
                         eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
+                        firstname: "Hans",
+                        lastname: "Schneider"
                     },
                     state: "closed",
                     endDate: "01.05.2021",
@@ -343,7 +343,7 @@ export const getters = {
             result = state.envelopes;
         }
         if (onlyOwned === true) {
-             result = result.filter(env => env.owner.eMail === "sehrTolle@email.com"); // TODO!!!!!!!!!!!!
+            result = result.filter(env => env.owner.eMail === "sehrTolle@email.com"); // TODO!!!!!!!!!!!!
         }
         return result;
     }
