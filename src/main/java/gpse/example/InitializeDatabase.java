@@ -7,6 +7,7 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class InitializeDatabase implements InitializingBean {
     private final PersonalDataService personalDataService;
 
 
+    @Lazy
     @Autowired
     public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService) {
         this.userService = userService;
@@ -44,7 +46,7 @@ public class InitializeDatabase implements InitializingBean {
                     personalDataService.savePersonalData(personalData),
                     "ROLE_USER"
             );
-
+            user.setEnabled(true);
         }
     }
 }

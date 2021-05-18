@@ -84,6 +84,7 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.enabled = false;
     }
 
     public static long getSerialVersionUID() {
