@@ -13,16 +13,10 @@
                                     </h4>
                                 </div>
                                 <div class="col-auto">
-                                    <div v-if="!this.open" style="text-align: right; margin-left: 1vw">
+                                    <div style="text-align: right; margin-left: 1vw">
                                         <h6>
                                             <!-- Time until document needs to be signed TODO -->
                                             {{$t('Document.closed')}}
-                                        </h6>
-                                    </div>
-                                    <div v-if="this.open" style="text-align: right; margin-left: 1vw">
-                                        <h6>
-                                            <!-- Time until document needs to be signed TODO -->
-                                            {{$t('Document.open')}}
                                         </h6>
                                     </div>
                                 </div>
@@ -30,7 +24,7 @@
                             <b-row align-h="start">
                                 <div class="col-auto">
                                     <h6>
-                                        {{$t('Document.owner')}}: {{this.env.owner.name}}
+                                        {{$t('Document.owner')}}: {{this.env.owner.firstname}} {{this.env.owner.lastname}}
                                     </h6>
                                 </div>
                                 <div class="col-auto">
@@ -108,8 +102,13 @@ export default {
     width: auto;
 }
 
+.card {
+    background-color: var(--closed-doc);
+}
+
 .card:hover {
-    background-color: var(--light-grey);
+    background-color: var(--closed-doc-hover);
     transition-duration: 0.4s;
+    box-shadow: var(--light-grey);
 }
 </style>

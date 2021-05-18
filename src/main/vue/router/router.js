@@ -2,20 +2,22 @@ import VueRouter from "vue-router";
 import i18n from "@/i18n";
 import NotFoundPage from "@/main/vue/views/NotFoundPage";
 import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
+import UserGuide from "@/main/vue/views/UserGuide";
 import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
-
+import ImpressumPage from "@/main/vue/views/ImpressumPage";
+import EnvelopePage from "@/main/vue/views/EnvelopePage";
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
         {
             path: '/',
-            redirect: `/${i18n.locale}`
+            redirect: `/${i18n.locale}/landing`
         },
         {
             path: '/:lang',
@@ -52,7 +54,7 @@ const router = new VueRouter({
                     component: MessagePage
                 },
                 {
-                    path: '/document/:docId',
+                    path: 'document/:docId',
                     name: 'document',
                     component: DocumentPage,
                     props: true
@@ -66,6 +68,24 @@ const router = new VueRouter({
                     path: 'no-connection',
                     name: 'no-connection',
                     component: NoConnectionPage
+                },
+                {
+                    // url address h for help/hilfe
+                    path: 'help',
+                    name: 'help',
+                    component: UserGuide
+                },
+                {
+
+                    path: 'impressum',
+                    name: 'impressum',
+                    component: ImpressumPage
+                },
+                {
+                    path: 'envelope/:envId',
+                    name: 'envelope',
+                    component: EnvelopePage,
+                    props: true
                 },
                 {
                     path: '*',

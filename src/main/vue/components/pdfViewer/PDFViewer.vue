@@ -8,22 +8,22 @@
             </b-col>
         </b-row>
 
-        <b-row cols="4" id="backgroundButtons">
+        <b-row cols="1" id="backgroundButtons">
 
             <!-- Switch between Page and Scroll Mode -->
             <b-col>
                 <PDFViewerButton v-if="pageMode"
                                  @click.native="changeMode()"
-                                 icon="hr">
+                                 icon="hr"
+                                 class="separation">
                 </PDFViewerButton>
-                <PDFViewerButton v-if="!pageMode"
+                <PDFViewerButton v-else
                                  @click.native="changeMode()"
-                                 icon="files">
+                                 icon="files"
+                                 class="separation">
                 </PDFViewerButton>
-            </b-col>
 
-            <!-- Jump backward -->
-            <b-col>
+                <!-- Jump backward -->
                 <PDFViewerButton :disabled="!pageMode || currentPage <= 1"
                                  @click.native="currentPage = 1"
                                  icon="chevron-double-left"
@@ -46,12 +46,11 @@
                 <PDFViewerButton :disabled="!pageMode || currentPage >= pageCount"
                                  @click.native="currentPage = pageCount"
                                  icon="chevron-double-right"
-                                 style="margin-left: 0.1vw">
+                                 style="margin-left: 0.1vw"
+                                 class="separation">
                 </PDFViewerButton>
-            </b-col>
 
-            <!-- Zoom in and out -->
-            <b-col>
+                <!-- Zoom in and out -->
                 <PDFViewerButton :disabled="zoom <= 10"
                                  @click.native="changeZoom(-10)"
                                  icon="zoom-out">
@@ -59,12 +58,12 @@
                 {{ zoom }}%
                 <PDFViewerButton :disabled="zoom >= 400"
                                  @click.native="changeZoom(10)"
-                                 icon="zoom-in">
+                                 icon="zoom-in"
+                                 class="separation">
                 </PDFViewerButton>
-            </b-col>
 
-            <!-- Download -->
-            <b-col>
+
+                <!-- Download -->
                 <PDFViewerButton icon="download"></PDFViewerButton>
             </b-col>
         </b-row>
@@ -78,19 +77,17 @@
                          :src="src"
                          @page-loaded="currentPage = $event"
                          @page-progress="loading = $event"
-                         @error="error"
                          :style="style">
                     </pdf>
                 </div>
 
-                <div class="overflow-auto" style="height: 75vh" v-if="!pageMode">
+                <div class="overflow-auto" style="height: 75vh" v-else>
                     <pdf
                         v-for="page in pageCount"
                         :key="page"
                         :src="src"
                         :page="page"
                         @page-progress="loading = $event"
-                        @error="error"
                         :style="style"
                     ></pdf>
                 </div>
@@ -124,9 +121,6 @@ export default {
         });
     },
     methods: {
-        error(e) {
-            console.log(e);
-        },
         changeMode() {
             this.newSrc()
             this.pageMode = !this.pageMode
@@ -152,7 +146,7 @@ export default {
 
 <style scoped>
 #container {
-    width: 75%;
+    width: 100%;
     height: 70vh;
     margin-left: auto;
     margin-right: auto;
@@ -165,6 +159,10 @@ export default {
     background-color: var(--elsa-blue-transparent);
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
+}
+
+.separation {
+    margin-right: 5vw;
 }
 
 /* Settings for differently sized screens */
