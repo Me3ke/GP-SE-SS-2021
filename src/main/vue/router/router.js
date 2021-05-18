@@ -151,7 +151,6 @@ router.beforeEach((to, from, next) => {
         }
     }
     if(to.matched.some(record => record.name === 'login' || record.name === 'landing')) {
-        console.log(store.state.token)
         if (store.state.authenticated === true) {
             next({
                 path: '/'+language+'/overview',

@@ -60,7 +60,6 @@ const store = new Vuex.Store({
                     this.state.authenticated = true
                     let token = res.headers.authorization
                     commit('authenticate', token)
-                    console.log(res.headers)
                     resolve()
                 }).catch(() => {
                     commit('authenticate', null)
