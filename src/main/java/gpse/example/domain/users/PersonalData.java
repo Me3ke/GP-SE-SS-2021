@@ -1,13 +1,14 @@
 package gpse.example.domain.users;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * the class that should contain all data concerning a user that is not necessarily needed.
  */
 @Entity
-public class PersonalData {
+public class PersonalData implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

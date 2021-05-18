@@ -56,9 +56,6 @@ public class User implements UserDetails {
     @OneToOne
     private PersonalData personalData;
 
-    @OneToMany
-    private final List<Envelope> myEnvelopes = new ArrayList<>();
-
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -180,7 +177,6 @@ public class User implements UserDetails {
      */
     public Envelope createNewEnvelope(final String name) {
         final Envelope envelope = new Envelope(name, this);
-        myEnvelopes.add(envelope);
         return envelope;
     }
 

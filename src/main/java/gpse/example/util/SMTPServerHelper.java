@@ -14,9 +14,9 @@ public class SMTPServerHelper {
     /**
      * Template for sending RegisterValidationEmail.
      */
-    public static final String INITIAL_REGISTER_TEMPLATE = "Hallo %s, \n"
-        + "um deine Emailadresse zu bestätigen klicke auf den Bestätigungslink. \n"
-        + "Hier bestätigen: %s \n"
+    public static final String INITIAL_REGISTER_TEMPLATE = "Hallo %s, %n"
+        + "um deine Emailadresse zu bestätigen klicke auf den Bestätigungslink. %n"
+        + "Hier bestätigen: %s %n"
         + "Dein ELSA-Team";
 
     /**
