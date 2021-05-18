@@ -18,7 +18,7 @@
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="logout">
             <b-icon icon="box-arrow-right" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.logout') }} </span>
         </b-dropdown-item>
@@ -34,6 +34,11 @@ export default {
       },
       routeToHelp(){
           this.$router.push('/'+this.$i18n.locale + '/help')
+      },
+      logout(){
+          localStorage.removeItem('store')
+          localStorage.clear()
+          this.$router.push('/'+this.$i18n.locale + '/login')
       }
     }
 }

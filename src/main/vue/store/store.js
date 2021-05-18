@@ -14,26 +14,27 @@ const store = new Vuex.Store({
         envelopes
     },
     state: {
-        authenticated: sessionStorage.getItem('authenticated'),
-        token: sessionStorage.getItem('token'),
-        username: sessionStorage.getItem('username')
+        authenticated: null,
+        token: null,
+        username: null
     },
     mutations: {
         authenticate(state, token) { //<2>
             if (token !== null) {
                 this.state.token = token
-                sessionStorage.setItem('token',token)
                 this.state.authenticated = true
-                sessionStorage.setItem('authenticated',true)
                 axios.defaults.headers['Authorization'] = token
             } else {
-                this.state.authenticated = true
-                sessionStorage.setItem('authenticated',true)
+                this.state.authenticated = false
             }
         },
-        initializeStore(state) { //<3>
+        initializeStore(state) {
             if (localStorage.getItem('store')) {
                 this.replaceState(Object.assign(state, JSON.parse(localStorage.getItem('store'))))
+            } else {
+                state.authenticated = null
+                state.token = null
+                state.username = null
             }
         }
     },
