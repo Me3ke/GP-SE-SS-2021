@@ -10,7 +10,7 @@
                                 <b-row align-h="between">
                                     <div class="col-auto">
                                         <h4>
-                                            {{this.doc.title}}
+                                            {{ this.doc.title }}
                                         </h4>
                                     </div>
                                     <div class="col-auto">
@@ -18,21 +18,24 @@
                                              v-if="doc.signatory === true && doc.signed === false && (doc.reader === false || doc.read === true)">
                                             <h6>
                                                 <!-- Time until document needs to be signed TODO -->
-                                                {{$t('OverviewPage.toSign1')}} {{this.doc.endDate}} {{$t('OverviewPage.toSign2')}}
+                                                {{ $t('OverviewPage.toSign1') }} {{ this.doc.endDate }}
+                                                {{ $t('OverviewPage.toSign2') }}
                                             </h6>
                                         </div>
                                         <div style="text-align: right; margin-left: 1vw; color: var(--red)"
                                              v-if="doc.reader === true && doc.read === false && (doc.signatory === false || doc.signed === true)">
                                             <h6>
                                                 <!-- Time until document needs to be signed TODO -->
-                                                {{$t('OverviewPage.toRead1')}} {{this.doc.endDate}} {{$t('OverviewPage.toRead2')}}
+                                                {{ $t('OverviewPage.toRead1') }} {{ this.doc.endDate }}
+                                                {{ $t('OverviewPage.toRead2') }}
                                             </h6>
                                         </div>
                                         <div style="text-align: right; margin-left: 1vw; color: var(--red)"
                                              v-if="doc.reader === true && doc.read === false && doc.signatory === true && doc.signed === false">
                                             <h6>
                                                 <!-- Time until document needs to be signed TODO -->
-                                                {{$t('OverviewPage.toSignRead1')}} {{this.doc.endDate}} {{$t('OverviewPage.toSignRead2')}}
+                                                {{ $t('OverviewPage.toSignRead1') }} {{ this.doc.endDate }}
+                                                {{ $t('OverviewPage.toSignRead2') }}
                                             </h6>
                                         </div>
                                     </div>
@@ -40,12 +43,13 @@
                                 <b-row align-h="start">
                                     <div class="col-auto">
                                         <h6>
-                                            {{$t('Document.owner')}}: {{this.doc.owner.firstname}} {{this.doc.owner.lastname}}
+                                            {{ $t('Document.owner') }}: {{ this.doc.owner.firstname }}
+                                            {{ this.doc.owner.lastname }}
                                         </h6>
                                     </div>
                                     <div class="col-auto" style="margin-left: 1vw">
                                         <h6>
-                                            {{$t('Document.date')}}: {{this.doc.creationDate}}
+                                            {{ $t('Document.date') }}: {{ this.doc.creationDate }}
                                         </h6>
                                     </div>
                                 </b-row>
@@ -97,7 +101,8 @@ export default {
 }
 
 .card {
-    background-color: var(--sign-doc)
+    background-color: var(--sign-doc);
+    border-color: var(--dark-grey);
 }
 
 .card:hover {

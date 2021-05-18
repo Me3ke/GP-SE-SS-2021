@@ -1,5 +1,5 @@
 <template>
-    <div style="background-color: var(--whitesmoke); height: 100vh">
+    <div style="background-color: var(--whitesmoke); height: 100vh; overflow: hidden">
         <div>
             <Header></Header>
         </div>
@@ -47,7 +47,7 @@
         <!-- Documents -->
         <div class="container-fluid">
             <div style="margin-top:1vh">
-                <div class="overflow-auto" style="height: 71.75vh">
+                <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">

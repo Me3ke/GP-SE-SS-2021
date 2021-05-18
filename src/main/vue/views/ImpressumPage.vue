@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-color: var(--whitesmoke); height: 100vh;">
         <Header></Header>
         <b-container class="full-container">
                 <b-container class="head-with-arrow">

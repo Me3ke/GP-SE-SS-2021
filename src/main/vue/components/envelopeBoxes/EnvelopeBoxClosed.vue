@@ -104,6 +104,7 @@ export default {
 
 .card {
     background-color: var(--closed-doc);
+    border-color: var(--dark-grey);
 }
 
 .card:hover {

@@ -3,7 +3,7 @@ CSS File for the User Guide Page (and Accordion Component)
 */
 
 body {
-    background-color: #EEE;
+    background-color: var(--whitesmoke);
     font-family: sans-serif;
 }
 
@@ -11,7 +11,6 @@ body {
 .base-header {
     margin-top: 2em;
     margin-left: .6em;
-
 }
 
 .h2-user-guide {
@@ -29,20 +28,22 @@ body {
     margin-left: .5rem;
     height: 1px;
     width: 100%;
-    background-color: #000;
+    border-color: var(--dark-grey);
+    background-color: var(--dark-grey);
 }
 .h2-general-info {
     margin-left: 3.8em;
     font-size: 1.6em;
     margin-top: 1.2em;
     color: var(--elsa-blue);
+    border-color: var(--dark-grey);
 }
 /* for the Section and icons(arrows) */
 .generalInfo {
     text-align: left;
     width: 100%;
     max-width: 768px;
-    background: white;
+    background: var(--whitesmoke);
 }
 /* For the faq question header */
 .generalInfo .question .h2-head {
@@ -50,11 +51,12 @@ body {
     text-align: left;
     margin-left: 1.2em;
     margin-top: -1.4em;
+    border-color: var(--dark-grey);
 }
 /* for the faq question*/
 .generalInfo .question {
     position: relative ;
-    color: #3c3c3c;
+    color: var(--dark-grey);
     width: 99%;
     left: 7em;
     font-size: 30px;
@@ -62,6 +64,7 @@ body {
     transition: all 0.4s linear;
     margin-left: 20em;
     cursor: pointer;
+    border-color: var(--dark-grey);
 }
 /* for the arrow icon */
 
@@ -72,6 +75,7 @@ body {
     color: var(--elsa-blue);
     width: 15px;
     height: 15px;
+    border-color: var(--dark-grey);
 }
 /* open case */
 .generalInfo .open .question .ui-icon-caret-1-n {
@@ -79,10 +83,12 @@ body {
     color: var(--elsa-blue);
     width: 15px;
     height: 15px;
+    border-color: var(--dark-grey);
 }
 
 .generalInfo .open .question {
     margin-bottom: 0;
+    border-color: var(--dark-grey);
 }
 .answer-image{
     width: 580px;
@@ -94,25 +100,28 @@ body {
 
 /* standard */
 .generalInfo .answer {
-    color: #3c3c3c;
+    color: var(--dark-grey);
     font-size: 18px;
     text-align: left;
     opacity: 0;
     max-height: 0;
     overflow-y: hidden;
+    border-color: var(--dark-grey);
 }
 /* open cause*/
 .generalInfo .open .answer {
     opacity: 1;
     max-height: 1000px;
     margin-left: 2em !important;
+    border-color: var(--dark-grey);
 }
 .wrapper {
     padding-bottom: 0;
     margin-left: 6em;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid;
     border-radius: 0.25rem;
     margin-top: -1em;
+    border-color: var(--dark-grey);
 }
 
 
