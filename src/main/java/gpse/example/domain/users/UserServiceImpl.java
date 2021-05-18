@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
 
         //user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPassword(user.getPassword());
+
         final User createdUser = repo.save(user);
 
         final ConfirmationToken token = new ConfirmationToken(user);
