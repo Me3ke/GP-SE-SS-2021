@@ -23,9 +23,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repo;
 
+    @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Lazy
     @Autowired
     public UserServiceImpl(final UserRepository repo) {
         this.repo = repo;
@@ -47,8 +49,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signUpUser(User user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         final User createdUser = repo.save(user);
 
         final ConfirmationToken token = new ConfirmationToken(user);
