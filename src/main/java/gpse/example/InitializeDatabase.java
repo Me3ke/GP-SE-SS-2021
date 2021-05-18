@@ -1,6 +1,5 @@
 package gpse.example;
 
-import gpse.example.domain.*;
 import gpse.example.domain.users.PersonalData;
 import gpse.example.domain.users.PersonalDataService;
 import gpse.example.domain.users.User;
