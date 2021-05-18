@@ -1,8 +1,8 @@
 <template>
     <b-card id="login-form" v-bind:header="$t('Login.login')"
-    header-class="headerText">
+            header-class="headerText" style="background-color: var(--whitesmoke); border-color: var(--dark-grey)">
         <b-alert :show="showDismissibleAlert" variant="danger" dismissible>
-            {{$t('Login.fail')}}
+            {{ $t('Login.fail') }}
         </b-alert>
         <b-form @submit.prevent="onSubmit">
             <b-form-group
@@ -23,7 +23,7 @@
                 <b-form-invalid-feedback
                     id="input-username-live-feedback"
                 >
-                    {{$t('Login.feedback-invalid-email')}}
+                    {{ $t('Login.feedback-invalid-email') }}
                 </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
@@ -44,22 +44,20 @@
                 <b-form-invalid-feedback
                     id="input-password-live-feedback"
                 >
-                    {{$t('Login.feedback-invalid-password')}}
+                    {{ $t('Login.feedback-invalid-password') }}
                 </b-form-invalid-feedback>
             </b-form-group>
-            <b-button type="submit">
-                {{$t('Login.sign-in')}}
+            <b-button class="dark-btn" type="submit">
+                {{ $t('Login.sign-in') }}
             </b-button>
         </b-form>
     </b-card>
 </template>
 
 
-
-
 <script>
-import { validationMixin } from "vuelidate";
-import { required, email, minLength } from "vuelidate/lib/validators";
+import {validationMixin} from "vuelidate";
+import {required, email, minLength} from "vuelidate/lib/validators";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
@@ -91,7 +89,7 @@ export default {
 
     methods: {
         validateState(name) {
-            const { $dirty, $error } = this.$v.auth[name];
+            const {$dirty, $error} = this.$v.auth[name];
             return $dirty ? !$error : null;
         },
         showAlert() {
@@ -121,15 +119,19 @@ export default {
 </script>
 
 
-
-
 <style scoped>
 
-#login-form{
+#login-form {
     width: 100%;
     max-width: 400px;
+
 }
-#left-child{
+
+.card-header {
+    background-color: var(--header-login);
+}
+
+#left-child {
     float: left;
 }
 
@@ -137,7 +139,7 @@ input::placeholder {
     color: var(--light-grey);
 }
 
-.headerText{
+.headerText {
     float: left;
     text-align: left;
     font-size: x-large;
