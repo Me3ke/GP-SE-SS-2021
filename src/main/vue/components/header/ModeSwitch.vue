@@ -1,45 +1,34 @@
 <template>
     <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
         <template #button-content>
-            <img :src="getFlag()" class="responsive-img" :alt="$t('Header.LanguageSwitcher.language')">
+            <b-icon v-if="theme === ''" icon="sun" class="my-icon"></b-icon>
+            <b-icon v-else icon="moon" class="my-icon"></b-icon>
         </template>
-        <b-dropdown-item @click.prevent="setLanguage('de')" class="my-dropdown-item">
-            <img :src="germanFlag" class="responsive-img" :alt="$t('Header.LanguageSwitcher.de')">
-            <span class="letters">DE</span>
+        <b-dropdown-item @click.prevent="toggleTheme()" class="my-dropdown-item">
+            <b-icon icon="moon" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @click.prevent="setLanguage('en')" class="my-dropdown-item">
-            <img :src="englishFlag" class="responsive-img" :alt="$t('Header.LanguageSwitcher.en')">
-            <span class="letters">EN</span>
+        <b-dropdown-item @click.prevent="toggleTheme()" class="my-dropdown-item">
+            <b-icon icon="sun" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
         </b-dropdown-item>
     </b-nav-item-dropdown>
 </template>
 
 <script>
-
 export default {
-    name: "LanguageSwitcher",
+    name: "ModeSwitch",
     data() {
         return {
-            englishFlag: require('../../assets/flags/gb.svg'),
-            germanFlag: require('../../assets/flags/de.svg')
+            'theme': ''
         }
     },
     methods: {
-        getFlag() {
-            if (this.$i18n.locale === 'de') {
-                return this.germanFlag
-            } else {
-                return this.englishFlag
-            }
-        },
-        setLanguage(lang) {
-            if (this.$i18n.locale !== lang) {
-                this.$i18n.locale = lang
-                this.$router.push({
-                    params: {lang: lang}
-                })
-            }
+        toggleTheme() {
+            this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
+            document.documentElement.setAttribute('data-theme', this.theme);
+            localStorage.setItem('theme', this.theme);
         }
     }
 }
@@ -49,21 +38,21 @@ export default {
 .letters {
     margin-left: 0.75vw;
     position: relative;
-    bottom: 0.1vw;
+    bottom: 0.5vw;
 }
 
-.responsive-img {
+.my-icon {
+    fill: var(--elsa-blue);
     height: 2em;
     width: auto;
 }
 
 .my-dropdown-menu >>> .dropdown-menu {
     color: var(--dark-grey);
-    padding-top: 0.1vw;
-    padding-bottom: 0.1vw;
+    padding-top: 0;
+    padding-bottom: 0;
     margin: 0;
     border-color: var(--elsa-blue);
-    min-width: 0;
 }
 
 .my-divider >>> .dropdown-divider {

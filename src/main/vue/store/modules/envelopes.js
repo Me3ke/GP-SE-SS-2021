@@ -11,7 +11,7 @@ export const state = {
                 creationDate: "01.05.2021",
                 documents: [
                     {
-                        id: 12,
+                        id: 1,
                         title: "Essensplan KW 25",
                         creationDate: "01.05.2021",
                         owner: {
@@ -29,7 +29,7 @@ export const state = {
                         read: false
                     },
                     {
-                        id: 13,
+                        id: 2,
                         title: "Essensplan KW 26",
                         creationDate: "22.05.2021",
                         owner: {
@@ -47,7 +47,7 @@ export const state = {
                         read: false
                     }
                     ,{
-                        id: 14,
+                        id: 3,
                         title: "Essensplan KW 24",
                         creationDate: "01.05.2021",
                         owner: {
@@ -77,7 +77,7 @@ export const state = {
             creationDate: "25.03.2021",
             documents: [
                 {
-                    id: 12,
+                    id: 4,
                     title: "Kühlschrank EG",
                     creationDate: "25.03.2021",
                     owner: {
@@ -95,7 +95,7 @@ export const state = {
                     read: false
                 },
                 {
-                    id: 13,
+                    id: 5,
                     title: "Kühlschrank 1.OG",
                     creationDate: "26.03.2021",
                     owner: {
@@ -125,7 +125,7 @@ export const state = {
                 creationDate: "15.04.2021",
                 documents: [
                     {
-                        id: 41,
+                        id: 6,
                         title: "Bedienungsanleitung Wasserspender",
                         creationDate: "15.04.2021",
                         owner: {
@@ -155,7 +155,7 @@ export const state = {
             creationDate: "01.04.2021",
             documents: [
                 {
-                    id: 41,
+                    id: 7,
                     title: "Kantinenordnung",
                     creationDate: "01.04.2021",
                     owner: {
@@ -185,7 +185,7 @@ export const state = {
                 creationDate: "03.03.2021",
                 documents: [
                     {
-                        id: 12,
+                        id: 8,
                         title: "Hygienics and reduced amount of visitor passes",
                         creationDate: "03.03.2021",
                         owner: {
@@ -203,7 +203,7 @@ export const state = {
                         read: false
                     },
                     {
-                        id: 13,
+                        id: 9,
                         title: "Programme",
                         creationDate: "03.03.2021",
                         owner: {
@@ -233,7 +233,7 @@ export const state = {
             creationDate: "10.01.2021",
             documents: [
                 {
-                    id: 21,
+                    id: 10,
                     title: "Mietvertrag Büroräume ",
                     creationDate: "10.01.2021",
                     owner: {
@@ -263,7 +263,7 @@ export const state = {
             creationDate: "25.01.2021",
             documents: [
                 {
-                    id: 31,
+                    id: 11,
                     title: "Handout 2. Kundengespräch",
                     creationDate: "25.01.2021",
                     owner: {
@@ -293,7 +293,7 @@ export const state = {
             creationDate: "05.01.2021",
             documents: [
                 {
-                    id: 21,
+                    id: 12,
                     title: "Plan die Weltherrschaft zu eroberen",
                     creationDate: "05.01.2021",
                     owner: {

@@ -21,8 +21,7 @@ export default {
 <style scoped>
 .active {
     background-color: var(--dark-grey);
-    color: whitesmoke;
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    color: var(--whitesmoke);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 70px;
     display: inline-flex
@@ -36,16 +35,15 @@ export default {
 }
 
 .inactive {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 70px;
     display: inline-flex;
 }
 
 .inactive:focus {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
     outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;

@@ -1,8 +1,8 @@
 <template>
-  <div class= "background">
+  <div class= "background" style="background-color: var(--whitesmoke); height: 100vh; overflow: hidden">
     <div class = img-wrap>
       <LandingPageHeader></LandingPageHeader>
-      <img :src = "image"  class="header-image"/>
+      <img :src = "image" alt="logo" class="header-image"/>
     </div>
 
     <div class = "button-division">
@@ -22,7 +22,7 @@
       <b-container>
         <div class="container-fluid">
           <div style="margin-bottom: 2vh">
-            <div class="overflow-auto" style="height: 76.75vh">
+            <div class="overflow-auto" style="height: 58vh;">
               <div v-for="paragraph in paragraphs" :key="paragraph.id" style="position: static; margin-top: 1vh; margin-left: 3vw;">
                 <div v-if="paragraph.type === 0">
                   <h1 id="paragraphTitle" style="margin-bottom: 2vh"> {{paragraph.content}}</h1>
@@ -157,9 +157,9 @@ export default {
 .background {
   padding: 0;
   margin: 0;
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
-  background-image: linear-gradient(to bottom, rgba(255,153,153,0) 0%,rgba(255,255,255,1) 30%, rgb(255, 255, 255) 100%), url(../assets/background.png);
+  background-image: linear-gradient(to bottom, var(--background-fade-one) 0%,var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
   background-repeat: no-repeat;
   background-size: 100% auto;
 }
@@ -181,24 +181,24 @@ export default {
   width: 100%;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: rgba(0,0,0,0.3);
+  border-top-color: var(--dark-grey);
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: rgba(0,0,0,0.3);
-  background-color: rgba(0,0,0,0.05);
+  border-bottom-color: var(--dark-grey);
+  background-color: var(--landing-back);
   background-size: 100% auto;
 }
 
 #registerButton{
-  color: #2d2d2d;
-  background-color: rgba(0,0,0,0);
+  color: var(--dark-grey);
+  background-color: var(--whitesmoke);
   margin-right: 0.5vh;
 }
 #registerButton{
   margin-left: 0.5vh;
 }
 .textField{
-  background-color: rgba(255,255,255,0.3);
+  background-color: var(--background-fade-three);
   background-size: 100% auto;
   padding-top: 2vw;
   margin-left: 5vw;
@@ -217,7 +217,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -235,7 +235,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -255,7 +255,7 @@ export default {
     font-size: 1.5em;
   }
   #paragraphTitle {
-    font-size: 1.5em  ;
+    font-size: 2em  ;
   }
   #loginButton {
     font-size: 1.5em;
@@ -273,7 +273,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -292,7 +292,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -310,7 +310,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -328,7 +328,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -346,7 +346,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1em  ;
+    font-size: 1.5em  ;
   }
   #loginButton {
     font-size: 0.9em;
@@ -364,7 +364,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1em  ;
+    font-size: 1.5em  ;
   }
   #loginButton {
     font-size: 0.9em;
@@ -382,7 +382,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;
@@ -400,7 +400,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1em  ;
+    font-size: 1.5em  ;
   }
   #loginButton {
     font-size: 0.8em;
@@ -418,7 +418,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1em  ;
+    font-size: 1.5em  ;
   }
   #loginButton {
     font-size: 0.8em;
@@ -436,7 +436,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 0.7em;
@@ -454,7 +454,7 @@ export default {
     font-size: 0.7em;
   }
   #paragraphTitle {
-    font-size: 0.8em  ;
+    font-size: 1.3em  ;
   }
   #loginButton {
     font-size: 0.7em;
@@ -472,7 +472,7 @@ export default {
     font-size: 1em;
   }
   #paragraphTitle {
-    font-size: 1.2em  ;
+    font-size: 1.7em  ;
   }
   #loginButton {
     font-size: 1em;

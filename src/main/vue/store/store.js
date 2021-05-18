@@ -6,6 +6,7 @@ import axios from "axios";
 
 import * as messages from './modules/messages.js';
 import * as envelopes from './modules/envelopes.js';
+import * as document from './modules/document';
 import api from '../api'
 
 Vue.use(Vuex)
@@ -13,7 +14,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     modules: {
         messages,
-        envelopes
+        envelopes,
+        document
     },
     state: {
         user: {

@@ -3,14 +3,57 @@
     --dark-grey: #47525E;
     --elsa-blue: #436495;
     --elsa-blue-transparent: rgba(67, 100, 149, 0.1);
+    --whitesmoke: whitesmoke;
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
     --green: #5D9543;
-    --closed-doc: #EBEBEB;
+
+    --open-doc-hover: #ababab;
+    --closed-doc: #E5E5E5;
     --closed-doc-hover: #C9C9C9;
     --sign-doc: #FFE3E3;
     --sign-doc-hover: #FFBABA;
     --red: #C93A3A;
+
+    --headerFadeOne: rgba(0, 0, 0, 0.1);
+    --headerFadeTwo: rgba(0, 0, 0, 0.2);
+    --headerFadeThree: rgba(0, 0, 0, 0.3);
+
+    /* Landing Page */
+    --background-fade-one: rgba(255, 153, 153, 0);
+    --background-fade-two: rgba(255, 255, 255, 1);
+    --background-fade-three: rgb(255, 255, 255);
+    --landing-back: rgba(0, 0, 0, 0.05);
+    --landing-back-two: rgba(255, 255, 255, 0.3);
+
+    --user-info: whitesmoke;
+}
+
+[data-theme="darkMode"] {
+    --dark-grey: #D8D8D9;
+    --elsa-blue: whitesmoke;
+    --elsa-blue-transparent: rgba(245, 245, 245, 0.3);
+    --whitesmoke: #23292f;
+    --light-grey: #ACACAC;
+    --shadow-grey: #D8D8D9;
+
+    --closed-doc: #070809;
+    --closed-doc-hover: #788796;
+    --sign-doc: #d25959;
+    --sign-doc-hover: #b02f2f;
+    --red: #651b1b;
+
+    --headerFadeOne: rgba(0, 0, 0, 0.5);
+    --headerFadeTwo: rgba(0, 0, 0, 0.6);
+    --headerFadeThree: rgba(0, 0, 0, 0.7);
+
+    --background-fade-one: rgba(255, 153, 153, 0);
+    --background-fade-two: rgba(35, 41, 47, 1);
+    --background-fade-three: rgb(35, 41, 47);
+    --landing-back: rgba(35, 41, 47, 0.05);
+    --landing-back-two: rgba(35, 41, 47, 0.3);
+
+    --user-info: #363f48;
 }
 
 
@@ -36,6 +79,20 @@ body {
     max-width: 100%;
 }
 
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-grey);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--headerFadeTwo);
+}
+
 
 /* Router Links */
 .link {
@@ -51,25 +108,22 @@ body {
 /* Buttons */
 .dark-btn {
     background-color: var(--dark-grey);
-    color: whitesmoke;
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .light-btn {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .light-btn:focus {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
     border: 0.13vw solid var(--dark-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
 }
 
 .dark-btn:hover, .light-btn:hover {
@@ -80,16 +134,14 @@ body {
 
 .elsa-blue-btn {
     background-color: var(--elsa-blue);
-    color: whitesmoke;
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    color: var(--whitesmoke);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .elsa-blue-btn:focus {
     background-color: var(--elsa-blue);
-    color: whitesmoke;
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
+    color: var(--whitesmoke);
     border: 0.03vw solid var(--dark-grey);
     outline: 0.06vw solid var(--light-grey);
     outline-offset: 0;
@@ -98,7 +150,6 @@ body {
 .green-btn {
     background-color: var(--green);
     color: var(--light-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
@@ -107,11 +158,10 @@ body {
     background-color: var(--green);
     color: var(--light-grey);
     border: 0.13vw solid var(--dark-grey);
-    box-shadow: 0 0.2vw 0.33vw var(--shadow-grey);
 }
 
 .elsa-blue-btn:hover:enabled, .green-btn:hover:enabled {
-    background-color: whitesmoke;
+    background-color: var(--whitesmoke);
     color: var(--dark-grey);
     transition-duration: 0.4s;
 }

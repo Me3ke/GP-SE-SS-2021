@@ -101,8 +101,13 @@ export default {
     width: auto;
 }
 
+.card{
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+}
+
 .card:hover {
-    background-color: var(--light-grey);
+    background-color: var(--closed-doc-hover);
     transition-duration: 0.4s;
 }
 </style>

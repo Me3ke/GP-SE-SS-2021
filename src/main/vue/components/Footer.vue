@@ -1,6 +1,9 @@
 <template>
     <div id="container">
-        <router-link :to="$i18n.locale === 'de' ? '/de/impressum' : '/en/impressum' " id="text">{{ $t('AboutPage.name') }}</router-link>
+        <router-link :to="$i18n.locale === 'de' ? '/de/impressum' : '/en/impressum' " id="text">{{
+                $t('AboutPage.name')
+            }}
+        </router-link>
     </div>
 </template>
 
@@ -23,7 +26,7 @@ export default {
 }
 
 #text {
-    color: whitesmoke;
+    color: var(--whitesmoke);
     font-size: 0.75em;
 }
 

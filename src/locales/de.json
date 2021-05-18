@@ -1,17 +1,10 @@
 {
-    "TestPage": {
-        "message": "Hallo! Das ist ein Test!",
-        "btn": "Knopf",
-        "heading": "Ueberschrift"
-    },
     "AboutPage": {
         "h1": "Impressum",
         "name": "Impressum",
-        "provider" : "Anbieter: ",
+        "provider": "Anbieter: ",
         "contact": "Kontakt: ",
         "editorial": "Bei Redaktionellen Inhalten: "
-
-
     },
     "NotFoundPage": {
         "h1": "Ups!",
@@ -20,13 +13,11 @@
         "start": "Zurück zur Startseite",
         "back": "Zurück zur letzten Seite"
     },
-
     "NoConnectionPage": {
         "h1": "Oh-Oh!",
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
     },
-
     "UserGuide": {
         "name": "Benutzerhandbuch",
         "section-1": "Allgemeine Information",
@@ -34,7 +25,6 @@
         "section-3": "Dokumente",
         "section-4": "Hilfreiche Bedienelemente",
         "section-5": "Kontoverwaltung",
-
         "section0": [
             {
                 "question": "Was ist ELSA?",
@@ -141,9 +131,7 @@
                 "answer": "Um firmeninterne Dokumente gut schützen zu können, ist es notwendig, dass ein Admin firmenexterne E-Mail-Adressen händisch freischaltet. So wird die Sicherheit vertraulicher Informationen gewährt."
             }
         ]
-
-},
-
+    },
     "Header": {
         "logo": "ELSA Logo",
         "LanguageSwitcher": {
@@ -155,7 +143,9 @@
             "profile": "Mein Konto",
             "settings": "Einstellungen",
             "help": "Benutzerhandbuch",
-            "logout": "Abmelden"
+            "logout": "Abmelden",
+            "darkmode": "Dunkler Modus",
+            "lightmode": "Heller Modus"
         },
         "Messages": {
             "msg": "Benachrichtigungen",
@@ -200,7 +190,7 @@
         "content": "Registrieren"
     },
     "UserPage": {
-        "content": "Benutzerinformationen:"
+        "content": "Benutzerinformationen"
     },
     "UserInfoBox": {
         "profileInformation": "Profilinformationen",
@@ -249,16 +239,16 @@
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen."
     },
-  "KeypairAlert": {
-    "generate": "Generiere Schlüsselpaar",
-    "upload": "Lade Schlüsselpaar hoch",
-    "selectOption": "Wähle Option",
-    "cancelText": "Abbruch",
-    "forceChoose": "Es muss etwas ausgewählt werden!",
-    "warning": "Warnung",
-    "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
-    "continueText": "Fortfahren",
-    "generatingText": "Generieren...",
-    "uploadText": "Hochladen..."
-  }
+    "KeypairAlert": {
+        "generate": "Generiere Schlüsselpaar",
+        "upload": "Lade Schlüsselpaar hoch",
+        "selectOption": "Wähle Option",
+        "cancelText": "Abbruch",
+        "forceChoose": "Es muss etwas ausgewählt werden!",
+        "warning": "Warnung",
+        "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
+        "continueText": "Fortfahren",
+        "generatingText": "Generieren...",
+        "uploadText": "Hochladen..."
+    }
 }

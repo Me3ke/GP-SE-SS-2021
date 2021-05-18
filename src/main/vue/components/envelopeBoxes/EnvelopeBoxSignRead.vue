@@ -9,16 +9,16 @@
                             <b-row align-h="between">
                                 <div class="col-auto">
                                     <h4>
-                                        {{this.env.name}}
+                                        {{ this.env.name }}
                                     </h4>
                                 </div>
                                 <div class="col-auto">
                                     <!-- Documents to sign and read -->
                                     <div style="text-align: right; margin-left: 1vw; color: var(--red)"
-                                    v-if="signatory && reader">
+                                         v-if="signatory && reader">
                                         <h6>
                                             <!-- Time until document needs to be signed TODO -->
-                                            {{$t('OverviewPage.envReadSign')}}
+                                            {{ $t('OverviewPage.envReadSign') }}
                                         </h6>
                                     </div>
 
@@ -27,7 +27,7 @@
                                          v-if="signatory && !reader">
                                         <h6>
                                             <!-- Time until document needs to be signed TODO -->
-                                            {{$t('OverviewPage.envSign')}}
+                                            {{ $t('OverviewPage.envSign') }}
                                         </h6>
                                     </div>
 
@@ -36,7 +36,7 @@
                                          v-if="reader && !signatory">
                                         <h6>
                                             <!-- Time until document needs to be signed TODO -->
-                                            {{$t('OverviewPage.envRead')}}
+                                            {{ $t('OverviewPage.envRead') }}
                                         </h6>
                                     </div>
                                 </div>
@@ -44,12 +44,13 @@
                             <b-row align-h="start">
                                 <div class="col-auto">
                                     <h6>
-                                        {{$t('Document.owner')}}: {{this.env.owner.firstname}} {{this.env.owner.lastname}}
+                                        {{ $t('Document.owner') }}: {{ this.env.owner.firstname }}
+                                        {{ this.env.owner.lastname }}
                                     </h6>
                                 </div>
                                 <div class="col-auto">
                                     <h6>
-                                        {{$t('Document.date')}}: {{this.env.creationDate}}
+                                        {{ $t('Document.date') }}: {{ this.env.creationDate }}
                                     </h6>
                                 </div>
                             </b-row>
@@ -103,7 +104,7 @@ export default {
         let toSign = false;
         let toRead = false;
         let i;
-        for(i = 0; i < this.env.documents.length; i++) {
+        for (i = 0; i < this.env.documents.length; i++) {
             if (this.env.documents[i].state === "open") {
                 open = true;
             }
@@ -132,7 +133,8 @@ export default {
 }
 
 .card {
-    background-color: var(--sign-doc)
+    background-color: var(--sign-doc);
+    border-color: var(--dark-grey);
 }
 
 .card:hover {

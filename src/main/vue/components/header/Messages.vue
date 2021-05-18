@@ -11,13 +11,13 @@
 
         <!-- If there are no new messages -->
         <b-dropdown-item class="my-dropdown-item-header" v-if="count === 0">
-            <b-icon icon="emoji-laughing" class="my-icon" style="fill: whitesmoke"></b-icon>
+            <b-icon icon="emoji-laughing" class="my-icon" style="fill: var(--whitesmoke)"></b-icon>
             <span class="letters"> {{ $t('Header.Messages.noMsg') }}</span>
         </b-dropdown-item>
 
         <!--If there are messages -->
         <b-dropdown-item class="my-dropdown-item-header" v-else>
-            <b-icon icon="chat-left-dots" class="my-icon" style="fill: whitesmoke"></b-icon>
+            <b-icon icon="chat-left-dots" class="my-icon" style="fill: var(--whitesmoke)"></b-icon>
             <span class="letters"> {{ $t('Header.Messages.newMsg') }}</span>
         </b-dropdown-item>
 
@@ -140,7 +140,7 @@ export default {
 }
 
 .my-dropdown-item-header >>> .dropdown-item {
-    color: whitesmoke;
+    color: var(--whitesmoke);
     background-color: var(--elsa-blue);
     padding-left: 0.5vw;
     text-align: center;
@@ -148,13 +148,14 @@ export default {
 }
 
 .my-dropdown-item-header:hover >>> .dropdown-item {
-    color: whitesmoke;
+    color: var(--whitesmoke);
     background-color: var(--elsa-blue);
 }
 
 .my-dropdown-item >>> .dropdown-item {
     color: var(--dark-grey);
     padding-left: 0.5vw;
+    background-color: var(--whitesmoke);
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
