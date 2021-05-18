@@ -1,6 +1,5 @@
 package gpse.example;
 
-import gpse.example.domain.*;
 import gpse.example.domain.users.PersonalData;
 import gpse.example.domain.users.PersonalDataService;
 import gpse.example.domain.users.User;
@@ -38,15 +37,17 @@ public class InitializeDatabase implements InitializingBean {
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), 32131245);
-            final User user = userService.createUser(
+            final User user = new User(
                     username,
-                    "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
                     "Hans",
                     "Schneider",
-                    personalDataService.savePersonalData(personalData),
-                    "ROLE_USER"
+                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG"
             );
             user.setEnabled(true);
+            personalDataService.savePersonalData(personalData);
+            user.setPersonalData(personalData);
+            user.addRole("ROLE_USER");
+            userService.saveUser(user);
         }
     }
 }

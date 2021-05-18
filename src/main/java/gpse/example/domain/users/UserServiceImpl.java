@@ -72,20 +72,20 @@ public class UserServiceImpl implements UserService {
             user.addRole(role);
         }
         user.setPersonalData(personalData);
-        final User saved = userRepository.save(user);
-        return saved;
+        return userRepository.save(user);
     }
 
     @Override
     public void signUpUser(User user) {
 
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        System.out.println(user.getUsername() + user.getEmail() + user.getPassword() + user.getFirstname());
 
         final User createdUser = userRepository.save(user);
 
         final ConfirmationToken token = new ConfirmationToken(user);
-
+        System.out.println(token.getConfirmationToken());
         confirmationTokenService.saveConfirmationToken(token);
     }
 
@@ -106,5 +106,15 @@ public class UserServiceImpl implements UserService {
         SMTPServerHelper.sendRegistrationEmail(user.getEmail(), user.getUsername(),
             "http://localhost:8080/sign-up/confirm?token="
             + token);
+    }
+
+    @Override
+    public void removeUser(final String username) {
+        userRepository.deleteById(username);
+    }
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

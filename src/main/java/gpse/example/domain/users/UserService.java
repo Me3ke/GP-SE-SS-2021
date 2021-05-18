@@ -18,4 +18,6 @@ public interface UserService extends UserDetailsService {
     User getUser(final String username) throws UsernameNotFoundException;
     void signUpUser(User user);
     void confirmUser(ConfirmationToken confirmationToken);
+    void removeUser(final String username) throws UsernameNotFoundException;
+    User saveUser(User user);
 }

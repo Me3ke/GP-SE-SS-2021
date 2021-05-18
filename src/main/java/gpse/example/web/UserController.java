@@ -30,8 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/users/")
-    public String signUp(User user) {
+    public String signUp(@RequestBody UserSignUpCmd signUpUser) {
 
+        User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
+            signUpUser.getLastname(), signUpUser.getPassword());
         userService.signUpUser(user);
 
         return "redirect:/login";
