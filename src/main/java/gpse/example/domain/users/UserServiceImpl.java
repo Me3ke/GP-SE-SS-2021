@@ -32,6 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Lazy
     @Autowired
+    SMTPServerHelper smtpServerHelper;
+
+    @Lazy
+    @Autowired
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -103,7 +107,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void sendConfirmationMail(User user, String token) {
-        SMTPServerHelper.sendRegistrationEmail(user.getEmail(), user.getUsername(),
+        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getUsername(),
             "http://localhost:8080/sign-up/confirm?token=" + token);
     }
 
