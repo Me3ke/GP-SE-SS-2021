@@ -107,8 +107,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void sendConfirmationMail(User user, String token) {
-        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getUsername(),
-            "http://localhost:8080/sign-up/confirm?token=" + token);
+        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
+            "http://localhost:8080/register/confirm/" + token);
     }
 
     @Override
