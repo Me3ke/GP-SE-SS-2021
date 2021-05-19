@@ -29,7 +29,8 @@ public class UserController {
         confirmationTokenService = confService;
     }
 
-    @PostMapping("/users/")
+
+    @PostMapping("/users")
     public String signUp(@RequestBody UserSignUpCmd signUpUser) {
 
         User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
@@ -39,9 +40,10 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/users/register/")
+    @GetMapping("/users/register")
     public String confirmMail(@RequestParam("token") String token) {
 
+        System.out.println("confirm Mail Success");
         Optional<ConfirmationToken> optionalConfirmationToken
             = confirmationTokenService.findConfirmationTokenByToken(token);
 

@@ -19,9 +19,9 @@ public class ConfirmationTokenService {
     }
 
 
-    public void saveConfirmationToken(ConfirmationToken confToken) {
+    public ConfirmationToken saveConfirmationToken(ConfirmationToken confToken) {
 
-        confirmationTokenRepository.save(confToken);
+        return confirmationTokenRepository.save(confToken);
     }
 
     public void deleteConfirmationToken(Long id) {

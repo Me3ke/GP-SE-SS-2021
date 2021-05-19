@@ -13,14 +13,17 @@ public class ConfirmationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
 
+    @Column
     private String confirmationToken;
 
+    @Column
     private LocalDate createdDate;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    //@JoinColumn(name="userId")
+    @JoinColumn(name="USER_ID")
     private User user;
 
     public ConfirmationToken(User user) {

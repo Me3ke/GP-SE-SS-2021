@@ -19,7 +19,9 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Standard ConfirmationTokenService.
+     * autowired not commited not tested 18.05.21
      */
+    @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
     private final UserRepository userRepository;
@@ -59,8 +61,7 @@ public class UserServiceImpl implements UserService {
         for (final String role : roles) {
             user.addRole(role);
         }
-        final User saved = userRepository.save(user);
-        return saved;
+        return userRepository.save(user);
     }
 
     @Override
@@ -80,13 +81,11 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        System.out.println(user.getUsername() + user.getEmail() + user.getPassword() + user.getFirstname());
-
         final User createdUser = userRepository.save(user);
 
         final ConfirmationToken token = new ConfirmationToken(user);
-        System.out.println(token.getConfirmationToken());
-        confirmationTokenService.saveConfirmationToken(token);
+        ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
+        sendConfirmationMail(createdUser, savedToken.getConfirmationToken());
     }
 
     @Override
@@ -98,14 +97,14 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
+        System.out.println(user.getEnabled());
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
 
     }
 
     public void sendConfirmationMail(User user, String token) {
         SMTPServerHelper.sendRegistrationEmail(user.getEmail(), user.getUsername(),
-            "http://localhost:8080/sign-up/confirm?token="
-            + token);
+            "http://localhost:8080/sign-up/confirm?token=" + token);
     }
 
     @Override

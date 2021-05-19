@@ -26,21 +26,21 @@ public class SMTPServerHelper {
      */
     public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
-    @Value("${smtp.password}")
-    private static String password;
+    //@Value("${smtp.password}")
+    private static String password = "elsa1234Super";
 
     private static final String TRUE = "true";
 
     private static JavaMailSenderImpl mailSender;
 
-    @Value("${smtp.host}")
-    private static String hostServer;
+    //@Value("${smtp.host}")
+    private static String hostServer = "smtp.gmail.com";
 
-    @Value("${smtp.port}")
-    private static int port;
+    //@Value("${smtp.port}")
+    private static int port = 587;
 
-    @Value("${smtp.username}")
-    private static String username;
+    //@Value("${smtp.username}")
+    private static String username = "elsabeispiel@gmail.com";
 
     /**
      * contructor of theSMTPServerHelper.
