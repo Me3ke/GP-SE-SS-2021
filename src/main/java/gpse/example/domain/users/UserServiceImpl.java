@@ -98,12 +98,8 @@ public class UserServiceImpl implements UserService {
         final User user = confirmationToken.getUser();
 
         user.setEnabled(true);
-
         userRepository.save(user);
-
-        System.out.println(user.getEnabled());
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
-
     }
 
     public void sendConfirmationMail(User user, String token) {

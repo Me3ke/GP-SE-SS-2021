@@ -3,6 +3,7 @@ package gpse.example.domain.users;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -44,5 +45,9 @@ public class ConfirmationTokenService {
             }
         }
         return Optional.empty();
+    }
+
+    public boolean isExpired(ConfirmationToken token) {
+        return (LocalDate.now().isAfter(token.getCreatedDate().plusDays(1)));
     }
 }

@@ -1,10 +1,17 @@
 package gpse.example.web;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import gpse.example.domain.users.PersonalData;
+
+import java.time.LocalDate;
+
 public class UserSignUpCmd {
 
     private String username;
     private String firstname;
     private String lastname;
+    private String password;
+
     private String street;
     private int housenumber;
     private int postcode;
@@ -12,7 +19,11 @@ public class UserSignUpCmd {
     private String country;
     private String birthday;
     private String phonenumber;
-    private String password;
+
+    public UserSignUpCmd() {
+        housenumber = -1;
+        postcode = -1;
+    }
 
     public String getUsername() {
         return username;
@@ -100,5 +111,26 @@ public class UserSignUpCmd {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @JsonIgnore
+    public PersonalData getPersonalData() {
+        PersonalData personalData = new PersonalData();
+        if(housenumber != -1)
+            personalData.setHouseNumber(housenumber);
+        if(postcode != -1)
+            personalData.setPostCode(postcode);
+        if(!hometown.isEmpty())
+            personalData.setHomeTown(hometown);
+        if(!country.isEmpty())
+            personalData.setCountry(country);
+        if(!birthday.isEmpty())
+            personalData.setBirthday(LocalDate.parse(birthday));
+        if(!phonenumber.isEmpty())
+            personalData.setPhoneNumber(phonenumber);
+        if(!street.isEmpty())
+            personalData.setStreet(street);
+
+        return personalData;
     }
 }

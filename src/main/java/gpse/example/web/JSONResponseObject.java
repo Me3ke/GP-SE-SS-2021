@@ -1,10 +1,10 @@
 package gpse.example.web;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public class JSONResponseObject {
 
     private int status;
+    private String message;
 
     public JSONResponseObject(){
 
@@ -18,30 +18,12 @@ public class JSONResponseObject {
         this.status = statusCode;
     }
 
-}
-
-class JSONConfirmationResponseObject extends JSONResponseObject {
-
-    boolean adminValidation;
-    String email;
-
-    public JSONConfirmationResponseObject() {
-        super();
+    public String getMessage() {
+        return message;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isAdminValidation() {
-        return adminValidation;
-    }
-
-    public void setAdminValidation(boolean adminValidation) {
-        this.adminValidation = adminValidation;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
+

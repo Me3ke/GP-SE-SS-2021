@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -38,31 +39,51 @@ public class UserController {
     @PostMapping("/users")
     public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
         JSONResponseObject response = new JSONResponseObject();
-        response.setStatus(200);
-        try {
-            User user = userService.getUser(signUpUser.getUsername());
+
+        if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(422);
-        } catch (UsernameNotFoundException e ) {
-            User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
-                signUpUser.getLastname(), signUpUser.getPassword());
-            userService.signUpUser(user);
+            response.setMessage("username or password not specified");
             return mapper.writeValueAsString(response);
+        } else {
+            try {
+                User user = userService.getUser(signUpUser.getUsername());
+
+                response.setStatus(422);
+                response.setMessage("username " + user.getUsername() + " already exists");
+                return mapper.writeValueAsString(response);
+            } catch (UsernameNotFoundException e) {
+                User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
+                    signUpUser.getLastname(), signUpUser.getPassword());
+                user.addRole("ROLE_USER");
+                user.setPersonalData(signUpUser.getPersonalData());
+                userService.signUpUser(user);
+                response.setStatus(200);
+                return mapper.writeValueAsString(response);
+            }
+
         }
-        return mapper.writeValueAsString(response);
     }
 
     @GetMapping("/users/register")
-    public String confirmMail(@RequestParam("token") String token) {
+    public String confirmMail(@RequestParam("token") String token) throws JsonProcessingException {
 
-        JSONConfirmationResponseObject response = new JSONConfirmationResponseObject();
-        response.setAdminValidation(false);
-        response.setStatus(200);
+        JSONResponseObject response = new JSONResponseObject();
+
         Optional<ConfirmationToken> optionalConfirmationToken
             = confirmationTokenService.findConfirmationTokenByToken(token);
 
-        optionalConfirmationToken.ifPresent(userService::confirmUser);
-
-        return "/login";
+        if(optionalConfirmationToken.isEmpty()) {
+            response.setStatus(423);
+            response.setMessage("Already validated");
+        } else if(confirmationTokenService.isExpired(optionalConfirmationToken.get())) {
+            response.setStatus(422);
+            response.setMessage("ConfirmationToken Expired");
+        } else {
+            optionalConfirmationToken.ifPresent(userService::confirmUser);
+            response.setStatus(200);
+            response.setMessage("Adminvalidation required:" + false );
+        }
+        return mapper.writeValueAsString(response);
     }
 
     @GetMapping("/user/{*userID}/personal")

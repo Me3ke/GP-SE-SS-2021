@@ -130,7 +130,7 @@ public class User implements UserDetails {
      */
     public void setPersonalData(final String street, final int houseNumber, final int postCode,
                                 final String homeTown, final String country, final LocalDate birthday,
-                                final int phoneNumber) {
+                                final String phoneNumber) {
         this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
                 country, birthday, phoneNumber);
     }

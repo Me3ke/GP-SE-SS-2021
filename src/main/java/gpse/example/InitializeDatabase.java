@@ -36,7 +36,7 @@ public class InitializeDatabase implements InitializingBean {
             userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
-                "Liebefeld", "Deutschland", LocalDate.now(), 32131245);
+                "Liebefeld", "Deutschland", LocalDate.now(), "32131245");
             final User user = new User(
                     username,
                     "Hans",
