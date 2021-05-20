@@ -34,6 +34,7 @@ public class UserController {
      * Constructor of UserController getting required services.
      * @param service Userservice Object
      * @param confService ConfirmationTokenService object
+     * @param personalDataService PersonalDataService object
      */
     public UserController(UserService service, ConfirmationTokenService confService,
                           PersonalDataService personalDataService) {
