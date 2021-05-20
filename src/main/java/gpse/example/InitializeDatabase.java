@@ -6,6 +6,7 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class InitializeDatabase implements InitializingBean {
     private final PersonalDataService personalDataService;
 
 
+    @Lazy
     @Autowired
     public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService) {
         this.userService = userService;
@@ -34,18 +36,18 @@ public class InitializeDatabase implements InitializingBean {
             userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
-                "Liebefeld", "Deutschland", LocalDate.now(), 32131245);
-            final User user = userService.createUser(
-                username,
-                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
-                "Hans",
-                "Schneider",
-                personalDataService.savePersonalData(personalData),
-                "ROLE_USER"
+                "Liebefeld", "Deutschland", LocalDate.now(), "32131245");
+            final User user = new User(
+                    username,
+                    "Hans",
+                    "Schneider",
+                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG"
             );
-            System.out.println("Created new User: " + user.getUsername());
-
-
+            user.setEnabled(true);
+            personalDataService.savePersonalData(personalData);
+            user.setPersonalData(personalData);
+            user.addRole("ROLE_USER");
+            userService.saveUser(user);
         }
     }
 }

@@ -27,7 +27,7 @@ public class PersonalData implements Serializable {
     private int postCode;
 
     @Column
-    private int phoneNumber;
+    private String phoneNumber;
 
     @Column
     private String homeTown;
@@ -50,7 +50,7 @@ public class PersonalData implements Serializable {
      */
     public PersonalData(final String street, final int houseNumber, final int postCode,
                         final String homeTown, final String country, final LocalDate birthday,
-                        final int phoneNumber) {
+                        final String phoneNumber) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.postCode = postCode;
@@ -60,7 +60,7 @@ public class PersonalData implements Serializable {
         this.birthday = birthday;
     }
 
-    protected PersonalData() {
+    public PersonalData() {
 
     }
 
@@ -88,11 +88,11 @@ public class PersonalData implements Serializable {
         this.postCode = postCode;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(final int phoneNumber) {
+    public void setPhoneNumber(final String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

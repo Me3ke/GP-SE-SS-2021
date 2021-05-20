@@ -1,6 +1,5 @@
 package gpse.example.domain.security;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -62,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
     /**
      * This method returns a configured state for cors.
      *
@@ -81,7 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers",
             "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, "
                 + "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"));
-
 
         source.registerCorsConfiguration("/**", corsConfiguration);
 
