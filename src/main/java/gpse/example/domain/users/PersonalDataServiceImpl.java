@@ -19,6 +19,6 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Override
     public PersonalData savePersonalData(PersonalData personalData) {
         final PersonalData saved = personalDataRepository.save(personalData);
-        return personalData;
+        return saved;
     }
 }

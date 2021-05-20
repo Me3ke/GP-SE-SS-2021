@@ -8,10 +8,6 @@ public class JSONResponseObject {
     private int status;
     private String message;
 
-    public JSONResponseObject() {
-
-    }
-
     public int getStatus() {
         return status;
     }

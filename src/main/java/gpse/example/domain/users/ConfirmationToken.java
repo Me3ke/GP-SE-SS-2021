@@ -1,7 +1,7 @@
 package gpse.example.domain.users;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -20,7 +20,7 @@ public class ConfirmationToken {
     private String confirmationToken;
 
     @Column
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
@@ -32,7 +32,7 @@ public class ConfirmationToken {
      */
     public ConfirmationToken(User user) {
         this.user = user;
-        this.createdDate = LocalDate.now();
+        this.createdDate = LocalDateTime.now();
         this.confirmationToken = UUID.randomUUID().toString();
     }
 
@@ -56,11 +56,11 @@ public class ConfirmationToken {
         this.confirmationToken = confirmationToken;
     }
 
-    public LocalDate getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
