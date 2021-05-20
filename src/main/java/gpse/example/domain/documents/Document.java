@@ -105,7 +105,7 @@ public class Document {
      * @param signatory the user object that is needed as a signatory
      */
     public void addSignatory(final User signatory) {
-        signatories.add(new Signatory(this, signatory));
+        signatories.add(new Signatory(signatory));
     }
 
     /**
@@ -114,7 +114,7 @@ public class Document {
      * @param reader the user object that is needed as a reader
      */
     public void addReader(final User reader) {
-        readers.add(new Signatory(this, reader));
+        readers.add(new Signatory(reader));
     }
 
     /**
@@ -158,7 +158,7 @@ public class Document {
                 sign.update(id);
                 valid = sign.verify(signature);
             } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
-                System.out.println(exception.getMessage());
+                exception.printStackTrace();
             }
         }
         return valid;

@@ -10,7 +10,6 @@ import java.util.List;
 public interface DocumentService {
     Document addDocument(Document document);
     Document getDocument(long id) throws DocumentNotFoundException;
-    Document loadDocumentByName(String name);
     List<Document> getDocuments();
     void remove(Document document);
 }

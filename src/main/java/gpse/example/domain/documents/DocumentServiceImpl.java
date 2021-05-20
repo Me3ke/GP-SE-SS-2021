@@ -41,15 +41,4 @@ public class DocumentServiceImpl implements DocumentService {
     public Document addDocument(final Document document) {
         return repo.save(document);
     }
-
-    @Override
-    public Document loadDocumentByName(String name) {
-        List<Document> documents = getDocuments();
-        for (Document document : documents) {
-            if (document.getDocumentTitle().equals(name)) {
-                return document;
-            }
-        }
-        return null;
-    }
 }

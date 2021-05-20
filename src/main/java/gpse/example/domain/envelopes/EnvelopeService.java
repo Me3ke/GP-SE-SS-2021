@@ -25,5 +25,7 @@ public interface EnvelopeService {
         throws CreatingFileException, DocumentNotFoundException, IOException;
 
     void remove(Envelope envelope);
+
+    Envelope saveEnvelope(Envelope envelope);
 }
 

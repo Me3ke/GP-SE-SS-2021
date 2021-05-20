@@ -1,8 +1,9 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-
+/**
+ * The interface for DocumentMetaDataServices.
+ */
 public interface DocumentMetaDataService {
     DocumentMetaData saveDocumentMetaData(DocumentMetaData documentMetaData);
-    void removeEverything();
+    void removeAll();
 }

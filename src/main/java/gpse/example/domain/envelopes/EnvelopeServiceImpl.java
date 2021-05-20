@@ -71,4 +71,9 @@ public class EnvelopeServiceImpl implements EnvelopeService {
     public void remove(final Envelope envelope) {
         envelopeRepository.delete(envelope);
     }
+
+    @Override
+    public Envelope saveEnvelope(final Envelope envelope) {
+        return envelopeRepository.save(envelope);
+    }
 }
