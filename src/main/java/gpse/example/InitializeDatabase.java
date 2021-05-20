@@ -13,7 +13,6 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -70,18 +69,17 @@ public class InitializeDatabase implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         try {
-            userService.loadUserByUsername(USERNAME);
+            userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), "3213145");
-            final User user = userService.createUser(
-                USERNAME,
-                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
-                "Hans",
-                "Schneider",
-                personalDataService.savePersonalData(personalData),
-                "ROLE_USER"
-            );
+            final User user = new User(USERNAME,
+                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG", "Hans",
+                "Schneider");
+            user.addRole("ROLE_USER");
+            user.setEnabled(true);
+            user.setPersonalData(personalDataService.savePersonalData(personalData));
+            userService.saveUser(user);
         }
         final List<Long> documentIDs = new ArrayList<>();
         final List<String> documentPaths = new ArrayList<>();

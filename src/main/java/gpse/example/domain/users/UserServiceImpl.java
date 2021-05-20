@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SMTPServerHelper smtpServerHelper;
 
-    @Lazy
     @Autowired
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
