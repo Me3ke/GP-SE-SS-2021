@@ -14,10 +14,11 @@ public class SMTPServerHelper {
     /**
      * Template for sending RegisterValidationEmail.
      */
-    public static final String INITIAL_REGISTER_TEMPLATE = "Guten Tag Herr %s, \n"
-        + "um deine Emailadresse zu bestätigen klicke auf den Bestätigungslink. \n"
-        + "Hier bestätigen: %s \n"
-        + "Dein ELSA-Team";
+    public static final String INITIAL_REGISTER_TEMPLATE = "Guten Tag Herr/Frau %s, %n"
+        + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
+        + "Hier bestätigen: %s %n"
+        + "%n %n"
+        + "Bitte beachten Sie die eingeschränkte Gültigkeit Ihres Bestätigungslinks von 24 Stunden.";
 
     /**
      * The subject of Elsas emails.
