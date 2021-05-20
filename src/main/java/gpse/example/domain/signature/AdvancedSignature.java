@@ -34,7 +34,7 @@ public class AdvancedSignature {
      */
     public AdvancedSignature(final String userEmail, final byte[] signature, final int keyIndex) {
         this.userEmail = userEmail;
-        this.signature = signature;
+        this.signature = signature.clone();
         this.keyIndex = keyIndex;
     }
 
@@ -43,7 +43,7 @@ public class AdvancedSignature {
     }
 
     public byte[] getSignature() {
-        return signature;
+        return signature.clone();
     }
 
     public int getKeyIndex() {
@@ -55,7 +55,7 @@ public class AdvancedSignature {
     }
 
     public void setSignature(final byte[] signature) {
-        this.signature = signature;
+        this.signature = signature.clone();
     }
 
     public void setKeyIndex(final int keyIndex) {

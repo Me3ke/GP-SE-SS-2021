@@ -25,7 +25,7 @@ export default {
     components: {Messages, Avatar, LanguageSwitcher},
     data() {
         return {
-            logo: require('../../assets/logos/ELSA_small.svg')
+            logo: require('../../assets/logos/ELSA_small.svg'),
         }
     }
 }
@@ -39,7 +39,7 @@ export default {
 }
 
 #background {
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)),
+    background-image: linear-gradient(to right, var(--headerFadeOne), var(--headerFadeTwo),var(--headerFadeThree), var(--headerFadeTwo), var(--headerFadeOne)),
     url(../../assets/header_background.png);
     background-size: cover;
     align-content: center;

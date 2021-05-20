@@ -15,26 +15,113 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
                                     <h5>
-                                        <b-icon type="button" icon="x-square" @click="show = false">
+                                        <b-icon type="button" icon="x-square" @click="show = false; page = 1">
                                         </b-icon>
                                     </h5>
                                 </div>
+                                <!-- Menu -->
                                 <div class="modal-body">
-                                    <div class="form-group files">
-                                        <input type="file" class="form-control" multiple="" style="height: 15vh">
+                                    <!-- Page 1 -->
+                                    <div v-if="page === 1">
+                                        <div class="form-group files">
+                                            <input type="file" id="fileInput" class="form-control" multiple="" style="height: 15vh">
+                                        </div>
+                                    </div>
+
+                                    <!-- Page 2 -->
+                                    <div v-if="page === 2">
+                                        <button type="button" class="light-btn" @click="newEnv = false; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.selectEnv')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="light-btn" @click="newEnv = true; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.newEnv')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+
+                                    <!-- Page 3 -->
+                                    <div v-if="page === 3">
+                                        <!-- Choose from envelopes -->
+
+                                        <div v-if="newEnv === false">
+                                            <div class="form-group">
+                                                <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
+                                                <select class="form-control" id="selectEnvelope">
+                                                    <option v-for="envelope in getEnvs(false, false, true)" :key="envelope.id"> {{envelope.name}} </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Create new envelope -->
+
+                                        <div v-if="newEnv === true">
+                                            <div class="form-group">
+                                                <label for="envelopeNameInout"> {{$t('UploadDoc.newEnv')}} </label>
+                                                <input type="text" class="form-control" id="envelopeNameInout" :placeholder="$t('UploadDoc.newEnvPlaceholder')">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Page 4 -->
+                                    <div v-if="page === 4">
+                                        {{$t('UploadDoc.configureDoc')}}
                                     </div>
                                 </div>
+                                <!-- Buttons -->
                                 <div class="modal-footer">
-                                    <button type="button" class="light-btn" @click="show = false">
-                                        <h5>
-                                            {{$t('UploadDoc.close')}}
-                                        </h5>
-                                    </button>
-                                    <button type="button" class="elsa-blue-btn">
-                                        <h5>
-                                            {{$t('UploadDoc.upload')}}
-                                        </h5>
-                                    </button>
+                                    <!-- Page 1 -->
+                                    <div v-if="page === 1">
+                                        <button type="button" class="light-btn" @click="show = false">
+                                            <h5>
+                                                {{$t('UploadDoc.close')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1">
+                                            <h5>
+                                                {{$t('UploadDoc.continue')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+
+                                    <!-- Page 2 -->
+                                    <div v-if="page === 2">
+                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                            <h5>
+                                                {{$t('UploadDoc.back')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+
+                                    <!-- Page 3 -->
+                                    <div v-if="page === 3">
+                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                            <h5>
+                                                {{$t('UploadDoc.back')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1">
+                                            <h5>
+                                                {{$t('UploadDoc.continue')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+
+                                    <!-- Page 4 -->
+                                    <div v-if="page === 4">
+                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                            <h5>
+                                                {{$t('UploadDoc.back')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="elsa-blue-btn">
+                                            <h5>
+                                                {{$t('UploadDoc.upload')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -52,7 +139,16 @@ export default {
         text: String
     },
     data() {
-        return {show: false};
+        return {
+            show: false,
+            page: 1,
+            newEnv: false
+        };
+    },
+    computed: {
+        getEnvs() {
+            return this.$store.getters.getEnvelopesFiltered
+        }
     }
 }
 </script>
@@ -84,7 +180,12 @@ export default {
 }
 
 .elsa-blue-btn, .light-btn {
-    padding: 0.5vh 1vw 0
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
 }
 
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
 </style>

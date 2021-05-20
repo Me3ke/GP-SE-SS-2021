@@ -1,67 +1,16 @@
 <template>
     <section>
-        <div class="background">
-            <div class = img-wrap>
-                <img :src = "image"  class="header-image"/>
+        <div class="background" style="height: 100vh; overflow: hidden">
+
+            <LandingPageHeader></LandingPageHeader>
+            <div class=img-wrap>
+                <img :src="image" alt="logo" class="header-image"/>
             </div>
             <div class="login-division">
-
-                <div v-if="showlogin" class = login-box>
-                    <h3>Anmeldung</h3>
-                    <b-form>
-                        <b-form-group
-                            id="input-group-email"
-                        >
-                            <b-form-input
-                                id="input-email"
-                                v-model="form.email"
-                                type="email"
-                                placeholder="E-Mail"
-                                required
-                            ></b-form-input>
-                        </b-form-group>
-                        <b-form-group id="input-group-password">
-                            <b-form-input
-                                id="input-password"
-                                v-model="form.password"
-                                type="password"
-                                placeholder="Password"
-                                required
-                            ></b-form-input>
-                        </b-form-group>
-                        <b-link v-on:click="showlogin = false">
-                            <h5> Passwort vergessen? </h5>
-                        </b-link>
-                        <b-button>Anmelden</b-button>
-                        <h5> Noch kein Konto? <b-link>Registrieren</b-link></h5>
-
-                    </b-form>
-                </div>
-                <div v-if="!showlogin" class = login-box>
-                    <h3>Passwort zurücksetzen</h3>
-                    <h5>Sie erhalten eine E-Mail zum zurücksetzen Ihres Passwortes</h5>
-                    <b-form>
-                        <b-form-group
-                            id="input-group-email"
-                        >
-                            <b-form-input
-                                id="input-email"
-                                v-model="form.email"
-                                type="email"
-                                placeholder="E-Mail"
-                                required
-                            ></b-form-input>
-                        </b-form-group>
-                        <b-button>Senden</b-button>
-                        <b-link v-on:click="showlogin = true">
-                            <h5> Zurück zur Anmeldung</h5>
-                        </b-link>
-                        <h5> Noch kein Konto? <b-link>Registrieren</b-link></h5>
-
-                    </b-form>
-                </div>
+                <login-component></login-component>
             </div>
         </div>
+
         <Footer></Footer>
     </section>
 
@@ -70,30 +19,22 @@
 <script>
 import Footer from "@/main/vue/components/Footer";
 import image from "../assets/logos/ELSA_big.svg";
+import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
+import LoginComponent from "@/main/vue/components/LoginComponent";
+
 export default {
     data: function () {
         return {
-            image: image,
-            show: true,
-            form: {
-                email: '',
-                password: ''
-            },
-            showlogin: true
+            image: image
         }
     },
     name: "LoginPage",
-    components: {Footer},
-    methods: {
-        historyThere() {
-            return window.history.length > 2
-        }
-    }
+    components: {LoginComponent, LandingPageHeader, Footer},
+    methods: {}
 }
 </script>
 
 <style scoped>
-
 
 
 .background {
@@ -101,37 +42,27 @@ export default {
     margin: 0;
     width: 100%;
     min-height: 100vh;
-    background-image: linear-gradient(to bottom, rgba(255,153,153,0) 0%,rgba(255,255,255,1) 30%, rgb(255, 255, 255) 100%), url(../assets/background.png);
+    background-image: linear-gradient(to bottom, var(--background-fade-one) 0%, var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
     background-repeat: no-repeat;
     background-size: 100% auto;
 }
-.login-division{
-    padding: 0;
-    margin: 0;
-    width: 100%;
+
+.login-division {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5vh;
+    width: 100vw;
     min-height: 100vh;
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: rgba(0,0,0,0.3);
-    background-color: rgba(0,0,0,0.2);
+    border-top-color: var(--shadow-grey);
+    background-color: var(--headerFadeOne);
     background-size: 100% auto;
 }
-.login-box{
-    color: white;
-    display: inline-block;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 6px 6px 6px 6px;
-    background-color: #49535F;
-}
-
-.email-label, .password-label {
-    color: white;
-    font-size: x-large;
-}
 
 
-.header-image{
+.header-image {
     padding-top: 2vw;
     padding-bottom: 2vw;
     width: 25%;

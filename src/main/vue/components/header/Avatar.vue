@@ -5,7 +5,7 @@
         </template>
         <b-dropdown-item class="my-dropdown-item" @click="routeToProfile">
             <b-icon icon="person-circle" class="my-icon"></b-icon>
-            <span class="letters" > {{ $t('Header.Avatar.profile') }} </span>
+            <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
         <b-dropdown-item class="my-dropdown-item">
@@ -13,12 +13,25 @@
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+
+
+        <b-dropdown-item v-if="theme === ''" class="my-dropdown-item" @click="toggleTheme()">
+            <b-icon icon="moon" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
+        </b-dropdown-item>
+        <b-dropdown-item v-else class="my-dropdown-item" @click="toggleTheme()">
+            <b-icon icon="sun" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
+        </b-dropdown-item>
+
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+        <b-dropdown-item class="my-dropdown-item" @click="routeToHelp">
             <b-icon icon="question-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item class="my-dropdown-item">
+        <b-dropdown-item class="my-dropdown-item" @click="logout">
             <b-icon icon="box-arrow-right" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.logout') }} </span>
         </b-dropdown-item>
@@ -28,10 +41,28 @@
 <script>
 export default {
     name: "Avatar",
-    methods:{
-      routeToProfile(){
-        this.$router.push('/'+this.$i18n.locale + '/user')
-      }
+    data() {
+        return {
+            'theme': ''
+        }
+    },
+    methods: {
+        routeToProfile() {
+            this.$router.push('/' + this.$i18n.locale + '/user')
+        },
+        routeToHelp() {
+            this.$router.push('/' + this.$i18n.locale + '/help')
+        },
+        toggleTheme() {
+            this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
+            document.documentElement.setAttribute('data-theme', this.theme);
+            localStorage.setItem('theme', this.theme);
+        },
+        logout(){
+            localStorage.removeItem('store')
+            localStorage.clear()
+            this.$router.push('/'+this.$i18n.locale + '/login')
+        }
     }
 }
 </script>
@@ -66,6 +97,7 @@ export default {
 .my-dropdown-item >>> .dropdown-item {
     color: var(--dark-grey);
     padding-left: 0.5vw;
+    background-color: var(--whitesmoke);
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {

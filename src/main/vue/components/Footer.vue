@@ -1,7 +1,9 @@
 <template>
     <div id="container">
-        <!-- TO-Do: Add real route to about page -->
-        <router-link :to="`/`" id="text">{{ $t('AboutPage.name') }}</router-link>
+        <router-link :to="$i18n.locale === 'de' ? '/de/impressum' : '/en/impressum' " id="text">{{
+                $t('AboutPage.name')
+            }}
+        </router-link>
     </div>
 </template>
 
@@ -16,14 +18,17 @@ export default {
     background-color: var(--dark-grey);
     opacity: 65%;
     width: 100%;
+    padding-top: 0;
     margin-left: 0;
-    padding-top: 0.2vw;
     position: fixed;
     bottom: 0;
+    font-size: 0.75em;
 }
 
 #text {
-    color: whitesmoke;
+    color: var(--whitesmoke);
+    font-size: 0.75em;
 }
-</style>
 
+
+</style>

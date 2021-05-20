@@ -1,10 +1,8 @@
 package gpse.example;
 
-import gpse.example.domain.*;
+
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.EnvelopeService;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.users.PersonalData;
 import gpse.example.domain.users.PersonalDataService;
 import gpse.example.domain.users.User;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 /**
@@ -42,8 +39,8 @@ public class InitializeDatabase implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws DocumentNotFoundException {
-        String username = "hans.schneider@mail.de";
+    public void afterPropertiesSet() {
+        final String username = "hans.schneider@mail.de";
         try {
             userService.loadUserByUsername(username);
             /*
@@ -66,13 +63,15 @@ public class InitializeDatabase implements InitializingBean {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), 32131245);
             final User user = userService.createUser(
-                    username,
-                    "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
-                    "Hans",
-                    "Schneider",
-                    personalDataService.savePersonalData(personalData),
-                    "ROLE_USER"
+                username,
+                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",
+                "Hans",
+                "Schneider",
+                personalDataService.savePersonalData(personalData),
+                "ROLE_USER"
             );
+            System.out.println("Created new User: " + user.getUsername());
+
 
         }
     }

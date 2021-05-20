@@ -1,11 +1,10 @@
 {
-    "TestPage": {
-        "message": "Hallo! Das ist ein Test!",
-        "btn": "Knopf",
-        "heading": "Ueberschrift"
-    },
     "AboutPage": {
-        "name": "Impressum"
+        "h1": "Impressum",
+        "name": "Impressum",
+        "provider": "Anbieter: ",
+        "contact": "Kontakt: ",
+        "editorial": "Bei Redaktionellen Inhalten: "
     },
     "NotFoundPage": {
         "h1": "Ups!",
@@ -19,6 +18,120 @@
         "h3": "Ihre Verbindung scheint nicht schnell genug zu sein. Bitte klicken Sie den Zurück-Knopf und versuchen es erneut.",
         "back": "Zurück zur letzten Seite"
     },
+    "UserGuide": {
+        "name": "Benutzerhandbuch",
+        "section-1": "Allgemeine Information",
+        "section-2": "Signieren",
+        "section-3": "Dokumente",
+        "section-4": "Hilfreiche Bedienelemente",
+        "section-5": "Kontoverwaltung",
+        "section0": [
+            {
+                "question": "Was ist ELSA?",
+                "answer": "ELSA ist eine ELektronische Signier Anwendung, die es ermöglicht beliebige Dokumente einfach, schnell und sicher elektronisch zu signieren"
+            },
+            {
+                "question": "Wie funktioniert ELSA?",
+                "answer": "Antwort 1.2"
+            }
+        ],
+        "section1": [
+            {
+                "question": "Wie unterschreibe ich ein Dokument?",
+                "answer": "Durch das Klicken auf dem Signier Knopf, neben der Dokumentenvorschau, können Sie das Dokument unterschreiben."
+            },
+            {
+                "question": "Ist das digitale Unterschreiben überhaupt sicher?",
+                "answer": "Antwort 2.2"
+            },
+            {
+                "question": "Wie funktioniert die kryptographische Signatur?",
+                "answer": "Antwort 2.3"
+            }
+        ],
+        "section2": [
+            {
+                "question": "Wie lade ich ein Dokument hoch?",
+                "answer": "Antwort 3.1"
+            },
+            {
+                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
+                "answer": "Antwort 3.2"
+            },
+            {
+                "question": "Welche Dokumententypen werden unterstützt?",
+                "answer": "Antwort 3.3"
+            },
+            {
+                "question": "Wer hat alles Zugriff auf mein Dokument?",
+                "answer": "Antwort 3.4"
+            },
+            {
+                "question": "Wie füge ich jemanden hinzu mein Dokument zu unterschreiben?",
+                "answer": "Antwort 3.5"
+            },
+            {
+                "question": "Was ist der Unterschied zwischen einer einfachen und einer fortgeschrittenen Signatur?",
+                "answer": "Antwort 3.6"
+            },
+            {
+                "question": "Ich habe die falsche Signaturart gewählt, kann ich das im Nachhinein ändern?",
+                "answer": "Ja, die Signaturart kann im Nachhinein geändernt werden. Jedoch verfallen dann alle schon gegebenen Signaturen und müssen neu angefordert werden. Aber keine Sorge, ELSA kümmert sich hierum und informiert Ihre Vertragspartner."
+            },
+            {
+                "question": "Wo kann ich die Informationen zu meinem Dokument einsehen?",
+                "answer": "Antwort 3.8"
+            },
+            {
+                "question": "Wo sehe ich die Dokumentenhistorie ein?",
+                "answer": "Antwort 3.9"
+            }
+        ],
+        "section3": [
+            {
+                "question": "Wie suche ich nach einem Dokument?",
+                "answer": "Antwort 4.1"
+            },
+            {
+                "question": "Was bedeuten die Filter überhalb meiner Dokumente?",
+                "answer": "Antwort 4.2"
+            },
+            {
+                "question": "Wie filtere ich meine Dokumnete manuell?",
+                "answer": "Antwort 4.3"
+            },
+            {
+                "question": "Die Lupe neben manchen Dokumenten ist ausgegraut, was hat das zu bedeuten?",
+                "answer": "Antwort 4.4"
+            }
+        ],
+        "section4": [
+            {
+                "question": "Wo sehe ich meine Kontoinformationen?",
+                "answer": "Mit einem Klick oben rechts auf den Avatar öffnet sich ein Menü, klicken Sie auf \"Mein Konto\". Es öffnet sich eine Seite auf der Sie all' Ihre Konotoinformationen einsehen und zum Teil auch verändern können."
+            },
+            {
+                "question": "Wie stelle ich meine Mitteilungen ein?",
+                "answer": "Antwort 5.2"
+            },
+            {
+                "question": "Wie stelle ich die Sprache ein?",
+                "answer": "Mit einem Klick auf die Flagge oben rechts öffnet sich ein Menü zum Umstellen der Sprache. Im Moment ist ELSA auf deutsch und auf englisch bedienbar."
+            },
+            {
+                "question": "Wie stelle ich mein Passwort um?",
+                "answer": "Antwort 5.4"
+            },
+            {
+                "question": "Wie kann ich meine E-Mail Adresse ändern?",
+                "answer": "Es ist nicht möglich Ihre E-Mail-Adresse im Nachhinein zu verändern. Möchten Sie ELSA unter einer anderen E-Mail-Adresse nutzen, müssen Sie sich mit dieser neu registrieren. Ihre Daten sind nicht auf das neue Konto übertragbar."
+            },
+            {
+                "question": "Was bedeutet es, dass mein Konto noch nicht vom Admin freigeschaltet ist?",
+                "answer": "Um firmeninterne Dokumente gut schützen zu können, ist es notwendig, dass ein Admin firmenexterne E-Mail-Adressen händisch freischaltet. So wird die Sicherheit vertraulicher Informationen gewährt."
+            }
+        ]
+    },
     "Header": {
         "logo": "ELSA Logo",
         "LanguageSwitcher": {
@@ -30,7 +143,9 @@
             "profile": "Mein Konto",
             "settings": "Einstellungen",
             "help": "Benutzerhandbuch",
-            "logout": "Abmelden"
+            "logout": "Abmelden",
+            "darkmode": "Dunkler Modus",
+            "lightmode": "Heller Modus"
         },
         "Messages": {
             "msg": "Benachrichtigungen",
@@ -43,10 +158,19 @@
     "OverviewPage": {
         "heading": "Übersicht",
         "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen"
+        "filterOpen": "Offen",
+        "toSign1": "Bis zum",
+        "toSign2": "signieren",
+        "toRead1": "Bis zum",
+        "toRead2": "gegenlesen",
+        "toSignRead1": "Bis zum",
+        "toSignRead2": "gegenlesen und signieren",
+        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
+        "envRead": "Enthält Dokumente zum gegenlesen",
+        "envSign": "Enthält Dokumente zum signieren"
     },
     "Document": {
-        "owner": "Bersitzer",
+        "owner": "Besitzer",
         "date": "Erstellungsdatum",
         "open": "Offen",
         "closed": "Abgeschlossen"
@@ -66,7 +190,7 @@
         "content": "Registrieren"
     },
     "UserPage": {
-        "content": "Benutzerinformationen:"
+        "content": "Benutzerinformationen"
     },
     "UserInfoBox": {
         "profileInformation": "Profilinformationen",
@@ -81,11 +205,50 @@
         "street": "Straße:",
         "houseNumber": "Hausnummer:",
         "publicKey": "Öffentlicher Schlüssel:",
-        "phoneNumber": "Telefonnummer:"
+        "phoneNumber": "Telefonnummer:",
+        "newKeypair": "Neues Schlüsselpaar"
     },
     "UploadDoc": {
         "upload": "Hochladen",
         "menuTitle": "Dokument hochladen",
+        "close": "Schließen",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "newEnv": "Neuen Verbund anlegen",
+        "selectEnv": "Bestehenden Verbund auswählen",
+        "newEnvPlaceholder": "Name des Verbundes",
+        "configureDoc": "Dokumenteneinstellungen"
+    },
+    "DocumentPage": {
+        "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
+        "download": "Herunterladen",
+        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
+        "sign": "Unterschreiben",
+        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
+        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
+        "read": "Gegengelesen",
+        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
         "close": "Schließen"
+    },
+    "Login": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "login": "Anmeldung",
+        "sign-in": "Anmelden",
+        "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
+        "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
+        "fail": "Anmeldung fehlgeschlagen."
+    },
+    "KeypairAlert": {
+        "generate": "Generiere Schlüsselpaar",
+        "upload": "Lade Schlüsselpaar hoch",
+        "selectOption": "Wähle Option",
+        "cancelText": "Abbruch",
+        "forceChoose": "Es muss etwas ausgewählt werden!",
+        "warning": "Warnung",
+        "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
+        "continueText": "Fortfahren",
+        "generatingText": "Generieren...",
+        "uploadText": "Hochladen..."
     }
 }

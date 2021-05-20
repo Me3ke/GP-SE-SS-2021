@@ -130,7 +130,9 @@ public class DocumentCreator {
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
         if (file.exists()) {
-            file.delete();
+            if (!file.delete()) {
+                throw new CreatingFileException();
+            }
         }
         try {
             if (file.createNewFile()) {

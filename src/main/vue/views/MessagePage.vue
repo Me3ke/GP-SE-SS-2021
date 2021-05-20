@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <div style="background-color: var(--whitesmoke); height: 100vh">
         <!-- On all devices -->
         <Header></Header>
         <BaseHeading name="MessagePage.heading"></BaseHeading>
 
         <!-- Desktop version -->
         <div class="desktop">
-            <b-container fluid style="margin-left: 3vw; padding: 0">
+            <b-container fluid
+                         style="margin-left: 3vw; padding: 0; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                 <b-row>
                     <b-col cols="3" style="margin-top:1vh;">
                         <div class="overflow-auto" style="height: 75vh">
@@ -22,7 +23,8 @@
                     <b-col cols="8" style="margin-top:2vh;">
                         <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
                                            style="height: 75vh;"></MessageContentBox>
-                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 75vh;">
+                        <b-container v-else fluid class="card"
+                                     style="padding:0.5vh; height: 75vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                             <h4 style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
@@ -50,8 +52,9 @@
                     <b-col cols="7" style="margin-top:2vh;">
                         <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
                                            style="height: 82vh;"></MessageContentBox>
-                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 82vh;">
-                            <h4 style="margin-top: 15vh">
+                        <b-container v-else fluid class="card"
+                                     style="padding:0.5vh; height: 82vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
+                            <h4 style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -78,8 +81,9 @@
                     <b-col cols="7" style="margin-top:3vh;">
                         <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
                                            style="height: 75vh;"></MessageContentBox>
-                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 75vh;">
-                            <h4 style="margin-top: 15vh">
+                        <b-container v-else fluid class="card"
+                                     style="padding:0.5vh; height: 75vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
+                            <h4 style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -106,7 +110,8 @@
                     <b-col cols="7" style="margin-top:4.7vh;">
                         <MessageContentBox v-if="isSelected()" :msg="selectedMsg"
                                            style="height: 60vh;"></MessageContentBox>
-                        <b-container v-else fluid class="card" style="padding:0.5vh; height: 60vh;">
+                        <b-container v-else fluid class="card"
+                                     style="padding:0.5vh; height: 60vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                             <h4 style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
@@ -230,7 +235,7 @@ export default {
 .backCard {
     font-size: .53em;
     background-color: var(--elsa-blue);
-    color: whitesmoke;
+    color: var(--whitesmoke);
     margin-top: 0.5vh;
     padding-top: 0.7vh;
     padding-bottom: 0.7vh;

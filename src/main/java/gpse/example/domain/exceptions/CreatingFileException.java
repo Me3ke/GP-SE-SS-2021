@@ -14,6 +14,8 @@ public class CreatingFileException extends Exception {
      */
     static final String MESSAGE = "Could not create a new File with given Data";
 
+    public CreatingFileException() {
+        super(); }
     public CreatingFileException(final IOException ioException) {
         super(ioException);
     }
