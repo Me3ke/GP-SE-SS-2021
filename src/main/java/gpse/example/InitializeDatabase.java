@@ -13,6 +13,7 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +73,7 @@ public class InitializeDatabase implements InitializingBean {
             userService.loadUserByUsername(USERNAME);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
-                "Liebefeld", "Deutschland", LocalDate.now(), 3213145);
+                "Liebefeld", "Deutschland", LocalDate.now(), "3213145");
             final User user = userService.createUser(
                 USERNAME,
                 "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG",

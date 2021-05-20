@@ -56,6 +56,9 @@ public class User implements UserDetails {
     @OneToOne
     private PersonalData personalData;
 
+    @Column
+    private boolean enabled;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -78,6 +81,7 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.enabled = false;
     }
 
     public static long getSerialVersionUID() {
@@ -123,7 +127,7 @@ public class User implements UserDetails {
      */
     public void setPersonalData(final String street, final int houseNumber, final int postCode,
                                 final String homeTown, final String country, final LocalDate birthday,
-                                final int phoneNumber) {
+                                final String phoneNumber) {
         this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
                 country, birthday, phoneNumber);
     }
@@ -223,7 +227,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
 
@@ -262,4 +266,13 @@ public class User implements UserDetails {
     public PersonalData getPersonalData() {
         return personalData;
     }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

@@ -1,8 +1,11 @@
 package gpse.example.domain.users;
 
+import gpse.example.util.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,8 +17,27 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    /**
+     * Standard ConfirmationTokenService.
+     * autowired not commited not tested 18.05.21
+     */
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
+
     private final UserRepository userRepository;
 
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /**
+     * the smtpServerHelper Service for sending emails.
+     */
+    @Lazy
+    @Autowired
+    private SMTPServerHelper smtpServerHelper;
+
+    @Lazy
     @Autowired
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -46,8 +68,7 @@ public class UserServiceImpl implements UserService {
         for (final String role : roles) {
             user.addRole(role);
         }
-        final User saved = userRepository.save(user);
-        return saved;
+        return userRepository.save(user);
     }
 
     @Override
@@ -59,7 +80,42 @@ public class UserServiceImpl implements UserService {
             user.addRole(role);
         }
         user.setPersonalData(personalData);
-        final User saved = userRepository.save(user);
-        return saved;
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void signUpUser(User user) {
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        final User createdUser = userRepository.save(user);
+        final ConfirmationToken token = new ConfirmationToken(user);
+        ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
+        sendConfirmationMail(createdUser, savedToken.getConfirmationToken());
+    }
+
+    @Override
+    public void confirmUser(ConfirmationToken confirmationToken) {
+
+        final User user = confirmationToken.getUser();
+
+        user.setEnabled(true);
+        userRepository.save(user);
+        confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
+    }
+
+    public void sendConfirmationMail(User user, String token) {
+        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
+            "http://localhost:8080/register/confirm/" + token);
+    }
+
+    @Override
+    public void removeUser(final String username) {
+        userRepository.deleteById(username);
+    }
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }
