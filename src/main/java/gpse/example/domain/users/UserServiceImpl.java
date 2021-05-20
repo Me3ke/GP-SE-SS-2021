@@ -30,9 +30,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * the smtpServerHelper Service for sending emails.
+     */
     @Lazy
     @Autowired
-    SMTPServerHelper smtpServerHelper;
+    private SMTPServerHelper smtpServerHelper;
 
     @Lazy
     @Autowired

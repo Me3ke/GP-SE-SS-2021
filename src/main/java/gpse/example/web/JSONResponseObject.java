@@ -1,12 +1,14 @@
 package gpse.example.web;
 
-
+/**
+ * an response POJO getting the status and an message.
+ */
 public class JSONResponseObject {
 
     private int status;
     private String message;
 
-    public JSONResponseObject(){
+    public JSONResponseObject() {
 
     }
 

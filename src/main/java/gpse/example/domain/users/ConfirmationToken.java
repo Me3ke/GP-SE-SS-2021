@@ -23,9 +23,13 @@ public class ConfirmationToken {
     private LocalDate createdDate;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name = "USER_ID")
     private User user;
 
+    /**
+     * Constructor of ConfirmationToken setting an user the creation date and a rndom string as the token.
+     * @param user
+     */
     public ConfirmationToken(User user) {
         this.user = user;
         this.createdDate = LocalDate.now();

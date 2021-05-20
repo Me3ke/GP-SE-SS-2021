@@ -5,6 +5,9 @@ import gpse.example.domain.users.PersonalData;
 
 import java.time.LocalDate;
 
+/**
+ * A Container for all userdata sent from frontend.
+ */
 public class UserSignUpCmd {
 
     private String username;
@@ -113,24 +116,34 @@ public class UserSignUpCmd {
         this.password = password;
     }
 
+    /**
+     * generating an personaldata object from its data.
+     * @return the personaldata object
+     */
     @JsonIgnore
-    public PersonalData getPersonalData() {
+    public PersonalData generatePersonalData() {
         PersonalData personalData = new PersonalData();
-        if(housenumber != -1)
+        if (housenumber != -1) {
             personalData.setHouseNumber(housenumber);
-        if(postcode != -1)
+        }
+        if (postcode != -1) {
             personalData.setPostCode(postcode);
-        if(!hometown.isEmpty())
+        }
+        if (hometown != null) {
             personalData.setHomeTown(hometown);
-        if(!country.isEmpty())
+        }
+        if (country != null) {
             personalData.setCountry(country);
-        if(!birthday.isEmpty())
+        }
+        if (birthday != null) {
             personalData.setBirthday(LocalDate.parse(birthday));
-        if(!phonenumber.isEmpty())
+        }
+        if (phonenumber != null) {
             personalData.setPhoneNumber(phonenumber);
-        if(!street.isEmpty())
+        }
+        if (street != null) {
             personalData.setStreet(street);
-
+        }
         return personalData;
     }
 }
