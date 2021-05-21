@@ -74,8 +74,8 @@ public class InitializeDatabase implements InitializingBean {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), "3213145");
             final User user = new User(USERNAME,
-                "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG", "Hans",
-                "Schneider");
+                 "Hans",
+                "Schneider", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
             user.addRole("ROLE_USER");
             user.setEnabled(true);
             user.setPersonalData(personalDataService.savePersonalData(personalData));
@@ -173,10 +173,7 @@ public class InitializeDatabase implements InitializingBean {
                 documentService.addDocument(document);
                 envelope.addDocument(document);
                 envelopeService.saveEnvelope(envelope);
-            } catch (CreatingFileException e) {
-                envelopeService.saveEnvelope(envelope);
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (CreatingFileException | IOException e) {
                 envelopeService.saveEnvelope(envelope);
                 e.printStackTrace();
             }

@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
         return users;
     }
     @Override
-    public User createUser(final String username, final String password,
-                           final String firstname, final String lastname, final String... roles) {
+    public User createUser(final String username, final String firstname,
+                           final String lastname, final String password, final String... roles) {
         final User user = new User(username, firstname, lastname, password);
         for (final String role : roles) {
             user.addRole(role);
@@ -71,8 +71,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(final String username, final String password,
-                           final String firstname, final String lastname,
+    public User createUser(final String username, final String firstname,
+                           final String lastname, final String password,
                            final PersonalData personalData, final String... roles) {
         final User user = new User(username, firstname, lastname, password);
         for (final String role : roles) {
