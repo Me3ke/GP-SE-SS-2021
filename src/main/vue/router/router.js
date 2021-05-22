@@ -134,7 +134,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     // using language from route guard or default language (de)
-    store.commit('initializeStore')
+    store.commit('INITIALIZE_STORE')
     let language = to.params.lang;
     if (!language) {
         language = 'de'
@@ -143,7 +143,7 @@ router.beforeEach((to, from, next) => {
     i18n.locale = language
 
     if(to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.state.authenticated !== true) {
+        if (store.state.auth.authenticated !== true) {
             next({
                 path: '/'+language+'/login',
                 params: { nextUrl: to.fullPath }
@@ -151,7 +151,7 @@ router.beforeEach((to, from, next) => {
         }
     }
     if(to.matched.some(record => record.name === 'login' || record.name === 'landing')) {
-        if (store.state.authenticated === true) {
+        if (store.state.auth.authenticated === true) {
             next({
                 path: '/'+language+'/overview',
                 params: { nextUrl: to.fullPath }

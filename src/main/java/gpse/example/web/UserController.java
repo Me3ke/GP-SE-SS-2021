@@ -109,7 +109,7 @@ public class UserController {
         return mapper.writeValueAsString(response);
     }
 
-    @GetMapping("/user/{*userID}/personal")
+    @GetMapping("/user/{userID}/personal")
     public PersonalData showPersonalData(@PathVariable("userID") final String username) {
         return userService.getUser(username).getPersonalData();
     }

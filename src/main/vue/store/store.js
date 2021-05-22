@@ -7,7 +7,7 @@ import * as messages from './modules/messages.js';
 import * as envelopes from './modules/envelopes.js';
 import * as document from './modules/document.js';
 import * as user from './modules/user';
-import api from '../api'
+import authorization from "@/main/vue/store/modules/authorization";
 
 Vue.use(Vuex)
 
@@ -16,56 +16,21 @@ const store = new Vuex.Store({
         messages,
         envelopes,
         document,
-        user
-    },
-    state: {
-        authenticated: null,
-        token: null,
-        username: null
+        user,
+        auth: authorization
     },
     mutations: {
-        authenticate(state, token) { //<2>
-            if (token !== null) {
-                this.state.token = token
-                this.state.authenticated = true
-                axios.defaults.headers['Authorization'] = token
-            } else {
-                this.state.authenticated = false
-            }
-        },
-        initializeStore(state) {
+        INITIALIZE_STORE(state) {
             if (localStorage.getItem('store')) {
                 this.replaceState(Object.assign(state, JSON.parse(localStorage.getItem('store'))))
             } else {
-                state.authenticated = null
-                state.token = null
-                state.username = null
+                state.auth.authenticated = null;
+                state.auth.username = null;
+                state.auth.token = null
+                state.auth.role = null;
             }
-        },
+        }
 
-    },
-    actions: {
-        requestToken({commit}, credentials) { //<4>
-            return new Promise((resolve, reject) => {
-                api.auth.login(credentials.username, credentials.password).then(res => {
-                    this.state.authenticated = true
-                    let token = res.headers.authorization
-                    commit('authenticate', token)
-                    resolve()
-                }).catch(() => {
-                    commit('authenticate', null)
-                    reject()
-                })
-            })
-        }
-    },
-    getters: {
-        isAuthenticated() {
-            return this.state.authenticated;
-        },
-        getToken() {
-            return this.state.token;
-        }
     }
 })
 

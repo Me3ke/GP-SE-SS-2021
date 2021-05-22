@@ -1,7 +1,7 @@
 <template>
     <b-container fluid="100">
 
-        <b-row class="text-center" align-v="center" align-h="center">
+        <b-row align-h="center" align-v="center" class="text-center">
             <div class="card">
                 <div class="card-header">
                     <h2 class="baseHeader-h2">
@@ -40,7 +40,7 @@
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.city') }} {{ this.userInformation.hometown }}
+                            {{ $t('UserInfoBox.city') }} {{ this.userInformation.homeTown }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
@@ -57,7 +57,7 @@
             </div>
         </b-row>
 
-        <b-row class="text-center" align-v="center" align-h="center">
+        <b-row align-h="center" align-v="center" class="text-center">
             <div class="card">
                 <div class="card-header">
                     <h2 class="baseHeader-h2">
@@ -73,7 +73,7 @@
                                 </h3>
                             </b-col>
                             <b-col style="text-align: right">
-                                <b-button @click="decideLanguage" id="keyButton">
+                                <b-button id="keyButton" @click="decideLanguage">
                                     {{ $t('UserInfoBox.newKeypair') }}
                                 </b-button>
                             </b-col>

@@ -4,7 +4,7 @@
             <Header></Header>
         </div>
 
-        <BaseHeading name="UserPage.content"> </BaseHeading>
+        <BaseHeading name="UserPage.content"></BaseHeading>
 
         <div>
             <UserInfoBox :user-information="user"></UserInfoBox>
@@ -23,9 +23,12 @@ export default {
     components: {Header, UserInfoBox},
     computed: {
         ...mapGetters({
-          user: 'getUser'
-      })
+            user: 'getUser'
+        })
     },
+    created() {
+        this.$store.dispatch('fetchUser')
+    }
     /*
     methods: {
       ...mapActions([
