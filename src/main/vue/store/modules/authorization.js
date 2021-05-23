@@ -49,9 +49,8 @@ const authorization = {
         getToken(state) {
             return state.token;
         },
-        isAdmin() {
-            //TODO
-            return false;
+        isAdmin(state) {
+            return state.role.includes('ROLE_ADMIN')
         }
     }
 

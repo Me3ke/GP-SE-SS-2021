@@ -27,6 +27,13 @@
         "Avatar": {
             "profile": "My Profile",
             "settings": "Settings",
+            "adminSetting": {
+                "settings": "Admin settings",
+                "unlock": "Unlock users",
+                "manage": "Manage users",
+                "design": "Design settings",
+                "filter": "Filter e-mail addresses"
+            },
             "help": "Help",
             "logout": "Logout",
             "darkmode": "Dark mode",
@@ -54,7 +61,6 @@
         "envRead": "There are documents to read",
         "envSign": "There are documents to sign"
     },
-
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General Information",
@@ -169,8 +175,6 @@
             }
         ]
     },
-
-
     "Document": {
         "owner": "Owner",
         "date": "Created on",
@@ -205,7 +209,7 @@
         "country": "Country:",
         "city": "City:",
         "street": "Street:",
-        "houseNumber":"House number:",
+        "houseNumber": "House number:",
         "publicKey": "Public key:",
         "phoneNumber": "Phone number:",
         "newKeypair": "New Keypair"
@@ -242,15 +246,15 @@
         "fail": "Login failed."
     },
     "KeypairAlert": {
-      "generate": "Generate Keypair",
-      "upload": "Upload Keypair",
-      "selectOption": "Select option",
-      "cancelText": "Cancel",
-      "forceChoose": "You need to choose something!",
-      "warning": "Warning",
-      "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
-      "continueText": "Continue",
-      "generatingText": "Generating...",
-      "uploadText": "Uploading"
-  }
+        "generate": "Generate Keypair",
+        "upload": "Upload Keypair",
+        "selectOption": "Select option",
+        "cancelText": "Cancel",
+        "forceChoose": "You need to choose something!",
+        "warning": "Warning",
+        "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
+        "continueText": "Continue",
+        "generatingText": "Generating...",
+        "uploadText": "Uploading"
+    }
 }

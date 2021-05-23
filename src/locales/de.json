@@ -142,6 +142,13 @@
         "Avatar": {
             "profile": "Mein Konto",
             "settings": "Einstellungen",
+            "adminSetting": {
+                "settings": "Admin-Einstellungen",
+                "unlock": "Nutzer freischalten",
+                "manage": "Nutzer verwalten",
+                "design": "Design-Einstellungen",
+                "filter": "E-Mail-Adressen filtern"
+            },
             "help": "Benutzerhandbuch",
             "logout": "Abmelden",
             "darkmode": "Dunkler Modus",
