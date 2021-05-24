@@ -113,5 +113,9 @@ public class UserController {
     public PersonalData showPersonalData(@PathVariable("userID") final String username) {
         return userService.getUser(username).getPersonalData();
     }
+    @GetMapping("/user/{userID}")
+    public User showUser(@PathVariable("userID") final String username) {
+        return userService.getUser(username);
+    }
 
 }

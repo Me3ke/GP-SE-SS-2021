@@ -11,46 +11,46 @@
                 <b-list-group flush>
                     <b-list-group-item style="text-align: left; background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.email') }} {{ this.userInformation.email }}
+                            {{ $t('UserInfoBox.email') }} {{ this.user.email }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left; background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.firstName') }} {{ this.userInformation.firstname }}
+                            {{ $t('UserInfoBox.firstName') }} {{ this.user.firstname }}
                         </h3></b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.lastName') }} {{ this.userInformation.lastname }}
+                            {{ $t('UserInfoBox.lastName') }} {{ this.user.lastname }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.birthday') }} {{ this.userInformation.birthday }}
+                            {{ $t('UserInfoBox.birthday') }} {{ this.userData.birthday }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.phoneNumber') }} {{ this.userInformation.phoneNumber }}
+                            {{ $t('UserInfoBox.phoneNumber') }} {{ this.userData.phoneNumber }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.country') }} {{ this.userInformation.country }}
+                            {{ $t('UserInfoBox.country') }} {{ this.userData.country }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.city') }} {{ this.userInformation.homeTown }}
+                            {{ $t('UserInfoBox.city') }} {{ this.userData.homeTown }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.street') }} {{ this.userInformation.street }}
+                            {{ $t('UserInfoBox.street') }} {{ this.userData.street }}
                         </h3>
                     </b-list-group-item>
                     <b-list-group-item style="text-align: left;background-color: var(--user-info)">
                         <h3 class="table-Content">
-                            {{ $t('UserInfoBox.houseNumber') }} {{ this.userInformation.houseNumber }}
+                            {{ $t('UserInfoBox.houseNumber') }} {{ this.userData.houseNumber }}
                         </h3>
                     </b-list-group-item>
                 </b-list-group>
@@ -69,7 +69,7 @@
                         <b-row>
                             <b-col style="text-align: left">
                                 <h3 class="table-Content">
-                                    {{ $t('UserInfoBox.publicKey') }} {{ this.userInformation.publicKey }}
+                                    {{ $t('UserInfoBox.publicKey') }} {{ this.userData.publicKey }}
                                 </h3>
                             </b-col>
                             <b-col style="text-align: right">
@@ -91,10 +91,10 @@ import i18n from "@/i18n";
 export default {
     name: "UserInfoBox",
     props: {
-        userInformation: Object,
+        user: Object,
+        userData: Object
     },
     methods: {
-
         decideLanguage() {
             if (i18n.locale === 'de') {
                 this.showAlertDE()
@@ -206,7 +206,7 @@ export default {
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        this.handleUploadKeyPairs
+                        this.handleUploadKeyPairs()
                         this.$swal.fire('Hochladen...')
                     }
                 })
@@ -214,6 +214,7 @@ export default {
         },
         handleGenerateKeyPairs() {
             //TODO Handling of the keypairs via generating
+
         },
         handleUploadKeyPairs() {
             //TODO Handling of the keypairs via uploading

@@ -7,6 +7,7 @@ import * as messages from './modules/messages.js';
 import * as envelopes from './modules/envelopes.js';
 import * as document from './modules/document.js';
 import * as user from './modules/user';
+import * as userData from './modules/userData';
 import authorization from "@/main/vue/store/modules/authorization";
 
 Vue.use(Vuex)
@@ -17,6 +18,7 @@ const store = new Vuex.Store({
         envelopes,
         document,
         user,
+        userData,
         auth: authorization
     },
     mutations: {
@@ -41,4 +43,3 @@ store.subscribe((mutation, state) => {
 
 
 export default store
-

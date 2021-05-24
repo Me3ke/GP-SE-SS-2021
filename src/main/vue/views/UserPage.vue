@@ -7,7 +7,7 @@
         <BaseHeading name="UserPage.content"></BaseHeading>
 
         <div>
-            <UserInfoBox :user-information="user"></UserInfoBox>
+            <UserInfoBox :user="user" :userData="userData"></UserInfoBox>
         </div>
 
     </div>
@@ -23,23 +23,14 @@ export default {
     components: {Header, UserInfoBox},
     computed: {
         ...mapGetters({
-            user: 'getUser'
+            user: 'getUser',
+            userData: 'getUserData'
         })
     },
     created() {
+        this.$store.dispatch('fetchUserData')
         this.$store.dispatch('fetchUser')
-    }
-    /*
-    methods: {
-      ...mapActions([
-        'requestUser' //<1>
-      ]),
     },
-    created() {
-      this.id = 'hans.schneider@mail.de'
-      this.requestUser(this.id) //<2>
-    }
-     */
 }
 </script>
 
