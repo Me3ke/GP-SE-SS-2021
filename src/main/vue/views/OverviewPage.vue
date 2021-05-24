@@ -59,7 +59,7 @@
                                 && (envelope.documents[0].reader === false || envelope.documents[0].read === true)
                                 && envelope.documents[0].state === 'open'">
                                 <DocumentBox
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.eMail}})"
+                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
                                     :doc="envelope.documents[0]">
                                 </DocumentBox>
                             </div>
@@ -68,7 +68,7 @@
                             <div
                                 v-if="envelope.documents[0].state === 'closed'">
                                 <DocumentBoxClosed
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
+                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
                                     :doc="envelope.documents[0]">
                                 </DocumentBoxClosed>
                             </div>
@@ -79,7 +79,7 @@
                                 || (envelope.documents[0].reader === true && envelope.documents[0].read === false))
                                 && envelope.documents[0].state === 'open'">
                                 <DocumentBoxSignRead
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id, userId: envelope.owner.id}})"
+                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
                                     :doc="envelope.documents[0]">
                                 </DocumentBoxSignRead>
                             </div>
@@ -92,7 +92,7 @@
                                 && getEnvData(envelope).open === true">
                                 <EnvelopeBox
                                     @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope" >
+                                    :env="envelope">
                                 </EnvelopeBox>
                             </div>
 
@@ -101,7 +101,7 @@
                                 v-if="getEnvData(envelope).open === false">
                                 <EnvelopeBoxClosed
                                     @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope" >
+                                    :env="envelope">
                                 </EnvelopeBoxClosed>
                             </div>
 
@@ -112,7 +112,7 @@
                                 && getEnvData(envelope).open === true">
                                 <EnvelopeBoxSignRead
                                     @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope" >
+                                    :env="envelope">
                                 </EnvelopeBoxSignRead>
                             </div>
 
@@ -139,7 +139,18 @@ import EnvelopeBoxSignRead from "@/main/vue/components/envelopeBoxes/EnvelopeBox
 
 export default {
     name: "OverviewPage",
-    components: {DocumentBox, DocumentBoxClosed, DocumentBoxSignRead, EnvelopeBox, EnvelopeBoxClosed, EnvelopeBoxSignRead, Footer, Header, FilterButton, UploadButton},
+    components: {
+        DocumentBox,
+        DocumentBoxClosed,
+        DocumentBoxSignRead,
+        EnvelopeBox,
+        EnvelopeBoxClosed,
+        EnvelopeBoxSignRead,
+        Footer,
+        Header,
+        FilterButton,
+        UploadButton
+    },
     data() {
         return {
             // Needs to be replaced with API Request TODO
@@ -170,7 +181,7 @@ export default {
             let toSign = false;
             let toRead = false;
             let i;
-            for(i = 0; i < env.documents.length; i++) {
+            for (i = 0; i < env.documents.length; i++) {
                 if (env.documents[i].state === "open") {
                     open = true;
                 }

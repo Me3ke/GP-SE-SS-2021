@@ -234,7 +234,11 @@
         "doRead": "You have not proofread this document yet. Confirm now that you have.",
         "read": "Proofread",
         "didRead": "You have successfully proofread this document.",
-        "close": "Close"
+        "close": "Close",
+        "errors": {
+            "notFound": "The document you were looking for cannot be found.",
+            "refresh": "Please try refreshing the page or contact the owner of the document."
+        }
     },
     "Login": {
         "email": "e-mail",

@@ -235,7 +235,11 @@
         "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
         "read": "Gegengelesen",
         "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
-        "close": "Schließen"
+        "close": "Schließen",
+        "errors": {
+            "notFound": "Das Dokument konnte nicht gefunden werden.",
+            "refresh": "Bitte versuchen Sie die Seite neu zuladen oder kontaktieren Sie den Besitzer des Dokuments."
+        }
     },
     "Login": {
         "email": "E-Mail",

@@ -73,7 +73,7 @@ const router = new VueRouter({
                     }
                 },
                 {
-                    path: 'document/:docId',
+                    path: 'envelope/:envId/document/:docId',
                     name: 'document',
                     component: DocumentPage,
                     props: true,
@@ -142,23 +142,23 @@ router.beforeEach((to, from, next) => {
     // setting current language
     i18n.locale = language
 
-    if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.auth.authenticated !== true) {
             next({
-                path: '/'+language+'/login',
-                params: { nextUrl: to.fullPath }
+                path: '/' + language + '/login',
+                params: {nextUrl: to.fullPath}
             })
         }
     }
-    if(to.matched.some(record => record.name === 'login' || record.name === 'landing')) {
+    if (to.matched.some(record => record.name === 'login' || record.name === 'landing')) {
         if (store.state.auth.authenticated === true) {
             next({
-                path: '/'+language+'/overview',
-                params: { nextUrl: to.fullPath }
+                path: '/' + language + '/overview',
+                params: {nextUrl: to.fullPath}
             })
         }
     }
-        next()
+    next()
 
 
 })
