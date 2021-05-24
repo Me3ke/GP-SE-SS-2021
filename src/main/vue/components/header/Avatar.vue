@@ -3,18 +3,78 @@
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
+
+        <!-- Personal Information -->
         <b-dropdown-item class="my-dropdown-item" @click="routeToProfile">
             <b-icon icon="person-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
         </b-dropdown-item>
+
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+        <!-- Settings -->
         <b-dropdown-item class="my-dropdown-item">
             <b-icon icon="gear" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
+
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
+        <!-- Admin Settings -->
+        <b-dropdown-item
+            v-if="isAdmin"
+            class="my-dropdown-item"
+            @click.native.capture.stop="toggleAdmin">
+            <b-iconstack class="my-icon">
+                <b-icon stacked icon="gear" class="my-icon"></b-icon>
+                <b-icon stacked icon="circle-fill" class="my-icon" scale="0.5" style="fill: var(--whitesmoke)"></b-icon>
+                <b-icon stacked icon="person-fill" class="my-icon" scale="0.7" shift-v="1"></b-icon>
+            </b-iconstack>
+            <span class="letters"> {{ $t('Header.Avatar.adminSetting.settings') }} </span>
 
+            <div v-bind:class="[mobile ? 'sub-menu-mobile':'sub-menu']" v-show="showAdmin">
+
+                <b-dropdown-item class="my-inner-dropdown-item">
+                    <b-iconstack class="my-icon">
+                        <b-icon stacked icon="person" class="my-icon"></b-icon>
+                        <b-icon stacked icon="unlock-fill" class="my-icon" scale="0.6" shift-v="-1"
+                                shift-h="5"></b-icon>
+                    </b-iconstack>
+                    <span class="letters"> {{ $t('Header.Avatar.adminSetting.unlock') }} </span>
+                </b-dropdown-item>
+
+                <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+                <b-dropdown-item class="my-inner-dropdown-item">
+                    <b-iconstack class="my-icon">
+                        <b-icon stacked icon="person" class="my-icon"></b-icon>
+                        <b-icon stacked icon="pencil-fill" class="my-icon" scale="0.5" shift-v="-2.5" shift-h="6"
+                                rotate="5"></b-icon>
+                    </b-iconstack>
+                    <span class="letters"> {{ $t('Header.Avatar.adminSetting.manage') }} </span>
+                </b-dropdown-item>
+
+                <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+                <b-dropdown-item class="my-inner-dropdown-item">
+                    <b-icon icon="brush" class="my-icon"></b-icon>
+                    <span class="letters"> {{ $t('Header.Avatar.adminSetting.design') }} </span>
+                </b-dropdown-item>
+
+                <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+                <b-dropdown-item class="my-inner-dropdown-item">
+                    <b-icon icon="at" class="my-icon"></b-icon>
+                    <span class="letters"> {{ $t('Header.Avatar.adminSetting.filter') }} </span>
+                </b-dropdown-item>
+            </div>
+
+
+        </b-dropdown-item>
+
+        <b-dropdown-divider v-if="isAdmin" class="my-divider"></b-dropdown-divider>
+
+        <!-- Mode switch -->
         <b-dropdown-item v-if="theme === ''" class="my-dropdown-item" @click="toggleTheme()">
             <b-icon icon="moon" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
@@ -24,8 +84,9 @@
             <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
         </b-dropdown-item>
 
-
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
+        <!-- Help -->
         <b-dropdown-item class="my-dropdown-item" @click="routeToHelp">
             <b-icon icon="question-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.help') }} </span>
@@ -39,12 +100,24 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+
 export default {
     name: "Avatar",
     data() {
         return {
-            'theme': ''
+            'theme': '',
+            'showAdmin': false,
+            'mobile': window.innerWidth < 576
         }
+    },
+    created() {
+        // reacts when screen size changes
+        window.addEventListener("resize", this.updateMobile);
+    },
+    destroyed() {
+        // removes event listener
+        window.removeEventListener("resize", this.updateMobile);
     },
     methods: {
         routeToProfile() {
@@ -58,16 +131,46 @@ export default {
             document.documentElement.setAttribute('data-theme', this.theme);
             localStorage.setItem('theme', this.theme);
         },
-        logout(){
+        toggleAdmin() {
+            this.showAdmin = !this.showAdmin
+        },
+        logout() {
             localStorage.removeItem('store')
             localStorage.clear()
-            this.$router.push('/'+this.$i18n.locale + '/login')
+            this.$router.push('/' + this.$i18n.locale + '/login')
+        },
+        updateMobile() {
+            // sets mobile depending on screen width (if smaller than 576 dropdown menu is collapsed)
+            this.mobile = window.innerWidth < 576
         }
+    },
+    computed: {
+        ...mapGetters(['isAdmin'])
     }
 }
 </script>
 
 <style scoped>
+
+.sub-menu {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    padding: 0;
+    color: var(--dark-grey);
+    text-align: left;
+    list-style: none;
+    background-clip: border-box;
+    border: 1px solid var(--elsa-blue);
+
+}
+
+.sub-menu-mobile {
+    color: var(--dark-grey);
+    text-align: left;
+    list-style: none;
+    border: 1px solid var(--elsa-blue);
+}
 
 .letters {
     margin-left: 0.75vw;
@@ -92,16 +195,23 @@ export default {
 .my-divider >>> .dropdown-divider {
     margin-top: 0;
     margin-bottom: 0;
+    border-color: var(--light-grey);
 }
 
 .my-dropdown-item >>> .dropdown-item {
     color: var(--dark-grey);
     padding-left: 0.5vw;
     background-color: var(--whitesmoke);
+    position: relative;
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {
-    background-color: var(--light-grey);
+    background-color: var(--closed-doc-hover);
+    transition-duration: 0.4s;
+}
+
+.my-inner-dropdown-item:hover >>> .dropdown-item {
+    background-color: var(--open-doc-hover);
     transition-duration: 0.4s;
 }
 

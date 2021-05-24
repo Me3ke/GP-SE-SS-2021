@@ -4,10 +4,10 @@
             <Header></Header>
         </div>
 
-        <BaseHeading name="UserPage.content"> </BaseHeading>
+        <BaseHeading name="UserPage.content"></BaseHeading>
 
         <div>
-            <UserInfoBox :user-information="user"></UserInfoBox>
+            <UserInfoBox :user="user" :userData="userData"></UserInfoBox>
         </div>
 
     </div>
@@ -16,25 +16,21 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import UserInfoBox from "@/main/vue/components/UserInfoBox";
-import {mapState} from "vuex"
+import {mapGetters} from 'vuex';
 
 export default {
     name: "UserPage",
     components: {Header, UserInfoBox},
-    computed: mapState({
-        user: state => state.user
-    }),
-    /*
-    methods: {
-      ...mapActions([
-        'requestUser' //<1>
-      ]),
+    computed: {
+        ...mapGetters({
+            user: 'getUser',
+            userData: 'getUserData'
+        })
     },
     created() {
-      this.id = 'hans.schneider@mail.de'
-      this.requestUser(this.id) //<2>
-    }
-     */
+        this.$store.dispatch('fetchUserData')
+        this.$store.dispatch('fetchUser')
+    },
 }
 </script>
 

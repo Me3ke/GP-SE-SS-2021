@@ -115,10 +115,7 @@ export default {
         }
     },
     created() {
-        this.src = pdf.createLoadingTask(this.pdfSrc)
-        this.src.promise.then(pdf => {
-            this.pageCount = pdf.numPages;
-        });
+        this.newSrc()
     },
     methods: {
         changeMode() {

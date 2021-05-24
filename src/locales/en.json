@@ -27,6 +27,13 @@
         "Avatar": {
             "profile": "My Profile",
             "settings": "Settings",
+            "adminSetting": {
+                "settings": "Admin settings",
+                "unlock": "Unlock users",
+                "manage": "Manage users",
+                "design": "Design settings",
+                "filter": "Filter e-mail addresses"
+            },
             "help": "Help",
             "logout": "Logout",
             "darkmode": "Dark mode",
@@ -54,7 +61,6 @@
         "envRead": "There are documents to read",
         "envSign": "There are documents to sign"
     },
-
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General Information",
@@ -169,8 +175,6 @@
             }
         ]
     },
-
-
     "Document": {
         "owner": "Owner",
         "date": "Created on",
@@ -205,7 +209,7 @@
         "country": "Country:",
         "city": "City:",
         "street": "Street:",
-        "houseNumber":"House number:",
+        "houseNumber": "House number:",
         "publicKey": "Public key:",
         "phoneNumber": "Phone number:",
         "newKeypair": "New Keypair"
@@ -230,7 +234,11 @@
         "doRead": "You have not proofread this document yet. Confirm now that you have.",
         "read": "Proofread",
         "didRead": "You have successfully proofread this document.",
-        "close": "Close"
+        "close": "Close",
+        "errors": {
+            "notFound": "The document you were looking for cannot be found.",
+            "refresh": "Please try refreshing the page or contact the owner of the document."
+        }
     },
     "Login": {
         "email": "e-mail",
@@ -242,15 +250,15 @@
         "fail": "Login failed."
     },
     "KeypairAlert": {
-      "generate": "Generate Keypair",
-      "upload": "Upload Keypair",
-      "selectOption": "Select option",
-      "cancelText": "Cancel",
-      "forceChoose": "You need to choose something!",
-      "warning": "Warning",
-      "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
-      "continueText": "Continue",
-      "generatingText": "Generating...",
-      "uploadText": "Uploading"
-  }
+        "generate": "Generate Keypair",
+        "upload": "Upload Keypair",
+        "selectOption": "Select option",
+        "cancelText": "Cancel",
+        "forceChoose": "You need to choose something!",
+        "warning": "Warning",
+        "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
+        "continueText": "Continue",
+        "generatingText": "Generating...",
+        "uploadText": "Uploading"
+    }
 }

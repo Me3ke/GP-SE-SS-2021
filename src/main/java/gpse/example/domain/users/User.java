@@ -140,7 +140,7 @@ public class User implements UserDetails {
      * This method adds Role to an user.
      * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
      */
-    public void addRole(String role) {
+    public void addRole(final String role) {
         if (roles == null) {
             this.roles = new ArrayList<>();
         }
@@ -180,8 +180,7 @@ public class User implements UserDetails {
      * @return the new envelope.
      */
     public Envelope createNewEnvelope(final String name) {
-        final Envelope envelope = new Envelope(name, this);
-        return envelope;
+        return new Envelope(name, this);
     }
 
     /**

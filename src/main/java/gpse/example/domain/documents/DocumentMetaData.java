@@ -144,4 +144,8 @@ public class DocumentMetaData {
     public String getMetaUserID() {
         return metaUserID;
     }
+
+    public long getId() {
+        return id;
+    }
 }

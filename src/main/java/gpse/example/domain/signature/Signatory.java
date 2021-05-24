@@ -1,6 +1,5 @@
 package gpse.example.domain.signature;
 
-import gpse.example.domain.documents.Document;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
@@ -17,9 +16,6 @@ public class Signatory {
     private long id;
 
     @ManyToOne
-    private Document document;
-
-    @ManyToOne
     private User user;
 
     @Column
@@ -27,25 +23,15 @@ public class Signatory {
 
     /**
      * Default constructor for a Signatory. Status is initialized with false.
-     * @param document The Document to which the signatory belongs to.
      * @param user the user which has to sign the corresponding document.
      */
-    public Signatory(final Document document, final User user) {
-        this.document = document;
+    public Signatory(final User user) {
         this.user = user;
         this.status = false;
     }
 
     protected Signatory() {
 
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(final Document document) {
-        this.document = document;
     }
 
     public User getUser() {

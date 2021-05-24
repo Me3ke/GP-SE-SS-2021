@@ -52,7 +52,7 @@ public class DocumentController {
      * The getDocumentFromEnvelope method gets a get request and creates an appropriate response.
      *
      * @param envelopeID the id of the envelope which contains the document.
-     * @param userID     the id of the owner doing the request.
+     * @param userID     the id of the user doing the request.
      * @param documentID the id of the document asked for.
      * @param download   a boolean which indicates if a document should be downloaded.
      * @return the DocumentGet response
@@ -60,7 +60,7 @@ public class DocumentController {
      *                                   if there was no document with this id in the database.
      * @throws DownloadFileException     if something went wrong while downloading the file.
      */
-    @GetMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                        final @PathVariable(USER_ID) String userID,
                                                        final @PathVariable(DOCUMENT_ID) long documentID,
@@ -87,6 +87,7 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
+            //TODO change to get owner
             return new DocumentGetResponse(document, userService.getUser(userID));
         } else {
             throw new DocumentNotFoundException();
@@ -108,7 +109,7 @@ public class DocumentController {
                                          final @RequestParam(USER_ID) String userID,
                                          final @RequestParam(ENVELOPE_ID) long envelopeID,
                                          final @RequestParam(DOCUMENT_ID) long documentID)
-                                            throws UploadFileException {
+        throws UploadFileException {
         try {
             userService.getUser(userID);
             final Document oldDocument = documentService.getDocument(documentID);
@@ -138,15 +139,16 @@ public class DocumentController {
 
     /**
      * The review method does a review for a given user on a given document.
-     * @param userID the id of the user reading the document.
+     *
+     * @param userID     the id of the user reading the document.
      * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public void review(final @RequestParam(USER_ID) String userID,
-                        final @RequestParam(ENVELOPE_ID) long envelopeID,
-                        final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+                       final @RequestParam(ENVELOPE_ID) long envelopeID,
+                       final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
@@ -161,15 +163,16 @@ public class DocumentController {
 
     /**
      * The sign method does a signing for a given user on a given document.
-     * @param userID the id of the user reading the document.
+     *
+     * @param userID     the id of the user reading the document.
      * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
     public void sign(final @RequestParam(USER_ID) String userID,
-                       final @RequestParam(ENVELOPE_ID) long envelopeID,
-                       final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+                     final @RequestParam(ENVELOPE_ID) long envelopeID,
+                     final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);

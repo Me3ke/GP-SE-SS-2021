@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpse.example.domain.users.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class UserController {
      * @param confService ConfirmationTokenService object
      * @param personalDataService PersonalDataService object
      */
+    @Autowired
     public UserController(UserService service, ConfirmationTokenService confService,
                           PersonalDataService personalDataService) {
         userService = service;
@@ -53,7 +55,6 @@ public class UserController {
     @PostMapping("/users")
     public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
         JSONResponseObject response = new JSONResponseObject();
-
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
             response.setMessage("username or password not specified");
@@ -108,9 +109,13 @@ public class UserController {
         return mapper.writeValueAsString(response);
     }
 
-    @GetMapping("/user/{*userID}/personal")
+    @GetMapping("/user/{userID}/personal")
     public PersonalData showPersonalData(@PathVariable("userID") final String username) {
         return userService.getUser(username).getPersonalData();
+    }
+    @GetMapping("/user/{userID}")
+    public User showUser(@PathVariable("userID") final String username) {
+        return userService.getUser(username);
     }
 
 }

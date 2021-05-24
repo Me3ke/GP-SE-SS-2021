@@ -1,13 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex";
-//import api from "../api";
 import axios from "axios";
 
 
 import * as messages from './modules/messages.js';
 import * as envelopes from './modules/envelopes.js';
-import * as document from './modules/document';
-import api from '../api'
+import * as document from './modules/document.js';
+import * as user from './modules/user';
+import * as userData from './modules/userData';
+import authorization from "@/main/vue/store/modules/authorization";
 
 Vue.use(Vuex)
 
@@ -15,87 +16,24 @@ const store = new Vuex.Store({
     modules: {
         messages,
         envelopes,
-        document
-    },
-    state: {
-        user: {
-            email: "sehrTolle@email.com",
-            firstname: "Otto",
-            lastname: "Wehner",
-            street: "Siegwardsweg",
-            houseNumber: 42,
-            postcode: 55555,
-            hometown: "Ownerhausen",
-            country: "Deutschland",
-            birthday: "30-04-1989",
-            phoneNumber: "+49 93483932",
-            publicKey: "z10f8dh736rz98712c6tz7r983t"
-        },
-        authenticated: null,
-        token: null,
-        username: null
+        document,
+        user,
+        userData,
+        auth: authorization
     },
     mutations: {
-        authenticate(state, token) { //<2>
-            if (token !== null) {
-                this.state.token = token
-                this.state.authenticated = true
-                axios.defaults.headers['Authorization'] = token
-            } else {
-                this.state.authenticated = false
-            }
-        },
-        initializeStore(state) {
+        INITIALIZE_STORE(state) {
             if (localStorage.getItem('store')) {
                 this.replaceState(Object.assign(state, JSON.parse(localStorage.getItem('store'))))
             } else {
-                state.authenticated = null
-                state.token = null
-                state.username = null
+                state.auth.authenticated = null;
+                state.auth.username = null;
+                state.auth.token = null
+                state.auth.role = null;
             }
         }
-    },
-    actions: {
-        requestToken({commit}, credentials) { //<4>
-            return new Promise((resolve, reject) => {
-                api.auth.login(credentials.username, credentials.password).then(res => {
-                    this.state.authenticated = true
-                    let token = res.headers.authorization
-                    commit('authenticate', token)
-                    resolve()
-                }).catch(() => {
-                    commit('authenticate', null)
-                    reject()
-                })
-            })
-        }
-    },
-    getters: {
-        isAuthenticated() {
-            return this.state.authenticated;
-        }
-    }
-    /*
-    mutations: {
-        setUser(state, user) { //<3>
-            this.state.user = user
-        },
-    },
-    actions: { //<4>
-        requestUser({commit}, id) { //<5>
-            return new Promise((resolve, reject) => {
-                api.user.get(id).then(res => {
-                    commit('setUser', res.data)
-                    resolve()
-                }).catch(() => {
-                    commit('setUser', [])
-                    reject()
-                })
-            })
-        }
-    }
 
-     */
+    }
 })
 
 store.subscribe((mutation, state) => {
@@ -105,4 +43,3 @@ store.subscribe((mutation, state) => {
 
 
 export default store
-
