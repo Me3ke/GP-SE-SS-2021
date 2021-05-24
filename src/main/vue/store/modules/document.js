@@ -16,7 +16,7 @@ export const state = {
             signatureType: "simple",
             signatory: true,
             reader: false,
-            signed: false,
+            signed: true,
             read: false
         },
         {
@@ -229,6 +229,12 @@ export const state = {
 export const mutations = {
     SET_DOCUMENT(state, doc) {
         state.selectedDocument = doc
+    },
+
+    EDIT_DOCUMENT(state,doc) {
+        const originalDocIndex = state.documents.findIndex(i => i.id === doc.id);
+        state.documents[originalDocIndex] = doc
+
     }
 }
 
@@ -237,11 +243,24 @@ export const actions = {
     // TODO use service here instead of changing state
     fetchDocument({state, commit}, id) {
         commit('SET_DOCUMENT', state.documents.find(doc => doc.id === id))
+    },
+
+
+    /*
+         TODO add axios call to change the document in the database instead of changing the state
+          (local storage, need refreshing for changing the view)
+     */
+    editDocument({commit}, doc) {
+        commit('EDIT_DOCUMENT', doc)
     }
 }
 
 export const getters = {
     document: (state) => {
         return state.selectedDocument
+    },
+    // get the documents array
+    getDocuments: (state)  =>{
+        return state.documents
     }
 }

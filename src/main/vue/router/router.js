@@ -13,6 +13,7 @@ import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import store from "@/main/vue/store/store";
+import BlankTestPage from "@/main/vue/views/BlankTestPage";
 
 Vue.use(VueRouter)
 
@@ -123,6 +124,11 @@ const router = new VueRouter({
                     meta: {
                         requiresAuth: true
                     }
+                },
+                {
+                    path: 'test',
+                    name: 'test',
+                    component: BlankTestPage
                 },
                 {
                     path: '*',
