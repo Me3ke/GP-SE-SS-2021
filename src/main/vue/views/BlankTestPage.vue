@@ -2,15 +2,11 @@
     <div>
         <base-heading></base-heading>
         <upload-new-version-button
-            :document="documents[0]"
+            :document="actualFile"
             :new-document="newUploadedFile"
             v-on:update-document="updateDoc"
         ></upload-new-version-button>
-
-        <DocumentBox :doc="documents[0]"></DocumentBox>
-
-        <p> Data: {{documents[0]}}</p>
-
+        <DocumentBox :doc="actualFile"></DocumentBox>
     </div>
 </template>
 
@@ -25,12 +21,22 @@ export default {
     components: {DocumentBox, UploadNewVersionButton},
     data() {
         return {
-            /// New File to get replaced
             /*
-            TODO add the component for the document settings (title,state=open, endDate,
-             signatureType, reader, signed=false, read)
+            TODO add the component for the document settings
+
+            Upload File will also be an axios call
+            (
+             title,
+             state=open  ,
+             endDate // changeable,
+             signatureType // changeable,
+              reader,
+              signed=false // will be reseted,
+              read // optionally be changed but can also stay on true
+              )
             */
-            newUploadedFile: {
+
+            actualFile: {
                 id: 1,
                 title: "Essenplan KW 25",
                 creationDate: "01.05.2021",
@@ -46,20 +52,42 @@ export default {
                 signatory: true,
                 reader: false,
                 signed: false,
-                read: false,
+                read: true,
+            },
+
+
+            newUploadedFile: {
+                id: 1,
+                title: "Essenplan KW 25 #2",
+                creationDate: "01.05.2021",
+                owner: {
+                    eMail: "sehrTolle@email.com",
+                    firstname: "Otto",
+                    lastname: "Wehner"
+                },
+                state: "open",
+                endDate: "15.06.2021",
+                dataType: "PDF",
+                signatureType: "simple",
+                signatory: true,
+                reader: false,
+                signed: true,
+                read: true,
             }
         }
     },
 
     computed: {
         ...mapGetters({
-            documents: 'getDocuments'
+            document: 'getDocument'
         })
     },
     methods: {
         updateDoc() {
            // debugger; // eslint-disable-line no-debugger
-            this.$store.dispatch('editDocument', this.newUploadedFile)
+           // this.$store.dispatch('editDocument', this.newUploadedFile)
+            this.actualFile = this.newUploadedFile
+
         }
     }
 }
