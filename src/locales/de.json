@@ -215,6 +215,15 @@
         "phoneNumber": "Telefonnummer:",
         "newKeypair": "Neues Schlüsselpaar"
     },
+    "MessageSettings": {
+        "settings": "Benachrichtigungs-Einstellungen",
+        "toDo": "Signier-/Gegenlesen-Anfragen",
+        "sign": "Signier-Erninnerungen",
+        "read": "Gegenlesen-Erinnerungen",
+        "progress": "Dokumenten-Fortschritt",
+        "newVersion": "Dokumenten-Aktualisierung",
+        "protocol": "Protokoll-Verfügbarkeit"
+    },
     "UploadDoc": {
         "upload": "Hochladen",
         "menuTitle": "Dokument hochladen",

@@ -214,6 +214,15 @@
         "phoneNumber": "Phone number:",
         "newKeypair": "New Keypair"
     },
+    "MessageSettings": {
+        "settings": "Message settings",
+        "toDo": "Signature/proofread requests",
+        "sign": "Signature reminders",
+        "read": "Proofread reminders",
+        "progress": "Document progress",
+        "newVersion": "Document updates",
+        "protocol": "Protocol availability"
+    },
     "UploadDoc": {
         "upload": "Upload",
         "menuTitle": "Upload document",
