@@ -30,13 +30,13 @@
                         <b-col>
                             <span @click="filterOpen()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filters.open"></FilterButton>
+                                              :isActive="this.filter.state === 'open'"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
-                                              :isActive="this.filters.closed"></FilterButton>
+                                              :isActive="this.filter.state === 'closed'"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -48,7 +48,7 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 68vh">
-                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)"
+                    <div v-for="envelope in this.envelopes"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <!-- Different styles for open/closed documents TODO-->
@@ -136,6 +136,7 @@ import DocumentBoxClosed from "@/main/vue/components/documentBoxes/DocumentBoxCl
 import DocumentBoxSignRead from "@/main/vue/components/documentBoxes/DocumentBoxSignRead";
 import EnvelopeBoxClosed from "@/main/vue/components/envelopeBoxes/EnvelopeBoxClosed";
 import EnvelopeBoxSignRead from "@/main/vue/components/envelopeBoxes/EnvelopeBoxSignRead";
+import {mapGetters} from "vuex";
 
 export default {
     name: "OverviewPage",
@@ -154,27 +155,42 @@ export default {
     data() {
         return {
             // Needs to be replaced with API Request TODO
-            filters: {
-                open: false,
-                closed: false
-            }
+            filter: {
+                //title: "",
+                //envelopeID: 0,
+                state: "",
+                //owner: "",
+                //creationDateMin: null,
+                //creationDateMax: null,
+                //endDateMin: null,
+                //endDateMax: null,
+                //signatureType: "",
+                //datatype: "",
+                //signatories: null,
+                //readers: null,
+                signed: null,
+                read: null
+            },
+            pageLimit: 50,
+            page: 1,
+            sort: null
         }
     },
     methods: {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            this.filters.open = !this.filters.open;
-            if (this.filters.closed && this.filters.open) {
-                this.filters.closed = false;
+            if (this.filter.state === null || this.filter.state === "closed") {
+                this.filter.state = "open";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         },
         filterClosed() {
-            this.filters.closed = !this.filters.closed;
-            if (this.filters.open && this.filters.closed) {
-                this.filters.open = false;
+            if (this.filter.state === null || this.filter.state === "open") {
+                this.filter.state = "closed";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         },
         getEnvData(env) {
             let open = false;
@@ -195,10 +211,14 @@ export default {
             return {open: open, needToSign: toSign, needToRead: toRead};
         }
     },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
     computed: {
-        getEnvs() {
-            return this.$store.getters.getEnvelopesFiltered
-        }
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getError: 'envelopes/getErrorGetEnvelopes'
+        })
     }
 }
 

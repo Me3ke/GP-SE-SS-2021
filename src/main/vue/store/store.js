@@ -39,6 +39,5 @@ store.subscribe((mutation, state) => {
     axios.defaults.headers['Authorization'] = state.token
 });
 
-
 export default store
 
