@@ -216,12 +216,30 @@
     },
     "MessageSettings": {
         "settings": "Message settings",
-        "toDo": "Signature/proofread requests",
-        "sign": "Signature reminders",
-        "read": "Proofread reminders",
-        "progress": "Document progress",
-        "newVersion": "Document updates",
-        "protocol": "Protocol availability"
+        "toDo": {
+            "text": "Signature/proofread requests",
+            "exp": "Get website alerts for new signature/proofread requests."
+        },
+        "sign": {
+            "text": "Signature reminders",
+            "exp": "Get website alerts as a reminder to sign documents/envelopes."
+        },
+        "read": {
+            "text": "Proofread reminders",
+            "exp": "Get website alerts as a reminder to proofread documents/envelopes."
+        },
+        "progress": {
+            "text": "Document progress",
+            "exp": "Get website alerts that show the progress of your own documents/envelopes."
+        },
+        "newVersion": {
+            "text": "Document updates",
+            "exp": "Get website alerts about updated documents."
+        },
+        "protocol": {
+            "text": "Protocol availability",
+            "exp": "Get website alerts about the availability of document protocols."
+        }
     },
     "UploadDoc": {
         "upload": "Upload",

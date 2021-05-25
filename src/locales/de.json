@@ -217,12 +217,30 @@
     },
     "MessageSettings": {
         "settings": "Benachrichtigungs-Einstellungen",
-        "toDo": "Signier-/Gegenlesen-Anfragen",
-        "sign": "Signier-Erninnerungen",
-        "read": "Gegenlesen-Erinnerungen",
-        "progress": "Dokumenten-Fortschritt",
-        "newVersion": "Dokumenten-Aktualisierung",
-        "protocol": "Protokoll-Verfügbarkeit"
+        "toDo": {
+            "text": "Signier-/Gegenlesen-Anfragen",
+            "exp": "Erhalten von Website-Benachrichtungen über neue Anfragen zum Signieren/Gegenlesen von Dokumenten/Dokumentenverbunden."
+        },
+        "sign": {
+            "text": "Signier-Erninnerungen",
+            "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
+        },
+        "read": {
+            "text": "Gegenlesen-Erinnerungen",
+            "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
+        },
+        "progress": {
+            "text": "Dokumenten-Fortschritt",
+            "exp": "Erhalten von Website-Benachrichtungen über den Fortschritt von eigenen Dokumenten/Dokumentenverbunden."
+        },
+        "newVersion": {
+            "text": "Dokumenten-Aktualisierung",
+            "exp": "Erhalten von Website-Benachrichtungen über die Aktualisierung von Dokumenten."
+        },
+        "protocol": {
+            "text": "Protokoll-Verfügbarkeit",
+            "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
+        }
     },
     "UploadDoc": {
         "upload": "Hochladen",

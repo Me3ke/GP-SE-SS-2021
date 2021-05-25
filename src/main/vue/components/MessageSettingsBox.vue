@@ -10,9 +10,13 @@
                 </div>
                 <b-list-group flush>
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <span>
-                             {{ $t('MessageSettings.toDo') }}
-                        </span>
+                          <span>
+                             {{ $t('MessageSettings.toDo.text') }}
+                               <b-icon id="tooltip-target-1" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-1" triggers="hover">
+                                   {{ $t('MessageSettings.toDo.exp') }}
+                              </b-tooltip>
+                          </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
                             <b-badge @click="clicked = !clicked" :class="[clicked ? 'badge-on' : 'badge-off']">
@@ -23,7 +27,11 @@
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
-                              {{ $t('MessageSettings.sign') }}
+                              {{ $t('MessageSettings.sign.text') }}
+                             <b-icon id="tooltip-target-2" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-2" triggers="hover">
+                                   {{ $t('MessageSettings.sign.exp') }}
+                              </b-tooltip>
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
@@ -33,7 +41,11 @@
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
-                                   {{ $t('MessageSettings.read') }}
+                                   {{ $t('MessageSettings.read.text') }}
+                             <b-icon id="tooltip-target-3" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-3" triggers="hover">
+                                   {{ $t('MessageSettings.read.exp') }}
+                              </b-tooltip>
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
@@ -43,7 +55,11 @@
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
-                             {{ $t('MessageSettings.progress') }}
+                             {{ $t('MessageSettings.progress.text') }}
+                             <b-icon id="tooltip-target-4" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-4" triggers="hover">
+                                   {{ $t('MessageSettings.progress.exp') }}
+                              </b-tooltip>
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
@@ -53,7 +69,11 @@
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
-                            {{ $t('MessageSettings.newVersion') }}
+                            {{ $t('MessageSettings.newVersion.text') }}
+                             <b-icon id="tooltip-target-5" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-5" triggers="hover">
+                                   {{ $t('MessageSettings.newVersion.exp') }}
+                              </b-tooltip>
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
@@ -63,7 +83,11 @@
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
-                             {{ $t('MessageSettings.protocol') }}
+                             {{ $t('MessageSettings.protocol.text') }}
+                             <b-icon id="tooltip-target-6" icon="info-circle-fill" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip-target-6" triggers="hover">
+                                   {{ $t('MessageSettings.protocol.exp') }}
+                              </b-tooltip>
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
@@ -89,6 +113,12 @@ export default {
 </script>
 
 <style scoped>
+
+.my-icon {
+    fill: var(--elsa-blue);
+    height: 1em;
+    width: auto;
+}
 
 /* Badges aka On/off switches */
 .badge-on {
