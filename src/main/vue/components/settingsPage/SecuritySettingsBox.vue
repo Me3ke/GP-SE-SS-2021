@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                     <h4>
-                        {{ $t('Settings.UserInfoBox.publicKeys') }}
+                        {{ $t('Settings.SecuritySettings.settings') }}
                     </h4>
                 </div>
                 <b-list-group>
@@ -12,12 +12,12 @@
                         <b-row>
                             <b-col style="text-align: left">
                                 <span>
-                                    {{ $t('Settings.UserInfoBox.publicKey') }} {{ this.userData.publicKey }}
+                                    {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
                             </b-col>
                             <b-col style="text-align: right">
                                 <b-button id="keyButton" @click="decideLanguage">
-                                    {{ $t('Settings.UserInfoBox.newKeypair') }}
+                                    {{ $t('Settings.SecuritySettings.newKeypair') }}
                                 </b-button>
                             </b-col>
                         </b-row>

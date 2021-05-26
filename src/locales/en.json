@@ -200,7 +200,6 @@
         "UserInfoBox": {
             "profileInformation": "Profile information",
             "accountInformation": "Account information",
-            "publicKeys": "Public Keys",
             "email": "E-Mail:",
             "firstName": "First name:",
             "lastName": "Last name:",
@@ -209,12 +208,17 @@
             "city": "City:",
             "street": "Street:",
             "houseNumber": "House number:",
+            "phoneNumber": "Phone number:"
+        },
+        "SecuritySettings": {
+            "settings": "Security settings",
+            "publicKeys": "Public Keys",
             "publicKey": "Public key:",
-            "phoneNumber": "Phone number:",
             "newKeypair": "New Keypair"
         },
         "MessageSettings": {
             "settings": "Message settings",
+            "send": "Save",
             "toDo": {
                 "text": "Signature/proofread requests",
                 "exp": "Get website alerts for new signature/proofread requests."

@@ -22,6 +22,9 @@
         font-size: 0.6em;
     }
 
+    .bigSpan {
+        font-size: 1em;
+    }
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -33,6 +36,10 @@
 
     span {
         font-size: 0.7em;
+    }
+
+    .bigSpan {
+        font-size: 1.2em;
     }
 
 }
@@ -47,6 +54,10 @@
     span {
         font-size: 0.7em;
     }
+
+    .bigSpan {
+        font-size: 1.2em;
+    }
 }
 
 /* Medium devices (tablets, 768px and up) */
@@ -58,6 +69,10 @@
 
     span {
         font-size: 0.7em;
+    }
+
+    .bigSpan {
+        font-size: 1.2em;
     }
 
 }
@@ -72,6 +87,10 @@
     span {
         font-size: 0.9em;
     }
+
+    .bigSpan {
+        font-size: 1.6em;
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up)*/
@@ -79,6 +98,10 @@
     h4 {
         font-size: 1.3em;
         text-overflow-mode: ellipse;
+    }
+
+    .bigSpan {
+        font-size: 1.6em;
     }
 }
 
@@ -100,13 +123,19 @@
     color: var(--shadow-grey);
 }
 
-.badge-on:hover, .badge-off:hover {
-    background-color: var(--open-doc-hover);
-    transition: 0.4s;
-}
-
 .badge-off:hover {
     color: var(--whitesmoke);
+}
+
+.badge-send {
+    background-color: var(--green);
+    color: var(--whitesmoke);
+}
+
+.badge-on:hover, .badge-off:hover, .badge-send:hover {
+    background-color: var(--open-doc-hover);
+    transition: 0.4s;
+    cursor: pointer;
 }
 
 /* Security settings */

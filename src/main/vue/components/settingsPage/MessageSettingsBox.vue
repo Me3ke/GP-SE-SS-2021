@@ -19,7 +19,8 @@
                           </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge @click="clicked = !clicked" :class="[clicked ? 'badge-on' : 'badge-off']">
+                            <b-badge @click="clicked = !clicked"
+                                     :class="[clicked ? 'badge-on font-weight-normal' : 'badge-off font-weight-normal']">
                                 {{ clicked }}
                             </b-badge>
                         </h4>
@@ -35,7 +36,7 @@
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge class="badge-on">On</b-badge>
+                            <b-badge class="badge-on font-weight-normal">On</b-badge>
                         </h4>
                     </b-list-group-item>
 
@@ -49,7 +50,7 @@
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge class="badge-on">On</b-badge>
+                            <b-badge class="badge-on font-weight-normal">On</b-badge>
                         </h4>
                     </b-list-group-item>
 
@@ -63,7 +64,7 @@
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge class="badge-on">On</b-badge>
+                            <b-badge class="badge-on font-weight-normal">On</b-badge>
                         </h4>
                     </b-list-group-item>
 
@@ -77,7 +78,7 @@
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge class="badge-on">On</b-badge>
+                            <b-badge class="badge-on font-weight-normal">On</b-badge>
                         </h4>
                     </b-list-group-item>
 
@@ -91,8 +92,18 @@
                         </span>
                         <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
                         <h4>
-                            <b-badge class="badge-off">Off</b-badge>
+                            <b-badge class="badge-off font-weight-normal">Off</b-badge>
                         </h4>
+                    </b-list-group-item>
+
+
+                    <b-list-group-item class="d-flex justify-content-end align-items-center"
+                                       style=" padding-top: 0; padding-bottom: 0;">
+                        <span class="bigSpan">
+                            <b-badge class="badge-send font-weight-normal">{{
+                                    $t('Settings.MessageSettings.send')
+                                }}</b-badge>
+                        </span>
                     </b-list-group-item>
                 </b-list-group>
             </div>

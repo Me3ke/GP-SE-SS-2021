@@ -201,7 +201,6 @@
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
             "accountInformation": "Kontoinformationen",
-            "publicKeys": "Öffentliche Schlüssel",
             "email": "E-Mail:",
             "firstName": "Vorname:",
             "lastName": "Nachname:",
@@ -210,12 +209,17 @@
             "city": "Stadt:",
             "street": "Straße:",
             "houseNumber": "Hausnummer:",
+            "phoneNumber": "Telefonnummer:"
+        },
+        "SecuritySettings": {
+            "settings": "Sicherheits-Einstellungen",
+            "publicKeys": "Öffentliche Schlüssel",
             "publicKey": "Öffentlicher Schlüssel:",
-            "phoneNumber": "Telefonnummer:",
             "newKeypair": "Neues Schlüsselpaar"
         },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",
+            "send": "Speichern",
             "toDo": {
                 "text": "Signier-/Gegenlesen-Anfragen",
                 "exp": "Erhalten von Website-Benachrichtungen über neue Anfragen zum Signieren/Gegenlesen von Dokumenten/Dokumentenverbunden."
