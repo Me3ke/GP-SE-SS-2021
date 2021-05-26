@@ -138,7 +138,7 @@ public class UserController {
         if (admin.getRoles().contains("ROLE_ADMIN")) {
             userService.validateUser(user);
         } else {
-            response.setMessage("noAdmin");
+            response.setMessage(adminUsername +  " is no Admin");
         }
 
         if (user.isAdminValidated()) {
