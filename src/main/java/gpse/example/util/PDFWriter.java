@@ -17,7 +17,7 @@ import java.util.List;
     /**
      * Location of output file.
      */
-    private static final String PROTOCOL_OUTPUT_PATH = "./src/main/resources/output/";
+    private static final String PROTOCOL_OUTPUT_PATH = "./src/main/resources/out/";
 
     /**
      * file type postfix.
