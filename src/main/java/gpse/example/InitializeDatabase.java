@@ -78,6 +78,7 @@ public class InitializeDatabase implements InitializingBean {
                 "Schneider", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
             user.addRole("ROLE_USER");
             user.setEnabled(true);
+            user.setAdminValidated(true);
             user.setPersonalData(personalDataService.savePersonalData(personalData));
             userService.saveUser(user);
         }

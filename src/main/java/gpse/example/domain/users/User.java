@@ -59,6 +59,9 @@ public class User implements UserDetails {
     @Column
     private boolean enabled;
 
+    @Column
+    private boolean adminValidated;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -82,6 +85,7 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
+        this.adminValidated = false;
     }
 
     public static long getSerialVersionUID() {
@@ -275,4 +279,11 @@ public class User implements UserDetails {
         this.username = username;
     }
 
+    public boolean isAdminValidated() {
+        return adminValidated;
+    }
+
+    public void setAdminValidated(boolean adminValidated) {
+        this.adminValidated = adminValidated;
+    }
 }

@@ -104,7 +104,12 @@ public class UserController {
         } else {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
-            response.setMessage("Adminvalidation required:" + false);
+            if(optionalConfirmationToken.get().getUser().getEmail().matches(".*@techfak\\.de")) {
+                response.setMessage("Adminvalidation required:" + false);
+                //optionalConfirmationToken.ifPresent(userService::validateUser)
+            } else {
+                response.setMessage("Adminvalidation required:" + true);
+            }
         }
         return mapper.writeValueAsString(response);
     }
