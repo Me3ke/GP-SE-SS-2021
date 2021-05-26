@@ -30,13 +30,18 @@
 
 <script>
 import i18n from "@/i18n";
-
+import {mapGetters} from 'vuex';
 export default {
     name: "SecuritySettingsBox",
     props: {
         user: Object,
         userData: Object
     },
+    computed: {
+      ...mapGetters({
+        keypair: 'getKeypair',
+      })
+  },
     methods: {
         decideLanguage() {
             if (i18n.locale === 'de') {
@@ -49,7 +54,7 @@ export default {
         async showAlertEN() {
             const inputOptions = new Promise((resolve) => {
                 resolve({
-                    'generate': 'Generate keypair',
+                    'generate': 'Generate keypair' ,
                     'upload': 'Upload public key',
                 })
             })
@@ -80,7 +85,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generating...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -95,7 +99,7 @@ export default {
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        this.handleUploadKeyPairs
+                        this.handleUploadKeyPairs()
                         this.$swal.fire('Uploading...')
                     }
                 })
@@ -135,7 +139,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generieren...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -156,6 +159,10 @@ export default {
             }
         },
         handleGenerateKeyPairs() {
+          this.$store.dispatch('callToGenerate')
+          this.$swal.fire({
+            text: this.keypair.privateKey
+          })
             //TODO Handling of the keypairs via generating
 
         },
