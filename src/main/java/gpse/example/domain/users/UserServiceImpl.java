@@ -108,17 +108,20 @@ public class UserServiceImpl implements UserService {
             "http://localhost:8080/register/confirm/" + token);
     }
 
+    @Override
     public void validateUser(User user) {
         user.setAdminValidated(true);
         userRepository.save(user);
     }
 
+    @Override
     public void infoNewExtUser(User user) {
        List<User> userList = getUsers();
         for (User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
                 smtpServerHelper.sendValidationInfo(value.getEmail(), user.getEmail());
-                return; //otional ohne return => alle Admins benachrichtigen.
+                return;
+                //otional ohne return => alle Admins benachrichtigen.
             }
         }
 

@@ -27,6 +27,7 @@ public class UserController {
     private static final int STATUS_CODE_USER_EXISTS_ALREADY = 421;
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
+    private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
@@ -108,23 +109,37 @@ public class UserController {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
 
-            if(user.getEmail().matches(".*@techfak\\.de")) {
-                response.setMessage("Adminvalidation required:" + false);
+            if (user.getEmail().matches(".*@techfak\\.de")) {
+                response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
-                response.setMessage("Adminvalidation required:" + true);
+                response.setMessage(ADMINVALIDATION_REQUIRED + true);
                 userService.infoNewExtUser(user);
             }
         }
         return mapper.writeValueAsString(response);
     }
 
-    @GetMapping("/users/{userID}/validate")
-    public String validateUser(@PathVariable("userID") final String username) throws JsonProcessingException {
+    /**
+     * Method to validate an useraccount by admin.
+     * @param adminUsername the identifier of the admin account that validates the user
+     * @param username the identifier of the useraccount that needs to be validated
+     * @return SONResponse containing statusCode and a message
+     * @throws JsonProcessingException thrown by mapper
+     */
+    @GetMapping("/users/{adminID}/validate/{userID}")
+    public String adminUserValidation(@PathVariable("adminID") final String adminUsername,
+                                      @PathVariable("userID") final String username)
+        throws JsonProcessingException {
 
         JSONResponseObject response = new JSONResponseObject();
         User user = userService.getUser(username);
-        userService.validateUser(user);
+        User admin = userService.getUser(adminUsername);
+        if (admin.getRoles().contains("ROLE_ADMIN")) {
+            userService.validateUser(user);
+        } else {
+            response.setMessage("noAdmin");
+        }
 
         if (user.isAdminValidated()) {
             response.setStatus(STATUS_CODE_OK);
