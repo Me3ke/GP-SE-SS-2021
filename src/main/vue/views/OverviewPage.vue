@@ -48,7 +48,7 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 68vh">
-                    <div v-for="envelope in this.envelopes"
+                    <div v-for="envelope in this.envelopes(filter)"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <!-- Different styles for open/closed documents TODO-->
@@ -158,7 +158,7 @@ export default {
             filter: {
                 //title: "",
                 //envelopeID: 0,
-                state: "",
+                state: null,
                 //owner: "",
                 //creationDateMin: null,
                 //creationDateMax: null,
@@ -168,8 +168,8 @@ export default {
                 //datatype: "",
                 //signatories: null,
                 //readers: null,
-                signed: null,
-                read: null
+                //signed: null,
+                //read: null
             },
             pageLimit: 50,
             page: 1,

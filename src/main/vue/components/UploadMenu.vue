@@ -50,7 +50,7 @@
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
                                                 <select class="form-control" id="selectEnvelope">
-                                                    <option v-for="envelope in getEnvs(false, false, true)" :key="envelope.id"> {{envelope.name}} </option>
+                                                    <option v-for="envelope in this.envelopes" :key="envelope.id"> {{envelope.name}} </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -133,6 +133,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: 'UploadButton',
     props: {
@@ -145,10 +147,13 @@ export default {
             newEnv: false
         };
     },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
     computed: {
-        getEnvs() {
-            return this.$store.getters.getEnvelopesFiltered
-        }
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes'
+        })
     }
 }
 </script>

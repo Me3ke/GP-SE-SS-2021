@@ -132,7 +132,6 @@ public class EnvelopeController {
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
             envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner));
-            System.out.println(envelope.getDocumentList().size());
         }
         return envelopeGetResponseList;
 

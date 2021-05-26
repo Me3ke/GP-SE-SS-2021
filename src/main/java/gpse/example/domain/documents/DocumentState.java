@@ -14,7 +14,7 @@ public enum DocumentState {
      */
     READ(0),
     /**
-     * Changes to signed state if all users have read the document.
+     * Changes to signed state if all users have signed the document.
      */
     SIGNED(1),
     /**

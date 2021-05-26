@@ -32,8 +32,26 @@ export const actions = {
 }
 
 export const getters = {
-    getEnvelopes: (state) => {
-        return state.envelopes
+    getEnvelopes: (state) => (filters) => {
+        let result = [];
+        let i
+        for (i = 0; i < state.envelopes.length; i++) {
+            console.log(state.envelopes[i].name)
+            let open = false
+            let j
+            for (j = 0; j < state.envelopes[i].documents.length; j++) {
+                console.log(state.envelopes[i].documents[j].state)
+                // Filter for state TODO: Other filter functions
+                let env_state = state.envelopes[i].documents[j].state
+                if (!(filters.state === null) && (env_state === "OPEN" || env_state === "READ")) {
+                    open = true
+                }
+            }
+            if ((open === true && filters.state === "open") || (open === false && filters.state === "closed") || filters.state === null) {
+                result.push(state.envelopes[i])
+            }
+        }
+        return result
     },
     getErrorGetEnvelopes: (state) => {
         return state.errorGetEnvelopes
