@@ -25,6 +25,12 @@ public class SMTPServerHelper {
      */
     public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
+    public static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
+        + "ein neuer Nutzer möchte sich registrieren. %n"
+        + "Bitte bestätigen sie die Emailadresse %s ";
+
+    public static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
+
     @Autowired
     private final JavaMailSender mailSender;
 
@@ -39,7 +45,6 @@ public class SMTPServerHelper {
      * @param userName name of the new user.
      * @param link validation link.
      */
-
     public void sendRegistrationEmail(final String toAddress, final String userName, final String link) {
         final SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
@@ -48,7 +53,16 @@ public class SMTPServerHelper {
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, userName, link));
 
         mailSender.send(message);
+    }
 
+    public void sendValidationInfo(final String toAddress, final String newUserEmail) {
+        final SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@gmail.com");
+        message.setTo(toAddress);
+        message.setSubject(VALIDATION_SUBJECT);
+        message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
+
+        mailSender.send(message);
     }
 
 }
