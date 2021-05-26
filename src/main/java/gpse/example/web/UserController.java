@@ -26,6 +26,7 @@ public class UserController {
     private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
     private static final int STATUS_CODE_USER_EXISTS_ALREADY = 421;
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
+    private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
@@ -102,14 +103,33 @@ public class UserController {
             response.setStatus(STATUS_CODE_TOKEN_EXPIRED);
             response.setMessage("ConfirmationToken Expired");
         } else {
+            final User user = optionalConfirmationToken.get().getUser();
+
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
-            if(optionalConfirmationToken.get().getUser().getEmail().matches(".*@techfak\\.de")) {
+
+            if(user.getEmail().matches(".*@techfak\\.de")) {
                 response.setMessage("Adminvalidation required:" + false);
-                //optionalConfirmationToken.ifPresent(userService::validateUser)
+                userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
                 response.setMessage("Adminvalidation required:" + true);
+                userService.infoNewExtUser(user);
             }
+        }
+        return mapper.writeValueAsString(response);
+    }
+
+    @GetMapping("/users/{userID}/validate")
+    public String validateUser(@PathVariable("userID") final String username) throws JsonProcessingException {
+
+        JSONResponseObject response = new JSONResponseObject();
+        User user = userService.getUser(username);
+        userService.validateUser(user);
+
+        if (user.isAdminValidated()) {
+            response.setStatus(STATUS_CODE_OK);
+        } else {
+            response.setStatus(STATUS_CODE_VALIDATION_FAILED);
         }
         return mapper.writeValueAsString(response);
     }

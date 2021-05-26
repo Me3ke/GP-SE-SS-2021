@@ -286,4 +286,12 @@ public class User implements UserDetails {
     public void setAdminValidated(boolean adminValidated) {
         this.adminValidated = adminValidated;
     }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }
