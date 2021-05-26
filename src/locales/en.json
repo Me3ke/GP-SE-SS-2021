@@ -241,6 +241,18 @@
         "feedback-invalid-password": "Minimum password length is 4 characters.",
         "fail": "Login failed."
     },
+    "Register": {
+        "email": "e-mail",
+        "password": "password",
+        "register": "sign up",
+        "sign-up": "sign up",
+        "feedback-invalid-email": "Please enter an valid e-mail.",
+        "feedback-invalid-password": "Minimum password length is 4 characters.",
+        "fail": "Login failed.",
+        "firstname": "first name",
+        "surname": "surname",
+        "feedback-invalid-name": "Please enter an valid name."
+    },
     "KeypairAlert": {
       "generate": "Generate Keypair",
       "upload": "Upload Keypair",

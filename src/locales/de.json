@@ -239,6 +239,18 @@
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen."
     },
+    "Register": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "register": "Registrierung",
+        "sign-up": "Registrieren",
+        "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
+        "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
+        "fail": "Registrierung fehlgeschlagen.",
+        "firstname": "Vorname",
+        "surname": "Nachname",
+        "feedback-invalid-name": "Bitte einen validen Namen eingeben."
+    },
     "KeypairAlert": {
         "generate": "Generiere Schlüsselpaar",
         "upload": "Lade Schlüsselpaar hoch",

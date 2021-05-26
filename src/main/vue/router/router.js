@@ -6,6 +6,7 @@ import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 import UserGuide from "@/main/vue/views/UserGuide";
 import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
+import RegisterPage from "../views/RegisterPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
@@ -59,6 +60,14 @@ const router = new VueRouter({
                     path: 'login',
                     name: 'login',
                     component: LoginPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'register',
+                    name: 'register',
+                    component: RegisterPage,
                     meta: {
                         guest: true
                     }
