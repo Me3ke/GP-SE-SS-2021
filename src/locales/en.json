@@ -303,5 +303,21 @@
         "continueText": "Continue",
         "generatingText": "Generating...",
         "uploadText": "Uploading"
+    },
+    "TwoFakAuth": {
+        "login": {
+            "title": "Set-up your two-factor authentication",
+            "firstStep": "Step 1: Scan the qr-code with your authenticator app",
+            "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
+            "always": "Enable two-factor authentication for every login",
+            "alwaysExp": "After a successful login you have to confirm your identity by using your second factor.",
+            "cancel": "Cancel",
+            "continue": "Wrong code format",
+            "didIt": "You successfully set up your second factor!",
+            "canUse": "You can now use the whole application",
+            "go": "Let's go!",
+            "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
+            "again": "Try again"
+        }
     }
 }

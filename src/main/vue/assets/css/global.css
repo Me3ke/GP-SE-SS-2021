@@ -30,6 +30,12 @@
 
     /* Login */
     --header-login: #D8D8D9;
+
+    /* Modal */
+    --modalBackground: rgba(0, 0, 0, .5);
+
+    /* Alert Dismiss */
+    --darkRed: #a22c2c;
 }
 
 [data-theme="darkMode"] {
@@ -59,6 +65,10 @@
     --user-info: #363f48;
 
     --header-login: #6a6a6d;
+
+    --modalBackground: rgba(0, 0, 0, .65);
+
+    --darkRed: #501515;
 }
 
 
@@ -181,6 +191,7 @@ body {
 .tooltip-inner {
     background-color: var(--elsa-blue);
     color: var(--whitesmoke);
+    opacity: 1;
 }
 
 .tooltip.bs-tooltip-right .arrow:before {
@@ -197,4 +208,10 @@ body {
 
 .tooltip.bs-tooltip-top .arrow:before {
     border-top-color: var(--elsa-blue);
+}
+
+/* Dismissible alert x */
+.close:hover {
+    cursor: pointer;
+    color: var(--darkRed);
 }

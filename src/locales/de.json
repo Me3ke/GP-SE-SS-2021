@@ -304,5 +304,22 @@
         "continueText": "Fortfahren",
         "generatingText": "Generieren...",
         "uploadText": "Hochladen..."
+    },
+    "TwoFakAuth": {
+        "login": {
+            "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
+            "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
+            "secondStep": "Schritt 2: Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
+            "always": "Aktivieren der  Zwei-Faktor-Authentifizierung bei jedem Login",
+            "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
+            "cancel": "Abbruch",
+            "continue": "Weiter",
+            "fail": "Der Code hat das falsche Format.",
+            "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
+            "canUse": "Sie können nun die Anwendung vollständig verwenden",
+            "go": "Los geht's!",
+            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
+            "again": "Erneut versuchen"
+        }
     }
 }
