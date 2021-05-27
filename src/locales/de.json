@@ -313,6 +313,8 @@
             "always": "Aktivieren der  Zwei-Faktor-Authentifizierung bei jedem Login",
             "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
             "cancel": "Abbruch",
+            "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
+            "cancelWarningTwo": "bis Sie Ihre Zwei-Faktor-Authentifizierung auf der Einstellungs-Seite eingerichtet haben.",
             "continue": "Weiter",
             "fail": "Der Code hat das falsche Format.",
             "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",

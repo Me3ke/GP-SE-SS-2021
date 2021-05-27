@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="show">
         <transition>
             <div class="modal-mask">
                 <div class="modal-wrapper">
@@ -58,7 +58,7 @@
                                             </b-icon>
                                             <span>
                                              {{ $t('TwoFakAuth.login.always') }}
-                                        </span>
+                                             </span>
                                             <b-icon id="tooltip-target-1" icon="info-circle" class="my-icon"></b-icon>
                                             <b-tooltip target="tooltip-target-1" triggers="hover">
                                                 {{ $t('TwoFakAuth.login.alwaysExp') }}
@@ -110,9 +110,22 @@
                                         </div>
                                     </div>
 
-                                    <!-- TODO: display whatever should happen when canceling set up -->
                                     <!-- Page 4 (shows when trying to abort) -->
                                     <div v-if="page === 4">
+                                        <div class="step" style="margin-bottom: 0">
+                                            {{ $t('TwoFakAuth.login.cancelWarningOne') }}
+                                        </div>
+                                        <div class="step" style="margin-top: 0">
+                                            {{ $t('TwoFakAuth.login.cancelWarningTwo') }}
+                                        </div>
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="elsa-blue-btn" @click="show = false; page = 1">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.login.continue') }}
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -134,6 +147,7 @@ export default {
     components: {LanguageSwitcher},
     data() {
         return {
+            show: true,
             showAlert: false,
             page: 1,
             qr: require('../../assets/frame2.png'),
