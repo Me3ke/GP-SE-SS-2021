@@ -4,12 +4,18 @@ package gpse.example.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gpse.example.domain.documents.DocumentPutRequest;
+import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
 
@@ -30,6 +36,7 @@ public class UserController {
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final StringToKeyConverter stringToKeyConverter;
 
     /**
      * Constructor of UserController getting required services.
@@ -44,6 +51,7 @@ public class UserController {
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
         mapper = new ObjectMapper();
+        stringToKeyConverter = new StringToKeyConverter();
     }
 
     /**
@@ -116,6 +124,24 @@ public class UserController {
     @GetMapping("/user/{userID}")
     public User showUser(@PathVariable("userID") final String username) {
         return userService.getUser(username);
+    }
+
+    /**
+     * Put request to change the public key of the user.
+     * @param publicKeyCmd
+     * @param username
+     */
+    @PutMapping("/user/{userID}/publicKey")
+    public void changePublicKey(@PathVariable("userID") final String username,
+                                @RequestBody final PublicKeyCmd publicKeyCmd) {
+
+        try {
+            userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
+            System.out.println(userService.getUser(username).getPublicKey());
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
+            exception.printStackTrace();
+        }
+
     }
 
 }

@@ -30,7 +30,7 @@
 
 <script>
 import i18n from "@/i18n";
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 export default {
     name: "SecuritySettingsBox",
     props: {
@@ -39,7 +39,8 @@ export default {
     },
     computed: {
       ...mapGetters({
-        keypair: 'getKeypair',
+        privateKey: 'getPrivateKey',
+        publicKey: 'getPublicKey',
       })
   },
     methods: {
@@ -158,13 +159,13 @@ export default {
                 })
             }
         },
-        handleGenerateKeyPairs() {
-          this.$store.dispatch('callToGenerate')
+      ...mapActions(['callToGenerate']),
+        async handleGenerateKeyPairs() {
+          this.callToGenerate()
           this.$swal.fire({
-            text: this.keypair.privateKey
+            text: this.privateKey
           })
-            //TODO Handling of the keypairs via generating
-
+          await this.$store.dispatch('sendPublicKey', {"publicKey": this.publicKey})
         },
         handleUploadKeyPairs() {
             //TODO Handling of the keypairs via uploading

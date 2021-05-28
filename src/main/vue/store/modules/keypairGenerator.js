@@ -8,5 +8,5 @@
         var prvpem = rs.KEYUTIL.getPEM(prv, "PKCS8PRV");
         var pubpem = rs.KEYUTIL.getPEM(pub, "PKCS8PUB");
 
-        return {privateKey: prvpem, publicKey: pubpem};
+        return ({"privateKey": prvpem, "publicKey": pubpem});
     }
