@@ -8,6 +8,7 @@ import * as envelopes from './modules/envelopes.js';
 import * as document from './modules/document.js';
 import * as user from './modules/user';
 import authorization from "@/main/vue/store/modules/authorization";
+import * as documentUpload from './modules/documentUpload.js';
 
 Vue.use(Vuex)
 
@@ -17,6 +18,7 @@ const store = new Vuex.Store({
         envelopes,
         document,
         user,
+        documentUpload,
         auth: authorization
     },
     mutations: {
