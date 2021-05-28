@@ -26,19 +26,19 @@
                                         <b-form-file
                                             v-model="file"
                                             :state="Boolean(file)"
-                                            placeholder="Choose a file or drop it here..."
+                                            v-bind:placeholder="$t('UploadDoc.chooseFile')"
                                             drop-placeholder="Drop file here..."
                                         ></b-form-file>
                                     </div>
 
                                     <!-- Page 2 -->
                                     <div v-if="page === 2">
-                                        <button type="button" class="light-btn" @click="newEnv = false; page = page +1">
+                                        <button type="button" class="light-btn" @click="newEnv = false; page = page +1; selectedEnv.new = null;">
                                             <h5>
                                                 {{$t('UploadDoc.selectEnv')}}
                                             </h5>
                                         </button>
-                                        <button type="button" class="light-btn" @click="newEnv = true; page = page +1">
+                                        <button type="button" class="light-btn" @click="newEnv = true; page = page +1; selectedEnv.old = null;">
                                             <h5>
                                                 {{$t('UploadDoc.newEnv')}}
                                             </h5>
@@ -83,7 +83,7 @@
                                     <b-container fluid>
                                         <b-row align-h="between">
                                             <b-col>
-                                                <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+                                                <div class="mt-3"> {{$t('UploadDoc.selectedDoc')}} {{ file ? file.name : '' }}</div>
                                             </b-col>
                                             <b-col>
                                                 <b-row>
@@ -118,7 +118,7 @@
 
                                                     <!-- Page 3 -->
                                                     <div v-if="page === 3">
-                                                        <button type="button" class="light-btn" @click="page = page - 1; back();">
+                                                        <button type="button" class="light-btn" @click="page = page - 1;">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>

@@ -223,7 +223,9 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+        "selectedDoc": "File: ",
+        "chooseFile": "Choose a file or drop it here..."
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
