@@ -1,5 +1,5 @@
 <template>
-    <div v-if="show">
+    <div>
         <transition>
             <div class="modal-mask">
                 <div class="modal-wrapper">
@@ -120,7 +120,7 @@
                                         </div>
 
                                         <div style="text-align: right">
-                                            <button type="button" class="elsa-blue-btn" @click="show = false; page = 1">
+                                            <button type="button" class="elsa-blue-btn" @click="closeModal()">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.login.continue') }}
                                                 </span>
@@ -147,7 +147,6 @@ export default {
     components: {LanguageSwitcher},
     data() {
         return {
-            show: true,
             showAlert: false,
             page: 1,
             qr: require('../../assets/frame2.png'),
@@ -164,6 +163,10 @@ export default {
             } else {
                 this.showAlert = true
             }
+        },
+        closeModal() {
+            this.$emit('modalTrigger');
+            this.page = 1
         }
     }
 }

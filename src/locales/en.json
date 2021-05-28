@@ -214,7 +214,9 @@
             "settings": "Security settings",
             "publicKeys": "Public Keys",
             "publicKey": "Public key:",
-            "newKeypair": "New Keypair"
+            "newKeypair": "New Keypair",
+            "twoFacAuthSetUp": "Two-factor authentication set-up",
+            "setUp": "Set up"
         },
         "MessageSettings": {
             "settings": "Message settings",

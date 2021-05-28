@@ -215,7 +215,9 @@
             "settings": "Sicherheits-Einstellungen",
             "publicKeys": "Öffentliche Schlüssel",
             "publicKey": "Öffentlicher Schlüssel:",
-            "newKeypair": "Neues Schlüsselpaar"
+            "newKeypair": "Neues Schlüsselpaar",
+            "twoFacAuthSetUp": "Zwei-Faktor-Authentifizierung einrichten",
+            "setUp": "Einrichten"
         },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",

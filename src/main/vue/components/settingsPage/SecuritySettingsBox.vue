@@ -8,19 +8,26 @@
                     </h4>
                 </div>
                 <b-list-group>
-                    <b-list-group-item>
-                        <b-row>
-                            <b-col style="text-align: left">
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-                            </b-col>
-                            <b-col style="text-align: right">
-                                <b-button id="keyButton" @click="decideLanguage">
-                                    {{ $t('Settings.SecuritySettings.newKeypair') }}
-                                </b-button>
-                            </b-col>
-                        </b-row>
+
+                        <b-button class="elsa-blue-btn" @click="decideLanguage">
+                            {{ $t('Settings.SecuritySettings.newKeypair') }}
+                        </b-button>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                             {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
+                        </span>
+
+                        <b-button class="elsa-blue-btn" @click="setUp()">
+                            {{ $t('Settings.SecuritySettings.setUp') }}
+                        </b-button>
+
+                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
                     </b-list-group-item>
                 </b-list-group>
             </div>
@@ -30,12 +37,21 @@
 
 <script>
 import i18n from "@/i18n";
+import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
 
 export default {
     name: "SecuritySettingsBox",
+    components: {
+        TwoFakAuthSetUp
+    },
     props: {
         user: Object,
         userData: Object
+    },
+    data() {
+        return {
+            showSetUp: false
+        }
     },
     methods: {
         decideLanguage() {
@@ -161,6 +177,10 @@ export default {
         },
         handleUploadKeyPairs() {
             //TODO Handling of the keypairs via uploading
+        },
+        setUp() {
+            this.showSetUp = !this.showSetUp
+            this.$emit('modalTrigger')
         }
     }
 }

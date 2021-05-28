@@ -1,7 +1,9 @@
 /* General */
 
 .list-group-item {
-    background-color: var(--user-info)
+    background-color: var(--user-info);
+    border-color: var(--light-grey);
+    padding: 0.5em 1.25em;;
 }
 
 .card {
@@ -143,6 +145,7 @@
     padding: 0.25em 1em 0;
     border: 0.03em solid var(--dark-grey);
     margin: 0.15em 0.15em;
+    width: 8.5em;
 }
 
 .elsa-blue-btn:focus, .green-btn:focus {
