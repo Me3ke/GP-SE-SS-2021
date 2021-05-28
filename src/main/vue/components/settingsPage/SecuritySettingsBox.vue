@@ -29,6 +29,29 @@
 
                         <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
                     </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('TwoFakAuth.login.always') }}
+                             <b-icon id="tooltip-security" icon="info-circle" class="my-icon"></b-icon>
+                             <b-tooltip target="tooltip-security" triggers="hover">
+                                {{ $t('TwoFakAuth.login.alwaysExp') }}
+                            </b-tooltip>
+                        </span>
+
+                        <!-- TODO: connect to API -->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="loginActive" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
+                    </b-list-group-item>
                 </b-list-group>
             </div>
         </b-row>
@@ -50,7 +73,9 @@ export default {
     },
     data() {
         return {
-            showSetUp: false
+            showSetUp: false,
+            // TODO: use value from API
+            loginActive: false
         }
     },
     methods: {

@@ -12,8 +12,8 @@
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                           <span>
                              {{ $t('Settings.MessageSettings.toDo.text') }}
-                               <b-icon id="tooltip-target-1" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-1" triggers="hover">
+                               <b-icon id="tooltip" icon="info-circle" class="my-icon"></b-icon>
+                              <b-tooltip target="tooltip" triggers="hover">
                                    {{ $t('Settings.MessageSettings.toDo.exp') }}
                               </b-tooltip>
                           </span>
@@ -150,7 +150,7 @@
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
-                        <b-button class="green-btn">
+                        <b-button class="green-btn" style="margin-top: 0.2em; margin-bottom: 0.1em">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
                     </b-list-group-item>
