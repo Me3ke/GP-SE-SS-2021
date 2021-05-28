@@ -176,3 +176,25 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+}
+
+.tooltip.bs-tooltip-right .arrow:before {
+    border-right-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-left .arrow:before {
+    border-left-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-bottom .arrow:before {
+    border-bottom-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-top .arrow:before {
+    border-top-color: var(--elsa-blue);
+}

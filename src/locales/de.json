@@ -196,24 +196,55 @@
     "RegisterButton": {
         "content": "Registrieren"
     },
-    "UserPage": {
-        "content": "Benutzerinformationen"
-    },
-    "UserInfoBox": {
-        "profileInformation": "Profilinformationen",
-        "accountInformation": "Kontoinformationen",
-        "publicKeys": "Öffentliche Schlüssel",
-        "email": "E-Mail:",
-        "firstName": "Vorname:",
-        "lastName": "Nachname:",
-        "birthday": "Geburtsdatum:",
-        "country": "Land:",
-        "city": "Stadt:",
-        "street": "Straße:",
-        "houseNumber": "Hausnummer:",
-        "publicKey": "Öffentlicher Schlüssel:",
-        "phoneNumber": "Telefonnummer:",
-        "newKeypair": "Neues Schlüsselpaar"
+    "Settings": {
+        "content": "Kontoinformationen und Einstellungen",
+        "UserInfoBox": {
+            "profileInformation": "Profilinformationen",
+            "accountInformation": "Kontoinformationen",
+            "email": "E-Mail:",
+            "firstName": "Vorname:",
+            "lastName": "Nachname:",
+            "birthday": "Geburtsdatum:",
+            "country": "Land:",
+            "city": "Stadt:",
+            "street": "Straße:",
+            "houseNumber": "Hausnummer:",
+            "phoneNumber": "Telefonnummer:"
+        },
+        "SecuritySettings": {
+            "settings": "Sicherheits-Einstellungen",
+            "publicKeys": "Öffentliche Schlüssel",
+            "publicKey": "Öffentlicher Schlüssel:",
+            "newKeypair": "Neues Schlüsselpaar"
+        },
+        "MessageSettings": {
+            "settings": "Benachrichtigungs-Einstellungen",
+            "send": "Speichern",
+            "toDo": {
+                "text": "Signier-/Gegenlesen-Anfragen",
+                "exp": "Erhalten von Website-Benachrichtungen über neue Anfragen zum Signieren/Gegenlesen von Dokumenten/Dokumentenverbunden."
+            },
+            "sign": {
+                "text": "Signier-Erninnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
+            },
+            "read": {
+                "text": "Gegenlesen-Erinnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
+            },
+            "progress": {
+                "text": "Dokumenten-Fortschritt",
+                "exp": "Erhalten von Website-Benachrichtungen über den Fortschritt von eigenen Dokumenten/Dokumentenverbunden."
+            },
+            "newVersion": {
+                "text": "Dokumenten-Aktualisierung",
+                "exp": "Erhalten von Website-Benachrichtungen über die Aktualisierung von Dokumenten."
+            },
+            "protocol": {
+                "text": "Protokoll-Verfügbarkeit",
+                "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
+            }
+        }
     },
     "UploadDoc": {
         "upload": "Hochladen",
@@ -249,6 +280,18 @@
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen."
+    },
+    "Register": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "register": "Registrierung",
+        "sign-up": "Registrieren",
+        "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
+        "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
+        "fail": "Registrierung fehlgeschlagen.",
+        "firstname": "Vorname",
+        "surname": "Nachname",
+        "feedback-invalid-name": "Bitte einen validen Namen eingeben."
     },
     "KeypairAlert": {
         "generate": "Generiere Schlüsselpaar",
