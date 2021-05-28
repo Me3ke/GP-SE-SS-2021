@@ -96,13 +96,13 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add("./src/main/resources/Handout_Kundengespraech.pdf");
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
-            documentPaths, DocumentState.READ_AND_SIGNED, true, true);
+            documentPaths, DocumentState.CLOSED, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_FIVE);
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.SIGNED, false, true);
+            documentPaths, DocumentState.CLOSED, false, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_SIX);
@@ -110,7 +110,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add(PROGRAM_PATH);
         documentPaths.add("./src/main/resources/Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
-            documentPaths, DocumentState.READ_AND_SIGNED, true, true);
+            documentPaths, DocumentState.CLOSED, true, true);
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,

@@ -40,7 +40,7 @@ public class EnvelopeController {
      * @return the new envelope.
      * @throws UploadFileException if the envelope could not be uploaded.
      */
-    @PostMapping("api.elsa.de/user/{*userID}/envelopes/envelopes")
+    @PostMapping("api.elsa.de/user/{userID}/envelopes/envelopes")
     public Envelope createEnvelope(final @PathVariable("userID") String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
@@ -61,7 +61,7 @@ public class EnvelopeController {
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}")
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                  final @PathVariable("userID") String ownerID,
                                  final @RequestBody DocumentPutRequest documentPutRequest)
@@ -94,20 +94,20 @@ public class EnvelopeController {
      * @throws DocumentNotFoundException if the envelope was not found.
      * @throws DownloadFileException     if the download goes wrong.
      */
-    @GetMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}")
+    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
     public EnvelopeGetResponse getEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                            final @PathVariable("userID") String userID,
                                            final @RequestParam("download") boolean download)
         throws DocumentNotFoundException, DownloadFileException {
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-            userService.getUser(userID);
+            final User currentUser = userService.getUser(userID);
             final User owner = userService.getUser(envelope.getOwnerID());
             if (download) {
                 final DocumentCreator documentCreator = new DocumentCreator();
                 documentCreator.downloadEnvelope(envelope);
             }
-            return new EnvelopeGetResponse(envelope, owner);
+            return new EnvelopeGetResponse(envelope, owner, currentUser);
         } catch (CreatingFileException | IOException | UsernameNotFoundException e) {
             throw new DownloadFileException(e);
         }
@@ -122,16 +122,16 @@ public class EnvelopeController {
      * @return the filtered envelope list.
      */
     //TODO Change to returning only envelopes that relate to the current User
-    @GetMapping("api.elsa.de/user/{*userID}/envelopes")
+    @GetMapping("api.elsa.de/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable String userID,
                                                      final @RequestBody EnvelopeGetRequest request) {
-        userService.getUser(userID);
+        final User currentUser = userService.getUser(userID);
         List<Envelope> envelopeList = envelopeService.getEnvelopes();
         envelopeList = filter(request, envelopeList);
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
-            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner));
+            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, currentUser));
         }
         return envelopeGetResponseList;
 

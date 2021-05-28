@@ -100,9 +100,7 @@ public class DocumentCreator {
      */
     private void setDocumentState(final List<User> signatories, final List<User> readers, final Document document) {
         if (readers == null && signatories == null) {
-            document.setState(DocumentState.READ_AND_SIGNED);
-        } else if (signatories == null) {
-            document.setState(DocumentState.SIGNED);
+            document.setState(DocumentState.CLOSED);
         } else if (readers == null) {
             document.setState(DocumentState.READ);
         } else {

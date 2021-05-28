@@ -21,6 +21,12 @@ import java.util.List;
  * The DocumentController class handles the requests from the frontend and
  * conducts the corresponding backend actions.
  */
+//TODO secured for permissions
+//TODO archiving
+//TODO Reader Class
+//TODO properties for download
+//TODO use signatory service?
+
 @RestController
 @CrossOrigin("http://localhost:8088")
 public class DocumentController {
@@ -54,7 +60,6 @@ public class DocumentController {
      * @param envelopeID the id of the envelope which contains the document.
      * @param userID     the id of the user doing the request.
      * @param documentID the id of the document asked for.
-     * @param download   a boolean which indicates if a document should be downloaded.
      * @return the DocumentGet response
      * @throws DocumentNotFoundException if the document was not in this particular envelope, or
      *                                   if there was no document with this id in the database.
@@ -63,19 +68,10 @@ public class DocumentController {
     @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                        final @PathVariable(USER_ID) String userID,
-                                                       final @PathVariable(DOCUMENT_ID) long documentID,
-                                                       final @RequestParam("download") boolean download)
-        throws DocumentNotFoundException, DownloadFileException {
+                                                       final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
         Document document;
-        if (download) {
-            try {
-                final DocumentCreator documentCreator = new DocumentCreator();
-                document = documentService.getDocument(documentID);
-                documentCreator.download(document, null);
-            } catch (CreatingFileException | IOException e) {
-                throw new DownloadFileException(e);
-            }
-        }
+        final User currentUser = userService.getUser(userID);
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         final List<Document> documentList = envelope.getDocumentList();
         boolean isInEnvelope = false;
@@ -87,11 +83,37 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
-            //TODO change to get owner
-            return new DocumentGetResponse(document, userService.getUser(userID));
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
         } else {
             throw new DocumentNotFoundException();
         }
+    }
+
+    /**
+     * The downloadDocument method downloads a document and saves it in the downloads directory.
+     * @param envelopeID the id of the envelope the document is in.
+     * @param userID the id of the user doing the request.
+     * @param documentID the id of the document.
+     * @return a documentGetResponse of the downloaded Document.
+     * @throws DocumentNotFoundException if the document was not found.
+     * @throws DownloadFileException if something went wrong while downloading.
+     */
+    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
+    public DocumentGetResponse downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                final @PathVariable(USER_ID) String userID,
+                                                final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, DownloadFileException {
+        final User currentUser = userService.getUser(userID);
+        envelopeService.getEnvelope(envelopeID);
+        Document document;
+        try {
+            final DocumentCreator documentCreator = new DocumentCreator();
+            document = documentService.getDocument(documentID);
+            documentCreator.download(document, null);
+        } catch (CreatingFileException | IOException e) {
+            throw new DownloadFileException(e);
+        }
+        return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
     }
 
     /**
@@ -104,7 +126,8 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    //archivierung einbinden
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                          final @RequestParam(USER_ID) String userID,
                                          final @RequestParam(ENVELOPE_ID) long envelopeID,
@@ -145,20 +168,33 @@ public class DocumentController {
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
-    public void review(final @RequestParam(USER_ID) String userID,
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    public boolean review(final @RequestParam(USER_ID) String userID,
                        final @RequestParam(ENVELOPE_ID) long envelopeID,
-                       final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+                       final @RequestParam(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
-        final List<Signatory> readers = document.getReaders();
-        for (final Signatory currentReader : readers) {
-            if (currentReader.getUser().equals(reader)) {
-                currentReader.setStatus(true);
+        boolean documentFinished = true;
+        if (document.getState().equals(DocumentState.OPEN)) {
+            final List<Signatory> readers = document.getReaders();
+            for (final Signatory currentReader : readers) {
+                if (currentReader.getUser().equals(reader)) {
+                    currentReader.setStatus(true);
+                }
+                if (!currentReader.isStatus()) {
+                    documentFinished = false;
+                }
             }
+            if (documentFinished) {
+                document.setState(DocumentState.READ);
+            }
+            documentService.addDocument(document);
+            return true;
+        } else {
+            return false;
         }
-        documentService.addDocument(document);
     }
 
     /**
@@ -169,20 +205,34 @@ public class DocumentController {
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
-    public void sign(final @RequestParam(USER_ID) String userID,
+    //TODO if orderRelevant test if current user is next in line.
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
+    public boolean sign(final @RequestParam(USER_ID) String userID,
                      final @RequestParam(ENVELOPE_ID) long envelopeID,
-                     final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+                     final @RequestParam(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
-        final List<Signatory> signatories = document.getSignatories();
-        for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(reader)) {
-                //TODO sign the document
-                currentSignatory.setStatus(true);
+        boolean documentFinished = true;
+        if (document.getState().equals(DocumentState.READ)) {
+            final List<Signatory> signatories = document.getSignatories();
+            for (final Signatory currentSignatory : signatories) {
+                if (currentSignatory.getUser().equals(reader)) {
+                    //TODO sign the document
+                    currentSignatory.setStatus(true);
+                }
+                if (!currentSignatory.isStatus()) {
+                    documentFinished = false;
+                }
             }
+            if (documentFinished) {
+                document.setState(DocumentState.CLOSED);
+            }
+            documentService.addDocument(document);
+            return true;
+        } else {
+            return false;
         }
-        documentService.addDocument(document);
     }
 }
