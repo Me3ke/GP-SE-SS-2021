@@ -196,6 +196,8 @@
         "content": "Register"
     },
     "Settings": {
+        "on": "On",
+        "off": "Off",
         "content": "Account information and settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",

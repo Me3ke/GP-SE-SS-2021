@@ -24,6 +24,10 @@
         font-size: 0.6em;
     }
 
+    .toggle-container {
+        font-size: 0.4em;
+    }
+
     .bigSpan {
         font-size: 1em;
     }
@@ -38,6 +42,10 @@
 
     span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
+    }
+
+    .toggle-container {
+        font-size: 0.5em;
     }
 
     .bigSpan {
@@ -57,6 +65,10 @@
         font-size: 0.7em;
     }
 
+    .toggle-container {
+        font-size: 0.5em;
+    }
+
     .bigSpan {
         font-size: 1.2em;
     }
@@ -71,6 +83,10 @@
 
     span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
+    }
+
+    .toggle-container {
+        font-size: 0.5em;
     }
 
     .bigSpan {
@@ -90,6 +106,10 @@
         font-size: 0.9em;
     }
 
+    .toggle-container {
+        font-size: 0.7em;
+    }
+
     .bigSpan {
         font-size: 1.6em;
     }
@@ -105,6 +125,10 @@
     .bigSpan {
         font-size: 1.6em;
     }
+
+    .toggle-container {
+        font-size: 0.8em;
+    }
 }
 
 /* Message settings */
@@ -114,40 +138,23 @@
     width: auto;
 }
 
-/* Badges aka On/off switches */
-.badge-on {
-    background-color: var(--elsa-blue);
-    color: var(--whitesmoke);
-}
-
-.badge-off {
-    background-color: var(--elsa-blue-transparent);
-    color: var(--shadow-grey);
-}
-
-.badge-off:hover {
-    color: var(--whitesmoke);
-}
-
-.badge-send {
-    background-color: var(--green);
-    color: var(--whitesmoke);
-}
-
-.badge-on:hover, .badge-off:hover, .badge-send:hover {
-    background-color: var(--open-doc-hover);
-    transition: 0.4s;
-    cursor: pointer;
-}
-
 /* Security settings */
 .elsa-blue-btn, .green-btn {
-    padding: 0.25em 1em 0;
+    padding: 0.25em 0.25em 0;
     border: 0.03em solid var(--dark-grey);
-    margin: 0.15em 0.15em;
-    width: 8.5em;
+    width: 7em;
 }
 
 .elsa-blue-btn:focus, .green-btn:focus {
     border: 0.03vw solid var(--dark-grey);
+}
+
+/* Toggle */
+.toggle-container {
+    width: 8.5em;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }

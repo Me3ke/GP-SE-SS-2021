@@ -216,3 +216,36 @@ body {
     cursor: pointer;
     color: var(--darkRed);
 }
+
+/* Toggle */
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    background-color: var(--elsa-blue);
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+    background-color: var(--whitesmoke);
+}
+
+.custom-control-label::before {
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    top: 0
+}
+
+.custom-switch .custom-control-label::after {
+    background-color: var(--shadow-grey);
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: var(--dark-grey);
+}
+
+.custom-switch .custom-control-label::after {
+    top: 2px;
+}

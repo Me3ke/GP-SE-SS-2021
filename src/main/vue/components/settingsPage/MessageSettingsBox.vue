@@ -17,13 +17,19 @@
                                    {{ $t('Settings.MessageSettings.toDo.exp') }}
                               </b-tooltip>
                           </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge @click="clicked = !clicked"
-                                     :class="[clicked ? 'badge-on font-weight-normal' : 'badge-off font-weight-normal']">
-                                {{ clicked }}
-                            </b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="requests" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
@@ -34,10 +40,19 @@
                                    {{ $t('Settings.MessageSettings.sign.exp') }}
                               </b-tooltip>
                         </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge class="badge-on font-weight-normal">On</b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="signReminder" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
@@ -48,10 +63,19 @@
                                    {{ $t('Settings.MessageSettings.read.exp') }}
                               </b-tooltip>
                         </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge class="badge-on font-weight-normal">On</b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="readReminder" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
@@ -62,10 +86,19 @@
                                    {{ $t('Settings.MessageSettings.progress.exp') }}
                               </b-tooltip>
                         </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge class="badge-on font-weight-normal">On</b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="progress" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
@@ -76,10 +109,19 @@
                                    {{ $t('Settings.MessageSettings.newVersion.exp') }}
                               </b-tooltip>
                         </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge class="badge-on font-weight-normal">On</b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="update" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
@@ -90,10 +132,19 @@
                                    {{ $t('Settings.MessageSettings.protocol.exp') }}
                               </b-tooltip>
                         </span>
-                        <!-- TODO: Add badge-on/badge-off class depending on user preference, same for text-->
-                        <h4>
-                            <b-badge class="badge-off font-weight-normal">Off</b-badge>
-                        </h4>
+
+                        <!-- TODO: connect to api-->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="protocol" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
 
 
@@ -115,7 +166,14 @@ export default {
     name: "MessageSettingsBox",
     data() {
         return {
-            clicked: false
+            clicked: false,
+            // TODO: connect with api
+            requests: true,
+            signReminder: false,
+            readReminder: true,
+            progress: false,
+            update: true,
+            protocol: true
         }
     }
 }
