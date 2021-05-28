@@ -45,6 +45,7 @@
     --whitesmoke: #23292f;
     --light-grey: #ACACAC;
     --shadow-grey: #D8D8D9;
+    --green: #81ba66;
 
     --closed-doc: #070809;
     --closed-doc-hover: #788796;
@@ -164,14 +165,14 @@ body {
 
 .green-btn {
     background-color: var(--green);
-    color: var(--light-grey);
+    color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .green-btn:focus {
     background-color: var(--green);
-    color: var(--light-grey);
+    color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
 }
 

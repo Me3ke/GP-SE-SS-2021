@@ -18,7 +18,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.6em;
     }
 
@@ -34,7 +34,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
     }
 
@@ -51,7 +51,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
     }
 
@@ -67,7 +67,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
     }
 
@@ -84,7 +84,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.9em;
     }
 
@@ -139,6 +139,12 @@
 }
 
 /* Security settings */
-#keyButton {
-    font-size: 1em;
+.elsa-blue-btn, .green-btn {
+    padding: 0.25em 1em 0;
+    border: 0.03em solid var(--dark-grey);
+    margin: 0.15em 0.15em;
+}
+
+.elsa-blue-btn:focus, .green-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }

@@ -98,12 +98,10 @@
 
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
-                                       style=" padding-top: 0; padding-bottom: 0;">
-                        <span class="bigSpan">
-                            <b-badge class="badge-send font-weight-normal">{{
-                                    $t('Settings.MessageSettings.send')
-                                }}</b-badge>
-                        </span>
+                                       style=" padding-top: 0.1em; padding-bottom: 0.1em;">
+                        <b-button class="green-btn">
+                            {{ $t('Settings.MessageSettings.send') }}
+                        </b-button>
                     </b-list-group-item>
                 </b-list-group>
             </div>
