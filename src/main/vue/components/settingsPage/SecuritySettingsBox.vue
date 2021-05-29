@@ -1,4 +1,5 @@
 <template>
+  <div>
     <b-container fluid="sm">
         <b-row align-h="center" align-v="center" class="text-center">
             <div class="card">
@@ -26,17 +27,29 @@
             </div>
         </b-row>
     </b-container>
+  </div>
 </template>
 
 <script>
 import i18n from "@/i18n";
-
+import {mapActions, mapGetters} from 'vuex';
 export default {
     name: "SecuritySettingsBox",
     props: {
         user: Object,
         userData: Object
     },
+  data() {
+    return {
+      show: false,
+    };
+  },
+    computed: {
+      ...mapGetters({
+        privateKey: 'getPrivateKey',
+        publicKey: 'getPublicKey',
+      })
+  },
     methods: {
         decideLanguage() {
             if (i18n.locale === 'de') {
@@ -49,7 +62,7 @@ export default {
         async showAlertEN() {
             const inputOptions = new Promise((resolve) => {
                 resolve({
-                    'generate': 'Generate keypair',
+                    'generate': 'Generate keypair' ,
                     'upload': 'Upload public key',
                 })
             })
@@ -80,7 +93,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generating...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -95,7 +107,7 @@ export default {
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        this.handleUploadKeyPairs
+                        this.handleUploadKeyPairs()
                         this.$swal.fire('Uploading...')
                     }
                 })
@@ -135,7 +147,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generieren...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -150,17 +161,39 @@ export default {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         this.handleUploadKeyPairs()
-                        this.$swal.fire('Hochladen...')
                     }
                 })
             }
         },
-        handleGenerateKeyPairs() {
-            //TODO Handling of the keypairs via generating
-
+      ...mapActions(['callToGenerate']),
+        async handleGenerateKeyPairs() {
+          this.callToGenerate()
+          this.$swal.fire({
+            text: this.privateKey
+          })
+          await this.$store.dispatch('sendPublicKey', {"publicKey": this.publicKey})
         },
-        handleUploadKeyPairs() {
-            //TODO Handling of the keypairs via uploading
+        async handleUploadKeyPairs() {
+          const {value: file} = await this.$swal.fire({
+            title: 'Select image',
+            input: 'file',
+            inputAttributes: {
+              'accept': 'text/*',
+            }
+          })
+
+          if (file) {
+            const reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = (e) => {
+              this.$store.dispatch('sendPublicKey', {"publicKey": e.target.result})
+              this.$swal.fire({
+                title: "Successfully uploaded",
+                icon: "success"
+              })
+            }
+          }
+          //TODO Handling of the keypairs via uploading
         }
     }
 }

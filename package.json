@@ -12,6 +12,8 @@
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
+    "jsrsasign": "^10.2.0",
+    "jsrsasign-util": "^1.0.5",
     "lodash": "^4.17.21",
     "vue": "^2.6.11",
     "vue-pdf": "^4.2.0",
