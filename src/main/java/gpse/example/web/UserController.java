@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gpse.example.domain.users.*;
 
 import gpse.example.util.Email.MessageGenerationException;
+import gpse.example.util.Email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,7 @@ public class UserController {
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final MessageService messageService;
 
     /**
      * Constructor of UserController getting required services.
@@ -43,10 +45,11 @@ public class UserController {
      */
     @Autowired
     public UserController(UserService service, ConfirmationTokenService confService,
-                          PersonalDataService personalDataService) {
+                          PersonalDataService personalDataService, MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
+        this.messageService = messageService;
         mapper = new ObjectMapper();
     }
 
@@ -82,6 +85,7 @@ public class UserController {
                     response.setStatus(STATUS_CODE_OK);
                 } catch (MessageGenerationException mge) {
                     userService.removeUser(user.getUsername());
+                    messageService.removeMessage(mge.getThrownByMessageID());
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
                     response.setMessage("Error generating Confirmationmail. Try again later.");
                 }
@@ -125,6 +129,7 @@ public class UserController {
                     userService.infoNewExtUser(user);
                     response.setMessage(ADMINVALIDATION_REQUIRED + true);
                 } catch (MessageGenerationException mge) {
+                    messageService.removeMessage(mge.getThrownByMessageID());
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
                         + "an error occured please call systemadmin");
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);

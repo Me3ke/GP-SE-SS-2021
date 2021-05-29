@@ -45,7 +45,7 @@ public class Message {
         }
 
         if (recievingUser == null || subject == null || text == null) {
-            throw new MessageGenerationException();
+            throw new MessageGenerationException(this.messageID);
         }
 
         message.setTo(recievingUser.getEmail());
