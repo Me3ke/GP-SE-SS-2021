@@ -144,7 +144,7 @@
 
                                         <div style="text-align: right">
                                             <button type="button" class="elsa-blue-btn"
-                                                    @click="pageBefore = page; page = 5">
+                                                    @click="closeModal()">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.close') }}
                                                 </span>
