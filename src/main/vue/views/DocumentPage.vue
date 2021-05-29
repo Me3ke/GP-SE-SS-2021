@@ -2,6 +2,9 @@
     <div style="width: 100%; height: 100vh; background-color: var(--whitesmoke)">
         <Header></Header>
 
+        <!-- TODO: add advanced prop based on api -->
+        <SignPopUp v-if="showSign" :documents="[document]" :advanced="true" @advancedTrigger="toggleSign()"></SignPopUp>
+
         <!-- Displays if document cannot get fetched by api -->
         <BaseHeading v-if="!hasError()" name=" " :translate="false" style="position: fixed;"></BaseHeading>
         <div v-if="!hasError()" class="d-flex align-items-center" style="height: 80vh">
@@ -35,7 +38,7 @@
                          style="width: 100%; margin-top: 0; margin-right: auto; margin-left: auto; padding: 0;">
                 <b-row style="width: 100%; margin: auto; padding: 0">
                     <b-col cols="9">
-                        <PDFViewer :pdf-src=getPDF()></PDFViewer>
+                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow"></PDFViewer>
                     </b-col>
 
                     <b-col cols="3" id="textCol">
@@ -54,7 +57,8 @@
                             <h6>
                                 {{ $t("DocumentPage.doRead") }}
                             </h6>
-                            <LightButtonIconText icon="eyeglasses" text="DocumentPage.read"></LightButtonIconText>
+                            <GreenButtonIconText icon="eyeglasses" text="DocumentPage.read"
+                                                 @click.native="showProofread = true"></GreenButtonIconText>
                             <hr v-if="document.signatory === true || document.signed === true">
                         </b-row>
 
@@ -72,7 +76,8 @@
                             <h6>
                                 {{ $t("DocumentPage.doSign") }}
                             </h6>
-                            <LightButtonIconText icon="pen" text="DocumentPage.sign"></LightButtonIconText>
+                            <GreenButtonIconText icon="pen" text="DocumentPage.sign"
+                                                 @click.native="toggleSign()"></GreenButtonIconText>
                         </b-row>
                     </b-col>
                 </b-row>
@@ -84,7 +89,7 @@
                     <h6>
                         {{ $t("DocumentPage.noView") }}
                     </h6>
-                    <LightButtonIconText icon="download" text="DocumentPage.download"></LightButtonIconText>
+                    <GreenButtonIconText icon="download" text="DocumentPage.download"></GreenButtonIconText>
                     <hr v-if="document.signatory === true || document.signed === true || document.reader === true || document.read === true">
                 </b-row>
 
@@ -102,7 +107,8 @@
                     <h6>
                         {{ $t("DocumentPage.doRead") }}
                     </h6>
-                    <LightButtonIconText icon="eyeglasses" text="DocumentPage.read"></LightButtonIconText>
+                    <GreenButtonIconText icon="eyeglasses" text="DocumentPage.read"
+                                         @click.native="showProofread = true"></GreenButtonIconText>
                     <hr v-if="document.signatory === true || document.signed === true">
                 </b-row>
 
@@ -120,7 +126,8 @@
                     <h6>
                         {{ $t("DocumentPage.doSign") }}
                     </h6>
-                    <LightButtonIconText icon="pen" text="DocumentPage.sign"></LightButtonIconText>
+                    <GreenButtonIconText icon="pen" text="DocumentPage.sign"
+                                         @click.native="toggleSign()"></GreenButtonIconText>
                 </b-row>
             </b-container>
 
@@ -134,16 +141,21 @@
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
-import LightButtonIconText from "@/main/vue/components/LightButtonIconText";
+import GreenButtonIconText from "@/main/vue/components/GreenButtonIconText";
+import SignPopUp from "@/main/vue/components/TwoFakAuth/SignPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
 
+
 export default {
     name: "DocumentPage",
-    components: {LightButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
         return {
-            turtle: require('../assets/turtle.svg')
+            turtle: require('../assets/turtle.svg'),
+            showProofread: false,
+            showSign: false,
+            showOverflow: true
         }
     },
     methods: {
@@ -158,6 +170,10 @@ export default {
         },
         hasError() {
             return _.isEmpty(this.getError);
+        },
+        toggleSign() {
+            this.showSign = !this.showSign
+            this.showOverflow = !this.showOverflow
         }
     },
     created() {
