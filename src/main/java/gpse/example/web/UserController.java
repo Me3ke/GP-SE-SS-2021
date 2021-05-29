@@ -54,7 +54,7 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
      */
-    @PostMapping("/users")
+    @PostMapping("/user")
     public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
         JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
@@ -89,7 +89,7 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
      */
-    @GetMapping("/users/register")
+    @GetMapping("/user/register")
     public String confirmMail(@RequestParam("token") String token) throws JsonProcessingException {
 
         JSONResponseObject response = new JSONResponseObject();
@@ -127,7 +127,7 @@ public class UserController {
      * @return SONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
      */
-    @GetMapping("/users/{adminID}/validate/{userID}")
+    @GetMapping("/user/{adminID}/validate/{userID}")
     public String adminUserValidation(@PathVariable("adminID") final String adminUsername,
                                       @PathVariable("userID") final String username)
         throws JsonProcessingException {
