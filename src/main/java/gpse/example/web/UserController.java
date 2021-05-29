@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpse.example.domain.users.*;
 
+import gpse.example.util.MessageGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UserController {
     private static final int STATUS_CODE_USER_EXISTS_ALREADY = 421;
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
+    private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private ObjectMapper mapper;
     private final UserService userService;
@@ -75,8 +77,14 @@ public class UserController {
                 PersonalData personalData = signUpUser.generatePersonalData();
                 personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
-                userService.signUpUser(user);
-                response.setStatus(STATUS_CODE_OK);
+                try {
+                    userService.signUpUser(user);
+                    response.setStatus(STATUS_CODE_OK);
+                } catch (MessageGenerationException mge) {
+                    userService.removeUser(user.getUsername());
+                    response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                    response.setMessage("Error generating Confirmationmail. Try again later.");
+                }
                 return mapper.writeValueAsString(response);
             }
 
@@ -113,8 +121,16 @@ public class UserController {
                 response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
-                response.setMessage(ADMINVALIDATION_REQUIRED + true);
-                userService.infoNewExtUser(user);
+                try {
+                    userService.infoNewExtUser(user);
+                    response.setMessage(ADMINVALIDATION_REQUIRED + true);
+                } catch (MessageGenerationException mge) {
+                    response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
+                        + "an error occured please call systemadmin");
+                    response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+
+                    return mapper.writeValueAsString(response);
+                }
             }
         }
         return mapper.writeValueAsString(response);
