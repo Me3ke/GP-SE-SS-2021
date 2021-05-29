@@ -56,6 +56,9 @@ public class User implements UserDetails {
     @OneToOne
     private PersonalData personalData;
 
+    @OneToOne
+    private SecuritySettings securitySettings;
+
     @Column
     private boolean enabled;
 
@@ -294,5 +297,13 @@ public class User implements UserDetails {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public SecuritySettings getSecuritySettings() {
+        return securitySettings;
+    }
+
+    public void setSecuritySettings(SecuritySettings securitySettings) {
+        this.securitySettings = securitySettings;
     }
 }
