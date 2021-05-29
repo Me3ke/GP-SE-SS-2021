@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpse.example.domain.users.*;
 
-import gpse.example.util.MessageGenerationException;
+import gpse.example.util.Email.MessageGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;

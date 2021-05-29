@@ -1,4 +1,4 @@
-package gpse.example.util;
+package gpse.example.util.Email;
 
 public class MessageGenerationException extends Exception {
 

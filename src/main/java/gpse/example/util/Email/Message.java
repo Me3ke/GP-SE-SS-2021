@@ -1,4 +1,4 @@
-package gpse.example.util;
+package gpse.example.util.Email;
 
 import gpse.example.domain.users.User;
 import org.springframework.mail.SimpleMailMessage;
@@ -36,7 +36,7 @@ public class Message {
         sendingUser = null;
     }
 
-    public SimpleMailMessage generateMessage() throws MessageGenerationException{
+    public SimpleMailMessage generateMessage() throws MessageGenerationException {
         final SimpleMailMessage message = new SimpleMailMessage();
         if (sendingUser == null){
             message.setFrom("System");
