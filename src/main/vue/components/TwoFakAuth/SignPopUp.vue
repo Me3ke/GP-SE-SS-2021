@@ -9,7 +9,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="exampleModalLongTitle">
-                                        {{ $t('TwoFakAuth.signAdvanced.sign') }}
+                                        {{ $t('TwoFakAuth.sign.sign') }}
                                     </h4>
                                 </div>
 
@@ -19,11 +19,11 @@
                                     <!-- Page 1 (advanced)-->
                                     <div v-if="page === 1 && advanced">
                                         <div class="step" v-if="documents.length === 1">
-                                            {{ $t('TwoFakAuth.signAdvanced.sureOne') }}
+                                            {{ $t('TwoFakAuth.sign.sureOne') }}
                                         </div>
 
                                         <div class="step" v-else>
-                                            {{ $t('TwoFakAuth.signAdvanced.sureMulti') }}
+                                            {{ $t('TwoFakAuth.sign.sureMulti') }}
                                         </div>
 
                                         <div class="content-div">
@@ -53,11 +53,11 @@
                                     <!-- Page 1 (simple) -->
                                     <div v-if="page === 1 && !advanced">
                                         <div class="step" v-if="documents.length === 1">
-                                            {{ $t('TwoFakAuth.signAdvanced.sureOne') }}
+                                            {{ $t('TwoFakAuth.sign.sureOne') }}
                                         </div>
 
                                         <div class="step" v-else>
-                                            {{ $t('TwoFakAuth.signAdvanced.sureMulti') }}
+                                            {{ $t('TwoFakAuth.sign.sureMulti') }}
                                         </div>
 
                                         <div class="content-div">
@@ -87,7 +87,7 @@
                                     <!-- Page 2 (two fac Auth) -->
                                     <div v-if="page === 2">
                                         <div class="step" style="margin-top: 0">
-                                            {{ $t('TwoFakAuth.signAdvanced.code') }}
+                                            {{ $t('TwoFakAuth.sign.code') }}
                                         </div>
 
                                         <div class="content-div">
@@ -139,7 +139,7 @@
                                     <!-- Page 4 (success) -->
                                     <div v-if="page === 4">
                                         <div class="step" style="margin-top: 0">
-                                            {{ $t('TwoFakAuth.signAdvanced.success') }}
+                                            {{ $t('TwoFakAuth.sign.success') }}
                                         </div>
 
                                         <div style="text-align: right">
@@ -155,7 +155,7 @@
                                     <!-- Page 5 (leave?) -->
                                     <div v-if="page === 5">
                                         <div class="step" style="margin-top: 0">
-                                            {{ $t('TwoFakAuth.signAdvanced.sure') }}
+                                            {{ $t('TwoFakAuth.sign.sure') }}
                                         </div>
 
                                         <div style="text-align: right">

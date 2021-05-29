@@ -328,7 +328,7 @@
             "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
             "again": "Try again"
         },
-        "signAdvanced": {
+        "sign": {
             "sureOne": "Are you sure you want to sign the following document?",
             "sureMulti": "Are you sure you want to sign the following documents?",
             "success": "You have successfully signed!",

@@ -329,7 +329,7 @@
             "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
             "again": "Erneut versuchen"
         },
-        "signAdvanced": {
+        "sign": {
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",
             "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente unterschreiben wollen?",
             "success": "Sie haben erfolgreich unterschrieben!",
