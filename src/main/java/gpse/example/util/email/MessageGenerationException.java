@@ -1,13 +1,13 @@
-package gpse.example.util.Email;
+package gpse.example.util.email;
 
+/**
+ * Exception thrown by generateMessage method in case there are params missing.
+ * Is finally catched in Controller to send errormessage to frontend and remove broken messages.
+ */
 public class MessageGenerationException extends Exception {
 
-    private long thrownByMessageID;
     public static final long serialVersionUID = 25;
-
-    public MessageGenerationException() {
-        super();
-    }
+    private final long thrownByMessageID;
 
     public MessageGenerationException(long messageID) {
         super();

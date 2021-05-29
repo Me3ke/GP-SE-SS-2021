@@ -1,4 +1,4 @@
-package gpse.example.util.Email;
+package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
 import org.springframework.mail.SimpleMailMessage;
@@ -6,6 +6,9 @@ import org.springframework.mail.SimpleMailMessage;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Class representing messages that are send via email and are stored in database.
+ */
 @Entity
 public class Message {
 
@@ -36,9 +39,14 @@ public class Message {
         sendingUser = null;
     }
 
+    /**
+     * genrates a SimplemailMessage that could be send via Email.
+     * @return the Simple mail Message object.
+     * @throws MessageGenerationException Thrown if there are params missing that are needed.
+     */
     public SimpleMailMessage generateMessage() throws MessageGenerationException {
         final SimpleMailMessage message = new SimpleMailMessage();
-        if (sendingUser == null){
+        if (sendingUser == null) {
             message.setFrom("System");
         } else {
             message.setFrom(sendingUser.getEmail());

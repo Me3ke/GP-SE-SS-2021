@@ -1,4 +1,4 @@
-package gpse.example.util.Email;
+package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package gpse.example.util.Email;
+package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
 import org.springframework.stereotype.Service;
@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of Messageservice implementing the defined methods.
+ */
 @Service
-public class MessageServiceImpl implements MessageService{
+public class MessageServiceImpl implements MessageService {
 
     private MessageRepository messageRepo;
 
@@ -20,8 +23,8 @@ public class MessageServiceImpl implements MessageService{
     public List<Message> getMessages(User user) {
         ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
 
-        for(int i = 0; i < userMessages.size(); i++) {
-            if(userMessages.get(i).getRecievingUser() != user){
+        for (int i = 0; i < userMessages.size(); i++) {
+            if (userMessages.get(i).getRecievingUser() != user) {
                 userMessages.remove(i);
                 i--;
             }

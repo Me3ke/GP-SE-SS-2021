@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gpse.example.domain.users.*;
 
-import gpse.example.util.Email.MessageGenerationException;
-import gpse.example.util.Email.MessageService;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +42,7 @@ public class UserController {
      * @param service Userservice Object
      * @param confService ConfirmationTokenService object
      * @param personalDataService PersonalDataService object
+     * @param messageService the messageService to access the message table
      */
     @Autowired
     public UserController(UserService service, ConfirmationTokenService confService,
@@ -59,7 +60,7 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
      */
-    @PostMapping("/user")
+    @PostMapping("/newuser")
     public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
         JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
