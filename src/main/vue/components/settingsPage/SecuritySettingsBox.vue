@@ -1,4 +1,5 @@
 <template>
+  <div>
     <b-container fluid="sm">
         <b-row align-h="center" align-v="center" class="text-center">
             <div class="card">
@@ -26,6 +27,7 @@
             </div>
         </b-row>
     </b-container>
+  </div>
 </template>
 
 <script>
@@ -37,6 +39,11 @@ export default {
         user: Object,
         userData: Object
     },
+  data() {
+    return {
+      show: false,
+    };
+  },
     computed: {
       ...mapGetters({
         privateKey: 'getPrivateKey',
@@ -154,7 +161,6 @@ export default {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         this.handleUploadKeyPairs()
-                        this.$swal.fire('Hochladen...')
                     }
                 })
             }
@@ -167,8 +173,27 @@ export default {
           })
           await this.$store.dispatch('sendPublicKey', {"publicKey": this.publicKey})
         },
-        handleUploadKeyPairs() {
-            //TODO Handling of the keypairs via uploading
+        async handleUploadKeyPairs() {
+          const {value: file} = await this.$swal.fire({
+            title: 'Select image',
+            input: 'file',
+            inputAttributes: {
+              'accept': 'text/*',
+            }
+          })
+
+          if (file) {
+            const reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = (e) => {
+              this.$store.dispatch('sendPublicKey', {"publicKey": e.target.result})
+              this.$swal.fire({
+                title: "Successfully uploaded",
+                icon: "success"
+              })
+            }
+          }
+          //TODO Handling of the keypairs via uploading
         }
     }
 }
