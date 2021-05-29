@@ -5,6 +5,8 @@
         <!-- TODO: add advanced prop based on api -->
         <SignPopUp v-if="showSign" :documents="[document]" :advanced="true" @advancedTrigger="toggleSign()"></SignPopUp>
 
+        <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
+
         <!-- Displays if document cannot get fetched by api -->
         <BaseHeading v-if="!hasError()" name=" " :translate="false" style="position: fixed;"></BaseHeading>
         <div v-if="!hasError()" class="d-flex align-items-center" style="height: 80vh">
@@ -58,7 +60,7 @@
                                 {{ $t("DocumentPage.doRead") }}
                             </h6>
                             <GreenButtonIconText icon="eyeglasses" text="DocumentPage.read"
-                                                 @click.native="showProofread = true"></GreenButtonIconText>
+                                                 @click.native="toggleRead()"></GreenButtonIconText>
                             <hr v-if="document.signatory === true || document.signed === true">
                         </b-row>
 
@@ -108,7 +110,7 @@
                         {{ $t("DocumentPage.doRead") }}
                     </h6>
                     <GreenButtonIconText icon="eyeglasses" text="DocumentPage.read"
-                                         @click.native="showProofread = true"></GreenButtonIconText>
+                                         @click.native="toggleRead()"></GreenButtonIconText>
                     <hr v-if="document.signatory === true || document.signed === true">
                 </b-row>
 
@@ -143,6 +145,7 @@ import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
 import GreenButtonIconText from "@/main/vue/components/GreenButtonIconText";
 import SignPopUp from "@/main/vue/components/TwoFakAuth/SignPopUp";
+import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
@@ -150,7 +153,7 @@ import {mapGetters} from 'vuex';
 
 export default {
     name: "DocumentPage",
-    components: {SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
@@ -173,6 +176,10 @@ export default {
         },
         toggleSign() {
             this.showSign = !this.showSign
+            this.showOverflow = !this.showOverflow
+        },
+        toggleRead() {
+            this.showProofread = !this.showProofread
             this.showOverflow = !this.showOverflow
         }
     },

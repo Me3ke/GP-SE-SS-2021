@@ -336,6 +336,13 @@
             "sign": "Jetzt unterschreiben!",
             "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+        },
+        "read": {
+            "read": "Jetzt gegenlesen!",
+            "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument gegenlesen wollen?",
+            "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente gegenlesen wollen?",
+            "success": "Sie haben erfolgreich gegengelesen!",
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
         }
     }
 }

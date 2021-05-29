@@ -335,6 +335,13 @@
             "sign": "Sign now!",
             "code": "Enter the 6-digit code from your authenticator app",
             "sure": "Are you sure you want to cancel the process?"
+        },
+        "read": {
+            "read": "Proofread now!",
+            "sureOne": "Are you sure you want to proofread the following document?",
+            "sureMulti": "Are you sure you want to proofread the following documents?",
+            "success": "You have successfully proofread!",
+            "sure": "Are you sure you want to cancel the process?"
         }
     }
 }
