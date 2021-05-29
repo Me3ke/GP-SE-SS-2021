@@ -4,6 +4,7 @@ package gpse.example.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.documents.DocumentPutRequest;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
@@ -39,19 +40,23 @@ public class UserController {
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final StringToKeyConverter stringToKeyConverter;
+    private final SecuritySettingsService securitySettingsService;
 
     /**
      * Constructor of UserController getting required services.
      * @param service Userservice Object
      * @param confService ConfirmationTokenService object
      * @param personalDataService PersonalDataService object
+     * @param securitySettingsService SecuritySettingsService object
      */
     @Autowired
     public UserController(UserService service, ConfirmationTokenService confService,
-                          PersonalDataService personalDataService) {
+                          PersonalDataService personalDataService,
+                          SecuritySettingsService securitySettingsService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
+        this.securitySettingsService = securitySettingsService;
         mapper = new ObjectMapper();
         stringToKeyConverter = new StringToKeyConverter();
     }
@@ -168,20 +173,39 @@ public class UserController {
 
     /**
      * Put request to change the public key of the user.
-     * @param publicKeyCmd
-     * @param username
+     * @param publicKeyCmd contains the public key in a String format
+     * @param username the identifier of the user account that needs to be updated
      */
     @PutMapping("/user/{userID}/publicKey")
     public void changePublicKey(@PathVariable("userID") final String username,
                                 @RequestBody final PublicKeyCmd publicKeyCmd) {
-
         try {
             userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
             System.out.println(userService.getUser(username).getPublicKey());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
             exception.printStackTrace();
         }
+    }
 
+    @GetMapping("/user/{userID}/settings/2FAconfigurated")
+    public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
+        return userService.getUser(username).getSecuritySettings().getSecret() == null;
+    }
+
+    /**
+     * Get request for getting the qr-code as a byte array.
+     * @param username the identifier of the user account that needs to be updated
+     * @return the qr code as a byte array
+     */
+    @GetMapping("/user/{userID}/settings/qrCode")
+    public byte[] getQRCode(@PathVariable("userID") final String username) {
+        try {
+            userService.getUser(username).getSecuritySettings().generateSecret();
+            return userService.getUser(username).getSecuritySettings().generateQRCode(username);
+        } catch (QrGenerationException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
 
 }

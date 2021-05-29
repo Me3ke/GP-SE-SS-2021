@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.security.PublicKey;
 
 /**
- *
+ * The class responsible for storing the security settings
  */
 @Entity
 public class SecuritySettings {
@@ -58,5 +58,11 @@ public class SecuritySettings {
 
     public long getId() {
         return id;
+    }
+    public String getSecret() {
+        return secret;
+    }
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 }

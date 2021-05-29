@@ -89,6 +89,7 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = false;
         this.adminValidated = false;
+        this.securitySettings = new SecuritySettings();
     }
 
     public static long getSerialVersionUID() {
