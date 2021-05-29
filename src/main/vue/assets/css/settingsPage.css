@@ -1,7 +1,9 @@
 /* General */
 
 .list-group-item {
-    background-color: var(--user-info)
+    background-color: var(--user-info);
+    border-color: var(--light-grey);
+    padding: 0.5em 1.25em;;
 }
 
 .card {
@@ -18,8 +20,12 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.6em;
+    }
+
+    .toggle-container {
+        font-size: 0.4em;
     }
 
     .bigSpan {
@@ -34,8 +40,12 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
+    }
+
+    .toggle-container {
+        font-size: 0.5em;
     }
 
     .bigSpan {
@@ -51,8 +61,12 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
+    }
+
+    .toggle-container {
+        font-size: 0.5em;
     }
 
     .bigSpan {
@@ -67,8 +81,12 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.7em;
+    }
+
+    .toggle-container {
+        font-size: 0.5em;
     }
 
     .bigSpan {
@@ -84,8 +102,12 @@
         text-overflow-mode: ellipse;
     }
 
-    span {
+    span, .elsa-blue-btn, .green-btn {
         font-size: 0.9em;
+    }
+
+    .toggle-container {
+        font-size: 0.7em;
     }
 
     .bigSpan {
@@ -103,6 +125,10 @@
     .bigSpan {
         font-size: 1.6em;
     }
+
+    .toggle-container {
+        font-size: 0.8em;
+    }
 }
 
 /* Message settings */
@@ -112,33 +138,23 @@
     width: auto;
 }
 
-/* Badges aka On/off switches */
-.badge-on {
-    background-color: var(--elsa-blue);
-    color: var(--whitesmoke);
-}
-
-.badge-off {
-    background-color: var(--elsa-blue-transparent);
-    color: var(--shadow-grey);
-}
-
-.badge-off:hover {
-    color: var(--whitesmoke);
-}
-
-.badge-send {
-    background-color: var(--green);
-    color: var(--whitesmoke);
-}
-
-.badge-on:hover, .badge-off:hover, .badge-send:hover {
-    background-color: var(--open-doc-hover);
-    transition: 0.4s;
-    cursor: pointer;
-}
-
 /* Security settings */
-#keyButton {
-    font-size: 1em;
+.elsa-blue-btn, .green-btn {
+    padding: 0.25em 0.25em 0;
+    border: 0.03em solid var(--dark-grey);
+    width: 7em;
+}
+
+.elsa-blue-btn:focus, .green-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
+/* Toggle */
+.toggle-container {
+    width: 8.5em;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }

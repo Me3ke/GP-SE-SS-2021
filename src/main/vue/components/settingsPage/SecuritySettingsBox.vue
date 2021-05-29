@@ -1,5 +1,4 @@
 <template>
-  <div>
     <b-container fluid="sm">
         <b-row align-h="center" align-v="center" class="text-center">
             <div class="card">
@@ -9,47 +8,83 @@
                     </h4>
                 </div>
                 <b-list-group>
-                    <b-list-group-item>
-                        <b-row>
-                            <b-col style="text-align: left">
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-                            </b-col>
-                            <b-col style="text-align: right">
-                                <b-button id="keyButton" @click="decideLanguage">
-                                    {{ $t('Settings.SecuritySettings.newKeypair') }}
-                                </b-button>
-                            </b-col>
-                        </b-row>
+
+                        <b-button class="elsa-blue-btn" @click="decideLanguage">
+                            {{ $t('Settings.SecuritySettings.newKeypair') }}
+                        </b-button>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                             {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
+                        </span>
+
+                        <b-button class="elsa-blue-btn" @click="setUp()">
+                            {{ $t('Settings.SecuritySettings.setUp') }}
+                        </b-button>
+
+                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('TwoFakAuth.login.always') }}
+                             <b-icon id="tooltip-security" icon="info-circle" class="my-icon"></b-icon>
+                             <b-tooltip target="tooltip-security" triggers="hover">
+                                {{ $t('TwoFakAuth.login.alwaysExp') }}
+                            </b-tooltip>
+                        </span>
+
+                        <!-- TODO: connect to API -->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="loginActive" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
                 </b-list-group>
             </div>
         </b-row>
     </b-container>
-  </div>
 </template>
 
 <script>
 import i18n from "@/i18n";
 import {mapActions, mapGetters} from 'vuex';
+import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
+
 export default {
     name: "SecuritySettingsBox",
+    components: {
+        TwoFakAuthSetUp
+    },
     props: {
         user: Object,
         userData: Object
     },
-  data() {
-    return {
-      show: false,
-    };
-  },
     computed: {
       ...mapGetters({
         privateKey: 'getPrivateKey',
         publicKey: 'getPublicKey',
       })
   },
+    data() {
+        return {
+            showSetUp: false,
+            // TODO: use value from API
+            loginActive: false
+        }
+    },
     methods: {
         decideLanguage() {
             if (i18n.locale === 'de') {
@@ -193,7 +228,10 @@ export default {
               })
             }
           }
-          //TODO Handling of the keypairs via uploading
+        },
+        setUp() {
+            this.showSetUp = !this.showSetUp
+            this.$emit('modalTrigger')
         }
     }
 }
