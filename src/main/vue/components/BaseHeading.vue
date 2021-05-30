@@ -40,7 +40,7 @@ export default {
     margin-left: calc((2vh + 1vw) / 2);
     height: calc((2vh + 1vw) / 2);
     margin-top: calc((2vh + 1vw) / 2);
-    margin-bottom: calc((2vh + 1vw) / 1.5);
+    margin-bottom: 4vh;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

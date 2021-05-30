@@ -30,6 +30,12 @@
 
     /* Login */
     --header-login: #D8D8D9;
+
+    /* Modal */
+    --modalBackground: rgba(0, 0, 0, .5);
+
+    /* Alert Dismiss */
+    --darkRed: #a22c2c;
 }
 
 [data-theme="darkMode"] {
@@ -39,6 +45,7 @@
     --whitesmoke: #23292f;
     --light-grey: #ACACAC;
     --shadow-grey: #D8D8D9;
+    --green: #81ba66;
 
     --closed-doc: #070809;
     --closed-doc-hover: #788796;
@@ -59,6 +66,10 @@
     --user-info: #363f48;
 
     --header-login: #6a6a6d;
+
+    --modalBackground: rgba(0, 0, 0, .65);
+
+    --darkRed: #501515;
 }
 
 
@@ -154,14 +165,14 @@ body {
 
 .green-btn {
     background-color: var(--green);
-    color: var(--light-grey);
+    color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .green-btn:focus {
     background-color: var(--green);
-    color: var(--light-grey);
+    color: var(--whitesmoke);
     border: 0.13vw solid var(--dark-grey);
 }
 
@@ -175,4 +186,66 @@ body {
     color: var(--light-grey);
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    opacity: 1;
+}
+
+.tooltip.bs-tooltip-right .arrow:before {
+    border-right-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-left .arrow:before {
+    border-left-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-bottom .arrow:before {
+    border-bottom-color: var(--elsa-blue);
+}
+
+.tooltip.bs-tooltip-top .arrow:before {
+    border-top-color: var(--elsa-blue);
+}
+
+/* Dismissible alert x */
+.close:hover {
+    cursor: pointer;
+    color: var(--darkRed);
+}
+
+/* Toggle */
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    background-color: var(--elsa-blue);
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+    background-color: var(--whitesmoke);
+}
+
+.custom-control-label::before {
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    top: 0
+}
+
+.custom-switch .custom-control-label::after {
+    background-color: var(--shadow-grey);
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: var(--dark-grey);
+}
+
+.custom-switch .custom-control-label::after {
+    top: 2px;
 }

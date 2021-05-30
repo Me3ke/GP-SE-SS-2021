@@ -8,6 +8,8 @@ import * as envelopes from './modules/envelopes.js';
 import * as document from './modules/document.js';
 import * as user from './modules/user';
 import * as userData from './modules/userData';
+import * as keypair from './modules/keypair';
+//import * as publicKey from './modules/keypair';
 import authorization from "@/main/vue/store/modules/authorization";
 
 Vue.use(Vuex)
@@ -19,6 +21,8 @@ const store = new Vuex.Store({
         document,
         user,
         userData,
+        keypair,
+        //publicKey,
         auth: authorization
     },
     mutations: {
