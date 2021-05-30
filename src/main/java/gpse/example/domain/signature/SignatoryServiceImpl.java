@@ -27,6 +27,18 @@ public class SignatoryServiceImpl implements SignatoryService {
     }
 
     @Override
+    public  void delete(final List<Signatory> signatories) {
+        for (int i = 0; i < signatories.size(); i++) {
+            signatoryRepository.deleteById(signatories.get(i).getId());
+        }
+    }
+
+    @Override
+    public Signatory saveSignatory(final Signatory signatory) {
+        return signatoryRepository.save(signatory);
+    }
+
+    @Override
     public void deleteAll() {
         signatoryRepository.deleteAll();
     }
