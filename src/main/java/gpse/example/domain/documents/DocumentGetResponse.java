@@ -37,13 +37,13 @@ public class DocumentGetResponse {
         this.title = document.getDocumentTitle();
         this.owner = owner;
         final DocumentMetaData metaData = document.getDocumentMetaData();
-        this.creationDate = metaData.getCreationDate();
+        //Replaced with uploadDate
+        this.creationDate = metaData.getMetaTimeStampUpload();
         this.endDate = document.getEndDate();
         this.signatureType = document.getSignatureType();
         this.dataType = document.getDocumentType();
         this.data = document.getData();
         this.state = document.getState();
-        this.signed = false;
         this.signatory = false;
         this.read = false;
         this.signed = false;

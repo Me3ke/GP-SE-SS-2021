@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,27 +123,35 @@ public class InitializeDatabase implements InitializingBean {
         try {
             final Envelope envelope = envelopeService.getEnvelope(id);
             for (int i = 0; i < documentIDs.size(); i++) {
-                createExampleDocument(owner, envelope, documentIDs.get(i), documentPaths.get(i),
+                final byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                createExampleDocument(owner, envelope, documentIDs.get(i), data,
                     documentState, docsRead, docsSigned);
             }
         } catch (DocumentNotFoundException exception) {
-            final Envelope envelope = owner.createNewEnvelope(name);
-            for (int i = 0; i < documentIDs.size(); i++) {
-                createExampleDocument(owner, envelope, documentIDs.get(i), documentPaths.get(i),
-                    documentState, docsRead, docsSigned);
+            try {
+                final Envelope envelope = owner.createNewEnvelope(name);
+                for (int i = 0; i < documentIDs.size(); i++) {
+                    final byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                        documentState, docsRead, docsSigned);
+                }
+            } catch (IOException e) {
+                exception.printStackTrace();
             }
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 
     private void createExampleDocument(final User owner, final Envelope envelope, final long id,
-                                       final String path, final DocumentState documentState,
+                                       final byte[] data, final DocumentState documentState,
                                        final boolean read, final boolean signed) {
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
             final DocumentCreator creator = new DocumentCreator();
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
-            documentPutRequestRequest.setPath(path);
+            documentPutRequestRequest.setData(data);
             try {
                 final List<User> signatories = new ArrayList<>();
                 final List<User> readers = new ArrayList<>();
