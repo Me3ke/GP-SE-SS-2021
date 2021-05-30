@@ -33,7 +33,7 @@ public class EnvelopeController {
     private DocumentCreator documentCreator = new DocumentCreator();
 
     /**
-     * The default constructor for an envelope Controller
+     * The default constructor for an envelope Controller.
      *
      * @param envelopeService the envelopeService
      * @param userService the userService
