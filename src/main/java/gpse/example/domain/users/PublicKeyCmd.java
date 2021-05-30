@@ -1,7 +1,7 @@
 package gpse.example.domain.users;
 
 /**
- * Comma
+ * The class used to get the String representing a publicKey from an API-Request.
  */
 public class PublicKeyCmd {
     private String publicKey;

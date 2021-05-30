@@ -73,7 +73,7 @@ public class User implements UserDetails {
     /**
      * The constructor for a user.
      *
-     * @param username the username equal the email
+     * @param username  the username equal the email
      * @param firstname the firstname of the user.
      * @param lastname  the lastname of the user.
      * @param password  the password that is used for actions that need security.
@@ -133,7 +133,7 @@ public class User implements UserDetails {
                                 final String homeTown, final String country, final LocalDate birthday,
                                 final String phoneNumber) {
         this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
-                country, birthday, phoneNumber);
+            country, birthday, phoneNumber);
     }
 
     public void setPersonalData(final PersonalData personalData) {
@@ -142,6 +142,7 @@ public class User implements UserDetails {
 
     /**
      * This method adds Role to an user.
+     *
      * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
      */
     public void addRole(final String role) {
@@ -204,6 +205,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
     @JsonIgnore
     @Override
     public String getUsername() {
@@ -266,7 +268,10 @@ public class User implements UserDetails {
     public PublicKey getPublicKey() {
         return publicKey;
     }
-    public void setPublicKey(final PublicKey publicKey){ this.publicKey = publicKey; }
+
+    public void setPublicKey(final PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public PersonalData getPersonalData() {
         return personalData;
