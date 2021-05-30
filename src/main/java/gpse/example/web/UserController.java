@@ -1,9 +1,5 @@
 package gpse.example.web;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import gpse.example.domain.users.*;
 
 import gpse.example.util.email.MessageGenerationException;
@@ -31,7 +27,6 @@ public class UserController {
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
-    private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -51,29 +46,27 @@ public class UserController {
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
         this.messageService = messageService;
-        mapper = new ObjectMapper();
     }
 
     /**
      * Method to handle an registration and generating user object.
      * @param signUpUser the userdata getting from frontend
      * @return JSONResponse containing statusCode and a message
-     * @throws JsonProcessingException thrown by mapper
      */
     @PostMapping("/newuser")
-    public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
+    public JSONResponseObject signUp(@RequestBody UserSignUpCmd signUpUser) {
         JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
             response.setMessage("username or password not specified");
-            return mapper.writeValueAsString(response);
+            return response;
         } else {
             try {
                 User user = userService.getUser(signUpUser.getUsername());
 
                 response.setStatus(STATUS_CODE_USER_EXISTS_ALREADY);
                 response.setMessage("username " + user.getUsername() + " already exists");
-                return mapper.writeValueAsString(response);
+                return response;
             } catch (UsernameNotFoundException e) {
                 User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
@@ -90,7 +83,7 @@ public class UserController {
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
                     response.setMessage("Error generating Confirmationmail. Try again later.");
                 }
-                return mapper.writeValueAsString(response);
+                return response;
             }
 
         }
@@ -100,10 +93,9 @@ public class UserController {
      * Method for confirm an User and enable his*her account.
      * @param token the confirmationToken sended with Email
      * @return JSONResponse containing statusCode and a message
-     * @throws JsonProcessingException thrown by mapper
      */
     @GetMapping("/user/register")
-    public String confirmMail(@RequestParam("token") String token) throws JsonProcessingException {
+    public JSONResponseObject confirmMail(@RequestParam("token") String token) {
 
         JSONResponseObject response = new JSONResponseObject();
 
@@ -135,40 +127,31 @@ public class UserController {
                         + "an error occured please call systemadmin");
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
 
-                    return mapper.writeValueAsString(response);
+                    return response;
                 }
             }
         }
-        return mapper.writeValueAsString(response);
+        return response;
     }
 
     /**
      * Method to validate an useraccount by admin.
-     * @param adminUsername the identifier of the admin account that validates the user
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
-     * @throws JsonProcessingException thrown by mapper
      */
-    @GetMapping("/user/{adminID}/validate/{userID}")
-    public String adminUserValidation(@PathVariable("adminID") final String adminUsername,
-                                      @PathVariable("userID") final String username)
-        throws JsonProcessingException {
+    @GetMapping("/user/{userID}/validate/")
+    public JSONResponseObject adminUserValidation(@PathVariable("userID") final String username) {
 
         JSONResponseObject response = new JSONResponseObject();
         User user = userService.getUser(username);
-        User admin = userService.getUser(adminUsername);
-        if (admin.getRoles().contains("ROLE_ADMIN")) {
-            userService.validateUser(user);
-        } else {
-            response.setMessage(adminUsername +  " is no Admin");
-        }
+        userService.validateUser(user);
 
         if (user.isAdminValidated()) {
             response.setStatus(STATUS_CODE_OK);
         } else {
             response.setStatus(STATUS_CODE_VALIDATION_FAILED);
         }
-        return mapper.writeValueAsString(response);
+        return response;
     }
 
     @GetMapping("/user/{userID}/personal")
