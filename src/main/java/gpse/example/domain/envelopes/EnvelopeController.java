@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @CrossOrigin("http://localhost:8088")
+@RequestMapping("/api")
 public class EnvelopeController {
 
     private static final String USER_ID = "userID";
@@ -60,7 +61,7 @@ public class EnvelopeController {
      * @return the new envelope.
      * @throws UploadFileException if the envelope could not be uploaded.
      */
-    @PostMapping("api.elsa.de/user/{userID}/envelopes/envelopes")
+    @PostMapping("/user/{userID}/envelopes/envelopes")
     public Envelope createEnvelope(final @PathVariable(USER_ID) String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
@@ -81,7 +82,7 @@ public class EnvelopeController {
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                  final @PathVariable(USER_ID) String ownerID,
                                  final @RequestBody DocumentPutRequest documentPutRequest)
@@ -106,7 +107,7 @@ public class EnvelopeController {
      * @return the response object
      * @throws DocumentNotFoundException if the envelope was not found.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public EnvelopeGetResponse getEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String userID)
         throws DocumentNotFoundException {
@@ -125,7 +126,7 @@ public class EnvelopeController {
      * @return the response object
      * @throws DownloadFileException if the download was not successful.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/download")
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/download")
     public EnvelopeGetResponse downloadEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                 final @PathVariable(USER_ID) String userID,
                                                 final @RequestParam("path") String path)
@@ -149,7 +150,7 @@ public class EnvelopeController {
      * @param request the Request object which keeps the filter data.
      * @return the filtered envelope list.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes")
+    @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID,
                                                      final @RequestBody EnvelopeGetRequest request) {
         final User currentUser = userService.getUser(userID);

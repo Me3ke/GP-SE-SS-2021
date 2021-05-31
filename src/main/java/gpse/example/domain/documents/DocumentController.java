@@ -27,6 +27,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:8088")
+@RequestMapping("/api")
 public class DocumentController {
 
     private static final String ENVELOPE_ID = "envelopeID";
@@ -71,7 +72,7 @@ public class DocumentController {
      *                                   if there was no document with this id in the database.
      * @throws DownloadFileException     if something went wrong while downloading the file.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                        final @PathVariable(USER_ID) String userID,
                                                        final @PathVariable(DOCUMENT_ID) long documentID)
@@ -105,7 +106,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      * @throws DownloadFileException if something went wrong while downloading.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
     public DocumentGetResponse downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                 final @PathVariable(USER_ID) String userID,
                                                 final @PathVariable(DOCUMENT_ID) long documentID,
@@ -133,7 +134,7 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
-    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                          final @PathVariable(USER_ID) String ownerID,
                                          final @PathVariable(ENVELOPE_ID) long envelopeID,
@@ -168,7 +169,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      * @return true if the review was successful and false if not.
      */
-    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public boolean review(final @PathVariable(USER_ID) String userID,
                           final @PathVariable(ENVELOPE_ID) long envelopeID,
                           final @PathVariable(DOCUMENT_ID) long documentID)
@@ -208,7 +209,7 @@ public class DocumentController {
      * @return true if the signing was successful and false if not.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
     public boolean sign(final @PathVariable(USER_ID) String userID,
                      final @PathVariable(ENVELOPE_ID) long envelopeID,
                      final @PathVariable(DOCUMENT_ID) long documentID)
