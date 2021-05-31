@@ -39,8 +39,10 @@ export const actions = {
      (local storage, need refreshing for changing the view)
      */
 
-    editDocument({commit}, doc) {
-        commit('EDIT_DOCUMENT', doc)
+    editDocument({commit}, doc, {envId, docId}) {
+        documentAPI.editDocument(envId, docId).then(response => {
+            commit('EDIT_DOCUMENT', response.data)
+        })
 
     }
 }

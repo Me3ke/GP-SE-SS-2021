@@ -3,10 +3,9 @@
         <base-heading></base-heading>
         <upload-new-version-button
             :document="actualFile"
-            :new-document="newUploadedFile"
             v-on:update-document="updateDoc"
         ></upload-new-version-button>
-        <DocumentBox :doc="actualFile"></DocumentBox>
+        <DocumentBox style="padding-top: 3em" :doc="actualFile"></DocumentBox>
     </div>
 </template>
 
@@ -35,6 +34,7 @@ export default {
               read // optionally be changed but can also stay on true
               )
             */
+            doc: {},
 
             actualFile: {
                 id: 1,
@@ -46,6 +46,25 @@ export default {
                     lastname: "Wehner"
                 },
                 state: "open",
+                signatoriesId: [
+                    {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Test1",
+                        lastname: "Wehner"
+                    },
+                    {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Test2",
+                        lastname: "Wehner"
+                    },
+                ],
+                readers: [
+                    {
+                        eMail: "sehrTolle@email.com",
+                        firstname: "Test2",
+                        lastname: "Wehner"
+                    }
+                ],
                 endDate: "15.06.2021",
                 dataType: "PDF",
                 signatureType: "simple",
@@ -53,41 +72,22 @@ export default {
                 reader: false,
                 signed: false,
                 read: true,
-            },
-
-
-            newUploadedFile: {
-                id: 1,
-                title: "Essenplan KW 25 #2",
-                creationDate: "01.05.2021",
-                owner: {
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto",
-                    lastname: "Wehner"
-                },
-                state: "open",
-                endDate: "15.06.2021",
-                dataType: "PDF",
-                signatureType: "simple",
-                signatory: true,
-                reader: false,
-                signed: true,
-                read: true,
             }
         }
     },
 
     computed: {
         ...mapGetters({
-            document: 'getDocument'
+            document: 'document/getDocument'
         })
     },
     methods: {
-        updateDoc() {
+
+        // todo implement the dispatch method to update the selected document
+        updateDoc(newDoc) {
            // debugger; // eslint-disable-line no-debugger
            // this.$store.dispatch('editDocument', this.newUploadedFile)
-            this.actualFile = this.newUploadedFile
-
+            this.actualFile = newDoc
         }
     }
 }

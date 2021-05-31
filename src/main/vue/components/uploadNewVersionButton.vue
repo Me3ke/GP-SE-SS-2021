@@ -49,11 +49,15 @@
         <b-modal
             id="modal-2"
             centered
-            hide-footer hide-header ok-only no-stacking
+
+            :title= "document.title + ' Documentsettings'"
+            hide-footer ok-only no-stacking
         >
             <div>
-                <h3>{{document.title}}</h3>
-                <h6>Select File to replace your Document</h6>
+                <label>
+                    <input v-model="newDoc.title" :placeholder="this.document.title">
+                    {{this.newDoc.title}}
+                </label>
             </div>
             <div>
                 {{ $t('UploadDoc.configureDoc') }}
@@ -95,44 +99,98 @@ export default {
     data() {
         return {
             // filename of uploaded file
-            // Todo need to add the new file as an ByteArray
             fileString: "",
             file: File,
-            dataURL: ''
+
+            // here need to paste all attributes of documents
+            newDoc: {
+                byte: [],
+                creationDate: '',
+                title: '',
+                type: '',
+                owner: {
+                    eMail: "sehrTolle@email.com",
+                    firstname: "Otto #2",
+                    lastname: "Wehner"
+                },
+                signatoriesId: [],
+                readers: [],
+                signatureType: '',
+                endDate: '',
+                orderRelevant: false,
+                state: ''
+            }
         }
     },
-    props: ['document', 'newDocument'],
+    props: ['document'],
 
     methods: {
         // save the selected File in the data
         previewFile(event) {
+            console.log(event.target.files[0])
             this.fileString = event.target.files[0].name
             this.file = event.target.files[0]
+
+
+        },
+
+        // get all necessary attributes of documents
+        getToDocumentSettings() {
+            this.newDoc.type = this.file.prototype
+            if(this.newDoc.title === '' || this.newDoc.title == null) {
+                this.newDoc.title = this.document.title + ' #2'
+            }
+            if(this.newDoc.signatoriesId === '' || this.newDoc.signatoriesId == null) {
+                this.newDoc.signatoriesId = this.document.signatoriesId
+            }
+            if(this.newDoc.readers === '' || this.newDoc.readers == null) {
+                this.newDoc.readers = this.document.readers
+            }
+            if(this.newDoc.signatureType === '' || this.newDoc.signatureType == null) {
+                this.newDoc.signatureType = this.document.signatureType
+            }
+            if(this.newDoc.endDate === '' || this.newDoc.endDate == null) {
+                this.newDoc.endDate = this.document.endDate
+            }
+            if(this.newDoc.state === '' || this.newDoc.state == null) {
+
+                this.newDoc.state = "open"
+            }
+            this.newDoc.creationDate = "31.06.2021"
+            console.log(this.newDoc)
+
         },
 
         // emit the newDocument to the parent component for handle the updateDoc method
-        uploadNewFile() {
-            this.$emit('update-document', this.newDocument)
+        async uploadNewFile() {
+            //this.$emit('update-document', this.newDocument)
             this.$refs['my-modal3'].hide()
             this.fileString = ""
-            this.asyncHandleFunction()
+            this.byte = await this.asyncHandleFunction()
+            this.newDoc.byte = await this.asyncHandleFunction()
+            this.getToDocumentSettings()
 
+            // emit the new doc to the parent
+            this.$emit('update-document', this.newDoc)
         },
+
+        // convert the promise base64 into an byte array
         async asyncHandleFunction() {
             const promise = await convertUploadFileToBase64(this.file)
-            let newString = promise.replace('data:', '').replace(/^.+,/, '');
-            console.log(newString)
-            this.dataURL = newString
+            const bytes = [];
+            for (let i = 0; i < promise.length; i++) {
+                bytes.push(promise.charCodeAt(i))
+            }
+            return bytes
         },
         resetTest(){
             this.$refs['my-modal1'].hide()
             this.fileString = ""
         }
-
     },
 
 }
-
+// converting the selected file into base64 (as promise)
 const convertUploadFileToBase64 = (file) => {
     const reader = new FileReader()
     return new Promise((resolve, reject) => {
@@ -140,9 +198,8 @@ const convertUploadFileToBase64 = (file) => {
             reader.abort()
             reject(error)
         }
-
         reader.onload = () => {
-            resolve(reader.result)
+            resolve(reader.result.replace('data:', '').replace(/^.+,/, ''))
         }
         reader.readAsDataURL(file)
     })

@@ -11,5 +11,11 @@ export default {
                 download: false
             }
         })
+    },
+    async editDocument(envId, docId) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
+        })
     }
 }

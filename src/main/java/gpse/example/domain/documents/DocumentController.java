@@ -29,9 +29,9 @@ public class DocumentController {
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
 
-    private EnvelopeServiceImpl envelopeService;
-    private UserServiceImpl userService;
-    private DocumentServiceImpl documentService;
+    private final EnvelopeServiceImpl envelopeService;
+    private final UserServiceImpl userService;
+    private final DocumentServiceImpl documentService;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -104,7 +104,7 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                          final @RequestParam(USER_ID) String userID,
                                          final @RequestParam(ENVELOPE_ID) long envelopeID,
