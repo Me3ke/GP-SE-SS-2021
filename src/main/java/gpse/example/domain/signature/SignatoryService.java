@@ -8,4 +8,6 @@ import java.util.List;
 public interface SignatoryService {
     List<Signatory> saveSignatories(List<Signatory> signatories);
     void deleteAll();
+    void delete(final List<Signatory> signatories);
+    Signatory saveSignatory(Signatory signatory);
 }

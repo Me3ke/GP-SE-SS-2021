@@ -196,6 +196,8 @@
         "content": "Register"
     },
     "Settings": {
+        "on": "On",
+        "off": "Off",
         "content": "Account information and settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",
@@ -214,7 +216,9 @@
             "settings": "Security settings",
             "publicKeys": "Public Keys",
             "publicKey": "Public key:",
-            "newKeypair": "New Keypair"
+            "newKeypair": "New Keypair",
+            "twoFacAuthSetUp": "Two-factor authentication set-up",
+            "setUp": "Set up"
         },
         "MessageSettings": {
             "settings": "Message settings",
@@ -303,5 +307,44 @@
         "continueText": "Continue",
         "generatingText": "Generating...",
         "uploadText": "Uploading"
+    },
+    "TwoFakAuth": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "close": "Close",
+        "back": "Back",
+        "login": {
+            "title": "Set-up your two-factor authentication",
+            "firstStep": "Step 1: Scan the qr-code with your authenticator app",
+            "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
+            "always": "Enable two-factor authentication for every login",
+            "alwaysExp": "After a successful login you have to confirm your identity by using your second factor.",
+            "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
+            "cancelWarningTwo": "your two-factor authentication via the settings page.",
+            "fail": "Wrong code format",
+            "didIt": "You successfully set up your second factor!",
+            "canUse": "You can now use the whole application",
+            "go": "Let's go!",
+            "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
+            "again": "Try again",
+            "attention": "Warning! You have already set up your two-factor authentication. If you continue it will be lost!"
+        },
+        "sign": {
+            "sureOne": "Are you sure you want to sign the following document?",
+            "sureMulti": "Are you sure you want to sign the following documents?",
+            "success": "You have successfully signed!",
+            "sign": "Sign now!",
+            "code": "Enter the 6-digit code from your authenticator app",
+            "sure": "Are you sure you want to cancel the process?",
+            "leftTries": "The code was wrong. Tries until logout:",
+            "logout": "You put in too many wrong codes. You will be logged out automatically."
+        },
+        "read": {
+            "read": "Proofread now!",
+            "sureOne": "Are you sure you want to proofread the following document?",
+            "sureMulti": "Are you sure you want to proofread the following documents?",
+            "success": "You have successfully proofread!",
+            "sure": "Are you sure you want to cancel the process?"
+        }
     }
 }

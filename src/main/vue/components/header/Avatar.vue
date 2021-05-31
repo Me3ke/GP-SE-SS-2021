@@ -75,11 +75,11 @@
         <b-dropdown-divider v-if="isAdmin" class="my-divider"></b-dropdown-divider>
 
         <!-- Mode switch -->
-        <b-dropdown-item v-if="theme === ''" class="my-dropdown-item" @click="toggleTheme()">
+        <b-dropdown-item v-if="theme === ''" class="my-dropdown-item" @click="toggleTheme('darkMode')">
             <b-icon icon="moon" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
         </b-dropdown-item>
-        <b-dropdown-item v-else class="my-dropdown-item" @click="toggleTheme()">
+        <b-dropdown-item v-else class="my-dropdown-item" @click="toggleTheme('')">
             <b-icon icon="sun" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
         </b-dropdown-item>
@@ -106,7 +106,6 @@ export default {
     name: "Avatar",
     data() {
         return {
-            'theme': '',
             'showAdmin': false,
             'mobile': window.innerWidth < 576
         }
@@ -114,6 +113,8 @@ export default {
     created() {
         // reacts when screen size changes
         window.addEventListener("resize", this.updateMobile);
+        // setting theme
+        document.documentElement.setAttribute('data-theme', this.theme);
     },
     destroyed() {
         // removes event listener
@@ -126,10 +127,10 @@ export default {
         routeToHelp() {
             this.$router.push('/' + this.$i18n.locale + '/help')
         },
-        toggleTheme() {
-            this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
+        toggleTheme(mode) {
+            //changes mode
+            this.$store.dispatch('theme/setTheme', {theme: mode})
             document.documentElement.setAttribute('data-theme', this.theme);
-            localStorage.setItem('theme', this.theme);
         },
         toggleAdmin() {
             this.showAdmin = !this.showAdmin
@@ -145,7 +146,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAdmin'])
+        ...mapGetters({
+            isAdmin: 'isAdmin',
+            theme: 'theme/getTheme'
+        })
     }
 }
 </script>

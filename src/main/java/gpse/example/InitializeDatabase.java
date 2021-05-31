@@ -7,16 +7,16 @@ import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.SignatoryService;
-import gpse.example.domain.users.PersonalData;
-import gpse.example.domain.users.PersonalDataService;
-import gpse.example.domain.users.User;
-import gpse.example.domain.users.UserService;
+import gpse.example.domain.users.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class InitializeDatabase implements InitializingBean {
     private final DocumentMetaDataService documentMetaDataService;
     private final EnvelopeService envelopeService;
     private final SignatoryService signatoryService;
-
+    private final SecuritySettingsService securitySettingsService;
 
     /**
      * The standard constructor for the class initializing the database.
@@ -52,18 +52,21 @@ public class InitializeDatabase implements InitializingBean {
      * @param envelopeService         used for saving envelope-objects in the database.
      * @param documentMetaDataService used for saving documentMetaData-objects in the database.
      * @param signatoryService        used for saving signatory-objects in the database.
+     * @param securitySettingsService used for saving user settings objects in the database
      */
     @Autowired
     public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService,
                               final DocumentService documentService, final EnvelopeService envelopeService,
                               final DocumentMetaDataService documentMetaDataService,
-                              final SignatoryService signatoryService) {
+                              final SignatoryService signatoryService,
+                              final SecuritySettingsService securitySettingsService) {
         this.userService = userService;
         this.personalDataService = personalDataService;
         this.documentService = documentService;
         this.documentMetaDataService = documentMetaDataService;
         this.envelopeService = envelopeService;
         this.signatoryService = signatoryService;
+        this.securitySettingsService = securitySettingsService;
     }
 
     @Override
@@ -78,7 +81,9 @@ public class InitializeDatabase implements InitializingBean {
                 "Schneider", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
             user.addRole("ROLE_USER");
             user.setEnabled(true);
+            user.setAdminValidated(true);
             user.setPersonalData(personalDataService.savePersonalData(personalData));
+            user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
             userService.saveUser(user);
         }
         final List<Long> documentIDs = new ArrayList<>();
@@ -96,13 +101,13 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add("./src/main/resources/Handout_Kundengespraech.pdf");
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
-            documentPaths, DocumentState.READ_AND_SIGNED, true, true);
+            documentPaths, DocumentState.CLOSED, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_FIVE);
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.SIGNED, false, true);
+            documentPaths, DocumentState.OPEN, false, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_SIX);
@@ -110,7 +115,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add(PROGRAM_PATH);
         documentPaths.add("./src/main/resources/Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
-            documentPaths, DocumentState.READ_AND_SIGNED, true, true);
+            documentPaths, DocumentState.CLOSED, true, true);
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,
@@ -120,27 +125,40 @@ public class InitializeDatabase implements InitializingBean {
         try {
             final Envelope envelope = envelopeService.getEnvelope(id);
             for (int i = 0; i < documentIDs.size(); i++) {
-                createExampleDocument(owner, envelope, documentIDs.get(i), documentPaths.get(i),
-                    documentState, docsRead, docsSigned);
+                byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
+                createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                    documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
             }
         } catch (DocumentNotFoundException exception) {
-            final Envelope envelope = owner.createNewEnvelope(name);
-            for (int i = 0; i < documentIDs.size(); i++) {
-                createExampleDocument(owner, envelope, documentIDs.get(i), documentPaths.get(i),
-                    documentState, docsRead, docsSigned);
+            try {
+                final Envelope envelope = owner.createNewEnvelope(name);
+                for (int i = 0; i < documentIDs.size(); i++) {
+                    byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                    String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
+                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                        documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                }
+            } catch (IOException e) {
+                exception.printStackTrace();
             }
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 
     private void createExampleDocument(final User owner, final Envelope envelope, final long id,
-                                       final String path, final DocumentState documentState,
-                                       final boolean read, final boolean signed) {
+                                       final byte[] data, final DocumentState documentState,
+                                       final boolean read, final boolean signed, final String title,
+                                       final String type) {
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
             final DocumentCreator creator = new DocumentCreator();
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
-            documentPutRequestRequest.setPath(path);
+            documentPutRequestRequest.setData(data);
+            documentPutRequestRequest.setTitle(title);
+            documentPutRequestRequest.setType(type);
             try {
                 final List<User> signatories = new ArrayList<>();
                 final List<User> readers = new ArrayList<>();

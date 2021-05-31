@@ -34,9 +34,8 @@ public class DocumentCreator {
         if (document.getData() == null) {
             throw new CreatingFileException(new IOException());
         }
-        final File file = writeInNewFile(document.getData(), document.getDocumentType(),
+        writeInNewFile(document.getData(), document.getDocumentType(),
             document.getDocumentTitle(), path);
-        document.setDocumentFile(file);
         return document;
     }
 
@@ -55,16 +54,13 @@ public class DocumentCreator {
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
                                    final List<User> signatories, final List<User> readers)
                                     throws CreatingFileException, IOException {
-        if (documentPutRequest.getPath().equals("")) {
+        if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
         }
-        //TODO should not get title from path
-        final Document document = new Document(documentPutRequest.getPath(), new ArrayList<>(),
+        final Document document = new Document(documentPutRequest, new ArrayList<>(),
             ownerID, new ArrayList<>());
         setDocumentState(signatories, readers, document);
         setReadersAndSignatories(signatories, readers, document);
-        document.setEndDate(documentPutRequest.getEndDate());
-        document.setOrderRelevant(documentPutRequest.isOrderRelevant());
         return document;
     }
 
@@ -100,9 +96,7 @@ public class DocumentCreator {
      */
     private void setDocumentState(final List<User> signatories, final List<User> readers, final Document document) {
         if (readers == null && signatories == null) {
-            document.setState(DocumentState.READ_AND_SIGNED);
-        } else if (signatories == null) {
-            document.setState(DocumentState.SIGNED);
+            document.setState(DocumentState.CLOSED);
         } else if (readers == null) {
             document.setState(DocumentState.READ);
         } else {
@@ -118,7 +112,7 @@ public class DocumentCreator {
      * @return the newly created File
      * @throws CreatingFileException if FileInputStream creates an error.
      */
-    @SuppressWarnings("PMD.AvoidFileStream")
+    @SuppressWarnings({"PMD.AvoidFileStream", "PMD.UseTryWithResources"})
     private File writeInNewFile(final byte[] bytes, final String type,
                                 final String name, final String path) throws CreatingFileException {
         File file;
@@ -127,11 +121,11 @@ public class DocumentCreator {
         } else {
             file = new File(path);
         }
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
         if (file.exists() && !file.delete()) {
             throw new CreatingFileException();
         }
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
         try {
             if (file.createNewFile()) {
                 fos = new FileOutputStream(file);
@@ -143,27 +137,44 @@ public class DocumentCreator {
         } catch (IOException e) {
             throw new CreatingFileException(e);
         } finally {
-            try {
-                assert bos != null;
-                bos.close();
-                fos.close();
-            } catch (IOException e) {
-                System.out.println("something went wrong while closing.");
-            }
+            close(fos, bos);
         }
         return file;
     }
 
     /**
+     * The close method avoids too much complexity in writeInNewFile.
+     * @param fos the FileOutputStream.
+     * @param bos the BufferedOutputStream.
+     * @throws CreatingFileException if the streams cannot be closed.
+     */
+    private void close(final FileOutputStream fos, final BufferedOutputStream bos) throws CreatingFileException {
+        try {
+            assert bos != null;
+            bos.close();
+            fos.close();
+        } catch (IOException e) {
+            throw new CreatingFileException(e);
+        }
+    }
+
+    /**
      * The downloadEnvelope methods downloads a whole envelope.
      * @param envelope the envelope to be downloaded.
+     * @param path the path where the envelope should be downloaded.
      * @throws IOException if the data is incorrect.
      * @throws CreatingFileException if the path is not specified.
      */
-    public void downloadEnvelope(final Envelope envelope) throws IOException, CreatingFileException {
+    public void downloadEnvelope(final Envelope envelope, final String path) throws IOException, CreatingFileException {
         final List<Document> documentList = envelope.getDocumentList();
+        String pathToEnvelope;
+        if (path == null) {
+            pathToEnvelope = PATH_TO_DOWNLOADS;
+        } else {
+            pathToEnvelope = path;
+        }
         for (final Document document : documentList) {
-            download(document, PATH_TO_DOWNLOADS + envelope.getName());
+            download(document, pathToEnvelope + envelope.getName());
         }
     }
 

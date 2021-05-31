@@ -7,10 +7,6 @@ import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,13 +38,16 @@ public class Document {
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
-    private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToMany
     private List<Signatory> readers = new ArrayList<>();
 
+    /*
     @Column
     private File documentFile;
+
+     */
 
     @Column
     private String documentType;
@@ -79,24 +78,21 @@ public class Document {
      * This works only if documentTitle has no dot.
      *
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
-     * @param path        The path leading to the file.
+     * @param documentPutRequest
      * @param signatories The list of signatories for a document.
      * @param readers     The list of readers for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
-    public Document(final String path, final List<Signatory> signatories,
-                    final String ownerID, final List<Signatory> readers) throws IOException {
+    public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
+                    final String ownerID, final List<Signatory> readers) {
         this.signatories = signatories;
         this.readers = readers;
-        final Path documentPath = Paths.get(path);
-        this.documentFile = new File(path);
-        final BasicFileAttributes attr = Files.readAttributes(documentPath, BasicFileAttributes.class);
-        final String[] filename = documentFile.getName().split("\\.");
-        final String title = filename[0];
-        this.documentType = filename[1];
-        this.data = Files.readAllBytes(documentPath);
-        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), title, attr.creationTime(),
-            attr.lastModifiedTime(), attr.lastAccessTime(), attr.size(), ownerID);
+        this.documentType = documentPutRequest.getType();
+        this.data = documentPutRequest.getData();
+        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
+             documentPutRequest.getLastModified(), this.data.length, ownerID);
+        this.endDate = documentPutRequest.getEndDate();
+        this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
 
     /**
@@ -177,6 +173,7 @@ public class Document {
 
     /**
      * The filter method for document titles.
+     *
      * @param titleFilter a String specifying the filter.
      * @return true if this document contains the titleFilter.
      */
@@ -186,6 +183,7 @@ public class Document {
 
     /**
      * The filter method for document signatureTypes.
+     *
      * @param signatureTypeFilter the signatureType specifying the filter.
      * @return true if this document has this signature type.
      */
@@ -198,6 +196,7 @@ public class Document {
 
     /**
      * The filter method for document states.
+     *
      * @param documentStateFilter the state specifying the filter.
      * @return true if this document has this state.
      */
@@ -210,8 +209,9 @@ public class Document {
 
     /**
      * The filter method for document titles.
+     *
      * @param endDateFrom a Date which specifies the earliest moment.
-     * @param endDateTo a Date which specifies the latest moment.
+     * @param endDateTo   a Date which specifies the latest moment.
      * @return true if this document is in between these endDates.
      */
     public boolean hasEndDate(final LocalDateTime endDateFrom, final LocalDateTime endDateTo) {
@@ -228,6 +228,7 @@ public class Document {
 
     /**
      * The filter method for document data types.
+     *
      * @param dataType a String specifying the datatypeFilter.
      * @return true if this document is from this type, or contains it.
      */
@@ -237,6 +238,7 @@ public class Document {
 
     /**
      * The filter method for document signatories.
+     *
      * @param signatories The list of signatories by which should be filtered.
      * @return true if this document contains one of the signatories of the filter.
      */
@@ -254,6 +256,7 @@ public class Document {
 
     /**
      * The filter method for document readers.
+     *
      * @param readers The list of reader by which should be filtered.
      * @return true if this document contains one of the readers of the filter.
      */
@@ -271,6 +274,7 @@ public class Document {
 
     /**
      * The filter method for signed.
+     *
      * @param signed a boolean specifying the filter if the document is signed.
      * @return true if this document corresponds to the filter.
      */
@@ -285,6 +289,7 @@ public class Document {
 
     /**
      * The filter method for read.
+     *
      * @param read a boolean specifying the filter if the document has been read.
      * @return true if this document corresponds to the filter.
      */
@@ -317,10 +322,6 @@ public class Document {
 
     public DocumentMetaData getDocumentMetaData() {
         return documentMetaData;
-    }
-
-    public File getDocumentFile() {
-        return documentFile;
     }
 
     public String getDocumentTitle() {
@@ -365,10 +366,6 @@ public class Document {
 
     public void setEndDate(final LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public void setDocumentFile(final File documentFile) {
-        this.documentFile = documentFile;
     }
 
     public DocumentState getState() {

@@ -197,6 +197,8 @@
         "content": "Registrieren"
     },
     "Settings": {
+        "on": "An",
+        "off": "Aus",
         "content": "Kontoinformationen und Einstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -215,7 +217,9 @@
             "settings": "Sicherheits-Einstellungen",
             "publicKeys": "Öffentliche Schlüssel",
             "publicKey": "Öffentlicher Schlüssel:",
-            "newKeypair": "Neues Schlüsselpaar"
+            "newKeypair": "Neues Schlüsselpaar",
+            "twoFacAuthSetUp": "Zwei-Faktor-Authentifizierung einrichten",
+            "setUp": "Einrichten"
         },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",
@@ -264,7 +268,7 @@
         "sign": "Unterschreiben",
         "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
         "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
-        "read": "Gegengelesen",
+        "read": "Gegenlesen",
         "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
         "close": "Schließen",
         "errors": {
@@ -304,5 +308,44 @@
         "continueText": "Fortfahren",
         "generatingText": "Generieren...",
         "uploadText": "Hochladen..."
+    },
+    "TwoFakAuth": {
+        "cancel": "Abbruch",
+        "continue": "Weiter",
+        "close": "Schließen",
+        "back": "Zurück",
+        "login": {
+            "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
+            "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
+            "secondStep": "Schritt 2: Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
+            "always": "Zwei-Faktor-Authentifizierung bei jedem Login",
+            "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
+            "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
+            "cancelWarningTwo": "bis Sie Ihre Zwei-Faktor-Authentifizierung auf der Einstellungs-Seite eingerichtet haben.",
+            "fail": "Der Code hat das falsche Format.",
+            "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
+            "canUse": "Sie können nun die Anwendung vollständig verwenden",
+            "go": "Los geht's!",
+            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
+            "again": "Erneut versuchen",
+            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
+        },
+        "sign": {
+            "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",
+            "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente unterschreiben wollen?",
+            "success": "Sie haben erfolgreich unterschrieben!",
+            "sign": "Jetzt unterschreiben!",
+            "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
+            "leftTries": "Der Code war falsch. Versuche bis zum Logout:",
+            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt."
+        },
+        "read": {
+            "read": "Jetzt gegenlesen!",
+            "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument gegenlesen wollen?",
+            "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente gegenlesen wollen?",
+            "success": "Sie haben erfolgreich gegengelesen!",
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+        }
     }
 }
