@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -105,7 +106,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(ID_FIVE);
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.CLOSED, false, true);
+            documentPaths, DocumentState.OPEN, false, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_SIX);
@@ -123,17 +124,19 @@ public class InitializeDatabase implements InitializingBean {
         try {
             final Envelope envelope = envelopeService.getEnvelope(id);
             for (int i = 0; i < documentIDs.size(); i++) {
-                final byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
                 createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                    documentState, docsRead, docsSigned);
+                    documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
             }
         } catch (DocumentNotFoundException exception) {
             try {
                 final Envelope envelope = owner.createNewEnvelope(name);
                 for (int i = 0; i < documentIDs.size(); i++) {
-                    final byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                    byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
+                    String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
                     createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                        documentState, docsRead, docsSigned);
+                        documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
                 }
             } catch (IOException e) {
                 exception.printStackTrace();
@@ -145,13 +148,16 @@ public class InitializeDatabase implements InitializingBean {
 
     private void createExampleDocument(final User owner, final Envelope envelope, final long id,
                                        final byte[] data, final DocumentState documentState,
-                                       final boolean read, final boolean signed) {
+                                       final boolean read, final boolean signed, final String title,
+                                       final String type) {
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
             final DocumentCreator creator = new DocumentCreator();
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
             documentPutRequestRequest.setData(data);
+            documentPutRequestRequest.setTitle(title);
+            documentPutRequestRequest.setType(type);
             try {
                 final List<User> signatories = new ArrayList<>();
                 final List<User> readers = new ArrayList<>();
