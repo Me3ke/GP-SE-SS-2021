@@ -326,7 +326,8 @@
             "canUse": "You can now use the whole application",
             "go": "Let's go!",
             "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
-            "again": "Try again"
+            "again": "Try again",
+            "attention": "Warning! You have already set up your two-factor authentication. If you continue it will be lost!"
         },
         "sign": {
             "sureOne": "Are you sure you want to sign the following document?",

@@ -22,6 +22,27 @@
 
                                 <!-- Menu -->
                                 <div class="modal-body">
+
+                                    <!-- Page 0 (shows if user has already set up 2 fac auth) -->
+                                    <div v-if="page === 0">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.login.attention') }}
+                                        </div>
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="light-btn" @click="page++">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.continue') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="elsa-blue-btn" @click="closeModal()">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.cancel') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
                                         <div class="step">
@@ -87,7 +108,7 @@
                                         </div>
 
                                         <div style="text-align: right">
-                                            <button type="button" class="elsa-blue-btn">
+                                            <button type="button" class="elsa-blue-btn" @click="closeModal()">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.login.go') }}
                                                 </span>
@@ -103,6 +124,12 @@
                                         </div>
 
                                         <div style="text-align: right">
+                                            <button type="button" class="light-btn"
+                                                    @click="pageBefore = page; page = 4">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.cancel') }}
+                                                </span>
+                                            </button>
                                             <button type="button" class="elsa-blue-btn" @click="code = ''; page = 1">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.login.again') }}
@@ -128,7 +155,7 @@
                                             </button>
                                             <button type="button" class="elsa-blue-btn" @click="closeModal()">
                                                 <span class="button-txt">
-                                                    {{ $t('TwoFakAuth.continue') }}
+                                                    {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
                                             </button>
                                         </div>
@@ -153,11 +180,18 @@ export default {
     data() {
         return {
             showAlert: false,
-            page: 1,
+            page: 0,
             pageBefore: 0,
             qr: require('../../assets/frame2.png'),
             code: '',
-            always: false
+            always: false,
+            // TODO: do with API
+            hasSetUp: true
+        }
+    },
+    created() {
+        if (!this.hasSetUp) {
+            this.page = 1
         }
     },
     methods: {
