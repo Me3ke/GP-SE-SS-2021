@@ -335,7 +335,9 @@
             "success": "You have successfully signed!",
             "sign": "Sign now!",
             "code": "Enter the 6-digit code from your authenticator app",
-            "sure": "Are you sure you want to cancel the process?"
+            "sure": "Are you sure you want to cancel the process?",
+            "leftTries": "The code was wrong. Tries until logout:",
+            "logout": "You put in too many wrong codes. You will be logged out automatically."
         },
         "read": {
             "read": "Proofread now!",

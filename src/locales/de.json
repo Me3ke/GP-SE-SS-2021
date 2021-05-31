@@ -336,7 +336,9 @@
             "success": "Sie haben erfolgreich unterschrieben!",
             "sign": "Jetzt unterschreiben!",
             "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
-            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
+            "leftTries": "Der Code war falsch. Versuche bis zum Logout:",
+            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt."
         },
         "read": {
             "read": "Jetzt gegenlesen!",
