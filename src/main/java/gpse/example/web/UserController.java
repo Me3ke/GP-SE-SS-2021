@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
-
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
@@ -204,6 +203,18 @@ public class UserController {
             e.printStackTrace();
         }
         return new byte[0];
+    }
+
+    /**
+     * the Method used to validate 2-Factor-Auth codes.
+     * @param username the id of the relating user
+     * @param code the code that should be validated (maybe use a Cmd-Class)
+     * @return "correctInput": true/false
+     */
+    @PostMapping("/user/{userID}/settings/qrCodeCode")
+    public String validateCode(@PathVariable("userID") final String username,
+                               @RequestBody final String code) {
+        return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
 
 }
