@@ -97,6 +97,7 @@ public class DocumentController {
 
     /**
      * The downloadDocument method downloads a document and saves it in the downloads directory.
+     *
      * @param envelopeID the id of the envelope the document is in.
      * @param userID the id of the user doing the request.
      * @param documentID the id of the document.
@@ -182,7 +183,7 @@ public class DocumentController {
             for (final Signatory currentReader : readers) {
                 if (currentReader.getUser().equals(reader)) {
                     currentReader.setStatus(true);
-                    //TODO save reader in readerRepo
+                    signatoryService.saveSignatory(currentReader);
                 }
                 if (!currentReader.isStatus()) {
                     documentFinished = false;
@@ -242,5 +243,25 @@ public class DocumentController {
         } else {
             return false;
         }
+    }
+
+    /**
+     * The getDocumentProgress method is used to track the progress of the signing process.
+     * It uses DocumentProgress response to create an appropriate response.
+     * @param userID the id of the user currently wanting to see the progress.
+     * @param envelopeID the id of the envelope in which the document appears to be.
+     * @param documentID the id of the document which's progress should be tracked.
+     * @return the documentProgressResponse
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/progress")
+    public DocumentProgressResponse getDocumentProgress(final @PathVariable(USER_ID) String userID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
+    throws DocumentNotFoundException{
+        userService.getUser(userID);
+        envelopeService.getEnvelope(envelopeID);
+        final Document document = documentService.getDocument(documentID);
+        return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 }
