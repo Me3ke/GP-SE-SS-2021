@@ -97,7 +97,7 @@
 <script>
 import {validationMixin} from "vuelidate";
 import {required, email, minLength} from "vuelidate/lib/validators";
-import {mapActions, mapGetters} from "vuex";
+import userAPI from "@/main/vue/api/userAPI";
 
 export default {
     mixins: [validationMixin],
@@ -115,21 +115,18 @@ export default {
     },
 
     validations: {
-        firstname: {required, minLength: minLength(2)},
-        surname: {required, minLength: minLength(2)},
-        username: {required, email},
-        password: {required, minLength: minLength(4)}
+        register: {
+            firstname: {required, minLength: minLength(2)},
+            surname: {required, minLength: minLength(2)},
+            username: {required, email},
+            password: {required, minLength: minLength(4)}
+        }
     },
 
-    computed: {
-        ...mapGetters({
-            authenticated: 'isAuthenticated'
-        })
-    },
 
     methods: {
         validateState(name) {
-            const {$dirty, $error} = this.$v.auth[name];
+            const {$dirty, $error} = this.$v.register[name];
             return $dirty ? !$error : null;
         },
         showAlert() {
@@ -137,19 +134,22 @@ export default {
         }
         ,
         onSubmit() {
-            this.$v.auth.$touch();
-            if (this.$v.auth.$anyError) {
+            this.$v.register.$touch();
+            if (this.$v.register.$anyError) {
                 return;
             }
-            this.login()
+            this.registerNewUser()
         },
-        ...mapActions(['requestToken']),
-        async login() {
-            await this.requestToken(this.auth)
+        async registerNewUser() {
+            await userAPI.registerUser(this.register.username,this.register.firstname,this.register.surname,this.register.password)
                 .then(() => {
+                    console.log("Registered User")
                     this.$router.push('/' + this.$i18n.locale + '/overview')
                 })
                 .catch(() => {
+                    console.log("failed")
+                    console.log(this.register.username,this.register.firstname,this.register.surname,this.register.password)
+                    console.log()
                     this.showAlert()
                 })
         }
