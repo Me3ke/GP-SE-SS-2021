@@ -31,11 +31,11 @@ public class DocumentPutRequest {
     }
 
     public byte[] getData() {
-        return Arrays.copyOf(data, data.length);
+        return data;
     }
 
     public void setData(final byte[] data) {
-        this.data = Arrays.copyOf(data, data.length);
+        this.data = data;
     }
 
     public String getTitle() {
