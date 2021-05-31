@@ -49,8 +49,8 @@
                                             {{ $t('TwoFakAuth.login.firstStep') }}
                                         </div>
                                         <div class="content-div" style="text-align: center">
-                                            <img style="margin-bottom: 1em" :src="qr" class="responsive-img"
-                                                 alt="turtle">
+                                            <img id="qrCode" style="margin-bottom: 1em" :src="'data:image/png;base64,' + qr.data" class="responsive-img"
+                                                 alt="qrCode">
                                         </div>
 
                                         <div class="step" style="margin-top: 0">
@@ -173,7 +173,7 @@
 
 <script>
 import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
-
+import {mapGetters} from 'vuex';
 export default {
     name: "TwoFakAuthSetUp",
     components: {LanguageSwitcher},
@@ -182,7 +182,7 @@ export default {
             showAlert: false,
             page: 0,
             pageBefore: 0,
-            qr: require('../../assets/frame2.png'),
+            //qr: require('../../assets/frame2.png'),
             code: '',
             always: false,
             // TODO: do with API
@@ -193,22 +193,28 @@ export default {
         if (!this.hasSetUp) {
             this.page = 1
         }
+        this.$store.dispatch('twoFakAuth/fetchQrCode')
     },
     methods: {
         /* TODO; check if correct code, not only syntax, via axios*/
         setUp() {
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
-                this.page = this.page + 1
-                this.showAlert = false
+              this.page = this.page + 1
+              this.showAlert = false
             } else {
-                this.showAlert = true
+              this.showAlert = true
             }
         },
-        closeModal() {
-            this.$emit('modalTrigger');
-            this.page = 1
-        }
-    }
+      closeModal() {
+        this.$emit('modalTrigger');
+        this.page = 1
+      }
+    },
+  computed: {
+      ...mapGetters({
+        qr: 'twoFakAuth/getQrCode'
+      }),
+  }
 }
 </script>
 

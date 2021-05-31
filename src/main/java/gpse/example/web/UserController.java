@@ -195,14 +195,15 @@ public class UserController {
      * @return the qr code as a byte array
      */
     @GetMapping("/user/{userID}/settings/qrCode")
-    public byte[] getQRCode(@PathVariable("userID") final String username) {
+    public QrCodeGetResponse getQRCode(@PathVariable("userID") final String username) {
         try {
             userService.getUser(username).getSecuritySettings().generateSecret();
-            return userService.getUser(username).getSecuritySettings().generateQRCode(username);
+            byte[] temp = userService.getUser(username).getSecuritySettings().generateQRCode(username);
+            return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
         }
-        return new byte[0];
+        return new QrCodeGetResponse(new byte[0]);
     }
 
     /**

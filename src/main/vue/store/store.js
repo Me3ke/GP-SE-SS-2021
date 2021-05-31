@@ -10,7 +10,7 @@ import * as user from './modules/user';
 import * as userData from './modules/userData';
 import * as keypair from './modules/keypair';
 import * as theme from './modules/theme';
-//import * as publicKey from './modules/keypair';
+import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 
 Vue.use(Vuex)
@@ -24,7 +24,7 @@ const store = new Vuex.Store({
         userData,
         keypair,
         theme,
-        //publicKey,
+        twoFakAuth,
         auth: authorization
     },
     mutations: {
