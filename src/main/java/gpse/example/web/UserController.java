@@ -5,17 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import gpse.example.domain.documents.DocumentPutRequest;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
@@ -206,6 +203,18 @@ public class UserController {
             e.printStackTrace();
         }
         return new byte[0];
+    }
+
+    /**
+     * the Method used to validate 2-Factor-Auth codes.
+     * @param username the id of the relating user
+     * @param code the code that should be validated (maybe use a Cmd-Class)
+     * @return "correctInput": true/false
+     */
+    @PostMapping("/user/{userID}/settings/qrCodeCode")
+    public String validateCode(@PathVariable("userID") final String username,
+                               @RequestBody final String code) {
+        return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
 
 }

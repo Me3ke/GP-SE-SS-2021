@@ -1,7 +1,7 @@
 package gpse.example.domain.users;
 
 /**
- * Comma
+ * The class used to get the public key from any request-body.
  */
 public class PublicKeyCmd {
     private String publicKey;
