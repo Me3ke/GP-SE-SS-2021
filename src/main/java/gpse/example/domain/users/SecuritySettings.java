@@ -11,14 +11,16 @@ import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.security.PublicKey;
 
 /**
  * The class responsible for storing the security settings.
  */
 @Entity
-public class SecuritySettings {
+public class SecuritySettings implements Serializable {
 
+    private static final long serialVersionUID = -8161342821150699358L;
     private static final int SECRET_GENERATOR_NUMBER = 64;
     private static final int CODE_DIGIT_NUMBER = 6;
     private static final int TIME_UNTIL_EXPIRED = 30;
