@@ -1,6 +1,6 @@
 <template>
-    <b-button class="green-btn" id="my-btn">
-        <b-icon id="my-icon" :icon="icon"></b-icon>
+    <b-button class="green-btn" id="my-btn" @mouseenter="hovered = !hovered" @mouseleave="hovered = !hovered">
+        <b-icon :id="[hovered ? 'my-icon-dark' : 'my-icon']" :icon="icon"></b-icon>
         <span id="my-txt"> {{ $t(text) }} </span>
     </b-button>
 </template>
@@ -11,6 +11,11 @@ export default {
     props: {
         icon: String,
         text: String
+    },
+    data() {
+        return {
+            hovered: false
+        }
     }
 }
 </script>
@@ -19,6 +24,11 @@ export default {
 #my-icon {
     fill: var(--whitesmoke);
     position: relative;
+}
+
+#my-icon-dark {
+    fill: var(--dark-grey);
+    transition: 0.4s;
 }
 
 .green-btn {

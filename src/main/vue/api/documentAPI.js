@@ -6,7 +6,7 @@ export default {
     async getDocument(envId, docId) {
         return axios({
             method: "get",
-            url: 'http://localhost:8088/api.elsa.de/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     }
 }
