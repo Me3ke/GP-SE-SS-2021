@@ -23,8 +23,9 @@ public class EnvelopeGetResponse {
      * The default constructor for an envelope response.
      * @param envelope The envelope on which the response is based.
      * @param owner the owner of the envelope.
+     * @param currentUser the user doing the request.
      */
-    public EnvelopeGetResponse(final Envelope envelope, final User owner) {
+    public EnvelopeGetResponse(final Envelope envelope, final User owner, final User currentUser) {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;
@@ -32,7 +33,7 @@ public class EnvelopeGetResponse {
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
             //rework soon to not mix up owners
-            this.documents.add(new DocumentGetResponse(document, owner));
+            this.documents.add(new DocumentGetResponse(document, owner, currentUser));
         }
     }
 

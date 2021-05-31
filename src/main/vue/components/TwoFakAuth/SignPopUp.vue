@@ -86,6 +86,12 @@
 
                                     <!-- Page 2 (two fac Auth) -->
                                     <div v-if="page === 2">
+                                        <b-alert :show="showTries" dismissible
+                                                 @dismissed="showTries = false"
+                                                 style="margin-bottom: 1em">
+                                            {{ $t('TwoFakAuth.sign.leftTries') }} {{ triesLeft }}
+                                        </b-alert>
+
                                         <div class="step" style="margin-top: 0">
                                             {{ $t('TwoFakAuth.sign.code') }}
                                         </div>
@@ -172,8 +178,16 @@
                                         </div>
                                     </div>
 
-                                    <!-- TODO: add what happens if something goes wrong -->
+                                    <!-- Page 6 (shows if user put in too many wrong codes) -->
+                                    <div v-if="page === 6">
+                                        <div class="step" style="margin-top: 0">
+                                            {{ $t('TwoFakAuth.sign.logout') }}
+                                        </div>
 
+                                        <div class="step" style="margin-top: 0; text-align: center;">
+                                            {{ logoutCounter }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,15 +216,35 @@ export default {
             page: 1,
             pageBefore: 0,
             showAlert: false,
-            code: ''
+            code: '',
+            //TODO: add somewhere in store so user cannot just refresh the page
+            triesLeft: 3,
+            showTries: false,
+            //TODO: remove once code correctness gets checked with api
+            codeCorrect: false,
+            //TODO: add somewhere in store so user cannot just refresh the page
+            logoutCounter: 10,
+            startCountDown: false
         }
     },
     methods: {
-        // TODO: check with API if code is correct
         twoFac() {
+            //checking syntax of code
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
-                this.page = this.page + 1
                 this.showAlert = false
+                // TODO: check with API if code is correct
+                //checking correctness of code
+                if (!this.codeCorrect) {
+                    this.triesLeft--
+                    // user used all his tries -> will get logged out
+                    if (this.triesLeft < 1) {
+                        this.page = 6
+                        this.startCountDown = true
+                    }
+                    this.showTries = true
+                } else {
+                    this.page = this.page + 1
+                }
             } else {
                 this.showAlert = true
             }
@@ -222,6 +256,32 @@ export default {
         closeModal() {
             this.$emit('advancedTrigger');
             this.page = 1
+        }
+    },
+    // watch methods taken from: https://stackoverflow.com/questions/55773602/how-do-i-create-a-simple-10-seconds-countdown-in-vue-js
+    watch: {
+        startCountDown(value) {
+            if (value) {
+                setTimeout(() => {
+                    this.logoutCounter--;
+                }, 1000);
+            }
+        },
+        logoutCounter: {
+            handler(value) {
+                if (value > 0 && this.startCountDown) {
+                    setTimeout(() => {
+                        this.logoutCounter--;
+                    }, 1000);
+                }
+
+                if (value === 0) {
+                    localStorage.removeItem('store')
+                    localStorage.clear()
+                    this.$router.push('/' + this.$i18n.locale + '/login')
+                }
+
+            }
         }
     }
 }

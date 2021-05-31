@@ -1,6 +1,6 @@
 package gpse.example.domain.envelopes;
 
-import gpse.example.domain.documents.DocumentPutRequest;
+import gpse.example.domain.documents.Document;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.users.User;
@@ -20,8 +20,7 @@ public interface EnvelopeService {
 
     Envelope addEnvelope(String name, User owner) throws IOException;
 
-    Envelope updateEnvelope(final long id, final DocumentPutRequest documentPutRequest, final String ownerID,
-                            final List<User> signatories, final List<User> readers)
+    Envelope updateEnvelope(final Envelope envelope, final Document document)
         throws CreatingFileException, DocumentNotFoundException, IOException;
 
     void remove(Envelope envelope);

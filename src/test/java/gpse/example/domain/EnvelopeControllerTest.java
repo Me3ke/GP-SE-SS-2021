@@ -1,5 +1,6 @@
 package gpse.example.domain;
 
+import gpse.example.domain.documents.ArchivedDocument;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentCreator;
 import gpse.example.domain.documents.DocumentPutRequest;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EnvelopeControllerTest {
+
     /*
 
     private UserServiceImpl userService;
