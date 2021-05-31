@@ -9,6 +9,7 @@ import * as document from './modules/document.js';
 import * as user from './modules/user';
 import * as userData from './modules/userData';
 import * as keypair from './modules/keypair';
+import * as theme from './modules/theme';
 //import * as publicKey from './modules/keypair';
 import authorization from "@/main/vue/store/modules/authorization";
 
@@ -22,6 +23,7 @@ const store = new Vuex.Store({
         user,
         userData,
         keypair,
+        theme,
         //publicKey,
         auth: authorization
     },
@@ -36,7 +38,6 @@ const store = new Vuex.Store({
                 state.auth.role = null;
             }
         }
-
     }
 })
 
