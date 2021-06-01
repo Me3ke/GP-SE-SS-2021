@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -27,8 +28,8 @@ import java.util.List;
 @Service
 public class InitializeDatabase implements InitializingBean {
 
-    private static final String PROGRAM_PATH = "./src/main/resources/Programme.pdf";
-    private static final String PLAN_PATH = "./src/main/resources/Essensplan.txt";
+    private static final String PROGRAM_PATH = "Programme.pdf";
+    private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
@@ -98,7 +99,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(ID_THREE);
         documentIDs.add(ID_FOUR);
         documentPaths.add(PROGRAM_PATH);
-        documentPaths.add("./src/main/resources/Handout_Kundengespraech.pdf");
+        documentPaths.add("Handout_Kundengespraech.pdf");
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
             documentPaths, DocumentState.CLOSED, true, true);
@@ -113,7 +114,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(ID_SIX);
         documentIDs.add(ID_SEVEN);
         documentPaths.add(PROGRAM_PATH);
-        documentPaths.add("./src/main/resources/Dropbox.pdf");
+        documentPaths.add("Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
             documentPaths, DocumentState.CLOSED, true, true);
     }
@@ -125,19 +126,27 @@ public class InitializeDatabase implements InitializingBean {
         try {
             final Envelope envelope = envelopeService.getEnvelope(id);
             for (int i = 0; i < documentIDs.size(); i++) {
-                byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
-                String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
-                createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                    documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                final ClassLoader classLoader = getClass().getClassLoader();
+                try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
+                    byte[] data = inputStream.readAllBytes();
+                    String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
+                        .getName().split("\\.");
+                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                        documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                }
             }
         } catch (DocumentNotFoundException exception) {
             try {
                 final Envelope envelope = owner.createNewEnvelope(name);
+                final ClassLoader classLoader = getClass().getClassLoader();
                 for (int i = 0; i < documentIDs.size(); i++) {
-                    byte[] data = Files.readAllBytes(Paths.get(documentPaths.get(i)));
-                    String[] titleAndType = new File(documentPaths.get(i)).getName().split("\\.");
-                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                        documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                    try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
+                        byte[] data = inputStream.readAllBytes();
+                        String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
+                            .getName().split("\\.");
+                        createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                            documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                    }
                 }
             } catch (IOException e) {
                 exception.printStackTrace();
