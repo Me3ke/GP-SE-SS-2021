@@ -5,7 +5,7 @@ export const namespaced = true
 export const state = {
     document: {},
     errorGetDocument: {},
-    errorDownloadDocument:{}
+    errorDownloadDocument: {}
 }
 
 export const mutations = {
@@ -36,11 +36,10 @@ export const actions = {
         })
     },
 
-    // TODO. look what success should set, look how to handle path
     // makes axios call to download document to given path, either sets document (success) or error (error)
-    downloadDocument({commit}, {envId, docId}) {
-        documentAPI.getDocument(envId, docId).then(response => {
-            console.log(response.data)
+    downloadDocument({commit}, {envId, docId, path}) {
+        documentAPI.downloadDocument(envId, docId, path).then(response => {
+            commit('SET_DOCUMENT', response.data)
             commit('SET_ERROR_DOWNLOAD_DOCUMENT', {})
         }).catch(error => {
             commit('SET_ERROR_DOWNLOAD_DOCUMENT', error)

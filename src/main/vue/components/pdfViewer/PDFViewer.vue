@@ -64,7 +64,11 @@
 
 
                 <!-- Download -->
-                <PDFViewerButton icon="download" @click.native="downloadDoc"></PDFViewerButton>
+                <PDFViewerButton icon="download"
+                                 @click.native="showDownload = true; showOverflow = false"></PDFViewerButton>
+
+                <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
+                               @closedDownload="showOverflow = true; showDownload = false"></DownloadPopUp>
             </b-col>
         </b-row>
 
@@ -72,7 +76,7 @@
         <!-- PDF -->
         <b-row cols="1" style="margin-top: 1vh">
             <b-col>
-                <div :class="[overflow ? 'overflow-auto' : '']" style="height: 75vh" v-if="pageMode">
+                <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 75vh" v-if="pageMode">
                     <pdf :page="currentPage"
                          :src="src"
                          @page-loaded="currentPage = $event"
@@ -81,7 +85,7 @@
                     </pdf>
                 </div>
 
-                <div :class="[overflow ? 'overflow-auto' : '']" style="height: 75vh" v-else>
+                <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 75vh" v-else>
                     <pdf
                         v-for="page in pageCount"
                         :key="page"
@@ -99,19 +103,22 @@
 <script>
 import pdf from 'vue-pdf';
 import PDFViewerButton from "@/main/vue/components/pdfViewer/PDFViewerButton";
+import DownloadPopUp from "@/main/vue/components/DownloadPopUp";
 
 export default {
     name: "PDFViewer",
-    props: ['pdfSrc', 'overflow','docId', 'envId'],
-    components: {PDFViewerButton, pdf},
+    props: ['pdfSrc', 'overflow', 'docId', 'envId'],
+    components: {DownloadPopUp, PDFViewerButton, pdf},
     data() {
         return {
+            showOverflow: this.overflow,
             src: undefined,
             currentPage: 1,
             pageCount: 0,
             loading: 0,
             pageMode: true,
-            zoom: 100
+            zoom: 100,
+            showDownload: false
         }
     },
     created() {
@@ -131,9 +138,6 @@ export default {
             this.src.promise.then(pdf => {
                 this.pageCount = pdf.numPages;
             });
-        },
-        downloadDoc(){
-            this.$store.dispatch('document/downloadDocument', {envId: this.envId, docId: this.docId})
         }
     },
     computed: {
