@@ -53,7 +53,7 @@ public class UserController {
      * @param signUpUser the userdata getting from frontend
      * @return JSONResponse containing statusCode and a message
      */
-    @PostMapping("/newuser")
+    @PostMapping("/newUser")
     public JSONResponseObject signUp(@RequestBody UserSignUpCmd signUpUser) {
         JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
@@ -94,7 +94,7 @@ public class UserController {
      * @param token the confirmationToken sended with Email
      * @return JSONResponse containing statusCode and a message
      */
-    @GetMapping("/user/register")
+    @GetMapping("/newUser/register")
     public JSONResponseObject confirmMail(@RequestParam("token") String token) {
 
         JSONResponseObject response = new JSONResponseObject();
