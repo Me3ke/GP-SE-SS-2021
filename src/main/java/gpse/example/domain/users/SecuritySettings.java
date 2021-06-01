@@ -37,7 +37,7 @@ public class SecuritySettings implements Serializable {
     private String secret;
 
     public void generateSecret() {
-        SecretGenerator secretGenerator = new DefaultSecretGenerator(SECRET_GENERATOR_NUMBER);
+        final SecretGenerator secretGenerator = new DefaultSecretGenerator(SECRET_GENERATOR_NUMBER);
         this.secret = secretGenerator.generate();
     }
 
@@ -47,8 +47,8 @@ public class SecuritySettings implements Serializable {
      * @return the QR-Code in form of a byte array
      * @throws QrGenerationException Gets thrown, if the username is incorrect
      */
-    public byte[] generateQRCode(String username) throws QrGenerationException {
-        QrData data = new QrData.Builder()
+    public byte[] generateQRCode(final String username) throws QrGenerationException {
+        final QrData data = new QrData.Builder()
                 .label(username)
                 .secret(secret)
                 .issuer("ELSA")
@@ -56,7 +56,7 @@ public class SecuritySettings implements Serializable {
                 .digits(CODE_DIGIT_NUMBER)
                 .period(TIME_UNTIL_EXPIRED)
                 .build();
-        QrGenerator generator = new ZxingPngQrGenerator();
+        final QrGenerator generator = new ZxingPngQrGenerator();
         return generator.generate(data);
     }
 
@@ -65,10 +65,10 @@ public class SecuritySettings implements Serializable {
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(String code) {
-        TimeProvider timeProvider = new SystemTimeProvider();
-        CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+    public boolean verifyCode(final String code) {
+        final TimeProvider timeProvider = new SystemTimeProvider();
+        final CodeGenerator codeGenerator = new DefaultCodeGenerator();
+        final CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
         return verifier.isValidCode(secret, code);
     }
 

@@ -1,12 +1,13 @@
 package gpse.example.domain.users;
 
 /**
- *
+ * The class used to contain a byte array representing a qr-code, to produce
+ *  a fitting json response.
  */
 public class QrCodeGetResponse {
     private byte[] data;
 
-    public QrCodeGetResponse(byte[] data) {
+    public QrCodeGetResponse(final byte[] data) {
         this.data = data;
     }
 
@@ -14,7 +15,7 @@ public class QrCodeGetResponse {
         return data;
     }
 
-    public void setData(byte[] data) {
+    public void setData(final byte[] data) {
         this.data = data;
     }
 

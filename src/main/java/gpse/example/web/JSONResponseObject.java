@@ -12,7 +12,7 @@ public class JSONResponseObject {
         return status;
     }
 
-    public void setStatus(int statusCode) {
+    public void setStatus(final int statusCode) {
         this.status = statusCode;
     }
 
@@ -20,7 +20,7 @@ public class JSONResponseObject {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

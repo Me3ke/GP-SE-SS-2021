@@ -46,7 +46,7 @@ public class SMTPServerHelper {
     @Autowired
     private final JavaMailSender mailSender;
 
-    public SMTPServerHelper(JavaMailSender mailSender) {
+    public SMTPServerHelper(final JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 

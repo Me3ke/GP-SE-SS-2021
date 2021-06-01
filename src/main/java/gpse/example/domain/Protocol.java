@@ -53,7 +53,7 @@ public class Protocol {
      */
     public void printProtocol() {
         final File file = new File(pathProtocolDir);
-        if ((!file.exists()) && (!file.mkdirs())) {
+        if (!file.exists() && !file.mkdirs()) {
            System.out.println("Verzeichnis wurde nicht angelegt");
            return;
         }

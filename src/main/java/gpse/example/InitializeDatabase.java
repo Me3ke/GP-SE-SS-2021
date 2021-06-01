@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +29,7 @@ public class InitializeDatabase implements InitializingBean {
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
+    private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
     private static final long ID_FIVE = 5L;
@@ -126,11 +125,11 @@ public class InitializeDatabase implements InitializingBean {
         try {
             final Envelope envelope = envelopeService.getEnvelope(id);
             for (int i = 0; i < documentIDs.size(); i++) {
-                final ClassLoader classLoader = getClass().getClassLoader();
+                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
-                    byte[] data = inputStream.readAllBytes();
-                    String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
-                        .getName().split("\\.");
+                    final byte[] data = inputStream.readAllBytes();
+                    final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
+                        .getName().split(DOUBLE_BACKSLASH);
                     createExampleDocument(owner, envelope, documentIDs.get(i), data,
                         documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
                 }
@@ -138,12 +137,12 @@ public class InitializeDatabase implements InitializingBean {
         } catch (DocumentNotFoundException exception) {
             try {
                 final Envelope envelope = owner.createNewEnvelope(name);
-                final ClassLoader classLoader = getClass().getClassLoader();
+                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 for (int i = 0; i < documentIDs.size(); i++) {
                     try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
-                        byte[] data = inputStream.readAllBytes();
-                        String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
-                            .getName().split("\\.");
+                        final byte[] data = inputStream.readAllBytes();
+                        final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
+                            .getName().split(DOUBLE_BACKSLASH);
                         createExampleDocument(owner, envelope, documentIDs.get(i), data,
                             documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
                     }

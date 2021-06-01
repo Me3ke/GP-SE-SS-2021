@@ -83,18 +83,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(User user) {
+    public void signUpUser(final User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         final User createdUser = userRepository.save(user);
         final ConfirmationToken token = new ConfirmationToken(user);
-        ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
-        sendConfirmationMail(createdUser, savedToken.getConfirmationToken());
+        final ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
+        sendConfirmationMail(createdUser, savedToken.getToken());
     }
 
     @Override
-    public void confirmUser(ConfirmationToken confirmationToken) {
+    public void confirmUser(final ConfirmationToken confirmationToken) {
 
         final User user = confirmationToken.getUser();
 
@@ -103,25 +103,25 @@ public class UserServiceImpl implements UserService {
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(User user, String token) {
+    public void sendConfirmationMail(final User user, final String token) {
         smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
             "http://localhost:8080/register/confirm/" + token);
     }
 
     @Override
-    public void validateUser(User user) {
+    public void validateUser(final User user) {
         user.setAdminValidated(true);
         userRepository.save(user);
     }
 
     @Override
-    public void infoNewExtUser(User user) {
-       List<User> userList = getUsers();
-        for (User value : userList) {
+    public void infoNewExtUser(final User user) {
+       final List<User> userList = getUsers();
+        for (final User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
                 smtpServerHelper.sendValidationInfo(value.getEmail(), user.getEmail());
                 return;
-                //otional ohne return => alle Admins benachrichtigen.
+                //optional, without return -> notify all admins.
             }
         }
 
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(final User user) {
         return userRepository.save(user);
     }
 }

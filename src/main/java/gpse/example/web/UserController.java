@@ -32,6 +32,7 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
+    private static final String USERID = "userID";
     private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
@@ -47,9 +48,9 @@ public class UserController {
      * @param securitySettingsService SecuritySettingsService object
      */
     @Autowired
-    public UserController(UserService service, ConfirmationTokenService confService,
-                          PersonalDataService personalDataService,
-                          SecuritySettingsService securitySettingsService) {
+    public UserController(final UserService service, final ConfirmationTokenService confService,
+                          final PersonalDataService personalDataService,
+                          final SecuritySettingsService securitySettingsService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
@@ -65,7 +66,7 @@ public class UserController {
      * @throws JsonProcessingException thrown by mapper
      */
     @PostMapping("/user")
-    public String signUp(@RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
+    public String signUp(final @RequestBody UserSignUpCmd signUpUser) throws JsonProcessingException {
         JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
@@ -100,7 +101,7 @@ public class UserController {
      * @throws JsonProcessingException thrown by mapper
      */
     @GetMapping("/user/register")
-    public String confirmMail(@RequestParam("token") String token) throws JsonProcessingException {
+    public String confirmMail(final @RequestParam("token") String token) throws JsonProcessingException {
 
         JSONResponseObject response = new JSONResponseObject();
 
@@ -139,7 +140,7 @@ public class UserController {
      */
     @GetMapping("/user/{adminID}/validate/{userID}")
     public String adminUserValidation(@PathVariable("adminID") final String adminUsername,
-                                      @PathVariable("userID") final String username)
+                                      @PathVariable(USERID) final String username)
         throws JsonProcessingException {
 
         JSONResponseObject response = new JSONResponseObject();
@@ -160,11 +161,11 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}/personal")
-    public PersonalData showPersonalData(@PathVariable("userID") final String username) {
+    public PersonalData showPersonalData(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getPersonalData();
     }
     @GetMapping("/user/{userID}")
-    public User showUser(@PathVariable("userID") final String username) {
+    public User showUser(@PathVariable(USERID) final String username) {
         return userService.getUser(username);
     }
 
@@ -174,7 +175,7 @@ public class UserController {
      * @param username the identifier of the user account that needs to be updated
      */
     @PutMapping("/user/{userID}/publicKey")
-    public void changePublicKey(@PathVariable("userID") final String username,
+    public void changePublicKey(@PathVariable(USERID) final String username,
                                 @RequestBody final PublicKeyCmd publicKeyCmd) {
         try {
             userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
@@ -185,7 +186,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
-    public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
+    public boolean checkForTwoFAConfiguration(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().getSecret() == null;
     }
 
@@ -195,7 +196,7 @@ public class UserController {
      * @return the qr code as a byte array
      */
     @GetMapping("/user/{userID}/settings/qrCode")
-    public QrCodeGetResponse getQRCode(@PathVariable("userID") final String username) {
+    public QrCodeGetResponse getQRCode(@PathVariable(USERID) final String username) {
         try {
             userService.getUser(username).getSecuritySettings().generateSecret();
             byte[] temp = userService.getUser(username).getSecuritySettings().generateQRCode(username);
@@ -213,7 +214,7 @@ public class UserController {
      * @return "correctInput": true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
-    public String validateCode(@PathVariable("userID") final String username,
+    public String validateCode(@PathVariable(USERID) final String username,
                                @RequestBody final String code) {
         return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
