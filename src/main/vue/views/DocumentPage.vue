@@ -40,7 +40,8 @@
                          style="width: 100%; margin-top: 0; margin-right: auto; margin-left: auto; padding: 0;">
                 <b-row style="width: 100%; margin: auto; padding: 0">
                     <b-col cols="9">
-                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow"></PDFViewer>
+                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow" :doc-id="docId"
+                                   :env-id="envId"></PDFViewer>
                     </b-col>
 
                     <b-col cols="3" id="textCol">

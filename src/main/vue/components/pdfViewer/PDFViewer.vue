@@ -64,7 +64,7 @@
 
 
                 <!-- Download -->
-                <PDFViewerButton icon="download"></PDFViewerButton>
+                <PDFViewerButton icon="download" @click.native="downloadDoc"></PDFViewerButton>
             </b-col>
         </b-row>
 
@@ -102,7 +102,7 @@ import PDFViewerButton from "@/main/vue/components/pdfViewer/PDFViewerButton";
 
 export default {
     name: "PDFViewer",
-    props: ['pdfSrc', 'overflow'],
+    props: ['pdfSrc', 'overflow','docId', 'envId'],
     components: {PDFViewerButton, pdf},
     data() {
         return {
@@ -131,6 +131,9 @@ export default {
             this.src.promise.then(pdf => {
                 this.pageCount = pdf.numPages;
             });
+        },
+        downloadDoc(){
+            this.$store.dispatch('document/downloadDocument', {envId: this.envId, docId: this.docId})
         }
     },
     computed: {
