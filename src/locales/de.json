@@ -140,8 +140,7 @@
             "language": "Sprache"
         },
         "Avatar": {
-            "profile": "Mein Konto",
-            "settings": "Einstellungen",
+            "profile": "Kontoeinstellungen",
             "adminSetting": {
                 "settings": "Admin-Einstellungen",
                 "unlock": "Nutzer freischalten",
@@ -199,7 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "content": "Kontoinformationen und Einstellungen",
+        "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
             "accountInformation": "Kontoinformationen",

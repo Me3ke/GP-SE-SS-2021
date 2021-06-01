@@ -25,8 +25,7 @@
             "language": "Language"
         },
         "Avatar": {
-            "profile": "My Profile",
-            "settings": "Settings",
+            "profile": "Account settings",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -198,7 +197,7 @@
     "Settings": {
         "on": "On",
         "off": "Off",
-        "content": "Account information and settings",
+        "content": "Account settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",
             "accountInformation": "Account information",
