@@ -119,7 +119,9 @@ export default {
                 endDate: '',
                 orderRelevant: false,
                 state: ''
-            }
+            },
+            // TODO Actual Doc which is going to be replaced
+            actualDoc: {}
         }
     },
     props: ['document'],
@@ -135,61 +137,81 @@ export default {
         },
 
         // get all necessary attributes of documents
+
+        /*
+
+        byte data <
+        title <
+        type <
+        list signatoriesID <
+        list readersId <
+        signatureType <
+        localDateTime endDate
+        orderRelevant <
+        document state <
+        lastModified <
+
+         */
         getToDocumentSettings() {
-            this.newDoc.type = this.file.prototype
-            if(this.newDoc.title === '' || this.newDoc.title == null) {
-                this.newDoc.title = this.document.title + ' #2'
-            }
-            if(this.newDoc.signatoriesId === '' || this.newDoc.signatoriesId == null) {
-                this.newDoc.signatoriesId = this.document.signatoriesId
-            }
-            if(this.newDoc.readers === '' || this.newDoc.readers == null) {
-                this.newDoc.readers = this.document.readers
-            }
-            if(this.newDoc.signatureType === '' || this.newDoc.signatureType == null) {
-                this.newDoc.signatureType = this.document.signatureType
-            }
-            if(this.newDoc.endDate === '' || this.newDoc.endDate == null) {
-                this.newDoc.endDate = this.document.endDate
-            }
-            if(this.newDoc.state === '' || this.newDoc.state == null) {
+            this.actualDoc = this.document
 
-                this.newDoc.state = "open"
-            }
-            this.newDoc.creationDate = "31.06.2021"
-            console.log(this.newDoc)
 
+            // todo Document settings input fields
+            this.actualDoc.orderRelevant = false
+            this.actualDoc.creationDate = this.actualDoc.creationDate.replace('T','-')
+            this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString().replace('T','-')
+            this.actualDoc.signatoriesId = []
+            this.actualDoc.readersId = []
+            this.actualDoc.endDate = "2021-06-15-21:15:02.933Z"
+            this.actualDoc.byte = []
+            this.actualDoc.signed = false
+            this.actualDoc.read = false
+            this.actualDoc.reader = false
         },
 
         // emit the newDocument to the parent component for handle the updateDoc method
         async uploadNewFile() {
-            //this.$emit('update-document', this.newDocument)
             this.$refs['my-modal3'].hide()
             this.fileString = ""
-            this.byte = await this.asyncHandleFunction()
-            this.newDoc.byte = await this.asyncHandleFunction()
+
             this.getToDocumentSettings()
+            this.actualDoc.byte =  await this.asyncHandleFunction()
 
             // emit the new doc to the parent
-            this.$emit('update-document', this.newDoc)
+            this.$emit('update-document', this.actualDoc)
         },
 
         // convert the promise base64 into an byte array
         async asyncHandleFunction() {
             const promise = await convertUploadFileToBase64(this.file)
-            const bytes = [];
+            let baseAndByte = []
+            let bytes =  []
             for (let i = 0; i < promise.length; i++) {
                 bytes.push(promise.charCodeAt(i))
             }
-            return bytes
+
+            baseAndByte.push(promise)
+            baseAndByte.push(bytes)
+            return baseAndByte
         },
-        resetTest(){
+        resetTest() {
             this.$refs['my-modal1'].hide()
             this.fileString = ""
-        }
-    },
+        },
 
+        base64ToArrayBuffer(base64) {
+            const binary_string = window.atob(base64);
+            const len = binary_string.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+    }
 }
+
+
 // converting the selected file into base64 (as promise)
 const convertUploadFileToBase64 = (file) => {
     const reader = new FileReader()

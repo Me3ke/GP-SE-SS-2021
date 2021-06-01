@@ -44,6 +44,15 @@
                     </b-col>
 
                     <b-col cols="3" id="textCol">
+
+
+                        <upload-new-version-button
+                        :document="document"
+                        v-on:update-document="updateDoc"
+                        >
+                        </upload-new-version-button>
+
+
                         <!-- Displays if user already proofread -->
                         <b-row style="margin: auto; display: block"
                                v-if="document.reader === true && document.read === true">
@@ -149,11 +158,12 @@ import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
 
 
 export default {
     name: "DocumentPage",
-    components: {ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
@@ -181,6 +191,18 @@ export default {
         toggleRead() {
             this.showProofread = !this.showProofread
             this.showOverflow = !this.showOverflow
+        },
+
+        updateDoc(newDoc) {
+            console.log(this.document)
+            console.log('typ: ',typeof this.document.type)
+            console.log('state: ',typeof this.document.state)
+            console.log('endDate: ',typeof this.document.endDate)
+            console.log('lastModified: ',typeof this.document.lastModified)
+            console.log('sign Type: ',typeof this.document.signatureType)
+            console.log("-----------------")
+            let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId }
+            this.$store.dispatch('document/editDocument', payload)
         }
     },
     created() {

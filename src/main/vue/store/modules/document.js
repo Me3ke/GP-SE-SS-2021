@@ -13,8 +13,8 @@ export const mutations = {
         state.document = doc
     },
 
-    EDIT_DOCUMENT(state,doc) {
-        const originalDocIndex = state.documents.findIndex(i => i.id === doc.id);
+    EDIT_DOCUMENT(state,doc, docId) {
+        const originalDocIndex = state.documents.findIndex(i => i.id === docId);
         state.documents[originalDocIndex] = doc
     },
 
@@ -39,9 +39,19 @@ export const actions = {
      (local storage, need refreshing for changing the view)
      */
 
-    editDocument({commit}, doc, {envId, docId}) {
-        documentAPI.editDocument(envId, docId).then(response => {
-            commit('EDIT_DOCUMENT', response.data)
+    editDocument({commit}, {newDoc, envId, docId}) {
+        console.log(envId)
+        console.log(newDoc)
+        console.log('typ: ',typeof newDoc.type)
+        console.log('state: ',typeof newDoc.state)
+        console.log('endDate: ',typeof newDoc.endDate)
+        console.log('lastModified: ',typeof newDoc.lastModified)
+        console.log('sign Type: ',typeof newDoc.signatureType)
+
+
+        // todo getting 400 bad request
+        documentAPI.editDocument(envId, docId, newDoc).then(response => {
+            commit('EDIT_DOCUMENT', response.data, docId)
         })
 
     }
