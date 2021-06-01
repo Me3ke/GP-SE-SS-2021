@@ -324,8 +324,10 @@
             "didIt": "You successfully set up your second factor!",
             "canUse": "You can now use the whole application",
             "go": "Let's go!",
-            "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
+            "failedSetUp": "Setting up your second factor was unsuccessful.",
+            "tryAgain": "Try again or start from the beginning.",
             "again": "Try again",
+            "toStart": "Go to beginning",
             "attention": "Warning! You have already set up your two-factor authentication. If you continue it will be lost!"
         },
         "sign": {

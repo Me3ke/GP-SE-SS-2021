@@ -325,8 +325,10 @@
             "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
             "canUse": "Sie können nun die Anwendung vollständig verwenden",
             "go": "Los geht's!",
-            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
+            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich.",
+            "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
             "again": "Erneut versuchen",
+            "toStart": "Zum Beginn",
             "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {

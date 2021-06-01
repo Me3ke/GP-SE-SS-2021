@@ -186,7 +186,7 @@ public class UserController {
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
     public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
-        return userService.getUser(username).getSecuritySettings().getSecret() == null;
+        return userService.getUser(username).getSecuritySettings().getSecret() != null;
     }
 
     /**
@@ -210,12 +210,12 @@ public class UserController {
      * the Method used to validate 2-Factor-Auth codes.
      * @param username the id of the relating user
      * @param code the code that should be validated (maybe use a Cmd-Class)
-     * @return "correctInput": true/false
+     * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
-    public String validateCode(@PathVariable("userID") final String username,
+    public Boolean validateCode(@PathVariable("userID") final String username,
                                @RequestBody final String code) {
-        return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
+        return userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
 
 }
