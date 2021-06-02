@@ -197,8 +197,10 @@ public class UserController {
     @GetMapping("/user/{userID}/settings/qrCode")
     public QrCodeGetResponse getQRCode(@PathVariable("userID") final String username) {
         try {
-            userService.getUser(username).getSecuritySettings().generateSecret();
-            byte[] temp = userService.getUser(username).getSecuritySettings().generateQRCode(username);
+            SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+            securitySettings.generateSecret();
+            byte[] temp = securitySettings.generateQRCode(username);
+            securitySettingsService.saveSecuritySettings(securitySettings);
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
@@ -215,6 +217,7 @@ public class UserController {
     @PostMapping("/user/{userID}/settings/qrCodeCode")
     public Boolean validateCode(@PathVariable("userID") final String username,
                                @RequestBody final String code) {
+        System.out.println("was du möchtest");
         return userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
 
