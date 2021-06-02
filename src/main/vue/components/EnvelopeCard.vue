@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid>
+    <b-container fluid style="padding: 0">
         <b-row no-gutters>
             <b-col cols="11">
                 <EnvelopeBox :envelope="envelope" @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"></EnvelopeBox>

@@ -247,6 +247,12 @@
                 "text": "Protocol availability",
                 "exp": "Get website alerts about the availability of document protocols."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Edit all documents in the envelope",
+            "addSignatory": "Add signatories",
+            "placeholderMail": "Signatory@mail.de",
+            "signatory": "Signatory"
         }
     },
     "UploadDoc": {
@@ -258,7 +264,9 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+        "addReaders": "Add proof-readers",
+        "skipReview": "Skip review process"
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",

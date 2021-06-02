@@ -3,14 +3,22 @@
         <Header></Header>
         <BaseHeading :name="getEnv(envId).name" :translate="false" style="position: fixed"></BaseHeading>
 
-        <div class="container-fluid">
+        <b-container fluid="xl">
             <div style="margin-top:7.5vh">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                    <label class="custom-control-label" for="customSwitch1">Alle Dokument im Envelope bearbeiten</label>
+                    <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="individual">
+                    <label class="custom-control-label" for="customSwitch1"> {{$t('Settings.DocumentSettings.editAll')}} </label>
                 </div>
             </div>
-        </div>
+            <div class="card" style="margin-top:3vh">
+                <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
+                    {{$t('Settings.DocumentSettings.signatory')}}
+                </div>
+                <div style="padding:2em">
+                    <SignatoryMenu :signatories="signatories"></SignatoryMenu>
+                </div>
+            </div>
+        </b-container>
 
         <Footer></Footer>
     </div>
@@ -19,15 +27,19 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
+import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 
 export default {
     name: "envSettingsPage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header},
+    components: {Footer, Header, SignatoryMenu},
     data() {
-      return{individual: false}
+      return{
+          individual: false,
+          signatories: []
+      }
     },
     computed: {
         getEnv() {

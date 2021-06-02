@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid>
+    <b-container fluid style="padding: 0">
         <div :class="{envelopeOpen: !toSign && !toRead && open, envelopeClosed: !open, envelopeSignRead: (toSign || toRead) && open}">
             <div class="media">
                 <b-icon icon="file-earmark-text" :class="{iconRed: (toSign || toRead) && open, iconBlue: (!toSign && !toRead) || !open}" style="margin:0.5em"></b-icon>

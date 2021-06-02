@@ -27,7 +27,6 @@
                                             <input type="file" id="fileInput" class="form-control" multiple="" style="height: 15vh">
                                         </div>
                                     </div>
-
                                     <!-- Page 2 -->
                                     <div v-if="page === 2">
                                         <button type="button" class="light-btn" @click="newEnv = false; page = page +1">
@@ -41,11 +40,9 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                     <!-- Page 3 -->
                                     <div v-if="page === 3">
                                         <!-- Choose from envelopes -->
-
                                         <div v-if="newEnv === false">
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
@@ -55,18 +52,36 @@
                                             </div>
                                         </div>
                                         <!-- Create new envelope -->
-
                                         <div v-if="newEnv === true">
                                             <div class="form-group">
-                                                <label for="envelopeNameInout"> {{$t('UploadDoc.newEnv')}} </label>
-                                                <input type="text" class="form-control" id="envelopeNameInout" :placeholder="$t('UploadDoc.newEnvPlaceholder')">
+                                                <label for="envelopeNameInput"> {{$t('UploadDoc.newEnv')}} </label>
+                                                <input type="text" class="form-control" id="envelopeNameInput" :placeholder="$t('UploadDoc.newEnvPlaceholder')">
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- Page 4 -->
                                     <div v-if="page === 4">
-                                        {{$t('UploadDoc.configureDoc')}}
+                                        <button type="button" class="light-btn" @click="review = true; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.addReaders')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="light-btn" @click="review = false; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.skipReview')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+                                    <!-- Page 5 -->
+                                    <div v-if="page === 5">
+                                        <div v-if="review">
+
+                                        </div>
+                                        <div v-if="!review">
+                                            <SignatoryMenu :signatories="this.signatories"></SignatoryMenu>
+
+
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Buttons -->
@@ -84,7 +99,6 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                     <!-- Page 2 -->
                                     <div v-if="page === 2">
                                         <button type="button" class="light-btn" @click="page = page - 1">
@@ -93,7 +107,6 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                     <!-- Page 3 -->
                                     <div v-if="page === 3">
                                         <button type="button" class="light-btn" @click="page = page - 1">
@@ -107,9 +120,16 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                     <!-- Page 4 -->
                                     <div v-if="page === 4">
+                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                            <h5>
+                                                {{$t('UploadDoc.back')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+                                    <!-- Page 5 -->
+                                    <div v-if="page === 5">
                                         <button type="button" class="light-btn" @click="page = page - 1">
                                             <h5>
                                                 {{$t('UploadDoc.back')}}
@@ -121,7 +141,6 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -133,16 +152,21 @@
 </template>
 
 <script>
+import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 export default {
     name: 'UploadButton',
     props: {
         text: String
     },
+    components: {SignatoryMenu},
     data() {
         return {
             show: false,
             page: 1,
-            newEnv: false
+            newEnv: false,
+            review: true,
+            signatories: [],
+            signatoryInput: ""
         };
     },
     computed: {
