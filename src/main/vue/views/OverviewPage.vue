@@ -100,7 +100,6 @@
                             <div
                                 v-if="getEnvData(envelope).open === false">
                                 <EnvelopeBoxClosed
-                                    @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
                                     :env="envelope">
                                 </EnvelopeBoxClosed>
                             </div>

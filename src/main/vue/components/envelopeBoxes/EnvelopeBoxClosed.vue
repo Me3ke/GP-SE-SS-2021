@@ -1,49 +1,68 @@
 <template>
-    <b-container fluid class="card" style="padding:0.5vh">
-        <div class="media">
-            <b-icon icon="envelope" class="my-icon"></b-icon>
-            <div class="media-body">
-                <b-container fluid>
-                    <b-row align-h="start">
-                        <div class="col-auto">
-                            <b-row align-h="between">
-                                <div class="col-auto">
-                                    <h4>
-                                        {{this.env.name}}
-                                    </h4>
-                                </div>
-                                <div class="col-auto">
-                                    <div style="text-align: right; margin-left: 1vw">
-                                        <h6>
-                                            <!-- Time until document needs to be signed TODO -->
-                                            {{$t('Document.closed')}}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </b-row>
-                            <b-row align-h="start">
-                                <div class="col-auto">
-                                    <h6>
-                                        {{$t('Document.owner')}}: {{this.env.owner.firstname}} {{this.env.owner.lastname}}
-                                    </h6>
-                                </div>
-                                <div class="col-auto">
-                                    <h6>
-                                        {{$t('Document.date')}}: {{this.env.creationDate}}
-                                    </h6>
-                                </div>
-                            </b-row>
-                        </div>
-                    </b-row>
+    <b-container fluid >
+        <b-row>
+            <b-col cols="11">
+                <b-container fluid class="card" style="padding:0.5vh; margin:0">
+                    <div class="media" style="padding-right: 0; margin: 0" @click="$router.push({name: 'envelope', params: {envId: env.id}})">
+                        <b-icon icon="envelope" class="my-icon"></b-icon>
+                        <b-col class="media-body" style="padding-right: 0; margin-right: 0">
+                            <b-container fluid>
+                                <b-row align-h="start">
+                                    <b-col class="col-auto" style="width: 100%">
+                                        <b-row align-h="between">
+                                            <div class="col-auto">
+                                                <h4>
+                                                    {{this.env.name}}
+                                                </h4>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div style="text-align: right; margin-left: 1vw">
+                                                    <h6>
+                                                        <!-- Time until document needs to be signed TODO -->
+                                                        {{$t('Document.closed')}}
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </b-row>
+                                        <b-row align-h="between">
+                                            <div class="col-auto">
+                                                <b-row align-h="start">
+                                                    <div class="col-auto">
+                                                        <h6>
+                                                            {{$t('Document.owner')}}: {{this.env.owner.firstname}} {{this.env.owner.lastname}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <h6>
+                                                            {{$t('Document.date')}}: {{this.env.creationDate}}
+                                                        </h6>
+                                                    </div>
+                                                </b-row>
+                                            </div>
+                                        </b-row>
+                                    </b-col>
+                                </b-row>
+                            </b-container>
+                        </b-col>
+                    </div>
                 </b-container>
-            </div>
-        </div>
+            </b-col>
+
+            <b-col cols="1">
+                <settings-button @click.native="$router.push({name: 'settings', params: {envId: env.id}})"></settings-button>
+            </b-col>
+        </b-row>
+
     </b-container>
+
 </template>
 
 <script>
+import settingsButton from "@/main/vue/components/envSettingsButton";
+
 export default {
     name: 'EnvelopeBox',
+    components: {settingsButton},
     props: {
         env: {
             id: Object,

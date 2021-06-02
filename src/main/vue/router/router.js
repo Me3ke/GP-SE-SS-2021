@@ -13,6 +13,7 @@ import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
+import EnvelopeSettingsPage from "@/main/vue/views/EnvelopeSettingsPage";
 import store from "@/main/vue/store/store";
 
 Vue.use(VueRouter)
@@ -128,6 +129,15 @@ const router = new VueRouter({
                     path: 'envelope/:envId',
                     name: 'envelope',
                     component: EnvelopePage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'settings/:envId',
+                    name: 'settings',
+                    component: EnvelopeSettingsPage,
                     props: true,
                     meta: {
                         requiresAuth: true
