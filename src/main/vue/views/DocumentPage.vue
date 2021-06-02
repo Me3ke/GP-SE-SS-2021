@@ -7,6 +7,9 @@
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 
+        <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
+                       @closedDownload="toggleDownload()"></DownloadPopUp>
+
         <!-- Displays if document cannot get fetched by api -->
         <BaseHeading v-if="!hasError()" name=" " :translate="false" style="position: fixed;"></BaseHeading>
         <div v-if="!hasError()" class="d-flex align-items-center" style="height: 80vh">
@@ -33,15 +36,17 @@
 
         <!-- Displays if document can get fetched by api -->
         <div v-else>
-            <BaseHeading :name="document.title" :translate="false" style="position: fixed;"></BaseHeading>
+            <BaseHeading v-if="document.dataType === 'pdf'" :name="document.title" :translate="false"
+                         style="position: fixed;"></BaseHeading>
+            <BaseHeading v-else :name="document.title" :translate="false"></BaseHeading>
 
             <!-- Displays that preview is possible -->
             <b-container v-if="document.dataType === 'pdf'"
                          style="width: 100%; margin-top: 0; margin-right: auto; margin-left: auto; padding: 0;">
                 <b-row style="width: 100%; margin: auto; padding: 0">
                     <b-col cols="9">
-                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow" :doc-id="docId"
-                                   :env-id="envId"></PDFViewer>
+                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow"
+                                   @openDownload="toggleDownload()"></PDFViewer>
                     </b-col>
 
                     <b-col cols="3" id="textCol">
@@ -92,7 +97,8 @@
                     <h6>
                         {{ $t("DocumentPage.noView") }}
                     </h6>
-                    <GreenButtonIconText icon="download" text="DocumentPage.download"></GreenButtonIconText>
+                    <GreenButtonIconText icon="download" text="DocumentPage.download"
+                                         @click.native="toggleDownload()"></GreenButtonIconText>
                     <hr v-if="document.signatory === true || document.signed === true || document.reader === true || document.read === true">
                 </b-row>
 
@@ -150,16 +156,18 @@ import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
+import DownloadPopUp from "@/main/vue/components/DownloadPopUp";
 
 
 export default {
     name: "DocumentPage",
-    components: {ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {DownloadPopUp, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
             showSign: false,
-            showOverflow: true
+            showOverflow: true,
+            showDownload: false
         }
     },
     methods: {
@@ -181,6 +189,10 @@ export default {
         },
         toggleRead() {
             this.showProofread = !this.showProofread
+            this.showOverflow = !this.showOverflow
+        },
+        toggleDownload() {
+            this.showDownload = !this.showDownload
             this.showOverflow = !this.showOverflow
         }
     },
