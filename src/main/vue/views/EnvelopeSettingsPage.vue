@@ -12,6 +12,14 @@
             </div>
             <div class="card" style="margin-top:3vh">
                 <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
+                    {{$t('Settings.DocumentSettings.reader')}}
+                </div>
+                <div style="padding:2em">
+                    <ReaderMenu :readers="readers"></ReaderMenu>
+                </div>
+            </div>
+            <div class="card" style="margin-top:3vh">
+                <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                     {{$t('Settings.DocumentSettings.signatory')}}
                 </div>
                 <div style="padding:2em">
@@ -28,17 +36,19 @@
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
+import ReaderMenu from "@/main/vue/components/ReaderMenu";
 
 export default {
     name: "envSettingsPage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header, SignatoryMenu},
+    components: {Footer, Header, SignatoryMenu, ReaderMenu},
     data() {
       return{
           individual: false,
-          signatories: []
+          signatories: [],
+          readers: []
       }
     },
     computed: {

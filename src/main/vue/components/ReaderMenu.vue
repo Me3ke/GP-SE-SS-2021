@@ -13,9 +13,9 @@
                 </b-col>
             </b-row>
         </div>
-        <div class="card" style="height:10em; overflow-y: auto; overflow-x: hidden">
+        <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
             <draggable v-model="readers">
-                <div class="drag-drop-element" v-for="reader in readers" :key="reader">
+                <div class="drag-drop-element" v-for="reader in readers" :key="reader" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
