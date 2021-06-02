@@ -1,8 +1,16 @@
 <template>
     <div class="background" style="background-color: var(--whitesmoke);">
         <Header></Header>
-
         <BaseHeading :name="getEnv(envId).name" :translate="false" style="position: fixed"></BaseHeading>
+
+        <div class="container-fluid">
+            <div style="margin-top:7.5vh">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                    <label class="custom-control-label" for="customSwitch1">Alle Dokument im Envelope bearbeiten</label>
+                </div>
+            </div>
+        </div>
 
         <Footer></Footer>
     </div>
@@ -18,6 +26,9 @@ export default {
         envId: [Number, String]
     },
     components: {Footer, Header},
+    data() {
+      return{individual: false}
+    },
     computed: {
         getEnv() {
             return this.$store.getters.getEnvelope
