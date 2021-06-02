@@ -258,7 +258,7 @@ public class DocumentController {
     public DocumentProgressResponse getDocumentProgress(final @PathVariable(USER_ID) String userID,
                                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                         final @PathVariable(DOCUMENT_ID) long documentID)
-    throws DocumentNotFoundException{
+    throws DocumentNotFoundException {
         userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);

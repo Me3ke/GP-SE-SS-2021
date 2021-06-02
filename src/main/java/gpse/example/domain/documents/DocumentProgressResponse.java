@@ -6,15 +6,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class which represents a Response for a Document progress request.
+ */
 public class DocumentProgressResponse {
-    
+
     private List<Signatory> signatories;
     private List<Signatory> alreadySigned = new ArrayList<>();
     private List<Signatory> readers;
     private List<Signatory> alreadyRead = new ArrayList<>();
     private LocalDateTime endDate;
 
-    public DocumentProgressResponse(List<Signatory> signatories, List<Signatory> readers, LocalDateTime endDate) {
+    /**
+     * The default constructor creates the response based on an data
+     * extracted from an existing document.
+     * @param signatories a list of signatories from the corresponding document.
+     * @param readers a list of readers from the corresponding document.
+     * @param endDate the date to which the document has to be signed.
+     */
+    public DocumentProgressResponse(final List<Signatory> signatories, final List<Signatory> readers,
+                                    final LocalDateTime endDate) {
         for (final Signatory signatory : signatories) {
             if (signatory.isStatus()) {
                 alreadySigned.add(signatory);
