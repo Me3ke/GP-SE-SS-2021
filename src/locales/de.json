@@ -253,7 +253,9 @@
             "editAll": "Alle Dokumente im Verbund bearbeiten",
             "addSignatory": "Unterzeichner hinzufügen",
             "placeholderMail": "MaxMustermann@mail.de",
-            "signatory": "Unterzeichner"
+            "signatory": "Unterzeichner",
+            "addReader": "Gegenleser hinzufügen",
+            "reader": "Gegenleser"
         }
     },
     "UploadDoc": {

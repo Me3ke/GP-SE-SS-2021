@@ -75,12 +75,10 @@
                                     <!-- Page 5 -->
                                     <div v-if="page === 5">
                                         <div v-if="review">
-
+                                            <ReaderMenu :readers="this.readers"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
                                             <SignatoryMenu :signatories="this.signatories"></SignatoryMenu>
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -153,12 +151,13 @@
 
 <script>
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
+import ReaderMenu from "@/main/vue/components/ReaderMenu";
 export default {
     name: 'UploadButton',
     props: {
         text: String
     },
-    components: {SignatoryMenu},
+    components: {SignatoryMenu, ReaderMenu},
     data() {
         return {
             show: false,
@@ -166,7 +165,7 @@ export default {
             newEnv: false,
             review: true,
             signatories: [],
-            signatoryInput: ""
+            readers: []
         };
     },
     computed: {
