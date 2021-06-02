@@ -78,6 +78,10 @@
                                             <ReaderMenu :readers="this.readers"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
+                                            <div>
+                                                <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                                                <b-form-datepicker id="endDatePicker" v-model="endDate" class="mb-2"></b-form-datepicker>
+                                            </div>
                                             <SignatoryMenu :signatories="this.signatories"></SignatoryMenu>
                                         </div>
                                     </div>
@@ -165,7 +169,8 @@ export default {
             newEnv: false,
             review: true,
             signatories: [],
-            readers: []
+            readers: [],
+            endDate: ''
         };
     },
     computed: {

@@ -268,7 +268,8 @@
         "newEnvPlaceholder": "Name of new envelope",
         "configureDoc": "Configure document",
         "addReaders": "Add proofreaders",
-        "skipReview": "Skip review process"
+        "skipReview": "Skip review process",
+        "chooseDate": "Chose deadline"
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",

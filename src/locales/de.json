@@ -255,7 +255,8 @@
             "placeholderMail": "MaxMustermann@mail.de",
             "signatory": "Unterzeichner",
             "addReader": "Gegenleser hinzufügen",
-            "reader": "Gegenleser"
+            "reader": "Gegenleser",
+            "chooseDate": "Zeitraum bestimmen"
         }
     },
     "UploadDoc": {
