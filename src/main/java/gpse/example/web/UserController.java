@@ -4,11 +4,13 @@ package gpse.example.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -211,14 +213,14 @@ public class UserController {
     /**
      * the Method used to validate 2-Factor-Auth codes.
      * @param username the id of the relating user
-     * @param code the code that should be validated (maybe use a Cmd-Class)
+     * @param code the code that should be validated
      * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
     public Boolean validateCode(@PathVariable("userID") final String username,
-                               @RequestBody final String code) {
+                               @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         System.out.println("was du möchtest");
-        return userService.getUser(username).getSecuritySettings().verifyCode(code);
+        return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
 
 }

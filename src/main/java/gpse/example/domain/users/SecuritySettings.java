@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 import dev.samstevens.totp.code.*;
+import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -21,7 +22,7 @@ import java.security.PublicKey;
 public class SecuritySettings implements Serializable {
 
     private static final long serialVersionUID = -8161342821150699358L;
-    private static final int SECRET_GENERATOR_NUMBER = 32;
+    private static final int SECRET_GENERATOR_NUMBER = 64;
     private static final int CODE_DIGIT_NUMBER = 6;
     private static final int TIME_UNTIL_EXPIRED = 30;
 
@@ -68,10 +69,14 @@ public class SecuritySettings implements Serializable {
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(String code) {
+    public boolean verifyCode(String code) throws CodeGenerationException {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+        DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+        verifier.setAllowedTimePeriodDiscrepancy(2);
+        System.out.println(codeGenerator.generate(secret, timeProvider.getTime()));
+        System.out.println(code);
+        System.out.println(verifier.isValidCode(secret, codeGenerator.generate(secret, timeProvider.getTime())));
         System.out.println("irgendwas anderes");
         System.out.println(verifier.isValidCode(this.secret, code));
         System.out.println(this.secret);
