@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.Protocol;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.CreatingFileException;
@@ -24,6 +25,7 @@ import java.util.List;
 //TODO secured for permissions
 //TODO Reader Class?
 //TODO properties for download
+//TODO split documentController in two separate controllers.
 
 @RestController
 @CrossOrigin("http://localhost:8088")
@@ -243,5 +245,38 @@ public class DocumentController {
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param userID
+     * @param envelopeID
+     * @param documentID
+     * @return
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/protocol")
+    public byte[] showProtocol(final @PathVariable(USER_ID) String userID,
+                               final @PathVariable(ENVELOPE_ID) long envelopeID,
+                               final @PathVariable(DOCUMENT_ID) long documentID) {
+        //TODO createProtocol
+        return new byte[0];
+    }
+
+    /**
+     *
+     * @param userID
+     * @param envelopeID
+     * @param documentID
+     * @param path
+     * @return
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/protocol/download")
+    public byte[] downloadProtocol(final @PathVariable(USER_ID) String userID,
+                                   final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                   final @PathVariable(DOCUMENT_ID) long documentID,
+                                   final @RequestParam("path") String path) {
+        //TODO createProtocol
+        //TODO downloadProtocol
+        return new byte[0];
     }
 }
