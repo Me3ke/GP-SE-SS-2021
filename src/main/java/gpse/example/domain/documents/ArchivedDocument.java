@@ -39,6 +39,8 @@ public class ArchivedDocument extends Document {
 
     private final DocumentState state;
 
+    private Document previousVersion;
+
     /**
      * Default constructor for an archived Document.
      * @param document the document from which it descends.
@@ -56,6 +58,7 @@ public class ArchivedDocument extends Document {
         this.orderRelevant = document.isOrderRelevant();
         this.endDate = document.getEndDate();
         this.state = DocumentState.CLOSED;
+        this.previousVersion = document.getPreviousVersion();
     }
 
     public String getTitle() {
@@ -115,5 +118,10 @@ public class ArchivedDocument extends Document {
     @Override
     public DocumentState getState() {
         return state;
+    }
+
+    @Override
+    public Document getPreviousVersion() {
+        return previousVersion;
     }
 }

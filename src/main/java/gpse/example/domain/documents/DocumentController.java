@@ -44,10 +44,10 @@ public class DocumentController {
     /**
      * The default constructor which initialises the services by autowiring.
      *
-     * @param envelopeService the envelopeService
-     * @param userService     the userService
-     * @param documentService the documentService
-     * @param signatoryService the signatoryService
+     * @param envelopeService         the envelopeService
+     * @param userService             the userService
+     * @param documentService         the documentService
+     * @param signatoryService        the signatoryService
      * @param documentMetaDataService the metaDataService
      */
     @Autowired
@@ -98,13 +98,14 @@ public class DocumentController {
 
     /**
      * The downloadDocument method downloads a document and saves it in the downloads directory.
+     *
      * @param envelopeID the id of the envelope the document is in.
-     * @param userID the id of the user doing the request.
+     * @param userID     the id of the user doing the request.
      * @param documentID the id of the document.
-     * @param path the path where the file should be downloaded.
+     * @param path       the path where the file should be downloaded.
      * @return a documentGetResponse of the downloaded Document.
      * @throws DocumentNotFoundException if the document was not found.
-     * @throws DownloadFileException if something went wrong while downloading.
+     * @throws DownloadFileException     if something went wrong while downloading.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
     public DocumentGetResponse downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
@@ -128,7 +129,7 @@ public class DocumentController {
      * The uploadNewDocumentVersion method does a put request to update.
      *
      * @param documentPutRequest the request object containing all the necessary data.
-     * @param ownerID             the email of the user uploading the new document.
+     * @param ownerID            the email of the user uploading the new document.
      * @param envelopeID         the envelope in which the new version should be uploaded.
      * @param documentID         the id of the document to be replaced.
      * @return the id of the new document.
@@ -149,9 +150,10 @@ public class DocumentController {
             envelope.removeDocument(oldDocument);
             final ArchivedDocument archivedDocument = new ArchivedDocument(oldDocument);
             documentService.addDocument(archivedDocument);
-            envelopeService.updateEnvelope(envelope, archivedDocument);
+            //TODO archived document should not be saved in envelope!
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
+            newDocument.setPreviousVersion(archivedDocument);
             documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
             envelopeService.updateEnvelope(envelope, newDocument);
             return newDocument.getId();
@@ -166,8 +168,8 @@ public class DocumentController {
      * @param userID     the id of the user reading the document.
      * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
-     * @throws DocumentNotFoundException if the document was not found.
      * @return true if the review was successful and false if not.
+     * @throws DocumentNotFoundException if the document was not found.
      */
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public boolean review(final @PathVariable(USER_ID) String userID,
@@ -205,14 +207,14 @@ public class DocumentController {
      * @param userID     the id of the user reading the document.
      * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
-     * @throws DocumentNotFoundException if the document was not found.
      * @return true if the signing was successful and false if not.
+     * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
     public boolean sign(final @PathVariable(USER_ID) String userID,
-                     final @PathVariable(ENVELOPE_ID) long envelopeID,
-                     final @PathVariable(DOCUMENT_ID) long documentID)
+                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         final User signatory = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
@@ -243,5 +245,17 @@ public class DocumentController {
         } else {
             return false;
         }
+    }
+
+    /**
+     * The getDocumentHistory method does a get request to get the document history.
+     * @param documentID the id of the document of which the history is requested.
+     * @return a list of all previous versions and the latest one.
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
+    public List<Document> getDocumentHistory(final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
+        return documentService.getDocument(documentID).getHistory();
     }
 }

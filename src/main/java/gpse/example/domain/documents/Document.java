@@ -7,6 +7,7 @@ import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.io.*;
+import java.lang.annotation.Target;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class Document {
 
     @OneToMany
     private List<Signatory> readers = new ArrayList<>();
+
+    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
+    private Document previousVersion;
 
     /*
     @Column
@@ -167,6 +171,21 @@ public class Document {
             }
         }
         return null;
+    }
+
+    /**
+     * The getHistory method gets all previous versions of a document.
+     * @return a list of all previous versions starting with the given document
+     *          and ending with the first version.
+     */
+    public List<Document> getHistory() {
+        Document temp = this;
+        final List<Document> history = new ArrayList<>();
+        while(temp != null) {
+            history.add(temp);
+            temp = temp.getPreviousVersion();
+        }
+        return history;
     }
 
     //--------- Filter methods--------
@@ -374,6 +393,14 @@ public class Document {
 
     public void setState(final DocumentState documentState) {
         this.state = documentState;
+    }
+
+    public Document getPreviousVersion() {
+        return previousVersion;
+    }
+
+    public void setPreviousVersion(Document previousVersion) {
+        this.previousVersion = previousVersion;
     }
 }
 
