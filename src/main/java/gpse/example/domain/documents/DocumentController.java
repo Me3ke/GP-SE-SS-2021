@@ -190,6 +190,12 @@ public class DocumentController {
         documentService.addDocument(document);
     }
 
+    /**
+     * Put request for changing documentsettings.
+     * @param documentID id of the document that should be changed
+     * @param documentSettingsCMD Container for the relevant settings
+     * @return JsonResponse containing statuscode
+     */
     @PutMapping("/document/{documentID}/settings")
     public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
                                           final @RequestBody DocumentSettingsCMD documentSettingsCMD) {

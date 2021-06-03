@@ -1,7 +1,7 @@
 package gpse.example.domain.users;
 
 /**
- * Comma
+ * Comma.
  */
 public class PublicKeyCmd {
     private String publicKey;

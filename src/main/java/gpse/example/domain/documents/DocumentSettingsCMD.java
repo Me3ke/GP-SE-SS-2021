@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Containerclass for relevant documentsettings.
+ */
 public class DocumentSettingsCMD {
 
     private List<Signatory> signatories;
