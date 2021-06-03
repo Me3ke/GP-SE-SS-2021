@@ -13,17 +13,19 @@ export default {
         return axios({
             method: "put",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId,
+
             data: {
-                'byte': newDoc.byte[1],
+                //'byte': newDoc.byte[1],
+                'data': newDoc.byte[0],
                 'title': newDoc.title,
-                'type': newDoc.type,
-                'signatoriesId': newDoc.signatoriesId,
-                'readersId': newDoc.readersId,
+                'dataType': newDoc.dataType,
+                'signatoriesID': newDoc.signatoriesId,
+                'readersID': newDoc.readersId,
                 'signatureType': newDoc.signatureType,
-                'endDate': newDoc.endDate,
+                'endDate': null,
                 'orderRelevant': newDoc.orderRelevant,
-                'documentState': newDoc.state,
-                'lastModifiedTime': newDoc.lastModified
+                'state': newDoc.state,
+                'lastModified': null
             }
         })
     }

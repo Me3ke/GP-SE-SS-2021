@@ -55,8 +55,8 @@
         >
             <div>
                 <label>
-                    <input v-model="newDoc.title" :placeholder="this.document.title">
-                    {{this.newDoc.title}}
+                    <input v-model="actualDoc.title" :placeholder="this.document.title">
+                    {{this.actualDoc.title}}
                 </label>
             </div>
             <div>
@@ -102,24 +102,7 @@ export default {
             fileString: "",
             file: File,
 
-            // here need to paste all attributes of documents
-            newDoc: {
-                byte: [],
-                creationDate: '',
-                title: '',
-                type: '',
-                owner: {
-                    eMail: "sehrTolle@email.com",
-                    firstname: "Otto #2",
-                    lastname: "Wehner"
-                },
-                signatoriesId: [],
-                readers: [],
-                signatureType: '',
-                endDate: '',
-                orderRelevant: false,
-                state: ''
-            },
+
             // TODO Actual Doc which is going to be replaced
             actualDoc: {}
         }
@@ -129,7 +112,6 @@ export default {
     methods: {
         // save the selected File in the data
         previewFile(event) {
-            console.log(event.target.files[0])
             this.fileString = event.target.files[0].name
             this.file = event.target.files[0]
 
@@ -155,15 +137,20 @@ export default {
         getToDocumentSettings() {
             this.actualDoc = this.document
 
+            console.log('------------')
+            console.log(this.actualDoc)
+            console.log('------------')
+
+
 
             // todo Document settings input fields
             this.actualDoc.orderRelevant = false
-            this.actualDoc.creationDate = this.actualDoc.creationDate.replace('T','-')
-            this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString().replace('T','-')
+            this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
             this.actualDoc.signatoriesId = []
             this.actualDoc.readersId = []
             this.actualDoc.endDate = "2021-06-15-21:15:02.933Z"
             this.actualDoc.byte = []
+            this.actualDoc.dataType = "pdf" // todo
             this.actualDoc.signed = false
             this.actualDoc.read = false
             this.actualDoc.reader = false
@@ -176,6 +163,7 @@ export default {
 
             this.getToDocumentSettings()
             this.actualDoc.byte =  await this.asyncHandleFunction()
+
 
             // emit the new doc to the parent
             this.$emit('update-document', this.actualDoc)

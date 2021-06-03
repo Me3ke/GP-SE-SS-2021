@@ -12,10 +12,9 @@ export const mutations = {
     SET_DOCUMENT(state, doc) {
         state.document = doc
     },
-
-    EDIT_DOCUMENT(state,doc, docId) {
-        const originalDocIndex = state.documents.findIndex(i => i.id === docId);
-        state.documents[originalDocIndex] = doc
+    // TODO need to change this mutation
+    EDIT_DOCUMENT(state,doc) {
+        state.document = doc
     },
 
     //sets error of getDocument request
@@ -34,24 +33,10 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT', error)
         })
     },
-    /*
-    TODO add axios call to change the document in the database instead of changing the state
-     (local storage, need refreshing for changing the view)
-     */
-
+    // makes axios call to put the newDocument and archive the old one
     editDocument({commit}, {newDoc, envId, docId}) {
-        console.log(envId)
-        console.log(newDoc)
-        console.log('typ: ',typeof newDoc.type)
-        console.log('state: ',typeof newDoc.state)
-        console.log('endDate: ',typeof newDoc.endDate)
-        console.log('lastModified: ',typeof newDoc.lastModified)
-        console.log('sign Type: ',typeof newDoc.signatureType)
-
-
-        // todo getting 400 bad request
-        documentAPI.editDocument(envId, docId, newDoc).then(response => {
-            commit('EDIT_DOCUMENT', response.data, docId)
+        documentAPI.editDocument(envId, docId, newDoc).then((response) =>{
+            commit('EDIT_DOCUMENT',response.data)
         })
 
     }

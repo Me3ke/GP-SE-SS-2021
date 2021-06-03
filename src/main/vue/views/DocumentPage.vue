@@ -194,15 +194,10 @@ export default {
         },
 
         updateDoc(newDoc) {
-            console.log(this.document)
-            console.log('typ: ',typeof this.document.type)
-            console.log('state: ',typeof this.document.state)
-            console.log('endDate: ',typeof this.document.endDate)
-            console.log('lastModified: ',typeof this.document.lastModified)
-            console.log('sign Type: ',typeof this.document.signatureType)
-            console.log("-----------------")
             let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId }
             this.$store.dispatch('document/editDocument', payload)
+
+
         }
     },
     created() {

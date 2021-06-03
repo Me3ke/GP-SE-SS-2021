@@ -158,7 +158,7 @@ public class InitializeDatabase implements InitializingBean {
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
-            documentPutRequestRequest.setType(type);
+            documentPutRequestRequest.setDataType(type);
             try {
                 final List<User> signatories = new ArrayList<>();
                 final List<User> readers = new ArrayList<>();

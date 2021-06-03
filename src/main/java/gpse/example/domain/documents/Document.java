@@ -87,7 +87,7 @@ public class Document {
                     final String ownerID, final List<Signatory> readers) {
         this.signatories = signatories;
         this.readers = readers;
-        this.documentType = documentPutRequest.getType();
+        this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
              documentPutRequest.getLastModified(), this.data.length, ownerID);

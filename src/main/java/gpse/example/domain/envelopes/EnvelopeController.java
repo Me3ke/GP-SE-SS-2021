@@ -92,7 +92,6 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
             return envelopeService.updateEnvelope(envelope, document);
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);

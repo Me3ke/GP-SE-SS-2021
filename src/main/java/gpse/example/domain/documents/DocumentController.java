@@ -136,26 +136,29 @@ public class DocumentController {
      */
 
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
-    public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
-                                         final @PathVariable(USER_ID) String ownerID,
-                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                         final @PathVariable(DOCUMENT_ID) long documentID)
+    public DocumentPutResponse uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
+                                                        final @PathVariable(USER_ID) String ownerID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws UploadFileException {
         try {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            documentService.remove(oldDocument);
-            signatoryService.delete(oldDocument.getSignatories());
             envelope.removeDocument(oldDocument);
+            signatoryService.delete(oldDocument.getSignatories());
+            documentService.remove(oldDocument);
+            documentMetaDataService.delete(oldDocument.getDocumentMetaData());
             final ArchivedDocument archivedDocument = new ArchivedDocument(oldDocument);
-            documentService.addDocument(archivedDocument);
-            envelopeService.updateEnvelope(envelope, archivedDocument);
+            documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
+            signatoryService.saveSignatories(archivedDocument.getSignatories());
+            Document savedDocument = documentService.addDocument(archivedDocument);
+            envelopeService.updateEnvelope(envelope, savedDocument);
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
+
             envelopeService.updateEnvelope(envelope, newDocument);
-            return newDocument.getId();
+            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }

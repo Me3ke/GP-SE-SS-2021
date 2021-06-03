@@ -71,6 +71,18 @@ public class DocumentMetaData {
     protected DocumentMetaData() {
 
     }
+
+
+    public DocumentMetaData(DocumentMetaData documentMetaData) {
+        this.metaTimeStampUpload = documentMetaData.getMetaTimeStampUpload();
+        this.metaDocumentTitle = documentMetaData.getMetaDocumentTitle();
+        //this.creationDate = formatDateTime(creationDate);
+        this.lastModified = documentMetaData.getLastModified();
+        //this.lastAccess = formatDateTime(lastAccess);
+        this.size = documentMetaData.getSize();
+        this.metaUserID = documentMetaData.getMetaUserID();
+        this.identifier = documentMetaData.getIdentifier();
+    }
 /*
     /**
      * The formatDateTime methods converts the file times to a more readable format.
