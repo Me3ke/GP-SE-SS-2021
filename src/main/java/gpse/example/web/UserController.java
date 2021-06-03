@@ -3,7 +3,6 @@ package gpse.example.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
@@ -185,6 +184,7 @@ public class UserController {
      * Put request to change the public key of the user.
      * @param publicKeyCmd contains the public key in a String format
      * @param username the identifier of the user account that needs to be updated
+     * @return returns a JSONResponseObject that contains status code.
      */
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,

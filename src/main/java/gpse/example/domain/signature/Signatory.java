@@ -60,6 +60,11 @@ public class Signatory {
         return status;
     }
 
+    /**
+     * Sets the status for a signatory. If the status is true
+     * the signedOn gets the moment of status change as time.
+     * @param status the new status.
+     */
     public void setStatus(final boolean status) {
         if (status) {
             this.signedOn = LocalDateTime.now();

@@ -99,6 +99,8 @@ public class DocumentCreator {
      *
      * @param bytes the byte array from another file.
      * @param type  the file extension from another file.
+     * @param name the name of the new created file.
+     * @param path the path of the new created file.
      * @return the newly created File
      * @throws CreatingFileException if FileInputStream creates an error.
      */

@@ -45,13 +45,13 @@
 
                     <b-col cols="3" id="textCol">
 
-                        <!--
+
                         <upload-new-version-button
                         :document="document"
                         v-on:update-document="updateDoc"
                         >
                         </upload-new-version-button>
-                        -->
+
 
 
                         <!-- Displays if user already proofread -->
