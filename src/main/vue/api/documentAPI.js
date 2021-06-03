@@ -16,7 +16,7 @@ export default {
 
             data: {
                 //'byte': newDoc.byte[1],
-                'data': newDoc.byte[0],
+                'data': newDoc.data,
                 'title': newDoc.title,
                 'dataType': newDoc.dataType,
                 'signatoriesID': newDoc.signatoriesId,
