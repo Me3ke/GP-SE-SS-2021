@@ -30,7 +30,6 @@ public class EnvelopeController {
     private final UserServiceImpl userService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
-    private final DocumentMetaDataServiceImpl documentMetaDataService;
     private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
@@ -40,17 +39,14 @@ public class EnvelopeController {
      * @param userService the userService
      * @param signatoryService the signatoryService
      * @param documentService the documentService
-     * @param documentMetaDataService the documentMetaDataService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService,
-                              final DocumentMetaDataServiceImpl documentMetaDataService) {
+                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.signatoryService = signatoryService;
         this.documentService = documentService;
-        this.documentMetaDataService = documentMetaDataService;
     }
 
     /**

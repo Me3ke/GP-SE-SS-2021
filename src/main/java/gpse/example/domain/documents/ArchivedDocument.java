@@ -22,9 +22,6 @@ public class ArchivedDocument extends Document {
     @Id
     private long id;
 
-    @Column
-    private String title;
-
     @OneToOne
     private DocumentMetaData documentMetaData;
 
@@ -64,7 +61,6 @@ public class ArchivedDocument extends Document {
      */
     public ArchivedDocument(final Document document) {
         this.id = document.getId();
-        this.title = document.getDocumentTitle();
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
         this.advancedSignatures = document.getAdvancedSignatures();
