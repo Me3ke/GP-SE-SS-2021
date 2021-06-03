@@ -99,6 +99,8 @@
 </template>
 
 <script>
+import {convertUploadFileToBase64} from "./fileToBase64Converter";
+
 export default {
     name: "uploadNewVersionButton",
     data() {
@@ -163,6 +165,8 @@ export default {
 
 
         // emit the newDocument to the parent component for handle the updateDoc method
+
+        /// getting emmited value
         async uploadNewFile() {
             this.$refs['my-modal3'].hide()
             this.fileString = ""
@@ -173,12 +177,12 @@ export default {
             if(this.newTitle !== '' || this.newTitle !== "") {
                 this.actualDoc.title = this.newTitle
             }
-
-
             this.actualDoc.data =  await this.asyncHandleFunction()
 
+            console.log(this.actualDoc.data)
 
-            // emit the new doc to the parent
+
+            // emit the new doc to the parent/other child
             this.$emit('update-document', this.actualDoc)
         },
 
@@ -190,35 +194,12 @@ export default {
             this.$refs['my-modal1'].hide()
             this.fileString = ""
             this.actualDoc = {}
-        },
-
-        base64ToArrayBuffer(base64) {
-            const binary_string = window.atob(base64);
-            const len = binary_string.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binary_string.charCodeAt(i);
-            }
-            return bytes.buffer;
         }
     }
 }
 
 
-// converting the selected file into base64 (as promise)
-const convertUploadFileToBase64 = (file) => {
-    const reader = new FileReader()
-    return new Promise((resolve, reject) => {
-        reader.onerror = (error) => {
-            reader.abort()
-            reject(error)
-        }
-        reader.onload = () => {
-            resolve(reader.result.replace('data:', '').replace(/^.+,/, ''))
-        }
-        reader.readAsDataURL(file)
-    })
-}
+
 
 
 
