@@ -43,9 +43,10 @@ public class UserController {
 
     /**
      * Constructor of UserController getting required services.
-     * @param service Userservice Object
-     * @param confService ConfirmationTokenService object
-     * @param personalDataService PersonalDataService object
+     *
+     * @param service                 Userservice Object
+     * @param confService             ConfirmationTokenService object
+     * @param personalDataService     PersonalDataService object
      * @param securitySettingsService SecuritySettingsService object
      */
     @Autowired
@@ -62,6 +63,7 @@ public class UserController {
 
     /**
      * Method to handle an registration and generating user object.
+     *
      * @param signUpUser the userdata getting from frontend
      * @return JSONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
@@ -97,6 +99,7 @@ public class UserController {
 
     /**
      * Method for confirm an User and enable his*her account.
+     *
      * @param token the confirmationToken sended with Email
      * @return JSONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
@@ -134,8 +137,9 @@ public class UserController {
 
     /**
      * Method to validate an useraccount by admin.
+     *
      * @param adminUsername the identifier of the admin account that validates the user
-     * @param username the identifier of the useraccount that needs to be validated
+     * @param username      the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      * @throws JsonProcessingException thrown by mapper
      */
@@ -150,7 +154,7 @@ public class UserController {
         if (admin.getRoles().contains("ROLE_ADMIN")) {
             userService.validateUser(user);
         } else {
-            response.setMessage(adminUsername +  " is no Admin");
+            response.setMessage(adminUsername + " is no Admin");
         }
 
         if (user.isAdminValidated()) {
@@ -165,6 +169,7 @@ public class UserController {
     public PersonalData showPersonalData(@PathVariable("userID") final String username) {
         return userService.getUser(username).getPersonalData();
     }
+
     @GetMapping("/user/{userID}")
     public User showUser(@PathVariable("userID") final String username) {
         return userService.getUser(username);
@@ -172,8 +177,9 @@ public class UserController {
 
     /**
      * Put request to change the public key of the user.
+     *
      * @param publicKeyCmd contains the public key in a String format
-     * @param username the identifier of the user account that needs to be updated
+     * @param username     the identifier of the user account that needs to be updated
      */
     @PutMapping("/user/{userID}/publicKey")
     public void changePublicKey(@PathVariable("userID") final String username,
@@ -193,6 +199,7 @@ public class UserController {
 
     /**
      * Get request for getting the qr-code as a byte array.
+     *
      * @param username the identifier of the user account that needs to be updated
      * @return the qr code as a byte array
      */
@@ -212,14 +219,14 @@ public class UserController {
 
     /**
      * the Method used to validate 2-Factor-Auth codes.
+     *
      * @param username the id of the relating user
-     * @param code the code that should be validated
+     * @param code     the code that should be validated
      * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
     public Boolean validateCode(@PathVariable("userID") final String username,
-                               @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
-        System.out.println("was du möchtest");
+                                @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
 

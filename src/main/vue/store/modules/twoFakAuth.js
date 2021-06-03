@@ -4,11 +4,11 @@ export const namespaced = true
 
 export const state = {
     hasSetUp: Boolean,
-    errorHasSetUp:{},
+    errorHasSetUp: {},
     qrCode: {},
     errorGetQrCode: {},
     correctInput: Boolean,
-    errorCorrectInput:{}
+    errorCorrectInput: {}
 }
 
 export const mutations = {
@@ -32,7 +32,7 @@ export const mutations = {
         state.correctInput = correct
     },
 
-    SET_ERROR_CORRECT_INPUT(state, error){
+    SET_ERROR_CORRECT_INPUT(state, error) {
         state.errorCorrectInput = error
     }
 }
@@ -57,8 +57,8 @@ export const actions = {
     },
 
     // makes axios call to check if qrCodeCode is correct
-    validateCode({commit}, code){
-        twoFakAuthAPI.postValidateCode(code).then(response => {
+    validateCode({commit}, code) {
+        return twoFakAuthAPI.postValidateCode(code).then(response => {
             commit('SET_CORRECT_INPUT', response.data)
         }).catch(error => {
             commit('SET_ERROR_CORRECT_INPUT', error)

@@ -220,29 +220,23 @@ export default {
         }
     },
     methods: {
-        setUp() {
+        async setUp() {
             // check if code is syntactically correct
-            if ((this.code.length === 6 && Number.isInteger(Number(this.code)))
-                || (this.code.length === 7 && this.code.match('[0-9][0-9][0-9][" "][0-9][0-9][0-9]'))) {
+            if ((this.code.length === 6 && Number.isInteger(Number(this.code)))) {
 
                 // axios call to check if code is semantically correct
-                this.$store.dispatch('twoFakAuth/validateCode', this.code)
-
-                console.log(this.correctInput)
-
-                // code is correct, set up is finished
-                if (this.correctInput) {
-                    // TODO: add here always-config call
-                    this.code = ''
-                    this.page = this.page + 1
-                    this.showAlert = false
-                }
-                // code is incorrect
-                else {
-                    this.page = 3
+                await this.$store.dispatch('twoFakAuth/validateCode', this.code).then(() => {
                     this.code = ''
                     this.showAlert = false
-                }
+                    if (this.correctInput) {
+                        // TODO: add here always-config call
+                        this.page = 2
+                    }
+                    // code is incorrect
+                    else {
+                        this.page = 3
+                    }
+                })
             } else {
                 this.showAlert = true
             }

@@ -321,7 +321,7 @@
             "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
             "cancelWarningTwo": "bis Sie Ihre Zwei-Faktor-Authentifizierung auf der Einstellungs-Seite eingerichtet haben.",
-            "fail": "Der Code hat das falsche Format.",
+            "fail": "Der Code hat das falsche Format [Bsp: '123456'].",
             "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
             "canUse": "Sie können nun die Anwendung vollständig verwenden",
             "go": "Los geht's!",

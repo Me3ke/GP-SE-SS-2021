@@ -40,7 +40,6 @@ public class SecuritySettings implements Serializable {
     public void generateSecret() {
         SecretGenerator secretGenerator = new DefaultSecretGenerator(SECRET_GENERATOR_NUMBER);
         this.secret = secretGenerator.generate();
-        System.out.println(secret);
     }
 
     /**
@@ -73,13 +72,8 @@ public class SecuritySettings implements Serializable {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
         DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
-        verifier.setAllowedTimePeriodDiscrepancy(2);
-        System.out.println(codeGenerator.generate(secret, timeProvider.getTime()));
-        System.out.println(code);
-        System.out.println(verifier.isValidCode(secret, codeGenerator.generate(secret, timeProvider.getTime())));
-        System.out.println("irgendwas anderes");
+
         System.out.println(verifier.isValidCode(this.secret, code));
-        System.out.println(this.secret);
         return verifier.isValidCode(this.secret, code);
     }
 
