@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 /**
@@ -47,6 +48,10 @@ public class Protocol {
     private static final String PROTOCOL = "Protokoll: ";
 
     private static final int MAX_LINE_LENGTH = 36;
+    private static final float SPACING_TWO_FIVE = 2.5f;
+    private static final float SPACING_ONE_FIVE = 1.5f;
+    private static final float SPACING_TWO = 2.0f;
+    private static final String SIGNATURE_OF = "Signiert von: ";
 
     private Document document;
 
@@ -62,6 +67,7 @@ public class Protocol {
     public ByteArrayOutputStream writeProtocol() throws IOException {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        //TODO make linecount method so we can check if its <= 0 and create new page if needed
         int lineCount = TOP_OF_PAGE;
         final String title = document.getDocumentTitle();
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -72,7 +78,7 @@ public class Protocol {
                 // (x|y) = (0|0) bottom left; new line forbidden
                 contentStream.beginText();
                 contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-                contentStream.newLineAtOffset(THREE * MARGIN_LEFT, lineCount);
+                contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
                 if ((PROTOCOL + title).length() <= MAX_LINE_LENGTH) {
                     contentStream.showText(PROTOCOL + title);
                 } else {
@@ -92,26 +98,51 @@ public class Protocol {
                 lineCount -= LINE_DIST;
                 addLine("Dokumenteneigentümer: " + document.getOwner(), lineCount, contentStream);
 
+                if (document.getEndDate() != null) {
+                    lineCount -= LINE_DIST;
+                    addLine("Offen bis: " + document.getEndDate(), lineCount, contentStream);
+                }
+
                 lineCount -= LINE_DIST;
-                addLine("Signiert von: ", lineCount, contentStream);
+                addLine(SIGNATURE_OF, lineCount, contentStream);
 
                 for (final Signatory signatory : document.getSignatories()) {
                     lineCount -= LINE_DIST;
                     if (signatory.isStatus()) {
-                        addLine(signatory.getUser().getUsername() + " Am: "
-                            + formatter.format(signatory.getSignedOn()), lineCount, contentStream);
+                        addIndentedLine(signatory.getUser().getUsername() + "    Am: "
+                            + formatter.format(signatory.getSignedOn()), lineCount, SPACING_ONE_FIVE, contentStream);
                     } else {
-                        addLine(signatory.getUser().getUsername() + " noch nicht signiert",
-                            lineCount, contentStream);
+                        addIndentedLine(signatory.getUser().getUsername() + "    noch nicht signiert",
+                            lineCount, SPACING_ONE_FIVE, contentStream);
                     }
                 }
 
                 lineCount = lineCount - LINE_DIST;
                 addLine("Historie: ", lineCount, contentStream);
+                List<Document> history = document.getHistory();
+                history.remove(0);
+                for (final Document document : history) {
 
-                for (final Document document : document.getHistory()) {
                     lineCount = lineCount - LINE_DIST;
-                    addLine(document.getDocumentTitle(), lineCount, contentStream);
+                    addIndentedLine(document.getDocumentTitle() + " vom "
+                        + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
+                        lineCount, SPACING_ONE_FIVE, contentStream);
+
+                    lineCount -= LINE_DIST;
+                    addIndentedLine(SIGNATURE_OF, lineCount, SPACING_TWO, contentStream);
+
+                    for (final Signatory signatory : document.getSignatories()) {
+                        lineCount -= LINE_DIST;
+                        if (signatory.isStatus()) {
+                            addIndentedLine(signatory.getUser().getUsername() + "    (ungültig) ",
+                                lineCount, SPACING_TWO_FIVE, contentStream);
+                        } else {
+                            addIndentedLine(signatory.getUser().getUsername() + "    nicht signiert",
+                                lineCount, SPACING_TWO_FIVE, contentStream);
+                        }
+                    }
+
+
                 }
             }
             protocol.save(output);
@@ -132,6 +163,15 @@ public class Protocol {
         contentStream.beginText();
         contentStream.setFont(PDType1Font.TIMES_ROMAN, FONT_SIZE);
         contentStream.newLineAtOffset(MARGIN_LEFT, offSet);
+        contentStream.showText(value);
+        contentStream.endText();
+    }
+
+    private void addIndentedLine(final String value, final int offSet, final float leftSpacing,
+                                 final PDPageContentStream contentStream) throws IOException {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, FONT_SIZE);
+        contentStream.newLineAtOffset(MARGIN_LEFT * leftSpacing, offSet);
         contentStream.showText(value);
         contentStream.endText();
     }

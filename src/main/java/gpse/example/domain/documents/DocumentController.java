@@ -309,7 +309,7 @@ public class DocumentController {
         Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
             return protocol.writeProtocol().toByteArray();
-        } catch(IOException e) {
+        } catch (IOException e) {
             return new byte[0];
         }
     }
@@ -322,15 +322,16 @@ public class DocumentController {
      */
     @GetMapping("/documents/{documentID:\\d+}/protocol/download")
     public byte[] downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID,
-                                   final @RequestParam("path") String path) throws DocumentNotFoundException, CreatingFileException {
+                                   final @RequestParam("path") String path) throws DocumentNotFoundException,
+                                        CreatingFileException {
         Document document = documentService.getDocument(documentID);
         Protocol protocol = new Protocol(document);
         try {
             byte[] protocolBytes = protocol.writeProtocol().toByteArray();
-           documentCreator.writeInNewFile(protocolBytes,"pdf",
+           documentCreator.writeInNewFile(protocolBytes, "pdf",
                 "protocol_" + documentID, path);
             return protocolBytes;
-        } catch(IOException e) {
+        } catch (IOException e) {
             return new byte[0];
         }
     }
