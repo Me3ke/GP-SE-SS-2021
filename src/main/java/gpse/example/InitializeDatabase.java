@@ -142,6 +142,7 @@ public class InitializeDatabase implements InitializingBean {
             final DocumentCreator creator = new DocumentCreator();
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
             documentPutRequestRequest.setPath(path);
+            documentPutRequestRequest.setOrderRelevant(true);
             try {
                 final List<User> signatories = new ArrayList<>();
                 final List<User> readers = new ArrayList<>();
