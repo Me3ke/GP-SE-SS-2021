@@ -34,12 +34,12 @@ public class DocumentController {
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
 
-    private EnvelopeServiceImpl envelopeService;
-    private UserServiceImpl userService;
-    private DocumentServiceImpl documentService;
-    private SignatoryServiceImpl signatoryService;
-    private DocumentMetaDataServiceImpl documentMetaDataService;
-    private DocumentCreator documentCreator = new DocumentCreator();
+    private final EnvelopeServiceImpl envelopeService;
+    private final UserServiceImpl userService;
+    private final DocumentServiceImpl documentService;
+    private final SignatoryServiceImpl signatoryService;
+    private final DocumentMetaDataServiceImpl documentMetaDataService;
+    private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -135,28 +135,32 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
-    public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
-                                         final @PathVariable(USER_ID) String ownerID,
-                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                         final @PathVariable(DOCUMENT_ID) long documentID)
+    public DocumentPutResponse uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
+                                                        final @PathVariable(USER_ID) String ownerID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws UploadFileException {
         try {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            documentService.remove(oldDocument);
-            signatoryService.delete(oldDocument.getSignatories());
+            //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
-            final ArchivedDocument archivedDocument = new ArchivedDocument(oldDocument);
-            documentService.addDocument(archivedDocument);
+            signatoryService.delete(oldDocument.getSignatories());
+            documentService.remove(oldDocument);
+            documentMetaDataService.delete(oldDocument.getDocumentMetaData());
+            final Document archivedDocument = new ArchivedDocument(oldDocument);
+            documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
+            signatoryService.saveSignatories(archivedDocument.getSignatories());
+            final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            newDocument.setPreviousVersion(archivedDocument);
-            documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
+            newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
-            return newDocument.getId();
+            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }

@@ -12,10 +12,9 @@ export const mutations = {
     SET_DOCUMENT(state, doc) {
         state.document = doc
     },
-
+    // TODO need to change this mutation
     EDIT_DOCUMENT(state,doc) {
-        const originalDocIndex = state.documents.findIndex(i => i.id === doc.id);
-        state.documents[originalDocIndex] = doc
+        state.document = doc
     },
 
     //sets error of getDocument request
@@ -34,14 +33,13 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT', error)
         })
     },
-    /*
-    TODO add axios call to change the document in the database instead of changing the state
-     (local storage, need refreshing for changing the view)
-     */
-
-    editDocument({commit}, doc) {
-        commit('EDIT_DOCUMENT', doc)
-
+    // makes axios call to put the newDocument and archive the old one
+    editDocument({commit}, {newDoc, envId, docId}) {
+        return documentAPI.editDocument(envId, docId, newDoc).then((response) => {
+            commit('EDIT_DOCUMENT', response.data)
+            // to get the new Id of the new Document (for router)
+            return response.data.newDocumentID
+        })
     }
 }
 

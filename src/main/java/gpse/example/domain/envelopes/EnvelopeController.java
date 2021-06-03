@@ -26,12 +26,12 @@ public class EnvelopeController {
     private static final String USER_ID = "userID";
     private static final String ENVELOPE_ID = "envelopeID";
 
-    private EnvelopeServiceImpl envelopeService;
-    private UserServiceImpl userService;
-    private SignatoryServiceImpl signatoryService;
-    private DocumentServiceImpl documentService;
-    private DocumentMetaDataServiceImpl documentMetaDataService;
-    private DocumentCreator documentCreator = new DocumentCreator();
+    private final EnvelopeServiceImpl envelopeService;
+    private final UserServiceImpl userService;
+    private final SignatoryServiceImpl signatoryService;
+    private final DocumentServiceImpl documentService;
+    private final DocumentMetaDataServiceImpl documentMetaDataService;
+    private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * The default constructor for an envelope Controller.
@@ -92,7 +92,6 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
             return envelopeService.updateEnvelope(envelope, document);
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);

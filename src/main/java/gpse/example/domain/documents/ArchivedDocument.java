@@ -4,7 +4,9 @@ import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,32 +15,47 @@ import java.util.List;
  * all of the variables of the archived Document are final and therefore
  * immutable. It extends Document to be treated similar in terms of the database.
  */
+@Entity
 public class ArchivedDocument extends Document {
 
-    private final long id;
+    @Column
+    @Id
+    private long id;
 
-    private final String title;
+    @Column
+    private String title;
 
-    private final DocumentMetaData documentMetaData;
+    @OneToOne
+    private DocumentMetaData documentMetaData;
 
-    private final List<Signatory> signatories;
+    @OneToMany
+    private List<Signatory> signatories = new ArrayList<>();
 
-    private final List<AdvancedSignature> advancedSignatures;
+    @OneToMany
+    private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
-    private final List<Signatory> readers;
+    @OneToMany
+    private List<Signatory> readers = new ArrayList<>();
 
-    private final String documentType;
+    @Column
+    private String documentType;
 
-    private final SignatureType signatureType;
+    @Column
+    private SignatureType signatureType = SignatureType.NO_SIGNATURE;
 
-    private final byte[] data;
+    @Lob
+    private byte[] data;
 
-    private final boolean orderRelevant;
+    @Column
+    private boolean orderRelevant;
 
-    private final LocalDateTime endDate;
+    @Column
+    private LocalDateTime endDate;
 
-    private final DocumentState state;
+    @Column
+    private DocumentState state;
 
+    @OneToOne
     private Document previousVersion;
 
     /**
@@ -48,7 +65,7 @@ public class ArchivedDocument extends Document {
     public ArchivedDocument(final Document document) {
         this.id = document.getId();
         this.title = document.getDocumentTitle();
-        this.documentMetaData = document.getDocumentMetaData();
+        this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
         this.advancedSignatures = document.getAdvancedSignatures();
         this.readers = document.getReaders();
@@ -59,6 +76,10 @@ public class ArchivedDocument extends Document {
         this.endDate = document.getEndDate();
         this.state = DocumentState.CLOSED;
         this.previousVersion = document.getPreviousVersion();
+    }
+
+    protected ArchivedDocument() {
+
     }
 
     public String getTitle() {
@@ -123,5 +144,22 @@ public class ArchivedDocument extends Document {
     @Override
     public Document getPreviousVersion() {
         return previousVersion;
+    }
+
+    @Override
+    public void setSignatureType(SignatureType signatureType) {
+
+    }
+
+    @Override
+    public void setOrderRelevant(boolean orderRelevant) {
+    }
+
+    @Override
+    public void setEndDate(LocalDateTime endDate) {
+    }
+
+    @Override
+    public void setState(DocumentState state) {
     }
 }

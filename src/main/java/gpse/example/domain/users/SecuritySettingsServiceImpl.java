@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecuritySettingsServiceImpl implements SecuritySettingsService {
 
-    private SecuritySettingsRepository securitySettingsRepository;
+    private final SecuritySettingsRepository securitySettingsRepository;
 
     @Autowired
     public SecuritySettingsServiceImpl(final SecuritySettingsRepository securitySettingsRepository) {

@@ -14,8 +14,8 @@ import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import store from "@/main/vue/store/store";
-import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import BlankTestPage from "@/main/vue/views/BlankTestPage";
+import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 
 Vue.use(VueRouter)
 

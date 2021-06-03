@@ -13,18 +13,18 @@ import java.util.List;
  */
 public class DocumentGetResponse {
 
-    private String title;
-    private DocumentState state;
-    private User owner;
-    private LocalDateTime creationDate;
-    private LocalDateTime endDate;
-    private SignatureType signatureType;
-    private String dataType;
+    private final String title;
+    private final DocumentState state;
+    private final User owner;
+    private final LocalDateTime creationDate;
+    private final LocalDateTime endDate;
+    private final SignatureType signatureType;
+    private final String dataType;
     private boolean signatory;
     private boolean reader;
     private boolean signed;
     private boolean read;
-    private byte[] data;
+    private final byte[] data;
 
     /**
      * The default constructor creates the documentGet based on an existing document
