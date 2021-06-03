@@ -3,6 +3,7 @@ package gpse.example.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
@@ -32,6 +33,7 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
+    private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
 
     private static final String USERID = "userID";
@@ -185,13 +187,16 @@ public class UserController {
      * @param username the identifier of the user account that needs to be updated
      */
     @PutMapping("/user/{userID}/publicKey")
-    public void changePublicKey(@PathVariable(USERID) final String username,
+    public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                 @RequestBody final PublicKeyCmd publicKeyCmd) {
+        JSONResponseObject response = new JSONResponseObject();
         try {
             userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
-            System.out.println(userService.getUser(username).getPublicKey());
+            response.setStatus(STATUS_CODE_OK);
+            return response;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            exception.printStackTrace();
+            response.setStatus(STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED);
+            return response;
         }
     }
 
