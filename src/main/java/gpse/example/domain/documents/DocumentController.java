@@ -301,13 +301,17 @@ public class DocumentController {
 
     /**
      * getting bytearry to show in frontend.
-     * @param documentID documentid
+     * @param documentID documentId
      * @return byteArray
      * */
     @GetMapping("/documents/{documentID:\\d+}/protocol")
-    public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID) {
-        //TODO createProtocol
-        return new byte[0];
+    public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+        Protocol protocol = new Protocol(documentService.getDocument(documentID));
+        try {
+            return protocol.writeProtocol().toByteArray();
+        } catch(IOException e) {
+            return new byte[0];
+        }
     }
 
     /**
@@ -318,9 +322,16 @@ public class DocumentController {
      */
     @GetMapping("/documents/{documentID:\\d+}/protocol/download")
     public byte[] downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID,
-                                   final @RequestParam("path") String path) {
-        //TODO createProtocol
-        //TODO downloadProtocol
-        return new byte[0];
+                                   final @RequestParam("path") String path) throws DocumentNotFoundException, CreatingFileException {
+        Document document = documentService.getDocument(documentID);
+        Protocol protocol = new Protocol(document);
+        try {
+            byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+           documentCreator.writeInNewFile(protocolBytes,"pdf",
+                "protocol_" + documentID, path);
+            return protocolBytes;
+        } catch(IOException e) {
+            return new byte[0];
+        }
     }
 }
