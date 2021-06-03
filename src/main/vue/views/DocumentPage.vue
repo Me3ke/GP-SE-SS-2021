@@ -44,6 +44,16 @@
                     </b-col>
 
                     <b-col cols="3" id="textCol">
+
+
+                        <upload-new-version-button
+                        :document="document"
+                        v-on:update-document="updateDoc"
+                        >
+                        </upload-new-version-button>
+
+
+
                         <!-- Displays if user already proofread -->
                         <b-row style="margin: auto; display: block"
                                v-if="document.reader === true && document.read === true">
@@ -149,11 +159,12 @@ import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
 
 
 export default {
     name: "DocumentPage",
-    components: {ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
@@ -168,7 +179,6 @@ export default {
             for (let i = 0; i < chars.length; i++) {
                 array[i] = chars.charCodeAt(i)
             }
-
             return array
         },
         hasError() {
@@ -181,7 +191,22 @@ export default {
         toggleRead() {
             this.showProofread = !this.showProofread
             this.showOverflow = !this.showOverflow
+        },
+
+        /*
+        async updateDoc(newDoc) {
+            console.log(newDoc.data)
+            let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId }
+            let newDocID = await this.$store.dispatch('document/editDocument', payload)
+            let newUrl = 'envelope/' + this.envId + '/document/' + newDocID
+            console.log(newUrl)
+            // will route the user to the newUploaded document page (with the new ID)
+            // for now it is working. But it will show before refreshing the new page an unable preview of the file
+           await this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {this.$router.go(0)})
+
         }
+
+         */
     },
     created() {
         this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})

@@ -32,16 +32,16 @@ public class ConfirmationTokenService {
 
     /**
      * find the correct Confirmation token if it is there.
-     * @param token searched token
+     * @param givenToken searched token
      * @return the token
      */
 
-    public Optional<ConfirmationToken> findConfirmationTokenByToken(final String token) {
+    public Optional<ConfirmationToken> findConfirmationTokenByToken(final String givenToken) {
         final Iterable<ConfirmationToken> tokens = confirmationTokenRepository.findAll();
 
-        for (final ConfirmationToken t : tokens) {
-            if (t.getToken().equals(token)) {
-                return Optional.of(t);
+        for (final ConfirmationToken token : tokens) {
+            if (token.getToken().equals(givenToken)) {
+                return Optional.of(token);
             }
         }
         return Optional.empty();

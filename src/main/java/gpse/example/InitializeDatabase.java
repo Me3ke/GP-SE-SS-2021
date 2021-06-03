@@ -6,7 +6,9 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.SignatoryService;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,8 +132,14 @@ public class InitializeDatabase implements InitializingBean {
                     final byte[] data = inputStream.readAllBytes();
                     final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                         .getName().split(DOUBLE_BACKSLASH);
-                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                    Document document = createExampleDocument(documentIDs.get(i), data,
                         documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                    if (document != null) {
+                        envelope.addDocument(document);
+                        envelopeService.saveEnvelope(envelope);
+                    }
+                } catch (CreatingFileException e) {
+                    e.printStackTrace();
                 }
             }
         } catch (DocumentNotFoundException exception) {
@@ -143,11 +151,13 @@ public class InitializeDatabase implements InitializingBean {
                         final byte[] data = inputStream.readAllBytes();
                         final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                             .getName().split(DOUBLE_BACKSLASH);
-                        createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                            documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                        envelope.addDocument(
+                            createExampleDocument(documentIDs.get(i), data,
+                                documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]));
+                        envelopeService.saveEnvelope(envelope);
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | CreatingFileException e) {
                 exception.printStackTrace();
             }
         } catch (IOException exception) {
@@ -155,10 +165,11 @@ public class InitializeDatabase implements InitializingBean {
         }
     }
 
-    private void createExampleDocument(final User owner, final Envelope envelope, final long id,
+    private Document createExampleDocument(final long id,
                                        final byte[] data, final DocumentState documentState,
                                        final boolean read, final boolean signed, final String title,
-                                       final String type) {
+                                       final String type) throws CreatingFileException, IOException {
+        final User owner = userService.getUser(USERNAME);
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
@@ -166,44 +177,31 @@ public class InitializeDatabase implements InitializingBean {
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
-            documentPutRequestRequest.setType(type);
+            documentPutRequestRequest.setDataType(type);
+            documentPutRequestRequest.setOrderRelevant(false);
             try {
-                final List<User> signatories = new ArrayList<>();
-                final List<User> readers = new ArrayList<>();
+                final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (signed) {
-                    signatories.add(owner);
+                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
                 }
                 if (read) {
-                    readers.add(owner);
+                    signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, readers);
-                if (read) {
-                    for (int i = 0; i < document.getReaders().size(); i++) {
-                        document.getReaders().get(i).setStatus(true);
-                    }
-                }
-                if (signed) {
-                    for (int i = 0; i < document.getSignatories().size(); i++) {
-                        document.getSignatories().get(i).setStatus(true);
-                    }
-                }
+                    signatories);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {
                     document.setState(DocumentState.OPEN);
                 }
                 signatoryService.saveSignatories(document.getSignatories());
-                signatoryService.saveSignatories(document.getReaders());
                 documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
-                documentService.addDocument(document);
-                envelope.addDocument(document);
-                envelopeService.saveEnvelope(envelope);
+                return documentService.addDocument(document);
             } catch (CreatingFileException | IOException e) {
-                envelopeService.saveEnvelope(envelope);
-                e.printStackTrace();
+                throw e;
             }
         }
+        return null;
     }
 
 }

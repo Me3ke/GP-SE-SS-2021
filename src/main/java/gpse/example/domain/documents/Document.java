@@ -38,16 +38,10 @@ public class Document {
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
-    private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
-    @OneToMany
-    private List<Signatory> readers = new ArrayList<>();
-
-    /*
-    @Column
-    private File documentFile;
-
-     */
+    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
+    private Document previousVersion;
 
     @Column
     private String documentType;
@@ -80,14 +74,12 @@ public class Document {
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
      * @param documentPutRequest
      * @param signatories The list of signatories for a document.
-     * @param readers     The list of readers for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
-                    final String ownerID, final List<Signatory> readers) {
+                    final String ownerID) {
         this.signatories = signatories;
-        this.readers = readers;
-        this.documentType = documentPutRequest.getType();
+        this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
              documentPutRequest.getLastModified(), this.data.length, ownerID);
@@ -99,20 +91,11 @@ public class Document {
      * adds a new user as a signatory to the signatory list.
      *
      * @param signatory the user object that is needed as a signatory
+     * @param signatureType the signatureType the signatory refers to
      */
-    public void addSignatory(final User signatory) {
-        signatories.add(new Signatory(signatory));
+    public void addSignatory(final User signatory, final SignatureType signatureType) {
+        signatories.add(new Signatory(signatory, signatureType));
     }
-
-    /**
-     * adds a new user as a reader to the reader list.
-     *
-     * @param reader the user object that is needed as a reader
-     */
-    public void addReader(final User reader) {
-        readers.add(new Signatory(reader));
-    }
-
     /**
      * the Method to add an advanced signature for a specific user to the document.
      *
@@ -167,6 +150,21 @@ public class Document {
             }
         }
         return null;
+    }
+
+    /**
+     * The getHistory method gets all previous versions of a document.
+     * @return a list of all previous versions starting with the given document
+     *          and ending with the first version.
+     */
+    public List<Document> getHistory() {
+        Document temp = this;
+        final List<Document> history = new ArrayList<>();
+        while (temp != null) {
+            history.add(temp);
+            temp = temp.getPreviousVersion();
+        }
+        return history;
     }
 
     //--------- Filter methods--------
@@ -261,12 +259,11 @@ public class Document {
      * @return true if this document contains one of the readers of the filter.
      */
     public boolean hasReaders(final List<String> readers) {
-        if (readers == null) {
-            return true;
-        }
-        for (final Signatory reader : this.readers) {
-            if (readers.contains(reader.getUser().getEmail())) {
-                return true;
+        for (final String reader : readers) {
+            for (final Signatory signatory : getReaders()) {
+                if (signatory.getUser().getUsername().equals(reader)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -294,11 +291,6 @@ public class Document {
      * @return true if this document corresponds to the filter.
      */
     public boolean hasRead(final boolean read) {
-        for (final Signatory reader : this.readers) {
-            if (read == reader.isStatus()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -348,7 +340,31 @@ public class Document {
         return signatories;
     }
 
+    /**
+     * The method that returns the first signatory, that hasn't signed or reviewed from any given list.
+     * @param signatories a List of Signatories, probably either a List of readers or a full list of all signatories
+     * @return the first signatory, that hasn't signed or reviewed from any given list.
+     */
+    public Signatory getCurrentSignatory(final List<Signatory> signatories) {
+        for (final Signatory signatory : signatories) {
+            if (!signatory.isStatus()) {
+                return signatory;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * returns a list of only those signatories that have review as their signature Type.
+     * @return a list of only those signatories that have review as their signature Type
+     */
     public List<Signatory> getReaders() {
+        final List<Signatory> readers = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.REVIEW)) {
+                readers.add(signatory);
+            }
+        }
         return readers;
     }
 
@@ -374,6 +390,14 @@ public class Document {
 
     public void setState(final DocumentState documentState) {
         this.state = documentState;
+    }
+
+    public Document getPreviousVersion() {
+        return previousVersion;
+    }
+
+    public void setPreviousVersion(final Document previousVersion) {
+        this.previousVersion = previousVersion;
     }
 }
 
