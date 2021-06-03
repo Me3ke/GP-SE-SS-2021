@@ -2,7 +2,7 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.users.User;
+import gpse.example.domain.signature.ProtoSignatory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -45,43 +45,36 @@ public class DocumentCreator {
      * @param documentPutRequest the command object which keeps the information for the document.
      * @param ownerID            the email adress of the User who want to create the document.
      * @param signatories        the list of signatories for this document.
-     * @param readers            the list of readers for this document.
      * @return the created document.
      * @throws IOException if the data is incorrect.
      * @throws CreatingFileException if the path is not specified.
      */
     //does not include directories.
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
-                                   final List<User> signatories, final List<User> readers)
+                                   final List<ProtoSignatory> signatories)
                                     throws CreatingFileException, IOException {
         if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
         }
         final Document document = new Document(documentPutRequest, new ArrayList<>(),
-            ownerID, new ArrayList<>());
-        setDocumentState(signatories, readers, document);
-        setReadersAndSignatories(signatories, readers, document);
+            ownerID);
+        setDocumentState(signatories, document);
+        setSignatories(signatories, document);
         return document;
     }
 
     /**
-     * The setReadersAndSignatories method creates signatory objects and refers them to the documents.
+     * The setSignatories method creates signatory objects and refers them to the documents.
      * A reader uses the same class as Signatory because both processes are similar.
      *
-     * @param signatories a list of users containing all the people to sign the document.
-     * @param readers     a list of users containing all the people to read the document before signing.
+     * @param signatories a list of users containing all the people to sign or read the document.
      * @param document    the document itself.
      */
-    private void setReadersAndSignatories(final List<User> signatories, final List<User> readers,
+    private void setSignatories(final List<ProtoSignatory> signatories,
                                           final Document document) {
         if (signatories != null) {
-            for (final User signatory : signatories) {
-                document.addSignatory(signatory);
-            }
-        }
-        if (readers != null) {
-            for (final User reader : readers) {
-                document.addReader(reader);
+            for (ProtoSignatory signatory : signatories) {
+                document.addSignatory(signatory.getUser(), signatory.getSignatureType());
             }
         }
     }
@@ -91,14 +84,11 @@ public class DocumentCreator {
      * initial state of the document based on that.
      *
      * @param signatories a list of users containing all the people to sign the document.
-     * @param readers     a list of users containing all the people to read the document before signing
      * @param document    the document itself.
      */
-    private void setDocumentState(final List<User> signatories, final List<User> readers, final Document document) {
-        if (readers == null && signatories == null) {
+    private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
+        if (signatories == null) {
             document.setState(DocumentState.CLOSED);
-        } else if (readers == null) {
-            document.setState(DocumentState.READ);
         } else {
             document.setState(DocumentState.OPEN);
         }

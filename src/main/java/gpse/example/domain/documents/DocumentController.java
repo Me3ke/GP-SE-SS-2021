@@ -10,6 +10,7 @@ import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,10 @@ public class DocumentController {
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
+    private static final int STATUS_CODE_OK = 200;
+    private static final int STATUS_CODE_WRONG_USER = 450;
+    private static final int STATUS_CODE_NOT_READER = 451;
+    private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -176,32 +181,58 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
-    public boolean review(final @PathVariable(USER_ID) String userID,
-                          final @PathVariable(ENVELOPE_ID) long envelopeID,
-                          final @PathVariable(DOCUMENT_ID) long documentID)
+    public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
+                                     final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                     final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
         boolean documentFinished = true;
+        JSONResponseObject response = new JSONResponseObject();
         if (document.getState().equals(DocumentState.OPEN)) {
             final List<Signatory> readers = document.getReaders();
-            for (final Signatory currentReader : readers) {
-                if (currentReader.getUser().equals(reader)) {
+            if (document.isOrderRelevant()) {
+                Signatory currentReader = document.getCurrentSignatory(readers);
+                if (currentReader != null && currentReader.getUser().equals(reader)) {
                     currentReader.setStatus(true);
-                    //TODO save reader in readerRepo
+                    signatoryService.saveSignatory(currentReader);
+                    documentService.addDocument(document);
+                    response.setStatus(STATUS_CODE_OK);
+                    return response;
+                } else {
+                    response.setStatus(STATUS_CODE_WRONG_USER);
+                    response.setMessage("The user is either not a reader for this document,"
+                        + "or it is currently not his turn");
+                    return response;
                 }
-                if (!currentReader.isStatus()) {
-                    documentFinished = false;
+            } else {
+                boolean foundReader = false;
+                for (final Signatory currentReader : readers) {
+                    if (currentReader.getUser().equals(reader)) {
+                        currentReader.setStatus(true);
+                        foundReader = true;
+                        signatoryService.saveSignatory(currentReader);
+                    }
+                    documentFinished &= currentReader.isStatus();
+                }
+                if (documentFinished) {
+                    document.setState(DocumentState.READ);
+                }
+                documentService.addDocument(document);
+                if (foundReader) {
+                    response.setStatus(STATUS_CODE_OK);
+                    return response;
+                } else {
+                    response.setStatus(STATUS_CODE_NOT_READER);
+                    response.setMessage("The user is not a reader for this document.");
+                    return response;
                 }
             }
-            if (documentFinished) {
-                document.setState(DocumentState.READ);
-            }
-            documentService.addDocument(document);
-            return true;
         } else {
-            return false;
+            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
+            response.setMessage("This document is closed");
+            return response;
         }
     }
 

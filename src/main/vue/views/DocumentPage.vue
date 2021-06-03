@@ -45,12 +45,13 @@
 
                     <b-col cols="3" id="textCol">
 
-
+                        <!--
                         <upload-new-version-button
                         :document="document"
                         v-on:update-document="updateDoc"
                         >
                         </upload-new-version-button>
+                        -->
 
 
                         <!-- Displays if user already proofread -->
@@ -192,6 +193,7 @@ export default {
             this.showOverflow = !this.showOverflow
         },
 
+        /*
         async updateDoc(newDoc) {
             console.log(newDoc.data)
             let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId }
@@ -203,6 +205,8 @@ export default {
            await this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {this.$router.go(0)})
 
         }
+
+         */
     },
     created() {
         this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})

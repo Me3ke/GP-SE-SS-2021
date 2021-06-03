@@ -14,7 +14,7 @@ export default {
         return axios(
             {
                 method: "post",
-                url: 'http://localhost:8088/api/user/',
+                url: 'http://localhost:8088/api/newUser/',
                 headers: {"Content-Type": "application/json"},
                 data: {
                     "username": username,

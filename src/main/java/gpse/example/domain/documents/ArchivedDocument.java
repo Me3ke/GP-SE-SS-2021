@@ -64,7 +64,6 @@ public class ArchivedDocument extends Document {
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
         this.advancedSignatures = document.getAdvancedSignatures();
-        this.readers = document.getReaders();
         this.documentType = document.getDocumentType();
         this.signatureType = document.getSignatureType();
         this.data = document.getData();
@@ -164,4 +163,5 @@ public class ArchivedDocument extends Document {
     @Override
     public void setState(final DocumentState state) {
     }
+
 }
