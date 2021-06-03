@@ -132,8 +132,14 @@ public class InitializeDatabase implements InitializingBean {
                     final byte[] data = inputStream.readAllBytes();
                     final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                         .getName().split(DOUBLE_BACKSLASH);
-                    createExampleDocument(owner, envelope, documentIDs.get(i), data,
+                    Document document = createExampleDocument(documentIDs.get(i), data,
                         documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                    if (document != null) {
+                        envelope.addDocument(document);
+                        envelopeService.saveEnvelope(envelope);
+                    }
+                } catch (CreatingFileException e) {
+                    e.printStackTrace();
                 }
             }
         } catch (DocumentNotFoundException exception) {
@@ -145,11 +151,13 @@ public class InitializeDatabase implements InitializingBean {
                         final byte[] data = inputStream.readAllBytes();
                         final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                             .getName().split(DOUBLE_BACKSLASH);
-                        createExampleDocument(owner, envelope, documentIDs.get(i), data,
-                            documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
+                        envelope.addDocument(
+                            createExampleDocument(documentIDs.get(i), data,
+                                documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]));
+                        envelopeService.saveEnvelope(envelope);
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | CreatingFileException e) {
                 exception.printStackTrace();
             }
         } catch (IOException exception) {
@@ -157,10 +165,11 @@ public class InitializeDatabase implements InitializingBean {
         }
     }
 
-    private void createExampleDocument(final User owner, final Envelope envelope, final long id,
+    private Document createExampleDocument(final long id,
                                        final byte[] data, final DocumentState documentState,
                                        final boolean read, final boolean signed, final String title,
-                                       final String type) {
+                                       final String type) throws CreatingFileException, IOException {
+        final User owner = userService.getUser(USERNAME);
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
@@ -187,14 +196,12 @@ public class InitializeDatabase implements InitializingBean {
                 }
                 signatoryService.saveSignatories(document.getSignatories());
                 documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
-                documentService.addDocument(document);
-                envelope.addDocument(document);
-                envelopeService.saveEnvelope(envelope);
+                return documentService.addDocument(document);
             } catch (CreatingFileException | IOException e) {
-                envelopeService.saveEnvelope(envelope);
-                e.printStackTrace();
+                throw e;
             }
         }
+        return null;
     }
 
 }

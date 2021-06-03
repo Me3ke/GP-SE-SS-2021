@@ -2,6 +2,9 @@ package gpse.example.domain.signature;
 
 import gpse.example.domain.users.User;
 
+/**
+ * Used to transport information regarding signatories.
+ */
 public class ProtoSignatory {
 
     private User user;
