@@ -7,7 +7,6 @@ import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.io.*;
-import java.lang.annotation.Target;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -181,7 +180,7 @@ public class Document {
     public List<Document> getHistory() {
         Document temp = this;
         final List<Document> history = new ArrayList<>();
-        while(temp != null) {
+        while (temp != null) {
             history.add(temp);
             temp = temp.getPreviousVersion();
         }
@@ -399,7 +398,7 @@ public class Document {
         return previousVersion;
     }
 
-    public void setPreviousVersion(Document previousVersion) {
+    public void setPreviousVersion(final Document previousVersion) {
         this.previousVersion = previousVersion;
     }
 }

@@ -147,19 +147,19 @@ public class ArchivedDocument extends Document {
     }
 
     @Override
-    public void setSignatureType(SignatureType signatureType) {
+    public void setSignatureType(final SignatureType signatureType) {
 
     }
 
     @Override
-    public void setOrderRelevant(boolean orderRelevant) {
+    public void setOrderRelevant(final boolean orderRelevant) {
     }
 
     @Override
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(final LocalDateTime endDate) {
     }
 
     @Override
-    public void setState(DocumentState state) {
+    public void setState(final DocumentState state) {
     }
 }
