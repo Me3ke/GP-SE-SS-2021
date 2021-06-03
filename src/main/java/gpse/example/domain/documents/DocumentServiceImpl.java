@@ -1,9 +1,17 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.envelopes.Envelope;
+import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.signature.ProtoSignatory;
+import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
+import gpse.example.domain.users.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +22,7 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository repo;
+    private final DocumentCreator documentCreator = new DocumentCreator();
 
     @Autowired
     public DocumentServiceImpl(final DocumentRepository repo) {
@@ -40,5 +49,29 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Document addDocument(final Document document) {
         return repo.save(document);
+    }
+
+    @Override
+    public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
+                              final UserServiceImpl userService, final SignatoryServiceImpl signatoryService)
+                                throws CreatingFileException, IOException {
+        final List<ProtoSignatory> signatories = new ArrayList<>();
+        final List<String> signatoriesID = documentPutRequest.getSignatoriesID();
+        final List<String> readersID = documentPutRequest.getReadersID();
+        for (final String currentID : readersID) {
+            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.REVIEW));
+        }
+        for (final String currentID : signatoriesID) {
+            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.SIMPLE_SIGNATURE));
+        }
+        final Document newDocument = documentCreator.createDocument(documentPutRequest,
+            ownerID, signatories);
+        for (final Document currentDocument : envelope.getDocumentList()) {
+            for (final Signatory signatory : currentDocument.getSignatories()) {
+                signatory.setStatus(false);
+                signatoryService.saveSignatory(signatory);
+            }
+        }
+        return addDocument(newDocument);
     }
 }

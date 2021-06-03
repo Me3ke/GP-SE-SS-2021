@@ -50,11 +50,11 @@ public class User implements UserDetails {
     //@OneToOne
     //private Keys activePair;
 
-    @Column
-    private boolean admin;
-
     @OneToOne
     private PersonalData personalData;
+
+    @OneToOne
+    private SecuritySettings securitySettings;
 
     @Column
     private boolean enabled;
@@ -73,7 +73,7 @@ public class User implements UserDetails {
     /**
      * The constructor for a user.
      *
-     * @param username the username equal the email
+     * @param username  the username equal the email
      * @param firstname the firstname of the user.
      * @param lastname  the lastname of the user.
      * @param password  the password that is used for actions that need security.
@@ -86,6 +86,7 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = false;
         this.adminValidated = false;
+        this.securitySettings = new SecuritySettings();
     }
 
     public static long getSerialVersionUID() {
@@ -133,7 +134,7 @@ public class User implements UserDetails {
                                 final String homeTown, final String country, final LocalDate birthday,
                                 final String phoneNumber) {
         this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
-                country, birthday, phoneNumber);
+            country, birthday, phoneNumber);
     }
 
     public void setPersonalData(final PersonalData personalData) {
@@ -142,6 +143,7 @@ public class User implements UserDetails {
 
     /**
      * This method adds Role to an user.
+     *
      * @param role e.g. "ROLE_USER" or "ROLE_ADMIN"
      */
     public void addRole(final String role) {
@@ -204,6 +206,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
     @JsonIgnore
     @Override
     public String getUsername() {
@@ -267,15 +270,19 @@ public class User implements UserDetails {
         return publicKey;
     }
 
+    public void setPublicKey(final PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+
     public PersonalData getPersonalData() {
         return personalData;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -283,7 +290,7 @@ public class User implements UserDetails {
         return adminValidated;
     }
 
-    public void setAdminValidated(boolean adminValidated) {
+    public void setAdminValidated(final boolean adminValidated) {
         this.adminValidated = adminValidated;
     }
 
@@ -291,7 +298,15 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(final List<String> roles) {
         this.roles = roles;
+    }
+
+    public SecuritySettings getSecuritySettings() {
+        return securitySettings;
+    }
+
+    public void setSecuritySettings(final SecuritySettings securitySettings) {
+        this.securitySettings = securitySettings;
     }
 }

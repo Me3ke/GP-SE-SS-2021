@@ -1,32 +1,44 @@
 <template>
-    <b-button class="light-btn" id="my-btn">
-        <b-icon id="my-icon" :icon="icon"></b-icon>
+    <b-button class="green-btn" id="my-btn" @mouseenter="hovered = !hovered" @mouseleave="hovered = !hovered">
+        <b-icon :id="[hovered ? 'my-icon-dark' : 'my-icon']" :icon="icon"></b-icon>
         <span id="my-txt"> {{ $t(text) }} </span>
     </b-button>
 </template>
 
 <script>
 export default {
-    name: "LightButtonIconText",
+    name: "GreenButtonIconText",
     props: {
         icon: String,
         text: String
+    },
+    data() {
+        return {
+            hovered: false
+        }
     }
 }
 </script>
 
 <style scoped>
 #my-icon {
-    fill: var(--dark-grey);
+    fill: var(--whitesmoke);
     position: relative;
 }
 
-#my-btn {
-    padding: 0.6em;
-    text-align: center;
-    vertical-align: center;
+#my-icon-dark {
+    fill: var(--dark-grey);
+    transition: 0.4s;
+}
+
+.green-btn {
+    padding: 0.25em 0.25em 0;
+    border: 0.03em solid var(--dark-grey);
     width: fit-content;
-    font-size: 0.75em;
+}
+
+.green-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }
 
 #my-txt {
@@ -35,26 +47,26 @@ export default {
 
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) and (min-height: 370px) {
-    #my-btn {
+    .green-btn {
         font-size: 0.3em;
     }
 }
 
 @media (max-width: 575.98px) and (max-height: 369.98px) {
-    #my-btn {
+    .green-btn {
         font-size: 0.4em;
     }
 }
 
 
 @media (min-width: 576px) and (max-width: 767.98px) {
-    #my-btn {
+    .green-btn {
         font-size: 0.45em;
     }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
-    #my-btn {
+    .green-btn {
         font-size: 0.5em;
     }
 }

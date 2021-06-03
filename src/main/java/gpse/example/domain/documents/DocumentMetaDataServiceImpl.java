@@ -17,6 +17,11 @@ public class DocumentMetaDataServiceImpl implements DocumentMetaDataService {
     }
 
     @Override
+    public void delete(final DocumentMetaData documentMetaData) {
+        documentMetaDataRepository.delete(documentMetaData);
+    }
+
+    @Override
     public DocumentMetaData saveDocumentMetaData(final DocumentMetaData documentMetaData) {
         return documentMetaDataRepository.save(documentMetaData);
     }

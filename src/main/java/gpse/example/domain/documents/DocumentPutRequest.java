@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class DocumentPutRequest {
 
-    private String path;
+    private byte[] data;
     private String title;
     private String type;
     private List<String> signatoriesID;
@@ -19,13 +19,22 @@ public class DocumentPutRequest {
     private LocalDateTime endDate;
     private boolean orderRelevant;
     private DocumentState state;
+    private LocalDateTime lastModified;
 
-    public String getPath() {
-        return path;
+    public LocalDateTime getLastModified() {
+        return lastModified;
     }
 
-    public void setPath(final String path) {
-        this.path = path;
+    public void setLastModified(final LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(final byte[] data) {
+        this.data = data;
     }
 
     public String getTitle() {

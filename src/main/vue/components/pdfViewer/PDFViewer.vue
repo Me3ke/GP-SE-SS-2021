@@ -72,7 +72,7 @@
         <!-- PDF -->
         <b-row cols="1" style="margin-top: 1vh">
             <b-col>
-                <div class="overflow-auto" style="height: 75vh" v-if="pageMode">
+                <div :class="[overflow ? 'overflow-auto' : '']" style="height: 75vh" v-if="pageMode">
                     <pdf :page="currentPage"
                          :src="src"
                          @page-loaded="currentPage = $event"
@@ -81,7 +81,7 @@
                     </pdf>
                 </div>
 
-                <div class="overflow-auto" style="height: 75vh" v-else>
+                <div :class="[overflow ? 'overflow-auto' : '']" style="height: 75vh" v-else>
                     <pdf
                         v-for="page in pageCount"
                         :key="page"
@@ -102,7 +102,7 @@ import PDFViewerButton from "@/main/vue/components/pdfViewer/PDFViewerButton";
 
 export default {
     name: "PDFViewer",
-    props: ['pdfSrc'],
+    props: ['pdfSrc', 'overflow'],
     components: {PDFViewerButton, pdf},
     data() {
         return {

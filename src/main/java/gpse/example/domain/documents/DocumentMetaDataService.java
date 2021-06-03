@@ -6,4 +6,5 @@ package gpse.example.domain.documents;
 public interface DocumentMetaDataService {
     DocumentMetaData saveDocumentMetaData(DocumentMetaData documentMetaData);
     void removeAll();
+    void delete(DocumentMetaData documentMetaData);
 }

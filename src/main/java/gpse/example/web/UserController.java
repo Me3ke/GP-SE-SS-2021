@@ -1,5 +1,10 @@
 package gpse.example.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 
 import gpse.example.util.email.MessageGenerationException;
@@ -8,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
 
@@ -27,25 +34,35 @@ public class UserController {
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
+
+    private static final String USERID = "userID";
+    private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
+    private final StringToKeyConverter stringToKeyConverter;
+    private final SecuritySettingsService securitySettingsService;
+
 
     /**
      * Constructor of UserController getting required services.
      * @param service Userservice Object
      * @param confService ConfirmationTokenService object
      * @param personalDataService PersonalDataService object
+     * @param securitySettingsService SecuritySettingsService object
      * @param messageService the messageService to access the message table
      */
     @Autowired
-    public UserController(UserService service, ConfirmationTokenService confService,
-                          PersonalDataService personalDataService, MessageService messageService) {
+    public UserController(final UserService service, final ConfirmationTokenService confService,
+                          final PersonalDataService personalDataService,
+                          final SecuritySettingsService securitySettingsService, MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
+        this.securitySettingsService = securitySettingsService;
         this.messageService = messageService;
+        stringToKeyConverter = new StringToKeyConverter();
     }
 
     /**
@@ -155,12 +172,62 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}/personal")
-    public PersonalData showPersonalData(@PathVariable("userID") final String username) {
+    public PersonalData showPersonalData(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getPersonalData();
     }
     @GetMapping("/user/{userID}")
-    public User showUser(@PathVariable("userID") final String username) {
+    public User showUser(@PathVariable(USERID) final String username) {
         return userService.getUser(username);
+    }
+
+    /**
+     * Put request to change the public key of the user.
+     * @param publicKeyCmd contains the public key in a String format
+     * @param username the identifier of the user account that needs to be updated
+     */
+    @PutMapping("/user/{userID}/publicKey")
+    public void changePublicKey(@PathVariable(USERID) final String username,
+                                @RequestBody final PublicKeyCmd publicKeyCmd) {
+        try {
+            userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
+            System.out.println(userService.getUser(username).getPublicKey());
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @GetMapping("/user/{userID}/settings/2FAconfigurated")
+    public boolean checkForTwoFAConfiguration(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getSecuritySettings().getSecret() == null;
+    }
+
+    /**
+     * Get request for getting the qr-code as a byte array.
+     * @param username the identifier of the user account that needs to be updated
+     * @return the qr code as a byte array
+     */
+    @GetMapping("/user/{userID}/settings/qrCode")
+    public QrCodeGetResponse getQRCode(@PathVariable(USERID) final String username) {
+        try {
+            userService.getUser(username).getSecuritySettings().generateSecret();
+            byte[] temp = userService.getUser(username).getSecuritySettings().generateQRCode(username);
+            return new QrCodeGetResponse(temp);
+        } catch (QrGenerationException e) {
+            e.printStackTrace();
+        }
+        return new QrCodeGetResponse(new byte[0]);
+    }
+
+    /**
+     * the Method used to validate 2-Factor-Auth codes.
+     * @param username the id of the relating user
+     * @param code the code that should be validated (maybe use a Cmd-Class)
+     * @return "correctInput": true/false
+     */
+    @PostMapping("/user/{userID}/settings/qrCodeCode")
+    public String validateCode(@PathVariable(USERID) final String username,
+                               @RequestBody final String code) {
+        return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
     }
 
 }

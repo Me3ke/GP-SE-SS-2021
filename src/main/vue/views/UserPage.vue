@@ -7,9 +7,10 @@
         <BaseHeading name="Settings.content"></BaseHeading>
 
         <b-container fluid="xl" style="overflow: hidden">
-            <div class="overflow-auto" style="height: 85vh">
+            <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 85vh">
                 <UserInfoBox :user="user" :userData="userData"></UserInfoBox>
-                <SecuritySettingsBox :user="user" :userData="userData"></SecuritySettingsBox>
+                <SecuritySettingsBox :user="user" :userData="userData"
+                                     @modalTrigger="toggleOverflow"></SecuritySettingsBox>
                 <MessageSettingsBox></MessageSettingsBox>
             </div>
         </b-container>
@@ -26,6 +27,16 @@ import SecuritySettingsBox from "@/main/vue/components/settingsPage/SecuritySett
 export default {
     name: "UserPage",
     components: {SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
+    data() {
+        return {
+            showOverflow: true
+        }
+    },
+    methods: {
+        toggleOverflow() {
+            this.showOverflow = !this.showOverflow
+        }
+    },
     computed: {
         ...mapGetters({
             user: 'getUser',

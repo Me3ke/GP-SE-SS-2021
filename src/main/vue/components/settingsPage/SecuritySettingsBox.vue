@@ -8,19 +8,49 @@
                     </h4>
                 </div>
                 <b-list-group>
-                    <b-list-group-item>
-                        <b-row>
-                            <b-col style="text-align: left">
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-                            </b-col>
-                            <b-col style="text-align: right">
-                                <b-button id="keyButton" @click="decideLanguage">
-                                    {{ $t('Settings.SecuritySettings.newKeypair') }}
-                                </b-button>
-                            </b-col>
-                        </b-row>
+
+                        <b-button class="elsa-blue-btn" @click="decideLanguage">
+                            {{ $t('Settings.SecuritySettings.newKeypair') }}
+                        </b-button>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                             {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
+                        </span>
+
+                        <b-button class="elsa-blue-btn" @click="setUp()">
+                            {{ $t('Settings.SecuritySettings.setUp') }}
+                        </b-button>
+
+                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('TwoFakAuth.login.always') }}
+                             <b-icon id="tooltip-security" icon="info-circle" class="my-icon"></b-icon>
+                             <b-tooltip target="tooltip-security" triggers="hover">
+                                {{ $t('TwoFakAuth.login.alwaysExp') }}
+                            </b-tooltip>
+                        </span>
+
+                        <!-- TODO: connect to API -->
+                        <div class="toggle-container">
+                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
+                                 {{ $t('Settings.off') }}
+                            </span>
+                            <b-form-checkbox v-model="loginActive" switch
+                                             style="display: inline-block">
+                            </b-form-checkbox>
+                            <span style="display: inline-block; font-size: 1em;">
+                               {{ $t('Settings.on') }}
+                            </span>
+                        </div>
                     </b-list-group-item>
                 </b-list-group>
             </div>
@@ -30,12 +60,30 @@
 
 <script>
 import i18n from "@/i18n";
+import {mapActions, mapGetters} from 'vuex';
+import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
 
 export default {
     name: "SecuritySettingsBox",
+    components: {
+        TwoFakAuthSetUp
+    },
     props: {
         user: Object,
         userData: Object
+    },
+    computed: {
+      ...mapGetters({
+        privateKey: 'getPrivateKey',
+        publicKey: 'getPublicKey',
+      })
+  },
+    data() {
+        return {
+            showSetUp: false,
+            // TODO: use value from API
+            loginActive: false
+        }
     },
     methods: {
         decideLanguage() {
@@ -49,7 +97,7 @@ export default {
         async showAlertEN() {
             const inputOptions = new Promise((resolve) => {
                 resolve({
-                    'generate': 'Generate keypair',
+                    'generate': 'Generate keypair' ,
                     'upload': 'Upload public key',
                 })
             })
@@ -80,7 +128,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generating...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -95,7 +142,7 @@ export default {
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        this.handleUploadKeyPairs
+                        this.handleUploadKeyPairs()
                         this.$swal.fire('Uploading...')
                     }
                 })
@@ -135,7 +182,6 @@ export default {
 
                     if (result.isConfirmed) {
                         this.handleGenerateKeyPairs()
-                        this.$swal.fire('Generieren...')
                     }
                 })
             } else if (updateOption === 'upload') {
@@ -150,17 +196,42 @@ export default {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         this.handleUploadKeyPairs()
-                        this.$swal.fire('Hochladen...')
                     }
                 })
             }
         },
-        handleGenerateKeyPairs() {
-            //TODO Handling of the keypairs via generating
-
+      ...mapActions(['callToGenerate']),
+        async handleGenerateKeyPairs() {
+          this.callToGenerate()
+          this.$swal.fire({
+            text: this.privateKey
+          })
+          await this.$store.dispatch('sendPublicKey', {"publicKey": this.publicKey})
         },
-        handleUploadKeyPairs() {
-            //TODO Handling of the keypairs via uploading
+        async handleUploadKeyPairs() {
+          const {value: file} = await this.$swal.fire({
+            title: 'Select image',
+            input: 'file',
+            inputAttributes: {
+              'accept': 'text/*',
+            }
+          })
+
+          if (file) {
+            const reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = (e) => {
+              this.$store.dispatch('sendPublicKey', {"publicKey": e.target.result})
+              this.$swal.fire({
+                title: "Successfully uploaded",
+                icon: "success"
+              })
+            }
+          }
+        },
+        setUp() {
+            this.showSetUp = !this.showSetUp
+            this.$emit('modalTrigger')
         }
     }
 }
