@@ -15,6 +15,7 @@ import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import store from "@/main/vue/store/store";
 import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
+import BlankTestPage from "@/main/vue/views/BlankTestPage";
 
 Vue.use(VueRouter)
 
@@ -139,6 +140,11 @@ const router = new VueRouter({
                     path: 'progressbar',
                     name: 'progressbar',
                     component: ProgressbarTestPage
+                },
+                {
+                    path: 'test',
+                    name: 'test',
+                    component: BlankTestPage
                 },
                 {
                     path: '*',
