@@ -6,7 +6,9 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.SignatoryService;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,34 +169,23 @@ public class InitializeDatabase implements InitializingBean {
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
             documentPutRequestRequest.setType(type);
+            documentPutRequestRequest.setOrderRelevant(false);
             try {
-                final List<User> signatories = new ArrayList<>();
-                final List<User> readers = new ArrayList<>();
+                final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (signed) {
-                    signatories.add(owner);
+                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
                 }
                 if (read) {
-                    readers.add(owner);
+                    signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, readers);
-                if (read) {
-                    for (int i = 0; i < document.getReaders().size(); i++) {
-                        document.getReaders().get(i).setStatus(true);
-                    }
-                }
-                if (signed) {
-                    for (int i = 0; i < document.getSignatories().size(); i++) {
-                        document.getSignatories().get(i).setStatus(true);
-                    }
-                }
+                    signatories);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {
                     document.setState(DocumentState.OPEN);
                 }
                 signatoryService.saveSignatories(document.getSignatories());
-                signatoryService.saveSignatories(document.getReaders());
                 documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
                 documentService.addDocument(document);
                 envelope.addDocument(document);

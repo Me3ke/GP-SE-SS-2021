@@ -21,13 +21,18 @@ public class Signatory {
     @Column
     private boolean status;
 
+    @Column
+    private SignatureType signatureType;
+
     /**
      * Default constructor for a Signatory. Status is initialized with false.
-     * @param user the user which has to sign the corresponding document.
+     * @param user the user that has to sign the corresponding document.
+     * @param signatureType the signatureType the signatory refers to.
      */
-    public Signatory(final User user) {
+    public Signatory(final User user, final SignatureType signatureType) {
         this.user = user;
         this.status = false;
+        this.signatureType = signatureType;
     }
 
     protected Signatory() {
@@ -52,5 +57,13 @@ public class Signatory {
 
     public void setStatus(final boolean status) {
         this.status = status;
+    }
+
+    public SignatureType getSignatureType() {
+        return signatureType;
+    }
+
+    public void setSignatureType(SignatureType signatureType) {
+        this.signatureType = signatureType;
     }
 }
