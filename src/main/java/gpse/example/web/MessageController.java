@@ -16,8 +16,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class MessageController {
 
-    public static final int STATUS_CODE_DELETE_FAILED = 520;
-    public static final int STATUS_CODE_OKAY = 200;
+    private static final int STATUS_CODE_DELETE_FAILED = 520;
+    private static final int STATUS_CODE_OKAY = 200;
     private MessageService messageService;
     private UserService userService;
 
@@ -32,6 +32,11 @@ public class MessageController {
         return messageService.getMessages(userService.getUser(userID));
     }
 
+    /**
+     * Request for delete a message from Database.
+     * @param messageID ID of message that should be deleted
+     * @return A response containing statuscode and a message
+     */
     @GetMapping("/message/{messageID}/delete")
     public JSONResponseObject deleteMessage(@PathVariable("messageID") final long messageID) {
         JSONResponseObject response = new JSONResponseObject();
