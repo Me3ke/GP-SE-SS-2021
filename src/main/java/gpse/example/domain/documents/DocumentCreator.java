@@ -113,13 +113,13 @@ public class DocumentCreator {
      * @throws CreatingFileException if FileInputStream creates an error.
      */
     @SuppressWarnings({"PMD.AvoidFileStream", "PMD.UseTryWithResources"})
-    private File writeInNewFile(final byte[] bytes, final String type,
+    public File writeInNewFile(final byte[] bytes, final String type,
                                 final String name, final String path) throws CreatingFileException {
         File file;
         if (path == null) {
             file = new File(PATH_TO_DOWNLOADS + name + "." + type);
         } else {
-            file = new File(path);
+            file = new File(path + "/" + name + "." + type);
         }
         if (file.exists() && !file.delete()) {
             throw new CreatingFileException();

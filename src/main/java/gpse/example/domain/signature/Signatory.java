@@ -3,6 +3,7 @@ package gpse.example.domain.signature;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * the class that models a signatory for a document.
@@ -20,6 +21,9 @@ public class Signatory {
 
     @Column
     private boolean status;
+
+    @Column
+    private LocalDateTime signedOn;
 
     /**
      * Default constructor for a Signatory. Status is initialized with false.
@@ -51,6 +55,13 @@ public class Signatory {
     }
 
     public void setStatus(final boolean status) {
+        if (status) {
+            this.signedOn = LocalDateTime.now();
+        }
         this.status = status;
+    }
+
+    public LocalDateTime getSignedOn() {
+        return signedOn;
     }
 }
