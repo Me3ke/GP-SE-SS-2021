@@ -30,7 +30,7 @@ class SignatureTypeTest {
             assertSame(SignatureType.fromInteger(-1), noSignature);
             assertNotSame(SignatureType.fromInteger(-1), simpleSignature);
             assertNotSame(SignatureType.fromInteger(-1), advancedSignature);
-            assertSame(SignatureType.fromInteger(0), simpleSignature);
+            assertSame(SignatureType.fromInteger(0), review);
             assertSame(SignatureType.fromInteger(1), simpleSignature);
             assertSame(SignatureType.fromInteger(2), advancedSignature);
         } catch (SignatureTypeFromIntegerException e) {
