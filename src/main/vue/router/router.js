@@ -17,6 +17,8 @@ import store from "@/main/vue/store/store";
 import BlankTestPage from "@/main/vue/views/BlankTestPage";
 import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
+import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
+
 
 Vue.use(VueRouter)
 
@@ -71,6 +73,14 @@ const router = new VueRouter({
                     path: 'register',
                     name: 'register',
                     component: RegisterPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'register/confirm/:id',
+                    name: 'register/confirm',
+                    component: RegisterConfirmPage,
                     meta: {
                         guest: true
                     }

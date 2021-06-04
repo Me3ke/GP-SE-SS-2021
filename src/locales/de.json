@@ -304,7 +304,15 @@
         "fail": "Registrierung fehlgeschlagen.",
         "firstname": "Vorname",
         "surname": "Nachname",
-        "feedback-invalid-name": "Bitte einen validen Namen eingeben."
+        "feedback-invalid-name": "Bitte einen validen Namen eingeben.",
+        "postcode": "Postleitzahl",
+        "city": "Stadt",
+        "birthdate": "Geburtsdatum",
+        "street": "Straße",
+        "streetNumber": " Nr.",
+        "phoneNumber": "Telefonnummer",
+        "passwordRepeat": "Passwort bestätigen",
+        "login": "Zum Login"
     },
     "KeypairAlert": {
         "generate": "Generiere Schlüsselpaar",

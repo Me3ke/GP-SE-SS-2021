@@ -303,7 +303,15 @@
         "fail": "Login failed.",
         "firstname": "first name",
         "surname": "surname",
-        "feedback-invalid-name": "Please enter an valid name."
+        "feedback-invalid-name": "Please enter an valid name.",
+        "postcode": "postcode",
+        "city": "city",
+        "birthdate": "birth date",
+        "street": "street",
+        "streetNumber": " nr.",
+        "phoneNumber": "phone number",
+        "passwordRepeat": "confirm password",
+        "login": "go to login"
     },
     "KeypairAlert": {
         "generate": "Generate Keypair",
