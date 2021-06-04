@@ -12,6 +12,10 @@ export const mutations = {
     SET_DOCUMENT(state, doc) {
         state.document = doc
     },
+    // TODO need to change this mutation
+    EDIT_DOCUMENT(state,doc) {
+        state.document = doc
+    },
 
     //sets error of getDocument request
     SET_ERROR_GET_DOCUMENT(state, error) {
@@ -27,6 +31,14 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT', {})
         }).catch(error => {
             commit('SET_ERROR_GET_DOCUMENT', error)
+        })
+    },
+    // makes axios call to put the newDocument and archive the old one
+    editDocument({commit}, {newDoc, envId, docId}) {
+        return documentAPI.editDocument(envId, docId, newDoc).then((response) => {
+            commit('EDIT_DOCUMENT', response.data)
+            // to get the new Id of the new Document (for router)
+            return response.data.newDocumentID
         })
     }
 }

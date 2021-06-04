@@ -17,7 +17,6 @@ export const mutations = {
     },
     //changes theme to given theme
     CHANGE_THEME(state, theme) {
-        console.log(theme)
         state.theme = theme
     }
 }

@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
-import gpse.example.util.SMTPServerHelper;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,8 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(final User user) {
-
+    public void signUpUser(User user) throws MessageGenerationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         final User createdUser = userRepository.save(user);
@@ -103,8 +103,8 @@ public class UserServiceImpl implements UserService {
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(final User user, final String token) {
-        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
+    public void sendConfirmationMail(User user, String token) throws MessageGenerationException {
+        smtpServerHelper.sendRegistrationEmail(user,
             "http://localhost:8080/register/confirm/" + token);
     }
 
@@ -115,11 +115,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void infoNewExtUser(final User user) {
-       final List<User> userList = getUsers();
-        for (final User value : userList) {
+    public void infoNewExtUser(User user) throws MessageGenerationException  {
+       List<User> userList = getUsers();
+        for (User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
-                smtpServerHelper.sendValidationInfo(value.getEmail(), user.getEmail());
+                smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;
                 //optional, without return -> notify all admins.
             }

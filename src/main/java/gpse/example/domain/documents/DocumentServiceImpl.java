@@ -22,10 +22,12 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository repo;
+    private final DocumentMetaDataService documentMetaDataService;
     private final DocumentCreator documentCreator = new DocumentCreator();
 
     @Autowired
-    public DocumentServiceImpl(final DocumentRepository repo) {
+    public DocumentServiceImpl(final DocumentRepository repo, final DocumentMetaDataService documentMetaDataService) {
+        this.documentMetaDataService = documentMetaDataService;
         this.repo = repo;
     }
 
@@ -72,6 +74,8 @@ public class DocumentServiceImpl implements DocumentService {
                 signatoryService.saveSignatory(signatory);
             }
         }
+        documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
+
         return addDocument(newDocument);
     }
 }

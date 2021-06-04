@@ -38,13 +38,10 @@ public class Document {
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
-    private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
-    /*
-    @Column
-    private File documentFile;
-
-     */
+    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
+    private Document previousVersion;
 
     @Column
     private String documentType;
@@ -82,7 +79,7 @@ public class Document {
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
         this.signatories = signatories;
-        this.documentType = documentPutRequest.getType();
+        this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
              documentPutRequest.getLastModified(), this.data.length, ownerID);
@@ -153,6 +150,21 @@ public class Document {
             }
         }
         return null;
+    }
+
+    /**
+     * The getHistory method gets all previous versions of a document.
+     * @return a list of all previous versions starting with the given document
+     *          and ending with the first version.
+     */
+    public List<Document> getHistory() {
+        Document temp = this;
+        final List<Document> history = new ArrayList<>();
+        while (temp != null) {
+            history.add(temp);
+            temp = temp.getPreviousVersion();
+        }
+        return history;
     }
 
     //--------- Filter methods--------
@@ -378,6 +390,14 @@ public class Document {
 
     public void setState(final DocumentState documentState) {
         this.state = documentState;
+    }
+
+    public Document getPreviousVersion() {
+        return previousVersion;
+    }
+
+    public void setPreviousVersion(final Document previousVersion) {
+        this.previousVersion = previousVersion;
     }
 }
 

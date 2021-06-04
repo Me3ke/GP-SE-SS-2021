@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 import dev.samstevens.totp.code.*;
+import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -43,41 +44,46 @@ public class SecuritySettings implements Serializable {
 
     /**
      * The method used to generate a QR-code with the username and the secret.
+     *
      * @param username is a part of the QR-code generating process
      * @return the QR-Code in form of a byte array
      * @throws QrGenerationException Gets thrown, if the username is incorrect
      */
-    public byte[] generateQRCode(final String username) throws QrGenerationException {
-        final QrData data = new QrData.Builder()
-                .label(username)
-                .secret(secret)
-                .issuer("ELSA")
-                .algorithm(HashingAlgorithm.SHA256)
-                .digits(CODE_DIGIT_NUMBER)
-                .period(TIME_UNTIL_EXPIRED)
-                .build();
-        final QrGenerator generator = new ZxingPngQrGenerator();
+    public byte[] generateQRCode(String username) throws QrGenerationException {
+        QrData data = new QrData.Builder()
+            .label(username)
+            .secret(secret)
+            .issuer("ELSA")
+            .algorithm(HashingAlgorithm.SHA1)
+            .digits(CODE_DIGIT_NUMBER)
+            .period(TIME_UNTIL_EXPIRED)
+            .build();
+        QrGenerator generator = new ZxingPngQrGenerator();
         return generator.generate(data);
     }
 
     /**
      * the Method used to verify a given 2-Fac-Auth code.
+     *
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(final String code) {
-        final TimeProvider timeProvider = new SystemTimeProvider();
-        final CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        final CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
-        return verifier.isValidCode(secret, code);
+    public boolean verifyCode(String code) throws CodeGenerationException {
+        TimeProvider timeProvider = new SystemTimeProvider();
+        CodeGenerator codeGenerator = new DefaultCodeGenerator();
+        DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+
+        return verifier.isValidCode(this.secret, code);
     }
 
     public long getId() {
         return id;
     }
+
     public String getSecret() {
         return secret;
     }
+
     public PublicKey getPublicKey() {
         return publicKey;
     }

@@ -25,8 +25,7 @@
             "language": "Language"
         },
         "Avatar": {
-            "profile": "My Profile",
-            "settings": "Settings",
+            "profile": "Account settings",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -198,7 +197,7 @@
     "Settings": {
         "on": "On",
         "off": "Off",
-        "content": "Account information and settings",
+        "content": "Account settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",
             "accountInformation": "Account information",
@@ -313,6 +312,8 @@
         "continue": "Continue",
         "close": "Close",
         "back": "Back",
+        "serverErrorOne": "There appear to be problems with your server connection.",
+        "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
         "login": {
             "title": "Set-up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
@@ -321,12 +322,14 @@
             "alwaysExp": "After a successful login you have to confirm your identity by using your second factor.",
             "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
             "cancelWarningTwo": "your two-factor authentication via the settings page.",
-            "fail": "Wrong code format",
+            "fail": "Wrong code format [eg: '123456'].",
             "didIt": "You successfully set up your second factor!",
             "canUse": "You can now use the whole application",
             "go": "Let's go!",
-            "failedSetUp": "Setting up your second factor was unsuccessful. Try again.",
+            "failedSetUp": "Setting up your second factor was unsuccessful.",
+            "tryAgain": "Try again or start from the beginning.",
             "again": "Try again",
+            "toStart": "Go to beginning",
             "attention": "Warning! You have already set up your two-factor authentication. If you continue it will be lost!"
         },
         "sign": {

@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.Protocol;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.CreatingFileException;
@@ -26,6 +27,7 @@ import java.util.List;
 //TODO secured for permissions
 //TODO Reader Class?
 //TODO properties for download
+//TODO split documentController in two separate controllers.
 
 @RestController
 @CrossOrigin("http://localhost:8088")
@@ -40,12 +42,12 @@ public class DocumentController {
     private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
 
-    private EnvelopeServiceImpl envelopeService;
-    private UserServiceImpl userService;
-    private DocumentServiceImpl documentService;
-    private SignatoryServiceImpl signatoryService;
-    private DocumentMetaDataServiceImpl documentMetaDataService;
-    private DocumentCreator documentCreator = new DocumentCreator();
+    private final EnvelopeServiceImpl envelopeService;
+    private final UserServiceImpl userService;
+    private final DocumentServiceImpl documentService;
+    private final SignatoryServiceImpl signatoryService;
+    private final DocumentMetaDataServiceImpl documentMetaDataService;
+    private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -140,27 +142,32 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
-    public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
-                                         final @PathVariable(USER_ID) String ownerID,
-                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                         final @PathVariable(DOCUMENT_ID) long documentID)
+    public DocumentPutResponse uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
+                                                        final @PathVariable(USER_ID) String ownerID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws UploadFileException {
         try {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            documentService.remove(oldDocument);
-            signatoryService.delete(oldDocument.getSignatories());
+            //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
-            final ArchivedDocument archivedDocument = new ArchivedDocument(oldDocument);
-            documentService.addDocument(archivedDocument);
-            envelopeService.updateEnvelope(envelope, archivedDocument);
+            signatoryService.delete(oldDocument.getSignatories());
+            documentService.remove(oldDocument);
+            documentMetaDataService.delete(oldDocument.getDocumentMetaData());
+            final Document archivedDocument = new ArchivedDocument(oldDocument);
+            documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
+            signatoryService.saveSignatories(archivedDocument.getSignatories());
+            final Document savedDocument = documentService.addDocument(archivedDocument);
+            //TODO archived document should not be saved in envelope!
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
+            newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
-            return newDocument.getId();
+            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -278,6 +285,58 @@ public class DocumentController {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+<<<<<<< HEAD
+
+=======
+     * The getDocumentHistory method does a get request to get the document history.
+     * @param documentID the id of the document of which the history is requested.
+     * @return a list of all previous versions and the latest one.
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
+    public List<Document> getDocumentHistory(final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
+        return documentService.getDocument(documentID).getHistory();
+    }
+
+    /**
+     * getting bytearry to show in frontend.
+     * @param documentID documentId
+     * @return byteArray
+     * */
+    @GetMapping("/documents/{documentID:\\d+}/protocol")
+    public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
+        Protocol protocol = new Protocol(documentService.getDocument(documentID));
+        try {
+            return protocol.writeProtocol().toByteArray();
+        } catch (IOException e) {
+            return new byte[0];
+        }
+    }
+
+    /**
+     * download the protocol to given path.
+     * @param documentID document that should be protocoled
+     * @param path path were protocol should be saved
+     * @return bytearry to download
+     */
+    @GetMapping("/documents/{documentID:\\d+}/protocol/download")
+    public byte[] downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID,
+                                   final @RequestParam("path") String path) throws DocumentNotFoundException,
+                                        CreatingFileException {
+        Document document = documentService.getDocument(documentID);
+        Protocol protocol = new Protocol(document);
+        try {
+            byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+           documentCreator.writeInNewFile(protocolBytes, "pdf",
+                "protocol_" + documentID, path);
+            return protocolBytes;
+        } catch (IOException e) {
+            return new byte[0];
         }
     }
 }

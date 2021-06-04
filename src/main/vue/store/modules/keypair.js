@@ -3,10 +3,11 @@ import generateKeyPair from "./keypairGenerator"
 import api from "@/main/vue/api";
 
 export const state = {
-   keypair: {
+    keypair: {
        publicKey:null,
        privateKey:null
-   }
+    },
+    sendingSuccess: {}
 }
 
 export const mutations = {
@@ -15,6 +16,9 @@ export const mutations = {
     },
     CLEAR_KEYPAIR(state) {
         state.keypair = {}
+    },
+    SET_SENDING_SUCCESS(state, sendingSuccess) {
+        state.sendingSuccess = sendingSuccess
     }
 }
 
@@ -23,9 +27,10 @@ export const actions = {
         commit('SET_KEYPAIR', generateKeyPair());
     },
     sendPublicKey({commit},{publicKey}) {
-        api.publicKeyAPI.changePublicKey(publicKey).then().catch(error => {
-            commit('CLEAR_KEYPAIR')
-            console.log(error)
+        api.publicKeyAPI.changePublicKey(publicKey).then(
+            commit('SET_SENDING_SUCCESS', {})
+        ).catch(error => {
+            commit('SET_SENDING_SUCCESS', error)
         })
     }
 }
@@ -39,5 +44,8 @@ export const getters = {
     },
     getPublicKey: (state) => {
         return state.keypair.publicKey
+    },
+    getSendingSuccess: (state) => {
+        return state.sendingSuccess
     },
 }
