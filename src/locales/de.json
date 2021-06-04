@@ -313,6 +313,8 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
+        "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
             "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",

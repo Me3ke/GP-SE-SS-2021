@@ -42,6 +42,8 @@ export const actions = {
     fetchHasSetUp({commit}) {
         twoFakAuthAPI.getHasSetUp().then(response => {
             commit('SET_HAS_SET_UP', response.data)
+            commit('SET_ERROR_HAS_SET_UP', {})
+
         }).catch(error => {
             commit('SET_ERROR_HAS_SET_UP', error)
         })
@@ -51,6 +53,7 @@ export const actions = {
     fetchQrCode({commit}) {
         twoFakAuthAPI.getQrCode().then(response => {
             commit('SET_QR_CODE', response.data)
+            commit('SET_ERROR_GET_QR_CODE', {})
         }).catch(error => {
             commit('SET_ERROR_GET_QR_CODE', error)
         })
@@ -60,6 +63,7 @@ export const actions = {
     validateCode({commit}, code) {
         return twoFakAuthAPI.postValidateCode(code).then(response => {
             commit('SET_CORRECT_INPUT', response.data)
+            commit('SET_ERROR_CORRECT_INPUT', {})
         }).catch(error => {
             commit('SET_ERROR_CORRECT_INPUT', error)
         })
@@ -75,5 +79,14 @@ export const getters = {
     },
     getCorrectInput: (state) => {
         return state.correctInput
+    },
+    getErrorGetQrCode: (state) => {
+        return state.errorGetQrCode
+    },
+    getErrorGetHasSetUp: (state) => {
+        return state.errorHasSetUp
+    },
+    getErrorGetCorrectInput: (state) => {
+        return state.errorCorrectInput
     }
 }

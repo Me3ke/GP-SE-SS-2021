@@ -45,6 +45,15 @@
 
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
+                                        <b-alert :show="showErrorQr || showErrorSetUp || showErrorInput"
+                                                 style="margin-bottom: 1em">
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorOne') }}
+                                            </div>
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorTwo') }}
+                                            </div>
+                                        </b-alert>
                                         <div class="step">
                                             {{ $t('TwoFakAuth.login.firstStep') }}
                                         </div>
@@ -126,6 +135,16 @@
                                             {{ $t('TwoFakAuth.login.tryAgain') }}
                                         </div>
 
+                                        <b-alert :show="showErrorInput"
+                                                 style="margin-bottom: 1em">
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorOne') }}
+                                            </div>
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorTwo') }}
+                                            </div>
+                                        </b-alert>
+
                                         <div class="content-div">
                                             <b-form-input id="input-code"
                                                           v-model="code"
@@ -197,6 +216,7 @@
 <script>
 import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 import {mapGetters} from 'vuex';
+import _ from "lodash";
 
 export default {
     name: "TwoFakAuthSetUp",
@@ -256,8 +276,26 @@ export default {
         ...mapGetters({
             qr: 'twoFakAuth/getQrCode',
             hasSetUp: 'twoFakAuth/getHasSetUp',
-            correctInput: 'twoFakAuth/getCorrectInput'
+            correctInput: 'twoFakAuth/getCorrectInput',
+            errorQr: 'twoFakAuth/getErrorGetQrCode',
+            errorSetUp: 'twoFakAuth/getErrorGetHasSetUp',
+            errorInput: 'twoFakAuth/getErrorGetCorrectInput'
         }),
+        showErrorQr: {
+            get() {
+                return !_.isEmpty(this.errorQr)
+            }
+        },
+        showErrorSetUp: {
+            get() {
+                return !_.isEmpty(this.errorSetUp)
+            }
+        },
+        showErrorInput: {
+            get() {
+                return !_.isEmpty(this.errorInput)
+            }
+        }
     }
 }
 </script>

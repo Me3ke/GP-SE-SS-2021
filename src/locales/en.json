@@ -312,6 +312,8 @@
         "continue": "Continue",
         "close": "Close",
         "back": "Back",
+        "serverErrorOne": "There appear to be problems with your server connection.",
+        "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
         "login": {
             "title": "Set-up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
