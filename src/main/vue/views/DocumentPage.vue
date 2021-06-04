@@ -7,6 +7,9 @@
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 
+        <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
+                       @closedDownload="toggleDownload()"></DownloadPopUp>
+
         <!-- Displays if document cannot get fetched by api -->
         <BaseHeading v-if="!hasError()" name=" " :translate="false" style="position: fixed;"></BaseHeading>
         <div v-if="!hasError()" class="d-flex align-items-center" style="height: 80vh">
@@ -33,25 +36,27 @@
 
         <!-- Displays if document can get fetched by api -->
         <div v-else>
-            <BaseHeading :name="document.title" :translate="false" style="position: fixed;"></BaseHeading>
+            <BaseHeading v-if="document.dataType === 'pdf'" :name="document.title" :translate="false"
+                         style="position: fixed;"></BaseHeading>
+            <BaseHeading v-else :name="document.title" :translate="false"></BaseHeading>
 
             <!-- Displays that preview is possible -->
             <b-container v-if="document.dataType === 'pdf'"
                          style="width: 100%; margin-top: 0; margin-right: auto; margin-left: auto; padding: 0;">
                 <b-row style="width: 100%; margin: auto; padding: 0">
                     <b-col cols="9">
-                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow"></PDFViewer>
+                        <PDFViewer :pdf-src=getPDF() :overflow="showOverflow"
+                                   @openDownload="toggleDownload()"></PDFViewer>
                     </b-col>
 
                     <b-col cols="3" id="textCol">
 
 
                         <upload-new-version-button
-                        :document="document"
-                        v-on:update-document="updateDoc"
+                            :document="document"
+                            v-on:update-document="updateDoc"
                         >
                         </upload-new-version-button>
-
 
 
                         <!-- Displays if user already proofread -->
@@ -101,7 +106,8 @@
                     <h6>
                         {{ $t("DocumentPage.noView") }}
                     </h6>
-                    <GreenButtonIconText icon="download" text="DocumentPage.download"></GreenButtonIconText>
+                    <GreenButtonIconText icon="download" text="DocumentPage.download"
+                                         @click.native="toggleDownload()"></GreenButtonIconText>
                     <hr v-if="document.signatory === true || document.signed === true || document.reader === true || document.read === true">
                 </b-row>
 
@@ -160,16 +166,28 @@ import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
 import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
+import DownloadPopUp from "@/main/vue/components/DownloadPopUp";
 
 
 export default {
     name: "DocumentPage",
-    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {
+        DownloadPopUp,
+        UploadNewVersionButton,
+        ProofreadPopUp,
+        SignPopUp,
+        GreenButtonIconText,
+        PDFViewer,
+        Footer,
+        Header
+    },
+    data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
             showSign: false,
-            showOverflow: true
+            showOverflow: true,
+            showDownload: false
         }
     },
     methods: {
@@ -192,7 +210,6 @@ export default {
             this.showProofread = !this.showProofread
             this.showOverflow = !this.showOverflow
         },
-
         /*
         async updateDoc(newDoc) {
             console.log(newDoc.data)
@@ -203,13 +220,14 @@ export default {
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
            await this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {this.$router.go(0)})
-
+        }  */
+        toggleDownload() {
+            this.showDownload = !this.showDownload
+            this.showOverflow = !this.showOverflow
+        },
+        created() {
+            this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
         }
-
-         */
-    },
-    created() {
-        this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
     },
     computed: {
         ...mapGetters({

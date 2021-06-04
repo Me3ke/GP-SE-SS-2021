@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(final String username) throws UsernameNotFoundException {
         return userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
+            .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
     }
 
     @Override
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
         userRepository.findAll().forEach(users::add);
         return users;
     }
+
     @Override
     public User createUser(final String username, final String firstname,
                            final String lastname, final String password, final String... roles) {
@@ -115,8 +116,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void infoNewExtUser(User user) throws MessageGenerationException  {
-       List<User> userList = getUsers();
+    public void infoNewExtUser(User user) throws MessageGenerationException {
+        List<User> userList = getUsers();
         for (User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
                 smtpServerHelper.sendValidationInfo(value, user.getEmail());

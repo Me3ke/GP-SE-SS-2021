@@ -260,6 +260,14 @@
         "newEnvPlaceholder": "Name des Verbundes",
         "configureDoc": "Dokumenteneinstellungen"
     },
+    "DownloadDoc": {
+        "download": "Herunterladen",
+        "heading": "Jetzt herunterladen!",
+        "sure": "Möchten Sie das Dokument wirklich herunterladen?",
+        "cancel": "Abbrechen",
+        "success": "Sie haben das Dokument erfolgreich heruntergeladen!",
+        "close": "Schließen"
+    },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
         "download": "Herunterladen",

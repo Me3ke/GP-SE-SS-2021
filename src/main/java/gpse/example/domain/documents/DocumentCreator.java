@@ -24,7 +24,7 @@ public class DocumentCreator {
      * The download methods creates a new File of the document given using the writeInNewFileMethod.
      *
      * @param document the document for the new File.
-     * @param path the in which the document should be downloaded.
+     * @param path     the in which the document should be downloaded.
      * @return the document with a new documentFile.
      * @throws CreatingFileException if creating the file failed.
      * @throws IOException           if creating the file failed.
@@ -46,13 +46,13 @@ public class DocumentCreator {
      * @param ownerID            the email adress of the User who want to create the document.
      * @param signatories        the list of signatories for this document.
      * @return the created document.
-     * @throws IOException if the data is incorrect.
+     * @throws IOException           if the data is incorrect.
      * @throws CreatingFileException if the path is not specified.
      */
     //does not include directories.
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
                                    final List<ProtoSignatory> signatories)
-                                    throws CreatingFileException, IOException {
+        throws CreatingFileException, IOException {
         if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
         }
@@ -71,7 +71,7 @@ public class DocumentCreator {
      * @param document    the document itself.
      */
     private void setSignatories(final List<ProtoSignatory> signatories,
-                                          final Document document) {
+                                final Document document) {
         if (signatories != null) {
             for (ProtoSignatory signatory : signatories) {
                 document.addSignatory(signatory.getUser(), signatory.getSignatureType());
@@ -99,23 +99,15 @@ public class DocumentCreator {
      *
      * @param bytes the byte array from another file.
      * @param type  the file extension from another file.
-     * @param name the name of the new created file.
-     * @param path the path of the new created file.
+     * @param name  the name of the new created file.
+     * @param path  the path of the new created file.
      * @return the newly created File
      * @throws CreatingFileException if FileInputStream creates an error.
      */
     @SuppressWarnings({"PMD.AvoidFileStream", "PMD.UseTryWithResources"})
     public File writeInNewFile(final byte[] bytes, final String type,
-                                final String name, final String path) throws CreatingFileException {
-        File file;
-        if (path == null) {
-            file = new File(PATH_TO_DOWNLOADS + name + "." + type);
-        } else {
-            file = new File(path + "/" + name + "." + type);
-        }
-        if (file.exists() && !file.delete()) {
-            throw new CreatingFileException();
-        }
+                               final String name, final String path) throws CreatingFileException {
+        final File file = checkPath(type, name, path);
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
         try {
@@ -135,7 +127,36 @@ public class DocumentCreator {
     }
 
     /**
+     * The checkPath method checks if the given path is valid. If there is no path given the
+     * method uses the default path (src/main/resources/Downloads). If there is no Download directory
+     * the method creates one.
+     *
+     * @param type the type of the file.
+     * @param name the name of the file.
+     * @param path the target path.
+     * @return the file with the correct path-
+     * @throws CreatingFileException if there were invalid inputs or errors in some creations.
+     */
+    private File checkPath(final String type, final String name, final String path) throws CreatingFileException {
+        final File pathFile = new File(PATH_TO_DOWNLOADS);
+        if (!pathFile.exists() && !pathFile.mkdir()) {
+            throw new CreatingFileException(new IOException());
+        }
+        File file;
+        if (path.equals("")) {
+            file = new File(PATH_TO_DOWNLOADS + name + "." + type);
+        } else {
+            file = new File(path + name + "." + type);
+        }
+        if (file.exists() && !file.delete()) {
+            throw new CreatingFileException();
+        }
+        return file;
+    }
+
+    /**
      * The close method avoids too much complexity in writeInNewFile.
+     *
      * @param fos the FileOutputStream.
      * @param bos the BufferedOutputStream.
      * @throws CreatingFileException if the streams cannot be closed.
@@ -152,21 +173,26 @@ public class DocumentCreator {
 
     /**
      * The downloadEnvelope methods downloads a whole envelope.
+     *
      * @param envelope the envelope to be downloaded.
-     * @param path the path where the envelope should be downloaded.
-     * @throws IOException if the data is incorrect.
+     * @param path     the path where the envelope should be downloaded.
+     * @throws IOException           if the data is incorrect.
      * @throws CreatingFileException if the path is not specified.
      */
     public void downloadEnvelope(final Envelope envelope, final String path) throws IOException, CreatingFileException {
         final List<Document> documentList = envelope.getDocumentList();
         String pathToEnvelope;
-        if (path == null) {
-            pathToEnvelope = PATH_TO_DOWNLOADS;
+        if (path.equals("")) {
+            pathToEnvelope = PATH_TO_DOWNLOADS + envelope.getName();
         } else {
-            pathToEnvelope = path;
+            pathToEnvelope = path + envelope.getName();
         }
-        for (final Document document : documentList) {
-            download(document, pathToEnvelope + envelope.getName());
+        if (new File(pathToEnvelope).mkdir()) {
+            for (final Document document : documentList) {
+                download(document, pathToEnvelope);
+            }
+        } else {
+            throw new CreatingFileException(new IOException());
         }
     }
 

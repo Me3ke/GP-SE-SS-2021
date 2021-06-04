@@ -50,5 +50,4 @@ export const getters = {
     getErrorGetDocument: (state) => {
         return state.errorGetDocument
     }
-
 }

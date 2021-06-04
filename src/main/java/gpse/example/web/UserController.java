@@ -10,7 +10,6 @@ import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 

@@ -259,6 +259,14 @@
         "newEnvPlaceholder": "Name of new envelope",
         "configureDoc": "Configure document"
     },
+    "DownloadDoc": {
+        "download": "Download",
+        "heading": "Download now!",
+        "sure": "Are you sure you want to download the document?",
+        "cancel": "Cancel",
+        "success": "You successfully downloaded the document!",
+        "close": "Close"
+    },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
         "download": "Download",

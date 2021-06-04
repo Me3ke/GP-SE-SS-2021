@@ -44,13 +44,14 @@ public class DocumentController {
     private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final String PROTOCOL_NAME = "Protocol_";
-
+    private static final String ATTACHMENT = "attachment; filename=";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
     private final DocumentCreator documentCreator = new DocumentCreator();
+
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -112,27 +113,22 @@ public class DocumentController {
      * @param envelopeID the id of the envelope the document is in.
      * @param userID     the id of the user doing the request.
      * @param documentID the id of the document.
-     * @param path       the path where the file should be downloaded.
      * @return a documentGetResponse of the downloaded Document.
      * @throws DocumentNotFoundException if the document was not found.
      * @throws DownloadFileException     if something went wrong while downloading.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
-    public DocumentGetResponse downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                                final @PathVariable(USER_ID) String userID,
-                                                final @PathVariable(DOCUMENT_ID) long documentID,
-                                                final @RequestParam("path") String path)
+    public ResponseEntity<byte[]> downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                   final @PathVariable(USER_ID) String userID,
+                                                   final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException, DownloadFileException {
+        userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
-        Document document;
-        try {
-            document = documentService.getDocument(documentID);
-            documentCreator.download(document, path);
-        } catch (CreatingFileException | IOException e) {
-            throw new DownloadFileException(e);
-        }
-        final User currentUser = userService.getUser(userID);
-        return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
+        final Document document = documentService.getDocument(documentID);
+        final String name = document.getDocumentTitle() + "." + document.getDocumentType();
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + name)
+            .body(document.getData());
     }
 
     /**
@@ -292,10 +288,8 @@ public class DocumentController {
     }
 
     /**
-<<<<<<< HEAD
-
-=======
      * The getDocumentHistory method does a get request to get the document history.
+     *
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
@@ -308,9 +302,10 @@ public class DocumentController {
 
     /**
      * getting bytearry to show in frontend.
+     *
      * @param documentID documentId
      * @return byteArray
-     * */
+     */
     @GetMapping("/documents/{documentID:\\d+}/protocol")
     public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException, CreatingFileException {
@@ -324,6 +319,7 @@ public class DocumentController {
 
     /**
      * download the protocol to given path.
+     *
      * @param documentID document that should be protocoled
      * @return bytearry to download
      */
@@ -335,7 +331,7 @@ public class DocumentController {
         try {
             byte[] protocolBytes = protocol.writeProtocol().toByteArray();
             return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + PROTOCOL_NAME + documentID )
+                .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
                 .body(protocolBytes);
         } catch (IOException e) {
             throw new CreatingFileException(e);
