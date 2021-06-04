@@ -9,7 +9,6 @@ import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
-import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
@@ -37,9 +36,6 @@ public class DocumentController {
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
-    private static final int STATUS_CODE_OK = 200;
-    private static final int STATUS_CODE_WRONG_USER = 450;
-    private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
 
     private final EnvelopeServiceImpl envelopeService;
@@ -188,60 +184,18 @@ public class DocumentController {
                                      final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
-        envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
-        boolean documentFinished = true;
         JSONResponseObject response = new JSONResponseObject();
         if (document.getState().equals(DocumentState.OPEN)) {
-            if (document.isOrderRelevant()) {
-                List<Signatory> signatories = document.getSignatories();
-                Signatory currentReader = document.getCurrentSignatory(signatories);
-                if (currentReader != null && currentReader.getSignatureType().equals(SignatureType.REVIEW)
-                    && currentReader.getUser().equals(reader)) {
-                    currentReader.setStatus(true);
-                    signatoryService.saveSignatory(currentReader);
-                    if (signatories.get(signatories.size() - 1).equals(currentReader)) {
-                        document.setState(DocumentState.CLOSED);
-                    }
-                    documentService.addDocument(document);
-                    response.setStatus(STATUS_CODE_OK);
-                    return response;
-                } else {
-                    response.setStatus(STATUS_CODE_WRONG_USER);
-                    response.setMessage("The user is either not a reader for this document,"
-                        + "or it is currently not his turn");
-                    return response;
-                }
-            } else {
-                final List<Signatory> readers = document.getReaders();
-                boolean foundReader = false;
-                for (final Signatory currentReader : readers) {
-                    if (currentReader.getUser().equals(reader)) {
-                        currentReader.setStatus(true);
-                        foundReader = true;
-                        signatoryService.saveSignatory(currentReader);
-                    }
-                    documentFinished &= currentReader.isStatus();
-                }
-                if (documentFinished) {
-                    document.setState(DocumentState.READ);
-                }
-                documentService.addDocument(document);
-                if (foundReader) {
-                    response.setStatus(STATUS_CODE_OK);
-                    return response;
-                } else {
-                    response.setStatus(STATUS_CODE_NOT_READER);
-                    response.setMessage("The user is not a reader for this document.");
-                    return response;
-                }
-            }
+            SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            return signatureManagement.manageSignatureRequest(reader, document);
         } else {
             response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
             response.setMessage("This document is closed");
             return response;
         }
     }
+
 
     /**
      * The sign method does a signing for a given user on a given document.

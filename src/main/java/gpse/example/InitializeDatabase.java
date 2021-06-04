@@ -181,11 +181,11 @@ public class InitializeDatabase implements InitializingBean {
             documentPutRequestRequest.setOrderRelevant(false);
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
-                if (signed) {
-                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
-                }
                 if (read) {
                     signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
+                }
+                if (signed) {
+                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
                     signatories);

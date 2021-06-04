@@ -1,7 +1,7 @@
 package gpse.example.web;
 
 /**
- * The class used to get the 2FacAuth-code from a request-body
+ * The class used to get the 2FacAuth-code from a request-body.
  */
 public class AuthCodeValidationRequest {
 
