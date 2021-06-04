@@ -1,7 +1,7 @@
-package gpse.example.util;
+package gpse.example.util.email;
 
+import gpse.example.domain.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
@@ -46,40 +46,37 @@ public class SMTPServerHelper {
     @Autowired
     private final JavaMailSender mailSender;
 
-    public SMTPServerHelper(JavaMailSender mailSender) {
+    public SMTPServerHelper(final JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     /**
      * sending an Registration email to the specified address.
      *
-     * @param toAddress the email address of the recieving person.
-     * @param userName name of the new user.
+     * @param recievingUser the recieving user.
      * @param link validation link.
      */
-    public void sendRegistrationEmail(final String toAddress, final String userName, final String link) {
-        final SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(NOREPLY_ADDRESS);
-        message.setTo(toAddress);
+    public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUser(recievingUser);
         message.setSubject(REGISTRATION_SUBJECT);
-        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, userName, link));
+        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
 
-        mailSender.send(message);
+        mailSender.send(message.generateMessage());
     }
 
     /**
      * sending an info mail to an admin containing the requested emailadress.
-     * @param toAddress address of an admin
+     * @param admin admin who should get this validation information
      * @param newUserEmail email adress of the user who needs to be validated
      */
-    public void sendValidationInfo(final String toAddress, final String newUserEmail) {
-        final SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(NOREPLY_ADDRESS);
-        message.setTo(toAddress);
+    public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUser(admin);
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
-        mailSender.send(message);
+        mailSender.send(message.generateMessage());
     }
 
 }

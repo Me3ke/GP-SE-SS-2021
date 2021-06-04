@@ -50,11 +50,11 @@ public class User implements UserDetails {
     //@OneToOne
     //private Keys activePair;
 
-    @Column
-    private boolean admin;
-
     @OneToOne
     private PersonalData personalData;
+
+    @OneToOne
+    private SecuritySettings securitySettings;
 
     @Column
     private boolean enabled;
@@ -86,6 +86,7 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = false;
         this.adminValidated = false;
+        this.securitySettings = new SecuritySettings();
     }
 
     public static long getSerialVersionUID() {
@@ -277,11 +278,11 @@ public class User implements UserDetails {
         return personalData;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -289,7 +290,7 @@ public class User implements UserDetails {
         return adminValidated;
     }
 
-    public void setAdminValidated(boolean adminValidated) {
+    public void setAdminValidated(final boolean adminValidated) {
         this.adminValidated = adminValidated;
     }
 
@@ -297,7 +298,15 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(final List<String> roles) {
         this.roles = roles;
+    }
+
+    public SecuritySettings getSecuritySettings() {
+        return securitySettings;
+    }
+
+    public void setSecuritySettings(final SecuritySettings securitySettings) {
+        this.securitySettings = securitySettings;
     }
 }

@@ -12,14 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class SignatureTypeTest {
 
     SignatureType noSignature;
+    SignatureType review;
     SignatureType simpleSignature;
     SignatureType advancedSignature;
 
     @Test
     void testToInteger() {
         assertEquals(-1, (int) noSignature.toInteger());
-        assertEquals((int) simpleSignature.toInteger(), 0);
-        assertEquals((int) advancedSignature.toInteger(), 1);
+        assertEquals((int) review.toInteger(), 0);
+        assertEquals((int) simpleSignature.toInteger(), 1);
+        assertEquals((int) advancedSignature.toInteger(), 2);
     }
 
     @Test
@@ -28,13 +30,14 @@ class SignatureTypeTest {
             assertSame(SignatureType.fromInteger(-1), noSignature);
             assertNotSame(SignatureType.fromInteger(-1), simpleSignature);
             assertNotSame(SignatureType.fromInteger(-1), advancedSignature);
-            assertSame(SignatureType.fromInteger(0), simpleSignature);
-            assertSame(SignatureType.fromInteger(1), advancedSignature);
+            assertSame(SignatureType.fromInteger(0), review);
+            assertSame(SignatureType.fromInteger(1), simpleSignature);
+            assertSame(SignatureType.fromInteger(2), advancedSignature);
         } catch (SignatureTypeFromIntegerException e) {
             Assertions.fail();
         }
             assertThrows(SignatureTypeFromIntegerException.class, () ->
-                SignatureType.fromInteger(2));
+                SignatureType.fromInteger(3));
     }
 
     @Test
@@ -47,6 +50,7 @@ class SignatureTypeTest {
     @BeforeEach
     void setUp() {
         noSignature = SignatureType.NO_SIGNATURE;
+        review = SignatureType.REVIEW;
         simpleSignature = SignatureType.SIMPLE_SIGNATURE;
         advancedSignature = SignatureType.ADVANCED_SIGNATURE;
     }
@@ -54,6 +58,7 @@ class SignatureTypeTest {
     @AfterEach
     void tearDown() {
         noSignature = null;
+        review = null;
         simpleSignature = null;
         advancedSignature = null;
     }

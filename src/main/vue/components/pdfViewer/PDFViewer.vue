@@ -64,7 +64,9 @@
 
 
                 <!-- Download -->
-                <PDFViewerButton icon="download"></PDFViewerButton>
+                <PDFViewerButton icon="download"
+                                 @click.native="$emit('openDownload');"></PDFViewerButton>
+
             </b-col>
         </b-row>
 

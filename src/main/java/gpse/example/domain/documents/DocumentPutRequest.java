@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ public class DocumentPutRequest {
 
     private byte[] data;
     private String title;
-    private String type;
+    private String dataType;
     private List<String> signatoriesID;
     private List<String> readersID;
     private SignatureType signatureType;
@@ -46,12 +45,12 @@ public class DocumentPutRequest {
         this.title = title;
     }
 
-    public String getType() {
-        return type;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setType(final String type) {
-        this.type = type;
+    public void setDataType(final String dataType) {
+        this.dataType = dataType;
     }
 
     public List<String> getSignatoriesID() {

@@ -140,8 +140,7 @@
             "language": "Sprache"
         },
         "Avatar": {
-            "profile": "Mein Konto",
-            "settings": "Einstellungen",
+            "profile": "Kontoeinstellungen",
             "adminSetting": {
                 "settings": "Admin-Einstellungen",
                 "unlock": "Nutzer freischalten",
@@ -199,7 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "content": "Kontoinformationen und Einstellungen",
+        "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
             "accountInformation": "Kontoinformationen",
@@ -261,6 +260,14 @@
         "newEnvPlaceholder": "Name des Verbundes",
         "configureDoc": "Dokumenteneinstellungen"
     },
+    "DownloadDoc": {
+        "download": "Herunterladen",
+        "heading": "Jetzt herunterladen!",
+        "sure": "Möchten Sie das Dokument wirklich herunterladen?",
+        "cancel": "Abbrechen",
+        "success": "Sie haben das Dokument erfolgreich heruntergeladen!",
+        "close": "Schließen"
+    },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
         "download": "Herunterladen",
@@ -268,7 +275,7 @@
         "sign": "Unterschreiben",
         "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
         "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
-        "read": "Gegengelesen",
+        "read": "Gegenlesen",
         "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
         "close": "Schließen",
         "errors": {
@@ -314,6 +321,8 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
+        "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
             "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
@@ -322,12 +331,15 @@
             "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
             "cancelWarningTwo": "bis Sie Ihre Zwei-Faktor-Authentifizierung auf der Einstellungs-Seite eingerichtet haben.",
-            "fail": "Der Code hat das falsche Format.",
+            "fail": "Der Code hat das falsche Format [Bsp: '123456'].",
             "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
             "canUse": "Sie können nun die Anwendung vollständig verwenden",
             "go": "Los geht's!",
-            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
-            "again": "Erneut versuchen"
+            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich.",
+            "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
+            "again": "Erneut versuchen",
+            "toStart": "Zum Beginn",
+            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",
@@ -335,7 +347,9 @@
             "success": "Sie haben erfolgreich unterschrieben!",
             "sign": "Jetzt unterschreiben!",
             "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
-            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
+            "leftTries": "Der Code war falsch. Versuche bis zum Logout:",
+            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt."
         },
         "read": {
             "read": "Jetzt gegenlesen!",

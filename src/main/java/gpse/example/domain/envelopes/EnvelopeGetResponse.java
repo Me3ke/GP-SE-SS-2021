@@ -13,11 +13,11 @@ import java.util.List;
  */
 public class EnvelopeGetResponse {
 
-    private long id;
-    private String name;
-    private User owner;
-    private LocalDateTime creationDate;
-    private List<DocumentGetResponse> documents;
+    private final long id;
+    private final String name;
+    private final User owner;
+    private final LocalDateTime creationDate;
+    private final List<DocumentGetResponse> documents;
 
     /**
      * The default constructor for an envelope response.
