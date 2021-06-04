@@ -26,9 +26,8 @@ public class Message {
     @Column
     private LocalDateTime timeStamp;
 
-    @ManyToOne
-    @JoinColumn
-    private User recievingUser;
+    @Column
+    private String recievingUserMail;
 
     @ManyToOne
     @JoinColumn
@@ -52,11 +51,11 @@ public class Message {
             message.setFrom(sendingUser.getEmail());
         }
 
-        if (recievingUser == null || subject == null || text == null) {
+        if (recievingUserMail == null || subject == null || text == null) {
             throw new MessageGenerationException(this.messageID);
         }
 
-        message.setTo(recievingUser.getEmail());
+        message.setTo(recievingUserMail);
         message.setSubject(subject);
         message.setText(text);
 
@@ -95,12 +94,12 @@ public class Message {
         this.timeStamp = timeStamp;
     }
 
-    public User getRecievingUser() {
-        return recievingUser;
+    public String getRecievingUserMail() {
+        return recievingUserMail;
     }
 
-    public void setRecievingUser(User user) {
-        this.recievingUser = user;
+    public void setRecievingUserMail(String email) {
+        this.recievingUserMail = email;
     }
 
     public User getSendingUser() {

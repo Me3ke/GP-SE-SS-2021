@@ -1,5 +1,6 @@
 package gpse.example.util.email;
 
+import gpse.example.domain.documents.Document;
 import gpse.example.domain.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,37 +12,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class SMTPServerHelper {
 
-    /**
-     * Template for sending RegistrationEmail.
-     */
-    public static final String INITIAL_REGISTER_TEMPLATE = "Guten Tag Herr/Frau %s, %n"
+    private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
+
+    private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
         + "Hier bestätigen: %s %n"
         + "%n %n"
         + "Bitte beachten Sie die eingeschränkte Gültigkeit Ihres Bestätigungslinks von 24 Stunden.";
 
-    /**
-     * The subject of Elsas registration emails.
-     */
-    public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
+    private static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
+
+    private static final String SIGNATURE_INVITATION = GREETING
+        + "%s hat sie zum signieren des Dokuments %s aufgefordert.";
+
+    private static final String SIGNATURE_INVITATION_SUBJECT = "Signatur des Dokuments %s";
 
 
-    /**
-     * Basic template for sending validation requests to admin.
-     */
-    public static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
+    private static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
-    /**
-     * The subject of Elsas validation request emails.
-     */
-    public static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
-
-    /**
-     * should be the from address, but because of whatever it doesnt work with thunderbird and K-9 emailclients.
-     */
-    public static final String NOREPLY_ADDRESS = "noreply@gmail.com";
+    private static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
 
     @Autowired
     private final JavaMailSender mailSender;
@@ -54,11 +45,11 @@ public class SMTPServerHelper {
      * sending an Registration email to the specified address.
      *
      * @param recievingUser the recieving user.
-     * @param link validation link.
+     * @param link          validation link.
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(recievingUser);
+        message.setRecievingUserMail(recievingUser.getEmail());
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
 
@@ -67,15 +58,35 @@ public class SMTPServerHelper {
 
     /**
      * sending an info mail to an admin containing the requested emailadress.
-     * @param admin admin who should get this validation information
+     *
+     * @param admin        admin who should get this validation information
      * @param newUserEmail email adress of the user who needs to be validated
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(admin);
+        message.setRecievingUserMail(admin.getUsername());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
+        mailSender.send(message.generateMessage());
+    }
+
+    /**
+     * sending the reminder for a signature.
+     *
+     * @param signatoryMail     the signatory who should be reminded
+     * @param owner             the owner of the relating document
+     * @param lastnameSignatory the lastname of the signatory who should be reminded
+     * @param document
+     * @throws MessageGenerationException
+     */
+    public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
+                                        final Document document) throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(signatoryMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
+            + owner.getLastname(), document.getDocumentTitle()));
         mailSender.send(message.generateMessage());
     }
 
