@@ -67,5 +67,5 @@ export default {
 }
 </script>
 
-<style scoped src="../assets/css/signModals.css">
+<style scoped src="src/main/vue/assets/css/signModals.css">
 </style>

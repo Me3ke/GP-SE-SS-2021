@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import SignatureUploadPopUp from "@/main/vue/components/settingsPage/SignatureUploadPopUp";
+import SignatureUploadPopUp from "@/main/vue/components/popUps/SignatureUploadPopUp";
 
 export default {
     name: "SignatureSettingsBox",

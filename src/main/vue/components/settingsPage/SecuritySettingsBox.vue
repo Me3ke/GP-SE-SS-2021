@@ -60,7 +60,7 @@
 <script>
 import i18n from "@/i18n";
 import {mapActions, mapGetters} from 'vuex';
-import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
+import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
 import _ from "lodash";
 
 export default {

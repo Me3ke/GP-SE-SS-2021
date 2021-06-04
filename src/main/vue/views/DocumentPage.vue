@@ -160,13 +160,13 @@ import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
 import GreenButtonIconText from "@/main/vue/components/GreenButtonIconText";
-import SignPopUp from "@/main/vue/components/TwoFakAuth/SignPopUp";
-import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
+import SignPopUp from "@/main/vue/components/popUps/SignPopUp";
+import ProofreadPopUp from "@/main/vue/components/popUps/ProofreadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
 import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
-import DownloadPopUp from "@/main/vue/components/DownloadPopUp";
+import DownloadPopUp from "@/main/vue/components/popUps/DownloadPopUp";
 
 
 export default {
