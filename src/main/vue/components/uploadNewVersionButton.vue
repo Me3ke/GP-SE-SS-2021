@@ -3,13 +3,13 @@
         <b-button
             size="sm"
             style="margin-top: 7em; background-color: var(--elsa-blue)"
-            v-b-modal.modal-1
+            v-b-modal="'modal-' + docID + 'a'"
         >
             Update Document
         </b-button>
 
         <b-modal
-            id="modal-1"
+            :id="'modal-' + docID + 'a'"
             ref="my-modal1"
             centered :title="'Replace Document: ' + document.title"
             hide-footer ok-only no-stacking
@@ -37,7 +37,7 @@
                 <b-button @click="resetTest"> Cancel</b-button>
                 <b-button
                     class="ml-1"
-                    v-b-modal.modal-2
+                    v-b-modal="'modal-' + docID + 'b'"
                     :disabled="fileString===''"
 
                     @click="setActualDoc"
@@ -49,7 +49,7 @@
 
 
         <b-modal
-            id="modal-2"
+            :id="'modal-' + docID + 'b'"
             centered
 
             :title= "document.title + ' Documentsettings'"
@@ -68,13 +68,13 @@
 
             </div>
             <div class="text-right">
-                <b-button v-b-modal.modal-1 @click="resetTest"> Back</b-button>
-                <b-button class="ml-1" v-b-modal.modal-3> Next</b-button>
+                <b-button v-b-modal="'modal-' + docID + 'a'" @click="resetTest"> Back</b-button>
+                <b-button class="ml-1" v-b-modal="'modal-' + docID + 'c'"> Next</b-button>
             </div>
         </b-modal>
 
         <b-modal
-            id="modal-3"
+            :id="'modal-' + docID + 'c'"
             ref="my-modal3"
             centered
             hide-footer hide-header ok-only no-stacking
@@ -117,7 +117,7 @@ export default {
             actualDoc: {}
         }
     },
-    props: ['document'],
+    props: ['document', 'docID'],
 
     methods: {
         // save the selected File in the data
@@ -131,15 +131,12 @@ export default {
 
         /*
 
-        byte data <
-        title <
-        type <
-        list signatoriesID <
-        list readersId <
-        signatureType <
-        localDateTime endDate
-        orderRelevant <
-        document state <
+        title, type < first modal page @clickAction
+        list readersId < second modal page @clickAction
+        list signatoriesID, orderRelevant, signatureType, localDateTime endDate < third modal page @clickAction
+        data < last modal Page
+
+        document state < - automatically open
         lastModified <
 
          */

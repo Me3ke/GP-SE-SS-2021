@@ -10,6 +10,16 @@
                     <div v-for="document in getEnv(envId).documents" :key="document.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
 
+
+                        <!-- Update new Version Button -->
+
+                        <upload-new-version-button
+                            :document="document"
+                            :doc-i-d="document.id"
+                        >
+                        </upload-new-version-button>
+
+
                         <!-- Default -->
                         <div
                             v-if="(document.signatory === false || document.signed === true)
@@ -54,13 +64,14 @@ import Footer from "@/main/vue/components/Footer";
 import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
 import DocumentBoxClosed from "@/main/vue/components/documentBoxes/DocumentBoxClosed";
 import DocumentBoxSignRead from "@/main/vue/components/documentBoxes/DocumentBoxSignRead";
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
 
 export default {
     name: "EnvelopePage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header, DocumentBox, DocumentBoxClosed, DocumentBoxSignRead},
+    components: {UploadNewVersionButton, Footer, Header, DocumentBox, DocumentBoxClosed, DocumentBoxSignRead},
     computed: {
         getEnv() {
             return this.$store.getters.getEnvelope
