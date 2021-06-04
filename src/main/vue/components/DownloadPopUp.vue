@@ -18,7 +18,10 @@
 
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
-                                        <div class="step" style="margin-top: 0">
+                                        <div v-if="isProtocol" class="step" style="margin-top: 0">
+                                            {{ $t('DownloadProtocol.sure') }}
+                                        </div>
+                                        <div v-else class="step" style="margin-top: 0">
                                             {{ $t('DownloadDoc.sure') }}
                                         </div>
 
@@ -29,7 +32,15 @@
                                                    {{ $t('DownloadDoc.cancel') }}
                                                 </span>
                                             </b-button>
-                                            <b-button type="button" class="elsa-blue-btn" @click="closeModal"
+                                            <b-button v-if="isProtocol" type="button" class="elsa-blue-btn"
+                                                      @click="closeModal"
+                                                      :href="'/api/documents/' + docId + '/protocol/download'">
+                                                <span class="button-txt">
+                                                     {{ $t('DownloadDoc.download') }}
+                                                </span>
+                                            </b-button>
+                                            <b-button v-else type="button" class="elsa-blue-btn"
+                                                      @click="closeModal"
                                                       :href="'/api/user/' + $store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/download'">
                                                 <span class="button-txt">
                                                      {{ $t('DownloadDoc.download') }}
@@ -50,7 +61,19 @@
 <script>
 export default {
     name: "DownloadPopUp",
-    props: ['docId', 'envId'],
+    props: {
+        'docId': {
+            type: [Number, String]
+        },
+        'envId': {
+            type: Number,
+            default: 0
+        },
+        'isProtocol': {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             page: 1,

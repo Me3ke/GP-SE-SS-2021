@@ -52,12 +52,17 @@
                     <b-col cols="3" id="textCol">
 
 
-                        <upload-new-version-button
-                            :document="document"
-                            v-on:update-document="updateDoc"
-                        >
-                        </upload-new-version-button>
-
+                        <b-row style="margin: auto; display: block">
+                            <upload-new-version-button
+                                :document="document"
+                                v-on:update-document="updateDoc"
+                            >
+                            </upload-new-version-button>
+                            <Button :key="$route.fullPath"
+                                    @click="$router.push({name: 'protocol', params: {envId: envId, docId: docId}})">
+                                Go to protocol
+                            </Button>
+                        </b-row>
 
                         <!-- Displays if user already proofread -->
                         <b-row style="margin: auto; display: block"
@@ -251,133 +256,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
-.responsive-img {
-    height: 15em;
-    width: auto;
-}
-
-hr {
-    background-color: var(--dark-grey);
-}
-
-#textCol {
-    display: block;
-    margin: auto;
-    padding-right: 5vw;
-}
-
-/* Settings for differently sized screens */
-@media (max-width: 575.98px) and (min-height: 370px) {
-    .container {
-        margin-top: 4em;
-    }
-
-    h6 {
-        font-size: 0.4em;
-    }
-
-    h1 {
-        font-size: 1.3em;
-    }
-
-    h3 {
-        font-size: 0.6em;
-    }
-
-    .responsive-img {
-        font-size: 0.4em;
-    }
-}
-
-@media (max-width: 575.98px) and (max-height: 369.98px) {
-    .container {
-        margin-top: 2em;
-    }
-
-    h6 {
-        font-size: 0.4em;
-    }
-
-    h1 {
-        font-size: 1.3em;
-    }
-
-    h3 {
-        font-size: 0.6em;
-    }
-
-    .responsive-img {
-        font-size: 0.4em;
-    }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .container {
-        margin-top: 3em;
-    }
-
-    h6 {
-        font-size: 0.45em;
-    }
-
-    h1 {
-        font-size: 1.5em;
-    }
-
-    h3 {
-        font-size: 0.8em;
-    }
-
-    .responsive-img {
-        font-size: 0.6em;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
-    .container {
-        margin-top: 3em;
-    }
-
-    h6 {
-        font-size: 0.5em;
-    }
-
-    h1 {
-        font-size: 1.6em;
-    }
-
-    h3 {
-        font-size: 0.9em;
-    }
-
-    .responsive-img {
-        font-size: 0.9em;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
-    .container {
-        margin-top: 6em;
-    }
-
-    h1 {
-        font-size: 1.6em;
-    }
-
-    h3 {
-        font-size: 0.9em;
-    }
-
-    .responsive-img {
-        font-size: 0.9em;
-    }
-}
-
-@media (min-width: 992px) {
-    .container {
-        margin-top: 5em;
-    }
-}
+<style scoped src="../assets/css/documentPage.css">
 </style>

@@ -263,9 +263,11 @@
         "download": "Download",
         "heading": "Download now!",
         "sure": "Are you sure you want to download the document?",
-        "cancel": "Cancel",
-        "success": "You successfully downloaded the document!",
-        "close": "Close"
+        "cancel": "Cancel"
+    },
+    "DownloadProtocol": {
+        "protocol": "Protocol",
+        "sure": "Are you sure you want to download the protocol?"
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",

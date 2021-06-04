@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -311,7 +312,7 @@ public class DocumentController {
         throws DocumentNotFoundException, CreatingFileException {
         final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
-            return protocol.writeProtocol().toByteArray();
+            return Base64.encodeBase64(protocol.writeProtocol().toByteArray());
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }

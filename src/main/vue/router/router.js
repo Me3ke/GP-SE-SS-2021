@@ -16,6 +16,7 @@ import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import store from "@/main/vue/store/store";
 import BlankTestPage from "@/main/vue/views/BlankTestPage";
 import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
+import ProtocolPage from "@/main/vue/views/ProtocolPage";
 
 Vue.use(VueRouter)
 
@@ -87,6 +88,15 @@ const router = new VueRouter({
                     path: 'envelope/:envId/document/:docId',
                     name: 'document',
                     component: DocumentPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/protocol',
+                    name: 'protocol',
+                    component: ProtocolPage,
                     props: true,
                     meta: {
                         requiresAuth: true
