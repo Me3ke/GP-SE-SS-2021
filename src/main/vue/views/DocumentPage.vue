@@ -10,6 +10,8 @@
         <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
                        @closedDownload="toggleDownload()"></DownloadPopUp>
 
+        <b-button :href="'/api/user/' + $store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/download'"></b-button>
+
         <!-- Displays if document cannot get fetched by api -->
         <BaseHeading v-if="!hasError()" name=" " :translate="false" style="position: fixed;"></BaseHeading>
         <div v-if="!hasError()" class="d-flex align-items-center" style="height: 80vh">

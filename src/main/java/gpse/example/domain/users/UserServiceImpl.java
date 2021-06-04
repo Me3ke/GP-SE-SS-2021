@@ -1,6 +1,6 @@
 package gpse.example.domain.users;
 
-import gpse.example.util.SMTPServerHelper;
+import gpse.example.util.SMTPMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
      */
     @Lazy
     @Autowired
-    private SMTPServerHelper smtpServerHelper;
+    private SMTPMailSender smtpMailSender;
 
     @Autowired
     public UserServiceImpl(final UserRepository userRepository) {
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void sendConfirmationMail(User user, String token) {
-        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
+        smtpMailSender.sendRegistrationEmail(user.getEmail(), user.getLastname(),
             "http://localhost:8080/register/confirm/" + token);
     }
 
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
        List<User> userList = getUsers();
         for (User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
-                smtpServerHelper.sendValidationInfo(value.getEmail(), user.getEmail());
+                smtpMailSender.sendValidationInfo(value.getEmail(), user.getEmail());
                 return;
                 //otional ohne return => alle Admins benachrichtigen.
             }

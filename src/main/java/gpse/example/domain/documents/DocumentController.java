@@ -11,6 +11,9 @@ import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +42,6 @@ public class DocumentController {
     private DocumentServiceImpl documentService;
     private SignatoryServiceImpl signatoryService;
     private DocumentMetaDataServiceImpl documentMetaDataService;
-    private DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -101,27 +103,22 @@ public class DocumentController {
      * @param envelopeID the id of the envelope the document is in.
      * @param userID the id of the user doing the request.
      * @param documentID the id of the document.
-     * @param path the path where the file should be downloaded.
      * @return a documentGetResponse of the downloaded Document.
      * @throws DocumentNotFoundException if the document was not found.
      * @throws DownloadFileException if something went wrong while downloading.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/download")
-    public DocumentGetResponse downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                                final @PathVariable(USER_ID) String userID,
-                                                final @PathVariable(DOCUMENT_ID) long documentID,
-                                                final @RequestParam("path") String path)
+    public ResponseEntity<byte[]> downloadDocument(final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                   final @PathVariable(USER_ID) String userID,
+                                                   final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException, DownloadFileException {
+        userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
-        Document document;
-        try {
-            document = documentService.getDocument(documentID);
-            documentCreator.download(document, path);
-        } catch (CreatingFileException | IOException e) {
-            throw new DownloadFileException(e);
-        }
-        final User currentUser = userService.getUser(userID);
-        return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
+        final Document document = documentService.getDocument(documentID);
+        final String name = document.getDocumentTitle() + "." + document.getDocumentType();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name)
+                .body(document.getData());
     }
 
     /**

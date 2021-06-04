@@ -72,8 +72,8 @@ export default {
         }
     },
     methods: {
-        download() {
-            this.$store.dispatch('document/downloadDocument', {envId: this.envId, docId: this.docId, path: this.path})
+        async download() {
+            await this.$store.dispatch('document/downloadDocument', {envId: this.envId, docId: this.docId})
             this.page = 2
         },
         closeModal() {

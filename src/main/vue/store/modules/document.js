@@ -37,9 +37,9 @@ export const actions = {
     },
 
     // makes axios call to download document to given path, either sets document (success) or error (error)
-    downloadDocument({commit}, {envId, docId, path}) {
-        documentAPI.downloadDocument(envId, docId, path).then(response => {
-            commit('SET_DOCUMENT', response.data)
+    downloadDocument({commit}, {envId, docId}) {
+        return documentAPI.downloadDocument(envId, docId).then(() => {
+           // commit('SET_DOCUMENT', response.data)
             commit('SET_ERROR_DOWNLOAD_DOCUMENT', {})
         }).catch(error => {
             commit('SET_ERROR_DOWNLOAD_DOCUMENT', error)
