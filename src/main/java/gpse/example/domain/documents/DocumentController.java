@@ -13,6 +13,8 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,7 @@ public class DocumentController {
     private static final int STATUS_CODE_WRONG_USER = 450;
     private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
+    private static final String PROTOCOL_NAME = "Protocol_";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -305,34 +308,33 @@ public class DocumentController {
      * @return byteArray
      * */
     @GetMapping("/documents/{documentID:\\d+}/protocol")
-    public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
-        Protocol protocol = new Protocol(documentService.getDocument(documentID));
+    public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, CreatingFileException {
+        final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
             return protocol.writeProtocol().toByteArray();
         } catch (IOException e) {
-            return new byte[0];
+            throw new CreatingFileException(e);
         }
     }
 
     /**
      * download the protocol to given path.
      * @param documentID document that should be protocoled
-     * @param path path were protocol should be saved
      * @return bytearry to download
      */
     @GetMapping("/documents/{documentID:\\d+}/protocol/download")
-    public byte[] downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID,
-                                   final @RequestParam("path") String path) throws DocumentNotFoundException,
-                                        CreatingFileException {
-        Document document = documentService.getDocument(documentID);
-        Protocol protocol = new Protocol(document);
+    public ResponseEntity<byte[]> downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, CreatingFileException {
+        final Document document = documentService.getDocument(documentID);
+        final Protocol protocol = new Protocol(document);
         try {
             byte[] protocolBytes = protocol.writeProtocol().toByteArray();
-           documentCreator.writeInNewFile(protocolBytes, "pdf",
-                "protocol_" + documentID, path);
-            return protocolBytes;
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + PROTOCOL_NAME + documentID )
+                .body(protocolBytes);
         } catch (IOException e) {
-            return new byte[0];
+            throw new CreatingFileException(e);
         }
     }
 }
