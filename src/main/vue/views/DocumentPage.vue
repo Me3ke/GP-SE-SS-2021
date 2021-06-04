@@ -190,6 +190,9 @@ export default {
             showDownload: false
         }
     },
+    created() {
+        this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+    },
     methods: {
         getPDF() {
             let chars = atob(this.document.data);
@@ -198,18 +201,22 @@ export default {
                 array[i] = chars.charCodeAt(i)
             }
             return array
-        },
+        }
+        ,
         hasError() {
             return _.isEmpty(this.getError);
-        },
+        }
+        ,
         toggleSign() {
             this.showSign = !this.showSign
             this.showOverflow = !this.showOverflow
-        },
+        }
+        ,
         toggleRead() {
             this.showProofread = !this.showProofread
             this.showOverflow = !this.showOverflow
-        },
+        }
+        ,
         /*
         async updateDoc(newDoc) {
             console.log(newDoc.data)
@@ -224,19 +231,19 @@ export default {
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.showOverflow = !this.showOverflow
-        },
-        created() {
-            this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
         }
-    },
+    }
+    ,
     computed: {
-        ...mapGetters({
-            document: 'document/getDocument',
-            getError: 'document/getErrorGetDocument'
-        }),
+        ...
+            mapGetters({
+                document: 'document/getDocument',
+                getError: 'document/getErrorGetDocument'
+            }),
         docId() {
             return this.$route.params.docId;
-        },
+        }
+        ,
         envId() {
             return this.$route.params.envId;
         }
