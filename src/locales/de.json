@@ -296,7 +296,7 @@
     },
     "Register": {
         "email": "E-Mail",
-        "password": "Passwort",
+        "password": "Passwort (min. 8 Zeichen)",
         "register": "Registrierung",
         "sign-up": "Registrieren",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",

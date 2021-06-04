@@ -295,7 +295,7 @@
     },
     "Register": {
         "email": "e-mail",
-        "password": "password",
+        "password": "password (min. 8 characters)",
         "register": "sign up",
         "sign-up": "sign up",
         "feedback-invalid-email": "Please enter an valid e-mail.",
