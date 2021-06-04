@@ -263,7 +263,7 @@
     "DownloadDoc": {
         "download": "Download",
         "heading": "Download now!",
-        "where": "Where do you want to download the document to?",
+        "sure": "Are you sure you want to download the document?",
         "cancel": "Cancel",
         "success": "You successfully downloaded the document!",
         "close": "Close"

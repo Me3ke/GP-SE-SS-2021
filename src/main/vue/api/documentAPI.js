@@ -8,13 +8,5 @@ export default {
             method: "get",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
-    },
-
-    // downloads document with id docId  in envelop wit id envId into given path
-    async downloadDocument(envId, docId) {
-        return axios({
-            method: "get",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/download'
-        })
     }
 }
