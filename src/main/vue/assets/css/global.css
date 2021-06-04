@@ -7,6 +7,7 @@
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
     --green: #5D9543;
+    --green-transparent: rgba(93, 149, 67, 0.1);
 
     --open-doc-hover: #ababab;
     --closed-doc: #E5E5E5;
@@ -46,6 +47,7 @@
     --light-grey: #ACACAC;
     --shadow-grey: #D8D8D9;
     --green: #81ba66;
+    --green-transparent: rgba(93, 149, 67, 0.3);
 
     --closed-doc: #070809;
     --closed-doc-hover: #788796;
@@ -271,4 +273,13 @@ body {
 .was-validated .custom-file-input:invalid:focus ~ .custom-file-label, .custom-file-input.is-invalid:focus ~ .custom-file-label {
     border-color: var(--elsa-blue);
     box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid ~ .custom-file-label {
+    border-color: var(--green);
+}
+
+.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid:focus ~ .custom-file-label {
+    border-color: var(--green);
+    box-shadow: 0 0 0 0.2rem var(--green-transparent);
 }
