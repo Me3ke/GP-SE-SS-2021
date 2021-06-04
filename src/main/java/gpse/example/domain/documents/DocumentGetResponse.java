@@ -95,4 +95,5 @@ public class DocumentGetResponse {
     public byte[] getData() {
         return Arrays.copyOf(data, data.length);
     }
+
 }

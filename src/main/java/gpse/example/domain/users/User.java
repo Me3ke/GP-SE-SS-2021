@@ -266,7 +266,9 @@ public class User implements UserDetails {
     public PublicKey getPublicKey() {
         return publicKey;
     }
-    public void setPublicKey(final PublicKey publicKey){ this.publicKey = publicKey; }
+    public void setPublicKey(final PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public PersonalData getPersonalData() {
         return personalData;

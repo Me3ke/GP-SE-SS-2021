@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
 @Component
-public class SMTPServerHelper {
+public class SMTPMailSender {
 
     /**
      * Template for sending RegistrationEmail.
@@ -46,7 +46,7 @@ public class SMTPServerHelper {
     @Autowired
     private final JavaMailSender mailSender;
 
-    public SMTPServerHelper(JavaMailSender mailSender) {
+    public SMTPMailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 

@@ -378,5 +378,9 @@ public class Document {
     public void setState(final DocumentState documentState) {
         this.state = documentState;
     }
+
+    public void setSignatories(List<Signatory> signatories) {
+        this.signatories = signatories;
+    }
 }
 

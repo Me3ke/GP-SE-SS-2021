@@ -9,6 +9,7 @@ import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +24,14 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin("http://localhost:8088")
+@RequestMapping("/api")
 public class DocumentController {
 
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
+    private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
+    private static final int STATUS_CODE_OK = 200;
 
     private EnvelopeServiceImpl envelopeService;
     private UserServiceImpl userService;
@@ -60,7 +64,7 @@ public class DocumentController {
      *                                   if there was no document with this id in the database.
      * @throws DownloadFileException     if something went wrong while downloading the file.
      */
-    @GetMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                        final @PathVariable(USER_ID) String userID,
                                                        final @PathVariable(DOCUMENT_ID) long documentID,
@@ -104,7 +108,7 @@ public class DocumentController {
      * @return the id of the new document.
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public long uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                          final @RequestParam(USER_ID) String userID,
                                          final @RequestParam(ENVELOPE_ID) long envelopeID,
@@ -145,7 +149,7 @@ public class DocumentController {
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public void review(final @RequestParam(USER_ID) String userID,
                        final @RequestParam(ENVELOPE_ID) long envelopeID,
                        final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
@@ -169,7 +173,7 @@ public class DocumentController {
      * @param documentID the document to be reviewed.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
     public void sign(final @RequestParam(USER_ID) String userID,
                      final @RequestParam(ENVELOPE_ID) long envelopeID,
                      final @RequestParam(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
@@ -184,5 +188,33 @@ public class DocumentController {
             }
         }
         documentService.addDocument(document);
+    }
+
+    /**
+     * Put request for changing documentsettings.
+     * @param documentID id of the document that should be changed
+     * @param documentSettingsCMD Container for the relevant settings
+     * @return JsonResponse containing statuscode
+     */
+    @PutMapping("/document/{documentID}/settings")
+    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        JSONResponseObject response = new JSONResponseObject();
+        try {
+            Document document = documentService.getDocument(documentID);
+            document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
+            document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setSignatories(documentSettingsCMD.getSignatories());
+
+            System.out.println(document.getId());
+            Document savedDoc = documentService.addDocument(document);
+            System.out.println(savedDoc.getId());
+
+            response.setStatus(STATUS_CODE_OK);
+        } catch (DocumentNotFoundException e) {
+            response.setStatus(STATUS_CODE_DOCUMENT_NOT_FOUND);
+            response.setMessage("Document not found.");
+        }
+        return response;
     }
 }
