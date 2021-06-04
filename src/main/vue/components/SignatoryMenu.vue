@@ -54,13 +54,13 @@ import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
     props: {
-        signatories: Array
+        signatories: Array,
+        orderRelevant: Boolean
     },
     components: {draggable},
     data() {
         return{
-            signatoryInput: "",
-            orderRelevant: true
+            signatoryInput: ""
         }
     },
     methods: {

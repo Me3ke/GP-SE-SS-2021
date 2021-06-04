@@ -44,13 +44,13 @@ import draggable from 'vuedraggable'
 export default {
     name: "ReaderMenu",
     props: {
-        readers: Array
+        readers: Array,
+        orderRelevant: Boolean
     },
     components: {draggable},
     data() {
         return{
-            readerInput: "",
-            orderRelevant: true,
+            readerInput: ""
         }
     },
     methods: {

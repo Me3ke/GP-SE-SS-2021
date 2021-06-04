@@ -75,14 +75,14 @@
                                     <!-- Page 5 -->
                                     <div v-if="page === 5">
                                         <div v-if="review">
-                                            <ReaderMenu :readers="this.readers"></ReaderMenu>
+                                            <ReaderMenu :readers="this.readers" :orderRelevant="this.orderRelevantReaders"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
                                             <div>
                                                 <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                                                 <b-form-datepicker id="endDatePicker" v-model="endDate" class="mb-2"></b-form-datepicker>
                                             </div>
-                                            <SignatoryMenu :signatories="this.signatories"></SignatoryMenu>
+                                            <SignatoryMenu :signatories="this.signatories" :orderRelevant="orderRelevantSignatories"></SignatoryMenu>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +170,9 @@ export default {
             review: true,
             signatories: [],
             readers: [],
-            endDate: ''
+            endDate: '',
+            orderRelevantReaders: true,
+            orderRelevantSignatories: true
         };
     },
     computed: {
