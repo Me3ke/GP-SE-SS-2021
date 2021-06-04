@@ -7,8 +7,8 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
@@ -173,27 +173,15 @@ public class DocumentController {
      * The review method does a review for a given user on a given document.
      *
      * @param userID     the id of the user reading the document.
-     * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @return true if the review was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
-                                     final @PathVariable(ENVELOPE_ID) long envelopeID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        final User reader = userService.getUser(userID);
-        final Document document = documentService.getDocument(documentID);
-        JSONResponseObject response = new JSONResponseObject();
-        if (document.getState().equals(DocumentState.OPEN)) {
-            SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
-            return signatureManagement.manageSignatureRequest(reader, document);
-        } else {
-            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
-            response.setMessage("This document is closed");
-            return response;
-        }
+        return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
 
 
@@ -201,51 +189,51 @@ public class DocumentController {
      * The sign method does a signing for a given user on a given document.
      *
      * @param userID     the id of the user reading the document.
-     * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
-    public boolean sign(final @PathVariable(USER_ID) String userID,
-                        final @PathVariable(ENVELOPE_ID) long envelopeID,
-                        final @PathVariable(DOCUMENT_ID) long documentID)
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
+    public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
+                              final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        final User signatory = userService.getUser(userID);
-        envelopeService.getEnvelope(envelopeID);
+        return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
+    }
+
+    /**
+     * The sign method does a signing for a given user on a given document.
+     *
+     * @param userID     the id of the user reading the document.
+     * @param documentID the document to be reviewed.
+     * @return true if the signing was successful and false if not.
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    //TODO if orderRelevant test if current user is next in line.
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
+    public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
+                                           final @PathVariable(DOCUMENT_ID) long documentID,
+                                           final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
+            throws DocumentNotFoundException {
+        return computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+    }
+
+    private JSONResponseObject computeSignatureRequest(String userID, long documentID, SignatureType signatureType)
+            throws DocumentNotFoundException {
+        final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
-        boolean documentFinished = true;
-        if (document.getState().equals(DocumentState.READ)) {
-            final List<Signatory> signatories = document.getSignatories();
-            for (final Signatory currentSignatory : signatories) {
-                if (currentSignatory.getUser().equals(signatory)) {
-                    currentSignatory.setStatus(true);
-                    signatoryService.saveSignatory(currentSignatory);
-                }
-                if (!currentSignatory.isStatus()) {
-                    documentFinished = false;
-                }
-            }
-            if (documentFinished) {
-                document.setState(DocumentState.CLOSED);
-                final ArchivedDocument archivedDocument = new ArchivedDocument(document);
-                documentService.remove(document);
-                documentService.addDocument(archivedDocument);
-                signatoryService.delete(document.getSignatories());
-            } else {
-                documentService.addDocument(document);
-            }
-            return true;
+        JSONResponseObject response = new JSONResponseObject();
+        if (!document.getState().equals(DocumentState.CLOSED)) {
+            SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         } else {
-            return false;
+            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
+            response.setMessage("This document is closed");
+            return response;
         }
     }
 
     /**
-<<<<<<< HEAD
-
-=======
      * The getDocumentHistory method does a get request to get the document history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.

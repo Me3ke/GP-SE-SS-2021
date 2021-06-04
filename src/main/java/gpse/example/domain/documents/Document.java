@@ -367,6 +367,32 @@ public class Document {
         }
         return readers;
     }
+    /**
+     * returns a list of only those signatories that have simple signature as their signature Type.
+     * @return a list of only those signatories that have simple signature as their signature Type
+     */
+    public List<Signatory> getSimpleSignatories() {
+        final List<Signatory> simpleSignatories = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)) {
+                simpleSignatories.add(signatory);
+            }
+        }
+        return simpleSignatories;
+    }
+    /**
+     * returns a list of only those signatories that have advanced signature as their signature Type.
+     * @return a list of only those signatories that have advanced signature as their signature Type
+     */
+    public List<Signatory> getAdvancedSignatories() {
+        final List<Signatory> advancedSignatories = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                advancedSignatories.add(signatory);
+            }
+        }
+        return advancedSignatories;
+    }
 
     public boolean isOrderRelevant() {
         return orderRelevant;
@@ -400,4 +426,3 @@ public class Document {
         this.previousVersion = previousVersion;
     }
 }
-
