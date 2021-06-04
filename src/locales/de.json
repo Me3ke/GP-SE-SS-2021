@@ -259,7 +259,17 @@
         "newEnv": "Neuen Verbund anlegen",
         "selectEnv": "Bestehenden Verbund auswählen",
         "newEnvPlaceholder": "Name des Verbundes",
-        "configureDoc": "Dokumenteneinstellungen"
+        "configureDoc": "Dokumenteneinstellungen",
+
+        "UpdateDocument": {
+            "update1": "aktualisieren",
+            "update2": "Dokument aktualisieren",
+            "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
+            "replaceDoc": "Das Aktualisieren des Dokumentes: ",
+            "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+
+        }
     },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",

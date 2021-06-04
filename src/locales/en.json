@@ -258,7 +258,17 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+
+        "UpdateDocument": {
+            "update1": "update",
+            "update2": "Update Document",
+            "selectDocument": "Select the File to replace/update the Document ",
+            "replaceDoc": "Update of: ",
+            "confirmation": "Are you sure to update {documentTitle}",
+            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+
+        }
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",

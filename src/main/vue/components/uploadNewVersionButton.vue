@@ -5,22 +5,24 @@
             style="margin-top: 7em; background-color: var(--elsa-blue)"
             v-b-modal="'modal-' + docID + 'a'"
         >
-            Update Document
+            {{ $t('UploadDoc.UpdateDocument.update2') }}
         </b-button>
 
         <b-modal
             :id="'modal-' + docID + 'a'"
             ref="my-modal1"
-            centered :title="'Replace Document: ' + document.title"
+            centered :title="$t('UploadDoc.UpdateDocument.replaceDoc') + document.title"
             hide-footer ok-only no-stacking
         >
             <div>
-                <h6>Select File to replace your Document</h6>
+                <h6>{{ $t('UploadDoc.UpdateDocument.selectDocument') }}</h6>
             </div>
             <div>
                 <div class="modal-body">
                     <div>
                         <div class="form-group files">
+                            <!-- File browse button is only in German available (because of browser language setting) -->
+
                             <input
                                 type="file"
                                 id="fileInput"
@@ -29,12 +31,15 @@
                                 style="height: 15vh"
                             >
                         </div>
+                        <!-- Not necessary --->
                         <p> Selected File: {{fileString}}</p>
                     </div>
                 </div>
             </div>
             <div class="text-right">
-                <b-button @click="resetTest"> Cancel</b-button>
+                <b-button @click="resetTest">
+                    {{ $t('UploadDoc.close') }}
+                </b-button>
                 <b-button
                     class="ml-1"
                     v-b-modal="'modal-' + docID + 'b'"
@@ -42,7 +47,7 @@
 
                     @click="setActualDoc"
                 >
-                    Next
+                    {{ $t('UploadDoc.continue') }}
                 </b-button>
             </div>
         </b-modal>
@@ -68,8 +73,8 @@
 
             </div>
             <div class="text-right">
-                <b-button v-b-modal="'modal-' + docID + 'a'" @click="resetTest"> Back</b-button>
-                <b-button class="ml-1" v-b-modal="'modal-' + docID + 'c'"> Next</b-button>
+                <b-button v-b-modal="'modal-' + docID + 'a'" @click="resetTest">  {{ $t('UploadDoc.back') }}</b-button>
+                <b-button class="ml-1" v-b-modal="'modal-' + docID + 'c'">  {{ $t('UploadDoc.continue') }}</b-button>
             </div>
         </b-modal>
 
@@ -81,17 +86,15 @@
         >
             <div>
                 <h3>{{document.title}}</h3>
-                <h5>Are you Sure to replace the Document: {{document.title}}
-
-                    new: {{this.actualDoc.title}}
-                    ?</h5>
+                <h5> {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</h5>
             </div>
-            <p class="my-4">All signed Documents will be reseted after you uploaded an newer version of an Document </p>
+            <p class="my-4"> {{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }} </p>
             <div class="text-right">
                 <b-button
                     @click="uploadNewFile"
-                >
-                    Save</b-button>
+                    >
+                    {{ $t('UploadDoc.UpdateDocument.update1') }}
+                </b-button>
             </div>
         </b-modal>
 
