@@ -78,8 +78,9 @@ public class ArchivedDocument extends Document {
 
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public String getDocumentTitle() {
+        return documentMetaData.getMetaDocumentTitle();
     }
 
     @Override
@@ -90,6 +91,11 @@ public class ArchivedDocument extends Document {
     @Override
     public DocumentMetaData getDocumentMetaData() {
         return documentMetaData;
+    }
+
+    @Override
+    public String getOwner() {
+        return documentMetaData.getMetaUserID();
     }
 
     @Override
