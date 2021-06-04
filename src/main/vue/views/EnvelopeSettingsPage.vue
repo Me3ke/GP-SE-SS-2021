@@ -6,8 +6,8 @@
         <b-container fluid="xl">
             <div style="margin-top:7.5vh">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="individual">
-                    <label class="custom-control-label" for="customSwitch1"> {{$t('Settings.DocumentSettings.editAll')}} </label>
+                    <input type="checkbox" class="custom-control-input" id="allIndividualSwitch" v-model="individual">
+                    <label class="custom-control-label" for="allIndividualSwitch"> {{$t('Settings.DocumentSettings.editAll')}} </label>
                 </div>
             </div>
             <div class="card" style="margin-top:3vh">

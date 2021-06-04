@@ -13,6 +13,12 @@
                 </b-col>
             </b-row>
         </div>
+        <div>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
+                <label class="custom-control-label" for="orderRelevantSwitch"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+            </div>
+        </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
             <draggable v-model="signatories">
                 <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email" style="padding:0.25em">
@@ -52,7 +58,10 @@ export default {
     },
     components: {draggable},
     data() {
-        return{signatoryInput: "", }
+        return{
+            signatoryInput: "",
+            orderRelevant: true
+        }
     },
     methods: {
         addSignatory() {

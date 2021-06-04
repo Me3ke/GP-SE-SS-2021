@@ -256,7 +256,8 @@
             "signatory": "Unterzeichner",
             "addReader": "Gegenleser hinzufügen",
             "reader": "Gegenleser",
-            "chooseDate": "Zeitraum bestimmen"
+            "chooseDate": "Zeitraum bestimmen",
+            "orderRelevant": "Reihenfolge berücksichtigen"
         }
     },
     "UploadDoc": {
