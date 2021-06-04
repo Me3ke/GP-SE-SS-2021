@@ -26,9 +26,8 @@
                         <b-button class="elsa-blue-btn" @click="setUp()">
                             {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
-
-                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
                     </b-list-group-item>
+                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
