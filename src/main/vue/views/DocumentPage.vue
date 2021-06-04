@@ -47,9 +47,9 @@
 
 
                         <upload-new-version-button
-                        :document="document"
-                        :doc-i-d="docId"
-                        v-on:update-document="updateDoc"
+                            :document="document"
+                            :doc-i-d="docId"
+                            @update-document="updateDoc"
                         >
                         </upload-new-version-button>
 
@@ -164,7 +164,8 @@ import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton
 
 export default {
     name: "DocumentPage",
-    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header}, data() {
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp, GreenButtonIconText, PDFViewer, Footer, Header},
+    data() {
         return {
             turtle: require('../assets/turtle.svg'),
             showProofread: false,
@@ -194,16 +195,19 @@ export default {
         },
 
         async updateDoc(newDoc) {
-            console.log(newDoc.data)
-            let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId }
+            // console.log(newDoc.data)
+            let payload = {newDoc: newDoc, envId: this.envId, docId: this.docId}
 
             // TODO: Tell Stina that she have also use this with router to get the nex envelope view of the page
-            let newDocID = await this.$store.dispatch('document/editDocument', payload)
-            let newUrl = 'envelope/' + this.envId + '/document/' + newDocID
-            console.log(newUrl)
+            await this.$store.dispatch('document/editDocument', payload)
+            await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.newDocumentId})
+            let newUrl = 'envelope/' + this.envId + '/document/' + this.newDocumentId
+            // console.log(newUrl)
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
-           await this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {this.$router.go(0)})
+            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                this.$router.go(0)
+            })
 
         }
     },
@@ -213,7 +217,8 @@ export default {
     computed: {
         ...mapGetters({
             document: 'document/getDocument',
-            getError: 'document/getErrorGetDocument'
+            getError: 'document/getErrorGetDocument',
+            newDocumentId: 'document/getNewDocumentId'
         }),
         docId() {
             return this.$route.params.docId;
