@@ -223,7 +223,12 @@
                     "cancel": "Cancel",
                     "sure": "Your progress will be lost if you cancel.",
                     "back": "Back",
-                    "close": "Close"
+                    "close": "Close",
+                    "attentionOne": "Warning! You have already uploaded your signature.",
+                    "attentionTwo": "If you continue it will be lost!",
+                    "placeholder": "Drop signature here or choose",
+                    "dropPlaceholder": "Drop here",
+                    "accepted": "All image formats are accepted."
                 }
             }
         },

@@ -232,7 +232,12 @@
                     "cancel": "Abbruch",
                     "sure": "Wenn Sie das Hochladen jetzt abbrechen, geht all' Ihr Fortschritt verloren.",
                     "back": "Zurück",
-                    "close": "Schließen"
+                    "close": "Schließen",
+                    "attentionOne": "Achtung! Sie haben schon eine Signatur hochgeladen.",
+                    "attentionTwo": "Wenn Sie fortfahren, geht diese verloren!",
+                    "placeholder": "Signatur hier ablegen oder auswählen",
+                    "dropPlaceholder": "Hier fallen lassen",
+                    "accepted": "Akzeptiert werden sämtliche Bildformate."
                 }
             }
         },
