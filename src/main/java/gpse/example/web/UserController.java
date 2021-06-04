@@ -2,6 +2,7 @@ package gpse.example.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
@@ -9,6 +10,7 @@ import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +49,10 @@ public class UserController {
 
     /**
      * Constructor of UserController getting required services.
-     * @param service Userservice Object
-     * @param confService ConfirmationTokenService object
-     * @param personalDataService PersonalDataService object
+     *
+     * @param service                 Userservice Object
+     * @param confService             ConfirmationTokenService object
+     * @param personalDataService     PersonalDataService object
      * @param securitySettingsService SecuritySettingsService object
      * @param messageService the messageService to access the message table
      */
@@ -67,6 +70,7 @@ public class UserController {
 
     /**
      * Method to handle an registration and generating user object.
+     *
      * @param signUpUser the userdata getting from frontend
      * @return JSONResponse containing statusCode and a message
      */
@@ -108,6 +112,7 @@ public class UserController {
 
     /**
      * Method for confirm an User and enable his*her account.
+     *
      * @param token the confirmationToken sended with Email
      * @return JSONResponse containing statusCode and a message
      */
@@ -175,6 +180,7 @@ public class UserController {
     public PersonalData showPersonalData(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getPersonalData();
     }
+
     @GetMapping("/user/{userID}")
     public User showUser(@PathVariable(USERID) final String username) {
         return userService.getUser(username);
@@ -182,6 +188,7 @@ public class UserController {
 
     /**
      * Put request to change the public key of the user.
+     *
      * @param publicKeyCmd contains the public key in a String format
      * @param username the identifier of the user account that needs to be updated
      * @return returns a JSONResponseObject that contains status code.
@@ -201,20 +208,23 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
-    public boolean checkForTwoFAConfiguration(@PathVariable(USERID) final String username) {
-        return userService.getUser(username).getSecuritySettings().getSecret() == null;
+    public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
+        return userService.getUser(username).getSecuritySettings().getSecret() != null;
     }
 
     /**
      * Get request for getting the qr-code as a byte array.
+     *
      * @param username the identifier of the user account that needs to be updated
      * @return the qr code as a byte array
      */
     @GetMapping("/user/{userID}/settings/qrCode")
     public QrCodeGetResponse getQRCode(@PathVariable(USERID) final String username) {
         try {
-            userService.getUser(username).getSecuritySettings().generateSecret();
-            byte[] temp = userService.getUser(username).getSecuritySettings().generateQRCode(username);
+            SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+            securitySettings.generateSecret();
+            byte[] temp = securitySettings.generateQRCode(username);
+            securitySettingsService.saveSecuritySettings(securitySettings);
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
@@ -224,14 +234,14 @@ public class UserController {
 
     /**
      * the Method used to validate 2-Factor-Auth codes.
+     *
      * @param username the id of the relating user
-     * @param code the code that should be validated (maybe use a Cmd-Class)
-     * @return "correctInput": true/false
+     * @param code     the code that should be validated
+     * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
-    public String validateCode(@PathVariable(USERID) final String username,
-                               @RequestBody final String code) {
-        return "correctInput: " + userService.getUser(username).getSecuritySettings().verifyCode(code);
+    public Boolean validateCode(@PathVariable("userID") final String username,
+                                @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
+        return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
-
 }
