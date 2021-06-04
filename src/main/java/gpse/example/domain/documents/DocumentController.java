@@ -8,6 +8,7 @@ import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
@@ -75,7 +76,6 @@ public class DocumentController {
      * @return the DocumentGet response
      * @throws DocumentNotFoundException if the document was not in this particular envelope, or
      *                                   if there was no document with this id in the database.
-     * @throws DownloadFileException     if something went wrong while downloading the file.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentGetResponse getDocumentFromEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
@@ -186,12 +186,16 @@ public class DocumentController {
         boolean documentFinished = true;
         JSONResponseObject response = new JSONResponseObject();
         if (document.getState().equals(DocumentState.OPEN)) {
-            final List<Signatory> readers = document.getReaders();
             if (document.isOrderRelevant()) {
-                Signatory currentReader = document.getCurrentSignatory(readers);
-                if (currentReader != null && currentReader.getUser().equals(reader)) {
+                List<Signatory> signatories = document.getSignatories();
+                Signatory currentReader = document.getCurrentSignatory(signatories);
+                if (currentReader != null && currentReader.getSignatureType().equals(SignatureType.REVIEW)
+                    && currentReader.getUser().equals(reader)) {
                     currentReader.setStatus(true);
                     signatoryService.saveSignatory(currentReader);
+                    if (signatories.get(signatories.size() - 1).equals(currentReader)) {
+                        document.setState(DocumentState.CLOSED);
+                    }
                     documentService.addDocument(document);
                     response.setStatus(STATUS_CODE_OK);
                     return response;
@@ -202,6 +206,7 @@ public class DocumentController {
                     return response;
                 }
             } else {
+                final List<Signatory> readers = document.getReaders();
                 boolean foundReader = false;
                 for (final Signatory currentReader : readers) {
                     if (currentReader.getUser().equals(reader)) {
@@ -254,7 +259,6 @@ public class DocumentController {
             final List<Signatory> signatories = document.getSignatories();
             for (final Signatory currentSignatory : signatories) {
                 if (currentSignatory.getUser().equals(signatory)) {
-                    //TODO sign the document
                     currentSignatory.setStatus(true);
                     signatoryService.saveSignatory(currentSignatory);
                 }
