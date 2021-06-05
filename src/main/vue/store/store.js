@@ -9,7 +9,6 @@ import * as document from './modules/document.js';
 import * as user from './modules/user';
 import * as userData from './modules/userData';
 import * as keypair from './modules/keypair';
-//import * as publicKey from './modules/keypair';
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
 
@@ -23,7 +22,6 @@ const store = new Vuex.Store({
         user,
         userData,
         keypair,
-        //publicKey,
         auth: authorization,
         documentUpload
     },

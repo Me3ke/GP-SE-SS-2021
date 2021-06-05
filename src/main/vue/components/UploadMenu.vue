@@ -180,7 +180,7 @@
 <script>
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
-import {mapActions} from "vuex";
+//import {mapActions} from "vuex";
 import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
 export default {
     name: 'UploadButton',
@@ -241,10 +241,8 @@ export default {
                 this.file.type = this.fileInput.name.split('.')[1];
                 this.file.data = await this.asyncHandleFunction(this.fileInput);
 
-                console.log(this.selectedEnv);
-                console.log(this.file);
-                console.log(this.settings);
-                this.uploadDocument(this.selectedEnv.old, this.file, this.settings);
+                //this.uploadDocument(this.selectedEnv.old, this.file, this.settings);
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings})
                 console.log("Done");
             } else if (!(this.selectedEnv.new === null)) {
                 //TODO: Post new Envelope then put document
@@ -259,7 +257,7 @@ export default {
         async asyncHandleFunction(file) {
             return await convertUploadFileToBase64(file)
         },
-        ...mapActions({uploadDocument: 'documentUpload/uploadDocument'})
+        //...mapActions({uploadDocument: 'documentUpload/uploadDocument'})
     },
     computed: {
         getEnvs() {

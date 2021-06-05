@@ -2,10 +2,11 @@ package gpse.example.domain.envelopes;
 
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.documents.DocumentPutRequest;
+import gpse.example.domain.documents.UploadDocumentPutRequest;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @CrossOrigin("http://localhost:8088")
+@RequestMapping("/api")
 public class EnvelopeController {
 
     private EnvelopeServiceImpl envelopeService;
@@ -40,7 +42,7 @@ public class EnvelopeController {
      * @return the new envelope.
      * @throws UploadFileException if the envelope could not be uploaded.
      */
-    @PostMapping("api.elsa.de/user/{*userID}/envelopes/envelopes")
+    @PostMapping("/user/{*userID}/envelopes/envelopes")
     public Envelope createEnvelope(final @PathVariable("userID") String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
@@ -57,15 +59,16 @@ public class EnvelopeController {
      *
      * @param envelopeID         the ID of the envelope.
      * @param ownerID            the email of the document creator
-     * @param documentPutRequest the command object keeping the information for a document to be created
+     * @param uploadDocumentPutRequest the command object keeping the information for a document to be created
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
-    public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
-                                 final @PathVariable("userID") String ownerID,
-                                 final @RequestBody DocumentPutRequest documentPutRequest)
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
+    public JSONResponseObject fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
+                                           final @PathVariable("userID") String ownerID,
+                                           final @RequestBody UploadDocumentPutRequest uploadDocumentPutRequest)
         throws UploadFileException {
+        /*
         try {
             userService.getUser(ownerID);
             final List<User> signatories = new ArrayList<>();
@@ -82,8 +85,12 @@ public class EnvelopeController {
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
+         */
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(200);
+        response.setMessage("Success");
+        return response;
     }
-
     /**
      * The getEnvelope method returns one particular envelope specified by id and may download the file.
      *

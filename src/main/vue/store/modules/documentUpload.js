@@ -15,8 +15,9 @@ export const mutations = {
 
 export const actions = {
     // makes axios call to upload document
-    uploadDocument({commit}, envID, file, settings) {
-        documentUploadAPI.uploadDocument(envID, file, settings).then(() => {
+    uploadDocument({commit}, {envID, file, settings}) {
+        documentUploadAPI.uploadDocumentApi(envID, file, settings).then(() => {
+            console.log("success")
             commit('SET_ERROR_GET_DOCUMENTS', {})
         }).catch(error => {
             commit('SET_ERROR_GET_DOCUMENTS', error)
