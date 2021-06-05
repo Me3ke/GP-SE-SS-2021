@@ -24,7 +24,8 @@ public class SignatureManagement {
     private final DocumentService documentService;
 
 
-    public SignatureManagement(SignatoryService givenSignatoryService, DocumentService givenDocumentService) {
+    public SignatureManagement(final SignatoryService givenSignatoryService,
+                               final DocumentService givenDocumentService) {
         signatoryService = givenSignatoryService;
         documentService = givenDocumentService;
     }
@@ -38,7 +39,8 @@ public class SignatureManagement {
      * @param signatureType the type of the signature
      * @return a fitting response.
      */
-    public JSONResponseObject manageSignatureRequest(User reader, Document document, SignatureType signatureType) {
+    public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
+                                                     final SignatureType signatureType) {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
@@ -46,10 +48,10 @@ public class SignatureManagement {
         }
     }
 
-    private JSONResponseObject manageSignatureWithoutOrder(User reader,
-                                                           Document document, SignatureType signatureType) {
+    private JSONResponseObject manageSignatureWithoutOrder(final User reader,
+                                                           final Document document, final SignatureType signatureType) {
         List<Signatory> signatories;
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         switch (signatureType) {
             case REVIEW:
                 signatories = document.getReaders();
@@ -64,16 +66,15 @@ public class SignatureManagement {
         }
     }
 
-    private JSONResponseObject manageSignatoriesWithoutOrder(User reader, Document document,
-                                                             JSONResponseObject response, SignatureType signatureType) {
+    private JSONResponseObject manageSignatoriesWithoutOrder(final User reader, final Document document,
+                                                             final JSONResponseObject response,
+                                                             final SignatureType signatureType) {
         List<Signatory> signatories;
         signatories = document.getSimpleSignatories();
-        if (!document.getState().equals(DocumentState.READ)) {
-            return setResponse(response);
-        } else {
+        if (document.getState().equals(DocumentState.READ)) {
             if (findSignatoryInList(signatories, reader, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
-                    return setDocumentToClosed(document);
+                    return changeDocumentStateToClosed(document);
                 } else {
                     response.setStatus(STATUS_CODE_OK);
                     return response;
@@ -83,17 +84,20 @@ public class SignatureManagement {
                 response.setMessage("The user is not a signatory for this document.");
                 return response;
             }
+        } else {
+            return changeResponseToNotReadYet(response);
         }
     }
 
-    private JSONResponseObject manageReadersWithoutOrder(User reader, Document document,
-                                                         List<Signatory> signatories, JSONResponseObject response) {
+    private JSONResponseObject manageReadersWithoutOrder(final User reader, final Document document,
+                                                         final List<Signatory> signatories,
+                                                         final JSONResponseObject response) {
         if (findSignatoryInList(signatories, reader, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
-                return setDocumentToClosed(document);
+                return changeDocumentStateToClosed(document);
             } else {
                 if (areSignatoriesFinished(signatories)) {
-                    return setDocumentToRead(document);
+                    return changeDocumentStateToRead(document);
                 } else {
                     response.setStatus(STATUS_CODE_OK);
                     return response;
@@ -106,17 +110,17 @@ public class SignatureManagement {
         }
     }
 
-    private JSONResponseObject setDocumentToRead(Document document) {
+    private JSONResponseObject changeDocumentStateToRead(final Document document) {
         document.setState(DocumentState.READ);
         documentService.addDocument(document);
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
         response.setMessage("The given document is now read");
         return response;
     }
 
-    private JSONResponseObject setDocumentToClosed(Document document) {
-        JSONResponseObject response = new JSONResponseObject();
+    private JSONResponseObject changeDocumentStateToClosed(final Document document) {
+        final JSONResponseObject response = new JSONResponseObject();
         document.setState(DocumentState.CLOSED);
         documentService.addDocument(document);
         response.setStatus(STATUS_CODE_OK);
@@ -124,8 +128,8 @@ public class SignatureManagement {
         return response;
     }
 
-    private boolean findSignatoryInList(List<Signatory> signatories, User signatoryToFind,
-                                        SignatureType signatureType) {
+    private boolean findSignatoryInList(final List<Signatory> signatories, final User signatoryToFind,
+                                        final SignatureType signatureType) {
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getUser().equals(signatoryToFind)
@@ -138,24 +142,25 @@ public class SignatureManagement {
         return foundSignatory;
     }
 
-    private boolean areSignatoriesFinished(List<Signatory> signatories) {
+    private boolean areSignatoriesFinished(final List<Signatory> signatories) {
         boolean finished = true;
-        for (Signatory signatory : signatories) {
+        for (final Signatory signatory : signatories) {
             finished &= signatory.isStatus();
         }
         return finished;
     }
 
-    private JSONResponseObject setResponse(JSONResponseObject response) {
+    private JSONResponseObject changeResponseToNotReadYet(final JSONResponseObject response) {
         response.setStatus(STATUS_CODE_NOT_READ_YET);
         response.setMessage("The given document is not fully read yet");
         return response;
     }
 
-    private JSONResponseObject manageSignatureInOrder(User reader, Document document, SignatureType signatureType) {
-        List<Signatory> signatories = document.getSignatories();
-        JSONResponseObject response = new JSONResponseObject();
-        Signatory currentReader = document.getCurrentSignatory();
+    private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
+                                                      final SignatureType signatureType) {
+        final List<Signatory> signatories = document.getSignatories();
+        final JSONResponseObject response = new JSONResponseObject();
+        final Signatory currentReader = document.getCurrentSignatory();
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
             signatoryService.saveSignatory(currentReader);
@@ -171,15 +176,16 @@ public class SignatureManagement {
         }
     }
 
-    private static void checkIfClosed(Document document, List<Signatory> signatories, JSONResponseObject response,
-                                      Signatory currentReader) {
+    private void checkIfClosed(final Document document, final List<Signatory> signatories,
+                               final JSONResponseObject response, final Signatory currentReader) {
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
             document.setState(DocumentState.CLOSED);
             response.setMessage("Document is now closed.");
         }
     }
 
-    private boolean matchesSignatory(User reader, Signatory currentReader, SignatureType signatureType) {
+    private boolean matchesSignatory(final User reader, final Signatory currentReader,
+                                     final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
             && currentReader.getUser().equals(reader);
     }

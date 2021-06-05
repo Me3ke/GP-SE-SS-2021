@@ -6,7 +6,7 @@ package gpse.example.domain.documents;
 public class AdvancedSignatureRequest {
     private final String signature;
 
-    public AdvancedSignatureRequest(String signature) {
+    public AdvancedSignatureRequest(final String signature) {
         this.signature = signature;
     }
 

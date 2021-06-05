@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -73,7 +74,7 @@ public class DocumentCreator {
     private void setSignatories(final List<ProtoSignatory> signatories,
                                           final Document document) {
         if (signatories != null) {
-            for (ProtoSignatory signatory : signatories) {
+            for (final ProtoSignatory signatory : signatories) {
                 document.addSignatory(signatory.getUser(), signatory.getSignatureType());
             }
         }
@@ -160,11 +161,7 @@ public class DocumentCreator {
     public void downloadEnvelope(final Envelope envelope, final String path) throws IOException, CreatingFileException {
         final List<Document> documentList = envelope.getDocumentList();
         String pathToEnvelope;
-        if (path == null) {
-            pathToEnvelope = PATH_TO_DOWNLOADS;
-        } else {
-            pathToEnvelope = path;
-        }
+        pathToEnvelope = Objects.requireNonNullElse(path, PATH_TO_DOWNLOADS);
         for (final Document document : documentList) {
             download(document, pathToEnvelope + envelope.getName());
         }

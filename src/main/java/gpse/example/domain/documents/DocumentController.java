@@ -218,33 +218,35 @@ public class DocumentController {
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
             throws DocumentNotFoundException {
-        Document document = documentService.getDocument(documentID);
+        final Document document = documentService.getDocument(documentID);
         if (document.verifySignature(userService.getUser(userID), advancedSignatureRequest.getSignature())) {
-            JSONResponseObject response = computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+            final JSONResponseObject response = computeSignatureRequest(userID,
+                documentID, SignatureType.ADVANCED_SIGNATURE);
             if (response.getStatus() == STATUS_CODE_OK) {
                 document.advancedSignature(userID, advancedSignatureRequest.getSignature());
             }
             return response;
         } else {
-            JSONResponseObject response = new JSONResponseObject();
+            final JSONResponseObject response = new JSONResponseObject();
             response.setStatus(STATUS_CODE_INVALID_SIGNATURE);
             response.setMessage("Invalid signature for this document");
             return response;
         }
     }
 
-    private JSONResponseObject computeSignatureRequest(String userID, long documentID, SignatureType signatureType)
+    private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
+                                                       final SignatureType signatureType)
             throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
-        JSONResponseObject response = new JSONResponseObject();
-        if (!document.getState().equals(DocumentState.CLOSED)) {
-            SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
-            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
-        } else {
+        final JSONResponseObject response = new JSONResponseObject();
+        if (document.getState().equals(DocumentState.CLOSED)) {
             response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
             response.setMessage("This document is closed");
             return response;
+        } else {
+            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }
 
@@ -267,7 +269,7 @@ public class DocumentController {
      * */
     @GetMapping("/documents/{documentID:\\d+}/protocol")
     public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID) throws DocumentNotFoundException {
-        Protocol protocol = new Protocol(documentService.getDocument(documentID));
+        final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
             return protocol.writeProtocol().toByteArray();
         } catch (IOException e) {
@@ -285,10 +287,11 @@ public class DocumentController {
     public byte[] downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID,
                                    final @RequestParam("path") String path) throws DocumentNotFoundException,
                                         CreatingFileException {
-        Document document = documentService.getDocument(documentID);
-        Protocol protocol = new Protocol(document);
+        //TODO: maybe just read the document directly into the protocol, instead of saving it in a local variable
+        final Document document = documentService.getDocument(documentID);
+        final Protocol protocol = new Protocol(document);
         try {
-            byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+            final byte[] protocolBytes = protocol.writeProtocol().toByteArray();
            documentCreator.writeInNewFile(protocolBytes, "pdf",
                 "protocol_" + documentID, path);
             return protocolBytes;

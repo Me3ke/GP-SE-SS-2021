@@ -132,7 +132,7 @@ public class InitializeDatabase implements InitializingBean {
                     final byte[] data = inputStream.readAllBytes();
                     final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                         .getName().split(DOUBLE_BACKSLASH);
-                    Document document = createExampleDocument(documentIDs.get(i), data,
+                    final Document document = createExampleDocument(documentIDs.get(i), data,
                         documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
                     if (document != null) {
                         envelope.addDocument(document);

@@ -50,13 +50,12 @@ public class DocumentGetResponse {
         this.signed = false;
         final List<Signatory> signatories = document.getSignatories();
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(currentUser)) {
-                if (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
-                    || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
-                    this.signatory = true;
-                    if (currentSignatory.isStatus()) {
-                        this.signed = true;
-                    }
+            if (currentSignatory.getUser().equals(currentUser)
+                && currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                this.signatory = true;
+                if (currentSignatory.isStatus()) {
+                    this.signed = true;
                 }
             }
         }

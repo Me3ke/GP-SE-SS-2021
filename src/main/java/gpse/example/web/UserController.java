@@ -1,7 +1,5 @@
 package gpse.example.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
@@ -37,7 +35,6 @@ public class UserController {
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
 
     private static final String USERID = "userID";
-    private ObjectMapper mapper;
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -58,7 +55,7 @@ public class UserController {
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final PersonalDataService personalDataService,
-                          final SecuritySettingsService securitySettingsService, MessageService messageService) {
+                          final SecuritySettingsService securitySettingsService, final MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
@@ -74,25 +71,25 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @PostMapping("/newUser")
-    public JSONResponseObject signUp(@RequestBody UserSignUpCmd signUpUser) {
-        JSONResponseObject response = new JSONResponseObject();
+    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) {
+        final JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
             response.setMessage("username or password not specified");
             return response;
         } else {
             try {
-                User user = userService.getUser(signUpUser.getUsername());
+                final User user = userService.getUser(signUpUser.getUsername());
 
                 response.setStatus(STATUS_CODE_USER_EXISTS_ALREADY);
                 response.setMessage("username " + user.getUsername() + " already exists");
                 return response;
             } catch (UsernameNotFoundException e) {
-                User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
+                final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
-                personalDataService.savePersonalData(personalData);
+                personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -116,11 +113,11 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @GetMapping("/newUser/register")
-    public JSONResponseObject confirmMail(@RequestParam("token") String token) {
+    public JSONResponseObject confirmMail(final @RequestParam("token") String token) {
 
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
 
-        Optional<ConfirmationToken> optionalConfirmationToken
+        final Optional<ConfirmationToken> optionalConfirmationToken
             = confirmationTokenService.findConfirmationTokenByToken(token);
 
         if (optionalConfirmationToken.isEmpty()) {
@@ -161,10 +158,10 @@ public class UserController {
      * @return SONResponse containing statusCode and a message
      */
     @GetMapping("/user/{userID}/validate/")
-    public JSONResponseObject adminUserValidation(@PathVariable("userID") final String username) {
+    public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
-        JSONResponseObject response = new JSONResponseObject();
-        User user = userService.getUser(username);
+        final JSONResponseObject response = new JSONResponseObject();
+        final User user = userService.getUser(username);
         userService.validateUser(user);
 
         if (user.isAdminValidated()) {
@@ -195,7 +192,7 @@ public class UserController {
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         try {
             userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
             response.setStatus(STATUS_CODE_OK);
@@ -207,7 +204,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
-    public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
+    public boolean checkForTwoFAConfiguration(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().getSecret() != null;
     }
 
@@ -220,9 +217,9 @@ public class UserController {
     @GetMapping("/user/{userID}/settings/qrCode")
     public QrCodeGetResponse getQRCode(@PathVariable(USERID) final String username) {
         try {
-            SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+            final SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
             securitySettings.generateSecret();
-            byte[] temp = securitySettings.generateQRCode(username);
+            final byte[] temp = securitySettings.generateQRCode(username);
             securitySettingsService.saveSecuritySettings(securitySettings);
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
@@ -239,7 +236,7 @@ public class UserController {
      * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
-    public Boolean validateCode(@PathVariable("userID") final String username,
+    public Boolean validateCode(@PathVariable(USERID) final String username,
                                 @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }

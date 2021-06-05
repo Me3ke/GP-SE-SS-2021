@@ -122,7 +122,7 @@ public class Document {
      * @param givenSignature the signature that needs to be validated
      * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
      */
-    public boolean verifySignature(final User user, String givenSignature) {
+    public boolean verifySignature(final User user, final String givenSignature) {
 
         boolean valid = false;
         final byte[] signature = givenSignature.getBytes();
