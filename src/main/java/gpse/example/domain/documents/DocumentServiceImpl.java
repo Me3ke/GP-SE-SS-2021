@@ -6,7 +6,6 @@ import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
-import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

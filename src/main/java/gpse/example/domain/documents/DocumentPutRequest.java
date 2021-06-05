@@ -1,7 +1,6 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.ProtoSignatory;
-import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
 import java.util.List;

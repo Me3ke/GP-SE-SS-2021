@@ -26,8 +26,9 @@ public class EnvelopeController {
 
     private static final String USER_ID = "userID";
     private static final String ENVELOPE_ID = "envelopeID";
-    public static final int FORBIDDEN = 403;
-    public static final int INTERNAL_ERROR = 500;
+    private static final int FORBIDDEN = 403;
+    private static final int INTERNAL_ERROR = 500;
+    private static final int STATUS_CODE_OK = 200;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -38,10 +39,10 @@ public class EnvelopeController {
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService the envelopeService
-     * @param userService the userService
+     * @param envelopeService  the envelopeService
+     * @param userService      the userService
      * @param signatoryService the signatoryService
-     * @param documentService the documentService
+     * @param documentService  the documentService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -80,13 +81,11 @@ public class EnvelopeController {
      * @param ownerID            the email of the document creator
      * @param documentPutRequest the command object keeping the information for a document to be created
      * @return the envelope in which the document was added to.
-     * @throws UploadFileException if the document could not be uploaded.
      */
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                 final @PathVariable(USER_ID) String ownerID,
-                                 final @RequestBody DocumentPutRequest documentPutRequest)
-        {
+                                           final @PathVariable(USER_ID) String ownerID,
+                                           final @RequestBody DocumentPutRequest documentPutRequest) {
         JSONResponseObject response = new JSONResponseObject();
         System.out.println(documentPutRequest.getEndDate());
         try {
@@ -99,7 +98,7 @@ public class EnvelopeController {
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
             envelopeService.updateEnvelope(envelope, document);
-            response.setStatus(200);
+            response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
@@ -108,6 +107,7 @@ public class EnvelopeController {
             return response;
         }
     }
+
     /**
      * The getEnvelope method returns one particular envelope specified by id.
      *
@@ -130,8 +130,8 @@ public class EnvelopeController {
      * The downloadEnvelope method downloads an envelope with all documents.
      *
      * @param envelopeID the id of the envelope to be downloaded.
-     * @param userID the id of the user doing the request.
-     * @param path the path where the envelope should be downloaded.
+     * @param userID     the id of the user doing the request.
+     * @param path       the path where the envelope should be downloaded.
      * @return the response object
      * @throws DownloadFileException if the download was not successful.
      */
