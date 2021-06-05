@@ -10,8 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 
 /**
  * The DocumentCreator is a factory method responsible for creating documents and envelops.
