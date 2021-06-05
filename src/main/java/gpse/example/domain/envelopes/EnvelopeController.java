@@ -26,6 +26,8 @@ public class EnvelopeController {
 
     private static final String USER_ID = "userID";
     private static final String ENVELOPE_ID = "envelopeID";
+    public static final int FORBIDDEN = 403;
+    public static final int INTERNAL_ERROR = 500;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -84,22 +86,27 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                  final @PathVariable(USER_ID) String ownerID,
                                  final @RequestBody DocumentPutRequest documentPutRequest)
-        throws UploadFileException {
-        /*
+        {
+        JSONResponseObject response = new JSONResponseObject();
+        System.out.println(documentPutRequest.getEndDate());
         try {
-            userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+            if (!envelope.getOwnerID().equals(ownerID)) {
+                response.setStatus(FORBIDDEN);
+                response.setMessage("Forbidden. Not permitted to upload document.");
+                return response;
+            }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            return envelopeService.updateEnvelope(envelope, document);
+            envelopeService.updateEnvelope(envelope, document);
+            response.setStatus(200);
+            response.setMessage("Success");
+            return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
-            throw new UploadFileException(e);
+            response.setStatus(INTERNAL_ERROR);
+            response.setMessage("The document could not be uploaded.");
+            return response;
         }
-         */
-        JSONResponseObject response = new JSONResponseObject();
-        response.setStatus(200);
-        response.setMessage("Success");
-        return response;
     }
     /**
      * The getEnvelope method returns one particular envelope specified by id.

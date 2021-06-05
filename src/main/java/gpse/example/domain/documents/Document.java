@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.*;
 import java.security.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +84,8 @@ public class Document {
         this.data = documentPutRequest.getData();
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
              documentPutRequest.getLastModified(), this.data.length, ownerID);
-        this.endDate = documentPutRequest.getEndDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
 

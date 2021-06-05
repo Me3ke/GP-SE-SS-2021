@@ -57,17 +57,9 @@ public class DocumentServiceImpl implements DocumentService {
     public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
                               final UserServiceImpl userService, final SignatoryServiceImpl signatoryService)
                                 throws CreatingFileException, IOException {
-        final List<ProtoSignatory> signatories = new ArrayList<>();
-        final List<String> signatoriesID = documentPutRequest.getSignatoriesID();
-        final List<String> readersID = documentPutRequest.getReadersID();
-        for (final String currentID : readersID) {
-            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.REVIEW));
-        }
-        for (final String currentID : signatoriesID) {
-            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.SIMPLE_SIGNATURE));
-        }
+        final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatoriesID();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatories);
+            ownerID, signatoriesID);
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);

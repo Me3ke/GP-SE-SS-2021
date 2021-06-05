@@ -240,7 +240,8 @@ export default {
                 this.file.name = this.fileInput.name.split('.')[0];
                 this.file.type = this.fileInput.name.split('.')[1];
                 this.file.data = await this.asyncHandleFunction(this.fileInput);
-
+                this.settings.endDate = this.settings.endDate + ' 12:00';
+                console.log(this.settings.endDate);
                 //this.uploadDocument(this.selectedEnv.old, this.file, this.settings);
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings})
                 console.log("Done");
