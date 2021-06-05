@@ -270,7 +270,9 @@
         "addReaders": "Add proofreaders",
         "skipReview": "Skip review process",
         "chooseDate": "Chose deadline",
-        "orderRelevant": "Order relevant"
+        "orderRelevant": "Order relevant",
+        "selectedDoc": "File: ",
+        "chooseFile": "Choose a file or drop it here..."
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",

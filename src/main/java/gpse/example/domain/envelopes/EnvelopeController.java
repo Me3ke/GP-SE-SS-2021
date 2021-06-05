@@ -61,7 +61,7 @@ public class EnvelopeController {
      * @return the envelope in which the document was added to.
      * @throws UploadFileException if the document could not be uploaded.
      */
-    @PutMapping("api.elsa.de/user/{*userID}/envelopes/{envelopeID:\\d+}")
+    @PutMapping("api.elsa.de/user/{userID}/envelopes/{envelopeID:\\d+}")
     public Envelope fillEnvelope(final @PathVariable("envelopeID") long envelopeID,
                                  final @PathVariable("userID") String ownerID,
                                  final @RequestBody DocumentPutRequest documentPutRequest)

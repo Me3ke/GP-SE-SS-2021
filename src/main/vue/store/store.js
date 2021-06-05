@@ -11,6 +11,7 @@ import * as userData from './modules/userData';
 import * as keypair from './modules/keypair';
 //import * as publicKey from './modules/keypair';
 import authorization from "@/main/vue/store/modules/authorization";
+import * as documentUpload from './modules/documentUpload.js';
 
 Vue.use(Vuex)
 
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
         userData,
         keypair,
         //publicKey,
-        auth: authorization
+        auth: authorization,
+        documentUpload
     },
     mutations: {
         INITIALIZE_STORE(state) {

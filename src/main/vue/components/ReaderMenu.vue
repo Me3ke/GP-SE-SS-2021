@@ -14,40 +14,28 @@
             </b-row>
         </div>
         <div >
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="readerOrderRelevantSwitch" v-model="orderRelevant">
-                <label class="custom-control-label" for="readerOrderRelevantSwitch"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
-            </div>
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
-            <draggable v-model="readers">
-                <div class="drag-drop-element" v-for="reader in readers" :key="reader" style="padding:0.25em">
-                    <b-row align-h="between">
-                        <h6>
-                            <b-col cols="auto">
-                                <b-icon class="icon-hover" icon="trash" @click="deleteReader(reader)"></b-icon>
-                                {{reader}}
-                            </b-col>
-                        </h6>
+            <div class="drag-drop-element" v-for="reader in readers" :key="reader" style="padding:0.25em">
+                <b-row align-h="between">
+                    <h6>
                         <b-col cols="auto">
-                            <b-icon icon="list" class="icon"></b-icon>
+                            <b-icon class="icon-hover" icon="trash" @click="deleteReader(reader)"></b-icon>
+                            {{reader}}
                         </b-col>
-                    </b-row>
-                </div>
-            </draggable>
+                    </h6>
+                </b-row>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable'
 export default {
     name: "ReaderMenu",
     props: {
-        readers: Array,
-        orderRelevant: Boolean
+        readers: Array
     },
-    components: {draggable},
     data() {
         return{
             readerInput: ""

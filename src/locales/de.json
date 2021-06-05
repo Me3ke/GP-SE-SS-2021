@@ -271,7 +271,9 @@
         "newEnvPlaceholder": "Name des Verbundes",
         "configureDoc": "Dokumenteneinstellungen",
         "addReaders": "Gegenleser hinzufügen",
-        "skipReview": "Gegenlese-Prozess überspringen"
+        "skipReview": "Gegenlese-Prozess überspringen",
+        "selectedDoc": "Dokument: ",
+        "chooseFile": "Dokument auswählen oder ins Feld ziehen..."
     },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
