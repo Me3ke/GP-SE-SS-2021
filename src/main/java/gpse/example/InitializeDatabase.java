@@ -109,7 +109,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(ID_FIVE);
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.OPEN, false, true);
+            documentPaths, DocumentState.OPEN, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_SIX);
@@ -178,7 +178,7 @@ public class InitializeDatabase implements InitializingBean {
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
             documentPutRequestRequest.setDataType(type);
-            documentPutRequestRequest.setOrderRelevant(false);
+            documentPutRequestRequest.setOrderRelevant(true);
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (read) {

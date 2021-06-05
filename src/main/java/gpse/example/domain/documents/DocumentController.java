@@ -37,7 +37,8 @@ public class DocumentController {
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
-    public static final int STATUS_CODE_INVALID_SIGNATURE = 456;
+    private static final int STATUS_CODE_INVALID_SIGNATURE = 456;
+    private static final int STATUS_CODE_OK = 200;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -207,6 +208,7 @@ public class DocumentController {
      *
      * @param userID     the id of the user reading the document.
      * @param documentID the document to be reviewed.
+     * @param advancedSignatureRequest the request Object containing the advanced signature
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
@@ -216,9 +218,13 @@ public class DocumentController {
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
             throws DocumentNotFoundException {
-        if (documentService.getDocument(documentID).verifySignature(userService.getUser(userID),
-            advancedSignatureRequest.getSignature())) {
-            return computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+        Document document = documentService.getDocument(documentID);
+        if (document.verifySignature(userService.getUser(userID), advancedSignatureRequest.getSignature())) {
+            JSONResponseObject response = computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+            if (response.getStatus() == STATUS_CODE_OK) {
+                document.advancedSignature(userID, advancedSignatureRequest.getSignature());
+            }
+            return response;
         } else {
             JSONResponseObject response = new JSONResponseObject();
             response.setStatus(STATUS_CODE_INVALID_SIGNATURE);
