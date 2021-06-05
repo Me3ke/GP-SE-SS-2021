@@ -32,7 +32,7 @@ public class UserSignUpCmd {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -40,7 +40,7 @@ public class UserSignUpCmd {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
+    public void setFirstname(final String firstname) {
         this.firstname = firstname;
     }
 
@@ -48,7 +48,7 @@ public class UserSignUpCmd {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
+    public void setLastname(final String lastname) {
         this.lastname = lastname;
     }
 
@@ -56,7 +56,7 @@ public class UserSignUpCmd {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(final String street) {
         this.street = street;
     }
 
@@ -64,7 +64,7 @@ public class UserSignUpCmd {
         return housenumber;
     }
 
-    public void setHousenumber(int housenumber) {
+    public void setHousenumber(final int housenumber) {
         this.housenumber = housenumber;
     }
 
@@ -72,7 +72,7 @@ public class UserSignUpCmd {
         return postcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(final int postcode) {
         this.postcode = postcode;
     }
 
@@ -80,7 +80,7 @@ public class UserSignUpCmd {
         return hometown;
     }
 
-    public void setHometown(String hometown) {
+    public void setHometown(final String hometown) {
         this.hometown = hometown;
     }
 
@@ -88,7 +88,7 @@ public class UserSignUpCmd {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(final String country) {
         this.country = country;
     }
 
@@ -96,7 +96,7 @@ public class UserSignUpCmd {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(final String birthday) {
         this.birthday = birthday;
     }
 
@@ -104,7 +104,7 @@ public class UserSignUpCmd {
         return phonenumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
+    public void setPhonenumber(final String phonenumber) {
         this.phonenumber = phonenumber;
     }
 
@@ -112,7 +112,7 @@ public class UserSignUpCmd {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -122,7 +122,7 @@ public class UserSignUpCmd {
      */
     @JsonIgnore
     public PersonalData generatePersonalData() {
-        PersonalData personalData = new PersonalData();
+        final PersonalData personalData = new PersonalData();
         if (housenumber != -1) {
             personalData.setHouseNumber(housenumber);
         }

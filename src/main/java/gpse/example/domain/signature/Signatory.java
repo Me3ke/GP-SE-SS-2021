@@ -3,6 +3,7 @@ package gpse.example.domain.signature;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * the class that models a signatory for a document.
@@ -21,6 +22,13 @@ public class Signatory {
     @Column
     private boolean status;
 
+    @Column
+    private LocalDateTime signedOn;
+
+    @Column
+    private SignatureType signatureType;
+
+
     /**
      * -1 = no reminder.
      */
@@ -29,12 +37,14 @@ public class Signatory {
 
     /**
      * Default constructor for a Signatory. Status is initialized with false.
-     * @param user the user which has to sign the corresponding document.
+     * @param user the user that has to sign the corresponding document.
+     * @param signatureType the signatureType the signatory refers to.
      */
-    public Signatory(final User user) {
+    public Signatory(final User user, final SignatureType signatureType) {
         this.user = user;
         this.status = false;
         this.reminder = -1;
+        this.signatureType = signatureType;
     }
 
     protected Signatory() {
@@ -53,7 +63,15 @@ public class Signatory {
         return status;
     }
 
+    /**
+     * Sets the status for a signatory. If the status is true
+     * the signedOn gets the moment of status change as time.
+     * @param status the new status.
+     */
     public void setStatus(final boolean status) {
+        if (status) {
+            this.signedOn = LocalDateTime.now();
+        }
         this.status = status;
     }
 
@@ -67,5 +85,17 @@ public class Signatory {
 
     public void setReminder(int reminder) {
         this.reminder = reminder;
+    }
+
+    public LocalDateTime getSignedOn() {
+        return signedOn;
+    }
+
+    public SignatureType getSignatureType() {
+        return signatureType;
+    }
+
+    public void setSignatureType(final SignatureType signatureType) {
+        this.signatureType = signatureType;
     }
 }

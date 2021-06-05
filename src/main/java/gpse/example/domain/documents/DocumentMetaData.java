@@ -3,10 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.util.HashSHA;
 
 import javax.persistence.*;
-import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-//import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -35,14 +32,17 @@ public class DocumentMetaData {
     @Column
     private String identifier;
 
+    /*
     @Column
     private LocalDateTime creationDate;
 
     @Column
-    private LocalDateTime lastModified;
+    private LocalDateTime lastAccess;
+
+     */
 
     @Column
-    private LocalDateTime lastAccess;
+    private LocalDateTime lastModified;
 
     @Column
     private long size;
@@ -52,20 +52,17 @@ public class DocumentMetaData {
      *
      * @param metaTimeStampUpload the Timestamp created during the upload
      * @param metaDocumentTitle   the document file name
-     * @param creationDate        the date of creation of the document
      * @param lastModified        the date of last modification on the document
-     * @param lastAccess          the date of last access on the document
      * @param size                the size of the document
      * @param metaUserID          an ID referring to the owner of the envelope this document is a part of.
      */
     public DocumentMetaData(final LocalDateTime metaTimeStampUpload, final String metaDocumentTitle,
-                            final FileTime creationDate, final FileTime lastModified,
-                            final FileTime lastAccess, final long size, final String metaUserID) {
+                            final LocalDateTime lastModified, final long size, final String metaUserID) {
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
-        this.creationDate = formatDateTime(creationDate);
-        this.lastModified = formatDateTime(lastModified);
-        this.lastAccess = formatDateTime(lastAccess);
+        //this.creationDate = formatDateTime(creationDate);
+        this.lastModified = lastModified;
+        //this.lastAccess = formatDateTime(lastAccess);
         this.size = size;
         this.metaUserID = metaUserID;
         generateHashString();
@@ -75,12 +72,29 @@ public class DocumentMetaData {
 
     }
 
+
+    /**
+     * Constructor for meta data that is important for archived documents.
+     * @param documentMetaData the old meta data.
+     */
+    public DocumentMetaData(DocumentMetaData documentMetaData) {
+        this.metaTimeStampUpload = documentMetaData.getMetaTimeStampUpload();
+        this.metaDocumentTitle = documentMetaData.getMetaDocumentTitle();
+        //this.creationDate = formatDateTime(creationDate);
+        this.lastModified = documentMetaData.getLastModified();
+        //this.lastAccess = formatDateTime(lastAccess);
+        this.size = documentMetaData.getSize();
+        this.metaUserID = documentMetaData.getMetaUserID();
+        this.identifier = documentMetaData.getIdentifier();
+    }
+/*
     /**
      * The formatDateTime methods converts the file times to a more readable format.
      *
      * @param fileTime the file time.
      * @return returns a String of the time in a new format.
      */
+    /*
     private LocalDateTime formatDateTime(final FileTime fileTime) {
         final LocalDateTime localDateTime = fileTime
             .toInstant()
@@ -88,6 +102,7 @@ public class DocumentMetaData {
             .toLocalDateTime();
         return localDateTime;
     }
+    */
 
     private void generateHashString() {
         final HashSHA hashSHA = new HashSHA();
@@ -125,16 +140,8 @@ public class DocumentMetaData {
         return identifier;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
     public LocalDateTime getLastModified() {
         return lastModified;
-    }
-
-    public LocalDateTime getLastAccess() {
-        return lastAccess;
     }
 
     public long getSize() {

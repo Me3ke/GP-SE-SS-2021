@@ -13,17 +13,14 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class StringToKeyConverter {
 
-    public StringToKeyConverter() {
-    }
-
     /**
      * Method, which converts a public key from a String format into a PublicKey format.
-     * @param keyToConvert
+     * @param keyToConvert the key that should be converted
      * @return the converted public key in the PublicKey format
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
+     * @throws NoSuchAlgorithmException shouldn't be thrown because we always use RSA, which is an existing algorithm
+     * @throws InvalidKeySpecException is thrown if the key doesn't match the correct format
      */
-    public PublicKey convertString(String keyToConvert) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public PublicKey convertString(final String keyToConvert) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String publicKeyPemStr = keyToConvert;
         publicKeyPemStr = publicKeyPemStr.replace("publicKey", "");
         publicKeyPemStr = publicKeyPemStr.replace(":", "");
@@ -31,9 +28,9 @@ public class StringToKeyConverter {
         publicKeyPemStr = publicKeyPemStr.replace("}", "");
         publicKeyPemStr = publicKeyPemStr.replace("-----BEGIN PUBLIC KEY-----", "");
         publicKeyPemStr = publicKeyPemStr.replace("-----END PUBLIC KEY-----", "");
-        byte[] encoded = Base64.decodeBase64(publicKeyPemStr);
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        final byte[] encoded = Base64.decodeBase64(publicKeyPemStr);
+        final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+        final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePublic(keySpec);
     }
 }

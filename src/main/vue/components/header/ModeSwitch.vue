@@ -9,7 +9,7 @@
             <span class="letters"> {{ $t('Header.Avatar.darkmode') }} </span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @click.prevent="toggleTheme('lightMode')" class="my-dropdown-item">
+        <b-dropdown-item @click.prevent="toggleTheme('')" class="my-dropdown-item">
             <b-icon icon="sun" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.lightmode') }} </span>
         </b-dropdown-item>
@@ -17,24 +17,30 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "ModeSwitch",
-    data() {
-        return {
-            'theme': ''
-        }
+    created() {
+        // sets up theme based on user preference
+        this.$store.dispatch('theme/setUpTheme')
+        document.documentElement.setAttribute('data-theme', this.theme);
     },
     methods: {
         toggleTheme(mode) {
-            if (mode === 'darkMode' && this.theme === 'darkMode' || mode === 'lightMode' && this.theme === '') {
-                return
-            }
-            this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
+            // changes modes
+            this.$store.dispatch('theme/setTheme', {theme: mode})
             document.documentElement.setAttribute('data-theme', this.theme);
-            localStorage.setItem('theme', this.theme);
         }
+    },
+    computed: {
+        ...mapGetters({
+            theme: 'theme/getTheme'
+        })
     }
 }
+
+
 </script>
 
 <style scoped>

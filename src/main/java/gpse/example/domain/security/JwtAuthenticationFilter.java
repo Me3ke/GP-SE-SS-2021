@@ -60,7 +60,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
-        System.out.println(roles.get(0));
 
         byte[] signingKey = securityConstants.getJwtSecret().getBytes();
 

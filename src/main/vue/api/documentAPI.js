@@ -6,9 +6,33 @@ export default {
     async getDocument(envId, docId) {
         return axios({
             method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
+        })
+    },
+    // gives back protocol of document with id docId
+    async getProtocol(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/' + 'documents/' + docId + '/protocol'
+        })
+    },
+    async editDocument(envId, docId, newDoc) {
+        return axios({
+            method: "put",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId,
-            params: {
-                download: false
+
+            data: {
+                //'byte': newDoc.byte[1],
+                'data': newDoc.data,
+                'title': newDoc.title,
+                'dataType': newDoc.dataType,
+                'signatoriesID': newDoc.signatoriesId,
+                'readersID': newDoc.readersId,
+                'signatureType': newDoc.signatureType,
+                'endDate': null,
+                'orderRelevant': newDoc.orderRelevant,
+                'state': newDoc.state,
+                'lastModified': null
             }
         })
     }

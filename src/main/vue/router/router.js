@@ -15,6 +15,9 @@ import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import EnvelopeSettingsPage from "@/main/vue/views/EnvelopeSettingsPage";
 import store from "@/main/vue/store/store";
+import BlankTestPage from "@/main/vue/views/BlankTestPage";
+import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
+import ProtocolPage from "@/main/vue/views/ProtocolPage";
 
 Vue.use(VueRouter)
 
@@ -92,6 +95,15 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'envelope/:envId/document/:docId/protocol',
+                    name: 'protocol',
+                    component: ProtocolPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: '404',
                     name: '404',
                     component: NotFoundPage,
@@ -133,6 +145,17 @@ const router = new VueRouter({
                     meta: {
                         requiresAuth: true
                     }
+                },
+
+                {
+                    path: 'progressbar',
+                    name: 'progressbar',
+                    component: ProgressbarTestPage
+                },
+                {
+                    path: 'test',
+                    name: 'test',
+                    component: BlankTestPage
                 },
                 {
                     path: 'settings/:envId',

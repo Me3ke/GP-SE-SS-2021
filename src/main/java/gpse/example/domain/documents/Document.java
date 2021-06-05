@@ -7,10 +7,6 @@ import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,13 +38,10 @@ public class Document {
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
-    private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
-    @OneToMany
-    private List<Signatory> readers = new ArrayList<>();
-
-    @Column
-    private File documentFile;
+    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
+    private Document previousVersion;
 
     @Column
     private String documentType;
@@ -79,44 +72,30 @@ public class Document {
      * This works only if documentTitle has no dot.
      *
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
-     * @param path        The path leading to the file.
+     * @param documentPutRequest
      * @param signatories The list of signatories for a document.
-     * @param readers     The list of readers for a document.
      * @throws IOException throws the exception if filepath was invalid.
      */
-    public Document(final String path, final List<Signatory> signatories,
-                    final String ownerID, final List<Signatory> readers) throws IOException {
+    public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
+                    final String ownerID) {
         this.signatories = signatories;
-        this.readers = readers;
-        final Path documentPath = Paths.get(path);
-        this.documentFile = new File(path);
-        final BasicFileAttributes attr = Files.readAttributes(documentPath, BasicFileAttributes.class);
-        final String[] filename = documentFile.getName().split("\\.");
-        final String title = filename[0];
-        this.documentType = filename[1];
-        this.data = Files.readAllBytes(documentPath);
-        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), title, attr.creationTime(),
-            attr.lastModifiedTime(), attr.lastAccessTime(), attr.size(), ownerID);
+        this.documentType = documentPutRequest.getDataType();
+        this.data = documentPutRequest.getData();
+        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
+             documentPutRequest.getLastModified(), this.data.length, ownerID);
+        this.endDate = documentPutRequest.getEndDate();
+        this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
 
     /**
      * adds a new user as a signatory to the signatory list.
      *
      * @param signatory the user object that is needed as a signatory
+     * @param signatureType the signatureType the signatory refers to
      */
-    public void addSignatory(final User signatory) {
-        signatories.add(new Signatory(signatory));
+    public void addSignatory(final User signatory, final SignatureType signatureType) {
+        signatories.add(new Signatory(signatory, signatureType));
     }
-
-    /**
-     * adds a new user as a reader to the reader list.
-     *
-     * @param reader the user object that is needed as a reader
-     */
-    public void addReader(final User reader) {
-        readers.add(new Signatory(reader));
-    }
-
     /**
      * the Method to add an advanced signature for a specific user to the document.
      *
@@ -173,10 +152,26 @@ public class Document {
         return null;
     }
 
+    /**
+     * The getHistory method gets all previous versions of a document.
+     * @return a list of all previous versions starting with the given document
+     *          and ending with the first version.
+     */
+    public List<Document> getHistory() {
+        Document temp = this;
+        final List<Document> history = new ArrayList<>();
+        while (temp != null) {
+            history.add(temp);
+            temp = temp.getPreviousVersion();
+        }
+        return history;
+    }
+
     //--------- Filter methods--------
 
     /**
      * The filter method for document titles.
+     *
      * @param titleFilter a String specifying the filter.
      * @return true if this document contains the titleFilter.
      */
@@ -186,6 +181,7 @@ public class Document {
 
     /**
      * The filter method for document signatureTypes.
+     *
      * @param signatureTypeFilter the signatureType specifying the filter.
      * @return true if this document has this signature type.
      */
@@ -198,6 +194,7 @@ public class Document {
 
     /**
      * The filter method for document states.
+     *
      * @param documentStateFilter the state specifying the filter.
      * @return true if this document has this state.
      */
@@ -210,8 +207,9 @@ public class Document {
 
     /**
      * The filter method for document titles.
+     *
      * @param endDateFrom a Date which specifies the earliest moment.
-     * @param endDateTo a Date which specifies the latest moment.
+     * @param endDateTo   a Date which specifies the latest moment.
      * @return true if this document is in between these endDates.
      */
     public boolean hasEndDate(final LocalDateTime endDateFrom, final LocalDateTime endDateTo) {
@@ -228,6 +226,7 @@ public class Document {
 
     /**
      * The filter method for document data types.
+     *
      * @param dataType a String specifying the datatypeFilter.
      * @return true if this document is from this type, or contains it.
      */
@@ -237,6 +236,7 @@ public class Document {
 
     /**
      * The filter method for document signatories.
+     *
      * @param signatories The list of signatories by which should be filtered.
      * @return true if this document contains one of the signatories of the filter.
      */
@@ -254,16 +254,16 @@ public class Document {
 
     /**
      * The filter method for document readers.
+     *
      * @param readers The list of reader by which should be filtered.
      * @return true if this document contains one of the readers of the filter.
      */
     public boolean hasReaders(final List<String> readers) {
-        if (readers == null) {
-            return true;
-        }
-        for (final Signatory reader : this.readers) {
-            if (readers.contains(reader.getUser().getEmail())) {
-                return true;
+        for (final String reader : readers) {
+            for (final Signatory signatory : getReaders()) {
+                if (signatory.getUser().getUsername().equals(reader)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -271,6 +271,7 @@ public class Document {
 
     /**
      * The filter method for signed.
+     *
      * @param signed a boolean specifying the filter if the document is signed.
      * @return true if this document corresponds to the filter.
      */
@@ -285,15 +286,11 @@ public class Document {
 
     /**
      * The filter method for read.
+     *
      * @param read a boolean specifying the filter if the document has been read.
      * @return true if this document corresponds to the filter.
      */
     public boolean hasRead(final boolean read) {
-        for (final Signatory reader : this.readers) {
-            if (read == reader.isStatus()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -317,10 +314,6 @@ public class Document {
 
     public DocumentMetaData getDocumentMetaData() {
         return documentMetaData;
-    }
-
-    public File getDocumentFile() {
-        return documentFile;
     }
 
     public String getDocumentTitle() {
@@ -347,7 +340,31 @@ public class Document {
         return signatories;
     }
 
+    /**
+     * The method that returns the first signatory, that hasn't signed or reviewed from any given list.
+     * @param signatories a List of Signatories, probably either a List of readers or a full list of all signatories
+     * @return the first signatory, that hasn't signed or reviewed from any given list.
+     */
+    public Signatory getCurrentSignatory(final List<Signatory> signatories) {
+        for (final Signatory signatory : signatories) {
+            if (!signatory.isStatus()) {
+                return signatory;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * returns a list of only those signatories that have review as their signature Type.
+     * @return a list of only those signatories that have review as their signature Type
+     */
     public List<Signatory> getReaders() {
+        final List<Signatory> readers = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.REVIEW)) {
+                readers.add(signatory);
+            }
+        }
         return readers;
     }
 
@@ -367,10 +384,6 @@ public class Document {
         this.endDate = endDate;
     }
 
-    public void setDocumentFile(final File documentFile) {
-        this.documentFile = documentFile;
-    }
-
     public DocumentState getState() {
         return state;
     }
@@ -381,6 +394,14 @@ public class Document {
 
     public void setSignatories(List<Signatory> signatories) {
         this.signatories = signatories;
+    }
+
+    public Document getPreviousVersion() {
+        return previousVersion;
+    }
+
+    public void setPreviousVersion(final Document previousVersion) {
+        this.previousVersion = previousVersion;
     }
 }
 
