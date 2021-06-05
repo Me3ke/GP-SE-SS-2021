@@ -268,17 +268,21 @@
     },
     "DownloadProtocol": {
         "protocol": "Protokoll",
-        "sure": "Möchten Sie das Protokoll wirklich herunterladen?"
+        "sure": "Möchten Sie das Protokoll wirklich herunterladen?",
+        "errorOne": "Es gab Probleme beim Laden des Protokolls.",
+        "errorTwo": "Laden Sie die Seite neu oder kontaktieren Sie einen Administrator."
     },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
         "download": "Herunterladen",
-        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
-        "sign": "Unterschreiben",
-        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
-        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
-        "read": "Gegenlesen",
-        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
+        "doSign": "Unterschreiben",
+        "didSign": "Schon unterschrieben",
+        "doRead": "Gegenlesen",
+        "didRead": "Schon gegengelesen.",
+        "protocol": "Protokoll anzeigen",
+        "history": "Historie einsehen",
+        "newVersion": "Neue Version",
+        "settings": "Einstellungen",
         "close": "Schließen",
         "errors": {
             "notFound": "Das Dokument konnte nicht gefunden werden.",

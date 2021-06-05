@@ -267,17 +267,21 @@
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
-        "sure": "Are you sure you want to download the protocol?"
+        "sure": "Are you sure you want to download the protocol?",
+        "errorOne": "There have been problems fetching the protocol.",
+        "errorTwo": "Try refreshing the page or contact an admin."
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
         "download": "Download",
-        "doSign": "You have not signed this document yet. Sign now.",
-        "sign": "Sign",
-        "didSign": "You have successfully signed this document.",
-        "doRead": "You have not proofread this document yet. Confirm now that you have.",
-        "read": "Proofread",
-        "didRead": "You have successfully proofread this document.",
+        "doSign": "Sign",
+        "didSign": "Already signed",
+        "doRead": "Proofread",
+        "didRead": "Already proofread",
+        "protocol": "Show protocol",
+        "history": "Show history",
+        "newVersion": "New Version",
+        "settings": "Settings",
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
