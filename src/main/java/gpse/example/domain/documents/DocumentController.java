@@ -37,6 +37,7 @@ public class DocumentController {
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
+    public static final int STATUS_CODE_INVALID_SIGNATURE = 456;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -215,7 +216,15 @@ public class DocumentController {
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
             throws DocumentNotFoundException {
-        return computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+        if (documentService.getDocument(documentID).verifySignature(userService.getUser(userID),
+            advancedSignatureRequest.getSignature())) {
+            return computeSignatureRequest(userID, documentID, SignatureType.ADVANCED_SIGNATURE);
+        } else {
+            JSONResponseObject response = new JSONResponseObject();
+            response.setStatus(STATUS_CODE_INVALID_SIGNATURE);
+            response.setMessage("Invalid signature for this document");
+            return response;
+        }
     }
 
     private JSONResponseObject computeSignatureRequest(String userID, long documentID, SignatureType signatureType)
