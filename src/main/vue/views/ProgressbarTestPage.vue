@@ -4,16 +4,21 @@
           DO NOT USE BOTH
             :env -> for envelopes progressbar
             :doc -> progress bar for each documents
-        --->
+
         <div style="padding-top: 5em ">
             <h2>Envelope:</h2>
-            <ProgressBar style="padding-bottom: 2em" :env="documents"></ProgressBar>
+            <ProgressBar
+                style="padding-bottom: 2em"
+                :document=""
+                :doc-i-d=""
+            ></ProgressBar>
 
         </div>
+         --->
 
         <div v-for="(doc,i) in documents" :key="i" class="mt-3">
             <DocumentBox :doc="doc"></DocumentBox>
-             <ProgressBar :document="doc"></ProgressBar >
+            <!--<ProgressBar :document="doc"></ProgressBar >--->
         </div>
 
 
@@ -21,11 +26,10 @@
 </template>
 
 <script>
-import ProgressBar from "@/main/vue/components/ProgressBar";
 import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
 export default {
     name: "ProgressbarTestPage",
-    components: {DocumentBox, ProgressBar},
+    components: {DocumentBox},
     data() {
         return {
             documents: [

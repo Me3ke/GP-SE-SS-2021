@@ -40,6 +40,13 @@
                                 :doc="document">
                             </DocumentBoxSignRead>
                         </div>
+
+                        <ProgressBar
+                            :document="document"
+                            :doc-i-d="document.id"
+                            :env-i-d="envId"
+                        >
+                        </ProgressBar>
                     </div>
                 </div>
             </div>
@@ -54,18 +61,21 @@ import Footer from "@/main/vue/components/Footer";
 import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
 import DocumentBoxClosed from "@/main/vue/components/documentBoxes/DocumentBoxClosed";
 import DocumentBoxSignRead from "@/main/vue/components/documentBoxes/DocumentBoxSignRead";
+import ProgressBar from "@/main/vue/components/ProgressBar";
 
 export default {
     name: "EnvelopePage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header, DocumentBox, DocumentBoxClosed, DocumentBoxSignRead},
+    components: {ProgressBar, Footer, Header, DocumentBox, DocumentBoxClosed, DocumentBoxSignRead},
     computed: {
         getEnv() {
             return this.$store.getters.getEnvelope
         }
-    }
+    },
+
+
 }
 </script>
 

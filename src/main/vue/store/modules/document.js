@@ -4,7 +4,9 @@ export const namespaced = true
 
 export const state = {
     document: {},
-    errorGetDocument: {}
+    errorGetDocument: {},
+    errorGetDocumentProgress: {},
+    documentProgress: {}
 }
 
 export const mutations = {
@@ -17,9 +19,19 @@ export const mutations = {
         state.document = doc
     },
 
+
+
+    SET_DOCUMENT_PROGRESS(state,progress) {
+        state.documentProgress = progress
+    },
+
     //sets error of getDocument request
     SET_ERROR_GET_DOCUMENT(state, error) {
         state.errorGetDocument = error
+    },
+
+    SET_ERROR_GET_DOCUMENT_PROGRESS(state, error) {
+        state.errorGetDocumentProgress = error
     }
 }
 
@@ -40,6 +52,16 @@ export const actions = {
             // to get the new Id of the new Document (for router)
             return response.data.newDocumentID
         })
+    },
+
+    async getDocumentProgress({commit}, {envId, docId}) {
+        await documentAPI.getDocumentProgress(envId, docId).then((response) => {
+            commit('SET_DOCUMENT_PROGRESS', response.data)
+            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
+            console.log("test " ,state.documentProgress)
+        }).catch(error => {
+            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
+        })
     }
 }
 
@@ -47,7 +69,15 @@ export const getters = {
     getDocument: (state) => {
         return state.document
     },
+
+    getDocumentProgress: (state) => {
+        return state.documentProgress
+    },
+
     getErrorGetDocument: (state) => {
         return state.errorGetDocument
+    },
+    getErrorGetDocumentProgress: (state) => {
+        return state.errorGetDocumentProgress
     }
 }

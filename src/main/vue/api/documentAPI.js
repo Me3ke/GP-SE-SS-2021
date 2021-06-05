@@ -28,5 +28,12 @@ export default {
                 'lastModified': null
             }
         })
+    },
+
+    async getDocumentProgress(envId, docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/progress'
+        })
     }
 }
