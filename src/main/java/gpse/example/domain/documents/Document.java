@@ -6,7 +6,6 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
-import java.io.*;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,10 +70,9 @@ public class Document {
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
      *
-     * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
-     * @param documentPutRequest
-     * @param signatories The list of signatories for a document.
-     * @throws IOException throws the exception if filepath was invalid.
+     * @param ownerID            an ID referring to the owner of the envelope this document is a part of.
+     * @param documentPutRequest the put request given with the necessary information for producing a document.
+     * @param signatories        The list of signatories for a document.
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
@@ -82,7 +80,7 @@ public class Document {
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
-             documentPutRequest.getLastModified(), this.data.length, ownerID);
+            documentPutRequest.getLastModified(), this.data.length, ownerID);
         this.endDate = documentPutRequest.getEndDate();
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
@@ -90,25 +88,25 @@ public class Document {
     /**
      * adds a new user as a signatory to the signatory list.
      *
-     * @param signatory the user object that is needed as a signatory
+     * @param signatory     the user object that is needed as a signatory
      * @param signatureType the signatureType the signatory refers to
      */
     public void addSignatory(final User signatory, final SignatureType signatureType) {
         signatories.add(new Signatory(signatory, signatureType));
     }
+
     /**
      * the Method to add an advanced signature for a specific user to the document.
      *
      * @param user      the user that signs the document
      * @param signature the signature that has been made
-     * @param index     the index of the key the signature has been made with
      */
-    public void advancedSignature(final String user, final byte[] signature, final int index) {
+    public void advancedSignature(final String user, final String signature) {
         boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
             if (signatories.get(i).getUser().getEmail().equals(user)) {
                 userIsSignatory = true;
-                advancedSignatures.add(new AdvancedSignature(user, signature, index));
+                advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
             }
         }
@@ -120,25 +118,23 @@ public class Document {
     /**
      * the method used to verify a signature for a specific user, by checking all public keys a user has.
      *
-     * @param user the user who relates to the signature that needs to be checked
+     * @param user           the user who relates to the signature that needs to be checked
+     * @param givenSignature the signature that needs to be validated
      * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
      */
-    public boolean verifySignature(final User user) {
+    public boolean verifySignature(final User user, final String givenSignature) {
 
-        final AdvancedSignature signatureInfo = getUsersSignature(user.getEmail());
         boolean valid = false;
-        if (signatureInfo != null) {
-            final byte[] signature = signatureInfo.getSignature();
-            try {
-                final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
-                final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-                final PublicKey publicKey = user.getPublicKey();
-                sign.initVerify(publicKey);
-                sign.update(id);
-                valid = sign.verify(signature);
-            } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
-                exception.printStackTrace();
-            }
+        final byte[] signature = givenSignature.getBytes();
+        try {
+            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
+            final byte[] id = this.documentMetaData.getIdentifier().getBytes();
+            final PublicKey publicKey = user.getPublicKey();
+            sign.initVerify(publicKey);
+            sign.update(id);
+            valid = sign.verify(signature);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+            exception.printStackTrace();
         }
         return valid;
     }
@@ -154,8 +150,8 @@ public class Document {
 
     /**
      * The getHistory method gets all previous versions of a document.
-     * @return a list of all previous versions starting with the given document
-     *          and ending with the first version.
+     *
+     * @return a list of all previous versions starting with the given document and ending with the first version.
      */
     public List<Document> getHistory() {
         Document temp = this;
@@ -341,11 +337,11 @@ public class Document {
     }
 
     /**
-     * The method that returns the first signatory, that hasn't signed or reviewed from any given list.
-     * @param signatories a List of Signatories, probably either a List of readers or a full list of all signatories
+     * The method that returns the first signatory, that hasn't signed or reviewed.
+     *
      * @return the first signatory, that hasn't signed or reviewed from any given list.
      */
-    public Signatory getCurrentSignatory(final List<Signatory> signatories) {
+    public Signatory getCurrentSignatory() {
         for (final Signatory signatory : signatories) {
             if (!signatory.isStatus()) {
                 return signatory;
@@ -356,6 +352,7 @@ public class Document {
 
     /**
      * returns a list of only those signatories that have review as their signature Type.
+     *
      * @return a list of only those signatories that have review as their signature Type
      */
     public List<Signatory> getReaders() {
@@ -366,6 +363,36 @@ public class Document {
             }
         }
         return readers;
+    }
+
+    /**
+     * returns a list of only those signatories that have simple signature as their signature Type.
+     *
+     * @return a list of only those signatories that have simple signature as their signature Type
+     */
+    public List<Signatory> getSimpleSignatories() {
+        final List<Signatory> simpleSignatories = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)) {
+                simpleSignatories.add(signatory);
+            }
+        }
+        return simpleSignatories;
+    }
+
+    /**
+     * returns a list of only those signatories that have advanced signature as their signature Type.
+     *
+     * @return a list of only those signatories that have advanced signature as their signature Type
+     */
+    public List<Signatory> getAdvancedSignatories() {
+        final List<Signatory> advancedSignatories = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                advancedSignatories.add(signatory);
+            }
+        }
+        return advancedSignatories;
     }
 
     public boolean isOrderRelevant() {
@@ -400,4 +427,3 @@ public class Document {
         this.previousVersion = previousVersion;
     }
 }
-

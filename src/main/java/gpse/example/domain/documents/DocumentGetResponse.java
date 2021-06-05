@@ -29,8 +29,9 @@ public class DocumentGetResponse {
     /**
      * The default constructor creates the documentGet based on an existing document
      * which is created from the Database beforehand.
-     * @param document the corresponding document for the request.
-     * @param owner the owner of the document.
+     *
+     * @param document    the corresponding document for the request.
+     * @param owner       the owner of the document.
      * @param currentUser the user doing the request
      */
     public DocumentGetResponse(final Document document, final User owner, final User currentUser) {
@@ -49,7 +50,9 @@ public class DocumentGetResponse {
         this.signed = false;
         final List<Signatory> signatories = document.getSignatories();
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(currentUser)) {
+            if (currentSignatory.getUser().equals(currentUser)
+                && currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
                 this.signatory = true;
                 if (currentSignatory.isStatus()) {
                     this.signed = true;

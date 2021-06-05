@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(User user) throws MessageGenerationException {
+    public void signUpUser(final User user) throws MessageGenerationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(User user, String token) throws MessageGenerationException {
+    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException {
         smtpServerHelper.sendRegistrationEmail(user,
             "http://localhost:8080/register/confirm/" + token);
     }
@@ -127,9 +127,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void infoNewExtUser(User user) throws MessageGenerationException {
-        List<User> userList = getUsers();
-        for (User value : userList) {
+    public void infoNewExtUser(final User user) throws MessageGenerationException  {
+       final List<User> userList = getUsers();
+        for (final User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
                 smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;

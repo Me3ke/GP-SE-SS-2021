@@ -57,7 +57,7 @@ public class SMTPServerHelper {
      * @param link validation link.
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUser(recievingUser);
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
@@ -71,7 +71,7 @@ public class SMTPServerHelper {
      * @param newUserEmail email adress of the user who needs to be validated
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUser(admin);
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));

@@ -15,16 +15,16 @@ public class MessageServiceImpl implements MessageService {
 
     private MessageRepository messageRepo;
 
-    public MessageServiceImpl(MessageRepository messageRepo) {
+    public MessageServiceImpl(final MessageRepository messageRepo) {
         this.messageRepo = messageRepo;
     }
 
     @Override
-    public List<Message> getMessages(User user) {
-        ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
+    public List<Message> getMessages(final User user) {
+        final ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
 
         for (int i = 0; i < userMessages.size(); i++) {
-            if (userMessages.get(i).getRecievingUser() != user) {
+            if (!userMessages.get(i).getRecievingUser().equals(user)) {
                 userMessages.remove(i);
                 i--;
             }
@@ -33,17 +33,17 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message saveMessage(Message message) {
+    public Message saveMessage(final Message message) {
         return messageRepo.save(message);
     }
 
     @Override
-    public Optional<Message> getMessage(long messageID) {
+    public Optional<Message> getMessage(final long messageID) {
         return messageRepo.findById(messageID);
     }
 
     @Override
-    public void removeMessage(long messageID) {
+    public void removeMessage(final long messageID) {
         messageRepo.deleteById(messageID);
     }
 }

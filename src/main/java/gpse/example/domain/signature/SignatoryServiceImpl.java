@@ -20,7 +20,7 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public List<Signatory> saveSignatories(final List<Signatory> signatories) {
-        for (Signatory signatory : signatories) {
+        for (final Signatory signatory : signatories) {
             signatoryRepository.save(signatory);
         }
         return signatories;
@@ -28,7 +28,7 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public  void delete(final List<Signatory> signatories) {
-        for (Signatory signatory : signatories) {
+        for (final Signatory signatory : signatories) {
             signatoryRepository.deleteById(signatory.getId());
         }
     }
