@@ -419,7 +419,7 @@ export default {
         },
         // send user to settings page
         goToSettings() {
-            this.$emit('signTrigger');
+            this.$emit('signTrigger', false);
             this.page = 1
             this.$router.push('/' + this.$i18n.locale + '/user')
         },
@@ -427,6 +427,8 @@ export default {
         closeModal() {
             this.$emit('signTrigger');
             this.page = 1
+            this.showAlertSign = false
+            this.showAlertCode = false
         }
     },
     computed: {

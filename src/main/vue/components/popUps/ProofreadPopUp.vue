@@ -156,7 +156,7 @@ export default {
             }
         },
         closeModal() {
-            this.$emit('readTrigger');
+            this.$emit('readTrigger', false);
             this.page = 1
         }
     },

@@ -14,13 +14,13 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead"
+                <b-list-group-item v-if="reader" @click="toggleRead(true)"
                                    :class="read ? 'inactive-item mini-list' : 'mini-list'">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign"
+                <b-list-group-item v-if="signatory" @click="toggleSign(true)"
                                    :class="signed ? 'inactive-item mini-list' : 'mini-list'">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                 </b-list-group-item>
@@ -57,14 +57,14 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead" :class="read ? 'inactive-item' : ''">
+                <b-list-group-item v-if="reader" @click="toggleRead(true)" :class="read ? 'inactive-item' : ''">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                     <span v-if="read"> {{ $t('DocumentPage.didRead') }} </span>
                     <span v-else> {{ $t('DocumentPage.doRead') }} </span>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign" :class="signed ? 'inactive-item' : ''">
+                <b-list-group-item v-if="signatory" @click="toggleSign(true)" :class="signed ? 'inactive-item' : ''">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
@@ -105,14 +105,14 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead" :class="read ? 'inactive-item' : ''">
+                <b-list-group-item v-if="reader" @click="toggleRead(true)" :class="read ? 'inactive-item' : ''">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                     <span v-if="read"> {{ $t('DocumentPage.didRead') }} </span>
                     <span v-else> {{ $t('DocumentPage.doRead') }} </span>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign" :class="signed ? 'inactive-item' : ''">
+                <b-list-group-item v-if="signatory" @click="toggleSign(true)" :class="signed ? 'inactive-item' : ''">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
@@ -170,13 +170,13 @@ export default {
         }
     },
     methods: {
-        toggleRead() {
-            this.showProofread = !this.read;
+        toggleRead(val) {
+            this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
         },
-        toggleSign() {
-            this.showSign = !this.signed;
+        toggleSign(val) {
+            this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
         },
