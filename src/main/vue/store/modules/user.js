@@ -12,7 +12,7 @@ export const mutations = {
 
 export const actions = {
     fetchUser({commit}) {
-        api.user.getMyUser().then(response => {
+        return api.user.getMyUser().then(response => {
             commit('SET_USER', response.data)
         }).catch(error => {
             console.log(error)

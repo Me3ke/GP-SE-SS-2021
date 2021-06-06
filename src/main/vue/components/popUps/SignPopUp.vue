@@ -303,6 +303,7 @@
 // TODO: rethink way pop up gets information about documents once it is possible to sign multiple files at at time
 import {mapGetters} from "vuex";
 import _ from "lodash";
+import {KJUR} from 'jsrsasign';
 
 export default {
     name: "SignPopUp",
@@ -396,10 +397,16 @@ export default {
             reader.readAsText(this.key)
 
             reader.onload = async (keyData) => {
-                await this.$store.dispatch('document/advancedSignDocument', {
-                    docId: this.docId,
-                    signature: keyData.target.result
-                })
+              await this.$store.dispatch('fetchUser')
+              var sig = new KJUR.crypto.Signature({"alg": "SHA512withRSA"});
+              sig.init(keyData.target.result);
+              sig.updateString(this.documents[0].identifier);
+              var signature = sig.sign();
+              console.log(signature);
+              await this.$store.dispatch('document/advancedSignDocument', {
+                docId: this.docId,
+                signature: signature
+              })
             }
 
             // everything went fine
@@ -433,24 +440,30 @@ export default {
     },
     computed: {
         ...mapGetters({
-            statusCodeSimple: 'document/getSimpleSignStatus',
-            errorSimple: 'document/getErrorSimpleSignDocument',
-            statusCodeAdvanced: 'document/getAdvancedSignStatus',
-            errorAdvanced: 'document/getErrorAdvancedSignDocument',
+          statusCodeSimple: 'document/getSimpleSignStatus',
+          errorSimple: 'document/getErrorSimpleSignDocument',
+          statusCodeAdvanced: 'document/getAdvancedSignStatus',
+          errorAdvanced: 'document/getErrorAdvancedSignDocument',
 
-            correctInput: 'twoFakAuth/getCorrectInput',
-            hasSetUp: 'twoFakAuth/getHasSetUp'
+          correctInput: 'twoFakAuth/getCorrectInput',
+          hasSetUp: 'twoFakAuth/getHasSetUp',
+
+          user: 'getUser'
         }),
-        // TODO
-        // gives back if advanced signature is needed (if false -> simple signature is needed)
-        advanced() {
-            //  return this.documents[0].signatureType === ''
-            return true
-        },
-        showErrorSimple: {
-            get() {
-                return !_.isEmpty(this.errorSimple)
-            }
+
+      publicKey() {
+        return this.user.publicKey
+      },
+      // TODO
+      // gives back if advanced signature is needed (if false -> simple signature is needed)
+      advanced() {
+        //  return this.documents[0].signatureType === ''
+        return true
+      },
+      showErrorSimple: {
+        get() {
+          return !_.isEmpty(this.errorSimple)
+        }
         },
         showErrorAdvanced: {
             get() {

@@ -21,7 +21,7 @@ import java.util.List;
 public class Document {
 
     //needed for verification
-    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
+    private static final String SIGNING_ALGORITHM = "SHA512withRSA";
     /**
      * The documentMetaData containing the identifier as well as other information.
      * The path leading to the document.

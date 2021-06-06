@@ -225,6 +225,7 @@ export default {
             const reader = new FileReader()
             reader.readAsText(file)
             reader.onload = (e) => {
+              console.log(e.target.result)
               this.$store.dispatch('sendPublicKey', {"publicKey": e.target.result})
             }
           }

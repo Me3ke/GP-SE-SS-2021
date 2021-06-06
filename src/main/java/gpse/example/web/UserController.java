@@ -192,7 +192,7 @@ public class UserController {
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
-        final JSONResponseObject response = new JSONResponseObject();
+            final JSONResponseObject response = new JSONResponseObject();
             userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
             userService.saveUser(userService.getUser(username));
             response.setStatus(STATUS_CODE_OK);

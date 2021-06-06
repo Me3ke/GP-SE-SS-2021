@@ -20,6 +20,7 @@ public class DocumentGetResponse {
     private final LocalDateTime endDate;
     private final SignatureType signatureType;
     private final String dataType;
+    private final String identifier;
     private boolean signatory;
     private boolean reader;
     private boolean signed;
@@ -46,6 +47,7 @@ public class DocumentGetResponse {
         this.dataType = document.getDocumentType();
         this.data = document.getData();
         this.state = document.getState();
+        this.identifier = document.getDocumentMetaData().getIdentifier();
         this.signatory = false;
         this.read = false;
         this.signed = false;
@@ -139,5 +141,25 @@ public class DocumentGetResponse {
 
     public void setTurnToSign(boolean turnToSign) {
         isTurnToSign = turnToSign;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setSignatory(boolean signatory) {
+        this.signatory = signatory;
+    }
+
+    public void setReader(boolean reader) {
+        this.reader = reader;
+    }
+
+    public void setSigned(boolean signed) {
+        this.signed = signed;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
