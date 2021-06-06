@@ -11,7 +11,7 @@ public class AuthCodeValidationRequest {
         return qrCodeCode;
     }
 
-    public void setQrCodeCode(String qrCodeCode) {
+    public void setQrCodeCode(final String qrCodeCode) {
         this.qrCodeCode = qrCodeCode;
     }
 }

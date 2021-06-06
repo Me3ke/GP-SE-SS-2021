@@ -199,6 +199,7 @@ export default {
     padding-left: 0.5vw;
     background-color: var(--whitesmoke);
     position: relative;
+    z-index: 1 !important;
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {

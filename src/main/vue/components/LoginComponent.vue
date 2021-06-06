@@ -47,6 +47,7 @@
                     {{ $t('Login.feedback-invalid-password') }}
                 </b-form-invalid-feedback>
             </b-form-group>
+          <b-button variant="outline-primary" @click="routeToRegister" style="margin-right: 1rem">{{$t('Register.register')}}</b-button>
             <b-button class="dark-btn" type="submit">
                 {{ $t('Login.sign-in') }}
             </b-button>
@@ -88,6 +89,9 @@ export default {
     },
 
     methods: {
+      routeToRegister(){
+        this.$router.push('/'+this.$i18n.locale + '/register')
+      },
         validateState(name) {
             const {$dirty, $error} = this.$v.auth[name];
             return $dirty ? !$error : null;

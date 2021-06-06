@@ -77,7 +77,7 @@ public class DocumentMetaData {
      * Constructor for meta data that is important for archived documents.
      * @param documentMetaData the old meta data.
      */
-    public DocumentMetaData(DocumentMetaData documentMetaData) {
+    public DocumentMetaData(final DocumentMetaData documentMetaData) {
         this.metaTimeStampUpload = documentMetaData.getMetaTimeStampUpload();
         this.metaDocumentTitle = documentMetaData.getMetaDocumentTitle();
         //this.creationDate = formatDateTime(creationDate);

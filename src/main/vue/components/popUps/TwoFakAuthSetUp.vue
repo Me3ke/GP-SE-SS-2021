@@ -245,7 +245,7 @@ export default {
             if ((this.code.length === 6 && Number.isInteger(Number(this.code)))) {
 
                 // axios call to check if code is semantically correct
-                await this.$store.dispatch('twoFakAuth/validateCode', this.code).then(() => {
+                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code}).then(() => {
                     this.code = ''
                     this.showAlert = false
                     if (this.correctInput) {
