@@ -357,6 +357,7 @@
         "back": "Back",
         "serverErrorOne": "There appear to be problems with your server connection.",
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
+        "fail": "There appear to be server problems. Error Code: ",
         "login": {
             "title": "Set-up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
@@ -390,8 +391,7 @@
             "sureOne": "Are you sure you want to proofread the following document?",
             "sureMulti": "Are you sure you want to proofread the following documents?",
             "success": "You have successfully proofread!",
-            "sure": "Are you sure you want to cancel the process?",
-            "fail": "There appear to be server problems. Error Code: "
+            "sure": "Are you sure you want to cancel the process?"
         }
     }
 }

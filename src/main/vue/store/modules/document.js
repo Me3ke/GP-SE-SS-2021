@@ -8,7 +8,11 @@ export const state = {
     protocol: {},
     errorGetProtocol: {},
     reviewResponse: {},
-    errorReviewDocument: {}
+    errorReviewDocument: {},
+    simpleSignResponse: {},
+    errorSimpleSignResponse: {},
+    advancedSignResponse: {},
+    errorAdvancedSignResponse: {}
 }
 
 export const mutations = {
@@ -23,6 +27,14 @@ export const mutations = {
     // sets response of reviewing (statusCode + message)
     SET_REVIEW_RESPONSE(state, res) {
         state.reviewResponse = res
+    },
+    // sets response of signing (simple) (statusCode + message)
+    SET_SIMPLE_SIGN_RESPONSE(state, res) {
+        state.simpleSignResponse = res
+    },
+    // sets response of signing (advanced) (statusCode + message)
+    SET_ADVANCED_SIGN_RESPONSE(state, res) {
+        state.advancedSignResponse = res
     },
     // TODO need to change this mutation
     EDIT_DOCUMENT(state, doc) {
@@ -39,6 +51,14 @@ export const mutations = {
     // sets error of reviewDocument request
     SET_ERROR_REVIEW_DOCUMENT(state, error) {
         state.errorReviewDocument = error
+    },
+    // sets error of simpleSignDocument request
+    SET_ERROR_SIMPLE_SIGN_DOCUMENT(state, error) {
+        state.errorSimpleSignResponse = error
+    },
+    // sets error of advancedSignDocument request
+    SET_ERROR_ADVANCED_SIGN_DOCUMENT(state, error) {
+        state.errorSimpleSignResponse = error
     }
 }
 
@@ -69,6 +89,24 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_REVIEW_DOCUMENT', error)
         })
+    },
+    // makes axios call to sign (simple) document, either sets simpleSignResponse (success) or error (error)
+    simpleSignDocument({commit}, {docId}) {
+        return documentAPI.simpleSignDocument(docId).then(response => {
+            commit('SET_SIMPLE_SIGN_RESPONSE', response.data)
+            commit('SET_ERROR_SIMPLE_SIGN_DOCUMENT', {})
+        }).catch(error => {
+            commit('SET_ERROR_SIMPLE_SIGN_DOCUMENT', error)
+        })
+    },
+    // makes axios call to sign (advanced) document, either sets advancedSignResponse (success) or error (error)
+    advancedSignDocument({commit}, {docId, signature}) {
+        return documentAPI.advancedSignDocument(docId, signature).then(response => {
+            commit('SET_ADVANCED_SIGN_RESPONSE', response.data)
+            commit('SET_ERROR_ADVANCED_SIGN_DOCUMENT', {})
+        }).catch(error => {
+            commit('SET_ERROR_ADVANCED_SIGN_DOCUMENT', error)
+        })
     }
 }
 
@@ -82,6 +120,12 @@ export const getters = {
     getReviewStatus: (state) => {
         return state.reviewResponse.status
     },
+    getSimpleSignStatus: (state) => {
+        return state.simpleSignResponse.status
+    },
+    getAdvancedSignStatus: (state) => {
+        return state.advancedSignResponse.status
+    },
     getErrorGetDocument: (state) => {
         return state.errorGetDocument
     },
@@ -90,5 +134,11 @@ export const getters = {
     },
     getErrorReviewDocument: (state) => {
         return state.errorReviewDocument
+    },
+    getErrorSimpleSignDocument: (state) => {
+        return state.errorSimpleSignResponse
+    },
+    getErrorAdvancedSignDocument: (state) => {
+        return state.errorAdvancedSignResponse
     }
 }

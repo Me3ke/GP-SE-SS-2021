@@ -195,7 +195,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
@@ -212,7 +212,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signAdvanced")
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)

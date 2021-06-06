@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <SignPopUp v-if="showSign" :documents="[document]" :advanced="true" @advancedTrigger="toggleSign()"></SignPopUp>
+        <SignPopUp v-if="showSign" :documents="[document]" @signTrigger="toggleSign()"></SignPopUp>
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 

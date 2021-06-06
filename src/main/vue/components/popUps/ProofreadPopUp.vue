@@ -16,11 +16,13 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
-                                    <!-- Page 1 (advanced)-->
+                                    <!-- Page 1 -->
                                     <div v-if="page === 1">
+
+                                        <!-- Error Messages -->
                                         <b-alert :show="showAlert"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.read.fail') }} {{ statusCode }}
+                                            {{ $t('TwoFakAuth.fail') }} {{ statusCode }}
                                         </b-alert>
 
                                         <b-alert :show="showErrorReview"
@@ -33,6 +35,7 @@
                                             </div>
                                         </b-alert>
 
+                                        <!-- Review Prompt -->
                                         <div class="step" v-if="documents.length === 1">
                                             {{ $t('TwoFakAuth.read.sureOne') }}
                                         </div>
@@ -49,6 +52,7 @@
                                             </ul>
                                         </div>
 
+                                        <!-- Buttons to switch pages -->
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
                                                     @click="pageBefore = page; page = 3">
@@ -70,6 +74,7 @@
                                             {{ $t('TwoFakAuth.read.success') }}
                                         </div>
 
+                                        <!-- Button to close -->
                                         <div style="text-align: right">
                                             <button type="button" class="elsa-blue-btn"
                                                     @click="closeModal()">
@@ -86,6 +91,7 @@
                                             {{ $t('TwoFakAuth.read.sure') }}
                                         </div>
 
+                                        <!-- Buttons to switch pages/ close -->
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn" @click="page = pageBefore">
                                                 <span class="button-txt">
@@ -138,9 +144,12 @@ export default {
             if (this.statusCode === 200) {
                 // reloading document in store, so information is coherent with server information
                 await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                // goes to success page and toggles alert
                 this.page += 1
                 this.showAlert = false
             } else {
+                // if api call got to server, but server did not response wit 'ok' shows errorCode to user
+                // if api call did not go to server, shows that there are Server Network problems
                 if (!this.showErrorReview) {
                     this.showAlert = true
                 }
