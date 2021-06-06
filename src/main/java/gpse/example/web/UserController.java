@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
 
@@ -192,15 +190,11 @@ public class UserController {
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
-        final JSONResponseObject response = new JSONResponseObject();
-        try {
-            userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
+            final JSONResponseObject response = new JSONResponseObject();
+            userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
+            userService.saveUser(userService.getUser(username));
             response.setStatus(STATUS_CODE_OK);
             return response;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            response.setStatus(STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED);
-            return response;
-        }
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
@@ -221,6 +215,7 @@ public class UserController {
             securitySettings.generateSecret();
             final byte[] temp = securitySettings.generateQRCode(username);
             securitySettingsService.saveSecuritySettings(securitySettings);
+            userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
@@ -240,4 +235,10 @@ public class UserController {
                                 @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
+
+    @GetMapping("/user/{userID}/settings/PKconfigurated")
+    public Boolean checkIfKeyIsConfigurated(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getPublicKey() != null;
+    }
+
 }

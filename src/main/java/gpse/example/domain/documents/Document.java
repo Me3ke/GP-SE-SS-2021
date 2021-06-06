@@ -6,7 +6,6 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
-import java.security.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +35,9 @@ public class Document {
     @OneToMany
     private List<Signatory> signatories = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
     private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
@@ -115,6 +116,7 @@ public class Document {
         }
     }
 
+    /*
     /**
      * the method used to verify a signature for a specific user, by checking all public keys a user has.
      *
@@ -122,22 +124,26 @@ public class Document {
      * @param givenSignature the signature that needs to be validated
      * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
      */
+    /*
     public boolean verifySignature(final User user, final String givenSignature) {
 
         boolean valid = false;
         final byte[] signature = givenSignature.getBytes();
         try {
+            StringToKeyConverter stringToKeyConverter = new StringToKeyConverter();
             final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
             final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-            final PublicKey publicKey = user.getPublicKey();
+            final String stringPublicKey = user.getPublicKey();
+            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);;
             sign.initVerify(publicKey);
             sign.update(id);
             valid = sign.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException
+                | SignatureException | InvalidKeySpecException exception) {
             exception.printStackTrace();
         }
         return valid;
-    }
+    } */
 
     private AdvancedSignature getUsersSignature(final String user) {
         for (final AdvancedSignature advancedSignature : advancedSignatures) {

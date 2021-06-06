@@ -12,5 +12,12 @@ export default {
                 'publicKey': publicKey
             }
         })
+    },
+    //getHasKey get request
+    async getHasKey() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/PKconfigurated'
+        })
     }
 }
