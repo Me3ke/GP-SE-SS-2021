@@ -2,7 +2,6 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.ProtoSignatory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,13 +15,13 @@ public class DocumentPutRequest {
     private List<ProtoSignatory> signatoriesID;
     private String endDate;
     private boolean orderRelevant;
-    private LocalDateTime lastModified;
+    private String lastModified;
 
-    public LocalDateTime getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(final LocalDateTime lastModified) {
+    public void setLastModified(final String lastModified) {
         this.lastModified = lastModified;
     }
 

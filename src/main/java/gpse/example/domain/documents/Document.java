@@ -73,18 +73,17 @@ public class Document {
      * This works only if documentTitle has no dot.
      *
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
-     * @param documentPutRequest
+     * @param documentPutRequest the requestBody of the request stated to generate this document
      * @param signatories The list of signatories for a document.
-     * @throws IOException throws the exception if filepath was invalid.
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
         this.signatories = signatories;
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
-        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
-             documentPutRequest.getLastModified(), this.data.length, ownerID);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
+             LocalDateTime.parse(documentPutRequest.getLastModified(), formatter), this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }

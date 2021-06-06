@@ -179,6 +179,8 @@ public class InitializeDatabase implements InitializingBean {
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
             documentPutRequestRequest.setDataType(type);
+            documentPutRequestRequest.setLastModified("2020-06-06 12:00");
+            documentPutRequestRequest.setEndDate("2021-06-13 12:00");
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (signed) {
