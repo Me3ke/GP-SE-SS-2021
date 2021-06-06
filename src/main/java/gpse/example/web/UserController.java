@@ -235,4 +235,10 @@ public class UserController {
                                 @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
+
+    @GetMapping("/user/{userID}/settings/PKconfigurated")
+    public Boolean checkIfKeyIsConfigurated(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getPublicKey() != null;
+    }
+
 }
