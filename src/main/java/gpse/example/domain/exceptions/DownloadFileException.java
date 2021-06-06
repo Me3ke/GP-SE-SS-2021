@@ -4,8 +4,12 @@ package gpse.example.domain.exceptions;
  * The downloadFileException is thrown if problems occur during download.
  */
 public class DownloadFileException extends Exception {
+
+    /* default */
     static final long serialVersionUID = 8697857770103640856L;
 
+
+    /* default */
     /**
      * This is the default message.
      */

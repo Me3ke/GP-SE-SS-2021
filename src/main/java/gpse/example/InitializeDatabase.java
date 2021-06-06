@@ -93,7 +93,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(1L);
         documentPaths.add(PROGRAM_PATH);
         createExampleEnvelope(1, "international congress 2021", documentIDs, documentPaths,
-            DocumentState.READ, true, false);
+            DocumentState.OPEN, true, false);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(2L);
@@ -103,7 +103,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add("Handout_Kundengespraech.pdf");
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
-            documentPaths, DocumentState.CLOSED, true, true);
+            documentPaths, DocumentState.OPEN, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_FIVE);
@@ -117,7 +117,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add(PROGRAM_PATH);
         documentPaths.add("Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
-            documentPaths, DocumentState.CLOSED, true, true);
+            documentPaths, DocumentState.OPEN, true, true);
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,

@@ -30,7 +30,6 @@ public class SignatureManagement {
         documentService = givenDocumentService;
     }
 
-
     /**
      * the standard method for managing requests, regarding reviews or signatures.
      *

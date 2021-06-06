@@ -195,6 +195,7 @@ public class UserController {
         final JSONResponseObject response = new JSONResponseObject();
         try {
             userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
+            userService.saveUser(userService.getUser(username));
             response.setStatus(STATUS_CODE_OK);
             return response;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
