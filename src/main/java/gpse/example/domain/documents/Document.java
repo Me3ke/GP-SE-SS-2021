@@ -3,10 +3,12 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
+import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,13 +129,16 @@ public class Document {
         boolean valid = false;
         final byte[] signature = givenSignature.getBytes();
         try {
+            StringToKeyConverter stringToKeyConverter = new StringToKeyConverter();
             final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
             final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-            final PublicKey publicKey = user.getPublicKey();
+            final String stringPublicKey = user.getPublicKey();
+            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);
             sign.initVerify(publicKey);
             sign.update(id);
             valid = sign.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException
+                | SignatureException | InvalidKeySpecException exception) {
             exception.printStackTrace();
         }
         return valid;

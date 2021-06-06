@@ -193,15 +193,10 @@ public class UserController {
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
-        try {
-            userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
+            userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
             userService.saveUser(userService.getUser(username));
             response.setStatus(STATUS_CODE_OK);
             return response;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            response.setStatus(STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED);
-            return response;
-        }
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
@@ -222,6 +217,7 @@ public class UserController {
             securitySettings.generateSecret();
             final byte[] temp = securitySettings.generateQRCode(username);
             securitySettingsService.saveSecuritySettings(securitySettings);
+            userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
