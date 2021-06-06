@@ -23,14 +23,13 @@
                                         </div>
 
                                         <ul>
-                                            <li>
-                                                <div class="content-div" v-if="!hasSetUp">
+                                            <li v-if="!hasSetUp">
+                                                <div class="content-div">
                                                     {{ $t('TwoFakAuth.sign.tfa') }}
                                                 </div>
                                             </li>
-                                            <li>
-                                                <!-- TODO: change to hasKey -->
-                                                <div class="content-div" v-if="!hasSetUp">
+                                            <li v-if="!hasKey">
+                                                <div class="content-div">
                                                     {{ $t('TwoFakAuth.sign.keyPair') }}
                                                 </div>
                                             </li>
@@ -338,7 +337,8 @@ export default {
         // TODO: connect to api to check for key
         if (this.advanced) {
             await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
-            if (!this.hasSetUp) {
+            await this.$store.dispatch('fetchHasKey')
+            if (!this.hasSetUp || !this.hasKey) {
                 this.page = 0
             }
         }
@@ -399,33 +399,33 @@ export default {
             // getting user so there is access public key
 
             reader.onload = async (keyData) => {
-              const privateKey = keyData.target.result
+                const privateKey = keyData.target.result
 
                 const docId = this.documents[0].identifier
 
                 // encrypting hashed docId with given private key
                 var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
-              sig.init(privateKey);
-              sig.updateString(docId);
-              const signature = sig.sign();
+                sig.init(privateKey);
+                sig.updateString(docId);
+                const signature = sig.sign();
 
-              // decrypting hashed docId with registered public key
-              var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
-              sig2.init(this.publicKey);
-              sig2.updateString(docId);
-              const isValid = sig2.verify(signature);
+                // decrypting hashed docId with registered public key
+                var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+                sig2.init(this.publicKey);
+                sig2.updateString(docId);
+                const isValid = sig2.verify(signature);
 
-              if (isValid) {
-                await this.$store.dispatch('document/advancedSignDocument', {
-                  docId: this.docId,
-                  signature: signature
-                })
-              }
+                if (isValid) {
+                    await this.$store.dispatch('document/advancedSignDocument', {
+                        docId: this.docId,
+                        signature: signature
+                    })
+                }
 
-              // everything went fine
-              if (this.statusCodeAdvanced === 200) {
-                // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                // everything went fine
+                if (this.statusCodeAdvanced === 200) {
+                    // reloading document in store, so information is coherent with server information
+                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
                     // goes to success page and toggles alert
                     this.page = 4
                     this.showAlertSign = false
@@ -461,6 +461,7 @@ export default {
 
             correctInput: 'twoFakAuth/getCorrectInput',
             hasSetUp: 'twoFakAuth/getHasSetUp',
+            hasKey: 'getHasKey',
 
             user: 'getUser'
         }),
