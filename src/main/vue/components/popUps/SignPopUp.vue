@@ -320,9 +320,6 @@ export default {
 
             code: '',
             key: null,
-            isValid: false,
-            signature: '',
-            privateKey: '',
 
             showAlertCode: false,
             showAlertSign: false,
@@ -394,51 +391,41 @@ export default {
         },
         // checks of user owns correct private-public-keypair
         async signAdvanced() {
-
+            await this.$store.dispatch('fetchUser')
             // gets data out of user file that contains key
             const reader = new FileReader()
             reader.readAsText(this.key)
 
-            console.log('1')
-
             // getting user so there is access public key
-            await this.$store.dispatch('fetchUser')
-
-            console.log('2')
 
             reader.onload = async (keyData) => {
-                this.privateKey = keyData.target.result
-                console.log('3')
+              const privateKey = keyData.target.result
 
                 const docId = this.documents[0].identifier
 
                 // encrypting hashed docId with given private key
                 var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
-                sig.init(this.privateKey);
-                sig.updateString(docId);
-                this.signature = sig.sign();
+              sig.init(privateKey);
+              sig.updateString(docId);
+              const signature = sig.sign();
 
-                // decrypting hashed docId with registered public key
-                var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
-                sig2.init(this.publicKey);
-                sig2.updateString(docId);
-                this.isValid = sig2.verify(this.signature);
+              // decrypting hashed docId with registered public key
+              var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+              sig2.init(this.publicKey);
+              sig2.updateString(docId);
+              const isValid = sig2.verify(signature);
 
-                console.log('4')
+              if (isValid) {
+                await this.$store.dispatch('document/advancedSignDocument', {
+                  docId: this.docId,
+                  signature: signature
+                })
+              }
 
-                if (this.isValid) {
-                    await this.$store.dispatch('document/advancedSignDocument', {
-                        docId: this.docId,
-                        signature: this.signature
-                    })
-                }
-
-                console.log(this.statusCodeAdvanced)
-
-                // everything went fine
-                if (this.statusCodeAdvanced === 200) {
-                    // reloading document in store, so information is coherent with server information
-                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+              // everything went fine
+              if (this.statusCodeAdvanced === 200) {
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
                     // goes to success page and toggles alert
                     this.page = 4
                     this.showAlertSign = false
