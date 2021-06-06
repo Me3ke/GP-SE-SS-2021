@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class DocumentProgressResponse {
 
-    private List<Signatory> signatories;
-    private List<Signatory> alreadySigned = new ArrayList<>();
-    private List<Signatory> readers;
-    private List<Signatory> alreadyRead = new ArrayList<>();
-    private LocalDateTime endDate;
+    private final List<Signatory> signatories;
+    private final List<Signatory> alreadySigned = new ArrayList<>();
+    private final List<Signatory> readers;
+    private final List<Signatory> alreadyRead = new ArrayList<>();
+    private final LocalDateTime endDate;
 
     /**
      * The default constructor creates the response based on an data
@@ -26,14 +26,15 @@ public class DocumentProgressResponse {
      */
     public DocumentProgressResponse(final List<Signatory> signatories, final List<Signatory> readers,
                                     final LocalDateTime endDate) {
-        for (final Signatory signatory : signatories) {
+        for (final Signatory signatory : signatories) { // signatories
             if (signatory.isStatus()) {
                 alreadySigned.add(signatory);
             }
         }
         for (final Signatory reader : readers) {
             if (reader.isStatus()) {
-                alreadySigned.add(reader);
+                // was alreadySigned.add(reader)
+                alreadyRead.add(reader);
             }
         }
         this.signatories = signatories;

@@ -1,30 +1,20 @@
 <template>
 <div>
-    <div style="padding-bottom: 1em;">
+    <div
+        style="padding-bottom: 1em;">
         <!-- (Parent Component)
-          DO NOT USE BOTH
-            :env -> for envelopes progressbar
-            :doc -> progress bar for each documents
-
-
-           NEED (for now):
-           - array of all Signatories
-           - array of signatories who already signed
+            :documentProgress -> progress bar for each documents // needs the documentProgressArray (state) with the id -1 because of the iD
         --->
+
 
         <b-progress :max="max">
             <b-progress-bar
-                :value="env == null && document !=='' ? docPercentage : envPercentage"
-                :label=" env == null && document !=='' ? docPercentage + '%' : envPercentage + '%'" variant="success"
+                :value="docPercentage"
+                variant="success"
+                :label="docPercentage + '%'"
             ></b-progress-bar>
 
         </b-progress>
-
-        <h4> DOC : {{getDocumentProgress}}</h4>
-
-
-
-
     </div>
 
 
@@ -35,98 +25,36 @@
 
 <script>
 
+
+
 export default {
     name: "ProgressBar",
-    props: ['document', 'env', 'envID', 'docID'],
+    props: ['documentProgress'],
 
-
-
-    /*
-   {
-    "signatories": [
-        {
-            "id": 1,
-            "user": {
-                "email": "hans.schneider@mail.de",
-                "firstname": "Hans",
-                "lastname": "Schneider",
-                "publicKey": null,
-                "personalData": {
-                    "street": "Berliner Straße",
-                    "houseNumber": 2,
-                    "postCode": 12312,
-                    "phoneNumber": "3213145",
-                    "homeTown": "Liebefeld",
-                    "country": "Deutschland",
-                    "birthday": "2021-06-04"
-                },
-                "securitySettings": {
-                    "id": 1,
-                    "publicKey": null,
-                    "secret": null
-                },
-                "adminValidated": true
-            },
-            "status": false,
-            "signedOn": null,
-            "signatureType": "REVIEW"
-        }
-    ],
-    "alreadySigned": [],
-    "readers": [
-        {
-            "id": 1,
-            "user": {
-                "email": "hans.schneider@mail.de",
-                "firstname": "Hans",
-                "lastname": "Schneider",
-                "publicKey": null,
-                "personalData": {
-                    "street": "Berliner Straße",
-                    "houseNumber": 2,
-                    "postCode": 12312,
-                    "phoneNumber": "3213145",
-                    "homeTown": "Liebefeld",
-                    "country": "Deutschland",
-                    "birthday": "2021-06-04"
-                },
-                "securitySettings": {
-                    "id": 1,
-                    "publicKey": null,
-                    "secret": null
-                },
-                "adminValidated": true
-            },
-            "status": false,
-            "signedOn": null,
-            "signatureType": "REVIEW"
-        }
-    ],
-    "alreadyRead": [],
-    "endDate": null
-    }
-
-
-     */
     data() {
         return {
             max: 100,
-
-            response: {              // <---  the progress response of the specific document
-                signatories: [],
-                alreadySigned: [],
-
-                readers: [],
-                alreadyRead: [],
-                endDate: null
-            }
-
+            zero: 0,
         }
     },
     computed: {
 
+        readers() {
+            return this.documentProgress.readers
+        },
+        signatories() {
+            return this.documentProgress.signatories
+        },
+        alreadySigned() {
+            return this.documentProgress.alreadySigned
+        },
+        alreadyRead() {
+            return this.documentProgress.alreadyRead
+        },
+        // optional ?
         envPercentage() {
             let array = [];
+
             (this.env.forEach(i => {
                 array.push(((i.alreadySign.length / i.sign.length) * 100).toFixed(2))
             }))
@@ -135,25 +63,16 @@ export default {
 
         },
 
-        // calculate the percentage of the document progress (signatories with reader)
+        // calculate th percentage of the document progress (signatories with reader)
         docPercentage() {
-            return ((this.response.alreadySigned.length + this.response.alreadyRead.length )
-                / (this.response.signatories.length + this.response.readers.length) * 100).toFixed(2)
+            return ((this.alreadySigned.length + this.alreadyRead.length )
+                / (this.signatories.length + this.readers.length) * 100).toFixed(2)
+
         },
 
-        getDocumentProgress() {
-             return this.$store.getters.getDocumentProgress
-         },
-
-    },
-    methods: {
-
-
     },
 
-    created() {
-        this.$store.dispatch('document/getDocumentProgress', {envId: this.envID, docId: this.docID})
-    }
+
 }
 </script>
 

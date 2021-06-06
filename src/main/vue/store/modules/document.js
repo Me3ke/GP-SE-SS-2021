@@ -6,10 +6,16 @@ export const state = {
     document: {},
     errorGetDocument: {},
     errorGetDocumentProgress: {},
-    documentProgress: {}
+    documentProgressArray: [],
+    documentProgress: {},
 }
 
 export const mutations = {
+    // will sets the state to []
+    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state, reset){
+        state.documentProgressArray = reset
+    },
+
     // sets given document as state
     SET_DOCUMENT(state, doc) {
         state.document = doc
@@ -19,10 +25,9 @@ export const mutations = {
         state.document = doc
     },
 
-
-
     SET_DOCUMENT_PROGRESS(state,progress) {
-        state.documentProgress = progress
+        //state.documentProgress = progress
+        state.documentProgressArray.push(progress)
     },
 
     //sets error of getDocument request
@@ -36,6 +41,12 @@ export const mutations = {
 }
 
 export const actions = {
+
+    // for resetting the state DOCUMENT_PROGRESS_ARRAY
+    resetState({commit}, reset) {
+        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY', reset)
+    },
+
     // makes axios call to get document, either sets document (success) or error (error)
     fetchDocument({commit}, {envId, docId}) {
         documentAPI.getDocument(envId, docId).then(response => {
@@ -54,14 +65,17 @@ export const actions = {
         })
     },
 
-    async getDocumentProgress({commit}, {envId, docId}) {
-        await documentAPI.getDocumentProgress(envId, docId).then((response) => {
-            commit('SET_DOCUMENT_PROGRESS', response.data)
-            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
-            console.log("test " ,state.documentProgress)
-        }).catch(error => {
-            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
+    async getDocumentProgress({commit}, {envId, documentsId}) {
+         await documentsId.forEach(docId => {
+            documentAPI.getDocumentProgress(envId, docId).then((response) => {
+                commit('SET_DOCUMENT_PROGRESS', response.data)
+                commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
+            }).catch(error => {
+                console.error(error)
+                commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
+            })
         })
+        //console.log("SUCCESS")
     }
 }
 
@@ -74,10 +88,13 @@ export const getters = {
         return state.documentProgress
     },
 
+    getDocumentProgressArray : (state) => {
+        return state.documentProgressArray
+    },
     getErrorGetDocument: (state) => {
         return state.errorGetDocument
     },
     getErrorGetDocumentProgress: (state) => {
         return state.errorGetDocumentProgress
-    }
+    },
 }
