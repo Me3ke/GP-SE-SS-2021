@@ -140,8 +140,7 @@
             "language": "Sprache"
         },
         "Avatar": {
-            "profile": "Mein Konto",
-            "settings": "Einstellungen",
+            "profile": "Kontoeinstellungen",
             "adminSetting": {
                 "settings": "Admin-Einstellungen",
                 "unlock": "Nutzer freischalten",
@@ -199,7 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "content": "Kontoinformationen und Einstellungen",
+        "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
             "accountInformation": "Kontoinformationen",
@@ -220,6 +219,27 @@
             "newKeypair": "Neues Schlüsselpaar",
             "twoFacAuthSetUp": "Zwei-Faktor-Authentifizierung einrichten",
             "setUp": "Einrichten"
+        },
+        "SignatureSettings": {
+            "settings": "Signatur Einstellungen",
+            "upload": {
+                "text": "Neue Signatur hochladen",
+                "exp": "Laden Sie ein Bild Ihrer Signatur hoch. Es wird dem  Prozess-Protokoll hinzugefügt werden.",
+                "upload": "Hochladen",
+                "popUp": {
+                    "heading": "Signatur hochladen",
+                    "exp": "Wählen Sie Ihre Signatur aus.",
+                    "cancel": "Abbruch",
+                    "sure": "Wenn Sie das Hochladen jetzt abbrechen, geht all' Ihr Fortschritt verloren.",
+                    "back": "Zurück",
+                    "close": "Schließen",
+                    "attentionOne": "Achtung! Sie haben schon eine Signatur hochgeladen.",
+                    "attentionTwo": "Wenn Sie fortfahren, geht diese verloren!",
+                    "placeholder": "Signatur hier ablegen oder auswählen",
+                    "dropPlaceholder": "Hier fallen lassen",
+                    "accepted": "Akzeptiert werden sämtliche Bildformate."
+                }
+            }
         },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",
@@ -271,15 +291,29 @@
 
         }
     },
+    "DownloadDoc": {
+        "download": "Herunterladen",
+        "heading": "Jetzt herunterladen!",
+        "sure": "Möchten Sie das Dokument wirklich herunterladen?",
+        "cancel": "Abbrechen"
+    },
+    "DownloadProtocol": {
+        "protocol": "Protokoll",
+        "sure": "Möchten Sie das Protokoll wirklich herunterladen?",
+        "errorOne": "Es gab Probleme beim Laden des Protokolls.",
+        "errorTwo": "Laden Sie die Seite neu oder kontaktieren Sie einen Administrator."
+    },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
         "download": "Herunterladen",
-        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
-        "sign": "Unterschreiben",
-        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
-        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
-        "read": "Gegenlesen",
-        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
+        "doSign": "Unterschreiben",
+        "didSign": "Schon unterschrieben",
+        "doRead": "Gegenlesen",
+        "didRead": "Schon gegengelesen.",
+        "protocol": "Protokoll anzeigen",
+        "history": "Historie einsehen",
+        "newVersion": "Neue Version",
+        "settings": "Einstellungen",
         "close": "Schließen",
         "errors": {
             "notFound": "Das Dokument konnte nicht gefunden werden.",
@@ -297,7 +331,7 @@
     },
     "Register": {
         "email": "E-Mail",
-        "password": "Passwort",
+        "password": "Passwort (min. 8 Zeichen)",
         "register": "Registrierung",
         "sign-up": "Registrieren",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
@@ -305,7 +339,15 @@
         "fail": "Registrierung fehlgeschlagen.",
         "firstname": "Vorname",
         "surname": "Nachname",
-        "feedback-invalid-name": "Bitte einen validen Namen eingeben."
+        "feedback-invalid-name": "Bitte einen validen Namen eingeben.",
+        "postcode": "Postleitzahl",
+        "city": "Stadt",
+        "birthdate": "Geburtsdatum",
+        "street": "Straße",
+        "streetNumber": " Nr.",
+        "phoneNumber": "Telefonnummer",
+        "passwordRepeat": "Passwort bestätigen",
+        "login": "Zum Login"
     },
     "KeypairAlert": {
         "generate": "Generiere Schlüsselpaar",
@@ -324,6 +366,8 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
+        "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
             "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
@@ -332,12 +376,14 @@
             "alwaysExp": "Nach jedem erfolgreichen Login müssen Sie Ihre Identität nochmals mittels des zweiten Faktors bestätigen.",
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
             "cancelWarningTwo": "bis Sie Ihre Zwei-Faktor-Authentifizierung auf der Einstellungs-Seite eingerichtet haben.",
-            "fail": "Der Code hat das falsche Format.",
+            "fail": "Der Code hat das falsche Format [Bsp: '123456'].",
             "didIt": "Sie haben erfolgreich Ihren zweiten Faktor eingerichtet!",
             "canUse": "Sie können nun die Anwendung vollständig verwenden",
             "go": "Los geht's!",
-            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich. Versuchen sie es erneut.",
+            "failedSetUp": "Das Einrichten Ihres zweiten Faktors war nicht erfolgreich.",
+            "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
             "again": "Erneut versuchen",
+            "toStart": "Zum Beginn",
             "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {

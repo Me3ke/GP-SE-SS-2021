@@ -2,7 +2,7 @@ package gpse.example.domain.documents;
 
 
 /**
- * .
+ * The response for a document put response for uploading new versions.
  */
 public class DocumentPutResponse {
 
@@ -10,9 +10,9 @@ public class DocumentPutResponse {
     private final long newDocumentID;
 
     /**
-     *
-     * @param archivedDocumentID
-     * @param newDocumentID
+     * The default constructor for a document put response.
+     * @param archivedDocumentID the id of the archived document.
+     * @param newDocumentID the id of the document created from the request.
      */
 
     public DocumentPutResponse(final long archivedDocumentID, final long newDocumentID) {
@@ -20,7 +20,6 @@ public class DocumentPutResponse {
         this.newDocumentID = newDocumentID;
 
     }
-
 
     public long getArchivedDocumentID() {
         return archivedDocumentID;

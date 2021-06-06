@@ -1,109 +1,170 @@
 package gpse.example.domain;
 
 import com.sun.istack.NotNull;
-import gpse.example.util.*;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.documents.*;
-import gpse.example.domain.envelopes.Envelope;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-
-import javax.persistence.*;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 
 /**
  * class modeling the protocol of an document.
  * able to print a PDF protocol
  */
-@Entity
 public class Protocol {
 
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private long protocolID;
-
-    @OneToOne
-    private Envelope envelope;
-
-    @Column
-    private String pathProtocolDir;
-
-    private transient PDFWriter writer;
+    /**
+     * vertical position of first line.
+     */
+    private static final int TOP_OF_PAGE = 700;
 
     /**
-     * constructor of protocol.
-     * @param env  envelope that should be protocoled
+     * distance between to regular lines.
      */
-    public Protocol(@NotNull final Envelope env) {
-        envelope = env;
-        pathProtocolDir = "./src/main/resources/out/" + protocolID;
-        writer = new PDFWriter();
-    }
+    private static final int LINE_DIST = 25;
 
-    public Protocol() {
+    /**
+     * Text margin to left side.
+     */
+    private static final int MARGIN_LEFT = 75;
 
+    private static final int FONT_SIZE = 12;
+
+    private static final String PROTOKOLL = "Protokoll: ";
+
+    private static final int MAX_LINE_LENGTH = 36;
+    private static final float SPACING_TWO_FIVE = 2.5f;
+    private static final float SPACING_ONE_FIVE = 1.5f;
+    private static final float SPACING_TWO = 2.0f;
+    private static final String SIGNATURE_OF = "Signiert von: ";
+
+    private final Document document;
+
+    public Protocol(@NotNull final Document document) {
+        this.document = document;
     }
 
     /**
-     * print protocol file for all documents in envelope.
-     * stored in /resources/protocolID/.
+     * printing the protocol with specified user data.
+     * @return a stream which contains the written pdf protocol.
+     * @throws IOException
      */
-    public void printProtocol() {
-        final File file = new File(pathProtocolDir);
-        if ((!file.exists()) && (!file.mkdirs())) {
-           System.out.println("Verzeichnis wurde nicht angelegt");
-           return;
+    public ByteArrayOutputStream writeProtocol() throws IOException {
+
+        final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        //TODO make linecount method so we can check if its <= 0 and create new page if needed
+        int lineCount = TOP_OF_PAGE;
+        final String title = document.getDocumentTitle();
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (PDDocument protocol = new PDDocument()) {
+            final PDPage page = new PDPage();
+            protocol.addPage(page);
+            try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(0))) {
+                // (x|y) = (0|0) bottom left; new line forbidden
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
+                contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
+                if ((PROTOKOLL + title).length() <= MAX_LINE_LENGTH) {
+                    contentStream.showText(PROTOKOLL + title);
+                } else {
+                    contentStream.showText(PROTOKOLL);
+                    lineCount -= LINE_DIST;
+                    contentStream.endText();
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
+                    contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
+                    contentStream.showText(title);
+                }
+                contentStream.endText();
+
+                lineCount -= 2 * LINE_DIST;
+                addLine("DokumentenID:  " + document.getId(), lineCount, contentStream);
+
+                lineCount -= LINE_DIST;
+                addLine("Dokumenteneigentümer: " + document.getOwner(), lineCount, contentStream);
+
+                if (document.getEndDate() != null) {
+                    lineCount -= LINE_DIST;
+                    addLine("Offen bis: " + document.getEndDate(), lineCount, contentStream);
+                }
+
+                lineCount -= LINE_DIST;
+                addLine(SIGNATURE_OF, lineCount, contentStream);
+
+                for (final Signatory signatory : document.getSignatories()) {
+                    lineCount -= LINE_DIST;
+                    if (signatory.isStatus()) {
+                        addIndentedLine(signatory.getUser().getUsername() + "    Am: "
+                            + formatter.format(signatory.getSignedOn()), lineCount, SPACING_ONE_FIVE, contentStream);
+                    } else {
+                        addIndentedLine(signatory.getUser().getUsername() + "    noch nicht signiert",
+                            lineCount, SPACING_ONE_FIVE, contentStream);
+                    }
+                }
+
+                lineCount = lineCount - LINE_DIST;
+                addLine("Historie: ", lineCount, contentStream);
+                final List<Document> history = document.getHistory();
+                history.remove(0);
+                for (final Document document : history) {
+
+                    lineCount = lineCount - LINE_DIST;
+                    addIndentedLine(document.getDocumentTitle() + " vom "
+                        + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
+                        lineCount, SPACING_ONE_FIVE, contentStream);
+
+                    lineCount -= LINE_DIST;
+                    addIndentedLine(SIGNATURE_OF, lineCount, SPACING_TWO, contentStream);
+
+                    for (final Signatory signatory : document.getSignatories()) {
+                        lineCount -= LINE_DIST;
+                        if (signatory.isStatus()) {
+                            addIndentedLine(signatory.getUser().getUsername() + "    (ungültig) ",
+                                lineCount, SPACING_TWO_FIVE, contentStream);
+                        } else {
+                            addIndentedLine(signatory.getUser().getUsername() + "    nicht signiert",
+                                lineCount, SPACING_TWO_FIVE, contentStream);
+                        }
+                    }
+
+
+                }
+            }
+            protocol.save(output);
         }
-        for (int i = 0; i < envelope.getDocumentList().size(); i++) {
-            printDocumentProtocol(envelope.getDocumentList().get(i));
-        }
+        return output;
     }
 
-    private void printDocumentProtocol(final Document document) {
-
-        final ArrayList<String> signatoryNames = new ArrayList<>();
-        final ArrayList<String> historyIDs = new ArrayList<>();
-
-        for (int i = 0; i < document.getSignatories().size(); i++) {
-            signatoryNames.add(document.getSignatories().get(i).getUser().getLastname());
-        }
-
-        /*for (int i = 0; i < history.size(); i++) {
-            historyIDs.add(history.get(i).getDocumentMetaData().getIdentifier());
-        }*/
-
-        try {
-            writer.printPDF(protocolID, document.getDocumentMetaData().getMetaUserID(),
-                signatoryNames, historyIDs, document.getDocumentMetaData().getIdentifier());
-        } catch (IOException ioe) {
-            System.out.println("print protocol failed");
-        }
+    /**
+     * adding a line to pdf document at specified offset with specified value.
+     *
+     * @param value         value to add to pdf file
+     * @param offSet        line offset from 0 to 700 from bottom of page
+     * @param contentStream Stream that knows the file to that is written
+     * @throws IOException
+     */
+    private void addLine(final String value, final int offSet,
+                         final PDPageContentStream contentStream) throws IOException {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, FONT_SIZE);
+        contentStream.newLineAtOffset(MARGIN_LEFT, offSet);
+        contentStream.showText(value);
+        contentStream.endText();
     }
 
-    public long getProtocolID() {
-        return protocolID;
-    }
-
-    public void setProtocolID(final long protocolID) {
-        this.protocolID = protocolID;
-    }
-
-    public Envelope getEnvelope() {
-        return envelope;
-    }
-
-    public void setEnvelope(final Envelope envelope) {
-        this.envelope = envelope;
-    }
-
-    public String getPathProtocolDir() {
-        return pathProtocolDir;
-    }
-
-    public void setPathProtocolDir(final String pathProtocolDir) {
-        this.pathProtocolDir = pathProtocolDir;
+    private void addIndentedLine(final String value, final int offSet, final float leftSpacing,
+                                 final PDPageContentStream contentStream) throws IOException {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, FONT_SIZE);
+        contentStream.newLineAtOffset(MARGIN_LEFT * leftSpacing, offSet);
+        contentStream.showText(value);
+        contentStream.endText();
     }
 }

@@ -1,13 +1,16 @@
 <template>
     <div>
+        <!--
+
         <b-button
-            size="sm"
+
             style="margin-top: 7em; background-color: var(--elsa-blue)"
             v-b-modal="'modal-' + docID + 'a'"
         >
             {{ $t('UploadDoc.UpdateDocument.update2') }}
         </b-button>
 
+        --->
         <b-modal
             :id="'modal-' + docID + 'a'"
             ref="my-modal1"

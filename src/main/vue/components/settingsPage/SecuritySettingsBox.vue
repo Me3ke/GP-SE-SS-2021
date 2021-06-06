@@ -26,9 +26,8 @@
                         <b-button class="elsa-blue-btn" @click="setUp()">
                             {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
-
-                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
                     </b-list-group-item>
+                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
@@ -61,7 +60,8 @@
 <script>
 import i18n from "@/i18n";
 import {mapActions, mapGetters} from 'vuex';
-import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
+import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
+import _ from "lodash";
 
 export default {
     name: "SecuritySettingsBox",
@@ -76,6 +76,7 @@ export default {
       ...mapGetters({
         privateKey: 'getPrivateKey',
         publicKey: 'getPublicKey',
+        sendingSuccess: 'getSendingSuccess'
       })
   },
     data() {
@@ -92,6 +93,9 @@ export default {
             } else {
                 this.showAlertEN()
             }
+        },
+        hasError(){
+         return _.isEmpty(this.sendingSuccess);
         },
 
         async showAlertEN() {
@@ -222,11 +226,23 @@ export default {
             reader.readAsText(file)
             reader.onload = (e) => {
               this.$store.dispatch('sendPublicKey', {"publicKey": e.target.result})
-              this.$swal.fire({
-                title: "Successfully uploaded",
-                icon: "success"
-              })
             }
+          }
+
+          if (this.hasError()) {
+            this.$swal.fire({
+              title: 'Ups',
+              icon: 'error',
+              text: 'The public key was incorrect; Please try another one'
+            })
+          }
+
+          else{
+            this.$swal.fire({
+              title: 'Perfect',
+              icon: 'success',
+              text: 'Your public key was successfully uploaded'
+            })
           }
         },
         setUp() {

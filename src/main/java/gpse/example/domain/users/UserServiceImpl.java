@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
-import gpse.example.util.SMTPServerHelper;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * the class that implements the UserService interface for communication with the database.
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private ConfirmationTokenService confirmationTokenService;
 
     private final UserRepository userRepository;
+    private final SecuritySettingsRepository securitySettingsRepository;
 
     @Lazy
     @Autowired
@@ -38,14 +41,15 @@ public class UserServiceImpl implements UserService {
     private SMTPServerHelper smtpServerHelper;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository) {
+    public UserServiceImpl(final UserRepository userRepository, SecuritySettingsRepository securitySettingsRepository) {
         this.userRepository = userRepository;
+        this.securitySettingsRepository = securitySettingsRepository;
     }
 
     @Override
     public User getUser(final String username) throws UsernameNotFoundException {
         return userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
+            .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
     }
 
     @Override
@@ -60,6 +64,7 @@ public class UserServiceImpl implements UserService {
         userRepository.findAll().forEach(users::add);
         return users;
     }
+
     @Override
     public User createUser(final String username, final String firstname,
                            final String lastname, final String password, final String... roles) {
@@ -67,6 +72,8 @@ public class UserServiceImpl implements UserService {
         for (final String role : roles) {
             user.addRole(role);
         }
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 
@@ -79,49 +86,54 @@ public class UserServiceImpl implements UserService {
             user.addRole(role);
         }
         user.setPersonalData(personalData);
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 
     @Override
-    public void signUpUser(User user) {
-
+    public void signUpUser(final User user) throws MessageGenerationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         final User createdUser = userRepository.save(user);
         final ConfirmationToken token = new ConfirmationToken(user);
-        ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
-        sendConfirmationMail(createdUser, savedToken.getConfirmationToken());
+        final ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
+        sendConfirmationMail(createdUser, savedToken.getToken());
     }
 
     @Override
-    public void confirmUser(ConfirmationToken confirmationToken) {
+    public void confirmUser(final ConfirmationToken confirmationToken) {
 
         final User user = confirmationToken.getUser();
 
         user.setEnabled(true);
+        securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(User user, String token) {
-        smtpServerHelper.sendRegistrationEmail(user.getEmail(), user.getLastname(),
+    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException {
+        smtpServerHelper.sendRegistrationEmail(user,
             "http://localhost:8080/register/confirm/" + token);
     }
 
     @Override
-    public void validateUser(User user) {
+    public void validateUser(final User user) {
         user.setAdminValidated(true);
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
     }
 
     @Override
-    public void infoNewExtUser(User user) {
-       List<User> userList = getUsers();
-        for (User value : userList) {
+    public void infoNewExtUser(final User user) throws MessageGenerationException  {
+       final List<User> userList = getUsers();
+        for (final User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
-                smtpServerHelper.sendValidationInfo(value.getEmail(), user.getEmail());
+                smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;
-                //otional ohne return => alle Admins benachrichtigen.
+                //optional, without return -> notify all admins.
             }
         }
 
@@ -129,11 +141,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeUser(final String username) {
+        Optional<User> user = userRepository.findById(username);
+        user.ifPresent(value -> securitySettingsRepository.delete(value.getSecuritySettings()));
         userRepository.deleteById(username);
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(final User user) {
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 }

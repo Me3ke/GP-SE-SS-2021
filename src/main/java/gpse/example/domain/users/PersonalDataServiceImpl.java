@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonalDataServiceImpl implements PersonalDataService {
 
-    private PersonalDataRepository personalDataRepository;
+    private final PersonalDataRepository personalDataRepository;
 
     @Autowired
-    public PersonalDataServiceImpl(PersonalDataRepository personalDataRepository) {
+    public PersonalDataServiceImpl(final PersonalDataRepository personalDataRepository) {
         this.personalDataRepository = personalDataRepository;
     }
 
     @Override
-    public PersonalData savePersonalData(PersonalData personalData) {
+    public PersonalData savePersonalData(final PersonalData personalData) {
         return personalDataRepository.save(personalData);
     }
 }

@@ -12,12 +12,12 @@ public class SecuritySettingsServiceImpl implements SecuritySettingsService {
     private final SecuritySettingsRepository securitySettingsRepository;
 
     @Autowired
-    public SecuritySettingsServiceImpl(SecuritySettingsRepository securitySettingsRepository) {
+    public SecuritySettingsServiceImpl(final SecuritySettingsRepository securitySettingsRepository) {
         this.securitySettingsRepository = securitySettingsRepository;
     }
 
     @Override
-    public SecuritySettings saveSecuritySettings(SecuritySettings securitySettings) {
+    public SecuritySettings saveSecuritySettings(final SecuritySettings securitySettings) {
         return securitySettingsRepository.save(securitySettings);
     }
 }

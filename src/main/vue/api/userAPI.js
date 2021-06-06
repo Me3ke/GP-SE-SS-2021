@@ -10,27 +10,38 @@ export default {
         })
     },
 
-    async registerUser(username, firstname, lastname, password) {
+    async registerUser(register) {
         return axios(
             {
                 method: "post",
-                url: 'http://localhost:8088/api/user/',
-                headers: {"Content-Type": "application/json"},
+                url: 'http://localhost:8088/api/user',
+                headers: {"Content-Type": "application/json", "Accept": "*/*", "Connection": "keep-alive"},
                 data: {
-                    "username": username,
-                    "firstname": firstname,
-                    "lastname": lastname,
-                    "password": password,
-                    "street": "testStreet",
-                    "housenumber": "0",
-                    "postcode": "0",
-                    "hometown": "testTown",
+                    "username": register.username,
+                    "firstname": register.firstname,
+                    "lastname": register.surname,
+                    "password": register.password,
+                    "street": register.street,
+                    "housenumber": register.streetNumber,
+                    "postcode": register.postCode,
+                    "hometown": register.city,
                     "country": "Germany",
-                    "birthday": "2021-05-31",
-                    "phonenumber": "0177598323"
+                    "birthday": register.birthdate,
+                    "phonenumber": register.phoneNumber,
                 }
             }
         )
-
+    },
+    async confirmUser(token) {
+        return axios(
+            {
+                method: "get",
+                url: 'http://localhost:8088/api/newUser/register',
+                headers: {"Content-Type": "application/json", "Accept": "*/*", "Connection": "keep-alive"},
+                params: {
+                    token: token
+                }
+            }
+        )
     }
 }

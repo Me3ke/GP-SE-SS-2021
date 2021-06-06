@@ -15,13 +15,17 @@ public enum SignatureType {
      */
     NO_SIGNATURE(-1),
     /**
+     * REVIEW is technically the same as SIMPLE_SIGNATURE.
+     */
+    REVIEW(0),
+    /**
      * SIMPLE_SIGNATURE can represent the simple option of a Signature.
      */
-    SIMPLE_SIGNATURE(0),
+    SIMPLE_SIGNATURE(1),
     /**
      * ADVANCED_SIGNATURE can represent the advanced option of a Signature.
      */
-    ADVANCED_SIGNATURE(1);
+    ADVANCED_SIGNATURE(2);
 
     private final int intRepresentation;
 
@@ -41,8 +45,10 @@ public enum SignatureType {
             case -1:
                 return SignatureType.NO_SIGNATURE;
             case 0:
-                return SignatureType.SIMPLE_SIGNATURE;
+                return SignatureType.REVIEW;
             case 1:
+                return SignatureType.SIMPLE_SIGNATURE;
+            case 2:
                 return SignatureType.ADVANCED_SIGNATURE;
             default:
                 throw new SignatureTypeFromIntegerException();

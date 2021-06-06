@@ -9,6 +9,13 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     },
+    // gives back protocol of document with id docId
+    async getProtocol(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/' + 'documents/' + docId + '/protocol'
+        })
+    },
     async editDocument(envId, docId, newDoc) {
         return axios({
             method: "put",

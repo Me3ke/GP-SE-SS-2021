@@ -3,6 +3,7 @@ package gpse.example.domain.signature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,26 +21,31 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public List<Signatory> saveSignatories(final List<Signatory> signatories) {
-        for (Signatory signatory : signatories) {
-            signatoryRepository.save(signatory);
+        /*List<Signatory> signatories1 = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            signatories1.add(signatoryRepository.save(signatory));
         }
+        return signatories1;*/
+
+
+
         return signatories;
     }
 
     @Override
-    public  void delete(final List<Signatory> signatories) {
-        for (int i = 0; i < signatories.size(); i++) {
-            signatoryRepository.deleteById(signatories.get(i).getId());
-        }
+    public void delete(final List<Signatory> signatories) {
+        /*for (Signatory signatory : signatories) {
+            signatoryRepository.deleteById(signatory.getId());
+        }*/
     }
-
     @Override
     public Signatory saveSignatory(final Signatory signatory) {
-        return signatoryRepository.save(signatory);
+        //return signatoryRepository.save(signatory);
+        return signatory;
     }
 
     @Override
     public void deleteAll() {
-        signatoryRepository.deleteAll();
+        //signatoryRepository.deleteAll();
     }
 }

@@ -22,9 +22,6 @@ public class ArchivedDocument extends Document {
     @Id
     private long id;
 
-    @Column
-    private String title;
-
     @OneToOne
     private DocumentMetaData documentMetaData;
 
@@ -35,7 +32,7 @@ public class ArchivedDocument extends Document {
     private List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToMany
-    private List<Signatory> readers = new ArrayList<>();
+    private final List<Signatory> readers = new ArrayList<>();
 
     @Column
     private String documentType;
@@ -55,32 +52,39 @@ public class ArchivedDocument extends Document {
     @Column
     private DocumentState state;
 
+    @OneToOne
+    private Document previousVersion;
+
     /**
      * Default constructor for an archived Document.
      * @param document the document from which it descends.
      */
     public ArchivedDocument(final Document document) {
         this.id = document.getId();
-        this.title = document.getDocumentTitle();
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
         this.advancedSignatures = document.getAdvancedSignatures();
-        this.readers = document.getReaders();
         this.documentType = document.getDocumentType();
         this.signatureType = document.getSignatureType();
         this.data = document.getData();
         this.orderRelevant = document.isOrderRelevant();
         this.endDate = document.getEndDate();
         this.state = DocumentState.CLOSED;
+        this.previousVersion = document.getPreviousVersion();
     }
 
     protected ArchivedDocument() {
 
     }
 
-    @Override
+    /*@Override
     public String getDocumentTitle() {
         return documentMetaData.getMetaDocumentTitle();
+    }*/
+
+    @Override
+    public String getOwner() {
+        return documentMetaData.getMetaUserID();
     }
 
     @Override
@@ -91,11 +95,6 @@ public class ArchivedDocument extends Document {
     @Override
     public DocumentMetaData getDocumentMetaData() {
         return documentMetaData;
-    }
-
-    @Override
-    public String getOwner() {
-        return documentMetaData.getMetaUserID();
     }
 
     @Override
@@ -144,18 +143,25 @@ public class ArchivedDocument extends Document {
     }
 
     @Override
-    public void setSignatureType(SignatureType signatureType) {
+    public Document getPreviousVersion() {
+        return previousVersion;
     }
 
     @Override
-    public void setOrderRelevant(boolean orderRelevant) {
+    public void setSignatureType(final SignatureType signatureType) {
+
     }
 
     @Override
-    public void setEndDate(LocalDateTime endDate) {
+    public void setOrderRelevant(final boolean orderRelevant) {
     }
 
     @Override
-    public void setState(DocumentState state) {
+    public void setEndDate(final LocalDateTime endDate) {
     }
+
+    @Override
+    public void setState(final DocumentState state) {
+    }
+
 }

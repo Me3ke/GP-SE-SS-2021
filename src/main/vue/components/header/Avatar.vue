@@ -4,18 +4,10 @@
             <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
 
-        <!-- Personal Information -->
+        <!-- Account Settings -->
         <b-dropdown-item class="my-dropdown-item" @click="routeToProfile">
             <b-icon icon="person-circle" class="my-icon"></b-icon>
             <span class="letters"> {{ $t('Header.Avatar.profile') }} </span>
-        </b-dropdown-item>
-
-        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-
-        <!-- Settings -->
-        <b-dropdown-item class="my-dropdown-item">
-            <b-icon icon="gear" class="my-icon"></b-icon>
-            <span class="letters"> {{ $t('Header.Avatar.settings') }} </span>
         </b-dropdown-item>
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
@@ -207,6 +199,7 @@ export default {
     padding-left: 0.5vw;
     background-color: var(--whitesmoke);
     position: relative;
+    z-index: 1 !important;
 }
 
 .my-dropdown-item:hover >>> .dropdown-item {

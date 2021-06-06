@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 /**
