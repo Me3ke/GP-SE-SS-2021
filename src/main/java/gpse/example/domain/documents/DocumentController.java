@@ -11,8 +11,11 @@ import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,7 +52,9 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
-
+    @Lazy
+    @Autowired
+    private SMTPServerHelper smtpServerHelper;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -145,7 +150,7 @@ public class DocumentController {
                                                         final @PathVariable(USER_ID) String ownerID,
                                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                         final @PathVariable(DOCUMENT_ID) long documentID)
-        throws UploadFileException {
+        throws UploadFileException, MessageGenerationException {
         try {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
@@ -164,6 +169,18 @@ public class DocumentController {
                 userService, signatoryService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
+            if(!newDocument.isOrderRelevant()){
+                for(int i = 0; i < newDocument.getSignatories().size(); i++) {
+                    smtpServerHelper.sendSignatureInvitation(newDocument.getSignatories().get(i).getUser().getEmail(),
+                        userService.getUser(newDocument.getOwner()),
+                        newDocument.getSignatories().get(i).getUser().getLastname(), newDocument
+                    );
+                }
+            } else {
+                smtpServerHelper.sendSignatureInvitation(newDocument.getCurrentSignatory().getUser().getEmail(),
+                    userService.getUser(newDocument.getOwner()),
+                    newDocument.getCurrentSignatory().getUser().getLastname(), newDocument);
+            }
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
