@@ -203,7 +203,10 @@ export default {
             document: 'document/getDocument'
         }),
         isOwner() {
-            return this.document.owner.email === this.$store.state.auth.username
+            if (this.document.owner) {
+                return this.document.owner.email === this.$store.state.auth.username
+            }
+            return false
         },
         reader() {
             return this.document.reader

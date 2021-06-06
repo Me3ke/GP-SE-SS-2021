@@ -391,7 +391,8 @@
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument gegenlesen wollen?",
             "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente gegenlesen wollen?",
             "success": "Sie haben erfolgreich gegengelesen!",
-            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+            "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
+            "fail": "Es scheint Server-Probleme zu geben. Fehlercode: "
         }
     }
 }

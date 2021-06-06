@@ -18,6 +18,21 @@
 
                                     <!-- Page 1 (advanced)-->
                                     <div v-if="page === 1">
+                                        <b-alert :show="showAlert"
+                                                 style="margin-bottom: 1em">
+                                            {{ $t('TwoFakAuth.read.fail') }} {{ statusCode }}
+                                        </b-alert>
+
+                                        <b-alert :show="showErrorReview"
+                                                 style="margin-bottom: 1em">
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorOne') }}
+                                            </div>
+                                            <div>
+                                                {{ $t('TwoFakAuth.serverErrorTwo') }}
+                                            </div>
+                                        </b-alert>
+
                                         <div class="step" v-if="documents.length === 1">
                                             {{ $t('TwoFakAuth.read.sureOne') }}
                                         </div>
@@ -41,7 +56,7 @@
                                                     {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
                                             </button>
-                                            <button type="button" class="elsa-blue-btn" @click="page = 2">
+                                            <button type="button" class="elsa-blue-btn" @click="proofread">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.continue') }}
                                                 </span>
@@ -85,9 +100,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- TODO: add what happens if something goes wrong -->
-
                             </div>
                         </div>
                     </div>
@@ -98,6 +110,10 @@
 </template>
 
 <script>
+// TODO: rethink way pop up gets information about documents once it is possible to review multiple files at at time
+import {mapGetters} from "vuex";
+import _ from "lodash";
+
 export default {
     name: "ProofreadPopUp",
     props: {
@@ -109,17 +125,47 @@ export default {
     data() {
         return {
             page: 1,
-            pageBefore: 0
+            pageBefore: 0,
+            showAlert: false
         }
     },
     methods: {
-        // TODO: connect to API
-        proofread() {
-            this.page += 1
+        // TODO: make adaptions once it is possible to review multiple files at at time
+        async proofread() {
+            await this.$store.dispatch('document/reviewDocument', {docId: this.docId})
+
+            // everything went fine
+            if (this.statusCode === 200) {
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                this.page += 1
+                this.showAlert = false
+            } else {
+                if (!this.showErrorReview) {
+                    this.showAlert = true
+                }
+            }
         },
         closeModal() {
             this.$emit('readTrigger');
             this.page = 1
+        }
+    },
+    computed: {
+        ...mapGetters({
+            statusCode: 'document/getReviewStatus',
+            errorReview: 'document/getErrorReviewDocument'
+        }),
+        docId() {
+            return this.$route.params.docId;
+        },
+        envId() {
+            return this.$route.params.envId;
+        },
+        showErrorReview: {
+            get() {
+                return !_.isEmpty(this.errorReview)
+            }
         }
     }
 }

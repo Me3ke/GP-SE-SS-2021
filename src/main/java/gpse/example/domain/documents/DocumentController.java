@@ -49,7 +49,6 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
-    private final DocumentCreator documentCreator = new DocumentCreator();
 
 
     /**
@@ -179,7 +178,7 @@ public class DocumentController {
      * @return true if the review was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
@@ -198,7 +197,7 @@ public class DocumentController {
     //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
-                              final @PathVariable(DOCUMENT_ID) long documentID)
+                                         final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
     }
@@ -206,8 +205,8 @@ public class DocumentController {
     /**
      * The sign method does a signing for a given user on a given document.
      *
-     * @param userID     the id of the user reading the document.
-     * @param documentID the document to be reviewed.
+     * @param userID                   the id of the user reading the document.
+     * @param documentID               the document to be reviewed.
      * @param advancedSignatureRequest the request Object containing the advanced signature
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
@@ -217,7 +216,7 @@ public class DocumentController {
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
-            throws DocumentNotFoundException {
+        throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentID);
         if (document.verifySignature(userService.getUser(userID), advancedSignatureRequest.getSignature())) {
             final JSONResponseObject response = computeSignatureRequest(userID,
@@ -236,7 +235,7 @@ public class DocumentController {
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
-            throws DocumentNotFoundException {
+        throws DocumentNotFoundException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
@@ -292,7 +291,7 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
-            byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+            final byte[] protocolBytes = protocol.writeProtocol().toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
                 .body(protocolBytes);

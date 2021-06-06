@@ -16,6 +16,14 @@ export default {
             url: 'http://localhost:8088/api/' + 'documents/' + docId + '/protocol'
         })
     },
+    // reviews document with id docId
+    async reviewDocument(docId) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/review'
+        })
+    },
+
     async editDocument(envId, docId, newDoc) {
         return axios({
             method: "put",
