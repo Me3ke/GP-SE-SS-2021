@@ -317,7 +317,10 @@
         "sign-in": "Anmelden",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
-        "fail": "Anmeldung fehlgeschlagen."
+        "fail": "Anmeldung fehlgeschlagen.",
+        "resetPassword" : "Passwort zurücksetzen",
+        "send" : "senden",
+        "reset" :"Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
     },
     "Register": {
         "email": "E-Mail",

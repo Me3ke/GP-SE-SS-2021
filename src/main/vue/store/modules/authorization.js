@@ -42,6 +42,7 @@ const authorization = {
             })
         }
     },
+
     getters: {
         isAuthenticated(state) {
             return state.authenticated;

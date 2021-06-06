@@ -163,8 +163,8 @@ export default {
   },
   validations: {
     register: {
-      firstname: { required, minLength: minLength(3) },
-      surname: { required, minLength: minLength(3) },
+      firstname: { required, minLength: minLength(1) },
+      surname: { required, minLength: minLength(1) },
       username: { required, email },
       password: { required, minLength: minLength(8) },
       passwordRepeat: {

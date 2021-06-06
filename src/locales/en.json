@@ -316,7 +316,10 @@
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
-        "fail": "Login failed."
+        "fail": "Login failed.",
+        "resetPassword" : "reset Password",
+        "send" : "send",
+        "reset" :"To reset your password, you will receive an e-mail containing a reset link."
     },
     "Register": {
         "email": "e-mail",
