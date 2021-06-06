@@ -14,13 +14,13 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead(true)"
+                <b-list-group-item v-if="(reader && readTurn) || (reader && read)" @click="toggleRead(true)"
                                    :class="read ? 'inactive-item mini-list' : 'mini-list'">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign(true)"
+                <b-list-group-item v-if="(signatory && signTurn) || (signatory && signed)" @click="toggleSign(true)"
                                    :class="signed ? 'inactive-item mini-list' : 'mini-list'">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                 </b-list-group-item>
@@ -57,14 +57,16 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead(true)" :class="read ? 'inactive-item' : ''">
+                <b-list-group-item v-if="(reader && readTurn) || (reader && read)" @click="toggleRead(true)"
+                                   :class="read ? 'inactive-item' : ''">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                     <span v-if="read"> {{ $t('DocumentPage.didRead') }} </span>
                     <span v-else> {{ $t('DocumentPage.doRead') }} </span>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign(true)" :class="signed ? 'inactive-item' : ''">
+                <b-list-group-item v-if="(signatory && signTurn) || (signatory && signed)" @click="toggleSign(true)"
+                                   :class="signed ? 'inactive-item' : ''">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
@@ -105,14 +107,16 @@
                 </b-list-group-item>
 
                 <!-- Proofread -->
-                <b-list-group-item v-if="reader" @click="toggleRead(true)" :class="read ? 'inactive-item' : ''">
+                <b-list-group-item v-if="(reader && readTurn) || (reader && read)" @click="toggleRead(true)"
+                                   :class="read ? 'inactive-item' : ''">
                     <b-icon icon="eyeglasses" class="my-icon"></b-icon>
                     <span v-if="read"> {{ $t('DocumentPage.didRead') }} </span>
                     <span v-else> {{ $t('DocumentPage.doRead') }} </span>
                 </b-list-group-item>
 
                 <!-- Sign -->
-                <b-list-group-item v-if="signatory" @click="toggleSign(true)" :class="signed ? 'inactive-item' : ''">
+                <b-list-group-item v-if="(signatory && signTurn) || (signatory && signed)" @click="toggleSign(true)"
+                                   :class="signed ? 'inactive-item' : ''">
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
@@ -214,17 +218,23 @@ export default {
         read() {
             return this.document.read
         },
+        readTurn() {
+            return this.document.turnToReview
+        },
         signatory() {
             return this.document.signatory
         },
         signed() {
             return this.document.signed
         },
+        signTurn() {
+            return this.document.turnToSign
+        },
         docId() {
-            return this.$route.params.docId;
+            return this.$route.params.docId
         },
         envId() {
-            return this.$route.params.envId;
+            return this.$route.params.envId
         }
     }
 }

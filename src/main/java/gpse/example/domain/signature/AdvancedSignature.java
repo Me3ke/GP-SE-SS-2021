@@ -16,8 +16,10 @@ public class AdvancedSignature {
     @Column
     private String userEmail;
 
+    @Lob
     @Column
     private byte[] signature;
+
     protected AdvancedSignature() {
     }
 

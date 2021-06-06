@@ -218,21 +218,14 @@ public class DocumentController {
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
         throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentID);
-        if (document.verifySignature(userService.getUser(userID), advancedSignatureRequest.getSignature())) {
-            final JSONResponseObject response = computeSignatureRequest(userID,
-                documentID, SignatureType.ADVANCED_SIGNATURE);
-            if (response.getStatus() == STATUS_CODE_OK) {
-                document.advancedSignature(userID, advancedSignatureRequest.getSignature());
-                documentService.saveSignatures(document);
-                documentService.addDocument(document);
-            }
-            return response;
-        } else {
-            final JSONResponseObject response = new JSONResponseObject();
-            response.setStatus(STATUS_CODE_INVALID_SIGNATURE);
-            response.setMessage("Invalid signature for this document");
-            return response;
+        final JSONResponseObject response = computeSignatureRequest(userID,
+            documentID, SignatureType.ADVANCED_SIGNATURE);
+        if (response.getStatus() == STATUS_CODE_OK) {
+            document.advancedSignature(userID, advancedSignatureRequest.getSignature());
+            documentService.saveSignatures(document);
+            documentService.addDocument(document);
         }
+        return response;
     }
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,

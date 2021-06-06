@@ -79,7 +79,7 @@ public class InitializeDatabase implements InitializingBean {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), "3213145");
             final User user = new User(USERNAME,
-                 "Hans",
+                "Hans",
                 "Schneider", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
             user.addRole("ROLE_USER");
             user.setEnabled(true);
@@ -166,9 +166,9 @@ public class InitializeDatabase implements InitializingBean {
     }
 
     private Document createExampleDocument(final long id,
-                                       final byte[] data, final DocumentState documentState,
-                                       final boolean read, final boolean signed, final String title,
-                                       final String type) throws CreatingFileException, IOException {
+                                           final byte[] data, final DocumentState documentState,
+                                           final boolean read, final boolean signed, final String title,
+                                           final String type) throws CreatingFileException, IOException {
         final User owner = userService.getUser(USERNAME);
         try {
             documentService.getDocument(id);
@@ -185,7 +185,7 @@ public class InitializeDatabase implements InitializingBean {
                     signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
                 }
                 if (signed) {
-                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
+                    signatories.add(new ProtoSignatory(owner, SignatureType.ADVANCED_SIGNATURE));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
                     signatories);

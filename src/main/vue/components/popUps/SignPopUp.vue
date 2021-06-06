@@ -320,6 +320,9 @@ export default {
 
             code: '',
             key: null,
+            isValid: false,
+            signature: '',
+            privateKey: '',
 
             showAlertCode: false,
             showAlertSign: false,
@@ -396,31 +399,55 @@ export default {
             const reader = new FileReader()
             reader.readAsText(this.key)
 
-            reader.onload = async (keyData) => {
-              await this.$store.dispatch('fetchUser')
-              var sig = new KJUR.crypto.Signature({"alg": "SHA512withRSA"});
-              sig.init(keyData.target.result);
-              sig.updateString(this.documents[0].identifier);
-              var signature = sig.sign();
-              console.log(signature);
-              await this.$store.dispatch('document/advancedSignDocument', {
-                docId: this.docId,
-                signature: signature
-              })
-            }
+            console.log('1')
 
-            // everything went fine
-            if (this.statusCodeAdvanced === 200) {
-                // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
-                // goes to success page and toggles alert
-                this.page = 4
-                this.showAlertSign = false
-            } else {
-                // if api call got to server, but server did not response wit 'ok' shows errorCode to user
-                // if api call did not go to server, shows that there are Server Network problems
-                if (!this.showErrorAdvanced) {
-                    this.showAlertSign = true
+            // getting user so there is access public key
+            await this.$store.dispatch('fetchUser')
+
+            console.log('2')
+
+            reader.onload = async (keyData) => {
+                this.privateKey = keyData.target.result
+                console.log('3')
+
+                const docId = this.documents[0].identifier
+
+                // encrypting hashed docId with given private key
+                var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
+                sig.init(this.privateKey);
+                sig.updateString(docId);
+                this.signature = sig.sign();
+
+                // decrypting hashed docId with registered public key
+                var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+                sig2.init(this.publicKey);
+                sig2.updateString(docId);
+                this.isValid = sig2.verify(this.signature);
+
+                console.log('4')
+
+                if (this.isValid) {
+                    await this.$store.dispatch('document/advancedSignDocument', {
+                        docId: this.docId,
+                        signature: this.signature
+                    })
+                }
+
+                console.log(this.statusCodeAdvanced)
+
+                // everything went fine
+                if (this.statusCodeAdvanced === 200) {
+                    // reloading document in store, so information is coherent with server information
+                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                    // goes to success page and toggles alert
+                    this.page = 4
+                    this.showAlertSign = false
+                } else {
+                    // if api call got to server, but server did not response wit 'ok' shows errorCode to user
+                    // if api call did not go to server, shows that there are Server Network problems
+                    if (!this.showErrorAdvanced) {
+                        this.showAlertSign = true
+                    }
                 }
             }
         },
@@ -440,30 +467,28 @@ export default {
     },
     computed: {
         ...mapGetters({
-          statusCodeSimple: 'document/getSimpleSignStatus',
-          errorSimple: 'document/getErrorSimpleSignDocument',
-          statusCodeAdvanced: 'document/getAdvancedSignStatus',
-          errorAdvanced: 'document/getErrorAdvancedSignDocument',
+            statusCodeSimple: 'document/getSimpleSignStatus',
+            errorSimple: 'document/getErrorSimpleSignDocument',
+            statusCodeAdvanced: 'document/getAdvancedSignStatus',
+            errorAdvanced: 'document/getErrorAdvancedSignDocument',
 
-          correctInput: 'twoFakAuth/getCorrectInput',
-          hasSetUp: 'twoFakAuth/getHasSetUp',
+            correctInput: 'twoFakAuth/getCorrectInput',
+            hasSetUp: 'twoFakAuth/getHasSetUp',
 
-          user: 'getUser'
+            user: 'getUser'
         }),
-
-      publicKey() {
-        return this.user.publicKey
-      },
-      // TODO
-      // gives back if advanced signature is needed (if false -> simple signature is needed)
-      advanced() {
-        //  return this.documents[0].signatureType === ''
-        return true
-      },
-      showErrorSimple: {
-        get() {
-          return !_.isEmpty(this.errorSimple)
-        }
+        publicKey() {
+            return this.user.publicKey
+        },
+        // TODO
+        // gives back if advanced signature is needed (if false -> simple signature is needed)
+        advanced() {
+            return this.documents[0].signatureType === 'ADVANCED_SIGNATURE'
+        },
+        showErrorSimple: {
+            get() {
+                return !_.isEmpty(this.errorSimple)
+            }
         },
         showErrorAdvanced: {
             get() {

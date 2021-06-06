@@ -3,12 +3,9 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.User;
 
 import javax.persistence.*;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +18,7 @@ import java.util.List;
 public class Document {
 
     //needed for verification
-    private static final String SIGNING_ALGORITHM = "SHA512withRSA";
+    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
     /**
      * The documentMetaData containing the identifier as well as other information.
      * The path leading to the document.
@@ -38,7 +35,9 @@ public class Document {
     @OneToMany
     private List<Signatory> signatories = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
     private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
@@ -117,6 +116,7 @@ public class Document {
         }
     }
 
+    /*
     /**
      * the method used to verify a signature for a specific user, by checking all public keys a user has.
      *
@@ -124,6 +124,7 @@ public class Document {
      * @param givenSignature the signature that needs to be validated
      * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
      */
+    /*
     public boolean verifySignature(final User user, final String givenSignature) {
 
         boolean valid = false;
@@ -133,7 +134,7 @@ public class Document {
             final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
             final byte[] id = this.documentMetaData.getIdentifier().getBytes();
             final String stringPublicKey = user.getPublicKey();
-            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);
+            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);;
             sign.initVerify(publicKey);
             sign.update(id);
             valid = sign.verify(signature);
@@ -142,7 +143,7 @@ public class Document {
             exception.printStackTrace();
         }
         return valid;
-    }
+    } */
 
     private AdvancedSignature getUsersSignature(final String user) {
         for (final AdvancedSignature advancedSignature : advancedSignatures) {
