@@ -26,9 +26,8 @@
                         <b-button class="elsa-blue-btn" @click="setUp()">
                             {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
-
-                        <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
                     </b-list-group-item>
+                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
@@ -61,7 +60,7 @@
 <script>
 import i18n from "@/i18n";
 import {mapActions, mapGetters} from 'vuex';
-import TwoFakAuthSetUp from "@/main/vue/components/TwoFakAuth/TwoFakAuthSetUp";
+import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
 import _ from "lodash";
 
 export default {

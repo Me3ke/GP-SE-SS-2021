@@ -211,6 +211,27 @@
             "houseNumber": "House number:",
             "phoneNumber": "Phone number:"
         },
+        "SignatureSettings": {
+            "settings": "Signature settings",
+            "upload": {
+                "text": "Upload new signature",
+                "exp": "Upload an image of your own signature. It will be added to the process protocol.",
+                "upload": "Upload",
+                "popUp": {
+                    "heading": "Upload signature",
+                    "exp": "Choose your signature.",
+                    "cancel": "Cancel",
+                    "sure": "Your progress will be lost if you cancel.",
+                    "back": "Back",
+                    "close": "Close",
+                    "attentionOne": "Warning! You have already uploaded your signature.",
+                    "attentionTwo": "If you continue it will be lost!",
+                    "placeholder": "Drop signature here or choose",
+                    "dropPlaceholder": "Drop here",
+                    "accepted": "All image formats are accepted."
+                }
+            }
+        },
         "SecuritySettings": {
             "settings": "Security settings",
             "publicKeys": "Public Keys",

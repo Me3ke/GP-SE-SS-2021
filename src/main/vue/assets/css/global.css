@@ -7,6 +7,7 @@
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
     --green: #5D9543;
+    --green-transparent: rgba(93, 149, 67, 0.1);
 
     --open-doc-hover: #ababab;
     --closed-doc: #E5E5E5;
@@ -249,6 +250,38 @@ body {
 
 .custom-switch .custom-control-label::after {
     top: 2px;
+}
+
+/* Upload Menu */
+.was-validated .custom-file-input:invalid ~ .custom-file-label, .custom-file-input.is-invalid ~ .custom-file-label {
+    border-color: var(--elsa-blue);
+}
+
+.custom-file-label {
+    color: var(--dark-grey);
+    background-color: var(--whitesmoke);
+    border: 1px solid var(--light-grey);;
+    border-radius: 0.03em;
+    text-align: left;
+}
+
+.custom-file-label::after {
+    color: var(--dark-grey);
+    background-color: var(--light-grey);
+}
+
+.was-validated .custom-file-input:invalid:focus ~ .custom-file-label, .custom-file-input.is-invalid:focus ~ .custom-file-label {
+    border-color: var(--elsa-blue);
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid ~ .custom-file-label {
+    border-color: var(--green);
+}
+
+.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid:focus ~ .custom-file-label {
+    border-color: var(--green);
+    box-shadow: 0 0 0 0.2rem var(--green-transparent);
 }
 
 /* Sidebar */

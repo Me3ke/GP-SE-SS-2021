@@ -220,6 +220,27 @@
             "twoFacAuthSetUp": "Zwei-Faktor-Authentifizierung einrichten",
             "setUp": "Einrichten"
         },
+        "SignatureSettings": {
+            "settings": "Signatur Einstellungen",
+            "upload": {
+                "text": "Neue Signatur hochladen",
+                "exp": "Laden Sie ein Bild Ihrer Signatur hoch. Es wird dem  Prozess-Protokoll hinzugefügt werden.",
+                "upload": "Hochladen",
+                "popUp": {
+                    "heading": "Signatur hochladen",
+                    "exp": "Wählen Sie Ihre Signatur aus.",
+                    "cancel": "Abbruch",
+                    "sure": "Wenn Sie das Hochladen jetzt abbrechen, geht all' Ihr Fortschritt verloren.",
+                    "back": "Zurück",
+                    "close": "Schließen",
+                    "attentionOne": "Achtung! Sie haben schon eine Signatur hochgeladen.",
+                    "attentionTwo": "Wenn Sie fortfahren, geht diese verloren!",
+                    "placeholder": "Signatur hier ablegen oder auswählen",
+                    "dropPlaceholder": "Hier fallen lassen",
+                    "accepted": "Akzeptiert werden sämtliche Bildformate."
+                }
+            }
+        },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",
             "send": "Speichern",
