@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,8 +40,9 @@ public class User implements UserDetails {
     //@OneToMany
     //private List<Keys> keys = new ArrayList<>();
 
+    @Lob
     @Column
-    private PublicKey publicKey;
+    private String publicKey;
 
     @Column
     private String password;
@@ -266,11 +266,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public PublicKey getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(final PublicKey publicKey) {
+    public void setPublicKey(final String publicKey) {
         this.publicKey = publicKey;
     }
 

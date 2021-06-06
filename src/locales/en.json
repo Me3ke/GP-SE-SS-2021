@@ -326,7 +326,10 @@
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
-        "fail": "Login failed."
+        "fail": "Login failed.",
+        "resetPassword" : "reset Password",
+        "send" : "send",
+        "reset" :"To reset your password, you will receive an e-mail containing a reset link."
     },
     "Register": {
         "email": "e-mail",
@@ -367,6 +370,7 @@
         "back": "Back",
         "serverErrorOne": "There appear to be problems with your server connection.",
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
+        "fail": "There appear to be server problems. Error Code: ",
         "login": {
             "title": "Set-up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
@@ -393,7 +397,15 @@
             "code": "Enter the 6-digit code from your authenticator app",
             "sure": "Are you sure you want to cancel the process?",
             "leftTries": "The code was wrong. Tries until logout:",
-            "logout": "You put in too many wrong codes. You will be logged out automatically."
+            "logout": "You put in too many wrong codes. You will be logged out automatically.",
+            "placeholder": "Drop key here or choose",
+            "dropPlaceholder": "Drop here",
+            "accepted": "Accepted are files that end on .txt.",
+            "uploadExp": "Upload your private key to confirm your identity.",
+            "notDone": "In order to sign you still have to set up the following.",
+            "tfa": "Two-factor authentication",
+            "keyPair": "Key-pair",
+            "toSettings": "To settings"
         },
         "read": {
             "read": "Proofread now!",

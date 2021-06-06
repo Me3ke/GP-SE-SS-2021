@@ -7,7 +7,10 @@
                 <img :src="image" alt="logo" class="header-image"/>
             </div>
             <div class="login-division">
-                <login-component></login-component>
+                <login-component v-show="showLogin"></login-component>
+                <b-link v-show="showLogin" v-on:click="showLogin=false">Passwort vergessen?</b-link>
+                <forgot-password-component v-show="!showLogin"></forgot-password-component>
+                <b-link v-show="!showLogin" v-on:click="showLogin=true">Zurück zum Login</b-link>
             </div>
         </div>
 
@@ -21,15 +24,17 @@ import Footer from "@/main/vue/components/Footer";
 import image from "../assets/logos/ELSA_big.svg";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import LoginComponent from "@/main/vue/components/LoginComponent";
+import ForgotPasswordComponent from "../components/settingsPage/ForgotPasswordComponent";
 
 export default {
     data: function () {
         return {
-            image: image
+            image: image,
+            showLogin: true,
         }
     },
     name: "LoginPage",
-    components: {LoginComponent, LandingPageHeader, Footer},
+    components: {ForgotPasswordComponent, LoginComponent, LandingPageHeader, Footer},
     methods: {}
 }
 </script>

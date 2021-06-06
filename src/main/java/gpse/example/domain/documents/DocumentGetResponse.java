@@ -20,11 +20,14 @@ public class DocumentGetResponse {
     private final LocalDateTime endDate;
     private final SignatureType signatureType;
     private final String dataType;
+    private final String identifier;
     private boolean signatory;
     private boolean reader;
     private boolean signed;
     private boolean read;
     private final byte[] data;
+    private boolean isTurnToReview;
+    private boolean isTurnToSign;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -41,24 +44,27 @@ public class DocumentGetResponse {
         //Replaced with uploadDate
         this.creationDate = metaData.getMetaTimeStampUpload();
         this.endDate = document.getEndDate();
-        this.signatureType = document.getSignatureType();
         this.dataType = document.getDocumentType();
         this.data = document.getData();
         this.state = document.getState();
+        this.identifier = document.getDocumentMetaData().getIdentifier();
         this.signatory = false;
         this.read = false;
         this.signed = false;
         final List<Signatory> signatories = document.getSignatories();
+        SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getUser().equals(currentUser)
                 && currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
                 this.signatory = true;
+                signatureType = currentSignatory.getSignatureType();
                 if (currentSignatory.isStatus()) {
                     this.signed = true;
                 }
             }
         }
+        this.signatureType = signatureType;
         final List<Signatory> readers = document.getReaders();
         for (final Signatory currentReader : readers) {
             if (currentReader.getUser().equals(currentUser)) {
@@ -68,6 +74,9 @@ public class DocumentGetResponse {
                 }
             }
         }
+        OrderManager orderManager = new OrderManager();
+        isTurnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
+        isTurnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
     }
 
     public String getTitle() {
@@ -116,5 +125,41 @@ public class DocumentGetResponse {
 
     public boolean isReader() {
         return reader;
+    }
+
+    public boolean isTurnToReview() {
+        return isTurnToReview;
+    }
+
+    public void setTurnToReview(boolean turnToReview) {
+        isTurnToReview = turnToReview;
+    }
+
+    public boolean isTurnToSign() {
+        return isTurnToSign;
+    }
+
+    public void setTurnToSign(boolean turnToSign) {
+        isTurnToSign = turnToSign;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setSignatory(boolean signatory) {
+        this.signatory = signatory;
+    }
+
+    public void setReader(boolean reader) {
+        this.reader = reader;
+    }
+
+    public void setSigned(boolean signed) {
+        this.signed = signed;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
