@@ -224,6 +224,8 @@ public class DocumentController {
                 documentID, SignatureType.ADVANCED_SIGNATURE);
             if (response.getStatus() == STATUS_CODE_OK) {
                 document.advancedSignature(userID, advancedSignatureRequest.getSignature());
+                documentService.saveSignatures(document);
+                documentService.addDocument(document);
             }
             return response;
         } else {
