@@ -41,14 +41,15 @@
                             </DocumentBoxSignRead>
                         </div>
 
-                        <div v-if="documentProgress[document.id-1]">
+                        <div v-if="documentProgressById(document.id)">
                             <ProgressBar
-                                :documentProgress="documentProgress[document.id-1]"
+                                :documentProgress="documentProgressById(document.id)"
                             >
                             </ProgressBar>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <Footer></Footer>
@@ -94,6 +95,8 @@ export default {
 
         ...mapGetters({
             documentProgress: 'document/getDocumentProgressArray',
+            documentProgressById: 'document/getDocumentProgressArrayById'
+
 
         })
 

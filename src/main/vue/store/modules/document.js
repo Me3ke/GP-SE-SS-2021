@@ -68,7 +68,9 @@ export const actions = {
     async getDocumentProgress({commit}, {envId, documentsId}) {
          await documentsId.forEach(docId => {
             documentAPI.getDocumentProgress(envId, docId).then((response) => {
-                commit('SET_DOCUMENT_PROGRESS', response.data)
+                let data = response.data
+                let progress = {docId, data}
+                commit('SET_DOCUMENT_PROGRESS', progress)
                 commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
             }).catch(error => {
                 console.error(error)
@@ -91,6 +93,18 @@ export const getters = {
     getDocumentProgressArray : (state) => {
         return state.documentProgressArray
     },
+
+    getDocumentProgressArrayById: (state) => (id) => {
+        let documentProgress
+        for (let i=0; i < state.documentProgressArray.length; i++){
+            if(state.documentProgressArray[i].docId === id) {
+                documentProgress = state.documentProgressArray[i].data
+            }
+        }
+        return documentProgress
+    },
+
+
     getErrorGetDocument: (state) => {
         return state.errorGetDocument
     },
