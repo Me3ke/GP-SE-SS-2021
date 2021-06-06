@@ -4,7 +4,11 @@ import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryService;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserService;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -22,12 +26,16 @@ public class SignatureManagement {
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
     private final SignatoryService signatoryService;
     private final DocumentService documentService;
+    private final UserService userService;
 
+    @Autowired
+    SMTPServerHelper smtpServerHelper;
 
     public SignatureManagement(final SignatoryService givenSignatoryService,
-                               final DocumentService givenDocumentService) {
+                               final DocumentService givenDocumentService, final UserService givenUserService) {
         signatoryService = givenSignatoryService;
         documentService = givenDocumentService;
+        userService = givenUserService;
     }
 
     /**
@@ -39,7 +47,8 @@ public class SignatureManagement {
      * @return a fitting response.
      */
     public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
-                                                     final SignatureType signatureType) {
+                                                     final SignatureType signatureType)
+                    throws MessageGenerationException {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
@@ -156,7 +165,8 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
-                                                      final SignatureType signatureType) {
+                                                      final SignatureType signatureType)
+                    throws MessageGenerationException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
@@ -176,10 +186,16 @@ public class SignatureManagement {
     }
 
     private void checkIfClosed(final Document document, final List<Signatory> signatories,
-                               final JSONResponseObject response, final Signatory currentReader) {
+                               final JSONResponseObject response, final Signatory currentReader)
+                throws MessageGenerationException {
+
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
             document.setState(DocumentState.CLOSED);
             response.setMessage("Document is now closed.");
+        } else {
+            smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                userService.getUser(document.getOwner()),
+                document.getCurrentSignatory().getUser().getLastname(), document);
         }
     }
 

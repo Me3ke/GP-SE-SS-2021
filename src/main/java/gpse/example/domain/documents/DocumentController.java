@@ -198,7 +198,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
 
@@ -215,7 +215,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
     }
 
@@ -233,7 +233,7 @@ public class DocumentController {
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = computeSignatureRequest(userID,
             documentID, SignatureType.ADVANCED_SIGNATURE);
@@ -247,7 +247,7 @@ public class DocumentController {
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
@@ -256,7 +256,8 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService,
+                userService);
             return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }
