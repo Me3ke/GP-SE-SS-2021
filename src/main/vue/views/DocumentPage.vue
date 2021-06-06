@@ -52,10 +52,11 @@ import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
 import Sidebar from "@/main/vue/components/Sidebar";
+import DownloadPopUp from "@/main/vue/components/popUps/DownloadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
-import DownloadPopUp from "@/main/vue/components/DownloadPopUp";
+
 
 export default {
     name: "DocumentPage",

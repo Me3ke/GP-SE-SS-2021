@@ -147,8 +147,8 @@
 </template>
 <script>
 import {mapGetters} from "vuex";
-import SignPopUp from "@/main/vue/components/TwoFakAuth/SignPopUp";
-import ProofreadPopUp from "@/main/vue/components/TwoFakAuth/ProofreadPopUp";
+import SignPopUp from "@/main/vue/components/popUps/SignPopUp";
+import ProofreadPopUp from "@/main/vue/components/popUps/ProofreadPopUp";
 
 export default {
     name: "Sidebar",
