@@ -16,6 +16,42 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page 0 -->
+                                    <div v-if="page === 0">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notDone') }}
+                                        </div>
+
+                                        <ul>
+                                            <li>
+                                                <div class="content-div" v-if="!hasSetUp">
+                                                    {{ $t('TwoFakAuth.sign.tfa') }}
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <!-- TODO: change to hasKey -->
+                                                <div class="content-div" v-if="!hasSetUp">
+                                                    {{ $t('TwoFakAuth.sign.keyPair') }}
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="light-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="elsa-blue-btn" @click="goToSettings">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.sign.toSettings') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
                                     <!-- Page 1 (advanced)-->
                                     <div v-if="page === 1 && advanced">
                                         <div class="step" v-if="documents.length === 1">
@@ -154,7 +190,7 @@
                                         <!-- Error Messages -->
                                         <b-alert :show="showAlertSign"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeSimple }}
+                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeAdvanced }}
                                         </b-alert>
 
 
@@ -167,6 +203,27 @@
                                                 {{ $t('TwoFakAuth.serverErrorTwo') }}
                                             </div>
                                         </b-alert>
+
+                                        <!-- Input Key Prompt -->
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.uploadExp') }}
+                                            <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
+                                            <b-tooltip target="tooltip-upl" triggers="hover">
+                                                {{ $t('TwoFakAuth.sign.accepted') }}
+                                            </b-tooltip>
+                                        </div>
+
+                                        <div style="display: flex; justify-content: center">
+                                            <div class="content-div" style="width: 25em;">
+                                                <b-form-file
+                                                    v-model="key"
+                                                    :state="Boolean(key)"
+                                                    :placeholder="$t('TwoFakAuth.sign.placeholder')"
+                                                    :drop-placeholder="$t('TwoFakAuth.sign.dropPlaceholder')"
+                                                    accept="text/*"
+                                                ></b-form-file>
+                                            </div>
+                                        </div>
 
                                         <!-- Buttons to switch pages -->
                                         <div style="text-align: right">
@@ -261,8 +318,7 @@ export default {
             pageBefore: 0,
 
             code: '',
-            //TODO: remove once code correctness gets checked with api
-            codeCorrect: false,
+            key: null,
 
             showAlertCode: false,
             showAlertSign: false,
@@ -274,6 +330,16 @@ export default {
             //TODO: add somewhere in store so user cannot just refresh the page
             logoutCounter: 10,
             startCountDown: false
+        }
+    },
+    async created() {
+        // checks if signature is advanced, if so checks if user has set up 2FakAuth and key
+        // TODO: connect to api to check for key
+        if (this.advanced) {
+            await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
+            if (!this.hasSetUp) {
+                this.page = 0
+            }
         }
     },
     methods: {
@@ -297,13 +363,14 @@ export default {
             }
         },
         // makes 2FakAuth verification needed for advanced signature
-        twoFac() {
+        async twoFac() {
             //checking syntax of code
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
                 this.showAlertCode = false
-                // TODO: check with API if code is correct
+
+                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
                 //checking correctness of code
-                if (!this.codeCorrect) {
+                if (!this.correctInput) {
                     this.triesLeft--
                     // user used all his tries -> will get logged out
                     if (this.triesLeft < 1) {
@@ -314,17 +381,26 @@ export default {
                 } else {
                     // goes to key page
                     this.page = 3
+                    this.showTries = false
+                    this.showAlertCode = false
                 }
             } else {
                 this.showAlertCode = true
             }
         },
-        // TODO: check with API if key step was successful
         // checks of user owns correct private-public-keypair
         async signAdvanced() {
-            // add signature
-            var signature = ''
-            await this.$store.dispatch('document/advancedSignDocument', {docId: this.docId, signature: signature})
+
+            // gets data out of user file that contains key
+            const reader = new FileReader()
+            reader.readAsText(this.key)
+
+            reader.onload = async (keyData) => {
+                await this.$store.dispatch('document/advancedSignDocument', {
+                    docId: this.docId,
+                    signature: keyData.target.result
+                })
+            }
 
             // everything went fine
             if (this.statusCodeAdvanced === 200) {
@@ -341,6 +417,12 @@ export default {
                 }
             }
         },
+        // send user to settings page
+        goToSettings() {
+            this.$emit('signTrigger');
+            this.page = 1
+            this.$router.push('/' + this.$i18n.locale + '/user')
+        },
         // closes the pop up
         closeModal() {
             this.$emit('signTrigger');
@@ -352,12 +434,16 @@ export default {
             statusCodeSimple: 'document/getSimpleSignStatus',
             errorSimple: 'document/getErrorSimpleSignDocument',
             statusCodeAdvanced: 'document/getAdvancedSignStatus',
-            errorAdvanced: 'document/getErrorAdvancedSignDocument'
+            errorAdvanced: 'document/getErrorAdvancedSignDocument',
+
+            correctInput: 'twoFakAuth/getCorrectInput',
+            hasSetUp: 'twoFakAuth/getHasSetUp'
         }),
         // TODO
         // gives back if advanced signature is needed (if false -> simple signature is needed)
         advanced() {
-            return this.documents[0].signatureType === ''
+            //  return this.documents[0].signatureType === ''
+            return true
         },
         showErrorSimple: {
             get() {
@@ -400,8 +486,17 @@ export default {
                 }
 
             }
+        },
+        // checks if input file has correct type
+        key(newKey) {
+            if (newKey && !newKey.type.startsWith("text/")) {
+                this.$nextTick(() => {
+                    this.key = null;
+                })
+            }
         }
     }
+
 }
 </script>
 

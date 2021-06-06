@@ -385,7 +385,15 @@
             "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
             "leftTries": "Der Code war falsch. Versuche bis zum Logout:",
-            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt."
+            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt.",
+            "placeholder": "Schlüssel hier ablegen oder auswählen",
+            "dropPlaceholder": "Hier fallen lassen",
+            "accepted": "Akzeptiert werden Dokumente, die mit .txt enden.",
+            "uploadExp": "Laden Sie Ihren Private Key zum Überprüfen Ihrer Identität hoch.",
+            "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
+            "tfa": "Zwei-Faktor-Authenifizierung",
+            "keyPair": "Schlüsselpaar",
+            "toSettings": "Zu den Einstellungen"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
