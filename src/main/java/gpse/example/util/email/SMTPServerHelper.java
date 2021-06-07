@@ -66,7 +66,7 @@ public class SMTPServerHelper {
     }
 
     /**
-     * sending an info mail to an admin containing the requested emailadress.
+     * sending an info mail to an admin containing the requested emailaddress.
      * @param admin admin who should get this validation information
      * @param newUserEmail email adress of the user who needs to be validated
      */
@@ -77,6 +77,13 @@ public class SMTPServerHelper {
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
         mailSender.send(message.generateMessage());
+    }
+
+    /**
+     *
+     */
+    public void sendReminder(final String userEmail, final int days ){
+
     }
 
 }
