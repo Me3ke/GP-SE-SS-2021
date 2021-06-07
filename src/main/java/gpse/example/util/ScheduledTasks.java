@@ -32,15 +32,15 @@ public class ScheduledTasks {
         }
     }
 
-    public void informSignatoriesInOrder(Document doc) {
+    private void informSignatoriesInOrder(Document doc) {
 
     }
 
-    public void informSignatoriesWithoutOrder(Document doc) {
+    private void informSignatoriesWithoutOrder(Document doc) {
         for (Signatory signatory:doc.getSignatories()) {
             if (signatory.getReminder() > -1) {
                 if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))){
-
+                    //TODO send reminder
                 }
             }
         }
