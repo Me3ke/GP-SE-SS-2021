@@ -13,6 +13,7 @@ public class UserResponseObject {
     private final boolean enabled;
     private final boolean adminValidated;
     private final boolean firstLogin;
+    private final String publicKey;
 
     /**
      * The standard constructor for userResponseObjects.
@@ -25,6 +26,7 @@ public class UserResponseObject {
         this.enabled = user.isEnabled();
         this.adminValidated = user.isAdminValidated();
         this.firstLogin = user.isFirstLogin();
+        this.publicKey = user.getPublicKey();
     }
 
     public String getEmail() {
@@ -49,5 +51,9 @@ public class UserResponseObject {
 
     public boolean isFirstLogin() {
         return firstLogin;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
     }
 }

@@ -400,7 +400,6 @@ export default {
             reader.readAsText(this.key)
 
             // getting user so there is access public key
-
             reader.onload = async (keyData) => {
                 const privateKey = keyData.target.result
 
@@ -411,13 +410,11 @@ export default {
                 sig.init(privateKey);
                 sig.updateString(docId);
                 const signature = sig.sign();
-
                 // decrypting hashed docId with registered public key
                 var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
                 sig2.init(this.publicKey);
                 sig2.updateString(docId);
                 const isValid = sig2.verify(signature);
-
                 if (isValid) {
                     await this.$store.dispatch('document/advancedSignDocument', {
                         docId: this.docId,
