@@ -46,7 +46,7 @@ public class UploadDocumentPutRequest {
     }
 
     public void setData(byte[] data) {
-        this.data = data;
+        this.data = data.clone();
     }
 
     public String getType() {
