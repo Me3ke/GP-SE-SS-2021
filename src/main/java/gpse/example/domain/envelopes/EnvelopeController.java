@@ -67,8 +67,7 @@ public class EnvelopeController {
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return envelope;
+            return envelopeService.addEnvelope(name, owner);
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -88,7 +87,6 @@ public class EnvelopeController {
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
         JSONResponseObject response = new JSONResponseObject();
-        System.out.println(documentPutRequest.getEndDate());
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             if (!envelope.getOwnerID().equals(ownerID)) {
@@ -98,6 +96,7 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
+            System.out.println(document.getSignatories().get(0));
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");

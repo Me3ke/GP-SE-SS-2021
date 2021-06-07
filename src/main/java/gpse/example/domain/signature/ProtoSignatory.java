@@ -1,5 +1,6 @@
 package gpse.example.domain.signature;
 
+import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import gpse.example.domain.users.User;
 
 /**
@@ -7,19 +8,23 @@ import gpse.example.domain.users.User;
  */
 public class ProtoSignatory {
 
-    private User user;
-    private SignatureType signatureType;
+    private String userID;
+    private int signatureType;
 
-    public ProtoSignatory(final User user, final SignatureType signatureType) {
-        this.user = user;
+    public ProtoSignatory(final String userID, final int signatureType) {
+        this.userID = userID;
         this.signatureType = signatureType;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserID() {
+        return userID;
     }
 
     public SignatureType getSignatureType() {
-        return signatureType;
+        try {
+            return SignatureType.fromInteger(signatureType);
+        } catch (SignatureTypeFromIntegerException e) {
+            return SignatureType.NO_SIGNATURE;
+        }
     }
 }
