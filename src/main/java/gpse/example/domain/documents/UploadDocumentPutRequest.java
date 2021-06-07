@@ -3,6 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.Signatory;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class UploadDocumentPutRequest {
     }
 
     public byte[] getData() {
-        return data;
+        return Arrays.copyOf(data, data.length);
     }
 
     public void setData(byte[] data) {
