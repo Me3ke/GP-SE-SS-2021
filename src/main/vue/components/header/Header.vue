@@ -9,8 +9,8 @@
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
                 <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
-                <Messages></Messages>
-                <Avatar></Avatar>
+                <Messages v-if="user.firstLogin"></Messages>
+                <Avatar v-if="user.firstLogin"></Avatar>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
@@ -33,7 +33,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            theme: 'theme/getTheme'
+            theme: 'theme/getTheme',
+            user: 'getUser'
         })
     }
 }

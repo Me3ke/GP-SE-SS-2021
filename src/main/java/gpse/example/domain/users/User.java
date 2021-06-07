@@ -38,6 +38,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @Column
+    // false: user has not had a first login yet; true: user has had a first login
     private boolean firstLogin;
 
     //@OneToMany

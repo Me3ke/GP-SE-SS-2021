@@ -428,5 +428,24 @@
             "success": "Sie haben erfolgreich gegengelesen!",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
         }
+    },
+    "wizard": {
+        "cancel": "Abbruch",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "welcome": {
+            "welcome": "Willkommen bei ELSA!",
+            "toDo": "Um die Seite optimal zu nutzen, müssen Sie ein paar für die Signatur relevanten Einstellungen treffen.",
+            "2FakAuth": "Schritt 1: Zwei-Faktor-Authentifizierung einrichten",
+            "2FakAuthExp": "Damit sich niemand einfach an Ihren Computer setzt und für Sie wichtige Dokumente unterschreiben kann, sorgt ein zweiter Faktor zur Identitätsbestätigung für extra Sicherheit.",
+            "setUp": "Einrichten",
+            "keypair": "Schritt 2: Schlüsselpaar einrichten",
+            "keypairExp": "Auch hierbei handelt es sich um einen weiteren wichtigen Sicherheitsfaktor der Ihre Signatur schütz, denn den privaten Schlüssel kennen nur Sie.",
+            "done": "Geschafft!",
+            "fun": "Sie haben erfolgreich alle Einstellungen getroffen, um ELSA optimal nutzen zu können.",
+            "go": "Los geht's",
+            "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
+            "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
+        }
     }
 }

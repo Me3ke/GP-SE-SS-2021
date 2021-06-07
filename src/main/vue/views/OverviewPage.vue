@@ -1,8 +1,9 @@
 <template>
-    <div style="background-color: var(--whitesmoke); height: 100vh; overflow: hidden">
-        <div>
-            <Header></Header>
-        </div>
+    <div>
+
+        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+
+        <Header></Header>
 
         <!-- Page Title -->
         <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
@@ -53,10 +54,10 @@
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeCard :envelope = envelope></EnvelopeCard>
+                            <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentCard :document = envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
+                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
                         </div>
                     </div>
                 </div>
@@ -74,10 +75,12 @@ import UploadButton from "@/main/vue/components/UploadMenu";
 import {mapGetters} from "vuex";
 import DocumentCard from "@/main/vue/components/DocumentCard";
 import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 
 export default {
     name: "OverviewPage",
     components: {
+        WelcomePopUp,
         Footer,
         Header,
         FilterButton,
@@ -124,15 +127,21 @@ export default {
             } else {
                 this.filter.state = null;
             }
+        },
+        async setLogin() {
+            await this.$store.dispatch('putFirstLogin')
+            await this.$store.dispatch('fetchUser')
         }
     },
     created() {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        this.$store.dispatch('fetchUser')
     },
     computed: {
         ...mapGetters({
             envelopes: 'envelopes/getEnvelopes',
-            getError: 'envelopes/getErrorGetEnvelopes'
+            getError: 'envelopes/getErrorGetEnvelopes',
+            user: 'getUser'
         })
     }
 }

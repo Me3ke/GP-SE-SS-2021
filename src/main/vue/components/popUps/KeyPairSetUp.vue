@@ -8,16 +8,9 @@
                         <div class="modal-dialog modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <b-navbar>
-                                        <b-nav-text style="color: var(--dark-grey)">
-                                            <h4 class="modal-title" id="exampleModalLongTitle">
-                                                {{ $t('KeypairAlert.title') }}
-                                            </h4>
-                                        </b-nav-text>
-                                        <b-navbar-nav style="margin-left: 2em">
-                                            <LanguageSwitcher></LanguageSwitcher>
-                                        </b-navbar-nav>
-                                    </b-navbar>
+                                    <h4 style="color: var(--dark-grey)" class="modal-title" id="exampleModalLongTitle">
+                                        {{ $t('KeypairAlert.title') }}
+                                    </h4>
                                 </div>
 
                                 <!-- Menu -->
@@ -221,13 +214,11 @@
 
 
 <script>
-import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 import {mapGetters} from "vuex";
 import _ from "lodash";
 
 export default {
     name: "KeyPairSetUp",
-    components: {LanguageSwitcher},
     data() {
         return {
             page: 0,

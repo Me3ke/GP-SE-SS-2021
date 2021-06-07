@@ -53,15 +53,16 @@
 
                                     <!-- Page 1 (advanced)-->
                                     <div v-if="page === 1 && advanced">
-                                        <div class="step" v-if="documents.length === 1">
+                                        <div class="step" v-if="documents.length === 1"
+                                             style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.sign.sureOne') }}
                                         </div>
 
-                                        <div class="step" v-else>
+                                        <div class="step" v-else style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.sign.sureMulti') }}
                                         </div>
 
-                                        <div class="content-div">
+                                        <div class="content-div" style="justify-content: left; text-align: left">
                                             <ul>
                                                 <li v-for="(document, idx) in documents" :key="idx">
                                                     {{ document.title }}
@@ -106,17 +107,19 @@
                                         </b-alert>
 
                                         <!-- Sign Prompt -->
-                                        <div class="step" v-if="documents.length === 1">
+                                        <div class="step" v-if="documents.length === 1"
+                                             style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.sign.sureOne') }}
                                         </div>
 
-                                        <div class="step" v-else>
+                                        <div class="step" v-else style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.sign.sureMulti') }}
                                         </div>
 
                                         <div class="content-div">
                                             <ul>
-                                                <li v-for="(document, idx) in documents" :key="idx">
+                                                <li v-for="(document, idx) in documents" :key="idx"
+                                                    style="justify-content: left; text-align: left">
                                                     {{ document.title }}
                                                 </li>
                                             </ul>
@@ -158,15 +161,15 @@
                                             <b-form-input id="input-code"
                                                           v-model="code"
                                                           placeholder="Code"
-                                                          trim
-                                                          style="margin-bottom: 1em">
+                                                          trim>
                                             </b-form-input>
-                                            <b-alert :show="showAlertCode" dismissible
-                                                     @dismissed="showAlertCode = false"
-                                                     style="margin-bottom: 1em">
-                                                {{ $t('TwoFakAuth.login.fail') }}
-                                            </b-alert>
                                         </div>
+
+                                        <b-alert :show="showAlertCode" dismissible
+                                                 @dismissed="showAlertCode = false"
+                                                 style="margin-bottom: 1em">
+                                            {{ $t('TwoFakAuth.login.fail') }}
+                                        </b-alert>
 
                                         <!-- Buttons to switch pages -->
                                         <div style="text-align: right">

@@ -385,7 +385,7 @@
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
         "fail": "There appear to be server problems. Error Code: ",
         "login": {
-            "title": "Set-up your two-factor authentication",
+            "title": "Set up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
             "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
             "always": "Enable two-factor authentication for every login",
@@ -426,6 +426,25 @@
             "sureMulti": "Are you sure you want to proofread the following documents?",
             "success": "You have successfully proofread!",
             "sure": "Are you sure you want to cancel the process?"
+        }
+    },
+    "wizard": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "back": "Back",
+        "welcome": {
+            "welcome": "Welcome to ELSA!",
+            "toDo": "I'm Elsa. I'm going to help you use this page in the best way possible. Let's start be setting up some important elements for giving signatures.",
+            "2FakAuth": "Step 1: Two-factor authentication",
+            "2FakAuthExp": "A second factor used to confirm your identity will prevent people from using your computer in order to sign under your name.",
+            "setUp": "Set up",
+            "keypair": "Step 2: Keypair",
+            "keypairExp": "Another key element to keep your identity and signature save, because you are they only one that knows your private key.",
+            "done": "It is done!",
+            "fun": "You have successfully set up everything you need in order to use ELSA to its fullest.",
+            "go": "Let's go",
+            "cancelWarningOne": "If you cancel now you cannot use ELSA completely ",
+            "cancelWarningTwo": "without setting up every necessary element via the settings page."
         }
     }
 }
