@@ -15,39 +15,39 @@ public class ConfirmationTokenService {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
-    public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository) {
+    public ConfirmationTokenService(final ConfirmationTokenRepository confirmationTokenRepository) {
         this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
 
-    public ConfirmationToken saveConfirmationToken(ConfirmationToken confToken) {
+    public ConfirmationToken saveConfirmationToken(final ConfirmationToken confToken) {
 
         return confirmationTokenRepository.save(confToken);
     }
 
-    public void deleteConfirmationToken(Long id) {
+    public void deleteConfirmationToken(final Long id) {
 
         confirmationTokenRepository.deleteById(id);
     }
 
     /**
      * find the correct Confirmation token if it is there.
-     * @param token searched token
+     * @param givenToken searched token
      * @return the token
      */
 
-    public Optional<ConfirmationToken> findConfirmationTokenByToken(String token) {
-        Iterable<ConfirmationToken> tokens = confirmationTokenRepository.findAll();
+    public Optional<ConfirmationToken> findConfirmationTokenByToken(final String givenToken) {
+        final Iterable<ConfirmationToken> tokens = confirmationTokenRepository.findAll();
 
-        for (ConfirmationToken t : tokens) {
-            if (t.getConfirmationToken().equals(token)) {
-                return Optional.of(t);
+        for (final ConfirmationToken token : tokens) {
+            if (token.getToken().equals(givenToken)) {
+                return Optional.of(token);
             }
         }
         return Optional.empty();
     }
 
-    public boolean isExpired(ConfirmationToken token) {
-        return (LocalDateTime.now().isAfter(token.getCreatedDate().plusDays(1)));
+    public boolean isExpired(final ConfirmationToken token) {
+        return LocalDateTime.now().isAfter(token.getCreatedDate().plusDays(1));
     }
 }

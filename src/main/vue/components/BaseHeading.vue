@@ -3,7 +3,7 @@
         <b-container fluid id="heading">
             <b-row>
                 <h3>
-                    <b-icon icon="arrow-left" style="fill: var(--dark-grey); font-weight: bolder;"
+                    <b-icon icon="arrow-left" style="fill: var(--dark-grey); font-weight: bolder; margin-right: 0.25em"
                             @click="historyThere()  ? $router.go(-1) : $router.push('/')">
                     </b-icon>
                     <span v-if="translate">{{ $t(name) }}</span>
@@ -39,8 +39,8 @@ export default {
 #heading {
     margin-left: calc((2vh + 1vw) / 2);
     height: calc((2vh + 1vw) / 2);
-    margin-top: calc((2vh + 1vw) / 2);
-    margin-bottom: calc((2vh + 1vw) / 1.5);
+    margin-top: 8vh;
+    margin-bottom: 4vh;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

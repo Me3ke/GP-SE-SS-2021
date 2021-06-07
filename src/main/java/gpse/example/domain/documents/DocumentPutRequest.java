@@ -10,22 +10,31 @@ import java.util.List;
  */
 public class DocumentPutRequest {
 
-    private String path;
+    private byte[] data;
     private String title;
-    private String type;
+    private String dataType;
     private List<String> signatoriesID;
     private List<String> readersID;
     private SignatureType signatureType;
     private LocalDateTime endDate;
     private boolean orderRelevant;
     private DocumentState state;
+    private LocalDateTime lastModified;
 
-    public String getPath() {
-        return path;
+    public LocalDateTime getLastModified() {
+        return lastModified;
     }
 
-    public void setPath(final String path) {
-        this.path = path;
+    public void setLastModified(final LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(final byte[] data) {
+        this.data = data;
     }
 
     public String getTitle() {
@@ -36,12 +45,12 @@ public class DocumentPutRequest {
         this.title = title;
     }
 
-    public String getType() {
-        return type;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setType(final String type) {
-        this.type = type;
+    public void setDataType(final String dataType) {
+        this.dataType = dataType;
     }
 
     public List<String> getSignatoriesID() {

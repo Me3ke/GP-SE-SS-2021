@@ -7,6 +7,10 @@ import * as messages from './modules/messages.js';
 import * as envelopes from './modules/envelopes.js';
 import * as document from './modules/document.js';
 import * as user from './modules/user';
+import * as userData from './modules/userData';
+import * as keypair from './modules/keypair';
+import * as theme from './modules/theme';
+import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
 
@@ -19,6 +23,10 @@ const store = new Vuex.Store({
         document,
         user,
         documentUpload,
+        userData,
+        keypair,
+        theme,
+        twoFakAuth,
         auth: authorization
     },
     mutations: {
@@ -32,7 +40,6 @@ const store = new Vuex.Store({
                 state.auth.role = null;
             }
         }
-
     }
 })
 
@@ -42,4 +49,3 @@ store.subscribe((mutation, state) => {
 });
 
 export default store
-

@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 
+import gpse.example.util.email.MessageGenerationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -16,8 +17,10 @@ public interface UserService extends UserDetailsService {
                     PersonalData personalData, String... roles);
     List<User> getUsers();
     User getUser(final String username) throws UsernameNotFoundException;
-    void signUpUser(User user);
+    void signUpUser(User user) throws MessageGenerationException;
     void confirmUser(ConfirmationToken confirmationToken);
+    void validateUser(User user);
+    void infoNewExtUser(User user) throws MessageGenerationException;
     void removeUser(final String username) throws UsernameNotFoundException;
     User saveUser(User user);
 }

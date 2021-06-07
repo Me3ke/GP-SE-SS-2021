@@ -13,18 +13,19 @@ import java.util.List;
  */
 public class EnvelopeGetResponse {
 
-    private long id;
-    private String name;
-    private User owner;
-    private LocalDateTime creationDate;
-    private List<DocumentGetResponse> documents;
+    private final long id;
+    private final String name;
+    private final User owner;
+    private final LocalDateTime creationDate;
+    private final List<DocumentGetResponse> documents;
 
     /**
      * The default constructor for an envelope response.
      * @param envelope The envelope on which the response is based.
      * @param owner the owner of the envelope.
+     * @param currentUser the user doing the request.
      */
-    public EnvelopeGetResponse(final Envelope envelope, final User owner) {
+    public EnvelopeGetResponse(final Envelope envelope, final User owner, final User currentUser) {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;
@@ -32,7 +33,7 @@ public class EnvelopeGetResponse {
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
             //rework soon to not mix up owners
-            this.documents.add(new DocumentGetResponse(document, owner));
+            this.documents.add(new DocumentGetResponse(document, owner, currentUser));
         }
     }
 

@@ -17,7 +17,7 @@ public class ConfirmationToken {
     private Long id;
 
     @Column
-    private String confirmationToken;
+    private String token;
 
     @Column
     private LocalDateTime createdDate;
@@ -27,13 +27,13 @@ public class ConfirmationToken {
     private User user;
 
     /**
-     * Constructor of ConfirmationToken setting an user the creation date and a rndom string as the token.
-     * @param user
+     * Constructor of ConfirmationToken setting an user the creation date and a random string as the token.
+     * @param user the user the token should relate to
      */
-    public ConfirmationToken(User user) {
+    public ConfirmationToken(final User user) {
         this.user = user;
         this.createdDate = LocalDateTime.now();
-        this.confirmationToken = UUID.randomUUID().toString();
+        this.token = UUID.randomUUID().toString();
     }
 
     public ConfirmationToken() {
@@ -44,23 +44,23 @@ public class ConfirmationToken {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public String getToken() {
+        return token;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setToken(final String token) {
+        this.token = token;
     }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(final LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -68,7 +68,7 @@ public class ConfirmationToken {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.user = user;
     }
 }

@@ -14,13 +14,9 @@ public enum DocumentState {
      */
     READ(0),
     /**
-     * Changes to signed state if all users have signed the document.
+     * Changes to closed state if all users have signed the document.
      */
-    SIGNED(1),
-    /**
-     * Changes to read and signed state if all users have read and signed the document.
-     */
-    READ_AND_SIGNED(2);
+    CLOSED(1);
 
     private final int intRepresentation;
 
@@ -42,9 +38,7 @@ public enum DocumentState {
             case 0:
                 return DocumentState.READ;
             case 1:
-                return DocumentState.SIGNED;
-            case 2:
-                return DocumentState.READ_AND_SIGNED;
+                return DocumentState.CLOSED;
             default:
                 throw new IllegalStateException();
         }

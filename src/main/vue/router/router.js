@@ -6,6 +6,7 @@ import NoConnectionPage from "@/main/vue/views/NoConnectionPage";
 import UserGuide from "@/main/vue/views/UserGuide";
 import OverviewPage from "@/main/vue/views/OverviewPage";
 import LoginPage from "@/main/vue/views/LoginPage";
+import RegisterPage from "../views/RegisterPage";
 import MessagePage from "@/main/vue/views/MessagePage";
 import LandingPage from "@/main/vue/views/LandingPage";
 import UserPage from "@/main/vue/views/UserPage";
@@ -13,6 +14,11 @@ import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import store from "@/main/vue/store/store";
+import BlankTestPage from "@/main/vue/views/BlankTestPage";
+import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
+import ProtocolPage from "@/main/vue/views/ProtocolPage";
+import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
+
 
 Vue.use(VueRouter)
 
@@ -64,6 +70,22 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'register',
+                    name: 'register',
+                    component: RegisterPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'register/confirm/:id',
+                    name: 'register/confirm',
+                    component: RegisterConfirmPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
                     path: 'messages',
                     name: 'messages',
                     props: true,
@@ -76,6 +98,15 @@ const router = new VueRouter({
                     path: 'envelope/:envId/document/:docId',
                     name: 'document',
                     component: DocumentPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/protocol',
+                    name: 'protocol',
+                    component: ProtocolPage,
                     props: true,
                     meta: {
                         requiresAuth: true
@@ -123,6 +154,17 @@ const router = new VueRouter({
                     meta: {
                         requiresAuth: true
                     }
+                },
+
+                {
+                    path: 'progressbar',
+                    name: 'progressbar',
+                    component: ProgressbarTestPage
+                },
+                {
+                    path: 'test',
+                    name: 'test',
+                    component: BlankTestPage
                 },
                 {
                     path: '*',

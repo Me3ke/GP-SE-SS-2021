@@ -7,8 +7,10 @@ import java.io.IOException;
  */
 public class CreatingFileException extends Exception {
 
+    /* default */
     static final long serialVersionUID = 7821966487856958574L;
 
+    /* default */
     /**
      * This is the default message.
      */

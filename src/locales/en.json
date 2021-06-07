@@ -25,8 +25,7 @@
             "language": "Language"
         },
         "Avatar": {
-            "profile": "My Profile",
-            "settings": "Settings",
+            "profile": "Account settings",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -195,24 +194,80 @@
     "RegisterButton": {
         "content": "Register"
     },
-    "UserPage": {
-        "content": "User information"
-    },
-    "UserInfoBox": {
-        "profileInformation": "Profile information",
-        "accountInformation": "Account information",
-        "publicKeys": "Public Keys",
-        "email": "E-Mail:",
-        "firstName": "First name:",
-        "lastName": "Last name:",
-        "birthday": "Birthday:",
-        "country": "Country:",
-        "city": "City:",
-        "street": "Street:",
-        "houseNumber": "House number:",
-        "publicKey": "Public key:",
-        "phoneNumber": "Phone number:",
-        "newKeypair": "New Keypair"
+    "Settings": {
+        "on": "On",
+        "off": "Off",
+        "content": "Account settings",
+        "UserInfoBox": {
+            "profileInformation": "Profile information",
+            "accountInformation": "Account information",
+            "email": "E-Mail:",
+            "firstName": "First name:",
+            "lastName": "Last name:",
+            "birthday": "Birthday:",
+            "country": "Country:",
+            "city": "City:",
+            "street": "Street:",
+            "houseNumber": "House number:",
+            "phoneNumber": "Phone number:"
+        },
+        "SignatureSettings": {
+            "settings": "Signature settings",
+            "upload": {
+                "text": "Upload new signature",
+                "exp": "Upload an image of your own signature. It will be added to the process protocol.",
+                "upload": "Upload",
+                "popUp": {
+                    "heading": "Upload signature",
+                    "exp": "Choose your signature.",
+                    "cancel": "Cancel",
+                    "sure": "Your progress will be lost if you cancel.",
+                    "back": "Back",
+                    "close": "Close",
+                    "attentionOne": "Warning! You have already uploaded your signature.",
+                    "attentionTwo": "If you continue it will be lost!",
+                    "placeholder": "Drop signature here or choose",
+                    "dropPlaceholder": "Drop here",
+                    "accepted": "All image formats are accepted."
+                }
+            }
+        },
+        "SecuritySettings": {
+            "settings": "Security settings",
+            "publicKeys": "Public Keys",
+            "publicKey": "Public key:",
+            "newKeypair": "New Keypair",
+            "twoFacAuthSetUp": "Two-factor authentication set-up",
+            "setUp": "Set up"
+        },
+        "MessageSettings": {
+            "settings": "Message settings",
+            "send": "Save",
+            "toDo": {
+                "text": "Signature/proofread requests",
+                "exp": "Get website alerts for new signature/proofread requests."
+            },
+            "sign": {
+                "text": "Signature reminders",
+                "exp": "Get website alerts as a reminder to sign documents/envelopes."
+            },
+            "read": {
+                "text": "Proofread reminders",
+                "exp": "Get website alerts as a reminder to proofread documents/envelopes."
+            },
+            "progress": {
+                "text": "Document progress",
+                "exp": "Get website alerts that show the progress of your own documents/envelopes."
+            },
+            "newVersion": {
+                "text": "Document updates",
+                "exp": "Get website alerts about updated documents."
+            },
+            "protocol": {
+                "text": "Protocol availability",
+                "exp": "Get website alerts about the availability of document protocols."
+            }
+        }
     },
     "UploadDoc": {
         "upload": "Upload",
@@ -227,15 +282,29 @@
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here..."
     },
+    "DownloadDoc": {
+        "download": "Download",
+        "heading": "Download now!",
+        "sure": "Are you sure you want to download the document?",
+        "cancel": "Cancel"
+    },
+    "DownloadProtocol": {
+        "protocol": "Protocol",
+        "sure": "Are you sure you want to download the protocol?",
+        "errorOne": "There have been problems fetching the protocol.",
+        "errorTwo": "Try refreshing the page or contact an admin."
+    },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
         "download": "Download",
-        "doSign": "You have not signed this document yet. Sign now.",
-        "sign": "Sign",
-        "didSign": "You have successfully signed this document.",
-        "doRead": "You have not proofread this document yet. Confirm now that you have.",
-        "read": "Proofread",
-        "didRead": "You have successfully proofread this document.",
+        "doSign": "Sign",
+        "didSign": "Already signed",
+        "doRead": "Proofread",
+        "didRead": "Already proofread",
+        "protocol": "Show protocol",
+        "history": "Show history",
+        "newVersion": "New Version",
+        "settings": "Settings",
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
@@ -251,6 +320,26 @@
         "feedback-invalid-password": "Minimum password length is 4 characters.",
         "fail": "Login failed."
     },
+    "Register": {
+        "email": "e-mail",
+        "password": "password (min. 8 characters)",
+        "register": "sign up",
+        "sign-up": "sign up",
+        "feedback-invalid-email": "Please enter an valid e-mail.",
+        "feedback-invalid-password": "Minimum password length is 4 characters.",
+        "fail": "Login failed.",
+        "firstname": "first name",
+        "surname": "surname",
+        "feedback-invalid-name": "Please enter an valid name.",
+        "postcode": "postcode",
+        "city": "city",
+        "birthdate": "birth date",
+        "street": "street",
+        "streetNumber": " nr.",
+        "phoneNumber": "phone number",
+        "passwordRepeat": "confirm password",
+        "login": "go to login"
+    },
     "KeypairAlert": {
         "generate": "Generate Keypair",
         "upload": "Upload Keypair",
@@ -262,5 +351,48 @@
         "continueText": "Continue",
         "generatingText": "Generating...",
         "uploadText": "Uploading"
+    },
+    "TwoFakAuth": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "close": "Close",
+        "back": "Back",
+        "serverErrorOne": "There appear to be problems with your server connection.",
+        "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
+        "login": {
+            "title": "Set-up your two-factor authentication",
+            "firstStep": "Step 1: Scan the qr-code with your authenticator app",
+            "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
+            "always": "Enable two-factor authentication for every login",
+            "alwaysExp": "After a successful login you have to confirm your identity by using your second factor.",
+            "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
+            "cancelWarningTwo": "your two-factor authentication via the settings page.",
+            "fail": "Wrong code format [eg: '123456'].",
+            "didIt": "You successfully set up your second factor!",
+            "canUse": "You can now use the whole application",
+            "go": "Let's go!",
+            "failedSetUp": "Setting up your second factor was unsuccessful.",
+            "tryAgain": "Try again or start from the beginning.",
+            "again": "Try again",
+            "toStart": "Go to beginning",
+            "attention": "Warning! You have already set up your two-factor authentication. If you continue it will be lost!"
+        },
+        "sign": {
+            "sureOne": "Are you sure you want to sign the following document?",
+            "sureMulti": "Are you sure you want to sign the following documents?",
+            "success": "You have successfully signed!",
+            "sign": "Sign now!",
+            "code": "Enter the 6-digit code from your authenticator app",
+            "sure": "Are you sure you want to cancel the process?",
+            "leftTries": "The code was wrong. Tries until logout:",
+            "logout": "You put in too many wrong codes. You will be logged out automatically."
+        },
+        "read": {
+            "read": "Proofread now!",
+            "sureOne": "Are you sure you want to proofread the following document?",
+            "sureMulti": "Are you sure you want to proofread the following documents?",
+            "success": "You have successfully proofread!",
+            "sure": "Are you sure you want to cancel the process?"
+        }
     }
 }

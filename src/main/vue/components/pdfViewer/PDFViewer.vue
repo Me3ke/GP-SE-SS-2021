@@ -1,99 +1,103 @@
 <template>
-    <b-container id="container">
+    <div>
+        <b-container id="container">
 
-        <!-- TODO : test with a big document if it is working -->
-        <b-row>
-            <b-col v-show="loading>0 && loading < 1">
-                <b-progress :value="loading*100" :max="100" show-progress animated></b-progress>
-            </b-col>
-        </b-row>
+            <!-- TODO : test with a big document if it is working -->
+            <b-row>
+                <b-col v-show="loading>0 && loading < 1">
+                    <b-progress :value="loading*100" :max="100" show-progress animated></b-progress>
+                </b-col>
+            </b-row>
 
-        <b-row cols="1" id="backgroundButtons">
+            <b-row cols="1" id="backgroundButtons">
 
-            <!-- Switch between Page and Scroll Mode -->
-            <b-col>
-                <PDFViewerButton v-if="pageMode"
-                                 @click.native="changeMode()"
-                                 icon="hr"
-                                 class="separation">
-                </PDFViewerButton>
-                <PDFViewerButton v-else
-                                 @click.native="changeMode()"
-                                 icon="files"
-                                 class="separation">
-                </PDFViewerButton>
+                <!-- Switch between Page and Scroll Mode -->
+                <b-col>
+                    <PDFViewerButton v-if="pageMode"
+                                     @click.native="changeMode()"
+                                     icon="hr"
+                                     class="separation">
+                    </PDFViewerButton>
+                    <PDFViewerButton v-else
+                                     @click.native="changeMode()"
+                                     icon="files"
+                                     class="separation">
+                    </PDFViewerButton>
 
-                <!-- Jump backward -->
-                <PDFViewerButton :disabled="!pageMode || currentPage <= 1"
-                                 @click.native="currentPage = 1"
-                                 icon="chevron-double-left"
-                                 style="margin-right: 0.1vw">
-                </PDFViewerButton>
-                <PDFViewerButton :disabled="!pageMode || currentPage <= 1"
-                                 @click.native="currentPage--"
-                                 icon="chevron-left"
-                                 style="margin-right: 0.2vw">
-                </PDFViewerButton>
-                <!-- Page Display -->
-                {{ currentPage }} / {{ pageCount }}
+                    <!-- Jump backward -->
+                    <PDFViewerButton :disabled="!pageMode || currentPage <= 1"
+                                     @click.native="currentPage = 1"
+                                     icon="chevron-double-left"
+                                     style="margin-right: 0.1vw">
+                    </PDFViewerButton>
+                    <PDFViewerButton :disabled="!pageMode || currentPage <= 1"
+                                     @click.native="currentPage--"
+                                     icon="chevron-left"
+                                     style="margin-right: 0.2vw">
+                    </PDFViewerButton>
+                    <!-- Page Display -->
+                    {{ currentPage }} / {{ pageCount }}
 
-                <!-- Jump forward -->
-                <PDFViewerButton :disabled="!pageMode || currentPage >= pageCount"
-                                 @click.native="currentPage++"
-                                 icon="chevron-right"
-                                 style="margin-left: 0.2vw">
-                </PDFViewerButton>
-                <PDFViewerButton :disabled="!pageMode || currentPage >= pageCount"
-                                 @click.native="currentPage = pageCount"
-                                 icon="chevron-double-right"
-                                 style="margin-left: 0.1vw"
-                                 class="separation">
-                </PDFViewerButton>
+                    <!-- Jump forward -->
+                    <PDFViewerButton :disabled="!pageMode || currentPage >= pageCount"
+                                     @click.native="currentPage++"
+                                     icon="chevron-right"
+                                     style="margin-left: 0.2vw">
+                    </PDFViewerButton>
+                    <PDFViewerButton :disabled="!pageMode || currentPage >= pageCount"
+                                     @click.native="currentPage = pageCount"
+                                     icon="chevron-double-right"
+                                     style="margin-left: 0.1vw"
+                                     class="separation">
+                    </PDFViewerButton>
 
-                <!-- Zoom in and out -->
-                <PDFViewerButton :disabled="zoom <= 10"
-                                 @click.native="changeZoom(-10)"
-                                 icon="zoom-out">
-                </PDFViewerButton>
-                {{ zoom }}%
-                <PDFViewerButton :disabled="zoom >= 400"
-                                 @click.native="changeZoom(10)"
-                                 icon="zoom-in"
-                                 class="separation">
-                </PDFViewerButton>
-
-
-                <!-- Download -->
-                <PDFViewerButton icon="download"></PDFViewerButton>
-            </b-col>
-        </b-row>
+                    <!-- Zoom in and out -->
+                    <PDFViewerButton :disabled="zoom <= 10"
+                                     @click.native="changeZoom(-10)"
+                                     icon="zoom-out">
+                    </PDFViewerButton>
+                    {{ zoom }}%
+                    <PDFViewerButton :disabled="zoom >= 400"
+                                     @click.native="changeZoom(10)"
+                                     icon="zoom-in"
+                                     class="separation">
+                    </PDFViewerButton>
 
 
-        <!-- PDF -->
-        <b-row cols="1" style="margin-top: 1vh">
-            <b-col>
-                <div class="overflow-auto" style="height: 75vh" v-if="pageMode">
-                    <pdf :page="currentPage"
-                         :src="src"
-                         @page-loaded="currentPage = $event"
-                         @page-progress="loading = $event"
-                         :style="style">
-                    </pdf>
-                </div>
+                    <!-- Download -->
+                    <PDFViewerButton icon="download"
+                                     @click.native="$emit('openDownload');"></PDFViewerButton>
 
-                <div class="overflow-auto" style="height: 75vh" v-else>
-                    <pdf
-                        v-for="page in pageCount"
-                        :key="page"
-                        :src="src"
-                        :page="page"
-                        @page-progress="loading = $event"
-                        :style="style"
-                    ></pdf>
-                </div>
-            </b-col>
-        </b-row>
-    </b-container>
+                </b-col>
+            </b-row>
+
+
+            <!-- PDF -->
+            <b-row cols="1" style="margin-top: 1vh">
+                <b-col>
+                    <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-if="pageMode">
+                        <pdf :page="currentPage"
+                             :src="src"
+                             @page-loaded="currentPage = $event"
+                             @page-progress="loading = $event"
+                             :style="style">
+                        </pdf>
+                    </div>
+
+                    <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-else>
+                        <pdf
+                            v-for="page in pageCount"
+                            :key="page"
+                            :src="src"
+                            :page="page"
+                            @page-progress="loading = $event"
+                            :style="style"
+                        ></pdf>
+                    </div>
+                </b-col>
+            </b-row>
+        </b-container>
+    </div>
 </template>
 
 <script>
@@ -102,7 +106,7 @@ import PDFViewerButton from "@/main/vue/components/pdfViewer/PDFViewerButton";
 
 export default {
     name: "PDFViewer",
-    props: ['pdfSrc'],
+    props: ['pdfSrc', 'overflow'],
     components: {PDFViewerButton, pdf},
     data() {
         return {
@@ -143,13 +147,17 @@ export default {
 
 <style scoped>
 #container {
-    width: 100%;
+    width: 70%;
     height: 70vh;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 9vh;
+    margin-top: 0;
     overflow: hidden;
     padding: 0;
+}
+
+.col {
+    height: fit-content;
 }
 
 #backgroundButtons {
