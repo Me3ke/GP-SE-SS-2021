@@ -1,5 +1,6 @@
 package gpse.example.domain.security;
 
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -54,7 +55,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain filterChain, Authentication authentication) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
-
 
         List<String> roles = user.getAuthorities()
             .stream()
