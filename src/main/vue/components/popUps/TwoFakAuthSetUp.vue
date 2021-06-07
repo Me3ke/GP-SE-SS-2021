@@ -231,13 +231,12 @@ export default {
             always: false
         }
     },
-    created() {
-        this.$store.dispatch('twoFakAuth/fetchHasSetUp')
-        this.$store.dispatch('twoFakAuth/fetchQrCode')
-
+    async created() {
+        await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
         if (!this.hasSetUp) {
             this.page = 1
         }
+        await this.$store.dispatch('twoFakAuth/fetchQrCode')
     },
     methods: {
         async setUp() {
@@ -245,18 +244,18 @@ export default {
             if ((this.code.length === 6 && Number.isInteger(Number(this.code)))) {
 
                 // axios call to check if code is semantically correct
-                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code}).then(() => {
-                    this.code = ''
-                    this.showAlert = false
-                    if (this.correctInput) {
-                        // TODO: add here always-config call
-                        this.page = 2
-                    }
-                    // code is incorrect
-                    else {
-                        this.page = 3
-                    }
-                })
+                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
+                this.code = ''
+                this.showAlert = false
+                if (this.correctInput) {
+                    // TODO: add here always-config call
+                    this.page = 2
+                }
+                // code is incorrect
+                else {
+                    this.page = 3
+                }
+
             } else {
                 this.showAlert = true
             }

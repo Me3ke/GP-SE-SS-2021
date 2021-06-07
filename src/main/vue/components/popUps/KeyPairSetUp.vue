@@ -238,9 +238,9 @@ export default {
             generating: true
         }
     },
-    created() {
+    async created() {
         // checking if user has a keypair already
-        this.$store.dispatch('fetchHasKey')
+        await this.$store.dispatch('fetchHasKey')
 
         // if he does not have a keypair -> do not show warning
         if (!this.hasKey) {
