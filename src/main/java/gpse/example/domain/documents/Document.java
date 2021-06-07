@@ -71,15 +71,9 @@ public class Document {
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
      *
-<<<<<<< HEAD
-     * @param ownerID            an ID referring to the owner of the envelope this document is a part of.
-     * @param documentPutRequest the put request given with the necessary information for producing a document.
-     * @param signatories        The list of signatories for a document.
-=======
      * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
      * @param documentPutRequest the requestBody of the request stated to generate this document
      * @param signatories The list of signatories for a document.
->>>>>>> feature.29317.documentSettings
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {

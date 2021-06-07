@@ -3,8 +3,6 @@ package gpse.example.domain.envelopes;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentGetResponse;
 import gpse.example.domain.users.User;
-
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

@@ -4,8 +4,6 @@ import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
-import dev.samstevens.totp.exceptions.CodeGenerationException;
-import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
