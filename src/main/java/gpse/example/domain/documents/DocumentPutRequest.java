@@ -1,8 +1,7 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.signature.SignatureType;
+import gpse.example.domain.signature.ProtoSignatory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -13,19 +12,16 @@ public class DocumentPutRequest {
     private byte[] data;
     private String title;
     private String dataType;
-    private List<String> signatoriesID;
-    private List<String> readersID;
-    private SignatureType signatureType;
-    private LocalDateTime endDate;
+    private List<ProtoSignatory> signatoriesID;
+    private String endDate;
     private boolean orderRelevant;
-    private DocumentState state;
-    private LocalDateTime lastModified;
+    private String lastModified;
 
-    public LocalDateTime getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(final LocalDateTime lastModified) {
+    public void setLastModified(final String lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -53,35 +49,19 @@ public class DocumentPutRequest {
         this.dataType = dataType;
     }
 
-    public List<String> getSignatoriesID() {
+    public List<ProtoSignatory> getSignatoriesID() {
         return signatoriesID;
     }
 
-    public void setSignatoriesID(final List<String> signatoriesID) {
+    public void setSignatoriesID(final List<ProtoSignatory> signatoriesID) {
         this.signatoriesID = signatoriesID;
     }
 
-    public List<String> getReadersID() {
-        return readersID;
-    }
-
-    public void setReadersID(final List<String> readersID) {
-        this.readersID = readersID;
-    }
-
-    public SignatureType getSignatureType() {
-        return signatureType;
-    }
-
-    public void setSignatureType(final SignatureType signatureType) {
-        this.signatureType = signatureType;
-    }
-
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(final LocalDateTime endDate) {
+    public void setEndDate(final String endDate) {
         this.endDate = endDate;
     }
 
@@ -91,13 +71,5 @@ public class DocumentPutRequest {
 
     public void setOrderRelevant(final boolean orderRelevant) {
         this.orderRelevant = orderRelevant;
-    }
-
-    public DocumentState getState() {
-        return state;
-    }
-
-    public void setState(final DocumentState state) {
-        this.state = state;
     }
 }

@@ -22,7 +22,7 @@
 
 <script>
 import ProgressBar from "@/main/vue/components/ProgressBar";
-import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
+import DocumentBox from "@/main/vue/components/DocumentBox";
 export default {
     name: "ProgressbarTestPage",
     components: {DocumentBox, ProgressBar},

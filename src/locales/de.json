@@ -171,9 +171,9 @@
         "toRead2": "gegenlesen",
         "toSignRead1": "Bis zum",
         "toSignRead2": "gegenlesen und signieren",
-        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
-        "envRead": "Enthält Dokumente zum gegenlesen",
-        "envSign": "Enthält Dokumente zum signieren"
+        "envReadSign": "Gegenlesen und signieren",
+        "envRead": "Gegenlesen",
+        "envSign": "Signieren"
     },
     "Document": {
         "owner": "Besitzer",
@@ -268,6 +268,16 @@
                 "text": "Protokoll-Verfügbarkeit",
                 "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Alle Dokumente im Verbund bearbeiten",
+            "addSignatory": "Unterzeichner hinzufügen",
+            "placeholderMail": "MaxMustermann@mail.de",
+            "signatory": "Unterzeichner",
+            "addReader": "Gegenleser hinzufügen",
+            "reader": "Gegenleser",
+            "chooseDate": "Zeitraum bestimmen",
+            "orderRelevant": "Reihenfolge berücksichtigen"
         }
     },
     "UploadDoc": {
@@ -279,7 +289,11 @@
         "newEnv": "Neuen Verbund anlegen",
         "selectEnv": "Bestehenden Verbund auswählen",
         "newEnvPlaceholder": "Name des Verbundes",
-        "configureDoc": "Dokumenteneinstellungen"
+        "configureDoc": "Dokumenteneinstellungen",
+        "addReaders": "Gegenleser hinzufügen",
+        "skipReview": "Gegenlese-Prozess überspringen",
+        "selectedDoc": "Dokument: ",
+        "chooseFile": "Dokument auswählen oder ins Feld ziehen..."
     },
     "DownloadDoc": {
         "download": "Herunterladen",
