@@ -12,10 +12,10 @@ export default {
             data: {
                 'data': file.data,
                 'title': file.name,
-                'type': file.type,
+                'dataType': file.type,
                 'signatories': settings.signatories,
                 'endDate': settings.endDate,
-                'orderRelevant': settings.orderRelevantReaders,
+                'orderRelevant': settings.orderRelevant
             }
         })
     },

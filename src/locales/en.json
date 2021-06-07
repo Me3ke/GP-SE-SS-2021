@@ -56,9 +56,9 @@
         "toRead2": "",
         "toSignRead1": "Read and sign until",
         "toSignRead2": "",
-        "envReadSign": "There are documents to sign or read",
-        "envRead": "There are documents to read",
-        "envSign": "There are documents to sign"
+        "envReadSign": "Read and sign",
+        "envRead": "Read",
+        "envSign": "Sign"
     },
     "UserGuide": {
         "name": "User Guide",

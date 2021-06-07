@@ -139,7 +139,7 @@
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1; validateEnvelope()">
+                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1;">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
                                                             </h5>

@@ -2,7 +2,7 @@
     <b-container fluid style="padding: 0">
         <b-row no-gutters>
             <b-col cols="11">
-                <DocumentBox  @click.native="$router.push({name: 'document', params: {docId: document.id, envId: envelopeId}})"
+                <DocumentBox  @click.native="$router.push({name: 'document', params: {envId: envelopeId, docId: document.id}})"
                               :document = document :envelopeId="envelopeId"></DocumentBox>
             </b-col>
             <b-col cols="1">
