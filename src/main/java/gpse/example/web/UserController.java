@@ -45,7 +45,7 @@ public class UserController {
      * @param confService             ConfirmationTokenService object
      * @param personalDataService     PersonalDataService object
      * @param securitySettingsService SecuritySettingsService object
-     * @param messageService the messageService to access the message table
+     * @param messageService          the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
@@ -149,6 +149,7 @@ public class UserController {
 
     /**
      * Method to validate an useraccount by admin.
+     *
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
@@ -173,25 +174,41 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}")
-    public User showUser(@PathVariable(USERID) final String username) {
-        return userService.getUser(username);
+    public UserResponseObject showUser(@PathVariable(USERID) final String username) {
+        return new UserResponseObject(userService.getUser(username));
+    }
+
+    /**
+     * The method used to signalize that a user has been through his first login.
+     *
+     * @param username the ID of the user
+     * @return the respone with statuscode 200
+     */
+    @PutMapping("/user/{userID}/firstLogin")
+    public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setFirstLogin(true);
+        userService.saveUser(user);
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     /**
      * Put request to change the public key of the user.
      *
      * @param publicKeyCmd contains the public key in a String format
-     * @param username the identifier of the user account that needs to be updated
+     * @param username     the identifier of the user account that needs to be updated
      * @return returns a JSONResponseObject that contains status code.
      */
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
-            final JSONResponseObject response = new JSONResponseObject();
-            userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
-            userService.saveUser(userService.getUser(username));
-            response.setStatus(STATUS_CODE_OK);
-            return response;
+        final JSONResponseObject response = new JSONResponseObject();
+        userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
+        userService.saveUser(userService.getUser(username));
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
