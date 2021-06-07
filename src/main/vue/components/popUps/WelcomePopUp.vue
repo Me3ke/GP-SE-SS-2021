@@ -53,7 +53,7 @@
                                         <!-- 2FakAuth set up prompt -->
                                         <h4>
                                             {{ $t('wizard.welcome.2FakAuth') }}
-                                        </h4>>
+                                        </h4>
 
                                         <div class="step">
                                             {{ $t('wizard.welcome.2FakAuthExp') }}
