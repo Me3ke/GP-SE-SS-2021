@@ -44,6 +44,7 @@
                         <div v-if="documentProgressById(document.id)">
                             <ProgressBar
                                 :documentProgress="documentProgressById(document.id)"
+                                :docId="document.id"
                             >
                             </ProgressBar>
                         </div>
