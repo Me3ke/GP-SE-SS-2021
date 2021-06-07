@@ -33,7 +33,9 @@ public class Document {
     @OneToOne
     private DocumentMetaData documentMetaData;
 
-    @OneToMany
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany(

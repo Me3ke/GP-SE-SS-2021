@@ -32,8 +32,8 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENTS', error)
         })
     },
-    createEnvelope({commit}, {name}) {
-        documentUploadAPI.createEnvelopeApi(name).then((response) => {
+    async createEnvelope({commit}, {name}) {
+        await documentUploadAPI.createEnvelopeApi(name).then((response) => {
             console.log("success")
             commit('SET_CREATED_ENVELOPE', response.data)
             commit('SET_ERROR_CREATE_ENVELOPE', {})

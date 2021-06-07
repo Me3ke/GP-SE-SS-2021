@@ -248,7 +248,8 @@ export default {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
             } else if (!(this.selectedEnv.new === null)) {
-                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new}).then(await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings}))
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
                 this.close();
             } else {
                 //TODO: ERROR
