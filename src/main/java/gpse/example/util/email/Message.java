@@ -67,7 +67,7 @@ public class Message {
         return messageID;
     }
 
-    public void setMessageID(long messageID) {
+    public void setMessageID(final long messageID) {
         this.messageID = messageID;
     }
 
@@ -75,7 +75,7 @@ public class Message {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -83,7 +83,7 @@ public class Message {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(final String text) {
         this.text = text;
     }
 
@@ -91,7 +91,7 @@ public class Message {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(final LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 
@@ -99,7 +99,7 @@ public class Message {
         return recievingUser;
     }
 
-    public void setRecievingUser(User user) {
+    public void setRecievingUser(final User user) {
         this.recievingUser = user;
     }
 
@@ -107,7 +107,7 @@ public class Message {
         return sendingUser;
     }
 
-    public void setSendingUser(User sendingUser) {
+    public void setSendingUser(final User sendingUser) {
         this.sendingUser = sendingUser;
     }
 }

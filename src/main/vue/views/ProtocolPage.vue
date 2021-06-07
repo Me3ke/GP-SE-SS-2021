@@ -2,45 +2,27 @@
     <div>
         <Header></Header>
 
-        <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
+        <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId" :is-protocol="true"
                        @closedDownload="toggleDownload()"></DownloadPopUp>
 
-        <div v-if="hasError" style="margin-top: 35vh;">
+        <BaseHeading name="DownloadProtocol.protocol"></BaseHeading>
+
+        <div v-if="hasError" style="margin-top: 25vh;">
             <div style="display: inline-block;" class="text">
                 <img :src="turtle" class="responsive-img" alt="turtle">
             </div>
             <div style="display: inline-block" class="text">
                 <div>
-                    {{ $t('DocumentPage.errors.notFound') }}
+                    {{ $t('DownloadProtocol.errorOne') }}
                 </div>
                 <div>
-                    {{ $t('DocumentPage.errors.refresh') }}
+                    {{ $t('DownloadProtocol.errorTwo') }}
                 </div>
             </div>
         </div>
 
         <div v-else>
-            <!-- No error, can be shown -->
-            <div v-if="document.dataType === 'pdf'">
-                <BaseHeading :name="document.title" :translate="false"></BaseHeading>
-                <PDFViewer :pdf-src=getPDF() :overflow="showOverflow" @openDownload="toggleDownload()"></PDFViewer>
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
-            </div>
-
-            <!-- Error, cannot be shown -->
-            <div v-else>
-                <BaseHeading :name="document.title" :translate="false"></BaseHeading>
-                <div class="text">
-                    {{ $t("DocumentPage.noView") }}
-                </div>
-                <button type="button" class="elsa-blue-btn" @click="toggleDownload">
-                <span class="button-txt">
-                    {{ $t('DownloadDoc.download') }}
-                </span>
-                </button>
-
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
-            </div>
+            <PDFViewer :pdf-src=getProtocol() :overflow="showOverflow" @openDownload="toggleDownload()"></PDFViewer>
         </div>
 
         <Footer></Footer>
@@ -51,18 +33,15 @@
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
-import Sidebar from "@/main/vue/components/Sidebar";
 import DownloadPopUp from "@/main/vue/components/popUps/DownloadPopUp";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
 
-
 export default {
-    name: "DocumentPage",
+    name: "ProtocolPage",
     components: {
         DownloadPopUp,
-        Sidebar,
         PDFViewer,
         Footer,
         Header
@@ -75,19 +54,16 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+        this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
     },
     methods: {
-        getPDF() {
-            let chars = atob(this.document.data);
+        getProtocol() {
+            let chars = atob(this.protocol);
             let array = new Uint8Array(chars.length);
             for (let i = 0; i < chars.length; i++) {
                 array[i] = chars.charCodeAt(i)
             }
             return array
-        },
-        toggleOverflow() {
-            this.showOverflow = !this.showOverflow
         },
         toggleDownload() {
             this.showDownload = !this.showDownload
@@ -97,8 +73,8 @@ export default {
     ,
     computed: {
         ...mapGetters({
-            document: 'document/getDocument',
-            getError: 'document/getErrorGetDocument'
+            protocol: 'document/getProtocol',
+            getError: 'document/getErrorGetProtocol'
         }),
         docId() {
             return this.$route.params.docId;
@@ -115,3 +91,4 @@ export default {
 
 <style scoped src="../assets/css/documentPage.css">
 </style>
+

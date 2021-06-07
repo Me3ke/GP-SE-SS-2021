@@ -26,7 +26,7 @@ public class DocumentProgressResponse {
      */
     public DocumentProgressResponse(final List<Signatory> signatories, final List<Signatory> readers,
                                     final LocalDateTime endDate) {
-        for (final Signatory signatory : signatories) { // signatories
+        for (final Signatory signatory : signatories) {
             if (signatory.isStatus()) {
                 alreadySigned.add(signatory);
             }

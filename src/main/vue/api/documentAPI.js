@@ -9,6 +9,37 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     },
+    // gives back protocol of document with id docId
+    async getProtocol(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/' + 'documents/' + docId + '/protocol'
+        })
+    },
+    // reviews document with id docId
+    async reviewDocument(docId) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/review'
+        })
+    },
+    // signs (simple) document with id docId
+    async simpleSignDocument(docId) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/signSimple'
+        })
+    },
+    // signs (advanced) document with id docId
+    async advancedSignDocument(docId, signature) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/signAdvanced',
+            data: {
+                'signature': signature
+            }
+        })
+    },
     async editDocument(envId, docId, newDoc) {
         return axios({
             method: "put",

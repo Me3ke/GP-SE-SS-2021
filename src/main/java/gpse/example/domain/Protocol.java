@@ -35,17 +35,9 @@ public class Protocol {
      */
     private static final int MARGIN_LEFT = 75;
 
-    /**
-     * standard font size.
-     */
     private static final int FONT_SIZE = 12;
 
-    /**
-     * just a factor for multiply margin at the topic.
-     */
-    private static final int THREE = 3;
-
-    private static final String PROTOCOL = "Protokoll: ";
+    private static final String PROTOKOLL = "Protokoll: ";
 
     private static final int MAX_LINE_LENGTH = 36;
     private static final float SPACING_TWO_FIVE = 2.5f;
@@ -79,10 +71,10 @@ public class Protocol {
                 contentStream.beginText();
                 contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
                 contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
-                if ((PROTOCOL + title).length() <= MAX_LINE_LENGTH) {
-                    contentStream.showText(PROTOCOL + title);
+                if ((PROTOKOLL + title).length() <= MAX_LINE_LENGTH) {
+                    contentStream.showText(PROTOKOLL + title);
                 } else {
-                    contentStream.showText(PROTOCOL);
+                    contentStream.showText(PROTOKOLL);
                     lineCount -= LINE_DIST;
                     contentStream.endText();
                     contentStream.beginText();
@@ -119,7 +111,7 @@ public class Protocol {
 
                 lineCount = lineCount - LINE_DIST;
                 addLine("Historie: ", lineCount, contentStream);
-                List<Document> history = document.getHistory();
+                final List<Document> history = document.getHistory();
                 history.remove(0);
                 for (final Document document : history) {
 

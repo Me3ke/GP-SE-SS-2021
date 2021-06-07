@@ -1,7 +1,7 @@
 <template>
     <div style="background-color: var(--whitesmoke); height: 100vh;">
         <Header></Header>
-        <BaseHeading :name="getEnv(envId).name" :translate="false" style="position: fixed"></BaseHeading>
+        <BaseHeading :name="getEnv(envId).name" :translate="false"></BaseHeading>
 
         <!-- Documents -->
         <div class="container-fluid">

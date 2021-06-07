@@ -1,5 +1,5 @@
 <template>
-    <div class="background" style="background-color: var(--whitesmoke);">
+    <div>
         <div>
             <Header></Header>
         </div>
@@ -11,6 +11,7 @@
                 <UserInfoBox :user="user" :userData="userData"></UserInfoBox>
                 <SecuritySettingsBox :user="user" :userData="userData"
                                      @modalTrigger="toggleOverflow"></SecuritySettingsBox>
+                <SignatureSettingsBox @uploadTrigger="toggleOverflow"></SignatureSettingsBox>
                 <MessageSettingsBox></MessageSettingsBox>
             </div>
         </b-container>
@@ -23,10 +24,11 @@ import UserInfoBox from "@/main/vue/components/settingsPage/UserInfoBox";
 import {mapGetters} from 'vuex';
 import MessageSettingsBox from "@/main/vue/components/settingsPage/MessageSettingsBox";
 import SecuritySettingsBox from "@/main/vue/components/settingsPage/SecuritySettingsBox";
+import SignatureSettingsBox from "@/main/vue/components/settingsPage/SignatureSettingsBox";
 
 export default {
     name: "UserPage",
-    components: {SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
+    components: {SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
     data() {
         return {
             showOverflow: true
@@ -51,14 +53,4 @@ export default {
 </script>
 
 <style scoped>
-
-.background {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-image: linear-gradient(to bottom, var(--background-fade-one) 0%, var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-}
 </style>

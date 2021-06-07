@@ -7,7 +7,6 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,18 +39,16 @@ public class DocumentController {
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
-    private static final int STATUS_CODE_OK = 200;
-    private static final int STATUS_CODE_WRONG_USER = 450;
-    private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
+    private static final int STATUS_CODE_INVALID_SIGNATURE = 456;
+    private static final int STATUS_CODE_OK = 200;
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
-    private final DocumentCreator documentCreator = new DocumentCreator();
 
 
     /**
@@ -176,114 +174,73 @@ public class DocumentController {
      * The review method does a review for a given user on a given document.
      *
      * @param userID     the id of the user reading the document.
-     * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @return true if the review was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
-                                     final @PathVariable(ENVELOPE_ID) long envelopeID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        final User reader = userService.getUser(userID);
-        envelopeService.getEnvelope(envelopeID);
-        final Document document = documentService.getDocument(documentID);
-        boolean documentFinished = true;
-        JSONResponseObject response = new JSONResponseObject();
-        if (document.getState().equals(DocumentState.OPEN)) {
-            if (document.isOrderRelevant()) {
-                List<Signatory> signatories = document.getSignatories();
-                Signatory currentReader = document.getCurrentSignatory(signatories);
-                if (currentReader != null && currentReader.getSignatureType().equals(SignatureType.REVIEW)
-                    && currentReader.getUser().equals(reader)) {
-                    currentReader.setStatus(true);
-                    signatoryService.saveSignatory(currentReader);
-                    if (signatories.get(signatories.size() - 1).equals(currentReader)) {
-                        document.setState(DocumentState.CLOSED);
-                    }
-                    documentService.addDocument(document);
-                    response.setStatus(STATUS_CODE_OK);
-                    return response;
-                } else {
-                    response.setStatus(STATUS_CODE_WRONG_USER);
-                    response.setMessage("The user is either not a reader for this document,"
-                        + "or it is currently not his turn");
-                    return response;
-                }
-            } else {
-                final List<Signatory> readers = document.getReaders();
-                boolean foundReader = false;
-                for (final Signatory currentReader : readers) {
-                    if (currentReader.getUser().equals(reader)) {
-                        currentReader.setStatus(true);
-                        foundReader = true;
-                        signatoryService.saveSignatory(currentReader);
-                    }
-                    documentFinished &= currentReader.isStatus();
-                }
-                if (documentFinished) {
-                    document.setState(DocumentState.READ);
-                }
-                documentService.addDocument(document);
-                if (foundReader) {
-                    response.setStatus(STATUS_CODE_OK);
-                    return response;
-                } else {
-                    response.setStatus(STATUS_CODE_NOT_READER);
-                    response.setMessage("The user is not a reader for this document.");
-                    return response;
-                }
-            }
-        } else {
-            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
-            response.setMessage("This document is closed");
-            return response;
-        }
+        return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
+
 
     /**
      * The sign method does a signing for a given user on a given document.
      *
      * @param userID     the id of the user reading the document.
-     * @param envelopeID the envelope in which the document is situated.
      * @param documentID the document to be reviewed.
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/sign")
-    public boolean sign(final @PathVariable(USER_ID) String userID,
-                        final @PathVariable(ENVELOPE_ID) long envelopeID,
-                        final @PathVariable(DOCUMENT_ID) long documentID)
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
+    public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
+                                         final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        final User signatory = userService.getUser(userID);
-        envelopeService.getEnvelope(envelopeID);
+        return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
+    }
+
+    /**
+     * The sign method does a signing for a given user on a given document.
+     *
+     * @param userID                   the id of the user reading the document.
+     * @param documentID               the document to be reviewed.
+     * @param advancedSignatureRequest the request Object containing the advanced signature
+     * @return true if the signing was successful and false if not.
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    //TODO if orderRelevant test if current user is next in line.
+    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signAdvanced")
+    public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
+                                           final @PathVariable(DOCUMENT_ID) long documentID,
+                                           final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
+        throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentID);
-        boolean documentFinished = true;
-        if (document.getState().equals(DocumentState.READ)) {
-            final List<Signatory> signatories = document.getSignatories();
-            for (final Signatory currentSignatory : signatories) {
-                if (currentSignatory.getUser().equals(signatory)) {
-                    currentSignatory.setStatus(true);
-                    signatoryService.saveSignatory(currentSignatory);
-                }
-                if (!currentSignatory.isStatus()) {
-                    documentFinished = false;
-                }
-            }
-            if (documentFinished) {
-                document.setState(DocumentState.CLOSED);
-                final ArchivedDocument archivedDocument = new ArchivedDocument(document);
-                documentService.remove(document);
-                documentService.addDocument(archivedDocument);
-                signatoryService.delete(document.getSignatories());
-            } else {
-                documentService.addDocument(document);
-            }
-            return true;
+        final JSONResponseObject response = computeSignatureRequest(userID,
+            documentID, SignatureType.ADVANCED_SIGNATURE);
+        if (response.getStatus() == STATUS_CODE_OK) {
+            document.advancedSignature(userID, advancedSignatureRequest.getSignature());
+            documentService.saveSignatures(document);
+            documentService.addDocument(document);
+        }
+        return response;
+    }
+
+    private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
+                                                       final SignatureType signatureType)
+        throws DocumentNotFoundException {
+        final User reader = userService.getUser(userID);
+        final Document document = documentService.getDocument(documentID);
+        final JSONResponseObject response = new JSONResponseObject();
+        if (document.getState().equals(DocumentState.CLOSED)) {
+            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
+            response.setMessage("This document is closed");
+            return response;
         } else {
-            return false;
+            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }
 
@@ -312,7 +269,7 @@ public class DocumentController {
         throws DocumentNotFoundException, CreatingFileException {
         final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
-            return protocol.writeProtocol().toByteArray();
+            return Base64.encodeBase64(protocol.writeProtocol().toByteArray());
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
@@ -330,7 +287,7 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
-            byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+            final byte[] protocolBytes = protocol.writeProtocol().toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
                 .body(protocolBytes);

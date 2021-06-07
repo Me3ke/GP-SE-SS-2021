@@ -79,7 +79,7 @@ public class InitializeDatabase implements InitializingBean {
             final PersonalData personalData = new PersonalData("Berliner Straße", 2, 12312,
                 "Liebefeld", "Deutschland", LocalDate.now(), "3213145");
             final User user = new User(USERNAME,
-                 "Hans",
+                "Hans",
                 "Schneider", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
             user.addRole("ROLE_USER");
             user.setEnabled(true);
@@ -93,7 +93,7 @@ public class InitializeDatabase implements InitializingBean {
         documentIDs.add(1L);
         documentPaths.add(PROGRAM_PATH);
         createExampleEnvelope(1, "international congress 2021", documentIDs, documentPaths,
-            DocumentState.READ, true, false);
+            DocumentState.OPEN, true, false);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(2L);
@@ -103,13 +103,13 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add("Handout_Kundengespraech.pdf");
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
-            documentPaths, DocumentState.CLOSED, true, true);
+            documentPaths, DocumentState.OPEN, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_FIVE);
         documentPaths.add(PLAN_PATH);
         createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.OPEN, false, true);
+            documentPaths, DocumentState.OPEN, true, true);
         documentIDs.clear();
         documentPaths.clear();
         documentIDs.add(ID_SIX);
@@ -117,7 +117,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add(PROGRAM_PATH);
         documentPaths.add("Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
-            documentPaths, DocumentState.CLOSED, true, true);
+            documentPaths, DocumentState.OPEN, true, true);
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,
@@ -132,7 +132,7 @@ public class InitializeDatabase implements InitializingBean {
                     final byte[] data = inputStream.readAllBytes();
                     final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
                         .getName().split(DOUBLE_BACKSLASH);
-                    Document document = createExampleDocument(documentIDs.get(i), data,
+                    final Document document = createExampleDocument(documentIDs.get(i), data,
                         documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
                     if (document != null) {
                         envelope.addDocument(document);
@@ -166,9 +166,9 @@ public class InitializeDatabase implements InitializingBean {
     }
 
     private Document createExampleDocument(final long id,
-                                       final byte[] data, final DocumentState documentState,
-                                       final boolean read, final boolean signed, final String title,
-                                       final String type) throws CreatingFileException, IOException {
+                                           final byte[] data, final DocumentState documentState,
+                                           final boolean read, final boolean signed, final String title,
+                                           final String type) throws CreatingFileException, IOException {
         final User owner = userService.getUser(USERNAME);
         try {
             documentService.getDocument(id);
@@ -178,14 +178,14 @@ public class InitializeDatabase implements InitializingBean {
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
             documentPutRequestRequest.setDataType(type);
-            documentPutRequestRequest.setOrderRelevant(false);
+            documentPutRequestRequest.setOrderRelevant(true);
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
-                if (signed) {
-                    signatories.add(new ProtoSignatory(owner, SignatureType.SIMPLE_SIGNATURE));
-                }
                 if (read) {
                     signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
+                }
+                if (signed) {
+                    signatories.add(new ProtoSignatory(owner, SignatureType.ADVANCED_SIGNATURE));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
                     signatories);

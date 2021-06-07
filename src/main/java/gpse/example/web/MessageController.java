@@ -22,13 +22,13 @@ public class MessageController {
     private final UserService userService;
 
     @Autowired
-    public MessageController(MessageService messageService, UserService userService) {
+    public MessageController(final MessageService messageService, final UserService userService) {
         this.messageService = messageService;
         this.userService = userService;
     }
 
     @GetMapping("/messages")
-    public List<Message> getMessages(@RequestParam("userid") String userID) {
+    public List<Message> getMessages(final @RequestParam("userid") String userID) {
         return messageService.getMessages(userService.getUser(userID));
     }
 
@@ -39,7 +39,7 @@ public class MessageController {
      */
     @GetMapping("/message/{messageID}/delete")
     public JSONResponseObject deleteMessage(@PathVariable("messageID") final long messageID) {
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         messageService.removeMessage(messageID);
         if (messageService.getMessage(messageID).isPresent()) {
             response.setStatus(STATUS_CODE_DELETE_FAILED);
