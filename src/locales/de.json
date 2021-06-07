@@ -318,9 +318,9 @@
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen.",
-        "resetPassword" : "Passwort zurücksetzen",
-        "send" : "senden",
-        "reset" :"Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
+        "resetPassword": "Passwort zurücksetzen",
+        "send": "senden",
+        "reset": "Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
     },
     "Register": {
         "email": "E-Mail",
@@ -343,16 +343,25 @@
         "login": "Zum Login"
     },
     "KeypairAlert": {
-        "generate": "Generiere Schlüsselpaar",
-        "upload": "Lade Schlüsselpaar hoch",
-        "selectOption": "Wähle Option",
-        "cancelText": "Abbruch",
-        "forceChoose": "Es muss etwas ausgewählt werden!",
-        "warning": "Warnung",
-        "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
-        "continueText": "Fortfahren",
+        "title": "Richten Sie Ihr Schlüsselpaar ein",
+        "choose": "Möchten Sie ein eigenes Schlüsselpaar hochladen oder eins generieren lassen?",
+        "generate": "Generieren",
+        "upload": "Hochladen",
+        "continue": "Weiter",
+        "cancel": "Abbruch",
+        "close": "Schließen",
+        "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
+        "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
+        "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
-        "uploadText": "Hochladen..."
+        "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
+        "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
+        "placeholder": "Schlüssel hier ablegen oder auswählen",
+        "dropPlaceholder": "Hier fallen lassen",
+        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {
         "cancel": "Abbruch",
@@ -378,7 +387,7 @@
             "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
             "again": "Erneut versuchen",
             "toStart": "Zum Beginn",
-            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
+            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Authentifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",

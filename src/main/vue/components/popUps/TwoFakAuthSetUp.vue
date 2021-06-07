@@ -269,7 +269,7 @@ export default {
         },
         closeModal() {
             this.$emit('modalTrigger');
-            this.page = 1
+            this.page = 0
         }
     },
     computed: {

@@ -317,9 +317,9 @@
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
         "fail": "Login failed.",
-        "resetPassword" : "reset Password",
-        "send" : "send",
-        "reset" :"To reset your password, you will receive an e-mail containing a reset link."
+        "resetPassword": "reset Password",
+        "send": "send",
+        "reset": "To reset your password, you will receive an e-mail containing a reset link."
     },
     "Register": {
         "email": "e-mail",
@@ -342,16 +342,25 @@
         "login": "go to login"
     },
     "KeypairAlert": {
-        "generate": "Generate Keypair",
-        "upload": "Upload Keypair",
-        "selectOption": "Select option",
-        "cancelText": "Cancel",
-        "forceChoose": "You need to choose something!",
-        "warning": "Warning",
-        "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
-        "continueText": "Continue",
+        "title": "Set up your keypair",
+        "choose": "Do you want to upload your own keypair or generate one?",
+        "generate": "Generate",
+        "upload": "Upload ",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "close": "Close",
+        "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
+        "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
+        "cancelWarningTwo": "your keypair via the settings page.",
+        "privateKey": "Copy your private key and save it to a .txt file.",
+        "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
-        "uploadText": "Uploading"
+        "uploadHere": "Upload your public key here.",
+        "uploadHereExp": "Accepted are files that end on .txt. The key has to have 1024 characters",
+        "placeholder": "Drop key here or choose",
+        "dropPlaceholder": "Drop here",
+        "success": "You have successfully uploaded your public key!",
+        "successWarning": "Do not loose the corresponding private key!"
     },
     "TwoFakAuth": {
         "cancel": "Cancel",
