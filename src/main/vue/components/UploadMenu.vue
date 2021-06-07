@@ -182,6 +182,7 @@ import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
 //import {mapActions} from "vuex";
 import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {mapGetters} from "vuex";
 export default {
     name: 'UploadButton',
     props: {
@@ -214,15 +215,18 @@ export default {
     },
     methods: {
         close() {
+            this.show = false;
             this.page = 1;
-            this.file = null;
+            this.fileInput = null;
+            this.file.data = null;
+            this.file.type = null;
+            this.file.name = null;
             this.selectedEnv.old = null;
             this.selectedEnv.new = null;
-            this.settings.signatories = null;
-            this.settings.readers = null;
+            this.settings.signatories = [];
+            this.settings.readers = [];
             this.settings.endDate = null;
-            this.settings.orderRelevantReaders = null;
-            this.settings.orderRelevantSignatories = null;
+            this.settings.orderRelevant = null;
             this.settings.review = null;
         },
         back() {
@@ -235,18 +239,19 @@ export default {
             }
         },
         async upload() {
+            //TODO: Convert readers into signatories and concat arrays
+            //TODO: Error-handling
+            this.file.name = this.fileInput.name.split('.')[0];
+            this.file.type = this.fileInput.name.split('.')[1];
+            this.file.data = await this.asyncHandleFunction(this.fileInput);
+            this.settings.endDate = this.settings.endDate + ' 12:00';
             if (!(this.selectedEnv.old === null)) {
-                //TODO: Convert readers into signatories and concat arrays
-                this.file.name = this.fileInput.name.split('.')[0];
-                this.file.type = this.fileInput.name.split('.')[1];
-                this.file.data = await this.asyncHandleFunction(this.fileInput);
-                this.settings.endDate = this.settings.endDate + ' 12:00';
-                console.log(this.settings.endDate);
-                //this.uploadDocument(this.selectedEnv.old, this.file, this.settings);
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings})
-                console.log("Done");
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
+                this.close();
             } else if (!(this.selectedEnv.new === null)) {
-                //TODO: Post new Envelope then put document
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings});
+                this.close();
             } else {
                 //TODO: ERROR
             }
@@ -257,13 +262,15 @@ export default {
         // convert the file into an base64 string
         async asyncHandleFunction(file) {
             return await convertUploadFileToBase64(file)
-        },
-        //...mapActions({uploadDocument: 'documentUpload/uploadDocument'})
+        }
     },
     computed: {
         getEnvs() {
             return this.$store.getters.getEnvelopesFiltered
-        }
+        },
+        ...mapGetters ({
+            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
+        })
     }
 }
 </script>

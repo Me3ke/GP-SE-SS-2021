@@ -62,7 +62,7 @@ public class EnvelopeController {
      * @throws UploadFileException if the envelope could not be uploaded.
      */
 
-    @PostMapping("/user/{userID}/envelopes/envelopes")
+    @PostMapping("/user/{userID}/envelopes")
     public Envelope createEnvelope(final @PathVariable(USER_ID) String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {

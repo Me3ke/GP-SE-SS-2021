@@ -4,7 +4,6 @@ import store from "@/main/vue/store/store";
 export default {
     // gives back document with id docId  in envelop wit id envId, does not download it
     async uploadDocumentApi(envId, file, settings) {
-        console.log(settings)
         return axios({
             method: "put",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId,
@@ -16,6 +15,16 @@ export default {
                 'signatories': settings.signatories,
                 'endDate': settings.endDate,
                 'orderRelevant': settings.orderRelevantReaders,
+            }
+        })
+    },
+
+    async createEnvelopeApi(name) {
+        return axios({
+            method: "post",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes',
+            params: {
+                name: name
             }
         })
     }
