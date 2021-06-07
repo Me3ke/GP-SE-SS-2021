@@ -268,6 +268,16 @@
                 "text": "Protokoll-Verfügbarkeit",
                 "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Alle Dokumente im Verbund bearbeiten",
+            "addSignatory": "Unterzeichner hinzufügen",
+            "placeholderMail": "MaxMustermann@mail.de",
+            "signatory": "Unterzeichner",
+            "addReader": "Gegenleser hinzufügen",
+            "reader": "Gegenleser",
+            "chooseDate": "Zeitraum bestimmen",
+            "orderRelevant": "Reihenfolge berücksichtigen"
         }
     },
     "UploadDoc": {
@@ -280,6 +290,8 @@
         "selectEnv": "Bestehenden Verbund auswählen",
         "newEnvPlaceholder": "Name des Verbundes",
         "configureDoc": "Dokumenteneinstellungen",
+        "addReaders": "Gegenleser hinzufügen",
+        "skipReview": "Gegenlese-Prozess überspringen",
         "selectedDoc": "Dokument: ",
         "chooseFile": "Dokument auswählen oder ins Feld ziehen..."
     },

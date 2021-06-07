@@ -175,10 +175,11 @@ public class InitializeDatabase implements InitializingBean {
         } catch (DocumentNotFoundException exception) {
             final DocumentCreator creator = new DocumentCreator();
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
+            documentPutRequestRequest.setOrderRelevant(true);
             documentPutRequestRequest.setData(data);
             documentPutRequestRequest.setTitle(title);
             documentPutRequestRequest.setDataType(type);
-            documentPutRequestRequest.setOrderRelevant(true);
+            documentPutRequestRequest.setEndDate("2021-06-13 12:00");
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (read) {

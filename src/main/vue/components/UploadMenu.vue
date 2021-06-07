@@ -24,8 +24,8 @@
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
                                         <b-form-file
-                                            v-model="file"
-                                            :state="Boolean(file)"
+                                            v-model="fileInput"
+                                            :state="Boolean(fileInput)"
                                             v-bind:placeholder="$t('UploadDoc.chooseFile')"
                                             drop-placeholder="Drop file here..."
                                         ></b-form-file>
@@ -44,7 +44,6 @@
                                             </h5>
                                         </button>
                                     </div>
-
                                     <!-- Page 3 -->
                                     <div v-if="page === 3">
                                         <!-- Choose from envelopes -->
@@ -72,20 +71,43 @@
                                             </b-form-group>
                                         </div>
                                     </div>
-
                                     <!-- Page 4 -->
                                     <div v-if="page === 4">
-                                        {{$t('UploadDoc.configureDoc')}}
+                                        <button type="button" class="light-btn" @click="review = true; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.addReaders')}}
+                                            </h5>
+                                        </button>
+                                        <button type="button" class="light-btn" @click="review = false; page = page +1">
+                                            <h5>
+                                                {{$t('UploadDoc.skipReview')}}
+                                            </h5>
+                                        </button>
+                                    </div>
+                                    <!-- Page 5 -->
+                                    <div v-if="page === 5">
+                                        <div v-if="review">
+                                            <ReaderMenu :readers="settings.readers"></ReaderMenu>
+                                        </div>
+                                        <div v-if="!review">
+                                            <div>
+                                                <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                                                <b-form-datepicker id="endDatePicker" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
+                                                <p>{{this.settings.endDate}}</p>
+                                            </div>
+                                            <SignatoryMenu :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Buttons -->
                                 <div class="modal-footer">
                                     <b-container fluid>
                                         <b-row align-h="between">
-                                            <b-col>
-                                                <div class="mt-3"> {{$t('UploadDoc.selectedDoc')}} {{ file ? file.name : '' }}</div>
+
+                                            <b-col cols="5">
+                                                <div class="mt-3"> {{$t('UploadDoc.selectedDoc')}} {{ fileInput ? fileInput.name : '' }}</div>
                                             </b-col>
-                                            <b-col>
+                                            <b-col cols="7">
                                                 <b-row>
                                                     <!-- Page 1 -->
                                                     <div v-if="page === 1">
@@ -94,19 +116,13 @@
                                                                 {{$t('UploadDoc.close')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="grey-btn" v-if="file===null">
-                                                            <h5>
-                                                                {{$t('UploadDoc.continue')}}
-                                                            </h5>
-                                                        </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1;" v-if="!(file===null)">
-                                                            <h5>
-                                                                {{$t('UploadDoc.continue')}}
-                                                            </h5>
-                                                        </button>
 
+                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1">
+                                                            <h5>
+                                                                {{$t('UploadDoc.continue')}}
+                                                            </h5>
+                                                        </button>
                                                     </div>
-
                                                     <!-- Page 2 -->
                                                     <div v-if="page === 2">
                                                         <button type="button" class="light-btn" @click="page = page - 1">
@@ -118,20 +134,27 @@
 
                                                     <!-- Page 3 -->
                                                     <div v-if="page === 3">
-                                                        <button type="button" class="light-btn" @click="page = page - 1;">
+                                                        <button type="button" class="light-btn" @click="page = page - 1">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1; validateEnvelope();">
+                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1; validateEnvelope()">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
                                                             </h5>
                                                         </button>
                                                     </div>
-
                                                     <!-- Page 4 -->
                                                     <div v-if="page === 4">
+                                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                                            <h5>
+                                                                {{$t('UploadDoc.back')}}
+                                                            </h5>
+                                                        </button>
+                                                    </div>
+                                                    <!-- Page 5 -->
+                                                    <div v-if="page === 5">
                                                         <button type="button" class="light-btn" @click="page = page - 1">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
@@ -158,13 +181,17 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
-
+import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
+import ReaderMenu from "@/main/vue/components/ReaderMenu";
+//import {mapActions} from "vuex";
+import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {mapGetters} from "vuex";
 export default {
     name: 'UploadButton',
     props: {
         text: String
     },
+    components: {SignatoryMenu, ReaderMenu},
     data() {
         return {
             show: false,
@@ -174,61 +201,74 @@ export default {
                 new: null,
                 old: null
             },
-            file: null,
-            settings : {
-                title: null,
+            fileInput: null,
+            settings: {
+                review: true,
+                signatories: [],
+                readers: [],
+                endDate: '',
+                orderRelevant: true
+            },
+            file: {
+                data: null,
                 type: null,
-                signatories: null,
-                readers: null,
-                signatureType: null,
-                endDate: null,
-                orderRelevant: null,
-                state: null
+                name: null
             }
         };
     },
     methods: {
         close() {
+            this.show = false;
             this.page = 1;
-            this.file = null;
+            this.fileInput = null;
+            this.file.data = null;
+            this.file.type = null;
+            this.file.name = null;
             this.selectedEnv.old = null;
             this.selectedEnv.new = null;
-            this.settings.title = null;
-            this.settings.type = null;
-            this.settings.signatories = null;
-            this.settings.readers = null;
-            this.settings.signatureType = null;
+            this.settings.signatories = [];
+            this.settings.readers = [];
             this.settings.endDate = null;
             this.settings.orderRelevant = null;
-            this.settings.state= null;
+            this.settings.review = null;
         },
         back() {
             this.selectedEnv.old = null;
             this.selectedEnv.new = null;
         },
-        validateEnvelope() {
-            if(this.selectedEnv.old === null && this.selectedEnv.new === null) {
-                //TODO: ERROR
-            }
-        },
-        upload() {
-            if(!(this.selectedEnv.old === null)) {
-                //TODO: Put document
-            } else if(!(this.selectedEnv.new === null)) {
-                //TODO: Post new Envelope then put document
+        async upload() {
+            //TODO: Convert readers into signatories and concat arrays
+            //TODO: Error-handling
+            this.file.name = this.fileInput.name.split('.')[0];
+            this.file.type = this.fileInput.name.split('.')[1];
+            this.file.data = await this.asyncHandleFunction(this.fileInput);
+            this.settings.endDate = this.settings.endDate + ' 12:00';
+            if (!(this.selectedEnv.old === null)) {
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
+                this.close();
+            } else if (!(this.selectedEnv.new === null)) {
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings});
+                this.close();
             } else {
                 //TODO: ERROR
             }
-            close();
         },
-        ...mapActions({uploadDocument: 'documentUpload/uploadDocument'})
+        convertReaders() {
+            //TODO
+        },
+        // convert the file into an base64 string
+        async asyncHandleFunction(file) {
+            return await convertUploadFileToBase64(file)
+        }
     },
     created() {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
     },
     computed: {
         ...mapGetters({
-            envelopes: 'envelopes/getEnvelopes'
+            envelopes: 'envelopes/getEnvelopes',
+            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
         })
     }
 }
