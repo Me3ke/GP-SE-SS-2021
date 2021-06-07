@@ -12,7 +12,7 @@ public class DocumentPutRequest {
     private byte[] data;
     private String title;
     private String dataType;
-    private List<ProtoSignatory> signatoriesID;
+    private List<ProtoSignatory> signatories;
     private String endDate;
     private boolean orderRelevant;
     private String lastModified;
@@ -49,12 +49,12 @@ public class DocumentPutRequest {
         this.dataType = dataType;
     }
 
-    public List<ProtoSignatory> getSignatoriesID() {
-        return signatoriesID;
+    public List<ProtoSignatory> getSignatories() {
+        return signatories;
     }
 
-    public void setSignatoriesID(final List<ProtoSignatory> signatoriesID) {
-        this.signatoriesID = signatoriesID;
+    public void setSignatories(final List<ProtoSignatory> signatories) {
+        this.signatories = signatories;
     }
 
     public String getEndDate() {

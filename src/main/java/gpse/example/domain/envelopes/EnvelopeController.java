@@ -63,11 +63,12 @@ public class EnvelopeController {
      */
 
     @PostMapping("/user/{userID}/envelopes")
-    public Envelope createEnvelope(final @PathVariable(USER_ID) String ownerID,
+    public EnvelopeGetResponse createEnvelope(final @PathVariable(USER_ID) String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            return envelopeService.addEnvelope(name, owner);
+            Envelope envelope = envelopeService.addEnvelope(name, owner);
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -89,6 +90,9 @@ public class EnvelopeController {
         JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+            System.out.println(documentPutRequest.getSignatories().size());
+            //System.out.println(documentPutRequest.getSignatoriesID().get(0).getUserID());
+            //System.out.println(documentPutRequest.getSignatoriesID().get(0).getSignatureType());
             if (!envelope.getOwnerID().equals(ownerID)) {
                 response.setStatus(FORBIDDEN);
                 response.setMessage("Forbidden. Not permitted to upload document.");
@@ -96,7 +100,7 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            System.out.println(document.getSignatories().get(0));
+            //System.out.println(document.getSignatories().get(0));
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
