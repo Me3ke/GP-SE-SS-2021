@@ -12,7 +12,7 @@
 <script>
 
 import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
-import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
+import DocumentBox from "@/main/vue/components/DocumentBox";
 import {mapGetters} from "vuex";
 
 export default {

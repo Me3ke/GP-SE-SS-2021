@@ -4,13 +4,11 @@ import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
-
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 
 
@@ -29,9 +27,8 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
-    private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
+    //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
-
     private static final String USERID = "userID";
     private final UserService userService;
     private final PersonalDataService personalDataService;

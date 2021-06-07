@@ -3,8 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
-
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,8 +15,8 @@ public class DocumentGetResponse {
     private final String title;
     private final DocumentState state;
     private final User owner;
-    private final LocalDateTime creationDate;
-    private final LocalDateTime endDate;
+    private final String creationDate;
+    private final String endDate;
     private final SignatureType signatureType;
     private final String dataType;
     private final String identifier;
@@ -28,6 +27,7 @@ public class DocumentGetResponse {
     private final byte[] data;
     private boolean isTurnToReview;
     private boolean isTurnToSign;
+    private final long id;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -42,8 +42,9 @@ public class DocumentGetResponse {
         this.owner = owner;
         final DocumentMetaData metaData = document.getDocumentMetaData();
         //Replaced with uploadDate
-        this.creationDate = metaData.getMetaTimeStampUpload();
-        this.endDate = document.getEndDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        this.creationDate = metaData.getMetaTimeStampUpload().format(formatter);
+        this.endDate = document.getEndDate().format(formatter);
         this.dataType = document.getDocumentType();
         this.data = document.getData();
         this.state = document.getState();
@@ -51,6 +52,7 @@ public class DocumentGetResponse {
         this.signatory = false;
         this.read = false;
         this.signed = false;
+        this.id = document.getId();
         final List<Signatory> signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
@@ -91,11 +93,11 @@ public class DocumentGetResponse {
         return owner;
     }
 
-    public LocalDateTime getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -161,5 +163,9 @@ public class DocumentGetResponse {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public long getId() {
+        return id;
     }
 }

@@ -3,6 +3,7 @@
         <div>
             <Header></Header>
         </div>
+
         <!-- Page Title -->
         <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
             <b-row align-h="start">
@@ -30,13 +31,13 @@
                         <b-col>
                             <span @click="filterOpen()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filters.open"></FilterButton>
+                                              :isActive="this.filter.state === 'open'"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
-                                              :isActive="this.filters.closed"></FilterButton>
+                                              :isActive="this.filter.state === 'closed'"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -48,74 +49,14 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 68vh">
-                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)"
+                    <div v-for="envelope in this.envelopes(filter)"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                        <!-- Different styles for open/closed documents TODO-->
-                        <div v-if="envelope.documents.length === 1">
-                            <!-- Default -->
-                            <div
-                                v-if="(envelope.documents[0].signatory === false || envelope.documents[0].signed === true)
-                                && (envelope.documents[0].reader === false || envelope.documents[0].read === true)
-                                && envelope.documents[0].state === 'open'">
-                                <DocumentBox
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
-                                    :doc="envelope.documents[0]">
-                                </DocumentBox>
-                            </div>
-
-                            <!-- Closed -->
-                            <div
-                                v-if="envelope.documents[0].state === 'closed'">
-                                <DocumentBoxClosed
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
-                                    :doc="envelope.documents[0]">
-                                </DocumentBoxClosed>
-                            </div>
-
-                            <!-- To sign/read -->
-                            <div
-                                v-if="((envelope.documents[0].signatory === true && envelope.documents[0].signed === false)
-                                || (envelope.documents[0].reader === true && envelope.documents[0].read === false))
-                                && envelope.documents[0].state === 'open'">
-                                <DocumentBoxSignRead
-                                    @click.native="$router.push({name: 'document', params: {docId: envelope.documents[0].id, envId: envelope.id}})"
-                                    :doc="envelope.documents[0]">
-                                </DocumentBoxSignRead>
-                            </div>
-                        </div>
                         <div v-if="!(envelope.documents.length === 1)">
-                            <!-- Default -->
-                            <div
-                                v-if="(getEnvData(envelope).needToSign === false)
-                                && getEnvData(envelope).needToRead === false
-                                && getEnvData(envelope).open === true">
-                                <EnvelopeBox
-                                    @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope">
-                                </EnvelopeBox>
-                            </div>
-
-                            <!-- Closed -->
-                            <div
-                                v-if="getEnvData(envelope).open === false">
-                                <EnvelopeBoxClosed
-                                    @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope">
-                                </EnvelopeBoxClosed>
-                            </div>
-
-                            <!-- To sign/read -->
-                            <div
-                                v-if="(getEnvData(envelope).needToSign === true
-                                || getEnvData(envelope).needToRead === true)
-                                && getEnvData(envelope).open === true">
-                                <EnvelopeBoxSignRead
-                                    @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"
-                                    :env="envelope">
-                                </EnvelopeBoxSignRead>
-                            </div>
-
+                            <EnvelopeCard :envelope = envelope></EnvelopeCard>
+                        </div>
+                        <div v-if="envelope.documents.length === 1">
+                            <DocumentCard :document = envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
                         </div>
                     </div>
                 </div>
@@ -126,79 +67,73 @@
 </template>
 
 <script>
-import DocumentBox from "@/main/vue/components/documentBoxes/DocumentBox";
-import EnvelopeBox from "@/main/vue/components/envelopeBoxes/EnvelopeBox";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
 import UploadButton from "@/main/vue/components/UploadMenu";
-import DocumentBoxClosed from "@/main/vue/components/documentBoxes/DocumentBoxClosed";
-import DocumentBoxSignRead from "@/main/vue/components/documentBoxes/DocumentBoxSignRead";
-import EnvelopeBoxClosed from "@/main/vue/components/envelopeBoxes/EnvelopeBoxClosed";
-import EnvelopeBoxSignRead from "@/main/vue/components/envelopeBoxes/EnvelopeBoxSignRead";
+import {mapGetters} from "vuex";
+import DocumentCard from "@/main/vue/components/DocumentCard";
+import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
 
 export default {
     name: "OverviewPage",
     components: {
-        DocumentBox,
-        DocumentBoxClosed,
-        DocumentBoxSignRead,
-        EnvelopeBox,
-        EnvelopeBoxClosed,
-        EnvelopeBoxSignRead,
         Footer,
         Header,
         FilterButton,
-        UploadButton
+        UploadButton,
+        EnvelopeCard,
+        DocumentCard
     },
     data() {
         return {
             // Needs to be replaced with API Request TODO
-            filters: {
-                open: false,
-                closed: false
-            }
+            filter: {
+                //title: "",
+                //envelopeID: 0,
+                state: null,
+                //owner: "",
+                //creationDateMin: null,
+                //creationDateMax: null,
+                //endDateMin: null,
+                //endDateMax: null,
+                //signatureType: "",
+                //datatype: "",
+                //signatories: null,
+                //readers: null,
+                //signed: null,
+                //read: null
+            },
+            pageLimit: 50,
+            page: 1,
+            sort: null
         }
     },
     methods: {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            this.filters.open = !this.filters.open;
-            if (this.filters.closed && this.filters.open) {
-                this.filters.closed = false;
+            if (this.filter.state === null || this.filter.state === "closed") {
+                this.filter.state = "open";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         },
         filterClosed() {
-            this.filters.closed = !this.filters.closed;
-            if (this.filters.open && this.filters.closed) {
-                this.filters.open = false;
+            if (this.filter.state === null || this.filter.state === "open") {
+                this.filter.state = "closed";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
-        },
-        getEnvData(env) {
-            let open = false;
-            let toSign = false;
-            let toRead = false;
-            let i;
-            for (i = 0; i < env.documents.length; i++) {
-                if (env.documents[i].state === "open") {
-                    open = true;
-                }
-                if (env.documents[i].signatory === true && env.documents[i].signed === false) {
-                    toSign = true
-                }
-                if (env.documents[i].reader === true && env.documents[i].read === false) {
-                    toRead = true
-                }
-            }
-            return {open: open, needToSign: toSign, needToRead: toRead};
         }
     },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
     computed: {
-        getEnvs() {
-            return this.$store.getters.getEnvelopesFiltered
-        }
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getError: 'envelopes/getErrorGetEnvelopes'
+        })
     }
 }
 

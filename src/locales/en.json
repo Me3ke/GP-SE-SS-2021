@@ -56,9 +56,9 @@
         "toRead2": "",
         "toSignRead1": "Read and sign until",
         "toSignRead2": "",
-        "envReadSign": "There are documents to sign or read",
-        "envRead": "There are documents to read",
-        "envSign": "There are documents to sign"
+        "envReadSign": "Read and sign",
+        "envRead": "Read",
+        "envSign": "Sign"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -267,6 +267,14 @@
                 "text": "Protocol availability",
                 "exp": "Get website alerts about the availability of document protocols."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Edit all documents in the envelope",
+            "addSignatory": "Add signatories",
+            "placeholderMail": "Signatory@mail.de",
+            "signatory": "Signatory",
+            "addReader": "Add proofreader",
+            "reader": "Proofreaders"
         }
     },
     "UploadDoc": {
@@ -278,7 +286,13 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+        "addReaders": "Add proofreaders",
+        "skipReview": "Skip review process",
+        "chooseDate": "Chose deadline",
+        "orderRelevant": "Order relevant",
+        "selectedDoc": "File: ",
+        "chooseFile": "Choose a file or drop it here..."
     },
     "DownloadDoc": {
         "download": "Download",
