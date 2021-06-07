@@ -292,7 +292,10 @@
         "chooseDate": "Chose deadline",
         "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
-        "chooseFile": "Choose a file or drop it here..."
+        "chooseFile": "Choose a file or drop it here...",
+        "simple": "Simple",
+        "advanced": "Advanced",
+        "signatureType": "Signaturetype"
     },
     "DownloadDoc": {
         "download": "Download",

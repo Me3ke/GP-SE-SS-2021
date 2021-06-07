@@ -33,8 +33,7 @@
                             <b-row align-h="end">
                                 <b-col cols="auto">
                                     <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.type">
-                                        <option>einfach</option>
-                                        <option>fortgeschritten</option>
+                                        <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
                                     </select>
                                 </b-col>
                                 <b-col cols="auto">
@@ -60,7 +59,14 @@ export default {
     components: {draggable},
     data() {
         return{
-            signatoryInput: ""
+            signatoryInput: "",
+            signatureTypes: [{
+                name: 'UploadDoc.simple',
+                value: 1
+            }, {
+                name: 'UploadDoc.advanced',
+                value: 2
+            }]
         }
     },
     methods: {

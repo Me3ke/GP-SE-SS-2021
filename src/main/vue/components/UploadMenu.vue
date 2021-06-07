@@ -243,12 +243,12 @@ export default {
             this.file.type = this.fileInput.name.split('.')[1];
             this.file.data = await this.asyncHandleFunction(this.fileInput);
             this.settings.endDate = this.settings.endDate + ' 12:00';
+            console.log(this.settings.signatories);
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
             } else if (!(this.selectedEnv.new === null)) {
-                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings});
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new}).then(await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings}))
                 this.close();
             } else {
                 //TODO: ERROR
