@@ -3,6 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.signature.ProtoSignatory;
+import gpse.example.domain.users.UserService;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -50,7 +51,7 @@ public class DocumentCreator {
      */
     //does not include directories.
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
-                                   final List<ProtoSignatory> signatories)
+                                   final List<ProtoSignatory> signatories, UserService userService)
         throws CreatingFileException, IOException {
         if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
@@ -58,7 +59,7 @@ public class DocumentCreator {
         final Document document = new Document(documentPutRequest, new ArrayList<>(),
             ownerID);
         setDocumentState(signatories, document);
-        setSignatories(signatories, document);
+        setSignatories(signatories, document, userService);
         return document;
     }
 
@@ -70,10 +71,10 @@ public class DocumentCreator {
      * @param document    the document itself.
      */
     private void setSignatories(final List<ProtoSignatory> signatories,
-                                final Document document) {
+                                final Document document, UserService userService) {
         if (signatories != null) {
             for (final ProtoSignatory signatory : signatories) {
-                document.addSignatory(signatory.getUser(), signatory.getSignatureType());
+                document.addSignatory(userService.getUser(signatory.getEmail()), signatory.getType());
             }
         }
     }

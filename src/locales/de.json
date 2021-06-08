@@ -293,7 +293,10 @@
         "addReaders": "Gegenleser hinzufügen",
         "skipReview": "Gegenlese-Prozess überspringen",
         "selectedDoc": "Dokument: ",
-        "chooseFile": "Dokument auswählen oder ins Feld ziehen..."
+        "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
+        "simple": "Einfach",
+        "advanced": "Fortgeschritten",
+        "signatureType": "Signaturtyp"
     },
     "DownloadDoc": {
         "download": "Herunterladen",

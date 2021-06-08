@@ -183,13 +183,13 @@ public class InitializeDatabase implements InitializingBean {
             try {
                 final List<ProtoSignatory> signatories = new ArrayList<>();
                 if (read) {
-                    signatories.add(new ProtoSignatory(owner, SignatureType.REVIEW));
+                    signatories.add(new ProtoSignatory(owner.getUsername(), 0));
                 }
                 if (signed) {
-                    signatories.add(new ProtoSignatory(owner, SignatureType.ADVANCED_SIGNATURE));
+                    signatories.add(new ProtoSignatory(owner.getUsername(), 2));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories);
+                    signatories, userService);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {
