@@ -90,9 +90,6 @@ public class EnvelopeController {
         JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-            System.out.println(documentPutRequest.getSignatories().size());
-            //System.out.println(documentPutRequest.getSignatoriesID().get(0).getUserID());
-            //System.out.println(documentPutRequest.getSignatoriesID().get(0).getSignatureType());
             if (!envelope.getOwnerID().equals(ownerID)) {
                 response.setStatus(FORBIDDEN);
                 response.setMessage("Forbidden. Not permitted to upload document.");
@@ -100,7 +97,6 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            //System.out.println(document.getSignatories().get(0));
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");

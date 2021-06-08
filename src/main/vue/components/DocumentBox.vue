@@ -78,7 +78,7 @@ export default {
         let open = false;
         let toSign = false;
         let toRead = false;
-        if (this.document.state === "OPEN") {
+        if (this.document.state === "OPEN" || this.document.state === "READ") {
             open = true;
         }
         if (this.document.signatory === true && this.document.signed === false) {
