@@ -35,7 +35,7 @@ public class Document {
     @OneToOne
     private DocumentMetaData documentMetaData;
 
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER)
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
@@ -336,6 +336,7 @@ public class Document {
     public List<AdvancedSignature> getAdvancedSignatures() {
         return advancedSignatures;
     }
+
 
     public List<Signatory> getSignatories() {
         return signatories;

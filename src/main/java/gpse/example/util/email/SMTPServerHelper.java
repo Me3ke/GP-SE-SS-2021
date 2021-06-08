@@ -1,5 +1,6 @@
 package gpse.example.util.email;
 
+import gpse.example.domain.documents.Document;
 import gpse.example.domain.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -42,6 +43,10 @@ public class SMTPServerHelper {
      * should be the from address, but because of whatever it doesnt work with thunderbird and K-9 emailclients.
      */
     public static final String NOREPLY_ADDRESS = "noreply@gmail.com";
+    private static final String REMINDER_SUBJECT = "Erinnerung an Dokument %s";
+    private static final String REMINDER = "Guten Tag Herr/Frau %s, %n" +
+        "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
+
 
     @Autowired
     private final JavaMailSender mailSender;
@@ -58,7 +63,7 @@ public class SMTPServerHelper {
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(recievingUser);
+        message.setRecievingUser(recievingUser.getEmail());
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
 
@@ -72,7 +77,7 @@ public class SMTPServerHelper {
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(admin);
+        message.setRecievingUser(admin.getEmail());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
@@ -80,10 +85,20 @@ public class SMTPServerHelper {
     }
 
     /**
-     *
+     * send a reminder to specified mail address with the given data.
+     * @param userEmail the recieving email address
+     * @param days days bevor deadline
+     * @param userName name of User who recieves the email
+     * @param document the document which is the 'reminding' one
      */
-    public void sendReminder(final String userEmail, final int days ){
+    public void sendReminder(final String userEmail, final int days, String userName, Document document)
+            throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUser(userEmail);
+        message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
+        message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
 
+        mailSender.send(message.generateMessage());
     }
 
 }

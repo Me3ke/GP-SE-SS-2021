@@ -30,7 +30,7 @@ public class InitializeDatabase implements InitializingBean {
 
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
-    private static final String USERNAME = "hans.schneider@mail.de";
+    private static final String USERNAME = "jhaschke@techfak.de";//"hans.schneider@mail.de";
     private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
