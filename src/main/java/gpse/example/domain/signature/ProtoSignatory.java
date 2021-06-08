@@ -19,6 +19,10 @@ public class ProtoSignatory {
         return email;
     }
 
+    /**
+     * This method returns the SignatureType of the protoUser.
+     * @return the type of the signature
+     */
     public SignatureType getType() {
         try {
             return SignatureType.fromInteger(type);

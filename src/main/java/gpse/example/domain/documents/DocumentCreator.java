@@ -45,6 +45,7 @@ public class DocumentCreator {
      * @param documentPutRequest the command object which keeps the information for the document.
      * @param ownerID            the email adress of the User who want to create the document.
      * @param signatories        the list of signatories for this document.
+     * @param userService        the service used to handle ProtoSignatories.
      * @return the created document.
      * @throws IOException           if the data is incorrect.
      * @throws CreatingFileException if the path is not specified.
