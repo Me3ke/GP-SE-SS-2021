@@ -30,6 +30,8 @@ public class InitializeDatabase implements InitializingBean {
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
+    private static final String ADMINNAME = "Ruediger.Spieler@mail.de";
+    private static final String SIMON_MAIL = "Simon.Schulz@mail.de";
     private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
@@ -87,7 +89,38 @@ public class InitializeDatabase implements InitializingBean {
             user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
             userService.saveUser(user);
         }
-        final List<Long> documentIDs = new ArrayList<>();
+        try {
+            userService.getUser(ADMINNAME);
+        } catch (UsernameNotFoundException ex) {
+            final PersonalData personalData = new PersonalData("Berliner Straße", 3, 12312,
+                "Liebefeld", "Deutschland", LocalDate.now(), "3217145");
+            final User user = new User(ADMINNAME,
+                "Ruediger",
+                "Spieler", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
+            user.addRole("ROLE_USER");
+            user.addRole("ROLE_ADMIN");
+            user.setEnabled(true);
+            user.setAdminValidated(true);
+            user.setPersonalData(personalDataService.savePersonalData(personalData));
+            user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
+            userService.saveUser(user);
+        }
+        try {
+            userService.getUser(SIMON_MAIL);
+        } catch (UsernameNotFoundException ex) {
+            final PersonalData personalData = new PersonalData("Berliner Straße", 4, 12312,
+                "Liebefeld", "Deutschland", LocalDate.now(), "3213945");
+            final User user = new User(USERNAME,
+                "Simon",
+                "Schulz", "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG");
+            user.addRole("ROLE_USER");
+            user.setEnabled(true);
+            user.setAdminValidated(true);
+            user.setPersonalData(personalDataService.savePersonalData(personalData));
+            user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
+            userService.saveUser(user);
+        }
+        /*final List<Long> documentIDs = new ArrayList<>();
         final List<String> documentPaths = new ArrayList<>();
         documentIDs.add(1L);
         documentPaths.add(PROGRAM_PATH);
@@ -117,6 +150,7 @@ public class InitializeDatabase implements InitializingBean {
         documentPaths.add("Dropbox.pdf");
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
             documentPaths, DocumentState.OPEN, true, true);
+         */
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,
