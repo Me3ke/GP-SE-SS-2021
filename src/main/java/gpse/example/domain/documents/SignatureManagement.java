@@ -68,10 +68,8 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatoriesWithoutOrder(final User reader, final Document document,
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType) {
-        List<Signatory> signatories;
-        signatories = document.getSimpleSignatories();
         if (document.getState().equals(DocumentState.READ)) {
-            if (findSignatoryInList(signatories, reader, signatureType)) {
+            if (findSignatoryInList(document, reader, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
                     return changeDocumentStateToClosed(document);
                 } else {
@@ -91,7 +89,7 @@ public class SignatureManagement {
     private JSONResponseObject manageReadersWithoutOrder(final User reader, final Document document,
                                                          final List<Signatory> signatories,
                                                          final JSONResponseObject response) {
-        if (findSignatoryInList(signatories, reader, SignatureType.REVIEW)) {
+        if (findSignatoryInList(document, reader, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
                 return changeDocumentStateToClosed(document);
             } else {
@@ -127,12 +125,23 @@ public class SignatureManagement {
         return response;
     }
 
-    private boolean findSignatoryInList(final List<Signatory> signatories, final User signatoryToFind,
+    private boolean findSignatoryInList(final Document document, final User signatoryToFind,
                                         final SignatureType signatureType) {
+        List<Signatory> signatories;
+        switch (signatureType) {
+            case REVIEW:
+                signatories = document.getReaders();
+                break;
+            case SIMPLE_SIGNATURE:
+                signatories = document.getSimpleSignatories();
+                break;
+            default:
+                signatories = document.getAdvancedSignatories();
+                break;
+        }
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)
-                && currentSignatory.getSignatureType().equals(signatureType)) {
+            if (currentSignatory.getUser().equals(signatoryToFind)) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
                 signatoryService.saveSignatory(currentSignatory);
@@ -162,7 +171,6 @@ public class SignatureManagement {
         final Signatory currentReader = document.getCurrentSignatory();
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
-            signatoryService.saveSignatory(currentReader);
             checkIfClosed(document, signatories, response, currentReader);
             documentService.addDocument(document);
             response.setStatus(STATUS_CODE_OK);

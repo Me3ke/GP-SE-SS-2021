@@ -90,6 +90,8 @@ public class DocumentCreator {
     private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
         if (signatories == null) {
             document.setState(DocumentState.CLOSED);
+        } else if (document.getReaders().size() == 0 && !document.isOrderRelevant()) {
+            document.setState(DocumentState.READ);
         } else {
             document.setState(DocumentState.OPEN);
         }

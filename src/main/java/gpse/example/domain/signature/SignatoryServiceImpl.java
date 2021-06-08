@@ -38,8 +38,7 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public Signatory saveSignatory(final Signatory signatory) {
-        //return signatoryRepository.save(signatory);
-        return signatory;
+        return signatoryRepository.save(signatory);
     }
 
     @Override

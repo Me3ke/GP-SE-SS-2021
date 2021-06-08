@@ -76,7 +76,7 @@ export default {
         let toRead = false;
         let i;
         for(i = 0; i < this.envelope.documents.length; i++) {
-            if (this.envelope.documents[i].state === "OPEN") {
+            if (this.envelope.documents[i].state === "OPEN" || this.envelope.documents[i].state === "READ") {
                 open = true;
             }
             if (this.envelope.documents[i].signatory === true && this.envelope.documents[i].signed === false) {

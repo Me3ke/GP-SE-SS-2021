@@ -315,9 +315,7 @@ public class DocumentController {
             document.setEndDate(documentSettingsCMD.convertEndDate());
             document.setSignatories(documentSettingsCMD.getSignatories());
 
-            System.out.println(document.getId());
             Document savedDoc = documentService.addDocument(document);
-            System.out.println(savedDoc.getId());
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {
