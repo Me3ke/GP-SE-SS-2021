@@ -2,6 +2,7 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.ProtoSignatory;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,11 +27,11 @@ public class DocumentPutRequest {
     }
 
     public byte[] getData() {
-        return data;
+        return Arrays.copyOf(data, data.length);
     }
 
     public void setData(final byte[] data) {
-        this.data = data;
+        this.data = data.clone();
     }
 
     public String getTitle() {
