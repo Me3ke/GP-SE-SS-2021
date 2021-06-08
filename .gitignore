@@ -335,5 +335,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# dataBase
+
+./data
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,maven,windows,linux,macos,vuejs,node
 
