@@ -35,7 +35,7 @@ public class Document {
     @OneToOne
     private DocumentMetaData documentMetaData;
 
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany
