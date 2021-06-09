@@ -16,7 +16,7 @@ public class SMTPServerHelper {
     /**
      * Template for sending RegistrationEmail.
      */
-    public static final String INITIAL_REGISTER_TEMPLATE = GREETING
+    private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
         + "Hier bestätigen: %s %n"
         + "%n %n"
@@ -25,25 +25,25 @@ public class SMTPServerHelper {
     /**
      * The subject of Elsas registration emails.
      */
-    public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
+    private static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
 
     /**
      * Basic template for sending validation requests to admin.
      */
-    public static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
+    private static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
     /**
      * The subject of Elsas validation request emails.
      */
-    public static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
+    private static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
 
     /**
      * should be the from address, but because of whatever it doesnt work with thunderbird and K-9 emailclients.
      */
-    public static final String NOREPLY_ADDRESS = "noreply@gmail.com";
+    private static final String NOREPLY_ADDRESS = "noreply@gmail.com";
     private static final String REMINDER_SUBJECT = "Erinnerung an Dokument %s";
     private static final String REMINDER = GREETING
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
