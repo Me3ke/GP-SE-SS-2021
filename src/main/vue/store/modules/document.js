@@ -98,11 +98,9 @@ export const actions = {
         })
     },
       // makes axios call to put the newDocument and archive the old one
-       editDocument({commit,state}, {newDoc, envId, docId}) {
+       editDocument({commit}, {newDoc, envId, docId}) {
         return documentAPI.editDocument(envId, docId, newDoc).then((response) => {
             commit('SET_IDS', response.data)
-            console.log("res: ", response.data)
-            console.log("state: ", state.newVersionIds)
             commit('SET_ERROR_EDIT_DOCUMENT', {})
         }).catch(error => {
             commit('SET_ERROR_EDIT_DOCUMENT', error)
@@ -127,6 +125,7 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_SIMPLE_SIGN_DOCUMENT', error)
         })
+
     },
     // makes axios call to sign (advanced) document, either sets advancedSignResponse (success) or error (error)
     advancedSignDocument({commit}, {docId, signature}) {
@@ -144,9 +143,13 @@ export const getters = {
         return state.document
     },
     getNewDocumentId: (state) => {
-        console.log("In DocumentJS: " , state.newVersionIds.newDocumentID)
         return state.newVersionIds.newDocumentID
     },
+
+    getEditDocumentStatus: (state) => {
+        return state.newVersionIds.status
+    },
+
     getProtocol: (state) => {
         return state.protocol
     },

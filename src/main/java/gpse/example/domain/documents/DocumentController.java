@@ -155,13 +155,9 @@ public class DocumentController {
             envelope.removeDocument(oldDocument);
             documentService.remove(oldDocument);
             signatoryService.delete(oldDocument.getSignatories());
-
-            // First upload works fine, but the second upload on the new uploaded document causes an IndexOutOfBoundException
-
             documentMetaDataService.delete(oldDocument.getDocumentMetaData());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
             documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
-            System.out.println("Archived Document: " + archivedDocument.getSignatories() +" - "+ archivedDocument.getSignatories().get(0).getId());
             signatoryService.saveSignatories(archivedDocument.getSignatories());
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!

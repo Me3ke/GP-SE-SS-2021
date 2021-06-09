@@ -282,6 +282,7 @@
         "configureDoc": "Dokumenteneinstellungen",
 
         "UpdateDocument": {
+            "chooseFile":  "Dokument auswählen oder ins Feld ziehen...",
             "update1": "aktualisieren",
             "update2": "Dokument aktualisieren",
             "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",

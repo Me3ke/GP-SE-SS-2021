@@ -5,7 +5,7 @@
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 
-        <upload-new-version-button :doc-i-d="docId" :document="document" @update-document="updateDoc"></upload-new-version-button>
+        <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
 
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>
@@ -207,22 +207,22 @@ export default {
 
             this.$bvModal.show('modal-' + this.docId + 'a')
         },
-        async updateDoc(newDocument) {
-            console.log("Wurde ausgeführt")
-            // console.log(newDoc.data)
+        /*async updateDoc(newDocument) {
             let payload = {newDoc: newDocument, envId: this.envId, docId: this.docId}
-
-            // TODO: Tell Stina that she have also use this with router to get the nex envelope view of the page
             await this.$store.dispatch('document/editDocument', payload)
-            await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.newDocumentId})
-            let newUrl = 'envelope/' + this.envId + '/document/' + this.newDocumentId
-            console.log(newUrl)
+            if(this.newDocumentStatus === 200) {
+                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.newDocumentId})
+                let newUrl = 'envelope/' + this.envId + '/document/' + this.newDocumentId
+            }
+
+
+
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
-            //this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
-               // this.$router.go(0)
-           // })
-        },
+            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                this.$router.go(0)
+            })
+        },*/
         // TODO. add router push to settings site of document
         goToSettings() {
         }
@@ -232,7 +232,8 @@ export default {
             theme: 'theme/getTheme',
             document: 'document/getDocument',
             newDocumentId: 'document/getNewDocumentId',
-            newDocumentError: 'document/getNewDocumentError'
+            newDocumentError: 'document/getNewDocumentError',
+            newDocumentStatus: 'document/getEditDocumentStatus'
 
         }),
         isOwner() {

@@ -281,6 +281,7 @@
         "configureDoc": "Configure document",
 
         "UpdateDocument": {
+            "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
             "update2": "Update Document",
             "selectDocument": "Select the File to replace/update the Document ",
