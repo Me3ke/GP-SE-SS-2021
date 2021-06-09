@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,11 +37,16 @@ public class User implements UserDetails {
     @Column
     private String lastname;
 
+    @Column
+    // false: user has not had a first login yet; true: user has had a first login
+    private boolean firstLogin;
+
     //@OneToMany
     //private List<Keys> keys = new ArrayList<>();
 
+    @Lob
     @Column
-    private PublicKey publicKey;
+    private String publicKey;
 
     @Column
     private String password;
@@ -86,6 +90,7 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = false;
         this.adminValidated = false;
+        this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
     }
 
@@ -266,11 +271,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public PublicKey getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(final PublicKey publicKey) {
+    public void setPublicKey(final String publicKey) {
         this.publicKey = publicKey;
     }
 
@@ -308,5 +313,13 @@ public class User implements UserDetails {
 
     public void setSecuritySettings(final SecuritySettings securitySettings) {
         this.securitySettings = securitySettings;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 }

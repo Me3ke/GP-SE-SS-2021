@@ -22,9 +22,9 @@ const store = new Vuex.Store({
         envelopes,
         document,
         user,
+        documentUpload,
         userData,
         keypair,
-        documentUpload,
         theme,
         twoFakAuth,
         auth: authorization
@@ -47,6 +47,5 @@ store.subscribe((mutation, state) => {
     localStorage.setItem('store', JSON.stringify(state));
     axios.defaults.headers['Authorization'] = state.token
 });
-
 
 export default store

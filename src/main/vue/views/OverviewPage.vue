@@ -1,8 +1,9 @@
 <template>
-    <div style="background-color: var(--whitesmoke); height: 100vh; overflow: hidden">
-        <div>
-            <Header></Header>
-        </div>
+    <div>
+
+        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+
+        <Header></Header>
 
         <!-- Page Title -->
         <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
@@ -31,13 +32,13 @@
                         <b-col>
                             <span @click="filterOpen()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filters.open"></FilterButton>
+                                              :isActive="this.filter.state === 'open'"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
                                 <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
-                                              :isActive="this.filters.closed"></FilterButton>
+                                              :isActive="this.filter.state === 'closed'"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -49,14 +50,14 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 68vh">
-                    <div v-for="envelope in this.getEnvs(this.filters.open, this.filters.closed, false)"
+                    <div v-for="envelope in this.envelopes(filter)"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeCard :envelope = envelope></EnvelopeCard>
+                            <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentCard :document = envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
+                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
                         </div>
                     </div>
                 </div>
@@ -71,12 +72,15 @@ import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
 import UploadButton from "@/main/vue/components/UploadMenu";
+import {mapGetters} from "vuex";
 import DocumentCard from "@/main/vue/components/DocumentCard";
 import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 
 export default {
     name: "OverviewPage",
     components: {
+        WelcomePopUp,
         Footer,
         Header,
         FilterButton,
@@ -87,33 +91,58 @@ export default {
     data() {
         return {
             // Needs to be replaced with API Request TODO
-            filters: {
-                open: false,
-                closed: false
-            }
+            filter: {
+                //title: "",
+                //envelopeID: 0,
+                state: null,
+                //owner: "",
+                //creationDateMin: null,
+                //creationDateMax: null,
+                //endDateMin: null,
+                //endDateMax: null,
+                //signatureType: "",
+                //datatype: "",
+                //signatories: null,
+                //readers: null,
+                //signed: null,
+                //read: null
+            },
+            pageLimit: 50,
+            page: 1,
+            sort: null
         }
     },
     methods: {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            this.filters.open = !this.filters.open;
-            if (this.filters.closed && this.filters.open) {
-                this.filters.closed = false;
+            if (this.filter.state === null || this.filter.state === "closed") {
+                this.filter.state = "open";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
         },
         filterClosed() {
-            this.filters.closed = !this.filters.closed;
-            if (this.filters.open && this.filters.closed) {
-                this.filters.open = false;
+            if (this.filter.state === null || this.filter.state === "open") {
+                this.filter.state = "closed";
+            } else {
+                this.filter.state = null;
             }
-            this.envelopes = this.getEnvs(this.filters.open, this.filters.closed, false);
+        },
+        async setLogin() {
+            await this.$store.dispatch('putFirstLogin')
+            await this.$store.dispatch('fetchUser')
         }
     },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        this.$store.dispatch('fetchUser')
+    },
     computed: {
-        getEnvs() {
-            return this.$store.getters.getEnvelopesFiltered
-        }
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getError: 'envelopes/getErrorGetEnvelopes',
+            user: 'getUser'
+        })
     }
 }
 

@@ -40,7 +40,7 @@ export const mutations = {
 export const actions = {
     // makes axios call to get information if user has already set up two fak auth, either sets hasSetUp (success) or error (error)
     fetchHasSetUp({commit}) {
-        twoFakAuthAPI.getHasSetUp().then(response => {
+        return twoFakAuthAPI.getHasSetUp().then(response => {
             commit('SET_HAS_SET_UP', response.data)
             commit('SET_ERROR_HAS_SET_UP', {})
 
@@ -51,7 +51,7 @@ export const actions = {
 
     // makes axios call to get qr code, either sets qrCode (success) or error (error)
     fetchQrCode({commit}) {
-        twoFakAuthAPI.getQrCode().then(response => {
+        return twoFakAuthAPI.getQrCode().then(response => {
             commit('SET_QR_CODE', response.data)
             commit('SET_ERROR_GET_QR_CODE', {})
         }).catch(error => {
@@ -60,7 +60,7 @@ export const actions = {
     },
 
     // makes axios call to check if qrCodeCode is correct
-    validateCode({commit}, code) {
+    validateCode({commit}, {code}) {
         return twoFakAuthAPI.postValidateCode(code).then(response => {
             commit('SET_CORRECT_INPUT', response.data)
             commit('SET_ERROR_CORRECT_INPUT', {})

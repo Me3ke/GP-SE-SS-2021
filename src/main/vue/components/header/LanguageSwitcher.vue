@@ -3,12 +3,12 @@
         <template #button-content>
             <img :src="getFlag()" class="responsive-img" :alt="$t('Header.LanguageSwitcher.language')">
         </template>
-        <b-dropdown-item @click.prevent="setLanguage('de')" class="my-dropdown-item">
+        <b-dropdown-item @click="setLanguage('de')" class="my-dropdown-item">
             <img :src="germanFlag" class="responsive-img" :alt="$t('Header.LanguageSwitcher.de')">
             <span class="letters">DE</span>
         </b-dropdown-item>
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
-        <b-dropdown-item @click.prevent="setLanguage('en')" class="my-dropdown-item">
+        <b-dropdown-item @click="setLanguage('en')" class="my-dropdown-item">
             <img :src="englishFlag" class="responsive-img" :alt="$t('Header.LanguageSwitcher.en')">
             <span class="letters">EN</span>
         </b-dropdown-item>

@@ -1,16 +1,14 @@
 package gpse.example.web;
 
-import gpse.example.domain.signature.StringToKeyConverter;
-import gpse.example.domain.users.*;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.signature.StringToKeyConverter;
+import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
 
@@ -29,9 +27,8 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
-    private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
+    //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
-
     private static final String USERID = "userID";
     private final UserService userService;
     private final PersonalDataService personalDataService;
@@ -48,12 +45,12 @@ public class UserController {
      * @param confService             ConfirmationTokenService object
      * @param personalDataService     PersonalDataService object
      * @param securitySettingsService SecuritySettingsService object
-     * @param messageService the messageService to access the message table
+     * @param messageService          the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final PersonalDataService personalDataService,
-                          final SecuritySettingsService securitySettingsService, MessageService messageService) {
+                          final SecuritySettingsService securitySettingsService, final MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
         this.personalDataService = personalDataService;
@@ -69,25 +66,25 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @PostMapping("/newUser")
-    public JSONResponseObject signUp(@RequestBody UserSignUpCmd signUpUser) {
-        JSONResponseObject response = new JSONResponseObject();
+    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) {
+        final JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
             response.setMessage("username or password not specified");
             return response;
         } else {
             try {
-                User user = userService.getUser(signUpUser.getUsername());
+                final User user = userService.getUser(signUpUser.getUsername());
 
                 response.setStatus(STATUS_CODE_USER_EXISTS_ALREADY);
                 response.setMessage("username " + user.getUsername() + " already exists");
                 return response;
             } catch (UsernameNotFoundException e) {
-                User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
+                final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
-                personalDataService.savePersonalData(personalData);
+                personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -111,11 +108,11 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @GetMapping("/newUser/register")
-    public JSONResponseObject confirmMail(@RequestParam("token") String token) {
+    public JSONResponseObject confirmMail(final @RequestParam("token") String token) {
 
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
 
-        Optional<ConfirmationToken> optionalConfirmationToken
+        final Optional<ConfirmationToken> optionalConfirmationToken
             = confirmationTokenService.findConfirmationTokenByToken(token);
 
         if (optionalConfirmationToken.isEmpty()) {
@@ -152,14 +149,15 @@ public class UserController {
 
     /**
      * Method to validate an useraccount by admin.
+     *
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
     @GetMapping("/user/{userID}/validate/")
-    public JSONResponseObject adminUserValidation(@PathVariable("userID") final String username) {
+    public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
-        JSONResponseObject response = new JSONResponseObject();
-        User user = userService.getUser(username);
+        final JSONResponseObject response = new JSONResponseObject();
+        final User user = userService.getUser(username);
         userService.validateUser(user);
 
         if (user.isAdminValidated()) {
@@ -176,33 +174,45 @@ public class UserController {
     }
 
     @GetMapping("/user/{userID}")
-    public User showUser(@PathVariable(USERID) final String username) {
-        return userService.getUser(username);
+    public UserResponseObject showUser(@PathVariable(USERID) final String username) {
+        return new UserResponseObject(userService.getUser(username));
+    }
+
+    /**
+     * The method used to signalize that a user has been through his first login.
+     *
+     * @param username the ID of the user
+     * @return the respone with statuscode 200
+     */
+    @PutMapping("/user/{userID}/firstLogin")
+    public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setFirstLogin(true);
+        userService.saveUser(user);
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     /**
      * Put request to change the public key of the user.
      *
      * @param publicKeyCmd contains the public key in a String format
-     * @param username the identifier of the user account that needs to be updated
+     * @param username     the identifier of the user account that needs to be updated
      * @return returns a JSONResponseObject that contains status code.
      */
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
-                                @RequestBody final PublicKeyCmd publicKeyCmd) {
-        JSONResponseObject response = new JSONResponseObject();
-        try {
-            userService.getUser(username).setPublicKey(stringToKeyConverter.convertString(publicKeyCmd.getPublicKey()));
-            response.setStatus(STATUS_CODE_OK);
-            return response;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            response.setStatus(STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED);
-            return response;
-        }
+                                              @RequestBody final PublicKeyCmd publicKeyCmd) {
+        final JSONResponseObject response = new JSONResponseObject();
+        userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
+        userService.saveUser(userService.getUser(username));
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
-    public boolean checkForTwoFAConfiguration(@PathVariable("userID") final String username) {
+    public boolean checkForTwoFAConfiguration(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().getSecret() != null;
     }
 
@@ -215,10 +225,11 @@ public class UserController {
     @GetMapping("/user/{userID}/settings/qrCode")
     public QrCodeGetResponse getQRCode(@PathVariable(USERID) final String username) {
         try {
-            SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+            final SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
             securitySettings.generateSecret();
-            byte[] temp = securitySettings.generateQRCode(username);
+            final byte[] temp = securitySettings.generateQRCode(username);
             securitySettingsService.saveSecuritySettings(securitySettings);
+            userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
             e.printStackTrace();
@@ -234,8 +245,14 @@ public class UserController {
      * @return true/false
      */
     @PostMapping("/user/{userID}/settings/qrCodeCode")
-    public Boolean validateCode(@PathVariable("userID") final String username,
+    public Boolean validateCode(@PathVariable(USERID) final String username,
                                 @RequestBody final AuthCodeValidationRequest code) throws CodeGenerationException {
         return userService.getUser(username).getSecuritySettings().verifyCode(code.getQrCodeCode());
     }
+
+    @GetMapping("/user/{userID}/settings/PKconfigurated")
+    public Boolean checkIfKeyIsConfigurated(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getPublicKey() != null;
+    }
+
 }

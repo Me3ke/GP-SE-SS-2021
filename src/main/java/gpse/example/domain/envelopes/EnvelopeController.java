@@ -62,13 +62,13 @@ public class EnvelopeController {
      * @throws UploadFileException if the envelope could not be uploaded.
      */
 
-    @PostMapping("/user/{userID}/envelopes/envelopes")
-    public Envelope createEnvelope(final @PathVariable(USER_ID) String ownerID,
+    @PostMapping("/user/{userID}/envelopes")
+    public EnvelopeGetResponse createEnvelope(final @PathVariable(USER_ID) String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return envelope;
+            Envelope envelope = envelopeService.addEnvelope(name, owner);
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -82,12 +82,12 @@ public class EnvelopeController {
      * @param documentPutRequest the command object keeping the information for a document to be created
      * @return the envelope in which the document was added to.
      */
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
         JSONResponseObject response = new JSONResponseObject();
-        System.out.println(documentPutRequest.getEndDate());
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             if (!envelope.getOwnerID().equals(ownerID)) {
@@ -116,6 +116,7 @@ public class EnvelopeController {
      * @return the response object
      * @throws DocumentNotFoundException if the envelope was not found.
      */
+
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public EnvelopeGetResponse getEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String userID)
@@ -156,15 +157,13 @@ public class EnvelopeController {
      * them using the filter method.
      *
      * @param userID  the id of the user doing the request.
-     * @param request the Request object which keeps the filter data.
      * @return the filtered envelope list.
      */
+
     @GetMapping("/user/{userID}/envelopes")
-    public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID,
-                                                     final @RequestBody EnvelopeGetRequest request) {
+    public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
         final User currentUser = userService.getUser(userID);
         List<Envelope> envelopeList = envelopeService.getEnvelopes();
-        envelopeList = filter(request, envelopeList);
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());

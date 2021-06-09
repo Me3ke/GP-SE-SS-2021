@@ -3,9 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.signature.ProtoSignatory;
-import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.*;
 import gpse.example.domain.users.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +20,20 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository repo;
     private final DocumentMetaDataService documentMetaDataService;
+    private final AdvancedSignatureRepository advancedSignatureRepository;
     private final DocumentCreator documentCreator = new DocumentCreator();
 
+    /**
+     * the standard constructor for documentServices.
+     * @param repo the documentRepository initialized by Spring
+     * @param documentMetaDataService the documentMetaDataService initialized by Spring
+     * @param advancedSignatureRepository the advancedSignatureRepository initialized by Spring
+     */
     @Autowired
-    public DocumentServiceImpl(final DocumentRepository repo, final DocumentMetaDataService documentMetaDataService) {
+    public DocumentServiceImpl(final DocumentRepository repo, final DocumentMetaDataService documentMetaDataService,
+                               final AdvancedSignatureRepository advancedSignatureRepository) {
         this.documentMetaDataService = documentMetaDataService;
+        this.advancedSignatureRepository = advancedSignatureRepository;
         this.repo = repo;
     }
 
@@ -53,12 +60,22 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public List<AdvancedSignature> saveSignatures(final Document document) {
+        List<AdvancedSignature> saved = new ArrayList<>();
+        List<AdvancedSignature> signatures = document.getAdvancedSignatures();
+        for (AdvancedSignature signature : signatures) {
+            saved.add(advancedSignatureRepository.save(signature));
+        }
+        return saved;
+    }
+
+    @Override
     public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
                               final UserServiceImpl userService, final SignatoryServiceImpl signatoryService)
                                 throws CreatingFileException, IOException {
-        final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatoriesID();
+        final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatoriesID);
+            ownerID, signatoriesID, userService);
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);

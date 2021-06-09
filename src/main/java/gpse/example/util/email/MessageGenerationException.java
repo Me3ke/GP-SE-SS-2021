@@ -9,7 +9,7 @@ public class MessageGenerationException extends Exception {
     public static final long serialVersionUID = 25;
     private final long thrownByMessageID;
 
-    public MessageGenerationException(long messageID) {
+    public MessageGenerationException(final long messageID) {
         super();
         thrownByMessageID = messageID;
     }

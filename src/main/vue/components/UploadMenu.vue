@@ -15,7 +15,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
                                     <h5>
-                                        <b-icon type="button" icon="x-square" @click="show = false; page = 1">
+                                        <b-icon type="button" icon="x-square" @click="show = false; close()">
                                         </b-icon>
                                     </h5>
                                 </div>
@@ -33,12 +33,12 @@
 
                                     <!-- Page 2 -->
                                     <div v-if="page === 2">
-                                        <button type="button" class="light-btn" @click="newEnv = false; page = page +1">
+                                        <button type="button" class="light-btn" @click="newEnv = false; page = page +1; selectedEnv.new = null;">
                                             <h5>
                                                 {{$t('UploadDoc.selectEnv')}}
                                             </h5>
                                         </button>
-                                        <button type="button" class="light-btn" @click="newEnv = true; page = page +1">
+                                        <button type="button" class="light-btn" @click="newEnv = true; page = page +1; selectedEnv.old = null;">
                                             <h5>
                                                 {{$t('UploadDoc.newEnv')}}
                                             </h5>
@@ -51,7 +51,7 @@
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
                                                 <select class="form-control" id="selectEnvelope" v-model="selectedEnv.old">
-                                                    <option v-for="envelope in getEnvs(false, false, true)" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
+                                                    <option v-for="envelope in this.envelopes({state: null})" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -103,6 +103,7 @@
                                 <div class="modal-footer">
                                     <b-container fluid>
                                         <b-row align-h="between">
+
                                             <b-col cols="5">
                                                 <div class="mt-3"> {{$t('UploadDoc.selectedDoc')}} {{ fileInput ? fileInput.name : '' }}</div>
                                             </b-col>
@@ -115,6 +116,7 @@
                                                                 {{$t('UploadDoc.close')}}
                                                             </h5>
                                                         </button>
+
                                                         <button type="button" class="elsa-blue-btn" @click="page = page + 1">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
@@ -129,6 +131,7 @@
                                                             </h5>
                                                         </button>
                                                     </div>
+
                                                     <!-- Page 3 -->
                                                     <div v-if="page === 3">
                                                         <button type="button" class="light-btn" @click="page = page - 1">
@@ -136,7 +139,7 @@
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1; validateEnvelope()">
+                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1;">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
                                                             </h5>
@@ -182,6 +185,7 @@ import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
 //import {mapActions} from "vuex";
 import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {mapGetters} from "vuex";
 export default {
     name: 'UploadButton',
     props: {
@@ -214,39 +218,39 @@ export default {
     },
     methods: {
         close() {
+            this.show = false;
             this.page = 1;
-            this.file = null;
+            this.fileInput = null;
+            this.file.data = null;
+            this.file.type = null;
+            this.file.name = null;
             this.selectedEnv.old = null;
             this.selectedEnv.new = null;
-            this.settings.signatories = null;
-            this.settings.readers = null;
+            this.settings.signatories = [];
+            this.settings.readers = [];
             this.settings.endDate = null;
-            this.settings.orderRelevantReaders = null;
-            this.settings.orderRelevantSignatories = null;
+            this.settings.orderRelevant = null;
             this.settings.review = null;
         },
         back() {
             this.selectedEnv.old = null;
             this.selectedEnv.new = null;
         },
-        validateEnvelope() {
-            if (this.selectedEnv.old === null && this.selectedEnv.new === null) {
-                //TODO: ERROR
-            }
-        },
         async upload() {
+            //TODO: Convert readers into signatories and concat arrays
+            //TODO: Error-handling
+            this.file.name = this.fileInput.name.split('.')[0];
+            this.file.type = this.fileInput.name.split('.')[1];
+            this.file.data = await this.asyncHandleFunction(this.fileInput);
+            this.settings.endDate = this.settings.endDate + ' 12:00';
+            console.log(this.settings.signatories);
             if (!(this.selectedEnv.old === null)) {
-                //TODO: Convert readers into signatories and concat arrays
-                this.file.name = this.fileInput.name.split('.')[0];
-                this.file.type = this.fileInput.name.split('.')[1];
-                this.file.data = await this.asyncHandleFunction(this.fileInput);
-                this.settings.endDate = this.settings.endDate + ' 12:00';
-                console.log(this.settings.endDate);
-                //this.uploadDocument(this.selectedEnv.old, this.file, this.settings);
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings})
-                console.log("Done");
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
+                this.close();
             } else if (!(this.selectedEnv.new === null)) {
-                //TODO: Post new Envelope then put document
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
+                this.close();
             } else {
                 //TODO: ERROR
             }
@@ -257,13 +261,16 @@ export default {
         // convert the file into an base64 string
         async asyncHandleFunction(file) {
             return await convertUploadFileToBase64(file)
-        },
-        //...mapActions({uploadDocument: 'documentUpload/uploadDocument'})
+        }
+    },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
     },
     computed: {
-        getEnvs() {
-            return this.$store.getters.getEnvelopesFiltered
-        }
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
+        })
     }
 }
 </script>
@@ -302,5 +309,14 @@ export default {
 
 .elsa-blue-btn:focus, .light-btn:focus {
     border: 0.03vw solid var(--dark-grey);
+}
+
+.grey-btn {
+    background-color: var(--light-grey);
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
 }
 </style>
