@@ -52,9 +52,7 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
-    @Lazy
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
+
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -169,18 +167,7 @@ public class DocumentController {
                 userService, signatoryService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
-            if(!newDocument.isOrderRelevant()){
-                for(int i = 0; i < newDocument.getSignatories().size(); i++) {
-                    smtpServerHelper.sendSignatureInvitation(newDocument.getSignatories().get(i).getUser().getEmail(),
-                        userService.getUser(newDocument.getOwner()),
-                        newDocument.getSignatories().get(i).getUser().getLastname(), newDocument
-                    );
-                }
-            } else {
-                smtpServerHelper.sendSignatureInvitation(newDocument.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(newDocument.getOwner()),
-                    newDocument.getCurrentSignatory().getUser().getLastname(), newDocument);
-            }
+
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);

@@ -5,7 +5,10 @@ import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +34,9 @@ public class EnvelopeController {
     private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
     private final DocumentCreator documentCreator = new DocumentCreator();
-
+    @Lazy
+    @Autowired
+    private SMTPServerHelper smtpServerHelper;
     /**
      * The default constructor for an envelope Controller.
      *
@@ -88,8 +93,20 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
+            if(!document.isOrderRelevant()){
+                for(int i = 0; i < document.getSignatories().size(); i++) {
+                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
+                        userService.getUser(document.getOwner()),
+                        document.getSignatories().get(i).getUser().getLastname(), document
+                    );
+                }
+            } else {
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                    userService.getUser(document.getOwner()),
+                    document.getCurrentSignatory().getUser().getLastname(), document);
+            }
             return envelopeService.updateEnvelope(envelope, document);
-        } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
+        } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException | MessageGenerationException e) {
             throw new UploadFileException(e);
         }
     }
