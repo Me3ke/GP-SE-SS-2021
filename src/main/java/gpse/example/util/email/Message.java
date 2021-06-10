@@ -45,6 +45,7 @@ public class Message {
      */
     public SimpleMailMessage generateMessage() throws MessageGenerationException {
         final SimpleMailMessage message = new SimpleMailMessage();
+
         if (sendingUser == null) {
             message.setFrom("System");
         } else {

@@ -178,7 +178,7 @@ buildNumber.properties
 node
 
 # Package
-package-lock.json
+# package-lock.json
 # Logs
 logs
 npm-debug.log*
@@ -334,6 +334,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# dataBase
+
+./data
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,maven,windows,linux,macos,vuejs,node
 

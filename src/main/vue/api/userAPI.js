@@ -63,5 +63,12 @@ export default {
                 }
             }
         )
+    },
+    // signals that user has been logged in for the first time
+    async putFirstLogin() {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/firstLogin'
+        })
     }
 }

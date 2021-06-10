@@ -56,9 +56,9 @@
         "toRead2": "",
         "toSignRead1": "Read and sign until",
         "toSignRead2": "",
-        "envReadSign": "There are documents to sign or read",
-        "envRead": "There are documents to read",
-        "envSign": "There are documents to sign"
+        "envReadSign": "Read and sign",
+        "envRead": "Read",
+        "envSign": "Sign"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -267,6 +267,14 @@
                 "text": "Protocol availability",
                 "exp": "Get website alerts about the availability of document protocols."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Edit all documents in the envelope",
+            "addSignatory": "Add signatories",
+            "placeholderMail": "Signatory@mail.de",
+            "signatory": "Signatory",
+            "addReader": "Add proofreader",
+            "reader": "Proofreaders"
         }
     },
     "UploadDoc": {
@@ -278,7 +286,16 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+        "addReaders": "Add proofreaders",
+        "skipReview": "Skip review process",
+        "chooseDate": "Chose deadline",
+        "orderRelevant": "Order relevant",
+        "selectedDoc": "File: ",
+        "chooseFile": "Choose a file or drop it here...",
+        "simple": "Simple",
+        "advanced": "Advanced",
+        "signatureType": "Signaturetype"
     },
     "DownloadDoc": {
         "download": "Download",
@@ -317,9 +334,9 @@
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
         "fail": "Login failed.",
-        "resetPassword" : "reset Password",
-        "send" : "send",
-        "reset" :"To reset your password, you will receive an e-mail containing a reset link."
+        "resetPassword": "reset Password",
+        "send": "send",
+        "reset": "To reset your password, you will receive an e-mail containing a reset link."
     },
     "Register": {
         "email": "e-mail",
@@ -342,16 +359,25 @@
         "login": "go to login"
     },
     "KeypairAlert": {
-        "generate": "Generate Keypair",
-        "upload": "Upload Keypair",
-        "selectOption": "Select option",
-        "cancelText": "Cancel",
-        "forceChoose": "You need to choose something!",
-        "warning": "Warning",
-        "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
-        "continueText": "Continue",
+        "title": "Set up your keypair",
+        "choose": "Do you want to upload your own keypair or generate one?",
+        "generate": "Generate",
+        "upload": "Upload ",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "close": "Close",
+        "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
+        "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
+        "cancelWarningTwo": "your keypair via the settings page.",
+        "privateKey": "Copy your private key and save it to a .txt file.",
+        "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
-        "uploadText": "Uploading"
+        "uploadHere": "Upload your public key here.",
+        "uploadHereExp": "Accepted are files that end on .txt. The key has to have 1024 characters",
+        "placeholder": "Drop key here or choose",
+        "dropPlaceholder": "Drop here",
+        "success": "You have successfully uploaded your public key!",
+        "successWarning": "Do not loose the corresponding private key!"
     },
     "TwoFakAuth": {
         "cancel": "Cancel",
@@ -362,7 +388,7 @@
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
         "fail": "There appear to be server problems. Error Code: ",
         "login": {
-            "title": "Set-up your two-factor authentication",
+            "title": "Set up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
             "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
             "always": "Enable two-factor authentication for every login",
@@ -403,6 +429,25 @@
             "sureMulti": "Are you sure you want to proofread the following documents?",
             "success": "You have successfully proofread!",
             "sure": "Are you sure you want to cancel the process?"
+        }
+    },
+    "wizard": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "back": "Back",
+        "welcome": {
+            "welcome": "Welcome to ELSA!",
+            "toDo": "I'm Elsa. I'm going to help you use this page in the best way possible. Let's start be setting up some important elements for giving signatures.",
+            "2FakAuth": "Step 1: Two-factor authentication",
+            "2FakAuthExp": "A second factor used to confirm your identity will prevent people from using your computer in order to sign under your name.",
+            "setUp": "Set up",
+            "keypair": "Step 2: Keypair",
+            "keypairExp": "Another key element to keep your identity and signature save, because you are they only one that knows your private key.",
+            "done": "It is done!",
+            "fun": "You have successfully set up everything you need in order to use ELSA to its fullest.",
+            "go": "Let's go",
+            "cancelWarningOne": "If you cancel now you cannot use ELSA completely ",
+            "cancelWarningTwo": "without setting up every necessary element via the settings page."
         }
     }
 }

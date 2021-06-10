@@ -34,9 +34,9 @@ export const actions = {
         commit('SET_KEYPAIR', generateKeyPair());
     },
     sendPublicKey({commit}, {publicKey}) {
-        api.publicKeyAPI.changePublicKey(publicKey).then(
+        return api.publicKeyAPI.changePublicKey(publicKey).then(() => {
             commit('SET_SENDING_SUCCESS', {})
-        ).catch(error => {
+        }).catch(error => {
             commit('SET_SENDING_SUCCESS', error)
         })
     },
