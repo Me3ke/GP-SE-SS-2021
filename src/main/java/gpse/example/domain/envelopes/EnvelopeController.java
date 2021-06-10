@@ -93,12 +93,11 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            if(!document.isOrderRelevant()){
-                for(int i = 0; i < document.getSignatories().size(); i++) {
+            if (!document.isOrderRelevant()) {
+                for (int i = 0; i < document.getSignatories().size(); i++) {
                     smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
                         userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document
-                    );
+                        document.getSignatories().get(i).getUser().getLastname(), document);
                 }
             } else {
                 smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
@@ -106,7 +105,8 @@ public class EnvelopeController {
                     document.getCurrentSignatory().getUser().getLastname(), document);
             }
             return envelopeService.updateEnvelope(envelope, document);
-        } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException | MessageGenerationException e) {
+        } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
+            | MessageGenerationException e) {
             throw new UploadFileException(e);
         }
     }

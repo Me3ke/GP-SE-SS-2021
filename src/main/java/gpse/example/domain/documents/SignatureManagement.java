@@ -29,8 +29,14 @@ public class SignatureManagement {
     private final UserService userService;
 
     @Autowired
-    SMTPServerHelper smtpServerHelper;
+    private SMTPServerHelper smtpServerHelper;
 
+    /**
+     * constructor of Signature management.
+     * @param givenSignatoryService signatoryservice
+     * @param givenDocumentService documentservice
+     * @param givenUserService userservice
+     */
     public SignatureManagement(final SignatoryService givenSignatoryService,
                                final DocumentService givenDocumentService, final UserService givenUserService) {
         signatoryService = givenSignatoryService;
