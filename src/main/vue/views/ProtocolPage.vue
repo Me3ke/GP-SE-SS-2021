@@ -22,7 +22,8 @@
         </div>
 
         <div v-else>
-            <PDFViewer :pdf-src=getProtocol() :overflow="showOverflow" @openDownload="toggleDownload()"></PDFViewer>
+            <PDFViewer v-if="showPdf" :pdf-src=getProtocol() :overflow="showOverflow"
+                       @openDownload="toggleDownload()"></PDFViewer>
         </div>
 
         <Footer></Footer>
@@ -50,14 +51,20 @@ export default {
         return {
             turtle: require('../assets/turtle.svg'),
             showOverflow: true,
-            showDownload: false
+            showDownload: false,
+            showPdf: false
         }
     },
-    created() {
-        this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
+    async created() {
+        await this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
+    },
+    async mounted() {
+        await this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
+        this.showPdf = true
     },
     methods: {
         getProtocol() {
+            console.log(this.protocol)
             let chars = atob(this.protocol);
             let array = new Uint8Array(chars.length);
             for (let i = 0; i < chars.length; i++) {

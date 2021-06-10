@@ -37,6 +37,10 @@ public class User implements UserDetails {
     @Column
     private String lastname;
 
+    @Column
+    // false: user has not had a first login yet; true: user has had a first login
+    private boolean firstLogin;
+
     //@OneToMany
     //private List<Keys> keys = new ArrayList<>();
 
@@ -86,6 +90,7 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = false;
         this.adminValidated = false;
+        this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
     }
 
@@ -308,5 +313,13 @@ public class User implements UserDetails {
 
     public void setSecuritySettings(final SecuritySettings securitySettings) {
         this.securitySettings = securitySettings;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 }

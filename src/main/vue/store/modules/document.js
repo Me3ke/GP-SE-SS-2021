@@ -81,7 +81,7 @@ export const mutations = {
 export const actions = {
     // makes axios call to get document, either sets document (success) or error (error)
     fetchDocument({commit}, {envId, docId}) {
-        documentAPI.getDocument(envId, docId).then(response => {
+        return documentAPI.getDocument(envId, docId).then(response => {
             commit('SET_DOCUMENT', response.data)
             commit('SET_ERROR_GET_DOCUMENT', {})
         }).catch(error => {
@@ -90,7 +90,7 @@ export const actions = {
     },
     // makes axios call to get protocol of document, either sets protocol (success) or error (error)
     fetchProtocol({commit}, {docId}) {
-        documentAPI.getProtocol(docId).then(response => {
+        return documentAPI.getProtocol(docId).then(response => {
             commit('SET_PROTOCOL', response.data)
             commit('SET_ERROR_GET_PROTOCOL', {})
         }).catch(error => {

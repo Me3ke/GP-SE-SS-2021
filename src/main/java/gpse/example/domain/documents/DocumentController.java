@@ -13,12 +13,12 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,17 +40,19 @@ public class DocumentController {
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
+    private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
+    private static final int STATUS_CODE_OK = 200;
+    private static final int STATUS_CODE_WRONG_USER = 450;
+    private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final int STATUS_CODE_INVALID_SIGNATURE = 456;
-    private static final int STATUS_CODE_OK = 200;
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
-
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -141,6 +143,7 @@ public class DocumentController {
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
 
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentPutResponse uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                                         final @PathVariable(USER_ID) String ownerID,
@@ -195,6 +198,7 @@ public class DocumentController {
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
+
     //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
@@ -294,5 +298,31 @@ public class DocumentController {
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
+    }
+
+    /**
+     * Put request for changing documentsettings.
+     * @param documentID id of the document that should be changed
+     * @param documentSettingsCMD Container for the relevant settings
+     * @return JsonResponse containing statuscode
+     */
+    @PutMapping("/document/{documentID}/settings")
+    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        JSONResponseObject response = new JSONResponseObject();
+        try {
+            Document document = documentService.getDocument(documentID);
+            document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
+            document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setSignatories(documentSettingsCMD.getSignatories());
+
+            Document savedDoc = documentService.addDocument(document);
+
+            response.setStatus(STATUS_CODE_OK);
+        } catch (DocumentNotFoundException e) {
+            response.setStatus(STATUS_CODE_DOCUMENT_NOT_FOUND);
+            response.setMessage("Document not found.");
+        }
+        return response;
     }
 }

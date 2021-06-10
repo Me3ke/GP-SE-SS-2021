@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException {
         smtpServerHelper.sendRegistrationEmail(user,
-            "http://localhost:8080/register/confirm/" + token);
+            "http://localhost:8080/de/register/confirm/" + token);
     }
 
     @Override

@@ -21,22 +21,21 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public List<Signatory> saveSignatories(final List<Signatory> signatories) {
-        /*List<Signatory> signatories1 = new ArrayList<>();
-        for (final Signatory signatory : signatories) {
-            signatories1.add(signatoryRepository.save(signatory));
+        /*for (final Signatory signatory : signatories) {
+            signatoryRepository.save(signatory);
         }
-        return signatories1;*/
-
-
-
+        return signatories;
+         */
         return signatories;
     }
 
     @Override
-    public void delete(final List<Signatory> signatories) {
-        /*for (Signatory signatory : signatories) {
+    public  void delete(final List<Signatory> signatories) {
+        /*for (final Signatory signatory : signatories) {
             signatoryRepository.deleteById(signatory.getId());
-        }*/
+        }
+         */
+
     }
     @Override
     public Signatory saveSignatory(final Signatory signatory) {

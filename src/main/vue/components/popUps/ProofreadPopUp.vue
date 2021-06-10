@@ -36,15 +36,16 @@
                                         </b-alert>
 
                                         <!-- Review Prompt -->
-                                        <div class="step" v-if="documents.length === 1">
+                                        <div class="step" v-if="documents.length === 1"
+                                             style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.read.sureOne') }}
                                         </div>
 
-                                        <div class="step" v-else>
+                                        <div class="step" v-else style="justify-content: left; text-align: left">
                                             {{ $t('TwoFakAuth.read.sureMulti') }}
                                         </div>
 
-                                        <div class="content-div">
+                                        <div class="content-div" style="justify-content: left; text-align: left">
                                             <ul>
                                                 <li v-for="(document, idx) in documents" :key="idx">
                                                     {{ document.title }}

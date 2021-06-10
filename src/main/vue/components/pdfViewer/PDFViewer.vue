@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="show">
         <b-container id="container">
 
             <!-- TODO : test with a big document if it is working -->
@@ -115,23 +115,27 @@ export default {
             pageCount: 0,
             loading: 0,
             pageMode: true,
-            zoom: 100
+            zoom: 100,
+            show: false
         }
     },
-    created() {
-        this.newSrc()
+    async mounted() {
+        this.src = await pdf.createLoadingTask(this.pdfSrc)
+        await this.src.promise.then(pdf => {
+            this.pageCount = pdf.numPages
+        })
+        this.show = true
     },
     methods: {
         changeMode() {
+            this.src = pdf.createLoadingTask(this.pdfSrc)
             this.newSrc()
             this.pageMode = !this.pageMode
-        },
-        changeZoom(val) {
+        }, changeZoom(val) {
             this.zoom += val
             this.newSrc()
         },
         newSrc() {
-            this.src = pdf.createLoadingTask(this.pdfSrc)
             this.src.promise.then(pdf => {
                 this.pageCount = pdf.numPages;
             });
@@ -141,6 +145,9 @@ export default {
         style() {
             return 'width: ' + this.zoom + '%'
         }
+    },
+    beforeDestroy() {
+        this.src._worker.destroy()
     }
 }
 </script>

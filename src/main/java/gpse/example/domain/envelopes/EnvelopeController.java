@@ -5,6 +5,7 @@ import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class EnvelopeController {
 
     private static final String USER_ID = "userID";
     private static final String ENVELOPE_ID = "envelopeID";
+    private static final int FORBIDDEN = 403;
+    private static final int INTERNAL_ERROR = 500;
+    private static final int STATUS_CODE_OK = 200;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -35,10 +39,10 @@ public class EnvelopeController {
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService the envelopeService
-     * @param userService the userService
+     * @param envelopeService  the envelopeService
+     * @param userService      the userService
      * @param signatoryService the signatoryService
-     * @param documentService the documentService
+     * @param documentService  the documentService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -57,13 +61,14 @@ public class EnvelopeController {
      * @return the new envelope.
      * @throws UploadFileException if the envelope could not be uploaded.
      */
-    @PostMapping("/user/{userID}/envelopes/envelopes")
-    public Envelope createEnvelope(final @PathVariable(USER_ID) String ownerID,
+
+    @PostMapping("/user/{userID}/envelopes")
+    public EnvelopeGetResponse createEnvelope(final @PathVariable(USER_ID) String ownerID,
                                    final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return envelope;
+            Envelope envelope = envelopeService.addEnvelope(name, owner);
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -76,21 +81,30 @@ public class EnvelopeController {
      * @param ownerID            the email of the document creator
      * @param documentPutRequest the command object keeping the information for a document to be created
      * @return the envelope in which the document was added to.
-     * @throws UploadFileException if the document could not be uploaded.
      */
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
-    public Envelope fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                 final @PathVariable(USER_ID) String ownerID,
-                                 final @RequestBody DocumentPutRequest documentPutRequest)
-        throws UploadFileException {
+    public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                           final @PathVariable(USER_ID) String ownerID,
+                                           final @RequestBody DocumentPutRequest documentPutRequest) {
+        JSONResponseObject response = new JSONResponseObject();
         try {
-            userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+            if (!envelope.getOwnerID().equals(ownerID)) {
+                response.setStatus(FORBIDDEN);
+                response.setMessage("Forbidden. Not permitted to upload document.");
+                return response;
+            }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
-            return envelopeService.updateEnvelope(envelope, document);
+            envelopeService.updateEnvelope(envelope, document);
+            response.setStatus(STATUS_CODE_OK);
+            response.setMessage("Success");
+            return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
-            throw new UploadFileException(e);
+            response.setStatus(INTERNAL_ERROR);
+            response.setMessage("The document could not be uploaded.");
+            return response;
         }
     }
 
@@ -102,6 +116,7 @@ public class EnvelopeController {
      * @return the response object
      * @throws DocumentNotFoundException if the envelope was not found.
      */
+
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}")
     public EnvelopeGetResponse getEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String userID)
@@ -116,8 +131,8 @@ public class EnvelopeController {
      * The downloadEnvelope method downloads an envelope with all documents.
      *
      * @param envelopeID the id of the envelope to be downloaded.
-     * @param userID the id of the user doing the request.
-     * @param path the path where the envelope should be downloaded.
+     * @param userID     the id of the user doing the request.
+     * @param path       the path where the envelope should be downloaded.
      * @return the response object
      * @throws DownloadFileException if the download was not successful.
      */
@@ -142,15 +157,13 @@ public class EnvelopeController {
      * them using the filter method.
      *
      * @param userID  the id of the user doing the request.
-     * @param request the Request object which keeps the filter data.
      * @return the filtered envelope list.
      */
+
     @GetMapping("/user/{userID}/envelopes")
-    public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID,
-                                                     final @RequestBody EnvelopeGetRequest request) {
+    public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
         final User currentUser = userService.getUser(userID);
         List<Envelope> envelopeList = envelopeService.getEnvelopes();
-        envelopeList = filter(request, envelopeList);
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
