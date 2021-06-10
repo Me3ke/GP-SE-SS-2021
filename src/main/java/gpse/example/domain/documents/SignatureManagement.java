@@ -189,6 +189,13 @@ public class SignatureManagement {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
             documentService.addDocument(document);
+
+            if (document.getState() != DocumentState.CLOSED) {
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                    userService.getUser(document.getOwner()),
+                    document.getCurrentSignatory().getUser().getLastname(), document);
+            }
+
             response.setStatus(STATUS_CODE_OK);
             return response;
         } else {
@@ -200,18 +207,14 @@ public class SignatureManagement {
     }
 
     private void checkIfClosed(final Document document, final List<Signatory> signatories,
-                               final JSONResponseObject response, final Signatory currentReader)
-                throws MessageGenerationException {
+                               final JSONResponseObject response, final Signatory currentReader) {
 
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
             document.setState(DocumentState.CLOSED);
             response.setMessage("Document is now closed.");
-        } else {
-            smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                userService.getUser(document.getOwner()),
-                document.getCurrentSignatory().getUser().getLastname(), document);
         }
     }
+
 
     private boolean matchesSignatory(final User reader, final Signatory currentReader,
                                      final SignatureType signatureType) {
