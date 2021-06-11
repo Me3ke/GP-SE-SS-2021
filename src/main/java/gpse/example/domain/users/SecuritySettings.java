@@ -37,6 +37,13 @@ public class SecuritySettings implements Serializable {
     @Column
     private String secret;
 
+    @Column
+    private boolean twoFactorLogin;
+
+    public SecuritySettings() {
+        this.twoFactorLogin = false;
+    }
+
     public void generateSecret() {
         final SecretGenerator secretGenerator = new DefaultSecretGenerator(SECRET_GENERATOR_NUMBER);
         this.secret = secretGenerator.generate();
@@ -86,5 +93,13 @@ public class SecuritySettings implements Serializable {
 
     public PublicKey getPublicKey() {
         return publicKey;
+    }
+
+    public boolean isTwoFactorLogin() {
+        return twoFactorLogin;
+    }
+
+    public void setTwoFactorLogin(boolean twoFactorLogin) {
+        this.twoFactorLogin = twoFactorLogin;
     }
 }

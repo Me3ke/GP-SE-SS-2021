@@ -255,4 +255,14 @@ public class UserController {
         return userService.getUser(username).getPublicKey() != null;
     }
 
+    @PutMapping("/user/{userID}/settings/twoFactorLogin")
+    public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
+                                         @RequestBody final  Boolean setting) {
+        userService.getUser(username).getSecuritySettings().setTwoFactorLogin(setting);
+    }
+
+    @GetMapping("/user/{userID}/settings/twoFactorLogin")
+    public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
+    }
 }
