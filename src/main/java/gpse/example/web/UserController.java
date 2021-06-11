@@ -173,6 +173,19 @@ public class UserController {
         return userService.getUser(username).getPersonalData();
     }
 
+    /**
+     * the request handling for changing personal data.
+     * @param personalData the new personal data of the user stating the request
+     * @param username the username of the user stating the request
+     */
+    @PutMapping("user/{userID}/personal")
+    public void setPersonalData(@RequestBody final PersonalData personalData,
+                                @PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setPersonalData(personalData);
+        userService.saveUser(user);
+    }
+
     @GetMapping("/user/{userID}")
     public UserResponseObject showUser(@PathVariable(USERID) final String username) {
         return new UserResponseObject(userService.getUser(username));
@@ -255,10 +268,17 @@ public class UserController {
         return userService.getUser(username).getPublicKey() != null;
     }
 
+    /**
+     * The request handler for the settings regarding a two-factor-login.
+     * @param username the username of the user stating the request
+     * @param setting true if the user wants a two-factor-login, false if not
+     */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
                                          @RequestBody final  Boolean setting) {
-        userService.getUser(username).getSecuritySettings().setTwoFactorLogin(setting);
+        SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+        securitySettings.setTwoFactorLogin(setting);
+        securitySettingsService.saveSecuritySettings(securitySettings);
     }
 
     @GetMapping("/user/{userID}/settings/twoFactorLogin")
