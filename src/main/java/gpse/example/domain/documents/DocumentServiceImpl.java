@@ -18,60 +18,43 @@ import java.util.List;
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
-    private final DocumentRepository repo;
-    private final DocumentMetaDataService documentMetaDataService;
-    private final AdvancedSignatureRepository advancedSignatureRepository;
+    private final DocumentRepository documentRepository;
     private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * the standard constructor for documentServices.
-     * @param repo the documentRepository initialized by Spring
-     * @param documentMetaDataService the documentMetaDataService initialized by Spring
-     * @param advancedSignatureRepository the advancedSignatureRepository initialized by Spring
+     * @param documentRepository the documentRepository initialized by Spring
      */
     @Autowired
-    public DocumentServiceImpl(final DocumentRepository repo, final DocumentMetaDataService documentMetaDataService,
-                               final AdvancedSignatureRepository advancedSignatureRepository) {
-        this.documentMetaDataService = documentMetaDataService;
-        this.advancedSignatureRepository = advancedSignatureRepository;
-        this.repo = repo;
+    public DocumentServiceImpl(final DocumentRepository documentRepository) {
+        this.documentRepository = documentRepository;
     }
 
     @Override
     public Document getDocument(final long id) throws DocumentNotFoundException {
-        return repo.findById(id).orElseThrow(DocumentNotFoundException::new);
+        return documentRepository.findById(id).orElseThrow(DocumentNotFoundException::new);
     }
 
     @Override
     public List<Document> getDocuments() {
         final List<Document> documents = new ArrayList<>();
-        repo.findAll().forEach(documents :: add);
+        documentRepository.findAll().forEach(documents :: add);
         return documents;
     }
 
     @Override
     public void remove(final Document document) {
-        repo.delete(document);
+        documentRepository.delete(document);
     }
 
     @Override
     public Document addDocument(final Document document) {
-        return repo.save(document);
-    }
-
-    @Override
-    public List<AdvancedSignature> saveSignatures(final Document document) {
-        List<AdvancedSignature> saved = new ArrayList<>();
-        List<AdvancedSignature> signatures = document.getAdvancedSignatures();
-        for (AdvancedSignature signature : signatures) {
-            saved.add(advancedSignatureRepository.save(signature));
-        }
-        return saved;
+        return documentRepository.save(document);
     }
 
     @Override
     public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
-                              final UserServiceImpl userService, final SignatoryServiceImpl signatoryService)
+                              final UserServiceImpl userService)
                                 throws CreatingFileException, IOException {
         final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
@@ -79,11 +62,8 @@ public class DocumentServiceImpl implements DocumentService {
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);
-                signatoryService.saveSignatory(signatory);
             }
         }
-        documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
-
         return addDocument(newDocument);
     }
 }

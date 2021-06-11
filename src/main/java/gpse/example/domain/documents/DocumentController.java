@@ -41,17 +41,13 @@ public class DocumentController {
     private static final String DOCUMENT_ID = "documentID";
     private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
     private static final int STATUS_CODE_OK = 200;
-    private static final int STATUS_CODE_WRONG_USER = 450;
-    private static final int STATUS_CODE_NOT_READER = 451;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
-    private static final int STATUS_CODE_INVALID_SIGNATURE = 456;
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
-    private final DocumentMetaDataServiceImpl documentMetaDataService;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -60,17 +56,14 @@ public class DocumentController {
      * @param userService             the userService
      * @param documentService         the documentService
      * @param signatoryService        the signatoryService
-     * @param documentMetaDataService the metaDataService
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
-                              final DocumentMetaDataServiceImpl documentMetaDataService) {
+                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.signatoryService = signatoryService;
-        this.documentMetaDataService = documentMetaDataService;
     }
 
     /**
@@ -155,16 +148,12 @@ public class DocumentController {
             final Document oldDocument = documentService.getDocument(documentID);
             //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
-            signatoryService.delete(oldDocument.getSignatories());
             documentService.remove(oldDocument);
-            documentMetaDataService.delete(oldDocument.getDocumentMetaData());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
-            documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
-            signatoryService.saveSignatories(archivedDocument.getSignatories());
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
-                userService, signatoryService);
+                userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
@@ -226,7 +215,6 @@ public class DocumentController {
             documentID, SignatureType.ADVANCED_SIGNATURE);
         if (response.getStatus() == STATUS_CODE_OK) {
             document.advancedSignature(userID, advancedSignatureRequest.getSignature());
-            documentService.saveSignatures(document);
             documentService.addDocument(document);
         }
         return response;
@@ -243,7 +231,7 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            final SignatureManagement signatureManagement = new SignatureManagement(documentService);
             return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }

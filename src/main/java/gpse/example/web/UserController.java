@@ -31,11 +31,9 @@ public class UserController {
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private final UserService userService;
-    private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
     private final StringToKeyConverter stringToKeyConverter;
-    private final SecuritySettingsService securitySettingsService;
 
 
     /**
@@ -43,18 +41,13 @@ public class UserController {
      *
      * @param service                 Userservice Object
      * @param confService             ConfirmationTokenService object
-     * @param personalDataService     PersonalDataService object
-     * @param securitySettingsService SecuritySettingsService object
      * @param messageService          the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final PersonalDataService personalDataService,
-                          final SecuritySettingsService securitySettingsService, final MessageService messageService) {
+                          final MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
-        this.personalDataService = personalDataService;
-        this.securitySettingsService = securitySettingsService;
         this.messageService = messageService;
         stringToKeyConverter = new StringToKeyConverter();
     }
@@ -84,7 +77,6 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
-                personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -241,7 +233,6 @@ public class UserController {
             final SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
             securitySettings.generateSecret();
             final byte[] temp = securitySettings.generateQRCode(username);
-            securitySettingsService.saveSecuritySettings(securitySettings);
             userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
@@ -278,7 +269,6 @@ public class UserController {
                                          @RequestBody final  Boolean setting) {
         SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
         securitySettings.setTwoFactorLogin(setting);
-        securitySettingsService.saveSecuritySettings(securitySettings);
     }
 
     @GetMapping("/user/{userID}/settings/twoFactorLogin")
