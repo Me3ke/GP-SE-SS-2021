@@ -1,6 +1,6 @@
 <template>
     <span>
-        <span :class="{active: isActive, inactive: !isActive}" @click="isActive = !isActive" style="padding: 0.5vh 1vw 0; margin:0">
+        <span :class="{active: active, inactive: !active}" @click="active = !active" style="padding: 0.5vh 1vw 0; margin:0">
             <h4>
                 {{this.text}}
             </h4>
@@ -14,6 +14,9 @@ export default {
     props: {
         text: String,
         isActive: Boolean
+    },
+    data() {
+        return {active: this.isActive}
     }
 }
 </script>

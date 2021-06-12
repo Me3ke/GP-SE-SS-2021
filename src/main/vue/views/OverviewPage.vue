@@ -6,7 +6,7 @@
         <Header></Header>
 
         <!-- Page Title -->
-        <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
+        <b-container fluid style="margin-top:10vh; margin-right:2vw; text-align: left">
             <b-row align-h="start">
                 <b-col>
                     <h2>

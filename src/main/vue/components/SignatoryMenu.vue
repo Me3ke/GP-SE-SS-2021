@@ -20,8 +20,8 @@
             </div>
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
-            <draggable v-model="signatories">
-                <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email" style="padding:0.25em">
+            <draggable v-model="signatoriesArray">
+                <div class="drag-drop-element" v-for="signatory in signatoriesArray" :key="signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
@@ -66,20 +66,21 @@ export default {
             }, {
                 name: 'UploadDoc.advanced',
                 value: 2
-            }]
+            }],
+            signatoriesArray: this.signatories
         }
     },
     methods: {
         addSignatory() {
-            if(this.signatories.includes(this.signatoryInput)) {
+            if(this.signatoriesArray.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatories.push({email: this.signatoryInput, type: ""});
+                this.signatoriesArray.push({email: this.signatoryInput, type: ""});
             }
             this.signatoryInput = "";
         },
         deleteSignatory(signatory) {
-            this.signatories = this.signatories.filter(sig => !(sig === signatory))
+            this.signatoriesArray = this.signatoriesArray.filter(sig => !(sig === signatory))
         }
     }
 }
