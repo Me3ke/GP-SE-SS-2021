@@ -23,6 +23,11 @@
                                 <div class="modal-body">
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
+                                        <b-alert :show="this.errors.noDocument">
+                                            Please choose a document to upload.
+                                            Wählen Sie ein Dokument aus, um es hochzuladen.
+                                        </b-alert>
+
                                         <b-form-file
                                             v-model="fileInput"
                                             :state="Boolean(fileInput)"
@@ -47,6 +52,11 @@
                                     <!-- Page 3 -->
                                     <div v-if="page === 3">
                                         <!-- Choose from envelopes -->
+                                        <b-alert :show="this.errors.noEnvelope">
+                                            Please choose a envelope to upload your document into.
+                                            Wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.
+                                        </b-alert>
+
                                         <div v-if="newEnv === false">
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
@@ -56,6 +66,11 @@
                                             </div>
                                         </div>
                                         <!-- Create new envelope -->
+                                        <b-alert :show="this.errors.noNewName">
+                                            Please choose a name for the new envelope.
+                                            Geben Sie einen Namen für den neuen Verbund ein.
+                                        </b-alert>
+
                                         <div v-if="newEnv === true">
                                             <b-form-group
                                                 v-bind:label="$t('UploadDoc.newEnv')"
@@ -73,12 +88,12 @@
                                     </div>
                                     <!-- Page 4 -->
                                     <div v-if="page === 4">
-                                        <button type="button" class="light-btn" @click="review = true; page = page +1">
+                                        <button type="button" class="light-btn" @click="review = true; settings.signatories = []; settings.endDate = null; page = page +1">
                                             <h5>
                                                 {{$t('UploadDoc.addReaders')}}
                                             </h5>
                                         </button>
-                                        <button type="button" class="light-btn" @click="review = false; page = page +1">
+                                        <button type="button" class="light-btn" @click="review = false; settings.readers = []; page = page +1">
                                             <h5>
                                                 {{$t('UploadDoc.skipReview')}}
                                             </h5>
@@ -87,9 +102,28 @@
                                     <!-- Page 5 -->
                                     <div v-if="page === 5">
                                         <div v-if="review">
+                                            <b-alert :show="this.errors.noReaders">
+                                                Please add readers to review the document.
+                                                Fügen Sie Gegenleser hinzu.
+                                            </b-alert>
+
                                             <ReaderMenu :readers="settings.readers"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
+                                            <b-alert :show="this.errors.noEndDate">
+                                                Please chose a deadline.
+                                                Wählen Sie ein Enddatum.
+                                            </b-alert>
+
+                                            <b-alert :show="this.errors.noSignatories">
+                                                Please add signatories to sign the document.
+                                                Fügen Sie Unterzeichner hinzu.
+                                            </b-alert>
+
+                                            <b-alert :show="this.errors.noSignatureType">
+                                                Please choose a signature type for each signatory.
+                                                Wählen Sie für jeden Unterzeichner eine Unterschriftart aus.
+                                            </b-alert>
                                             <div>
                                                 <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                                                 <b-form-datepicker id="endDatePicker" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
@@ -117,7 +151,7 @@
                                                             </h5>
                                                         </button>
 
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1">
+                                                        <button type="button" class="elsa-blue-btn" @click="validate()">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
                                                             </h5>
@@ -125,7 +159,7 @@
                                                     </div>
                                                     <!-- Page 2 -->
                                                     <div v-if="page === 2">
-                                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                                        <button type="button" class="light-btn" @click="back()">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
@@ -134,12 +168,12 @@
 
                                                     <!-- Page 3 -->
                                                     <div v-if="page === 3">
-                                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                                        <button type="button" class="light-btn" @click="back()">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="page = page + 1;">
+                                                        <button type="button" class="elsa-blue-btn" @click="validate()">
                                                             <h5>
                                                                 {{$t('UploadDoc.continue')}}
                                                             </h5>
@@ -147,7 +181,7 @@
                                                     </div>
                                                     <!-- Page 4 -->
                                                     <div v-if="page === 4">
-                                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                                        <button type="button" class="light-btn" @click="back()">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
@@ -155,12 +189,12 @@
                                                     </div>
                                                     <!-- Page 5 -->
                                                     <div v-if="page === 5">
-                                                        <button type="button" class="light-btn" @click="page = page - 1">
+                                                        <button type="button" class="light-btn" @click="back() ">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
                                                         </button>
-                                                        <button type="button" class="elsa-blue-btn" @click="upload()">
+                                                        <button type="button" class="elsa-blue-btn" @click="validate()">
                                                             <h5>
                                                                 {{$t('UploadDoc.upload')}}
                                                             </h5>
@@ -206,13 +240,22 @@ export default {
                 review: true,
                 signatories: [],
                 readers: [],
-                endDate: '',
+                endDate: null,
                 orderRelevant: true
             },
             file: {
                 data: null,
                 type: null,
                 name: null
+            },
+            errors: {
+                noDocument: false,
+                noEnvelope: false,
+                noNewName: false,
+                noReaders: false,
+                noSignatories: false,
+                noEndDate: false,
+                noSignatureType: false
             }
         };
     },
@@ -221,20 +264,64 @@ export default {
             this.show = false;
             this.page = 1;
             this.fileInput = null;
-            this.file.data = null;
-            this.file.type = null;
-            this.file.name = null;
-            this.selectedEnv.old = null;
-            this.selectedEnv.new = null;
-            this.settings.signatories = [];
-            this.settings.readers = [];
-            this.settings.endDate = null;
-            this.settings.orderRelevant = null;
-            this.settings.review = null;
+            this.file = {data: null, type: null, name: null}
+            this.selectedEnv = {old: null, new: null}
+            this.settings = {signatories: [], readers: [], endDate: null, orderRelevant: null, review: null}
+            this.errors = {noEnvelope: null, noNewName: null, noDocument: null};
         },
         back() {
-            this.selectedEnv.old = null;
-            this.selectedEnv.new = null;
+            this.errors = {noEnvelope: null, noNewName: null, noDocument: null};
+            this.page = this.page-1;
+        },
+        validate() {
+            // Check if Document was chosen
+            if (this.page === 1) {
+               if (this.fileInput === null) {
+                   this.errors.noDocument = true;
+               } else {
+                   this.errors.noDocument = false;
+                   this.page = this.page+1;
+               }
+            } else if (this.page === 3) {
+                // Check if name for new envelope was chosen
+                if (this.newEnv) {
+                    if (this.selectedEnv.new === null || this.selectedEnv.new === "") {
+                        this.errors.noNewName = true;
+                    } else {
+                        this.errors.noNewName = false;
+                        this.page = this.page+1;
+                    }
+                    // Check if old envelope was chosen
+                } else {
+                    if (this.selectedEnv.old === null) {
+                        this.errors.noEnvelope = true;
+                    } else {
+                        this.errors.noEnvelope = false;
+                        this.page = this.page+1;
+                    }
+                }
+            } else if (this.page === 5) {
+                if (this.review) {
+                    // checks for readers
+                    this.errors.noReaders = this.settings.readers.length === 0;
+                } else {
+                    // checks endDate
+                    this.errors.noEndDate = this.settings.endDate === null;
+                    // cehcks for signatories
+                    this.errors.noSignatories = this.settings.signatories.length === 0;
+                    // checks signatories for signature types
+                    this.errors.noSignatureType = false;
+                    let i;
+                    for(i = 0; i < this.settings.signatories.length; i++) {
+                        if (this.settings.signatories[i].type === "") {
+                            this.errors.noSignatureType= true;
+                        }
+                    }
+                    if (!this.errors.noSignatureType && !this.errors.noSignatories && !this.errors.noEndDate) {
+                        this.upload();
+                    }
+                }
+            }
         },
         async upload() {
             //TODO: Convert readers into signatories and concat arrays
@@ -247,12 +334,10 @@ export default {
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
-            } else if (!(this.selectedEnv.new === null)) {
+            } else {
                 await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
                 this.close();
-            } else {
-                //TODO: ERROR
             }
         },
         convertReaders() {
@@ -318,5 +403,11 @@ export default {
     margin: 0.25vh 0.25vw;
     color: var(--dark-grey);
     border-radius: 0.33vw;
+}
+
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
 }
 </style>
