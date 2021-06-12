@@ -29,6 +29,10 @@ public class DocumentGetResponse {
     private boolean isTurnToSign;
     private final long id;
 
+    // getting the signatories and reader in the response
+    private final List<Signatory> signatories;
+    private final List<Signatory> readers;
+
     /**
      * The default constructor creates the documentGet based on an existing document
      * which is created from the Database beforehand.
@@ -53,7 +57,8 @@ public class DocumentGetResponse {
         this.read = false;
         this.signed = false;
         this.id = document.getId();
-        final List<Signatory> signatories = document.getSignatories();
+        // final List<Signatory> signatories = document.getSignatories();
+        this.signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getUser().equals(currentUser)
@@ -68,7 +73,8 @@ public class DocumentGetResponse {
             }
         }
         this.signatureType = signatureType;
-        final List<Signatory> readers = document.getReaders();
+        //final List<Signatory> readers = document.getReaders();
+        this.readers = document.getReaders();
         for (final Signatory currentReader : readers) {
             if (currentReader.getUser().equals(currentUser)) {
                 this.reader = true;
@@ -169,5 +175,14 @@ public class DocumentGetResponse {
 
     public long getId() {
         return id;
+    }
+
+
+    public List<Signatory> getSignatories() {
+        return signatories;
+    }
+
+    public List<Signatory> getReaders() {
+        return readers;
     }
 }

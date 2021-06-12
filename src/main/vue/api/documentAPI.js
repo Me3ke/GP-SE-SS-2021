@@ -50,13 +50,13 @@ export default {
                 'data': newDoc.data,
                 'title': newDoc.title,
                 'dataType': newDoc.dataType,
-                'signatoriesID': newDoc.signatoriesId,
-                'readersID': newDoc.readersId,
+                'signatoriesID': newDoc.signatories,
+                'readersID': newDoc.readers,
                 'signatureType': newDoc.signatureType,
-                'endDate': null,
+                'endDate': newDoc.endDate,
                 'orderRelevant': newDoc.orderRelevant,
                 'state': newDoc.state,
-                'lastModified': null
+                'lastModified': newDoc.lastModified
             }
         })
     }
