@@ -240,7 +240,8 @@ export default {
                 this.code = ''
                 this.showAlert = false
                 if (this.correctInput) {
-                    // TODO: add here always-config call
+                    await this.$store.dispatch('putTwoFactorLogin', {setting: this.always})
+                    await this.$store.dispatch('getTwoFactorLogin')
                     this.page = 2
                 }
                 // code is incorrect

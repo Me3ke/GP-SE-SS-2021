@@ -158,3 +158,12 @@
     align-items: center;
     display: flex;
 }
+
+/* Saved notification */
+.saved-enter-active, .saved-leave-active {
+    transition: opacity .7s
+}
+
+.saved-enter, .saved-leave-to {
+    opacity: 0
+}

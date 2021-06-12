@@ -9,6 +9,7 @@ import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 
@@ -175,8 +176,9 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
+     *
      * @param personalData the new personal data of the user stating the request
-     * @param username the username of the user stating the request
+     * @param username     the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
@@ -270,14 +272,15 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
+     *
      * @param username the username of the user stating the request
-     * @param setting true if the user wants a two-factor-login, false if not
+     * @param settingTwoFacAuth  true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
-                                         @RequestBody final  Boolean setting) {
+                                        @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
         SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
-        securitySettings.setTwoFactorLogin(setting);
+        securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
         securitySettingsService.saveSecuritySettings(securitySettings);
     }
 
