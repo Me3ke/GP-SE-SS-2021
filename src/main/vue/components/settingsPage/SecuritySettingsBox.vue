@@ -13,7 +13,7 @@
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
 
-                        <b-button class="elsa-blue-btn" @click="keySetUp">
+                        <b-button class="light-btn" @click="keySetUp">
                             {{ $t('Settings.SecuritySettings.newKeypair') }}
                         </b-button>
                     </b-list-group-item>
@@ -24,7 +24,7 @@
                              {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
                         </span>
 
-                        <b-button class="elsa-blue-btn" @click="setUp()">
+                        <b-button class="light-btn" @click="setUp()">
                             {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
                     </b-list-group-item>
@@ -60,7 +60,8 @@
                             </div>
                         </transition>
 
-                        <b-button class="green-btn" style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
+                        <b-button class="elsa-blue-btn"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
                                   @click="saveTwoFacLogin">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
