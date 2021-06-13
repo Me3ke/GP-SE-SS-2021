@@ -197,6 +197,7 @@
     "Settings": {
         "on": "On",
         "off": "Off",
+        "saved" : "Saved!",
         "content": "Account settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",

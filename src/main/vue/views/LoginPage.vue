@@ -2,12 +2,14 @@
     <section>
         <div class="background" style="height: 100vh; overflow: hidden">
 
+            <TwoFacAuth v-if="showTwoFactorLogin" :before-doc="false" @twoFacTrigger="closeTwoFacAuth"></TwoFacAuth>
+
             <LandingPageHeader></LandingPageHeader>
             <div class=img-wrap>
                 <img :src="image" alt="logo" class="header-image"/>
             </div>
             <div class="login-division">
-                <login-component v-show="showLogin"></login-component>
+                <login-component v-show="showLogin" @loginComponentTrigger="twoFacAuthCheck"></login-component>
                 <b-link v-show="showLogin" v-on:click="showLogin=false">Passwort vergessen?</b-link>
                 <forgot-password-component v-show="!showLogin"></forgot-password-component>
                 <b-link v-show="!showLogin" v-on:click="showLogin=true">Zurück zum Login</b-link>
@@ -25,17 +27,41 @@ import image from "../assets/logos/ELSA_big.svg";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import LoginComponent from "@/main/vue/components/LoginComponent";
 import ForgotPasswordComponent from "../components/settingsPage/ForgotPasswordComponent";
+import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import {mapGetters} from "vuex";
 
 export default {
-    data: function () {
+    name: "LoginPage",
+    components: {TwoFacAuth, ForgotPasswordComponent, LoginComponent, LandingPageHeader, Footer},
+    data() {
         return {
             image: image,
             showLogin: true,
+            showTwoFactorLogin: false
         }
     },
-    name: "LoginPage",
-    components: {ForgotPasswordComponent, LoginComponent, LandingPageHeader, Footer},
-    methods: {}
+    methods: {
+        // checks if twoFacAuth should be should, if not continues
+        async twoFacAuthCheck() {
+            //  loads twoFacAuthLogin info into local storage
+            await this.$store.dispatch('getTwoFactorLogin')
+            if (this.twoFactorLogin) {
+                this.showTwoFactorLogin = true
+            } else {
+                await this.$router.push('/' + this.$i18n.locale + '/overview')
+            }
+        },
+        // closes TwoFakAuth pop up, continues to overview page
+        closeTwoFacAuth() {
+            this.showTwoFactorLogin = false
+            this.$router.push('/' + this.$i18n.locale + '/overview')
+        }
+    },
+    computed: {
+        ...mapGetters({
+            twoFactorLogin: 'getTwoFactorLogin'
+        })
+    }
 }
 </script>
 

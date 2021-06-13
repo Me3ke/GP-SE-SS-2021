@@ -9,6 +9,7 @@ import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 
@@ -173,6 +174,20 @@ public class UserController {
         return userService.getUser(username).getPersonalData();
     }
 
+    /**
+     * the request handling for changing personal data.
+     *
+     * @param personalData the new personal data of the user stating the request
+     * @param username     the username of the user stating the request
+     */
+    @PutMapping("user/{userID}/personal")
+    public void setPersonalData(@RequestBody final PersonalData personalData,
+                                @PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setPersonalData(personalData);
+        userService.saveUser(user);
+    }
+
     @GetMapping("/user/{userID}")
     public UserResponseObject showUser(@PathVariable(USERID) final String username) {
         return new UserResponseObject(userService.getUser(username));
@@ -255,4 +270,22 @@ public class UserController {
         return userService.getUser(username).getPublicKey() != null;
     }
 
+    /**
+     * The request handler for the settings regarding a two-factor-login.
+     *
+     * @param username the username of the user stating the request
+     * @param settingTwoFacAuth  true if the user wants a two-factor-login, false if not
+     */
+    @PutMapping("/user/{userID}/settings/twoFactorLogin")
+    public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
+                                        @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
+        SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+        securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
+        securitySettingsService.saveSecuritySettings(securitySettings);
+    }
+
+    @GetMapping("/user/{userID}/settings/twoFactorLogin")
+    public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
+    }
 }

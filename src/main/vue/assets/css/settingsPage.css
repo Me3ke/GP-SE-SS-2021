@@ -20,7 +20,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span, .elsa-blue-btn, .green-btn {
+    span, .elsa-blue-btn, .light-btn {
         font-size: 0.6em;
     }
 
@@ -40,7 +40,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span, .elsa-blue-btn, .green-btn {
+    span, .elsa-blue-btn, .light-btn {
         font-size: 0.7em;
     }
 
@@ -61,7 +61,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span, .elsa-blue-btn, .green-btn {
+    span, .elsa-blue-btn, .light-btn {
         font-size: 0.7em;
     }
 
@@ -81,7 +81,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span, .elsa-blue-btn, .green-btn {
+    span, .elsa-blue-btn, .light-btn {
         font-size: 0.7em;
     }
 
@@ -102,7 +102,7 @@
         text-overflow-mode: ellipse;
     }
 
-    span, .elsa-blue-btn, .green-btn {
+    span, .elsa-blue-btn, .light-btn {
         font-size: 0.9em;
     }
 
@@ -139,14 +139,22 @@
 }
 
 /* Security settings */
-.elsa-blue-btn, .green-btn {
+.elsa-blue-btn, .light-btn {
     padding: 0.25em 0.25em 0;
     border: 0.03em solid var(--dark-grey);
     width: 7em;
 }
 
-.elsa-blue-btn:focus, .green-btn:focus {
+.elsa-blue-btn:focus, .light-btn:focus {
     border: 0.03vw solid var(--dark-grey);
+}
+
+.light-btn {
+    background-color: var(--light-grey);
+}
+
+.light-btn:hover {
+    background-color: var(--shadow-grey);
 }
 
 /* Toggle */
@@ -157,4 +165,13 @@
     justify-content: center;
     align-items: center;
     display: flex;
+}
+
+/* Saved notification */
+.saved-enter-active, .saved-leave-active {
+    transition: opacity .7s
+}
+
+.saved-enter, .saved-leave-to {
+    opacity: 0
 }

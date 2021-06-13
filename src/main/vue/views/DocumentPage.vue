@@ -85,7 +85,6 @@ export default {
     },
     methods: {
         getPDF() {
-            console.log(this.document.data)
             let chars = atob(this.document.data);
             let array = new Uint8Array(chars.length);
             for (let i = 0; i < chars.length; i++) {

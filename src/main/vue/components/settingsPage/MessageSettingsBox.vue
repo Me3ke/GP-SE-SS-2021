@@ -150,7 +150,7 @@
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
-                        <b-button class="green-btn" style="margin-top: 0.2em; margin-bottom: 0.1em">
+                        <b-button class="elsa-blue-btn" style="margin-top: 0.2em; margin-bottom: 0.1em">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
                     </b-list-group-item>
