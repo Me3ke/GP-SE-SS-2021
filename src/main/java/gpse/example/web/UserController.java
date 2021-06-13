@@ -288,4 +288,9 @@ public class UserController {
     public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
     }
+
+    @PutMapping("/user/password/change")
+    public void changePassword(@RequestParam("password") final String password, @RequestHeader final String Token) {
+
+    }
 }
