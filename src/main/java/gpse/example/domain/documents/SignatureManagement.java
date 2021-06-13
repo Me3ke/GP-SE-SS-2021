@@ -193,10 +193,6 @@ public class SignatureManagement {
             Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
 
-                System.out.println(savedDocument.getCurrentSignatory().getUser().getUsername());
-                System.out.println(userService.getUser(savedDocument.getOwner()));
-                System.out.println(savedDocument.getCurrentSignatory().getUser().getLastname());
-                System.out.println(document);
                 smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
                     userService.getUser(savedDocument.getOwner()),
                     savedDocument.getCurrentSignatory().getUser().getLastname(), document);
