@@ -30,7 +30,7 @@ public class InitializeDatabase implements InitializingBean {
     private static final String BERLINER_STRASSE = "Berliner Straße";
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
-    private static final String USERNAME = "hans.schneider@mail.de";
+    private static final String USERNAME = "jonas@unnainnrw.de";
     private static final String ADMINNAME = "Ruediger.Spieler@mail.de";
     private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
@@ -195,7 +195,7 @@ public class InitializeDatabase implements InitializingBean {
         try {
             documentService.getDocument(id);
         } catch (DocumentNotFoundException exception) {
-            final DocumentCreator creator = new DocumentCreator();
+            final DocumentCreator creator = new DocumentCreator(documentService);
             final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
             documentPutRequestRequest.setOrderRelevant(true);
             documentPutRequestRequest.setData(data);

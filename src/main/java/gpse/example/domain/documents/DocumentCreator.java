@@ -4,6 +4,10 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.users.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -16,9 +20,19 @@ import java.util.List;
  * The DocumentCreator is a factory method responsible for creating documents and envelops.
  */
 @SuppressWarnings("PMD.AvoidFileStream")
+@Component
 public class DocumentCreator {
 
+
+    DocumentService documentService;
+
     private static final String PATH_TO_DOWNLOADS = "src/main/resources/Downloads/";
+
+    @Autowired
+    public DocumentCreator(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
 
     /**
      * The download methods creates a new File of the document given using the writeInNewFileMethod.
@@ -77,6 +91,7 @@ public class DocumentCreator {
             for (final ProtoSignatory signatory : signatories) {
                 document.addSignatory(userService.getUser(signatory.getEmail()), signatory.getType());
             }
+            documentService.addDocument(document);
         }
     }
 

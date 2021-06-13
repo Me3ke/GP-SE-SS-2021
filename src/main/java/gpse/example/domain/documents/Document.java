@@ -30,13 +30,13 @@ public class Document {
     @Column
     private long id;
 
-    @OneToOne
+
+    @OneToOne(cascade=CascadeType.ALL)
     private DocumentMetaData documentMetaData;
 
-/*<<<<<<< HEAD
-    @OneToMany(fetch = FetchType.EAGER)
-=======*/
+
     @OneToMany(
+        fetch = FetchType.EAGER,
         orphanRemoval = true,
         cascade = CascadeType.ALL)
     private List<Signatory> signatories = new ArrayList<>();
@@ -358,7 +358,9 @@ public class Document {
     public Signatory getCurrentSignatory() {
         for (final Signatory signatory : signatories) {
             if (!signatory.isStatus()) {
+
                 return signatory;
+
             }
         }
         return null;

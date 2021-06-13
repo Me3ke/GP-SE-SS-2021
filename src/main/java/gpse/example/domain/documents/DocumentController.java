@@ -53,6 +53,7 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentMetaDataServiceImpl documentMetaDataService;
+    private final SignatureManagement signatureManagement;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -66,12 +67,14 @@ public class DocumentController {
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
                               final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
-                              final DocumentMetaDataServiceImpl documentMetaDataService) {
+                              final DocumentMetaDataServiceImpl documentMetaDataService,
+                              final SignatureManagement signatureManagement) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.signatoryService = signatoryService;
         this.documentMetaDataService = documentMetaDataService;
+        this.signatureManagement = signatureManagement;
     }
 
     /**
@@ -245,8 +248,6 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService,
-                userService);
             return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }

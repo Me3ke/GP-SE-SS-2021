@@ -21,7 +21,7 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository repo;
     private final DocumentMetaDataService documentMetaDataService;
     private final AdvancedSignatureRepository advancedSignatureRepository;
-    private final DocumentCreator documentCreator = new DocumentCreator();
+    private final DocumentCreator documentCreator = new DocumentCreator(this);
 
     /**
      * the standard constructor for documentServices.

@@ -37,7 +37,9 @@ public class EnvelopeController {
     private final UserServiceImpl userService;
     private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
-    private final DocumentCreator documentCreator = new DocumentCreator();
+    @Lazy
+    @Autowired
+    private DocumentCreator documentCreator;
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;

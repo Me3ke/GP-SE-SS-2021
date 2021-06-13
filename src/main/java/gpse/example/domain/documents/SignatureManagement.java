@@ -9,13 +9,14 @@ import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * The class used to manage all signature and review requests.
  */
-
+@Component
 public class SignatureManagement {
 
     private static final int STATUS_CODE_OK = 200;
@@ -27,19 +28,20 @@ public class SignatureManagement {
     private final SignatoryService signatoryService;
     private final DocumentService documentService;
     private final UserService userService;
-
-    @Autowired
     private SMTPServerHelper smtpServerHelper;
 
     /**
      * constructor of Signature management.
      * @param givenSignatoryService signatoryservice
+     * @param smtpServerHelper smtpServerHelper
      * @param givenDocumentService documentservice
      * @param givenUserService userservice
      */
-    public SignatureManagement(final SignatoryService givenSignatoryService,
+    @Autowired
+    public SignatureManagement(final SignatoryService givenSignatoryService, SMTPServerHelper smtpServerHelper,
                                final DocumentService givenDocumentService, final UserService givenUserService) {
         signatoryService = givenSignatoryService;
+        this.smtpServerHelper = smtpServerHelper;
         documentService = givenDocumentService;
         userService = givenUserService;
     }
@@ -188,12 +190,16 @@ public class SignatureManagement {
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
-            documentService.addDocument(document);
+            Document savedDocument = documentService.addDocument(document);
+            if (savedDocument.getState() != DocumentState.CLOSED) {
 
-            if (document.getState() != DocumentState.CLOSED) {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
+                System.out.println(savedDocument.getCurrentSignatory().getUser().getUsername());
+                System.out.println(userService.getUser(savedDocument.getOwner()));
+                System.out.println(savedDocument.getCurrentSignatory().getUser().getLastname());
+                System.out.println(document);
+                smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
+                    userService.getUser(savedDocument.getOwner()),
+                    savedDocument.getCurrentSignatory().getUser().getLastname(), document);
             }
 
             response.setStatus(STATUS_CODE_OK);
