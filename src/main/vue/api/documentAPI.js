@@ -46,16 +46,16 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId,
 
             data: {
-                //'byte': newDoc.byte[1],
                 'data': newDoc.data,
                 'title': newDoc.title,
                 'dataType': newDoc.dataType,
-                'signatoriesID': newDoc.signatories,
+                'signatories': newDoc.signatories,
+                'signa': newDoc.signatories,
                 'readersID': newDoc.readers,
-                'signatureType': newDoc.signatureType,
+                //'signatureType': newDoc.signatureType,
                 'endDate': newDoc.endDate,
                 'orderRelevant': newDoc.orderRelevant,
-                'state': newDoc.state,
+                //'state': newDoc.state,
                 'lastModified': newDoc.lastModified
             }
         })

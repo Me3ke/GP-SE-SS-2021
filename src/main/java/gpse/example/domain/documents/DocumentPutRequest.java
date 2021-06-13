@@ -1,6 +1,7 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.ProtoSignatory;
+import gpse.example.domain.signature.Signatory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,14 @@ public class DocumentPutRequest {
     private String endDate;
     private boolean orderRelevant;
     private String lastModified;
+
+    public List<Signatory> getSigna() {
+        return signa;
+    }
+
+    private List<Signatory> signa;
+
+
 
     public String getLastModified() {
         return lastModified;

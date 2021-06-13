@@ -134,7 +134,7 @@
                     <b-form-datepicker id="endDatePicker" v-model="actualDoc.endDate" class="mb-2"></b-form-datepicker>
                     <p>{{actualDoc.endDate}}</p>
                 </div>
-                <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant"></SignatoryMenu>
+                <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant" @update-signatories="updateSignatories"></SignatoryMenu>
             </div>
             <div>
                 <button type="button"
@@ -291,6 +291,14 @@ export default {
             this.file = event.target.files[0]
         },
 
+        updateSignatories(newSignatories) {
+            console.log("Parent --------------")
+            console.log(newSignatories)
+            console.log("///Parent --------------")
+
+            //this.actualDoc.signatories = newSignatories
+        },
+
 
         // get all necessary attributes of documents
 
@@ -323,9 +331,7 @@ export default {
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
             this.actualDoc.dataType = this.fileString.split('.').pop()
-            this.actualDoc.signed = false
-            this.actualDoc.read = false
-            this.actualDoc.state = 'OPEN'
+            //this.actualDoc.signed = false // reset the signed field to false
         },
 
         /// getting emitted value
@@ -333,12 +339,13 @@ export default {
 
             this.fileString = ""
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
-            // TODO setting the documentSettings values
 
             this.actualDoc.data =  await this.asyncHandleFunction()
+
+
             console.log("READY")
             console.log(this.actualDoc)
-            // todo add error (but neet status code on the reponse, for now only getting newDocId and replaced one which is getting an new id too)
+            // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
             await this.$store.dispatch('document/editDocument', payload)
 

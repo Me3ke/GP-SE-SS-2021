@@ -2,6 +2,7 @@
     <div>
         <div class="form-group">
             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
+            {{signatories}}
             <b-row no-gutters>
                 <b-col cols="11">
                     <input type="text" class="form-control" v-model="signatoryInput" id="signatoryInput" :placeholder="$t('Settings.DocumentSettings.placeholderMail')">
@@ -21,12 +22,12 @@
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
             <draggable v-model="signatories">
-                <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email" style="padding:0.25em">
+                <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
                                 <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)"></b-icon>
-                                {{signatory.email}}
+                                {{signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email}}
                             </b-col>
                         </h6>
                         <b-col cols="auto">
@@ -59,6 +60,8 @@ export default {
     components: {draggable},
     data() {
         return{
+
+            signatoriesNew: {},
             signatoryInput: "",
             signatureTypes: [{
                 name: 'UploadDoc.simple',
@@ -71,16 +74,50 @@ export default {
     },
     methods: {
         addSignatory() {
-            if(this.signatories.includes(this.signatoryInput)) {
+            console.log("new")
+            console.log(this.signatoriesNew)
+
+
+            if(this.signatoriesNew.includes(this.signatoryInput)) {
+                // TODO: Error
+            } else {
+                this.signatoriesNew.push({email: this.signatoryInput, type: ""});
+            }
+            this.signatoryInput = "";
+
+
+
+
+            /*if(this.signatories.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
                 this.signatories.push({email: this.signatoryInput, type: ""});
             }
-            this.signatoryInput = "";
+            this.signatoryInput = "";*/
+            this.$emit('update-signatories', this.signatoriesNew) // my try
+            console.log(this.signatories)
+
         },
         deleteSignatory(signatory) {
-            this.signatories = this.signatories.filter(sig => !(sig === signatory))
+            //this.signatories = this.signatories.filter(sig => !(sig === signatory))
+            this.signatoriesNew = this.signatoriesNew.filter(sig => !(sig === signatory))
+
+            this.$emit('update-signatories', this.signatoriesNew) // my try
+
         }
+
+    },
+
+    mounted() {
+        console.log(this.signatories)
+        this.signatoriesNew = this.signatories
+        console.log("new Copy of list:")
+        console.log(this.signatoriesNew)
+        console.log("--------------")
+
+        this.$emit('update-signatories', this.signatoriesNew)
+
+
     }
 }
 </script>
