@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="sm" id="background" sticky style="position: fixed; width: 100%; height: 5vh">
+    <b-navbar toggleable="sm" id="background" sticky :class="[breakpointReached ? 'mobile' : 'normal']">
         <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="$router.push(`/`)">
             <b-img v-if="theme === '' " :src="logoLightMode" class="responsive-img" :alt="$t('Header.logo')"></b-img>
@@ -29,13 +29,22 @@ export default {
         return {
             logoLightMode: require('../../assets/logos/ELSA_small.svg'),
             logoDarkMode: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            windowWidth: window.innerWidth
         }
+    },
+    mounted() {
+        window.addEventListener('resize', () => {
+            this.windowWidth = window.innerWidth
+        })
     },
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
             user: 'getUser'
-        })
+        }),
+        breakpointReached() {
+            return this.windowWidth <= 574
+        }
     }
 }
 </script>
@@ -45,6 +54,18 @@ export default {
 .responsive-img {
     height: 2em;
     width: auto;
+}
+
+.normal {
+    position: fixed;
+    width: 100%;
+    height: 5vh
+}
+
+.mobile {
+    position: fixed;
+    width: 100%;
+    height: fit-content;
 }
 
 #background {
