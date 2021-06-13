@@ -198,7 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "saved" : "Gespeichert!",
+        "saved": "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -386,6 +386,7 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "verify": "Jetzt authentifizieren!",
         "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
         "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
         "fail": "Es scheint Server-Probleme zu geben. Fehlercode: ",
@@ -450,6 +451,20 @@
             "go": "Los geht's",
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
             "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
+        }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Firmen Design",
+            "logo": "Logo",
+            "currentLogo": "Aktuelles Logo:",
+            "logoUpload": "Logo hochladen",
+            "logoUploadHere": "Laden Sie hier Ihr Logo hoch.",
+            "logoUploadHereExp": "Akzeptiert werden Bild-Dateien. Für ein gutes Erbenis nutzen Sie 400x120-Pixel Bilder.",
+            "logoTitle": "Laden Sie Ihr Logo hoch!",
+            "logoPlaceholder": "Logo hier ablegen oder auswählen ",
+            "dropPlaceholder": "Hier fallen lassen",
+            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!"
         }
     }
 }

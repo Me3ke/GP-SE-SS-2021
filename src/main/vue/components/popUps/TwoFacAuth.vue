@@ -9,7 +9,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="exampleModalLongTitle">
-                                        {{ $t('TwoFakAuth.sign.sign') }}
+                                        {{ $t('TwoFakAuth.verify') }}
                                     </h4>
                                 </div>
 

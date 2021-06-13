@@ -197,7 +197,7 @@
     "Settings": {
         "on": "On",
         "off": "Off",
-        "saved" : "Saved!",
+        "saved": "Saved!",
         "content": "Account settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",
@@ -385,6 +385,7 @@
         "continue": "Continue",
         "close": "Close",
         "back": "Back",
+        "verify": "Authenticate now!",
         "serverErrorOne": "There appear to be problems with your server connection.",
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
         "fail": "There appear to be server problems. Error Code: ",
@@ -449,6 +450,20 @@
             "go": "Let's go",
             "cancelWarningOne": "If you cancel now you cannot use ELSA completely ",
             "cancelWarningTwo": "without setting up every necessary element via the settings page."
+        }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Corporate design",
+            "logo": "Logo",
+            "currentLogo": "Current logo:",
+            "logoUpload": "Upload logo",
+            "logoUploadHere": "Upload your logo here",
+            "logoUploadHereExp": "Accepted are image files. To get a good result use an image with dimensions 400x120 pixel.",
+            "logoTitle": "Upload your logo!",
+            "logoPlaceholder": "Drop logo here or choose",
+            "dropPlaceholder": "Drop here",
+            "logoSuccess": "You have successfully uploaded your logo!"
         }
     }
 }
