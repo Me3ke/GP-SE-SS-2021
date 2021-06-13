@@ -146,12 +146,13 @@
                                                           trim
                                                           style="margin-bottom: 1em">
                                             </b-form-input>
-                                            <b-alert :show="showAlert" dismissible
-                                                     @dismissed="showAlert = false"
-                                                     style="margin-bottom: 1em">
-                                                {{ $t('TwoFakAuth.login.fail') }}
-                                            </b-alert>
                                         </div>
+
+                                        <b-alert :show="showAlert" dismissible
+                                                 @dismissed="showAlert = false"
+                                                 style="margin-bottom: 1em">
+                                            {{ $t('TwoFakAuth.login.fail') }}
+                                        </b-alert>
 
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
@@ -219,7 +220,6 @@ export default {
             page: 0,
             pageBefore: 0,
             code: '',
-            // TODO: connect setting with API
             always: false
         }
     },

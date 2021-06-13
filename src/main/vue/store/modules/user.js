@@ -48,7 +48,6 @@ export const actions = {
     },
     // sets if user wants a 2FacAuth at login
     putTwoFactorLogin({commit}, {setting}) {
-        console.log(setting)
         return api.user.putTwoFactorLogin(setting).then(response => {
             commit('SET_GET_TWO_FACTOR_LOGIN', response.data)
         }).catch(error => {

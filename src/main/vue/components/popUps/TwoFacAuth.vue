@@ -16,6 +16,36 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page 0 -->
+                                    <div v-if="page === 0">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notDone') }}
+                                        </div>
+
+                                        <ul>
+                                            <li v-if="!hasSetUp">
+                                                <div class="content-div"
+                                                     style="justify-content: left; text-align: left">
+                                                    {{ $t('TwoFakAuth.sign.tfa') }}
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="light-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="elsa-blue-btn" @click="goToSettings">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.sign.toSettings') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 1 (two fac Auth) -->
                                     <div v-if="page === 1">
 
@@ -47,6 +77,12 @@
 
                                         <!-- Buttons to switch pages -->
                                         <div style="text-align: right">
+                                            <button v-if="beforeDoc" type="button" class="light-btn"
+                                                    @click="pageBefore = page; page = 3">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.cancel') }}
+                                                </span>
+                                            </button>
                                             <button type="button" class="elsa-blue-btn" @click="twoFac()">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.continue') }}
@@ -63,6 +99,27 @@
 
                                         <div class="step" style="margin-top: 0; text-align: center;">
                                             {{ logoutCounter }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Page 3 (leave?) -->
+                                    <div v-if="page === 3">
+                                        <div class="step" style="margin-top: 0">
+                                            {{ $t('TwoFakAuth.sign.sure') }}
+                                        </div>
+
+                                        <!-- Buttons to switch pages/ close -->
+                                        <div style="text-align: right">
+                                            <button type="button" class="light-btn" @click="page = pageBefore">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.back') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="elsa-blue-btn" @click="closeModal()">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.cancel') }}
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -85,11 +142,16 @@ export default {
         beforeDoc: {
             type: Boolean,
             default: true
+        },
+        advanced: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
             page: 1,
+            pageBefore: 0,
             code: '',
             showAlertCode: false,
             //TODO: add somewhere in store so user cannot just refresh the page
@@ -98,6 +160,21 @@ export default {
             //TODO: add somewhere in store so user cannot just refresh the page
             logoutCounter: 10,
             startCountDown: false
+        }
+    },
+    async created() {
+        await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
+        // checks if signature is advanced (if prompt appears in font of doc or envelope containing doc with advanced signature),
+        // if so checks if user has set up 2FakAuth
+        if (this.advanced && this.beforeDoc) {
+            if (!this.hasSetUp) {
+                this.page = 0
+            }
+        }
+
+        // if auth is not in front of doc and user has no set-up -> close modal
+        if (!this.beforeDoc && !this.hasSetUp) {
+            this.$emit('twoFacTrigger')
         }
     },
     methods: {
@@ -126,11 +203,25 @@ export default {
             } else {
                 this.showAlertCode = true
             }
+        },
+        // send user to settings page
+        goToSettings() {
+            this.$emit('closeTrigger');
+            this.page = 1
+            this.$router.push('/' + this.$i18n.locale + '/user')
+        },
+        // closes the pop up
+        closeModal() {
+            this.$emit('closeTrigger');
+            this.page = 1
+            this.showAlertSign = false
         }
     },
     computed: {
         ...mapGetters({
-            correctInput: 'twoFakAuth/getCorrectInput'
+            correctInput: 'twoFakAuth/getCorrectInput',
+            hasSetUp: 'twoFakAuth/getHasSetUp',
+
         }),
     },
     // watch methods taken from: https://stackoverflow.com/questions/55773602/how-do-i-create-a-simple-10-seconds-countdown-in-vue-js
