@@ -1,5 +1,5 @@
 <template>
-    <b-nav-item-dropdown right class="my-dropdown-menu" no-caret>
+    <b-nav-item-dropdown right class="my-dropdown-menu" no-caret @hide="onDropdownHide">
         <template #button-content>
             <b-icon icon="person-circle" class="my-icon"></b-icon>
         </template>
@@ -16,7 +16,7 @@
         <b-dropdown-item
             v-if="isAdmin"
             class="my-dropdown-item"
-            @click.native.capture.stop="toggleAdmin">
+            @click.stop="toggleAdmin">
             <b-iconstack class="my-icon">
                 <b-icon stacked icon="gear" class="my-icon"></b-icon>
                 <b-icon stacked icon="circle-fill" class="my-icon" scale="0.5" style="fill: var(--whitesmoke)"></b-icon>
@@ -25,7 +25,6 @@
             <span class="letters"> {{ $t('Header.Avatar.adminSetting.settings') }} </span>
 
             <div v-bind:class="[mobile ? 'sub-menu-mobile':'sub-menu']" v-show="showAdmin">
-
                 <b-dropdown-item class="my-inner-dropdown-item">
                     <b-iconstack class="my-icon">
                         <b-icon stacked icon="person" class="my-icon"></b-icon>
@@ -48,7 +47,7 @@
 
                 <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-                <b-dropdown-item class="my-inner-dropdown-item">
+                <b-dropdown-item class="my-inner-dropdown-item" @click="routeToCorporate">
                     <b-icon icon="brush" class="my-icon"></b-icon>
                     <span class="letters"> {{ $t('Header.Avatar.adminSetting.design') }} </span>
                 </b-dropdown-item>
@@ -99,7 +98,8 @@ export default {
     data() {
         return {
             'showAdmin': false,
-            'mobile': window.innerWidth < 576
+            'mobile': window.innerWidth < 576,
+            close: true
         }
     },
     created() {
@@ -113,11 +113,22 @@ export default {
         window.removeEventListener("resize", this.updateMobile);
     },
     methods: {
+        toggleClose() {
+            this.close = !this.close
+        },
+        onDropdownHide(bvEvent) {
+            if (!this.close) {
+                bvEvent.preventDefault();
+            }
+        },
         routeToProfile() {
             this.$router.push('/' + this.$i18n.locale + '/user')
         },
         routeToHelp() {
             this.$router.push('/' + this.$i18n.locale + '/help')
+        },
+        routeToCorporate() {
+            this.$router.push('/' + this.$i18n.locale + '/adminSettings/corporate')
         },
         toggleTheme(mode) {
             //changes mode
@@ -125,6 +136,9 @@ export default {
             document.documentElement.setAttribute('data-theme', this.theme);
         },
         toggleAdmin() {
+            if (!this.mobile) {
+                this.toggleClose()
+            }
             this.showAdmin = !this.showAdmin
         },
         logout() {
