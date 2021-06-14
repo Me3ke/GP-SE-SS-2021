@@ -7,7 +7,9 @@ import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -290,7 +292,14 @@ public class UserController {
     }
 
     @PutMapping("/user/password/change")
-    public void changePassword(@RequestParam("password") final String password, @RequestHeader final String Token) {
+    public void changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
+        //TODO get User from TOken
+        User user;
+        if (user.getRoles().contains("ROLE_USER")) {
+            user.setPassword(password);
+        } else {
+
+        }
 
     }
 }
