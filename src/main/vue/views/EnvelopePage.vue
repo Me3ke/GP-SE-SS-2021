@@ -25,7 +25,7 @@
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import {mapGetters} from "vuex";
-import DocumentCard from "@/main/vue/components/DocumentCard";
+import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
 
 export default {
     name: "EnvelopePage",

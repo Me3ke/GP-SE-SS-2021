@@ -6,15 +6,15 @@
                               :document = document :envelopeId="envelopeId"></DocumentBox>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="document.owner.email === this.user.user.email" @click.native="$router.push({name: 'settings', params: {envId: envelopeId}})"></settingsButton>
+                <settingsButton v-if="document.owner.email === user.email" @click.native="$router.push({name: 'settings', params: {envId: envelopeId}})"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/envSettingsButton";
-import DocumentBox from "@/main/vue/components/DocumentBox";
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
+import DocumentBox from "@/main/vue/components/overviewPage/DocumentBox";
 import {mapGetters} from "vuex";
 export default {
     name: "DocumentCard",
@@ -23,9 +23,12 @@ export default {
         document: Object,
         envelopeId: [String, Number]
     },
-    created: {
+    created() {
+        this.$store.dispatch('fetchUser')
+    },
+    computed: {
         ...mapGetters({
-            user: 'getUser',
+            user: 'getUser'
         })
     }
 }

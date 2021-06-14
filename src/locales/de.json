@@ -277,7 +277,8 @@
             "addReader": "Gegenleser hinzufügen",
             "reader": "Gegenleser",
             "chooseDate": "Zeitraum bestimmen",
-            "orderRelevant": "Reihenfolge berücksichtigen"
+            "orderRelevant": "Reihenfolge berücksichtigen",
+            "save": "Speichern"
         }
     },
     "UploadDoc": {

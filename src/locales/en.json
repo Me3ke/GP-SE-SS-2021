@@ -274,7 +274,8 @@
             "placeholderMail": "Signatory@mail.de",
             "signatory": "Signatory",
             "addReader": "Add proofreader",
-            "reader": "Proofreaders"
+            "reader": "Proofreaders",
+            "save": "Save"
         }
     },
     "UploadDoc": {

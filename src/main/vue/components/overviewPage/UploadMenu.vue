@@ -106,7 +106,7 @@
                                                 Please add readers to review the document.
                                                 Fügen Sie Gegenleser hinzu.
                                             </b-alert>
-
+                                            <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
                                             <ReaderMenu :readers="settings.readers"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
@@ -129,6 +129,7 @@
                                                 <b-form-datepicker id="endDatePicker" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
                                                 <p>{{this.settings.endDate}}</p>
                                             </div>
+                                            <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
                                             <SignatoryMenu :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
                                         </div>
                                     </div>
@@ -215,8 +216,8 @@
 </template>
 
 <script>
-import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
-import ReaderMenu from "@/main/vue/components/ReaderMenu";
+import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatoryMenu";
+import ReaderMenu from "@/main/vue/components/envelopeSettings/ReaderMenu";
 //import {mapActions} from "vuex";
 import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
 import {mapGetters} from "vuex";

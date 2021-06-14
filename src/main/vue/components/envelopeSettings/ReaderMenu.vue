@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="form-group">
-            <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
             <b-row no-gutters>
                 <b-col cols="11">
                     <input type="text" class="form-control" v-model="readerInput" id="readerInput" :placeholder="$t('Settings.DocumentSettings.placeholderMail')">

@@ -5,15 +5,15 @@
                 <EnvelopeBox :envelope="envelope" @click.native="$router.push({name: 'envelope', params: {envId: envelope.id}})"></EnvelopeBox>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="envelope.owner.email === user.user.email" @click.native="$router.push({name: 'settings', params: {envId: envelope.id}})"></settingsButton>
+                <settingsButton v-if="envelope.owner.email === user.email" @click.native="$router.push({name: 'settings', params: {envId: envelope.id}})"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/envSettingsButton";
-import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
+import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
 
 export default {
@@ -22,9 +22,12 @@ export default {
     props: {
         envelope: Object
     },
-    created: {
+    created() {
+        this.$store.dispatch('fetchUser')
+    },
+    computed: {
         ...mapGetters({
-            user: 'getUser',
+            user: 'getUser'
         })
     }
 }
