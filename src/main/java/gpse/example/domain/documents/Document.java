@@ -30,15 +30,16 @@ public class Document {
     @Column
     private long id;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private DocumentMetaData documentMetaData;
 
-/*<<<<<<< HEAD
-    @OneToMany(fetch = FetchType.EAGER)
-=======*/
     @OneToMany(
         orphanRemoval = true,
-        cascade = CascadeType.ALL)
+        cascade = CascadeType.ALL,
+        fetch = FetchType.EAGER)
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany(

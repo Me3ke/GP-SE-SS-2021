@@ -95,8 +95,7 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
-            final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
-                userService, signatoryService);
+            final Document document = documentService.creation(documentPutRequest, envelope, ownerID, userService);
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");

@@ -28,7 +28,10 @@ public class Envelope implements Iterable<Document> {
     @ManyToOne
     private User owner;
 
-    @OneToMany
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private List<Document> documentList = new ArrayList<>();
 
     @Column
@@ -49,15 +52,13 @@ public class Envelope implements Iterable<Document> {
         this.name = name;
         this.owner = owner;
         this.creationDate = LocalDateTime.now();
-        for (final Document document : documents) {
-            this.documentList.add(document);
-        }
+        this.documentList.addAll(documents);
     }
 
     /**
      * Creates an envelope without any documents.
-     * @param name
-     * @param owner
+     * @param name the name of the envelope to be created.
+     * @param owner the owner of the envelope to be created.
      */
     public Envelope(final String name, final User owner) {
         this.name = name;

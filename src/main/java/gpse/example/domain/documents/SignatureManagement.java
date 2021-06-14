@@ -1,7 +1,6 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatoryService;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.web.JSONResponseObject;
@@ -20,13 +19,10 @@ public class SignatureManagement {
     private static final int STATUS_CODE_INVALID_SIGNATURE_TYPE = 453;
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
-    private final SignatoryService signatoryService;
     private final DocumentService documentService;
 
 
-    public SignatureManagement(final SignatoryService givenSignatoryService,
-                               final DocumentService givenDocumentService) {
-        signatoryService = givenSignatoryService;
+    public SignatureManagement(final DocumentService givenDocumentService) {
         documentService = givenDocumentService;
     }
 
@@ -144,7 +140,7 @@ public class SignatureManagement {
             if (currentSignatory.getUser().equals(signatoryToFind)) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
-                signatoryService.saveSignatory(currentSignatory);
+                documentService.addDocument(document);
             }
         }
         return foundSignatory;

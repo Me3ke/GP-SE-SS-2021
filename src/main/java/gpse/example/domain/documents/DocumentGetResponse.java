@@ -25,8 +25,8 @@ public class DocumentGetResponse {
     private boolean signed;
     private boolean read;
     private final byte[] data;
-    private boolean isTurnToReview;
-    private boolean isTurnToSign;
+    private boolean turnToReview;
+    private boolean turnToSign;
     private final long id;
 
     /**
@@ -79,8 +79,8 @@ public class DocumentGetResponse {
             }
         }
         OrderManager orderManager = new OrderManager();
-        isTurnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
-        isTurnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
+        turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
+        turnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
     }
 
     public String getTitle() {
@@ -132,19 +132,19 @@ public class DocumentGetResponse {
     }
 
     public boolean isTurnToReview() {
-        return isTurnToReview;
+        return turnToReview;
     }
 
     public void setTurnToReview(boolean turnToReview) {
-        isTurnToReview = turnToReview;
+        this.turnToReview = turnToReview;
     }
 
     public boolean isTurnToSign() {
-        return isTurnToSign;
+        return turnToSign;
     }
 
     public void setTurnToSign(boolean turnToSign) {
-        isTurnToSign = turnToSign;
+        this.turnToSign = turnToSign;
     }
 
     public String getIdentifier() {
