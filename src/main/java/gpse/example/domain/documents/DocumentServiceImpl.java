@@ -5,6 +5,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.*;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
-                              final UserServiceImpl userService)
+                             final UserServiceImpl userService)
                                 throws CreatingFileException, IOException {
         final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,

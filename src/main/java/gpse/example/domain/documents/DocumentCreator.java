@@ -4,6 +4,7 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.users.UserService;
+import gpse.example.web.documents.DocumentPutRequest;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

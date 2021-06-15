@@ -1,7 +1,8 @@
-package gpse.example.domain.envelopes;
+package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentGetResponse;
+import gpse.example.domain.envelopes.Envelope;
+import gpse.example.web.documents.DocumentGetResponse;
 import gpse.example.domain.users.User;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

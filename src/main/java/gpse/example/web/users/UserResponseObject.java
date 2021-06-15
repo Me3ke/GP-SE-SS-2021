@@ -1,4 +1,4 @@
-package gpse.example.web;
+package gpse.example.web.users;
 
 import gpse.example.domain.users.User;
 

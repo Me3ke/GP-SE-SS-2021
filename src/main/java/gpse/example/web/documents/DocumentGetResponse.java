@@ -1,5 +1,9 @@
-package gpse.example.domain.documents;
+package gpse.example.web.documents;
 
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentMetaData;
+import gpse.example.domain.documents.DocumentState;
+import gpse.example.domain.documents.OrderManager;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;

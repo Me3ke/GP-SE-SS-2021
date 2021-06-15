@@ -1,11 +1,14 @@
-package gpse.example.domain.envelopes;
+package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.*;
+import gpse.example.domain.envelopes.Envelope;
+import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +67,7 @@ public class EnvelopeController {
 
     @PostMapping("/user/{userID}/envelopes")
     public EnvelopeGetResponse createEnvelope(final @PathVariable(USER_ID) String ownerID,
-                                   final @RequestParam("name") String name) throws UploadFileException {
+                                              final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
             Envelope envelope = envelopeService.addEnvelope(name, owner);
