@@ -212,3 +212,17 @@
 .saved-enter, .saved-leave-to {
     opacity: 0
 }
+
+/* Color picker */
+.color-picker {
+    border: none;
+    width: 7em;
+    height: 2em;
+}
+
+.reset-icon {
+    fill: var(--dark-grey);
+    height: 1.5em;
+    width: auto;
+    margin-right: 1em;
+}

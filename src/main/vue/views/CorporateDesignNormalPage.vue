@@ -7,6 +7,7 @@
         <b-container fluid="xl" style="overflow: hidden">
             <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 85vh">
                 <LogoNormal @modalTrigger="toggleOverflow"></LogoNormal>
+                <ColorNormal></ColorNormal>
             </div>
         </b-container>
 
@@ -18,10 +19,11 @@
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import LogoNormal from "@/main/vue/components/corporateDesign/LogoNormal";
+import ColorNormal from "@/main/vue/components/corporateDesign/ColorNormal";
 
 export default {
     name: "CorporateDesignNormalPage",
-    components: {LogoNormal, Header, Footer},
+    components: {ColorNormal, LogoNormal, Header, Footer},
     data() {
         return {
             showOverflow: true
