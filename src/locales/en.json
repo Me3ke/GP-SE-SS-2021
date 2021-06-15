@@ -455,6 +455,7 @@
     "AdminSettings": {
         "corporate": {
             "title": "Corporate design",
+            "exp": "Experimental settings",
             "logo": "Logo",
             "currentLogo": "Current logo:",
             "logoUpload": "Upload logo",
@@ -463,7 +464,10 @@
             "logoTitle": "Upload your logo!",
             "logoPlaceholder": "Drop logo here or choose",
             "dropPlaceholder": "Drop here",
-            "logoSuccess": "You have successfully uploaded your logo!"
+            "logoSuccess": "You have successfully uploaded your logo!",
+            "color": "Color scheme",
+            "color1": "Font and contrast color",
+            "color2": "Accent color"
         }
     }
 }

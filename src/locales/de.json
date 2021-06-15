@@ -456,6 +456,7 @@
     "AdminSettings": {
         "corporate": {
             "title": "Firmen Design",
+            "exp": "Experimentelle Einstellungen",
             "logo": "Logo",
             "currentLogo": "Aktuelles Logo:",
             "logoUpload": "Logo hochladen",
@@ -464,7 +465,10 @@
             "logoTitle": "Laden Sie Ihr Logo hoch!",
             "logoPlaceholder": "Logo hier ablegen oder auswählen ",
             "dropPlaceholder": "Hier fallen lassen",
-            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!"
+            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!",
+            "color": "Farbthema",
+            "color1": "Schrift- und Kontrastfarbe",
+            "color2": "Akzentfarbe"
         }
     }
 }
