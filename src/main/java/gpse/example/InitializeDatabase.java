@@ -1,6 +1,8 @@
 package gpse.example;
 
 
+import gpse.example.domain.corporatedesign.CorporateDesign;
+import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +46,14 @@ public class InitializeDatabase implements InitializingBean {
     private static final String DEUTSCHLAND = "Deutschland";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String PASSWORD = "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG";
+    private static final String COLOR_ONE = "#23292f";
+    private static final String COLOR_TWO = "#D8D8D9";
+    private static final String COLOR_THREE = "#ACACAC";
+    private static final String COLOR_FOUR = "#ababab";
+    private static final String[] DEFAULT_COLORS = {"#47525E", "#436495", COLOR_ONE, COLOR_TWO, COLOR_THREE, COLOR_FOUR,
+        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", COLOR_ONE, "rgba(0, 0, 0, .5)", COLOR_TWO, COLOR_ONE,
+        COLOR_ONE, COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
+        "#501515", "#363f48", "rgba(0, 0, 0, .65)"};
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final DocumentService documentService;
@@ -49,6 +61,7 @@ public class InitializeDatabase implements InitializingBean {
     private final EnvelopeService envelopeService;
     private final SignatoryService signatoryService;
     private final SecuritySettingsService securitySettingsService;
+    private final CorporateDesignService corporateDesignService;
 
     /**
      * The standard constructor for the class initializing the database.
@@ -59,14 +72,16 @@ public class InitializeDatabase implements InitializingBean {
      * @param envelopeService         used for saving envelope-objects in the database.
      * @param documentMetaDataService used for saving documentMetaData-objects in the database.
      * @param signatoryService        used for saving signatory-objects in the database.
-     * @param securitySettingsService used for saving user settings objects in the database
+     * @param securitySettingsService used for saving user settings objects in the database.
+     * @param corporateDesignService  used for saving the corporate design in the database.
      */
     @Autowired
     public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService,
                               final DocumentService documentService, final EnvelopeService envelopeService,
                               final DocumentMetaDataService documentMetaDataService,
                               final SignatoryService signatoryService,
-                              final SecuritySettingsService securitySettingsService) {
+                              final SecuritySettingsService securitySettingsService,
+                              final CorporateDesignService corporateDesignService) {
         this.userService = userService;
         this.personalDataService = personalDataService;
         this.documentService = documentService;
@@ -74,10 +89,22 @@ public class InitializeDatabase implements InitializingBean {
         this.envelopeService = envelopeService;
         this.signatoryService = signatoryService;
         this.securitySettingsService = securitySettingsService;
+        this.corporateDesignService = corporateDesignService;
     }
 
     @Override
     public void afterPropertiesSet() {
+        final byte[] defaultLogo;
+        final byte[] defaultLogoDark;
+        try {
+            defaultLogo = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small.svg"));
+            defaultLogoDark = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small_darkmode.svg"));
+            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, defaultLogo, defaultLogoDark);
+            defaultDesign = corporateDesignService.saveCorporateDesign(defaultDesign);
+            System.out.println(defaultDesign.getId());
+        } catch (IOException e) {
+            System.out.println("Default logo could not be saved.");
+        }
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
