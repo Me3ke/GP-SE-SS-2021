@@ -50,7 +50,7 @@ export default {
                 'title': newDoc.title,
                 'dataType': newDoc.dataType,
                 'signatories': newDoc.signatories,
-                'signa': newDoc.signatories,
+                'alreadyDefinedSignatories': newDoc.signatories,
                 'readersID': newDoc.readers,
                 //'signatureType': newDoc.signatureType,
                 'endDate': newDoc.endDate,

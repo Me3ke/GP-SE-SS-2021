@@ -19,11 +19,14 @@ public class DocumentPutRequest {
     private boolean orderRelevant;
     private String lastModified;
 
-    public List<Signatory> getSigna() {
-        return signa;
+
+
+
+    public List<Signatory> getAlreadyDefinedSignatories() {
+        return alreadyDefinedSignatories;
     }
 
-    private List<Signatory> signa;
+    private List<Signatory> alreadyDefinedSignatories;
 
 
 

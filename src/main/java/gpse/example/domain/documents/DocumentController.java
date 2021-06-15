@@ -7,6 +7,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
+import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
@@ -164,6 +165,7 @@ public class DocumentController {
             signatoryService.saveSignatories(archivedDocument.getSignatories());
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
+
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
             newDocument.setPreviousVersion(savedDocument);
@@ -291,6 +293,7 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
+            // TODO Document Title is null after updated Document
             final byte[] protocolBytes = protocol.writeProtocol().toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
