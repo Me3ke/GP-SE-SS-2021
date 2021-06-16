@@ -6,6 +6,7 @@ import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
@@ -146,10 +147,14 @@ public class EnvelopeController {
                 userService.getUser(document.getOwner()),
                 user.getLastname(), document);
         } catch (UsernameNotFoundException unf) {
-            GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
-            smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
-                "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
-                    + token.getToken());
+            if(signatory.getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
+                GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
+                smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
+                    "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
+                        + token.getToken());
+            } else {
+                smtpServerHelper.sendGuestInvitationAdvanced(signatory.getEmail(), document);
+            }
         }
     }
 
