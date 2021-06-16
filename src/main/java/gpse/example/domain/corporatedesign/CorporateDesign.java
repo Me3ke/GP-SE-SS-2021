@@ -33,9 +33,15 @@ public class CorporateDesign {
      * @param logoDark the logo in darkmode.
      */
     public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark) {
-        this.colors = Arrays.stream(colors).collect(Collectors.toList());
-        this.logo = Arrays.copyOf(logo, logo.length);
-        this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+        if (colors != null) {
+            this.colors = Arrays.stream(colors).collect(Collectors.toList());
+        }
+        if (logo != null) {
+            this.logo = Arrays.copyOf(logo, logo.length);
+        }
+        if (logoDark != null) {
+            this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+        }
     }
 
     protected CorporateDesign() {

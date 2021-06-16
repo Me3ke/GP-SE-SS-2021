@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * A request and response File for setting or getting the logos.
  */
-public class Logos {
+public class LogosRequestBody {
 
     private byte[] logo;
     private byte[] logoDark;

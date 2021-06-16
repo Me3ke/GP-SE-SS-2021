@@ -36,17 +36,17 @@ public class CorporateDesignController {
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
     @GetMapping("/corporate/logo")
-    public Logos getLogo() throws CorporateDesignNotFoundException {
-        final Logos logos = new Logos();
+    public LogosRequestBody getLogo() throws CorporateDesignNotFoundException {
+        final LogosRequestBody logosRequestBody = new LogosRequestBody();
         CorporateDesign corporateDesign;
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
             corporateDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
         }
-        logos.setLogo(corporateDesign.getLogo());
-        logos.setLogoDark(corporateDesign.getLogoDark());
-        return logos;
+        logosRequestBody.setLogo(corporateDesign.getLogo());
+        logosRequestBody.setLogoDark(corporateDesign.getLogoDark());
+        return logosRequestBody;
     }
 
     /**
@@ -67,21 +67,25 @@ public class CorporateDesignController {
 
     /**
      * The changeLogo method does a put request and changes the logo.
-     * @param logos the request body which contains both logos as byte array.
+     * @param logosRequestBody the request body which contains both logos as byte array.
      * @return a JSONResponseObject showing the status of the request.
+     * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
     @Secured("ROLE_ADMIN")
     @PutMapping("/corporate/logo")
-    public JSONResponseObject changeLogo(@RequestBody final Logos logos) {
+    public JSONResponseObject changeLogo(@RequestBody final LogosRequestBody logosRequestBody)
+        throws CorporateDesignNotFoundException {
         final JSONResponseObject response = new JSONResponseObject();
         CorporateDesign corporateDesign;
+        final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, null, null);
+            corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
+                null, null);
         }
-        corporateDesign.setLogo(logos.getLogo());
-        corporateDesign.setLogoDark(logos.getLogoDark());
+        corporateDesign.setLogo(logosRequestBody.getLogo());
+        corporateDesign.setLogoDark(logosRequestBody.getLogoDark());
         corporateDesignService.saveCorporateDesign(corporateDesign);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage(SUCCESSFUL);
@@ -90,23 +94,23 @@ public class CorporateDesignController {
 
     /**
      * The changeColors method does a put request to change the colors of the corporate Design.
-     * @param colors the given colors that should be implemented in the corporate Design.
+     * @param colorsRequestBody the given colors that should be implemented in the corporate Design.
      * @return a JSONResponseObject showing the status of the request.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
     @Secured("ROLE_ADMIN")
     @PutMapping("/corporate/colors")
-    public JSONResponseObject changeColors(@RequestBody final String... colors)
+    public JSONResponseObject changeColors(@RequestBody final ColorsRequestBody colorsRequestBody)
         throws CorporateDesignNotFoundException {
         final JSONResponseObject response = new JSONResponseObject();
         CorporateDesign corporateDesign;
+        final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, null, null);
+            corporateDesign = new CorporateDesign(null, defaultDesign.getLogo(), defaultDesign.getLogoDark());
         }
-        final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
-        corporateDesign.setColors(colors, defaultDesign.getColors());
+        corporateDesign.setColors(colorsRequestBody.getColors(), defaultDesign.getColors());
         corporateDesignService.saveCorporateDesign(corporateDesign);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage(SUCCESSFUL);

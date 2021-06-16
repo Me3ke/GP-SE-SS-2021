@@ -42,7 +42,7 @@
 
 <script>
 
-import image from "../assets/logos/ELSA_big.svg";
+import image from "../assets/logosRequestBody/ELSA_big.svg";
 import Footer from "@/main/vue/components/Footer";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 

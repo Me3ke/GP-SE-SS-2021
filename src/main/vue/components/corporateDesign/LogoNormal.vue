@@ -38,7 +38,7 @@ export default {
     data() {
         return {
             // TODO: gather logo from Api
-            logo: require('../../assets/logos/ELSA_small.svg'),
+            logo: require('../../assets/logosRequestBody/ELSA_small.svg'),
             showLogoUpload: false
         }
     },

@@ -18,7 +18,7 @@
                             <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r0" @click="resetColor(0)"></b-icon>
                             <span>
-                                <input class="color-picker" type="color" v-model="colors[0]">
+                                <input class="color-picker" type="color" v-model="colorsRequestBody[0]">
                             </span>
                         </div>
                     </b-list-group-item>
@@ -33,7 +33,7 @@
                             <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r1" @click="resetColor(1)"></b-icon>
                             <span>
-                                <input class="color-picker" type="color" v-model="colors[1]">
+                                <input class="color-picker" type="color" v-model="colorsRequestBody[1]">
                             </span>
                         </div>
                     </b-list-group-item>
@@ -72,19 +72,19 @@ export default {
     data() {
         return {
             showSave: false,
-            colors: ["#000000", "#ea0a80"]
+            colorsRequestBody: ["#000000", "#ea0a80"]
         }
     },
     created() {
         //TODO: use loadSheet method here, also do for every other page the same
     },
     mounted() {
-        //TODO: initialize color array with colors on server
+        //TODO: initialize color array with colorsRequestBody on server
     },
     methods: {
         saveColors() {
-            // TODO: make api call to set colors here and use set colors via api get as array
-            constructSheet(this.colors)
+            // TODO: make api call to set colorsRequestBody here and use set colorsRequestBody via api get as array
+            constructSheet(this.colorsRequestBody)
 
             // show saved notification
             this.showSave = true

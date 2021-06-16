@@ -27,8 +27,8 @@ export default {
     components: {Messages, Avatar, LanguageSwitcher},
     data() {
         return {
-            logoLightMode: require('../../assets/logos/ELSA_small.svg'),
-            logoDarkMode: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            logoLightMode: require('../../assets/logosRequestBody/ELSA_small.svg'),
+            logoDarkMode: require('../../assets/logosRequestBody/ELSA_small_darkmode.svg'),
             mobile: window.innerWidth < 576
         }
     },

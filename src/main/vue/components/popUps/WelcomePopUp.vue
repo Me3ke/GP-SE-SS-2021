@@ -173,8 +173,8 @@ export default {
     components: {KeyPairSetUp, TwoFakAuthSetUp},
     data() {
         return {
-            logoLightMode: require('../../assets/logos/ELSA_small.svg'),
-            logoDarkMode: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            logoLightMode: require('../../assets/logosRequestBody/ELSA_small.svg'),
+            logoDarkMode: require('../../assets/logosRequestBody/ELSA_small_darkmode.svg'),
 
             page: 1,
             pageBefore: 0,
