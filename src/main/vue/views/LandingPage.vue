@@ -42,7 +42,7 @@
 
 <script>
 
-import image from "../assets/logosRequestBody/ELSA_big.svg";
+import image from "../assets/logos/ELSA_big.svg";
 import Footer from "@/main/vue/components/Footer";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 
@@ -173,7 +173,7 @@ export default {
 .button-Box{
   padding-top: 1vh;
   margin: 0;
-  padding-bottom: 0vh;
+  padding-bottom: 0;
 }
 .button-division{
   padding: 2vh;

@@ -167,8 +167,8 @@ export default {
             showSign: false,
             showDownload: false,
 
-            logoDarkMode: require('../assets/logosRequestBody/ELSA_medium_darkmode.svg'),
-            logoLightMode: require('../assets/logosRequestBody/ELSA_medium.svg'),
+            logoDarkMode: require('../assets/logos/ELSA_medium_darkmode.svg'),
+            logoLightMode: require('../assets/logos/ELSA_medium.svg'),
 
             isClosed: true
         }

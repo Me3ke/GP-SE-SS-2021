@@ -1,3 +1,5 @@
+import themeAPI from "@/main/vue/api/themeAPI";
+
 export const namespaced = true
 
 export const state = {
@@ -6,7 +8,11 @@ export const state = {
         theme: ''
     },
     sheet: '',
-    initialLoad: false
+    initialLoad: false,
+    colors: [],
+    errorFetchColors: {},
+    putColorResponse: {},
+    errorPutColorResponse: {}
 }
 
 export const mutations = {
@@ -28,6 +34,20 @@ export const mutations = {
     // changes initialLoad to indicate that stylesheet has been loaded after start of application
     CHANGE_INITIAL_LOAD(state, load) {
         state.initialLoad = load
+    },
+    // sets color-array that is in database
+    SET_COLORS(state, colors) {
+        state.colors = colors
+    },
+    // sets error of request
+    SET_ERROR_FETCH_COLORS(state, error) {
+        state.errorFetchColors = error
+    },
+    SET_PUT_COLORS_RESPONSE(state, res) {
+        state.putColorResponse = res
+    },
+    SET_ERROR_PUT_COLORS_RESPONSE(state, error) {
+        state.errorPutColorResponse = error
     }
 }
 
@@ -47,6 +67,31 @@ export const actions = {
     },
     setInitialLoad({commit}, load) {
         commit('CHANGE_INITIAL_LOAD', load)
+    },
+    // fetches the initial colors from server
+    fetchColors({commit}) {
+        return themeAPI.getColors().then(response => {
+            commit('SET_COLORS', response.data)
+            commit('SET_ERROR_FETCH_COLORS', {})
+        }).catch(error => {
+            commit('SET_ERROR_FETCH_COLORS', error)
+        })
+    },
+    // puts new colors into database
+    putColors({commit}, colors) {
+        return themeAPI.putColors(colors).then(response => {
+            commit('SET_PUT_COLORS_RESPONSE', response.data)
+            commit('SET_ERROR_PUT_COLORS_RESPONSE', {})
+        }).catch(error => {
+            commit('SET_ERROR_PUT_COLORS_RESPONSE', error)
+        })
+    },
+    // resets colors in order to clean local storage
+    resetColors({commit}) {
+        commit('SET_COLORS', {})
+        commit('SET_ERROR_FETCH_COLORS', {})
+        commit('SET_PUT_COLORS_RESPONSE', {})
+        commit('SET_ERROR_PUT_COLORS_RESPONSE', {})
     }
 }
 
@@ -60,5 +105,8 @@ export const getters = {
     },
     getInitialLoad: (state) => {
         return state.initialLoad
+    },
+    getColors: (state) => {
+        return state.colors
     }
 }

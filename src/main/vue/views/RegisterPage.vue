@@ -18,7 +18,7 @@
 
 <script>
 import Footer from "@/main/vue/components/Footer";
-import image from "../assets/logosRequestBody/ELSA_big.svg";
+import image from "../assets/logos/ELSA_big.svg";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import RegisterForm from "../components/RegisterForm";
 

@@ -18,7 +18,7 @@
                             <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r0" @click="resetColor(0)"></b-icon>
                             <span>
-                                <input class="color-picker" type="color" v-model="colorsRequestBody[0]">
+                                <input class="color-picker" type="color" v-model="colors[0]">
                             </span>
                         </div>
                     </b-list-group-item>
@@ -33,7 +33,7 @@
                             <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r1" @click="resetColor(1)"></b-icon>
                             <span>
-                                <input class="color-picker" type="color" v-model="colorsRequestBody[1]">
+                                <input class="color-picker" type="color" v-model="colors[1]">
                             </span>
                         </div>
                     </b-list-group-item>
@@ -65,26 +65,33 @@
 </template>
 
 <script>
-import {constructSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import {constructSheet, loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import {mapGetters} from "vuex";
 
 export default {
     name: "ColorNormal",
     data() {
         return {
             showSave: false,
-            colorsRequestBody: ["#000000", "#ea0a80"]
+            colors: []
         }
     },
     created() {
         //TODO: use loadSheet method here, also do for every other page the same
+        loadSheet()
     },
-    mounted() {
-        //TODO: initialize color array with colorsRequestBody on server
+    async mounted() {
+        await this.$store.dispatch('theme/fetchColors')
+        this.colors = JSON.parse(JSON.stringify(this.sheetColors))
     },
     methods: {
-        saveColors() {
-            // TODO: make api call to set colorsRequestBody here and use set colorsRequestBody via api get as array
-            constructSheet(this.colorsRequestBody)
+        async saveColors() {
+            // setting colors on server
+            await this.$store.dispatch('theme/putColors', this.colors)
+            await this.$store.dispatch('theme/fetchColors')
+
+            // constructing stylesheet and applying it to DOM
+            constructSheet(this.sheetColors)
 
             // show saved notification
             this.showSave = true
@@ -93,7 +100,8 @@ export default {
             }, 2000);
         },
         resetColor(index) {
-            // TODO: reset color here with color from api
+            //  reset color here with color from api
+            this.colors[index] = this.sheetColors[index]
 
             // rotate animation
             document.querySelector("#r" + index).style.transform = "rotate(45deg)";
@@ -122,6 +130,14 @@ export default {
                 document.querySelector("#r" + index).style.transform = "rotate(360deg)";
             }, 400);
         }
+    },
+    computed: {
+        ...mapGetters({
+            sheetColors: 'theme/getColors'
+        })
+    },
+    beforeDestroy() {
+        this.$store.dispatch('theme/resetColors')
     }
 }
 </script>
