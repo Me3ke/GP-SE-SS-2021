@@ -32,6 +32,7 @@ public class CorporateDesignController {
 
     /**
      * The getLogo method does a get request on the logo.
+     *
      * @return a logos object which contains both logos.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
@@ -51,6 +52,7 @@ public class CorporateDesignController {
 
     /**
      * The getColors method does a get request on the colors.
+     *
      * @return a String array which contains all the colors.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
@@ -67,11 +69,12 @@ public class CorporateDesignController {
 
     /**
      * The changeLogo method does a put request and changes the logo.
+     *
      * @param logosRequestBody the request body which contains both logos as byte array.
      * @return a JSONResponseObject showing the status of the request.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_ROLE_ADMIN")
     @PutMapping("/corporate/logo")
     public JSONResponseObject changeLogo(@RequestBody final LogosRequestBody logosRequestBody)
         throws CorporateDesignNotFoundException {
@@ -94,11 +97,12 @@ public class CorporateDesignController {
 
     /**
      * The changeColors method does a put request to change the colors of the corporate Design.
+     *
      * @param colorsRequestBody the given colors that should be implemented in the corporate Design.
      * @return a JSONResponseObject showing the status of the request.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
-    @Secured("ROLE_ADMIN")
+   // @Secured("ROLE_ADMIN")
     @PutMapping("/corporate/colors")
     public JSONResponseObject changeColors(@RequestBody final ColorsRequestBody colorsRequestBody)
         throws CorporateDesignNotFoundException {

@@ -1,9 +1,9 @@
 package gpse.example.domain.corporatedesign;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The class corporate Design is a compound of colors and pictures which are stored in the database
@@ -34,7 +34,8 @@ public class CorporateDesign {
      */
     public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark) {
         if (colors != null) {
-            this.colors = Arrays.stream(colors).collect(Collectors.toList());
+            this.colors = new ArrayList<>(Arrays.asList(colors));
+            System.out.println(this.colors.get(0));
         }
         if (logo != null) {
             this.logo = Arrays.copyOf(logo, logo.length);
