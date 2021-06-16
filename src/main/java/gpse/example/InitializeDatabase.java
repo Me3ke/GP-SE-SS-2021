@@ -31,7 +31,7 @@ public class InitializeDatabase implements InitializingBean {
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
-    private static final String ADMINNAME = "Ruediger.Spieler@mail.de";
+    private static final String ADMINNAME = "Hans.Schneider.test@gmail.com";
     private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
@@ -192,7 +192,7 @@ public class InitializeDatabase implements InitializingBean {
                     signatories.add(new ProtoSignatory(owner.getUsername(), 2));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, userService);
+                    signatories, userService, documentService);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {

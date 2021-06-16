@@ -51,13 +51,14 @@ public class ScheduledTasks {
     }
 
     private void informSignatoriesInOrder(Document doc) throws MessageGenerationException {
-        Signatory currentSignatory = null;
-        for (final Signatory signatory : doc.getSignatories()) {
+
+       /* for (final Signatory signatory : doc.getSignatories()) {
             if (!signatory.isStatus()) {
-                currentSignatory = signatory;
+                Signatory currentSignatory = signatory;
                 break;
             }
-        }
+        }*/
+        Signatory currentSignatory = doc.getCurrentSignatory();
         if (currentSignatory != null && currentSignatory.getReminder() > -1) {
             if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
                 try {
