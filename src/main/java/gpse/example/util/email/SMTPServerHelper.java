@@ -14,6 +14,8 @@ public class SMTPServerHelper {
 
     private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
 
+    private static final String GUTEN_TAG_N = "Guten Tag, %n";
+
     private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
         + "Hier bestätigen: %s %n"
@@ -30,7 +32,7 @@ public class SMTPServerHelper {
     private static final String SIGNATURE_INVITATION_SUBJECT = "Signatur des Dokuments %s";
 
 
-    private static final String ADMIN_VALIDATION_INFO = "Hallo, %n"
+    private static final String ADMIN_VALIDATION_INFO = GUTEN_TAG_N
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
@@ -41,13 +43,18 @@ public class SMTPServerHelper {
     private static final String REMINDER = GREETING
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
+
     /**
      * use Invitation subject.
      */
-    private static final String GUEST_INVITATION = "Guten Tag, %n"
+    private static final String GUEST_INVITATION = GUTEN_TAG_N
         + "Sie wurden von %s gebeten das Dokument %s zu Signieren.%n"
         + "Sie finden das Dokument hier: %s";
 
+    private static final String GUEST_INVITATION_ADVANCED = GUTEN_TAG_N
+        + "Sie wurden aufgefordert ein Dokument mit einer Signatur zu signieren, die eine Anmeldung erfordert.%n"
+        + "Sie können sich hier http://localhost:8080/de/landingpage/ registrieren.%n"
+        + "Dort finden Sie auch weitere Informationen rund um unsere Anwendung.";
     @Autowired
     private final JavaMailSender mailSender;
 
@@ -134,6 +141,22 @@ public class SMTPServerHelper {
         message.setRecievingUserMail(guestMail);
         message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(GUEST_INVITATION, document.getOwner(), document.getDocumentTitle(), link));
+
+        mailSender.send(message.generateMessage());
+    }
+
+    /**
+     * send Information that Registration is required for signing advanced.
+     * @param guestMail Mail of guestsignatory
+     * @param document document that should be signed advanced
+     * @throws MessageGenerationException when message could not be generated or send
+     */
+    public void sendGuestInvitationAdvanced(final String guestMail, final Document document)
+            throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(guestMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(GUEST_INVITATION_ADVANCED);
 
         mailSender.send(message.generateMessage());
     }

@@ -1,15 +1,13 @@
 package gpse.example.web.documents;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Class modeling the guestTokens
+ * Class modeling the guestTokens.
  */
+@Entity
 public class GuestToken {
 
     @Id
