@@ -105,9 +105,8 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
-<<<<<<< HEAD:src/main/java/gpse/example/domain/envelopes/EnvelopeController.java
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
-                userService, signatoryService);
+                userService);
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
                     smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
@@ -119,9 +118,6 @@ public class EnvelopeController {
                     userService.getUser(document.getOwner()),
                     document.getCurrentSignatory().getUser().getLastname(), document);
             }
-=======
-            final Document document = documentService.creation(documentPutRequest, envelope, ownerID, userService);
->>>>>>> develop:src/main/java/gpse/example/web/envelopes/EnvelopeController.java
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");

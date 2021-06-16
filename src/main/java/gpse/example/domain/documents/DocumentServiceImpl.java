@@ -27,6 +27,7 @@ public class DocumentServiceImpl implements DocumentService {
     /**
      * the standard constructor for documentServices.
      * @param documentRepository the documentRepository initialized by Spring
+     * @param documentCreator the documentCreator creates documents.
      */
     @Autowired
     public DocumentServiceImpl(final DocumentRepository documentRepository, final DocumentCreator documentCreator) {
@@ -62,7 +63,7 @@ public class DocumentServiceImpl implements DocumentService {
                                 throws CreatingFileException, IOException {
         final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatoriesID, userService);
+            ownerID, signatoriesID, userService, this);
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);
