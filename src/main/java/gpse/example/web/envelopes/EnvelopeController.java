@@ -1,6 +1,8 @@
-package gpse.example.domain.envelopes;
+package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.*;
+import gpse.example.domain.envelopes.Envelope;
+import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
@@ -8,6 +10,7 @@ import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,7 +74,7 @@ public class EnvelopeController {
 
     @PostMapping("/user/{userID}/envelopes")
     public EnvelopeGetResponse createEnvelope(final @PathVariable(USER_ID) String ownerID,
-                                   final @RequestParam("name") String name) throws UploadFileException {
+                                              final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
             Envelope envelope = envelopeService.addEnvelope(name, owner);
@@ -102,6 +105,7 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
+<<<<<<< HEAD:src/main/java/gpse/example/domain/envelopes/EnvelopeController.java
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService, signatoryService);
             if (!document.isOrderRelevant()) {
@@ -115,6 +119,9 @@ public class EnvelopeController {
                     userService.getUser(document.getOwner()),
                     document.getCurrentSignatory().getUser().getLastname(), document);
             }
+=======
+            final Document document = documentService.creation(documentPutRequest, envelope, ownerID, userService);
+>>>>>>> develop:src/main/java/gpse/example/web/envelopes/EnvelopeController.java
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");

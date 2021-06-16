@@ -1,4 +1,4 @@
-package gpse.example.web;
+package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -6,10 +6,11 @@ import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
+import gpse.example.web.AuthCodeValidationRequest;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 
 
@@ -28,15 +29,12 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
-    //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private final UserService userService;
-    private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
     private final StringToKeyConverter stringToKeyConverter;
-    private final SecuritySettingsService securitySettingsService;
 
 
     /**
@@ -44,18 +42,13 @@ public class UserController {
      *
      * @param service                 Userservice Object
      * @param confService             ConfirmationTokenService object
-     * @param personalDataService     PersonalDataService object
-     * @param securitySettingsService SecuritySettingsService object
      * @param messageService          the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final PersonalDataService personalDataService,
-                          final SecuritySettingsService securitySettingsService, final MessageService messageService) {
+                          final MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
-        this.personalDataService = personalDataService;
-        this.securitySettingsService = securitySettingsService;
         this.messageService = messageService;
         stringToKeyConverter = new StringToKeyConverter();
     }
@@ -85,7 +78,6 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
-                personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -176,9 +168,8 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
-     *
      * @param personalData the new personal data of the user stating the request
-     * @param username     the username of the user stating the request
+     * @param username the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
@@ -243,7 +234,6 @@ public class UserController {
             final SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
             securitySettings.generateSecret();
             final byte[] temp = securitySettings.generateQRCode(username);
-            securitySettingsService.saveSecuritySettings(securitySettings);
             userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
@@ -272,16 +262,16 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
-     *
      * @param username the username of the user stating the request
-     * @param settingTwoFacAuth  true if the user wants a two-factor-login, false if not
+     * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
                                         @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
-        SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
+        User user = userService.getUser(username);
+        SecuritySettings securitySettings = user.getSecuritySettings();
         securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
-        securitySettingsService.saveSecuritySettings(securitySettings);
+        userService.saveUser(user);
     }
 
     @GetMapping("/user/{userID}/settings/twoFactorLogin")

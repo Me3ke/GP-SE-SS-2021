@@ -5,9 +5,8 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
+import gpse.example.web.documents.DocumentPutRequest;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
