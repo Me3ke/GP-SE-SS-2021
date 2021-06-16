@@ -115,9 +115,6 @@ export default {
 
 <style scoped>
 
-.popover {
-    max-width: 100%;
-}
 .popover-content-missing {
     font-size: 1em;
     color: red;

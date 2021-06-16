@@ -131,17 +131,15 @@ export const actions = {
         })
     },
 
-    async getDocumentProgress({commit}, {envId, documentsId}) {
-         await documentsId.forEach(docId => {
-            documentAPI.getDocumentProgress(envId, docId).then((response) => {
-                let data = response.data
-                let progress = {docId, data}
-                commit('SET_DOCUMENT_PROGRESS', progress)
-                commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
-            }).catch(error => {
-                console.error(error)
-                commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
-            })
+    async getDocumentProgress({commit}, {envId, docId}) {
+        await documentAPI.getDocumentProgress(envId, docId).then((response) => {
+            let data = response.data
+            let progress = {docId, data}
+            commit('SET_DOCUMENT_PROGRESS', progress)
+            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
+        }).catch(error => {
+            console.error(error)
+            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
         })
         //console.log("SUCCESS")
     }

@@ -142,7 +142,7 @@
                                         <!-- Error Messages -->
                                         <b-alert :show="showAlertSign"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeAdvanced }}
+                                            {{ $t('TwoFakAuth.fail') }} <!---{{ statusCodeAdvanced }}--->
                                         </b-alert>
 
 
@@ -297,6 +297,8 @@ export default {
             await this.$store.dispatch('fetchUser')
             // gets data out of user file that contains key
             const reader = new FileReader()
+            console.log("KEY")
+            console.log(this.key)
             reader.readAsText(this.key)
 
             // getting user so there is access public key
@@ -332,6 +334,7 @@ export default {
                 } else {
                     // if api call got to server, but server did not response wit 'ok' shows errorCode to user
                     // if api call did not go to server, shows that there are Server Network problems
+                    console.log("hallo ich bin's")
                     if (!this.showErrorAdvanced) {
                         this.showAlertSign = true
                     }

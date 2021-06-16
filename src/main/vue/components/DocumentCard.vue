@@ -7,6 +7,12 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
+                    <div v-if="documentProgressById(document.id) && showProgress">
+                        <ProgressBar
+                            :documentProgress="documentProgressById(document.id)"
+                            :docId="document.id"
+                        ></ProgressBar>
+                    </div>
             </b-col>
             <b-col cols="1">
                 <settingsButton
@@ -20,13 +26,23 @@
 import settingsButton from "@/main/vue/components/envSettingsButton";
 import DocumentBox from "@/main/vue/components/DocumentBox";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import ProgressBar from "@/main/vue/components/ProgressBar";
+import {mapGetters} from "vuex";
 
 export default {
     name: "DocumentCard",
-    components: {TwoFacAuth, DocumentBox, settingsButton},
+    components: {ProgressBar, TwoFacAuth, DocumentBox, settingsButton},
     props: {
         document: Object,
-        envelopeId: [String, Number]
+        envelopeId: [String, Number],
+        showProgress: Boolean
+    },
+    computed: {
+        ...mapGetters({
+        documentProgress: 'document/getDocumentProgressArray',
+        documentProgressById: 'document/getDocumentProgressArrayById'
+    }),
+
     },
     data() {
         return {
@@ -56,6 +72,22 @@ export default {
         closeAuth() {
             this.showAuth = false
         }
+    },
+    // resets the state of documentProgress array to [] if this pages is going to reload
+    // otherwise it will add by every refreshing or new loading of the page all documents to the already (previously)
+    // added state array
+    async beforeCreate() {
+        await this.$store.dispatch('document/resetState', [])
+
+        await this.$store.dispatch('document/getDocumentProgress', {
+            envId: this.envelopeId,
+            docId: this.document.id
+        })
+
+    },
+     created() {
+        console.log("test")
+        console.log(this.documentProgressById(this.document.id))
     }
 }
 </script>

@@ -57,7 +57,7 @@
                             <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
+                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id" :show-progress="false"></DocumentCard>
                         </div>
                     </div>
                 </div>
