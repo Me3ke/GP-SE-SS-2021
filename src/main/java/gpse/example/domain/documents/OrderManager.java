@@ -49,9 +49,10 @@ public class OrderManager {
                                         final SignatureType signatureType) {
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)
-                    && currentSignatory.getSignatureType().equals(signatureType)) {
+            if (currentSignatory.getEmail().equals(signatoryToFind.getEmail())
+                && currentSignatory.getSignatureType().equals(signatureType)) {
                 foundSignatory = true;
+                break;
             }
         }
         return foundSignatory;
@@ -66,6 +67,6 @@ public class OrderManager {
     private boolean matchesSignatory(final User reader, final Signatory currentReader,
                                      final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
-                && currentReader.getUser().equals(reader);
+                && currentReader.getEmail().equals(reader.getEmail());
     }
 }

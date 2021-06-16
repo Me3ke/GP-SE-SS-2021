@@ -54,7 +54,7 @@ public class Protocol {
     /**
      * printing the protocol with specified user data.
      * @return a stream which contains the written pdf protocol.
-     * @throws IOException
+     * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
     public ByteArrayOutputStream writeProtocol() throws IOException {
 
@@ -101,10 +101,10 @@ public class Protocol {
                 for (final Signatory signatory : document.getSignatories()) {
                     lineCount -= LINE_DIST;
                     if (signatory.isStatus()) {
-                        addIndentedLine(signatory.getUser().getUsername() + "    Am: "
+                        addIndentedLine(signatory.getEmail() + "    Am: "
                             + formatter.format(signatory.getSignedOn()), lineCount, SPACING_ONE_FIVE, contentStream);
                     } else {
-                        addIndentedLine(signatory.getUser().getUsername() + "    noch nicht signiert",
+                        addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
                             lineCount, SPACING_ONE_FIVE, contentStream);
                     }
                 }
@@ -126,10 +126,10 @@ public class Protocol {
                     for (final Signatory signatory : document.getSignatories()) {
                         lineCount -= LINE_DIST;
                         if (signatory.isStatus()) {
-                            addIndentedLine(signatory.getUser().getUsername() + "    (ungültig) ",
+                            addIndentedLine(signatory.getEmail() + "    (ungültig) ",
                                 lineCount, SPACING_TWO_FIVE, contentStream);
                         } else {
-                            addIndentedLine(signatory.getUser().getUsername() + "    nicht signiert",
+                            addIndentedLine(signatory.getEmail() + "    nicht signiert",
                                 lineCount, SPACING_TWO_FIVE, contentStream);
                         }
                     }
@@ -148,7 +148,7 @@ public class Protocol {
      * @param value         value to add to pdf file
      * @param offSet        line offset from 0 to 700 from bottom of page
      * @param contentStream Stream that knows the file to that is written
-     * @throws IOException
+     * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
     private void addLine(final String value, final int offSet,
                          final PDPageContentStream contentStream) throws IOException {

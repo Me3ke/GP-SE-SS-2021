@@ -102,7 +102,7 @@ public class Document {
      * @param signatureType the signatureType the signatory refers to
      */
     public void addSignatory(final User signatory, final SignatureType signatureType) {
-        signatories.add(new Signatory(signatory, signatureType));
+        signatories.add(new Signatory(signatory.getUsername(), signatureType));
     }
 
     /**
@@ -114,7 +114,7 @@ public class Document {
     public void advancedSignature(final String user, final String signature) {
         boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
-            if (signatories.get(i).getUser().getEmail().equals(user)) {
+            if (signatories.get(i).getEmail().equals(user)) {
                 userIsSignatory = true;
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
@@ -256,7 +256,7 @@ public class Document {
             return true;
         }
         for (final Signatory signatory : this.signatories) {
-            if (signatories.contains(signatory.getUser().getEmail())) {
+            if (signatories.contains(signatory.getEmail())) {
                 return true;
             }
         }
@@ -272,7 +272,7 @@ public class Document {
     public boolean hasReaders(final List<String> readers) {
         for (final String reader : readers) {
             for (final Signatory signatory : getReaders()) {
-                if (signatory.getUser().getUsername().equals(reader)) {
+                if (signatory.getEmail().equals(reader)) {
                     return true;
                 }
             }

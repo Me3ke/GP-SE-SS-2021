@@ -137,7 +137,7 @@ public class SignatureManagement {
         }
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)) {
+            if (currentSignatory.getEmail().equals(signatoryToFind.getEmail())) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
                 documentService.addDocument(document);
@@ -190,7 +190,7 @@ public class SignatureManagement {
     private boolean matchesSignatory(final User reader, final Signatory currentReader,
                                      final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
-            && currentReader.getUser().equals(reader);
+            && currentReader.getEmail().equals(reader.getEmail());
     }
 
 }

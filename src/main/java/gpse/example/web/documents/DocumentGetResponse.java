@@ -65,7 +65,7 @@ public class DocumentGetResponse {
         this.signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(currentUser)
+            if (currentSignatory.getEmail().equals(currentUser.getEmail())
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
                 this.signatory = true;
@@ -80,7 +80,7 @@ public class DocumentGetResponse {
         //final List<Signatory> readers = document.getReaders();
         this.readers = document.getReaders();
         for (final Signatory currentReader : readers) {
-            if (currentReader.getUser().equals(currentUser)) {
+            if (currentReader.getEmail().equals(currentUser.getEmail())) {
                 this.reader = true;
                 if (currentReader.isStatus()) {
                     this.read = true;
