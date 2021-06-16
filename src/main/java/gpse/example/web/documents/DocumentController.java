@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The DocumentController class handles the requests from the frontend and
@@ -49,7 +50,7 @@ public class DocumentController {
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
-    private final SignatoryServiceImpl signatoryService;
+    private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
 
     /**
@@ -58,18 +59,18 @@ public class DocumentController {
      * @param envelopeService         the envelopeService
      * @param userService             the userService
      * @param documentService         the documentService
-     * @param signatoryService        the signatoryService
+     * @param guestTokenService       the guestTokenService
      * @param signatureManagement     the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
+                              final DocumentServiceImpl documentService, final GuestTokenService guestTokenService,
                               final SignatureManagement signatureManagement) {
 
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
-        this.signatoryService = signatoryService;
+        this.guestTokenService = guestTokenService;
         this.signatureManagement = signatureManagement;
     }
 
@@ -101,10 +102,42 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
-            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser.getEmail());
         } else {
             throw new DocumentNotFoundException();
         }
+    }
+
+    @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
+    public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
+                                                      @PathVariable final long documentID,
+                                                      @PathVariable final String token)
+            throws DocumentNotFoundException {
+        final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
+
+        if(guestTokenOptional.isEmpty()){
+            //TODO Fehlermeldung
+            return null;
+        } else if (guestTokenOptional.get().getDocumentId() == documentID) {
+            Document document;
+            final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+            final List<Document> documentList = envelope.getDocumentList();
+            boolean isInEnvelope = false;
+            for (final Document currentDocument : documentList) {
+                if (currentDocument.getId() == documentID) {
+                    isInEnvelope = true;
+                    break;
+                }
+            }
+            if (isInEnvelope) {
+                document = documentService.getDocument(documentID);
+                return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
+                    guestTokenOptional.get().getUsername());
+            } else {
+                throw new DocumentNotFoundException();
+            }
+        }
+        return null;
     }
 
     /**
@@ -153,7 +186,6 @@ public class DocumentController {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
             documentService.remove(oldDocument);
             System.out.println("old document: " + oldDocument.getSignatories());

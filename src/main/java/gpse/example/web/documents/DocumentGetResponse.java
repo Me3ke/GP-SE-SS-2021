@@ -45,7 +45,7 @@ public class DocumentGetResponse {
      * @param owner       the owner of the document.
      * @param currentUser the user doing the request
      */
-    public DocumentGetResponse(final Document document, final User owner, final User currentUser) {
+    public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         this.title = document.getDocumentTitle();
         this.owner = owner;
         final DocumentMetaData metaData = document.getDocumentMetaData();
@@ -65,7 +65,7 @@ public class DocumentGetResponse {
         this.signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getEmail().equals(currentUser.getEmail())
+            if (currentSignatory.getEmail().equals(currentUser)
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
                 this.signatory = true;
@@ -80,7 +80,7 @@ public class DocumentGetResponse {
         //final List<Signatory> readers = document.getReaders();
         this.readers = document.getReaders();
         for (final Signatory currentReader : readers) {
-            if (currentReader.getEmail().equals(currentUser.getEmail())) {
+            if (currentReader.getEmail().equals(currentUser)) {
                 this.reader = true;
                 if (currentReader.isStatus()) {
                     this.read = true;

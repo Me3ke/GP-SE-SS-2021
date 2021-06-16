@@ -41,6 +41,12 @@ public class SMTPServerHelper {
     private static final String REMINDER = GREETING
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
+    /**
+     * use Invitation subject
+     */
+    private static final String GUEST_INVITATION = "Guten Tag, %n"
+        + "Sie wurden von %s gebeten das Dokument %s zu Signieren.%n"
+        + "Sie finden das Dokument hier: %s";
 
     @Autowired
     private final JavaMailSender mailSender;
@@ -80,7 +86,6 @@ public class SMTPServerHelper {
     }
 
     /**
-<<<<<<< HEAD
      * sending the Invitation for a signature.
      * @param signatoryMail     the signatory who should be reminded
      * @param owner             the owner of the relating document
@@ -111,6 +116,16 @@ public class SMTPServerHelper {
         message.setRecievingUserMail(userEmail);
         message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
+
+        mailSender.send(message.generateMessage());
+    }
+
+    public void sendGuestInvitation(final String guestMail, final Document document, final String link)
+            throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(guestMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(String.format(GUEST_INVITATION, document.getOwner(), document.getDocumentTitle(), link));
 
         mailSender.send(message.generateMessage());
     }

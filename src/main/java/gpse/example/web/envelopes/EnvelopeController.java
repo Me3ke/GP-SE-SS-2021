@@ -4,6 +4,7 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -11,6 +12,7 @@ import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
+import gpse.example.web.documents.GuestToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -109,14 +111,10 @@ public class EnvelopeController {
                 userService);
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
-                        userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document);
+                    sendInvitation(document, document.getSignatories().get(i), envelopeID);
                 }
             } else {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
+                sendInvitation(document, document.getCurrentSignatory(), envelopeID);
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
@@ -127,6 +125,31 @@ public class EnvelopeController {
             response.setStatus(INTERNAL_ERROR);
             response.setMessage("The document could not be uploaded.");
             return response;
+        }
+    }
+
+    /**
+     * Sending invitation email to Guests or Users.
+     * Guests getting the following link.
+     * http://localhost:8080/de/envelope/{envelopeID}/document/{documentID}/{token}
+     * @param document the document that should be signed
+     * @param signatory the signatory
+     * @param envelopeId The EnvelopeId required for link.
+     * @throws MessageGenerationException Thrown by smtpServerHelper if email could not be sended.
+     */
+
+    private void sendInvitation(Document document, Signatory signatory, long envelopeId)
+            throws MessageGenerationException {
+        try{
+            User user = userService.getUser(signatory.getEmail());
+            smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
+                userService.getUser(document.getOwner()),
+                user.getLastname(), document);
+        } catch(UsernameNotFoundException unf) {
+            GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
+            smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
+                "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
+                    + token.getToken());
         }
     }
 

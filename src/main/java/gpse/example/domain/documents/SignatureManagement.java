@@ -7,7 +7,9 @@ import gpse.example.domain.users.UserService;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.documents.GuestToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -191,9 +193,17 @@ public class SignatureManagement {
             Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
 
-                smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
-                    userService.getUser(savedDocument.getOwner()),
-                    savedDocument.getCurrentSignatory().getUser().getLastname(), document);
+                try{
+                    User user = userService.getUser(savedDocument.getCurrentSignatory().getEmail());
+                    smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                        userService.getUser(document.getOwner()),
+                        user.getLastname(), document);
+                } catch(UsernameNotFoundException unf) {
+                    GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(), document.getId());
+                    smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(), document,
+                        "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
+                            + token.getToken());
+                }
             }
 
             response.setStatus(STATUS_CODE_OK);
