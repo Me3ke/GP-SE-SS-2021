@@ -1,6 +1,7 @@
-package gpse.example.domain.documents;
+package gpse.example.web.documents;
 
 import gpse.example.domain.Protocol;
+import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.CreatingFileException;
@@ -12,12 +13,12 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.JSONResponseObject;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,17 +40,15 @@ public class DocumentController {
     private static final String ENVELOPE_ID = "envelopeID";
     private static final String USER_ID = "userID";
     private static final String DOCUMENT_ID = "documentID";
+    private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
+    private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
-    private static final int STATUS_CODE_INVALID_SIGNATURE = 456;
-    private static final int STATUS_CODE_OK = 200;
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
-    private final DocumentMetaDataServiceImpl documentMetaDataService;
-
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -58,17 +57,14 @@ public class DocumentController {
      * @param userService             the userService
      * @param documentService         the documentService
      * @param signatoryService        the signatoryService
-     * @param documentMetaDataService the metaDataService
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
-                              final DocumentMetaDataServiceImpl documentMetaDataService) {
+                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.signatoryService = signatoryService;
-        this.documentMetaDataService = documentMetaDataService;
     }
 
     /**
@@ -140,6 +136,7 @@ public class DocumentController {
      * @throws UploadFileException if something goes wrong while uploading the new version.
      */
 
+
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}")
     public DocumentPutResponse uploadNewDocumentVersion(final @RequestBody DocumentPutRequest documentPutRequest,
                                                         final @PathVariable(USER_ID) String ownerID,
@@ -152,16 +149,12 @@ public class DocumentController {
             final Document oldDocument = documentService.getDocument(documentID);
             //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
-            signatoryService.delete(oldDocument.getSignatories());
             documentService.remove(oldDocument);
-            documentMetaDataService.delete(oldDocument.getDocumentMetaData());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
-            documentMetaDataService.saveDocumentMetaData(archivedDocument.getDocumentMetaData());
-            signatoryService.saveSignatories(archivedDocument.getSignatories());
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
             final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
-                userService, signatoryService);
+                userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
@@ -194,6 +187,7 @@ public class DocumentController {
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
+
     //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
@@ -222,7 +216,6 @@ public class DocumentController {
             documentID, SignatureType.ADVANCED_SIGNATURE);
         if (response.getStatus() == STATUS_CODE_OK) {
             document.advancedSignature(userID, advancedSignatureRequest.getSignature());
-            documentService.saveSignatures(document);
             documentService.addDocument(document);
         }
         return response;
@@ -239,7 +232,7 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            final SignatureManagement signatureManagement = new SignatureManagement(signatoryService, documentService);
+            final SignatureManagement signatureManagement = new SignatureManagement(documentService);
             return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }
@@ -297,6 +290,7 @@ public class DocumentController {
     }
 
     /**
+<<<<<<< HEAD:src/main/java/gpse/example/domain/documents/DocumentController.java
      * The getDocumentProgress method is used to track the progress of the signing process.
      * It uses DocumentProgress response to create an appropriate response.
      * @param userID the id of the user currently wanting to see the progress.
@@ -316,5 +310,29 @@ public class DocumentController {
         return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 
+    /*
+     * Put request for changing documentsettings.
+     * @param documentID id of the document that should be changed
+     * @param documentSettingsCMD Container for the relevant settings
+     * @return JsonResponse containing statuscode
+     */
+    @PutMapping("/document/{documentID}/settings")
+    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        JSONResponseObject response = new JSONResponseObject();
+        try {
+            Document document = documentService.getDocument(documentID);
+            document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
+            document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setSignatories(documentSettingsCMD.getSignatories());
 
+            Document savedDoc = documentService.addDocument(document);
+
+            response.setStatus(STATUS_CODE_OK);
+        } catch (DocumentNotFoundException e) {
+            response.setStatus(STATUS_CODE_DOCUMENT_NOT_FOUND);
+            response.setMessage("Document not found.");
+        }
+        return response;
+    }
 }

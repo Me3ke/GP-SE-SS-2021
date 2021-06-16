@@ -1,10 +1,10 @@
-package gpse.example.domain.envelopes;
+package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentGetResponse;
+import gpse.example.domain.envelopes.Envelope;
+import gpse.example.web.documents.DocumentGetResponse;
 import gpse.example.domain.users.User;
-
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class EnvelopeGetResponse {
     private final long id;
     private final String name;
     private final User owner;
-    private final LocalDateTime creationDate;
+    private final String creationDate;
     private final List<DocumentGetResponse> documents;
 
     /**
@@ -29,7 +29,8 @@ public class EnvelopeGetResponse {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;
-        this.creationDate = envelope.getCreationDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        this.creationDate = envelope.getCreationDate().format(formatter);
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
             //rework soon to not mix up owners
@@ -49,7 +50,7 @@ public class EnvelopeGetResponse {
         return owner;
     }
 
-    public LocalDateTime getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 

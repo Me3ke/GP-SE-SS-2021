@@ -51,7 +51,6 @@ public class OrderManager {
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getUser().equals(signatoryToFind)
                     && currentSignatory.getSignatureType().equals(signatureType)) {
-                currentSignatory.setStatus(true);
                 foundSignatory = true;
             }
         }

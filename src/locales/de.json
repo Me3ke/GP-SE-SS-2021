@@ -171,9 +171,9 @@
         "toRead2": "gegenlesen",
         "toSignRead1": "Bis zum",
         "toSignRead2": "gegenlesen und signieren",
-        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
-        "envRead": "Enthält Dokumente zum gegenlesen",
-        "envSign": "Enthält Dokumente zum signieren"
+        "envReadSign": "Gegenlesen und signieren",
+        "envRead": "Gegenlesen",
+        "envSign": "Signieren"
     },
     "Document": {
         "owner": "Besitzer",
@@ -198,6 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
+        "saved" : "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -268,6 +269,16 @@
                 "text": "Protokoll-Verfügbarkeit",
                 "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Alle Dokumente im Verbund bearbeiten",
+            "addSignatory": "Unterzeichner hinzufügen",
+            "placeholderMail": "MaxMustermann@mail.de",
+            "signatory": "Unterzeichner",
+            "addReader": "Gegenleser hinzufügen",
+            "reader": "Gegenleser",
+            "chooseDate": "Zeitraum bestimmen",
+            "orderRelevant": "Reihenfolge berücksichtigen"
         }
     },
     "UploadDoc": {
@@ -279,7 +290,14 @@
         "newEnv": "Neuen Verbund anlegen",
         "selectEnv": "Bestehenden Verbund auswählen",
         "newEnvPlaceholder": "Name des Verbundes",
-        "configureDoc": "Dokumenteneinstellungen"
+        "configureDoc": "Dokumenteneinstellungen",
+        "addReaders": "Gegenleser hinzufügen",
+        "skipReview": "Gegenlese-Prozess überspringen",
+        "selectedDoc": "Dokument: ",
+        "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
+        "simple": "Einfach",
+        "advanced": "Fortgeschritten",
+        "signatureType": "Signaturtyp"
     },
     "DownloadDoc": {
         "download": "Herunterladen",
@@ -318,9 +336,9 @@
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen.",
-        "resetPassword" : "Passwort zurücksetzen",
-        "send" : "senden",
-        "reset" :"Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
+        "resetPassword": "Passwort zurücksetzen",
+        "send": "senden",
+        "reset": "Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
     },
     "Register": {
         "email": "E-Mail",
@@ -343,16 +361,25 @@
         "login": "Zum Login"
     },
     "KeypairAlert": {
-        "generate": "Generiere Schlüsselpaar",
-        "upload": "Lade Schlüsselpaar hoch",
-        "selectOption": "Wähle Option",
-        "cancelText": "Abbruch",
-        "forceChoose": "Es muss etwas ausgewählt werden!",
-        "warning": "Warnung",
-        "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
-        "continueText": "Fortfahren",
+        "title": "Richten Sie Ihr Schlüsselpaar ein",
+        "choose": "Möchten Sie ein eigenes Schlüsselpaar hochladen oder eins generieren lassen?",
+        "generate": "Generieren",
+        "upload": "Hochladen",
+        "continue": "Weiter",
+        "cancel": "Abbruch",
+        "close": "Schließen",
+        "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
+        "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
+        "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
-        "uploadText": "Hochladen..."
+        "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
+        "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
+        "placeholder": "Schlüssel hier ablegen oder auswählen",
+        "dropPlaceholder": "Hier fallen lassen",
+        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {
         "cancel": "Abbruch",
@@ -378,7 +405,7 @@
             "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
             "again": "Erneut versuchen",
             "toStart": "Zum Beginn",
-            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
+            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Authentifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",
@@ -404,6 +431,25 @@
             "sureMulti": "Sind Sie sich sicher, dass Sie folgende Dokumente gegenlesen wollen?",
             "success": "Sie haben erfolgreich gegengelesen!",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
+        }
+    },
+    "wizard": {
+        "cancel": "Abbruch",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "welcome": {
+            "welcome": "Willkommen bei ELSA!",
+            "toDo": "Um die Seite optimal zu nutzen, müssen Sie ein paar für die Signatur relevanten Einstellungen treffen.",
+            "2FakAuth": "Schritt 1: Zwei-Faktor-Authentifizierung einrichten",
+            "2FakAuthExp": "Damit sich niemand einfach an Ihren Computer setzt und für Sie wichtige Dokumente unterschreiben kann, sorgt ein zweiter Faktor zur Identitätsbestätigung für extra Sicherheit.",
+            "setUp": "Einrichten",
+            "keypair": "Schritt 2: Schlüsselpaar einrichten",
+            "keypairExp": "Auch hierbei handelt es sich um einen weiteren wichtigen Sicherheitsfaktor der Ihre Signatur schütz, denn den privaten Schlüssel kennen nur Sie.",
+            "done": "Geschafft!",
+            "fun": "Sie haben erfolgreich alle Einstellungen getroffen, um ELSA optimal nutzen zu können.",
+            "go": "Los geht's",
+            "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
+            "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
         }
     }
 }

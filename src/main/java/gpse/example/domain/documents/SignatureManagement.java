@@ -1,7 +1,6 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatoryService;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.web.JSONResponseObject;
@@ -20,13 +19,10 @@ public class SignatureManagement {
     private static final int STATUS_CODE_INVALID_SIGNATURE_TYPE = 453;
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
-    private final SignatoryService signatoryService;
     private final DocumentService documentService;
 
 
-    public SignatureManagement(final SignatoryService givenSignatoryService,
-                               final DocumentService givenDocumentService) {
-        signatoryService = givenSignatoryService;
+    public SignatureManagement(final DocumentService givenDocumentService) {
         documentService = givenDocumentService;
     }
 
@@ -68,10 +64,8 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatoriesWithoutOrder(final User reader, final Document document,
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType) {
-        List<Signatory> signatories;
-        signatories = document.getSimpleSignatories();
         if (document.getState().equals(DocumentState.READ)) {
-            if (findSignatoryInList(signatories, reader, signatureType)) {
+            if (findSignatoryInList(document, reader, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
                     return changeDocumentStateToClosed(document);
                 } else {
@@ -91,7 +85,7 @@ public class SignatureManagement {
     private JSONResponseObject manageReadersWithoutOrder(final User reader, final Document document,
                                                          final List<Signatory> signatories,
                                                          final JSONResponseObject response) {
-        if (findSignatoryInList(signatories, reader, SignatureType.REVIEW)) {
+        if (findSignatoryInList(document, reader, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
                 return changeDocumentStateToClosed(document);
             } else {
@@ -127,15 +121,26 @@ public class SignatureManagement {
         return response;
     }
 
-    private boolean findSignatoryInList(final List<Signatory> signatories, final User signatoryToFind,
+    private boolean findSignatoryInList(final Document document, final User signatoryToFind,
                                         final SignatureType signatureType) {
+        List<Signatory> signatories;
+        switch (signatureType) {
+            case REVIEW:
+                signatories = document.getReaders();
+                break;
+            case SIMPLE_SIGNATURE:
+                signatories = document.getSimpleSignatories();
+                break;
+            default:
+                signatories = document.getAdvancedSignatories();
+                break;
+        }
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)
-                && currentSignatory.getSignatureType().equals(signatureType)) {
+            if (currentSignatory.getUser().equals(signatoryToFind)) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
-                signatoryService.saveSignatory(currentSignatory);
+                documentService.addDocument(document);
             }
         }
         return foundSignatory;
@@ -162,7 +167,6 @@ public class SignatureManagement {
         final Signatory currentReader = document.getCurrentSignatory();
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
-            signatoryService.saveSignatory(currentReader);
             checkIfClosed(document, signatories, response, currentReader);
             documentService.addDocument(document);
             response.setStatus(STATUS_CODE_OK);

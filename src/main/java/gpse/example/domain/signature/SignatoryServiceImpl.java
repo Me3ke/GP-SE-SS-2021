@@ -19,27 +19,9 @@ public class SignatoryServiceImpl implements SignatoryService {
     }
 
     @Override
-    public List<Signatory> saveSignatories(final List<Signatory> signatories) {
-        for (final Signatory signatory : signatories) {
-            signatoryRepository.save(signatory);
-        }
-        return signatories;
-    }
-
-    @Override
     public  void delete(final List<Signatory> signatories) {
         for (final Signatory signatory : signatories) {
             signatoryRepository.deleteById(signatory.getId());
         }
-    }
-
-    @Override
-    public Signatory saveSignatory(final Signatory signatory) {
-        return signatoryRepository.save(signatory);
-    }
-
-    @Override
-    public void deleteAll() {
-        signatoryRepository.deleteAll();
     }
 }

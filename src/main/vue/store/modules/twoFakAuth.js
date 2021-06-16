@@ -51,7 +51,7 @@ export const actions = {
 
     // makes axios call to get qr code, either sets qrCode (success) or error (error)
     fetchQrCode({commit}) {
-        twoFakAuthAPI.getQrCode().then(response => {
+        return twoFakAuthAPI.getQrCode().then(response => {
             commit('SET_QR_CODE', response.data)
             commit('SET_ERROR_GET_QR_CODE', {})
         }).catch(error => {

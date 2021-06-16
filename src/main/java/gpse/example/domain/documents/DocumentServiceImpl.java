@@ -5,6 +5,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.*;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,80 +19,52 @@ import java.util.List;
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
-    private final DocumentRepository repo;
-    private final DocumentMetaDataService documentMetaDataService;
-    private final AdvancedSignatureRepository advancedSignatureRepository;
+    private final DocumentRepository documentRepository;
     private final DocumentCreator documentCreator = new DocumentCreator();
 
     /**
      * the standard constructor for documentServices.
-     * @param repo the documentRepository initialized by Spring
-     * @param documentMetaDataService the documentMetaDataService initialized by Spring
-     * @param advancedSignatureRepository the advancedSignatureRepository initialized by Spring
+     * @param documentRepository the documentRepository initialized by Spring
      */
     @Autowired
-    public DocumentServiceImpl(final DocumentRepository repo, final DocumentMetaDataService documentMetaDataService,
-                               final AdvancedSignatureRepository advancedSignatureRepository) {
-        this.documentMetaDataService = documentMetaDataService;
-        this.advancedSignatureRepository = advancedSignatureRepository;
-        this.repo = repo;
+    public DocumentServiceImpl(final DocumentRepository documentRepository) {
+        this.documentRepository = documentRepository;
     }
 
     @Override
     public Document getDocument(final long id) throws DocumentNotFoundException {
-        return repo.findById(id).orElseThrow(DocumentNotFoundException::new);
+        return documentRepository.findById(id).orElseThrow(DocumentNotFoundException::new);
     }
 
     @Override
     public List<Document> getDocuments() {
         final List<Document> documents = new ArrayList<>();
-        repo.findAll().forEach(documents :: add);
+        documentRepository.findAll().forEach(documents :: add);
         return documents;
     }
 
     @Override
     public void remove(final Document document) {
-        repo.delete(document);
+        documentRepository.delete(document);
     }
 
     @Override
     public Document addDocument(final Document document) {
-        return repo.save(document);
-    }
-
-    @Override
-    public List<AdvancedSignature> saveSignatures(final Document document) {
-        List<AdvancedSignature> saved = new ArrayList<>();
-        List<AdvancedSignature> signatures = document.getAdvancedSignatures();
-        for (AdvancedSignature signature : signatures) {
-            saved.add(advancedSignatureRepository.save(signature));
-        }
-        return saved;
+        return documentRepository.save(document);
     }
 
     @Override
     public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
-                              final UserServiceImpl userService, final SignatoryServiceImpl signatoryService)
+                             final UserServiceImpl userService)
                                 throws CreatingFileException, IOException {
-        final List<ProtoSignatory> signatories = new ArrayList<>();
-        final List<String> signatoriesID = documentPutRequest.getSignatoriesID();
-        final List<String> readersID = documentPutRequest.getReadersID();
-        for (final String currentID : readersID) {
-            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.REVIEW));
-        }
-        for (final String currentID : signatoriesID) {
-            signatories.add(new ProtoSignatory(userService.getUser(currentID), SignatureType.SIMPLE_SIGNATURE));
-        }
+        final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatories);
+            ownerID, signatoriesID, userService);
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);
-                signatoryService.saveSignatory(signatory);
             }
         }
-        documentMetaDataService.saveDocumentMetaData(newDocument.getDocumentMetaData());
-
         return addDocument(newDocument);
     }
 }

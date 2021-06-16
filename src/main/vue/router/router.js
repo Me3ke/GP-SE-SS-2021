@@ -13,9 +13,9 @@ import UserPage from "@/main/vue/views/UserPage";
 import DocumentPage from "@/main/vue/views/DocumentPage";
 import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
+import EnvelopeSettingsPage from "@/main/vue/views/EnvelopeSettingsPage";
 import store from "@/main/vue/store/store";
 import BlankTestPage from "@/main/vue/views/BlankTestPage";
-import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 
@@ -155,16 +155,19 @@ const router = new VueRouter({
                         requiresAuth: true
                     }
                 },
-
-                {
-                    path: 'progressbar',
-                    name: 'progressbar',
-                    component: ProgressbarTestPage
-                },
                 {
                     path: 'test',
                     name: 'test',
                     component: BlankTestPage
+                },
+                {
+                    path: 'settings/:envId',
+                    name: 'settings',
+                    component: EnvelopeSettingsPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: '*',
@@ -183,6 +186,15 @@ router.beforeEach((to, from, next) => {
     }
     // setting current language
     i18n.locale = language
+
+    if (store.state.auth.exp < Date.now() / 1000) {
+        localStorage.removeItem('store')
+        localStorage.clear()
+        next({
+            path: '/' + language + '/login',
+            params: {nextUrl: to.fullPath}
+        })
+    }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.auth.authenticated !== true) {

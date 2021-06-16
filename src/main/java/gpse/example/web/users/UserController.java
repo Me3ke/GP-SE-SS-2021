@@ -1,16 +1,16 @@
-package gpse.example.web;
+package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
-
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
+import gpse.example.web.AuthCodeValidationRequest;
+import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 
 
@@ -29,16 +29,12 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
-    private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
-
     private static final String USERID = "userID";
     private final UserService userService;
-    private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
     private final StringToKeyConverter stringToKeyConverter;
-    private final SecuritySettingsService securitySettingsService;
 
 
     /**
@@ -46,18 +42,13 @@ public class UserController {
      *
      * @param service                 Userservice Object
      * @param confService             ConfirmationTokenService object
-     * @param personalDataService     PersonalDataService object
-     * @param securitySettingsService SecuritySettingsService object
-     * @param messageService the messageService to access the message table
+     * @param messageService          the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final PersonalDataService personalDataService,
-                          final SecuritySettingsService securitySettingsService, final MessageService messageService) {
+                          final MessageService messageService) {
         userService = service;
         confirmationTokenService = confService;
-        this.personalDataService = personalDataService;
-        this.securitySettingsService = securitySettingsService;
         this.messageService = messageService;
         stringToKeyConverter = new StringToKeyConverter();
     }
@@ -87,7 +78,6 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
-                personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -152,6 +142,7 @@ public class UserController {
 
     /**
      * Method to validate an useraccount by admin.
+     *
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
@@ -175,26 +166,55 @@ public class UserController {
         return userService.getUser(username).getPersonalData();
     }
 
+    /**
+     * the request handling for changing personal data.
+     * @param personalData the new personal data of the user stating the request
+     * @param username the username of the user stating the request
+     */
+    @PutMapping("user/{userID}/personal")
+    public void setPersonalData(@RequestBody final PersonalData personalData,
+                                @PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setPersonalData(personalData);
+        userService.saveUser(user);
+    }
+
     @GetMapping("/user/{userID}")
-    public User showUser(@PathVariable(USERID) final String username) {
-        return userService.getUser(username);
+    public UserResponseObject showUser(@PathVariable(USERID) final String username) {
+        return new UserResponseObject(userService.getUser(username));
+    }
+
+    /**
+     * The method used to signalize that a user has been through his first login.
+     *
+     * @param username the ID of the user
+     * @return the respone with statuscode 200
+     */
+    @PutMapping("/user/{userID}/firstLogin")
+    public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
+        User user = userService.getUser(username);
+        user.setFirstLogin(true);
+        userService.saveUser(user);
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     /**
      * Put request to change the public key of the user.
      *
      * @param publicKeyCmd contains the public key in a String format
-     * @param username the identifier of the user account that needs to be updated
+     * @param username     the identifier of the user account that needs to be updated
      * @return returns a JSONResponseObject that contains status code.
      */
     @PutMapping("/user/{userID}/publicKey")
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
-            final JSONResponseObject response = new JSONResponseObject();
-            userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
-            userService.saveUser(userService.getUser(username));
-            response.setStatus(STATUS_CODE_OK);
-            return response;
+        final JSONResponseObject response = new JSONResponseObject();
+        userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
+        userService.saveUser(userService.getUser(username));
+        response.setStatus(STATUS_CODE_OK);
+        return response;
     }
 
     @GetMapping("/user/{userID}/settings/2FAconfigurated")
@@ -214,7 +234,6 @@ public class UserController {
             final SecuritySettings securitySettings = userService.getUser(username).getSecuritySettings();
             securitySettings.generateSecret();
             final byte[] temp = securitySettings.generateQRCode(username);
-            securitySettingsService.saveSecuritySettings(securitySettings);
             userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
         } catch (QrGenerationException e) {
@@ -241,4 +260,22 @@ public class UserController {
         return userService.getUser(username).getPublicKey() != null;
     }
 
+    /**
+     * The request handler for the settings regarding a two-factor-login.
+     * @param username the username of the user stating the request
+     * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
+     */
+    @PutMapping("/user/{userID}/settings/twoFactorLogin")
+    public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
+                                        @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
+        User user = userService.getUser(username);
+        SecuritySettings securitySettings = user.getSecuritySettings();
+        securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
+        userService.saveUser(user);
+    }
+
+    @GetMapping("/user/{userID}/settings/twoFactorLogin")
+    public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
+        return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
+    }
 }

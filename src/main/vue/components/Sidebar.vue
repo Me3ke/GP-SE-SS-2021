@@ -175,11 +175,17 @@ export default {
     },
     methods: {
         toggleRead(val) {
+            if (this.read) {
+                val = false
+            }
             this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
         },
         toggleSign(val) {
+            if (this.signed) {
+                val = false
+            }
             this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')

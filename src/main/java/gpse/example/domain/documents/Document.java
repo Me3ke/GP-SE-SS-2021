@@ -4,9 +4,11 @@ import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
+import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,10 +31,16 @@ public class Document {
     @Column
     private long id;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private DocumentMetaData documentMetaData;
 
-    @OneToMany
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL,
+        fetch = FetchType.EAGER)
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany(
@@ -71,18 +79,19 @@ public class Document {
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
      *
-     * @param ownerID            an ID referring to the owner of the envelope this document is a part of.
-     * @param documentPutRequest the put request given with the necessary information for producing a document.
-     * @param signatories        The list of signatories for a document.
+     * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
+     * @param documentPutRequest the requestBody of the request stated to generate this document
+     * @param signatories The list of signatories for a document.
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
         this.signatories = signatories;
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
-            documentPutRequest.getLastModified(), this.data.length, ownerID);
-        this.endDate = documentPutRequest.getEndDate();
+             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
+        this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
 
@@ -338,6 +347,7 @@ public class Document {
         return advancedSignatures;
     }
 
+
     public List<Signatory> getSignatories() {
         return signatories;
     }
@@ -423,6 +433,10 @@ public class Document {
 
     public void setState(final DocumentState documentState) {
         this.state = documentState;
+    }
+
+    public void setSignatories(List<Signatory> signatories) {
+        this.signatories = signatories;
     }
 
     public Document getPreviousVersion() {

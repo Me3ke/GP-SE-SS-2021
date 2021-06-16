@@ -23,7 +23,8 @@
             <!-- No error, can be shown -->
             <div v-if="document.dataType === 'pdf'">
                 <BaseHeading :name="document.title" :translate="false"></BaseHeading>
-                <PDFViewer :pdf-src=getPDF() :overflow="showOverflow" @openDownload="toggleDownload()"></PDFViewer>
+                <PDFViewer v-if="showPdf" :pdf-src=getPDF() :overflow="showOverflow"
+                           @openDownload="toggleDownload()"></PDFViewer>
                 <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
             </div>
 
@@ -71,11 +72,16 @@ export default {
         return {
             turtle: require('../assets/turtle.svg'),
             showOverflow: true,
-            showDownload: false
+            showDownload: false,
+            showPdf: false
         }
     },
-    created() {
-        this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+    async created() {
+        await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+    },
+    async mounted() {
+        await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+        this.showPdf = true
     },
     methods: {
         getPDF() {

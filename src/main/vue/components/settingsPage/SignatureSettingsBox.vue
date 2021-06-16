@@ -17,7 +17,7 @@
                               </b-tooltip>
                           </span>
 
-                        <b-button class="elsa-blue-btn" @click="upload">
+                        <b-button class="light-btn" @click="upload">
                             {{ $t('Settings.SignatureSettings.upload.upload') }}
                         </b-button>
                     </b-list-group-item>
