@@ -297,7 +297,21 @@
         "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
-        "signatureType": "Signaturtyp"
+        "signatureType": "Signaturtyp",
+        "error": {
+            "noDocument": "Wählen Sie ein Dokument aus, um es hochzuladen.",
+            "noEnvelope": "Wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",
+            "noNewName": "Geben Sie einen Namen für den neuen Verbund ein.",
+            "noReaders": "Fügen Sie Gegenleser hinzu.",
+            "noSignatories": "Fügen Sie Unterzeichner hinzu.",
+            "noEndDate": "Wählen Sie ein Enddatum.",
+            "noSignatureType": "Wählen Sie für jeden Unterzeichner eine Unterschriftart aus."
+        },
+        "remindSignatories": "Unterzeichner erinnern",
+        "remindDaysBefore": "Tage vor dem Enddatum",
+        "reminder": "Erinnerung:",
+        "reminderShort": "Tag(e) vor Ende",
+        "sendReminderEMails": "Erinnerungs-Emails verschicken"
     },
     "DownloadDoc": {
         "download": "Herunterladen",

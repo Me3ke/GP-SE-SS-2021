@@ -272,10 +272,12 @@
             "editAll": "Edit all documents in the envelope",
             "addSignatory": "Add signatories",
             "placeholderMail": "Signatory@mail.de",
-            "signatory": "Signatory",
+            "signatory": "Signatories",
             "addReader": "Add proofreader",
             "reader": "Proofreaders",
-            "save": "Save"
+            "save": "Save",
+            "chooseDate": "Chose deadline",
+            "orderRelevant": "Order relevant"
         }
     },
     "UploadDoc": {
@@ -290,13 +292,25 @@
         "configureDoc": "Configure document",
         "addReaders": "Add proofreaders",
         "skipReview": "Skip review process",
-        "chooseDate": "Chose deadline",
-        "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
         "simple": "Simple",
         "advanced": "Advanced",
-        "signatureType": "Signaturetype"
+        "signatureType": "Signaturetype",
+        "error": {
+            "noDocument": "Please choose a document to upload.",
+            "noEnvelope": "Please choose a envelope to upload your document into.",
+            "noNewName": "Please choose a name for the new envelope.",
+            "noReaders": "Please add readers to review the document.",
+            "noSignatories": "Please add signatories to sign the document.",
+            "noEndDate": "Please chose a deadline.",
+            "noSignatureType": "Please choose a signature type for each signatory."
+        },
+        "remindSignatories": "Remind Signatories",
+        "remindDaysBefore": "days before the deadline",
+        "reminder": "Reminder:",
+        "reminderShort": "day(s) before deadline",
+        "sendReminderEMails": "Send reminder emails"
     },
     "DownloadDoc": {
         "download": "Download",

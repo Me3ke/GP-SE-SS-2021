@@ -44,7 +44,7 @@
                         {{$t('Settings.DocumentSettings.signatory')}}
                     </div>
                     <div style="padding:2em">
-                        <SignatoryMenu :signatories="settings.signatories"></SignatoryMenu>
+                        <SignatoryMenu :inModal="false" :signatories="settings.signatories"></SignatoryMenu>
                     </div>
                 </div>
                 <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>

@@ -15,7 +15,10 @@
         <div>
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
-                <label class="custom-control-label" for="orderRelevantSwitch"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+                <label class="custom-control-label" for="orderRelevantSwitch" style="margin-right:5em"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+
+                <input type="checkbox" class="custom-control-input" id="reminderSwitch" style="margin-left:5em" v-model="reminder" v-if="!inModal">
+                <label class="custom-control-label" for="reminderSwitch" v-if="!inModal"> {{$t('UploadDoc.sendReminderEMails')}} </label>
             </div>
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
@@ -30,6 +33,13 @@
                         </h6>
                         <b-col cols="auto">
                             <b-row align-h="end">
+                                <b-col cols="auto" v-if="!inModal && reminder" style="margin-right: 0.5em">
+                                    <b-row>
+                                        {{$t('UploadDoc.reminder')}}
+                                        <b-form-input type="number" v-model="signatory.reminder" min="0" style="width:5em; height: 2em; margin-right: 0.5em"> </b-form-input>
+                                        {{$t('UploadDoc.reminderShort')}}
+                                    </b-row>
+                                </b-col>
                                 <b-col cols="auto">
                                     <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.type">
                                         <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
@@ -53,7 +63,8 @@ export default {
     name: "SignatoryMenu",
     props: {
         signatories: Array,
-        orderRelevant: Boolean
+        orderRelevant: Boolean,
+        inModal: Boolean
     },
     components: {draggable},
     data() {
@@ -66,7 +77,8 @@ export default {
                 name: 'UploadDoc.advanced',
                 value: 2
             }],
-            signatoriesArray: this.signatories
+            signatoriesArray: this.signatories,
+            reminder: false
         }
     },
     methods: {
@@ -74,7 +86,7 @@ export default {
             if(this.signatoriesArray.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatoriesArray.push({email: this.signatoryInput, type: ""});
+                this.signatoriesArray.push({email: this.signatoryInput, type: "", reminder: ""});
             }
             this.signatoryInput = "";
         },

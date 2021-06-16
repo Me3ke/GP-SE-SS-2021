@@ -24,8 +24,7 @@
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
                                         <b-alert :show="this.errors.noDocument">
-                                            Please choose a document to upload.
-                                            Wählen Sie ein Dokument aus, um es hochzuladen.
+                                            {{$t('UploadDoc.error.noDocument')}}
                                         </b-alert>
 
                                         <b-form-file
@@ -53,8 +52,7 @@
                                     <div v-if="page === 3">
                                         <!-- Choose from envelopes -->
                                         <b-alert :show="this.errors.noEnvelope">
-                                            Please choose a envelope to upload your document into.
-                                            Wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.
+                                            {{$t('UploadDoc.error.noEnvelope')}}
                                         </b-alert>
 
                                         <div v-if="newEnv === false">
@@ -67,8 +65,7 @@
                                         </div>
                                         <!-- Create new envelope -->
                                         <b-alert :show="this.errors.noNewName">
-                                            Please choose a name for the new envelope.
-                                            Geben Sie einen Namen für den neuen Verbund ein.
+                                            {{$t('UploadDoc.error.noNewName')}}
                                         </b-alert>
 
                                         <div v-if="newEnv === true">
@@ -103,34 +100,38 @@
                                     <div v-if="page === 5">
                                         <div v-if="review">
                                             <b-alert :show="this.errors.noReaders">
-                                                Please add readers to review the document.
-                                                Fügen Sie Gegenleser hinzu.
+                                                {{$t('UploadDoc.error.noReaders')}}
                                             </b-alert>
                                             <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
                                             <ReaderMenu :readers="settings.readers"></ReaderMenu>
                                         </div>
                                         <div v-if="!review">
                                             <b-alert :show="this.errors.noEndDate">
-                                                Please chose a deadline.
-                                                Wählen Sie ein Enddatum.
+                                                {{$t('UploadDoc.error.noEndDate')}}
                                             </b-alert>
 
                                             <b-alert :show="this.errors.noSignatories">
-                                                Please add signatories to sign the document.
-                                                Fügen Sie Unterzeichner hinzu.
+                                                {{$t('UploadDoc.error.noSignatories')}}
                                             </b-alert>
 
                                             <b-alert :show="this.errors.noSignatureType">
-                                                Please choose a signature type for each signatory.
-                                                Wählen Sie für jeden Unterzeichner eine Unterschriftart aus.
+                                                {{$t('UploadDoc.error.noSignatureType')}}
                                             </b-alert>
                                             <div>
-                                                <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                                                 <b-form-datepicker id="endDatePicker" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
-                                                <p>{{this.settings.endDate}}</p>
+                                                <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                                             </div>
+
+                                            <b-form-checkbox v-model="settings.remind" name="some-radios" style="margin: 1em 0">
+                                                {{$t('UploadDoc.remindSignatories')}}
+                                            </b-form-checkbox>
+                                            <b-row v-if="settings.remind" style="margin-bottom: 1em; margin-left: 1.5em">
+                                                <b-form-input type="number" v-model="settings.daysBefore" min="0" style="width:5em; margin-right: 0.5em"> </b-form-input>
+                                                {{$t('UploadDoc.remindDaysBefore')}}
+                                            </b-row>
+
                                             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
-                                            <SignatoryMenu :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
+                                            <SignatoryMenu :inModal="true" :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
                                         </div>
                                     </div>
                                 </div>
@@ -242,7 +243,9 @@ export default {
                 signatories: [],
                 readers: [],
                 endDate: null,
-                orderRelevant: true
+                orderRelevant: true,
+                remind: false,
+                daysBefore: null
             },
             file: {
                 data: null,
