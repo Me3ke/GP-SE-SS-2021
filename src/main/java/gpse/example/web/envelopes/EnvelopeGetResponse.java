@@ -34,7 +34,7 @@ public class EnvelopeGetResponse {
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
             //rework soon to not mix up owners
-            this.documents.add(new DocumentGetResponse(document, owner, currentUser));
+            this.documents.add(new DocumentGetResponse(document, owner, currentUser.getEmail()));
         }
     }
 

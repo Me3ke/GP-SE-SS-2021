@@ -8,7 +8,6 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -108,6 +107,14 @@ public class DocumentController {
         }
     }
 
+    /**
+     * Getting the document with guestToken.
+     * @param envelopeID id of envelope
+     * @param documentID id of document
+     * @param token String Token to get the tokenobject (or not if its expired? or wrong)
+     * @return the documentGetResponse
+     * @throws DocumentNotFoundException
+     */
     @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
     public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
                                                       @PathVariable final long documentID,
@@ -115,7 +122,7 @@ public class DocumentController {
             throws DocumentNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
-        if(guestTokenOptional.isEmpty()){
+        if (guestTokenOptional.isEmpty()) {
             //TODO Fehlermeldung
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {

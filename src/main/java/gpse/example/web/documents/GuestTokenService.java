@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Class that wires the database to the objekts it represents.
+ */
 @Service
 public class GuestTokenService {
 
@@ -21,6 +24,12 @@ public class GuestTokenService {
         guestTokenRepository.deleteById(id);
     }
 
+
+    /**
+     * finding an GuestToken entity by a specified String token.
+     * @param token the String token that is needed
+     * @return returns an optional GuestToken which can be empty or contains the GuestToken
+     */
     public Optional<GuestToken> findGuestTokenByToken(String token) {
         final Iterable<GuestToken> guestTokens = guestTokenRepository.findAll();
 

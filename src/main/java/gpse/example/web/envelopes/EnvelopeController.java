@@ -140,12 +140,12 @@ public class EnvelopeController {
 
     private void sendInvitation(Document document, Signatory signatory, long envelopeId)
             throws MessageGenerationException {
-        try{
+        try {
             User user = userService.getUser(signatory.getEmail());
             smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
                 userService.getUser(document.getOwner()),
                 user.getLastname(), document);
-        } catch(UsernameNotFoundException unf) {
+        } catch (UsernameNotFoundException unf) {
             GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
             smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
                 "http://localhost:8080/de/" + "/document/" + document.getId() + "/"

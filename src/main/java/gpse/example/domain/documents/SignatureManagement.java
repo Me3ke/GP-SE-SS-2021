@@ -193,12 +193,12 @@ public class SignatureManagement {
             Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
 
-                try{
+                try {
                     User user = userService.getUser(savedDocument.getCurrentSignatory().getEmail());
                     smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getEmail(),
                         userService.getUser(document.getOwner()),
                         user.getLastname(), document);
-                } catch(UsernameNotFoundException unf) {
+                } catch (UsernameNotFoundException unf) {
                     GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(), document.getId());
                     smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(), document,
                         "http://localhost:8080/de/" + "/document/" + document.getId() + "/"

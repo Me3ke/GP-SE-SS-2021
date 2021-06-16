@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Class modeling the guestTokens
+ */
 public class GuestToken {
 
     @Id
@@ -26,6 +29,11 @@ public class GuestToken {
     @Column
     private long documentId;
 
+    /**
+     * Constructor of Guest Token to generate a GuestToken which contains username and documentId.
+     * @param username username of the GuestUser (Emailaddress)
+     * @param documentId document that is accessable for the Guest
+     */
     public GuestToken(String username, long documentId) {
         this.username = username;
         this.documentId = documentId;

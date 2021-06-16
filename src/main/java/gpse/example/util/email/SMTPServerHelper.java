@@ -30,7 +30,7 @@ public class SMTPServerHelper {
     private static final String SIGNATURE_INVITATION_SUBJECT = "Signatur des Dokuments %s";
 
 
-    private static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
+    private static final String ADMIN_VALIDATION_INFO = "Hallo, %n"
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
@@ -42,7 +42,7 @@ public class SMTPServerHelper {
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
     /**
-     * use Invitation subject
+     * use Invitation subject.
      */
     private static final String GUEST_INVITATION = "Guten Tag, %n"
         + "Sie wurden von %s gebeten das Dokument %s zu Signieren.%n"
@@ -120,6 +120,14 @@ public class SMTPServerHelper {
         mailSender.send(message.generateMessage());
     }
 
+
+    /**
+     * sending an email with the guest invitation template.
+     * @param guestMail the reciever mail
+     * @param document the document which the invitation belongs to
+     * @param link the link to get the document view without log in
+     * @throws MessageGenerationException when message could not be generated or send
+     */
     public void sendGuestInvitation(final String guestMail, final Document document, final String link)
             throws MessageGenerationException {
         Message message = new Message();

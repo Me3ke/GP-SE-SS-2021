@@ -2,7 +2,6 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 
 import java.util.List;
 
