@@ -194,6 +194,15 @@ router.beforeEach((to, from, next) => {
     // setting current language
     i18n.locale = language
 
+    if (store.state.auth.exp < Date.now() / 1000) {
+        localStorage.removeItem('store')
+        localStorage.clear()
+        next({
+            path: '/' + language + '/login',
+            params: {nextUrl: to.fullPath}
+        })
+    }
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.auth.authenticated !== true) {
             next({

@@ -198,6 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
+        "saved" : "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",

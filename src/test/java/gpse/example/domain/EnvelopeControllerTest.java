@@ -1,22 +1,6 @@
 package gpse.example.domain;
 
-import gpse.example.domain.documents.ArchivedDocument;
-import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.documents.DocumentPutRequest;
-import gpse.example.domain.envelopes.Envelope;
-import gpse.example.domain.envelopes.EnvelopeController;
-import gpse.example.domain.envelopes.EnvelopeGetRequest;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.users.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class EnvelopeControllerTest {
 

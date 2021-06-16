@@ -1,5 +1,9 @@
-package gpse.example.domain.documents;
+package gpse.example.web.documents;
 
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentMetaData;
+import gpse.example.domain.documents.DocumentState;
+import gpse.example.domain.documents.OrderManager;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -25,8 +29,8 @@ public class DocumentGetResponse {
     private boolean signed;
     private boolean read;
     private final byte[] data;
-    private boolean isTurnToReview;
-    private boolean isTurnToSign;
+    private boolean turnToReview;
+    private boolean turnToSign;
     private final long id;
 
     // getting the signatories and reader in the response
@@ -85,8 +89,8 @@ public class DocumentGetResponse {
             }
         }
         OrderManager orderManager = new OrderManager();
-        isTurnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
-        isTurnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
+        turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
+        turnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
     }
 
     public String getTitle() {
@@ -138,19 +142,19 @@ public class DocumentGetResponse {
     }
 
     public boolean isTurnToReview() {
-        return isTurnToReview;
+        return turnToReview;
     }
 
     public void setTurnToReview(boolean turnToReview) {
-        isTurnToReview = turnToReview;
+        this.turnToReview = turnToReview;
     }
 
     public boolean isTurnToSign() {
-        return isTurnToSign;
+        return turnToSign;
     }
 
     public void setTurnToSign(boolean turnToSign) {
-        isTurnToSign = turnToSign;
+        this.turnToSign = turnToSign;
     }
 
     public String getIdentifier() {

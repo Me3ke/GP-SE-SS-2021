@@ -70,5 +70,25 @@ export default {
             method: "put",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/firstLogin'
         })
+    },
+
+    // gives back if user wants to always have to do a 2FakAuth after their login
+    async getTwoFactorLogin() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/twoFactorLogin'
+        })
+    },
+
+    // puts information if user wants to always have to do a 2FakAuth after their login
+    async putTwoFactorLogin(setting) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/twoFactorLogin',
+            headers: {"Content-Type": "application/json"},
+            data: {
+                'setting': setting
+            }
+        })
     }
 }

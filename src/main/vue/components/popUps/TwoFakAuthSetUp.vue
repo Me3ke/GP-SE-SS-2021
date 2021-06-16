@@ -146,12 +146,13 @@
                                                           trim
                                                           style="margin-bottom: 1em">
                                             </b-form-input>
-                                            <b-alert :show="showAlert" dismissible
-                                                     @dismissed="showAlert = false"
-                                                     style="margin-bottom: 1em">
-                                                {{ $t('TwoFakAuth.login.fail') }}
-                                            </b-alert>
                                         </div>
+
+                                        <b-alert :show="showAlert" dismissible
+                                                 @dismissed="showAlert = false"
+                                                 style="margin-bottom: 1em">
+                                            {{ $t('TwoFakAuth.login.fail') }}
+                                        </b-alert>
 
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
@@ -219,7 +220,6 @@ export default {
             page: 0,
             pageBefore: 0,
             code: '',
-            // TODO: connect setting with API
             always: false
         }
     },
@@ -240,7 +240,8 @@ export default {
                 this.code = ''
                 this.showAlert = false
                 if (this.correctInput) {
-                    // TODO: add here always-config call
+                    await this.$store.dispatch('putTwoFactorLogin', {setting: this.always})
+                    await this.$store.dispatch('getTwoFactorLogin')
                     this.page = 2
                 }
                 // code is incorrect

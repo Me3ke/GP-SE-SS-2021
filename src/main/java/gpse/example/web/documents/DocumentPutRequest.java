@@ -1,4 +1,4 @@
-package gpse.example.domain.documents;
+package gpse.example.web.documents;
 
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
@@ -18,18 +18,15 @@ public class DocumentPutRequest {
     private String endDate;
     private boolean orderRelevant;
     private String lastModified;
-
-
-
-
+    // for the case if the User do not want to edit the signatories
+    // list on upload new Version (getter is going to be uses)
+    private List<Signatory> alreadyDefinedSignatories;
+    public void setAlreadyDefinedSignatories(List<Signatory> alreadyDefinedSignatories) {
+        this.alreadyDefinedSignatories = alreadyDefinedSignatories;
+    }
     public List<Signatory> getAlreadyDefinedSignatories() {
         return alreadyDefinedSignatories;
     }
-
-    private List<Signatory> alreadyDefinedSignatories;
-
-
-
     public String getLastModified() {
         return lastModified;
     }

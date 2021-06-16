@@ -79,10 +79,10 @@ export default {
             if (this.envelope.documents[i].state === "OPEN" || this.envelope.documents[i].state === "READ") {
                 open = true;
             }
-            if (this.envelope.documents[i].signatory === true && this.envelope.documents[i].signed === false) {
+            if (this.envelope.documents[i].turnToSign === true) {
                 toSign = true;
             }
-            if (this.envelope.documents[i].reader === true && this.envelope.documents[i].read === false) {
+            if (this.envelope.documents[i].turnToReview === true) {
                 toRead = true;
             }
         }

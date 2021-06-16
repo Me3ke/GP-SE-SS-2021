@@ -13,7 +13,7 @@
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
 
-                        <b-button class="elsa-blue-btn" @click="keySetUp">
+                        <b-button class="light-btn" @click="keySetUp">
                             {{ $t('Settings.SecuritySettings.newKeypair') }}
                         </b-button>
                     </b-list-group-item>
@@ -24,7 +24,7 @@
                              {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
                         </span>
 
-                        <b-button class="elsa-blue-btn" @click="setUp()">
+                        <b-button class="light-btn" @click="setUp()">
                             {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
                     </b-list-group-item>
@@ -39,7 +39,6 @@
                             </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to API -->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
@@ -52,6 +51,21 @@
                             </span>
                         </div>
                     </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-end align-items-center">
+
+                        <transition name="saved">
+                            <div v-if="showSave" class="content-div">
+                                {{ $t('Settings.saved') }}
+                            </div>
+                        </transition>
+
+                        <b-button class="elsa-blue-btn"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
+                                  @click="saveTwoFacLogin">
+                            {{ $t('Settings.MessageSettings.send') }}
+                        </b-button>
+                    </b-list-group-item>
                 </b-list-group>
             </div>
         </b-row>
@@ -61,6 +75,7 @@
 <script>
 import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
 import KeyPairSetUp from "@/main/vue/components/popUps/KeyPairSetUp";
+import {mapGetters} from "vuex";
 
 export default {
     name: "SecuritySettingsBox",
@@ -76,10 +91,18 @@ export default {
         return {
             showKey: false,
             showSetUp: false,
+            showSave: false,
 
-            // TODO: use value from API
             loginActive: false
         }
+    },
+    async created() {
+        await this.$store.dispatch('getTwoFactorLogin')
+        this.loginActive = this.twoFacLogin
+    },
+    async mounted() {
+        await this.$store.dispatch('getTwoFactorLogin')
+        this.loginActive = this.twoFacLogin
     },
     methods: {
         keySetUp() {
@@ -89,7 +112,27 @@ export default {
         setUp() {
             this.showSetUp = !this.showSetUp
             this.$emit('modalTrigger')
+        },
+        // saves setting if two-factor authentication should always be shown at login
+        async saveTwoFacLogin() {
+            // checking if setting even changed
+            if (this.loginActive !== this.twoFacLogin) {
+                await this.$store.dispatch('putTwoFactorLogin', {setting: this.loginActive})
+                await this.$store.dispatch('getTwoFactorLogin')
+                this.loginActive = this.twoFacLogin
+
+                // show saved notification
+                this.showSave = true
+                setTimeout(() => {
+                    this.showSave = false
+                }, 2000);
+            }
         }
+    },
+    computed: {
+        ...mapGetters({
+            twoFacLogin: 'getTwoFactorLogin'
+        })
     }
 }
 </script>
