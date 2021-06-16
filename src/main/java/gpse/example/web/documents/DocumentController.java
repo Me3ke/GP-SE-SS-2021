@@ -151,8 +151,6 @@ public class DocumentController {
             envelope.removeDocument(oldDocument);
             documentService.remove(oldDocument);
             System.out.println("old document: " + oldDocument.getSignatories());
-            signatoryService.delete(oldDocument.getSignatories());
-            //documentMetaDataService.delete(oldDocument.getDocumentMetaData());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
