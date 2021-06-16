@@ -2,10 +2,14 @@ package gpse.example.web;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -291,14 +295,27 @@ public class UserController {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
     }
 
+
     @PutMapping("/user/password/change")
     public void changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
-        //TODO get User from TOken
-        User user;
-        if (user.getRoles().contains("ROLE_USER")) {
-            user.setPassword(password);
-        } else {
+        SecurityConstants securityConstants = new SecurityConstants();
+        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(),"").strip());
 
+        try {
+            User user = userService.getUser(parsedToken.getBody().getSubject());
+            if (user.getRoles().contains("ROLE_USER")) {
+                user.setPassword(password);
+
+            } else {
+                //TODO Fehlermelden? DOch Responseobject nutzen
+                System.out.println("ROle is not User");
+            }
+        } catch(UsernameNotFoundException unfe){
+            unfe.printStackTrace();
+            //TODO Fehlermelden? DOch Responseobject nutzen
         }
 
     }
