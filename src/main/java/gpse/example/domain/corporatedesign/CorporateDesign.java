@@ -24,8 +24,14 @@ public class CorporateDesign {
     @Lob
     private byte[] logo;
 
+    @Column
+    private String logoTyp;
+
     @Lob
     private byte[] logoDark;
+
+    @Column
+    private String logoDarkTyp;
 
     /**
      * the default constructor for a corporate Design.
@@ -79,15 +85,25 @@ public class CorporateDesign {
         return Arrays.copyOf(logo, logo.length);
     }
 
-    public void setLogo(final byte[] logo) {
+    public void setLogo(final byte[] logo, final String logoTyp) {
         this.logo = Arrays.copyOf(logo, logo.length);
+        this.logoTyp = logoTyp;
     }
 
     public byte[] getLogoDark() {
         return Arrays.copyOf(logoDark, logoDark.length);
     }
 
-    public void setLogoDark(final byte[] logoDark) {
+    public void setLogoDark(final byte[] logoDark, final String logoDarkTyp) {
         this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+        this.logoDarkTyp = logoDarkTyp;
+    }
+
+    public String getLogoTyp() {
+        return logoTyp;
+    }
+
+    public String getLogoDarkTyp() {
+        return logoDarkTyp;
     }
 }

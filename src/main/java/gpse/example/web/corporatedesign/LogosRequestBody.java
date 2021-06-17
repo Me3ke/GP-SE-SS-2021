@@ -8,7 +8,9 @@ import java.util.Arrays;
 public class LogosRequestBody {
 
     private byte[] logo;
+    private String logoTyp;
     private byte[] logoDark;
+    private String logoDarkTyp;
 
     public byte[] getLogo() {
         return Arrays.copyOf(logo, logo.length);
@@ -24,5 +26,21 @@ public class LogosRequestBody {
 
     public void setLogoDark(final byte[] logoDark) {
         this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+    }
+
+    public String getLogoTyp() {
+        return logoTyp;
+    }
+
+    public void setLogoTyp(final String logoTyp) {
+        this.logoTyp = logoTyp;
+    }
+
+    public String getLogoDarkTyp() {
+        return logoDarkTyp;
+    }
+
+    public void setLogoDarkTyp(final String logoDarkTyp) {
+        this.logoDarkTyp = logoDarkTyp;
     }
 }
