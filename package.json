@@ -18,6 +18,7 @@
     "vue": "^2.6.11",
     "vue-pdf": "^4.2.0",
     "vue-router": "^3.5.1",
+    "vue-signature-pad": "^2.0.0",
     "vue-sweetalert2": "^4.3.1",
     "vuelidate": "^0.7.6",
     "vuex": "^3.6.2",

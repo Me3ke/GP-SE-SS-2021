@@ -75,6 +75,14 @@
     align-items: center;
 }
 
+.pad {
+    box-shadow: rgba(67, 100, 149, 1) 0 1px 1px 2px;
+    border-radius: 1vw 1vw 1vw 1vw;
+
+    height: 12em;
+    width: 35em;
+}
+
 /* Form */
 .form-control {
     background-color: var(--whitesmoke);
@@ -137,6 +145,16 @@
     .nav-item {
         font-size: 0.5em;
     }
+
+    .pad {
+        width: 20em;
+        height: 8em;
+    }
+
+    .modal-fade {
+        margin-left: 0em;
+    }
+
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -160,6 +178,10 @@
 
     .nav-item {
         font-size: 0.41em;
+    }
+
+    .pad {
+        width: 30em  ;
     }
 }
 
@@ -208,6 +230,9 @@
 
     .nav-item {
         font-size: 0.75em;
+    }
+    .pad {
+        width: 30em  ;
     }
 }
 
