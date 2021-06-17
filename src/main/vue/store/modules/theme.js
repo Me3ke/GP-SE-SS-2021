@@ -12,7 +12,9 @@ export const state = {
     colors: [],
     errorFetchColors: {},
     putColorResponse: {},
-    errorPutColorResponse: {}
+    errorPutColorResponse: {},
+    logos: {},
+    errorLogoResponse: {},
 }
 
 export const mutations = {
@@ -39,19 +41,29 @@ export const mutations = {
     SET_COLORS(state, colors) {
         state.colors = colors
     },
+    // sets response for putting colors into database
+    SET_PUT_COLORS_RESPONSE(state, res) {
+        state.putColorResponse = res
+    },
+    // changes logos in localstorage
+    CHANGE_LOGOS(state, logos) {
+        state.logos = logos
+    },
+
     // sets error of request
     SET_ERROR_FETCH_COLORS(state, error) {
         state.errorFetchColors = error
     },
-    SET_PUT_COLORS_RESPONSE(state, res) {
-        state.putColorResponse = res
-    },
     SET_ERROR_PUT_COLORS_RESPONSE(state, error) {
         state.errorPutColorResponse = error
+    },
+    SET_ERROR_CHANGE_LOGOS(state, error) {
+        state.errorLogoResponse = error
     }
 }
 
 export const actions = {
+    /* General Theme */
     setUpTheme({state, commit}) {
         if (!state.modeInitialized) {
             commit('INITIALIZE_THEME')
@@ -62,6 +74,8 @@ export const actions = {
             commit('CHANGE_THEME', theme)
         }
     },
+
+    /* Colors */
     setStylesheet({commit}, sheet) {
         commit('CHANGE_STYLESHEET', sheet)
     },
@@ -92,6 +106,17 @@ export const actions = {
         commit('SET_ERROR_FETCH_COLORS', {})
         commit('SET_PUT_COLORS_RESPONSE', {})
         commit('SET_ERROR_PUT_COLORS_RESPONSE', {})
+    },
+
+    /* Logos */
+    // gives back logos
+    getLogos({commit}) {
+        return themeAPI.getLogos().then(response => {
+            commit('CHANGE_LOGOS', response.data)
+            commit('SET_ERROR_CHANGE_LOGOS', {})
+        }).catch(error => {
+            commit('SET_ERROR_CHANGE_LOGOS', error)
+        })
     }
 }
 
@@ -108,5 +133,11 @@ export const getters = {
     },
     getColors: (state) => {
         return state.colors
+    },
+    getLightLogo: (state) => {
+        return state.logos.logo
+    },
+    getDarkLogo: (state) => {
+        return state.logos.logoDark
     }
 }

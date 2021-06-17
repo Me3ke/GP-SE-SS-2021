@@ -18,5 +18,12 @@ export default {
                 colors: colors
             }
         })
+    },
+    // gives back logos
+    async getLogos() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/corporate/logo'
+        })
     }
 }

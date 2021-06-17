@@ -27,10 +27,15 @@ export default {
     components: {Messages, Avatar, LanguageSwitcher},
     data() {
         return {
-            logoLightMode: require('../../assets/logos/ELSA_small.svg'),
-            logoDarkMode: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            logoLightMode: Object,
+            logoDarkMode: Object,
             mobile: window.innerWidth < 576
         }
+    },
+    async created() {
+        await this.$store.dispatch('theme/getLogos')
+        this.logoLightMode = this.logoLight
+        this.logoDarkMode = this.logoDark
     },
     mounted() {
         // reacts when screen size changes
@@ -49,7 +54,9 @@ export default {
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
-            user: 'getUser'
+            user: 'getUser',
+            logoLight: 'theme/getLightLogo',
+            logoDark: 'theme/getDarkLogo'
         })
     }
 }
