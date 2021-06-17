@@ -35,6 +35,8 @@ public class UserController {
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
     //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
+    private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";
@@ -305,7 +307,9 @@ public class UserController {
      * @param token JWT token which identifies the user
      */
     @PutMapping("/user/password/change")
-    public void changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
+    public JSONResponseObject changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+
         SecurityConstants securityConstants = new SecurityConstants();
         byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         Jws<Claims> parsedToken = Jwts.parserBuilder()
@@ -316,15 +320,19 @@ public class UserController {
             User user = userService.getUser(parsedToken.getBody().getSubject());
             if (user.getRoles().contains(ROLE_USER)) {
                 user.setPassword(passwordEncoder.encode(password));
-
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
             } else {
                 //TODO Fehlermelden? DOch Responseobject nutzen
-                System.out.println("ROle is not User");
+                jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+                jsonResponseObject.setMessage("User has not role user");
             }
-        } catch (UsernameNotFoundException unfe) {
-            unfe.printStackTrace();
-            //TODO Fehlermelden? DOch Responseobject nutzen
-        }
+            return jsonResponseObject;
 
+        } catch (UsernameNotFoundException unfe) {
+            //TODO Fehlermelden? DOch Responseobject nutzen
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage("User not Found");
+            return jsonResponseObject;
+        }
     }
 }
