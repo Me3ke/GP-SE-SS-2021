@@ -2,6 +2,7 @@ package gpse.example.domain.users;
 
 
 import gpse.example.util.email.MessageGenerationException;
+import gpse.example.web.tokens.ConfirmationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

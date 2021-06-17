@@ -7,6 +7,11 @@ import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
+import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.web.tokens.ConfirmationToken;
+import gpse.example.web.tokens.ConfirmationTokenService;
+import gpse.example.web.tokens.ResetPasswordToken;
+import gpse.example.web.tokens.ResetPasswordTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -38,12 +43,15 @@ public class UserController {
     //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
+    private static final int STATUS_CODE_WRONG_USER = 229;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ResetPasswordTokenService resetPasswordTokenService;
     private final MessageService messageService;
+    private final SMTPServerHelper smtpServerHelper;
     private final StringToKeyConverter stringToKeyConverter;
 
     @Lazy
@@ -60,10 +68,14 @@ public class UserController {
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final MessageService messageService) {
+                          final MessageService messageService,
+                          final ResetPasswordTokenService resetPasswordTokenService,
+                          final SMTPServerHelper smtpServerHelper) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
+        this.resetPasswordTokenService = resetPasswordTokenService;
+        this.smtpServerHelper = smtpServerHelper;
         stringToKeyConverter = new StringToKeyConverter();
     }
 
@@ -299,7 +311,8 @@ public class UserController {
      * @param token JWT token which identifies the user
      */
     @PutMapping("/user/password/change")
-    public JSONResponseObject changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
+    public JSONResponseObject changePassword(@RequestParam("password") final String password,
+                                             @RequestHeader final String token) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
 
         SecurityConstants securityConstants = new SecurityConstants();
@@ -327,4 +340,69 @@ public class UserController {
             return jsonResponseObject;
         }
     }
+
+    @GetMapping("/user/{userId}/password/reset")
+    public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        try {
+            User user = userService.getUser(userId);
+            ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
+            ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
+            try {
+                smtpServerHelper.sendResetPasswordMail(user, "http://localhost:8080/de/login/reset/"
+                    + savedToken.getToken());
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            }  catch (MessageGenerationException mge) {
+                resetPasswordTokenService.deleteResetPasswordToken(savedToken.getId());
+                jsonResponseObject.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                return jsonResponseObject;
+            }
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST );
+            jsonResponseObject.setMessage("User not Found");
+            return jsonResponseObject;
+        }
+    }
+
+    @GetMapping("/user/")
+    public JSONResponseObject resetPassword(@RequestParam("password") final String password,
+                                            @RequestParam("token") final String token,
+                                            @RequestHeader final String jwtToken) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+
+        SecurityConstants securityConstants = new SecurityConstants();
+        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        final Optional<ResetPasswordToken> optionalResetPasswordToken
+            = resetPasswordTokenService.findResetPasswordTokenByToken(token);
+
+        try {
+            User user = userService.getUser(parsedToken.getBody().getSubject());
+
+            if(optionalResetPasswordToken.isEmpty()) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+                return jsonResponseObject;
+            } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
+                return jsonResponseObject;
+            } else if (optionalResetPasswordToken.get().getUser().equals(user)) {
+                user.setPassword(passwordEncoder.encode(password));
+                userService.saveUser(user);
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            } else {
+                jsonResponseObject.setStatus(STATUS_CODE_WRONG_USER);
+                return jsonResponseObject;
+            }
+
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            return jsonResponseObject;
+        }
+    }
+
 }

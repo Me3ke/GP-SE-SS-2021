@@ -2,6 +2,8 @@ package gpse.example.domain.users;
 
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.web.tokens.ConfirmationToken;
+import gpse.example.web.tokens.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;

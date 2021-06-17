@@ -1,4 +1,6 @@
-package gpse.example.domain.users;
+package gpse.example.web.tokens;
+
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

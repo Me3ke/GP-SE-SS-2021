@@ -42,6 +42,13 @@ public class SMTPServerHelper {
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
 
+    private static final String RESET_PASSWORD_SUBJECT = "Passwort zurücksetzen";
+    private static final String RESET_PASSWORD_MAIL = GREETING
+        + "Sie können Ihr Passwort unter folgendem Link zurücksetzen. %n"
+        + "Passwort hier Zurücksetzen: %s %n"
+        + "Bitte beachten Sie die Eingeschränkte Gültigkeit dieses Links von 24h. %n"
+        + "Wenn sie nicht versucht haben ihr Passwort zurückzusetzen, können sie diese Email Ignorieren.";
+
     @Autowired
     private final JavaMailSender mailSender;
 
@@ -80,7 +87,6 @@ public class SMTPServerHelper {
     }
 
     /**
-<<<<<<< HEAD
      * sending the Invitation for a signature.
      * @param signatoryMail     the signatory who should be reminded
      * @param owner             the owner of the relating document
@@ -113,6 +119,13 @@ public class SMTPServerHelper {
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
 
         mailSender.send(message.generateMessage());
+    }
+
+    public void sendResetPasswordMail(final User user, String link) throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(user.getEmail());
+        message.setSubject(RESET_PASSWORD_SUBJECT);
+        message.setText(String.format(RESET_PASSWORD_MAIL, user.getLastname(), link));
     }
 
 }
