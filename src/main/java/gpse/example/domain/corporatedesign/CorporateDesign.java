@@ -1,7 +1,8 @@
 package gpse.example.domain.corporatedesign;
 
+import com.beust.jcommander.internal.Lists;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,8 +35,7 @@ public class CorporateDesign {
      */
     public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark) {
         if (colors != null) {
-            this.colors = new ArrayList<>(Arrays.asList(colors));
-            System.out.println(this.colors.get(0));
+            this.colors = Lists.newArrayList(colors);
         }
         if (logo != null) {
             this.logo = Arrays.copyOf(logo, logo.length);
@@ -72,7 +72,7 @@ public class CorporateDesign {
                 temp[i] = colors[i];
             }
         }
-        this.colors = Arrays.asList(temp.clone());
+        this.colors = Lists.newArrayList(temp);
     }
 
     public byte[] getLogo() {

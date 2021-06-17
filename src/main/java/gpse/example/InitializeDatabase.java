@@ -6,6 +6,7 @@ import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
+import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
@@ -97,13 +98,17 @@ public class InitializeDatabase implements InitializingBean {
         final byte[] defaultLogo;
         final byte[] defaultLogoDark;
         try {
-            defaultLogo = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small.svg"));
-            defaultLogoDark = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small_darkmode.svg"));
-            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, defaultLogo, defaultLogoDark);
-            defaultDesign = corporateDesignService.saveCorporateDesign(defaultDesign);
-            System.out.println(defaultDesign.getId());
-        } catch (IOException e) {
-            System.out.println("Default logo could not be saved.");
+            corporateDesignService.getCorporateDesign(1L);
+        } catch (CorporateDesignNotFoundException exception) {
+            try {
+                defaultLogo = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small.svg"));
+                defaultLogoDark =
+                    Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small_darkmode.svg"));
+                CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, defaultLogo, defaultLogoDark);
+                corporateDesignService.saveCorporateDesign(defaultDesign);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         try {
             userService.getUser(USERNAME);
