@@ -111,6 +111,7 @@ public class InitializeDatabase implements InitializingBean {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
