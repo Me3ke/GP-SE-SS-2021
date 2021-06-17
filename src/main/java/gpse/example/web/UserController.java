@@ -11,7 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +37,16 @@ public class UserController {
     //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
+    private static final String ROLE_USER = "ROLE_USER";
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
     private final StringToKeyConverter stringToKeyConverter;
     private final SecuritySettingsService securitySettingsService;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     /**
@@ -89,7 +93,7 @@ public class UserController {
             } catch (UsernameNotFoundException e) {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
-                user.addRole("ROLE_USER");
+                user.addRole(ROLE_USER);
                 PersonalData personalData = signUpUser.generatePersonalData();
                 personalData = personalDataService.savePersonalData(personalData);
                 user.setPersonalData(personalData);
@@ -295,25 +299,29 @@ public class UserController {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
     }
 
-
+    /**
+     * Method to chenge password as logged in User.
+     * @param password the new password
+     * @param token JWT token which identifies the user
+     */
     @PutMapping("/user/password/change")
     public void changePassword(@RequestParam("password") final String password, @RequestHeader final String token) {
         SecurityConstants securityConstants = new SecurityConstants();
         byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
-            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(),"").strip());
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
 
         try {
             User user = userService.getUser(parsedToken.getBody().getSubject());
-            if (user.getRoles().contains("ROLE_USER")) {
-                user.setPassword(password);
+            if (user.getRoles().contains(ROLE_USER)) {
+                user.setPassword(passwordEncoder.encode(password));
 
             } else {
                 //TODO Fehlermelden? DOch Responseobject nutzen
                 System.out.println("ROle is not User");
             }
-        } catch(UsernameNotFoundException unfe){
+        } catch (UsernameNotFoundException unfe) {
             unfe.printStackTrace();
             //TODO Fehlermelden? DOch Responseobject nutzen
         }
