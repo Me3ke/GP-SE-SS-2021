@@ -99,7 +99,9 @@ public class InitializeDatabase implements InitializingBean {
         try {
             defaultLogo = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small.svg"));
             defaultLogoDark = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small_darkmode.svg"));
-            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, defaultLogo, defaultLogoDark);
+            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, null, null);
+            defaultDesign.setLogo(defaultLogo, "svg");
+            defaultDesign.setLogoDark(defaultLogoDark, "svg");
             defaultDesign = corporateDesignService.saveCorporateDesign(defaultDesign);
             System.out.println(defaultDesign.getId());
         } catch (IOException e) {

@@ -46,7 +46,9 @@ public class CorporateDesignController {
             corporateDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
         }
         logosRequestBody.setLogo(corporateDesign.getLogo());
+        logosRequestBody.setLogoTyp(corporateDesign.getLogoTyp());
         logosRequestBody.setLogoDark(corporateDesign.getLogoDark());
+        logosRequestBody.setLogoDarkTyp(corporateDesign.getLogoDarkTyp());
         return logosRequestBody;
     }
 
@@ -87,8 +89,8 @@ public class CorporateDesignController {
             corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
                 null, null);
         }
-        corporateDesign.setLogo(logosRequestBody.getLogo());
-        corporateDesign.setLogoDark(logosRequestBody.getLogoDark());
+        corporateDesign.setLogo(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
+        corporateDesign.setLogoDark(logosRequestBody.getLogoDark(), logosRequestBody.getLogoDarkTyp());
         corporateDesignService.saveCorporateDesign(corporateDesign);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage(SUCCESSFUL);
@@ -112,7 +114,7 @@ public class CorporateDesignController {
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, defaultDesign.getLogo(), defaultDesign.getLogoDark());
+            corporateDesign = new CorporateDesign(null, null, null);
         }
         corporateDesign.setColors(colorsRequestBody.getColors(), defaultDesign.getColors());
         corporateDesignService.saveCorporateDesign(corporateDesign);
