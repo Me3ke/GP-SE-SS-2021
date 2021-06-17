@@ -6,7 +6,8 @@ const authorization = {
         authenticated: null,
         token: null,
         username: null,
-        role: null
+        role: null,
+        date: null
     }),
     mutations: {
         AUTHENTICATE(state, token) {
@@ -22,6 +23,7 @@ const authorization = {
                 console.log(jsonPayload);
                 let payload = JSON.parse(jsonPayload);
                 state.username = payload.sub;
+                state.exp = payload.exp;
                 state.role = payload.rol;
             } else {
                 state.authenticated = false

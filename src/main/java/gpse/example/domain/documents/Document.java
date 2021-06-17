@@ -4,6 +4,7 @@ import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
+import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,15 +31,18 @@ public class Document {
     @Column
     private long id;
 
-    @OneToOne
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private DocumentMetaData documentMetaData;
 
-/*<<<<<<< HEAD
-    @OneToMany(fetch = FetchType.EAGER)
-=======*/
     @OneToMany(
+        fetch = FetchType.EAGER,
         orphanRemoval = true,
-        cascade = CascadeType.ALL)
+        cascade = CascadeType.ALL
+    )
     private List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany(
@@ -358,7 +362,9 @@ public class Document {
     public Signatory getCurrentSignatory() {
         for (final Signatory signatory : signatories) {
             if (!signatory.isStatus()) {
+
                 return signatory;
+
             }
         }
         return null;

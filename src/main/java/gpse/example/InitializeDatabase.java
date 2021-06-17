@@ -7,8 +7,8 @@ import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
-import gpse.example.domain.signature.SignatoryService;
 import gpse.example.domain.users.*;
+import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,7 +31,7 @@ public class InitializeDatabase implements InitializingBean {
     private static final String PROGRAM_PATH = "Programme.pdf";
     private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
-    private static final String ADMINNAME = "Ruediger.Spieler@mail.de";
+    private static final String ADMINNAME = "Hans.Schneider.test@gmail.com";
     private static final String DOUBLE_BACKSLASH = "\\.";
     private static final long ID_THREE = 3L;
     private static final long ID_FOUR = 4L;
@@ -43,37 +43,22 @@ public class InitializeDatabase implements InitializingBean {
     private static final String ROLE_USER = "ROLE_USER";
     private static final String PASSWORD = "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG";
     private final UserService userService;
-    private final PersonalDataService personalDataService;
     private final DocumentService documentService;
-    private final DocumentMetaDataService documentMetaDataService;
     private final EnvelopeService envelopeService;
-    private final SignatoryService signatoryService;
-    private final SecuritySettingsService securitySettingsService;
 
     /**
      * The standard constructor for the class initializing the database.
      *
      * @param userService             used for saving user-objects in the database.
-     * @param personalDataService     used for saving personalData-objects in the database.
      * @param documentService         used for saving document-objects in the database.
      * @param envelopeService         used for saving envelope-objects in the database.
-     * @param documentMetaDataService used for saving documentMetaData-objects in the database.
-     * @param signatoryService        used for saving signatory-objects in the database.
-     * @param securitySettingsService used for saving user settings objects in the database
      */
     @Autowired
-    public InitializeDatabase(final UserService userService, final PersonalDataService personalDataService,
-                              final DocumentService documentService, final EnvelopeService envelopeService,
-                              final DocumentMetaDataService documentMetaDataService,
-                              final SignatoryService signatoryService,
-                              final SecuritySettingsService securitySettingsService) {
+    public InitializeDatabase(final UserService userService, final DocumentService documentService,
+                              final EnvelopeService envelopeService) {
         this.userService = userService;
-        this.personalDataService = personalDataService;
         this.documentService = documentService;
-        this.documentMetaDataService = documentMetaDataService;
         this.envelopeService = envelopeService;
-        this.signatoryService = signatoryService;
-        this.securitySettingsService = securitySettingsService;
     }
 
     @Override
@@ -89,8 +74,6 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.setEnabled(true);
             user.setAdminValidated(true);
-            user.setPersonalData(personalDataService.savePersonalData(personalData));
-            user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
             userService.saveUser(user);
         }
         try {
@@ -105,8 +88,6 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
             user.setAdminValidated(true);
-            user.setPersonalData(personalDataService.savePersonalData(personalData));
-            user.setSecuritySettings(securitySettingsService.saveSecuritySettings(user.getSecuritySettings()));
             userService.saveUser(user);
         }
         /*final List<Long> documentIDs = new ArrayList<>();
@@ -211,14 +192,12 @@ public class InitializeDatabase implements InitializingBean {
                     signatories.add(new ProtoSignatory(owner.getUsername(), 2));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, userService);
+                    signatories, userService, documentService);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {
                     document.setState(DocumentState.OPEN);
                 }
-                signatoryService.saveSignatories(document.getSignatories());
-                documentMetaDataService.saveDocumentMetaData(document.getDocumentMetaData());
                 return documentService.addDocument(document);
             } catch (CreatingFileException | IOException e) {
                 throw e;

@@ -182,11 +182,14 @@ export default {
         async twoFac() {
             //checking syntax of code
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
+                console.log(1)
                 this.showAlertCode = false
 
-                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
+                await this.$store.dispatch('twoFakAuthAPI/postValidateCode', {code: this.code})
+                console.log(2)
                 //checking correctness of code
                 if (!this.correctInput) {
+                    console.log(3)
                     this.triesLeft--
                     // user used all his tries -> will get logged out
                     if (this.triesLeft < 1) {
@@ -196,9 +199,11 @@ export default {
                     this.showTries = true
                 } else {
                     // emits event to close pop-up
+                    console.log(4)
                     this.showTries = false
                     this.showAlertCode = false
                     this.$emit('twoFacTrigger')
+                    console.log(5)
                 }
             } else {
                 this.showAlertCode = true

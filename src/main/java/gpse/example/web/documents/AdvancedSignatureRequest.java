@@ -1,4 +1,4 @@
-package gpse.example.domain.documents;
+package gpse.example.web.documents;
 
 /**
  * Class responsible for containing the advanced Signature.

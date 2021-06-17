@@ -1,4 +1,4 @@
-package gpse.example.domain.envelopes;
+package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.signature.SignatureType;
