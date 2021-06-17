@@ -47,6 +47,7 @@ public class UserController {
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";
+    private static final String USER_NOT_FOUND = "User not Found";
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
@@ -65,6 +66,8 @@ public class UserController {
      * @param service                 Userservice Object
      * @param confService             ConfirmationTokenService object
      * @param messageService          the messageService to access the message table
+     * @param resetPasswordTokenService Service for the resetPasswordToken
+     * @param smtpServerHelper        smtpserverhelper to send emails
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
@@ -309,6 +312,7 @@ public class UserController {
      * Method to chenge password as logged in User.
      * @param password the new password
      * @param token JWT token which identifies the user
+     * @return jsonResponse with statuscode
      */
     @PutMapping("/user/password/change")
     public JSONResponseObject changePassword(@RequestParam("password") final String password,
@@ -336,11 +340,16 @@ public class UserController {
         } catch (UsernameNotFoundException unfe) {
             //TODO Fehlermelden? DOch Responseobject nutzen
             jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
-            jsonResponseObject.setMessage("User not Found");
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
             return jsonResponseObject;
         }
     }
 
+    /**
+     * GetRequest to get an Token via email to Reset a password.
+     * @param userId the requesting users id
+     * @return jsonResponse with statuscode
+     */
     @GetMapping("/user/{userId}/password/reset")
     public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
@@ -359,12 +368,20 @@ public class UserController {
                 return jsonResponseObject;
             }
         } catch (UsernameNotFoundException unfe) {
-            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST );
-            jsonResponseObject.setMessage("User not Found");
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
             return jsonResponseObject;
         }
     }
 
+    /**
+     * GetResponse Method to set a new password.
+     * call api/user?password={password}&token={token}
+     * @param password new password
+     * @param token token which references the user who want to chnge password
+     * @param jwtToken jwt-token references current logged in user
+     * @return jsonResponse with statuscode
+     */
     @GetMapping("/user/")
     public JSONResponseObject resetPassword(@RequestParam("password") final String password,
                                             @RequestParam("token") final String token,
@@ -383,7 +400,7 @@ public class UserController {
         try {
             User user = userService.getUser(parsedToken.getBody().getSubject());
 
-            if(optionalResetPasswordToken.isEmpty()) {
+            if (optionalResetPasswordToken.isEmpty()) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
                 return jsonResponseObject;
             } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Service for resetPasswordTokens.
+ */
 @Service
 public class ResetPasswordTokenService {
 
@@ -18,10 +21,16 @@ public class ResetPasswordTokenService {
         return repo.save(rpt);
     }
 
-    public void deleteResetPasswordToken (final long id) {
+    public void deleteResetPasswordToken(final long id) {
         repo.deleteById(id);
     }
 
+
+    /**
+     * Method to find one token not by an String token not by id.
+     * @param givenToken the String token
+     * @return the Optional Token
+     */
     public Optional<ResetPasswordToken> findResetPasswordTokenByToken(final String givenToken) {
         final Iterable<ResetPasswordToken> tokens = repo.findAll();
 

@@ -121,11 +121,18 @@ public class SMTPServerHelper {
         mailSender.send(message.generateMessage());
     }
 
+    /**
+     * send email with link to reset password.
+     * @param user the requesting user reciever of email
+     * @param link the link to reset password
+     * @throws MessageGenerationException if message could not be generated or send
+     */
     public void sendResetPasswordMail(final User user, String link) throws MessageGenerationException {
         Message message = new Message();
         message.setRecievingUserMail(user.getEmail());
         message.setSubject(RESET_PASSWORD_SUBJECT);
         message.setText(String.format(RESET_PASSWORD_MAIL, user.getLastname(), link));
+        mailSender.send(message.generateMessage());
     }
 
 }

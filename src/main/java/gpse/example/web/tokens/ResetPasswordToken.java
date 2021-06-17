@@ -6,6 +6,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * ResetPasswordToken class Referencing an user when he lost password.
+ */
+@Entity
 public class ResetPasswordToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +26,10 @@ public class ResetPasswordToken {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    /**
+     * Generate token with reference to an user.
+     * @param user referenced user
+     */
     public ResetPasswordToken(final User user) {
         this.user = user;
         this.createdDate = LocalDateTime.now();
