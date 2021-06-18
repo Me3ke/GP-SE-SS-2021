@@ -167,5 +167,8 @@ export const getters = {
     },
     getErrorPutLogoResponse: (state) => {
         return state.errorPutLogosResponse
+    },
+    getErrorPutColorResponse: (state) => {
+        return state.errorPutColorResponse
     }
 }

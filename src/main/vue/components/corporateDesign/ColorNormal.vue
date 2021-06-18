@@ -7,6 +7,17 @@
                         {{ $t('AdminSettings.corporate.color') }}
                     </h4>
                 </div>
+
+                <!-- Alert that shows if uploading colors to backend was unsuccessful -->
+                <b-alert :show="showSendingAlert" style="margin-bottom: 0">
+                    <div>
+                        {{ $t('TwoFakAuth.serverErrorOne') }}
+                    </div>
+                    <div>
+                        {{ $t('TwoFakAuth.serverErrorTwoAdmin') }}
+                    </div>
+                </b-alert>
+
                 <b-list-group>
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
@@ -60,12 +71,14 @@
 <script>
 import {constructSheet} from "@/main/vue/scripts/stylesheetManipulator";
 import {mapGetters} from "vuex";
+import _ from "lodash";
 
 export default {
     name: "ColorNormal",
     data() {
         return {
             showSave: false,
+            showSendingAlert: false,
             colors: []
         }
     },
@@ -82,11 +95,18 @@ export default {
             // constructing stylesheet and applying it to DOM
             constructSheet(this.sheetColors)
 
-            // show saved notification
-            this.showSave = true
-            setTimeout(() => {
-                this.showSave = false
-            }, 2000);
+            // shows 'saved' if no error occurred, otherwise shows warning
+            if (!this.hasSendingError()) {
+                // show saved notification
+                this.showSave = true
+                setTimeout(() => {
+                    this.showSave = false
+                }, 2000);
+                this.showSendingAlert = false
+            } else {
+                this.showSendingAlert = true
+            }
+
         },
         resetColor(index) {
             //  reset color here with color from api
@@ -118,11 +138,16 @@ export default {
             setTimeout(() => {
                 document.querySelector("#r" + index).style.transform = "rotate(360deg)";
             }, 400);
-        }
+        },
+        // checks if colors got send to server correctly
+        hasSendingError() {
+            return !_.isEmpty(this.uploadError)
+        },
     },
     computed: {
         ...mapGetters({
-            sheetColors: 'theme/getColors'
+            sheetColors: 'theme/getColors',
+            uploadError: 'theme/getErrorPutColorResponse'
         })
     },
     watch: {

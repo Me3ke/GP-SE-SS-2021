@@ -226,3 +226,9 @@
     width: auto;
     margin-right: 1em;
 }
+/* Alert */
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
