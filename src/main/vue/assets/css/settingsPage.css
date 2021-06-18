@@ -14,7 +14,7 @@
 }
 
 .responsive-img {
-    height: 10em;
+    height: 8em;
     width: auto;
 }
 
@@ -187,11 +187,11 @@
 }
 
 .light-btn {
-    background-color: var(--light-grey);
+    background-color: var(--elsa-blue-transparent);
 }
 
 .light-btn:hover {
-    background-color: var(--shadow-grey);
+    background-color: var(--light-grey);
 }
 
 /* Toggle */
@@ -226,6 +226,7 @@
     width: auto;
     margin-right: 1em;
 }
+
 /* Alert */
 .alert {
     background-color: var(--sign-doc-hover);

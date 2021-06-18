@@ -457,7 +457,10 @@
     "AdminSettings": {
         "corporate": {
             "title": "Firmen Design",
+            "titleExp": "Experimentelles Design",
             "exp": "Experimentelle Einstellungen",
+            "light": "Heller Modus",
+            "dark": "Dunkler Modus",
             "logo": "Logo",
             "currentLogo": "Aktuelles Logo:",
             "logoUpload": "Logo hochladen",
@@ -469,7 +472,19 @@
             "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!",
             "color": "Farbthema",
             "color1": "Schrift- und Kontrastfarbe",
-            "color2": "Akzentfarbe"
+            "color2": "Akzentfarbe",
+            "color3": "Hintergrund- und Hauptfarbe",
+            "color4": "Heller Neutralton",
+            "color5":"Dunkler Neutralton",
+            "color6": "Offenes Dokument - Hover",
+            "color7": "Geschlossenes Dokument",
+            "color8":"Geschlossenes Dokument - Hover",
+            "color9": "Dokument Aktion benötigt",
+            "color10":"Dokument Aktion benötigt - Hover",
+            "color11": "Helle Warnfarbe",
+            "color12": "Dunkle Warnfarbe",
+            "color13": "Einstellungsfarbe",
+            "color14": "Pop-Up Hintergrund"
         }
     }
 }

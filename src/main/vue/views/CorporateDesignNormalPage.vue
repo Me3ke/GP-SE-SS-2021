@@ -8,7 +8,7 @@
             <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 80vh">
                 <LogoNormal @modalTrigger="toggleOverflow"></LogoNormal>
                 <ColorNormal></ColorNormal>
-                <span class="link"
+                <span class="link" @click="$router.push('/'+ $i18n.locale + '/adminSettings/corporate/experimental')"
                       style="color: var(--dark-grey); opacity: 60%; justify-content: right; text-align: right">
                       {{ $t('AdminSettings.corporate.exp') }}
                 </span>

@@ -456,7 +456,10 @@
     "AdminSettings": {
         "corporate": {
             "title": "Corporate design",
+            "titleExp": "Experimental Design",
             "exp": "Experimental settings",
+            "light": "Light mode",
+            "dark": "Dark mode",
             "logo": "Logo",
             "currentLogo": "Current logo:",
             "logoUpload": "Upload logo",
@@ -468,7 +471,19 @@
             "logoSuccess": "You have successfully uploaded your logo!",
             "color": "Color scheme",
             "color1": "Font and contrast color",
-            "color2": "Accent color"
+            "color2": "Accent color",
+            "color3": "Background and main color",
+            "color4": "Light neutral",
+            "color5":"Dark neutral",
+            "color6": "Open document - hover",
+            "color7": "Closed document",
+            "color8":"Closed document - hover",
+            "color9": "Document action required",
+            "color10":"Document action required - Hover",
+            "color11": "Light warn color",
+            "color12": "Dark warn color",
+            "color13": "Setting color",
+            "color14": "Pop-Up background"
         }
     }
 }

@@ -2,41 +2,40 @@ import store from "@/main/vue/store/store";
 
 // makes dom changes to color variables whose information is provided in the sheetInformation
 export function constructSheet(sheetInformation) {
-
     let sheetString =
         ":root{\n" +
         "--dark-grey: " + sheetInformation[0] + ";\n" +
         "--elsa-blue: " + sheetInformation[1] + ";\n" +
         "--elsa-blue-transparent: " + hexToRgba(sheetInformation[1], 0.1) + ";\n" +
-        "--whitesmoke: whitesmoke;\n" +
-        "--light-grey: #D8D8D9;\n" +
-        "--shadow-grey: #ACACAC;\n" +
-        "--open-doc-hover: #ababab;\n" +
-        "--closed-doc: #E5E5E5;\n" +
-        "--closed-doc-hover: #C9C9C9;\n" +
-        "--sign-doc: #FFE3E3;\n" +
-        "--sign-doc-hover: #FFBABA;\n" +
-        "--red: #C93A3A;\n" +
-        "--user-info: whitesmoke;\n" +
-        "--modalBackground: rgba(0, 0, 0, .5);\n" +
-        "--darkRed: #a22c2c; \n" +
+        "--whitesmoke: " + sheetInformation[2] + ";\n" +
+        "--light-grey: " + sheetInformation[3] + ";\n" +
+        "--shadow-grey: " + sheetInformation[4] + ";\n" +
+        "--open-doc-hover: " + sheetInformation[5] + ";\n" +
+        "--closed-doc: " + sheetInformation[6] + ";\n" +
+        "--closed-doc-hover: " + sheetInformation[7] + ";\n" +
+        "--sign-doc: " + sheetInformation[8] + ";\n" +
+        "--sign-doc-hover: " + sheetInformation[9] + ";\n" +
+        "--red: " + sheetInformation[10] + ";\n" +
+        "--darkRed: " + sheetInformation[11] + ";\n" +
+        "--user-info: " + sheetInformation[12] + ";\n" +
+        "--modalBackground: " + hexToRgba(sheetInformation[13], 0.5) + ";\n" +
         "}\n" +
         "[data-theme=\"darkMode\"]{\n" +
-        "--dark-grey:" + sheetInformation[0] + ";\n" +
-        "--elsa-blue: #436495;\n" +
-        "--elsa-blue-transparent: rgba(67, 100, 149, 0.1);\n" +
-        "--whitesmoke: whitesmoke;\n" +
-        "--light-grey: #D8D8D9;\n" +
-        "--shadow-grey: #ACACAC;\n" +
-        "--open-doc-hover: #ababab;\n" +
-        "--closed-doc: #E5E5E5;\n" +
-        "--closed-doc-hover: #C9C9C9;\n" +
-        "--sign-doc: #FFE3E3;\n" +
-        "--sign-doc-hover: #FFBABA;\n" +
-        "--red: #C93A3A;\n" +
-        "--user-info: whitesmoke;\n" +
-        "--modalBackground: rgba(0, 0, 0, .5);\n" +
-        "--darkRed: #a22c2c; \n" +
+        "--dark-grey:" + sheetInformation[14] + ";\n" +
+        "--elsa-blue:" + sheetInformation[15] + ";\n" +
+        "--elsa-blue-transparent: " + hexToRgba(sheetInformation[15], 0.1) + ";\n" +
+        "--whitesmoke: " + sheetInformation[16] + ";\n" +
+        "--light-grey: " + sheetInformation[17] + ";\n" +
+        "--shadow-grey: " + sheetInformation[18] + ";\n" +
+        "--open-doc-hover: " + sheetInformation[19] + ";\n" +
+        "--closed-doc: " + sheetInformation[20] + ";\n" +
+        "--closed-doc-hover: " + sheetInformation[21] + ";\n" +
+        "--sign-doc: " + sheetInformation[22] + ";\n" +
+        "--sign-doc-hover: " + sheetInformation[23] + ";\n" +
+        "--red: " + sheetInformation[24] + ";\n" +
+        "--darkRed: " + sheetInformation[25] + ";\n" +
+        "--user-info: " + sheetInformation[26] + ";\n" +
+        "--modalBackground: " + hexToRgba(sheetInformation[27], 0.65) + ";\n" +
         "}\n"
 
     store.dispatch('theme/setStylesheet', sheetString).then(() => loadSheet())
