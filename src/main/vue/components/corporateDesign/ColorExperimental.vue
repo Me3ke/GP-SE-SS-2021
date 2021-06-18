@@ -24,12 +24,12 @@
                     <b-row align-h="center" align-v="center" cols="3">
                         <b-col></b-col>
                         <b-col style="text-align: center;">
-                            <span style="margin-left: 1.5em">
+                            <span>
                                 {{ $t('AdminSettings.corporate.light') }}
                             </span>
                         </b-col>
-                        <b-col style="text-align: center">
-                            <span style="margin-right: 0.5em">
+                        <b-col style="text-align: right">
+                            <span style="margin-right: 2em">
                                 {{ $t('AdminSettings.corporate.dark') }}
                             </span>
                         </b-col>
@@ -43,14 +43,14 @@
                             <b-row align-h="center" align-v="center" cols="3"
                                    v-for="index in Array.from(Array(14).keys())"
                                    :key="index">
-                                <b-col style="text-align: left">
+                                <b-col style="text-align: left; padding: 0; margin: 0">
                                     <span style="text-align: left">
                                         {{ $t('AdminSettings.corporate.color' + (index + 1)) }}
                                     </span>
                                 </b-col>
                                 <b-col>
                                     <!-- Color picker -->
-                                    <div>
+                                    <div style="padding: 0; margin: 0">
                                         <b-icon icon="arrow-clockwise" class="reset-icon" :id="'r' + index"
                                                 @click="resetColor(index)"></b-icon>
                                         <span>
@@ -58,7 +58,7 @@
                                         </span>
                                     </div>
                                 </b-col>
-                                <b-col>
+                                <b-col style="text-align: right; padding: 0; margin: 0">
                                     <!-- Color picker -->
                                     <div>
                                         <b-icon icon="arrow-clockwise" class="reset-icon" :id="'r' + (index+14)"
@@ -75,17 +75,23 @@
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
-
                         <transition name="saved">
-                            <span v-if="showSave" style="margin-left: 3.5em">
+                            <span v-if="showSave"
+                                  style="margin-right: 1em; margin-top: 0.2em; margin-bottom: 0.1em;">
                                 {{ $t('Settings.saved') }}
                             </span>
                         </transition>
 
+                        <b-button class="light-btn" @click="defaultResetColors"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;">
+                            {{ $t('AdminSettings.corporate.default') }}
+                        </b-button>
+
                         <b-button class="elsa-blue-btn" @click="saveColors"
-                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 3.5em; margin-right: 1em">
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em;">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
+
                     </b-list-group-item>
                 </b-list-group>
             </div>
@@ -104,7 +110,12 @@ export default {
         return {
             showSave: false,
             showSendingAlert: false,
-            colors: []
+            colors: [],
+            defaultColors:
+                ["#47525E", "#436495", "#f5f5f5", "#D8D8D9", "#ACACAC", "#ababab",
+                    "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", "#f5f5f5", "#000000",
+                    "#D8D8D9", "#f5f5f5", "#23292f", "#ACACAC", "#D8D8D9", "#ababab", "#070809",
+                    "#788796", "#d25959", "#b02f2f", "#651b1b", "#501515", "#363f48", "#000000"]
         }
     },
     async mounted() {
@@ -163,6 +174,10 @@ export default {
             setTimeout(() => {
                 document.querySelector("#r" + index).style.transform = "rotate(360deg)";
             }, 400);
+        },
+        // sets back colors to system colors
+        defaultResetColors() {
+            this.colors = [...this.defaultColors]
         },
         // checks if colors got send to server correctly
         hasSendingError() {

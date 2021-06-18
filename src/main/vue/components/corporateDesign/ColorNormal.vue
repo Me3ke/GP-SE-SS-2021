@@ -52,13 +52,18 @@
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
 
                         <transition name="saved">
-                            <span v-if="showSave" style="margin-left: 3.5em">
+                            <span v-if="showSave" style="margin-right: 1em;">
                                 {{ $t('Settings.saved') }}
                             </span>
                         </transition>
 
+                        <b-button class="light-btn" @click="defaultResetColors"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;">
+                            {{ $t('AdminSettings.corporate.default') }}
+                        </b-button>
+
                         <b-button class="elsa-blue-btn" @click="saveColors"
-                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 3.5em">
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em;">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
                     </b-list-group-item>
@@ -138,6 +143,11 @@ export default {
             setTimeout(() => {
                 document.querySelector("#r" + index).style.transform = "rotate(360deg)";
             }, 400);
+        },
+        // sets back colors to system colors
+        defaultResetColors() {
+            this.$set(this.colors, 0, "#47525E")
+            this.$set(this.colors, 1, "#436495")
         },
         // checks if colors got send to server correctly
         hasSendingError() {
