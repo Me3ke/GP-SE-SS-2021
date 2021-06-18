@@ -15,6 +15,8 @@ export const state = {
     errorPutColorResponse: {},
     logos: {},
     errorLogoResponse: {},
+    putLogosResponse: {},
+    errorPutLogosResponse: {}
 }
 
 export const mutations = {
@@ -49,6 +51,10 @@ export const mutations = {
     CHANGE_LOGOS(state, logos) {
         state.logos = logos
     },
+    // sets response for putting logos into database
+    SET_PUT_LOGOS_RESPONSE(state, res) {
+        state.putLogosResponse = res
+    },
 
     // sets error of request
     SET_ERROR_FETCH_COLORS(state, error) {
@@ -59,7 +65,11 @@ export const mutations = {
     },
     SET_ERROR_CHANGE_LOGOS(state, error) {
         state.errorLogoResponse = error
+    },
+    SET_ERROR_PUT_LOGOS_RESPONSE(state, error) {
+        state.errorPutLogosResponse = error
     }
+
 }
 
 export const actions = {
@@ -117,6 +127,15 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_CHANGE_LOGOS', error)
         })
+    },
+    // puts logos into database
+    putLogos({commit}, {logo, logoDark, logoType, logoDarkType}) {
+        return themeAPI.putLogos(logo, logoDark, logoType, logoDarkType).then(response => {
+            commit('SET_PUT_LOGOS_RESPONSE', response.data)
+            commit('SET_ERROR_PUT_LOGOS_RESPONSE', {})
+        }).catch(error => {
+            commit('SET_ERROR_PUT_LOGOS_RESPONSE', error)
+        })
     }
 }
 
@@ -137,7 +156,16 @@ export const getters = {
     getLightLogo: (state) => {
         return state.logos.logo
     },
+    getLightLogoType: (state) => {
+        return state.logos.logoTyp
+    },
     getDarkLogo: (state) => {
         return state.logos.logoDark
+    },
+    getDarkLogoType: (state) => {
+        return state.logos.logoDarkTyp
+    },
+    getErrorPutLogoResponse: (state) => {
+        return state.errorPutLogosResponse
     }
 }

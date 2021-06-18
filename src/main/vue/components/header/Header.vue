@@ -2,8 +2,12 @@
     <b-navbar toggleable="sm" id="background" sticky :class="[mobile ? 'mobile' : 'normal']">
         <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="$router.push(`/`)">
-            <b-img v-if="theme === '' " :src="logoLightMode" class="responsive-img" :alt="$t('Header.logo')"></b-img>
-            <b-img v-else :src="logoDarkMode" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <img v-if="theme === '' "
+                 :src="getLightSource()" class="responsive-img"
+                 :alt="$t('Header.logo')">
+            <img v-else
+                 :src="getDarkSource()" class="responsive-img"
+                 :alt="$t('Header.logo')">
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
@@ -21,21 +25,21 @@ import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 import Avatar from "@/main/vue/components/header/Avatar";
 import Messages from "@/main/vue/components/header/Messages";
 import {mapGetters} from "vuex";
+import {loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
 
 export default {
     name: "Header",
     components: {Messages, Avatar, LanguageSwitcher},
     data() {
         return {
-            logoLightMode: Object,
-            logoDarkMode: Object,
+            elsaLight: require('../../assets/logos/ELSA_small.svg'),
+            elsaDark: require('../../assets/logos/ELSA_small_darkmode.svg'),
             mobile: window.innerWidth < 576
         }
     },
     async created() {
+        await loadSheet()
         await this.$store.dispatch('theme/getLogos')
-        this.logoLightMode = this.logoLight
-        this.logoDarkMode = this.logoDark
     },
     mounted() {
         // reacts when screen size changes
@@ -49,14 +53,32 @@ export default {
         updateMobile() {
             // sets mobile depending on screen width (if smaller than 576 dropdown menu is collapsed)
             this.mobile = window.innerWidth < 576
+        },
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        },
+        getDarkSource() {
+            if (this.logoDarkType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoDark
+            } else {
+                return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
+            }
         }
-    },
+    }
+    ,
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
             user: 'getUser',
+
             logoLight: 'theme/getLightLogo',
-            logoDark: 'theme/getDarkLogo'
+            logoDark: 'theme/getDarkLogo',
+            logoLightType: 'theme/getLightLogoType',
+            logoDarkType: 'theme/getDarkLogoType'
         })
     }
 }

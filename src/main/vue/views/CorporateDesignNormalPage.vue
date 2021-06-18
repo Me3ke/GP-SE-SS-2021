@@ -5,11 +5,16 @@
         <BaseHeading name="AdminSettings.corporate.title"></BaseHeading>
 
         <b-container fluid="xl" style="overflow: hidden">
-            <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 85vh">
+            <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 80vh">
                 <LogoNormal @modalTrigger="toggleOverflow"></LogoNormal>
                 <ColorNormal></ColorNormal>
+                <span class="link"
+                      style="color: var(--dark-grey); opacity: 60%; justify-content: right; text-align: right">
+                      {{ $t('AdminSettings.corporate.exp') }}
+                </span>
             </div>
         </b-container>
+
 
         <Footer></Footer>
     </div>
@@ -37,6 +42,6 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped src="../assets/css/settingsPage.css">
 </style>
+

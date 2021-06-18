@@ -11,9 +11,8 @@
                     <b-list-group-item class="d-flex justify-content-center align-items-center">
                         <div>
                             <div class="logo-border">
-                                <img id="logoLight" style="margin-bottom: 1em"
-                                     :src="logo" class="responsive-img"
-                                     alt="logo">
+                                <img :src="getLightSource()" class="responsive-img"
+                                     :alt="$t('Header.logo')">
                             </div>
 
                             <b-button class="light-btn" @click="uploadLogo">
@@ -31,14 +30,13 @@
 <script>
 
 import UploadLogoPopUp from "@/main/vue/components/popUps/UploadLogoPopUp";
+import {mapGetters} from "vuex";
 
 export default {
     name: "LogoNormal",
     components: {UploadLogoPopUp},
     data() {
         return {
-            // TODO: gather logo from Api
-            logo: require('../../assets/logos/ELSA_small.svg'),
             showLogoUpload: false
         }
     },
@@ -47,6 +45,19 @@ export default {
             this.showLogoUpload = !this.showLogoUpload
             this.$emit('modalTrigger')
         },
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        }
+    },
+    computed: {
+        ...mapGetters({
+            logoLight: 'theme/getLightLogo',
+            logoLightType: 'theme/getLightLogoType'
+        })
     }
 }
 </script>

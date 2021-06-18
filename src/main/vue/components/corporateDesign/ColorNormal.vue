@@ -40,11 +40,6 @@
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
 
-                        <span class="link"
-                              style="color: var(--dark-grey); opacity: 60%;  margin-top: 0.2em; margin-bottom: 0.1em;">
-                            {{ $t('AdminSettings.corporate.exp') }}
-                        </span>
-
                         <transition name="saved">
                             <span v-if="showSave" style="margin-left: 3.5em">
                                 {{ $t('Settings.saved') }}

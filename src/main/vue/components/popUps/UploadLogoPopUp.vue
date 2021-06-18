@@ -26,7 +26,7 @@
                                                 {{ $t('TwoFakAuth.serverErrorOne') }}
                                             </div>
                                             <div>
-                                                {{ $t('TwoFakAuth.serverErrorTwo') }}
+                                                {{ $t('TwoFakAuth.serverErrorTwoAdmin') }}
                                             </div>
                                         </b-alert>
 
@@ -95,6 +95,10 @@
 </template>
 
 <script>
+import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {mapGetters} from "vuex";
+import _ from "lodash";
+
 export default {
     name: "UploadLogoPopUp",
     data() {
@@ -106,45 +110,47 @@ export default {
         }
     },
     methods: {
-        // uploads given public key to server
-        upload() {
+        // uploads given logo-image to server
+        async upload() {
             // if now logo has been submitted, do not continue
             if (this.logo === null) {
                 return
             }
-            // gets key out of file and send it to server
-            if (this.logo) {
-                const reader = new FileReader()
-                reader.readAsText(this.logo)
-                reader.onload = (logoInfo) => {
-                    this.sendLogo(logoInfo.target.result)
-                }
-            }
 
-            // changes page if no error occurred
+            // getting type of image
+            const type = this.logo.name.split('.')[1];
+            // getting content out of image
+            const content = await convertUploadFileToBase64(this.logo)
+
+            // sending logo to server (darkMode logo is the same)
+            await this.$store.dispatch('theme/putLogos', {
+                logo: content,
+                logoDark: content,
+                logoType: type,
+                logoDarkType: type
+            })
+
+
+            // changes page if no error occurred, otherwise shows warning
             if (!this.hasSendingError()) {
                 this.page = 2
-            }
-        },
-        // sends given logo to server
-        async sendLogo(logo) {
-
-            //TODO: add API call
-            console.log(logo)
-
-            // if sending did not work correctly sets alert
-            if (this.hasSendingError()) {
+            } else {
                 this.showSendingAlert = true
             }
         },
         // checks if logo got send to server correctly
         hasSendingError() {
-            //TODO: add API call
+            return !_.isEmpty(this.uploadError)
         },
         closeModal() {
             this.$emit('logoTrigger');
             this.page = 1
         }
+    },
+    computed: {
+        ...mapGetters({
+            uploadError: 'theme/getErrorPutLogoResponse'
+        })
     },
     watch: {
         // checks if input file has correct type

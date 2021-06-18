@@ -18,7 +18,7 @@
         "back": "Go back"
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "German",
             "en": "English",
@@ -388,6 +388,7 @@
         "verify": "Authenticate now!",
         "serverErrorOne": "There appear to be problems with your server connection.",
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
+        "serverErrorTwoAdmin": "Please try reloading the page or contact TechSupport.",
         "fail": "There appear to be server problems. Error Code: ",
         "login": {
             "title": "Set up your two-factor authentication",

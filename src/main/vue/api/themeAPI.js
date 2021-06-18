@@ -25,5 +25,18 @@ export default {
             method: "get",
             url: 'http://localhost:8088/api/corporate/logo'
         })
+    },
+    // puts corporate logo into database
+    async putLogos(logo, logoDark, logoType, logoDarkType) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/corporate/logo',
+            data: {
+                logo: logo,
+                logoDark: logoDark,
+                logoType: logoType,
+                logoDarkType: logoDarkType
+            }
+        })
     }
 }

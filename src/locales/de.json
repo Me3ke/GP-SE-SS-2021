@@ -133,7 +133,7 @@
         ]
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "Deutsch",
             "en": "Englisch",
@@ -389,6 +389,7 @@
         "verify": "Jetzt authentifizieren!",
         "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
         "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
+        "serverErrorTwoAdmin": "Bitte laden Sie die Seite neu oder wenden Sie sich an den technischen Support.",
         "fail": "Es scheint Server-Probleme zu geben. Fehlercode: ",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
