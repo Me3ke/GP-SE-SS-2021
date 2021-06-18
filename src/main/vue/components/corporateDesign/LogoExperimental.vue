@@ -31,7 +31,9 @@
                                 <b-col>
                                     <div>
                                         <div class="logo-border">
-                                            <img :src="getLightSource()" class="responsive-img"
+                                            <b-img v-if="lightEmpty" :src="elsaLight" class="responsive-img"
+                                                   :alt="$t('Header.logo')"></b-img>
+                                            <img v-else :src="getLightSource()" class="responsive-img"
                                                  :alt="$t('Header.logo')">
                                         </div>
 
@@ -43,7 +45,9 @@
                                 <b-col>
                                     <div>
                                         <div class="logo-border">
-                                            <img :src="getDarkSource()" class="responsive-img"
+                                            <b-img v-if="darkEmpty" :src="elsaDark" class="responsive-img"
+                                                   :alt="$t('Header.logo')"></b-img>
+                                            <img v-else :src="getDarkSource()" class="responsive-img"
                                                  :alt="$t('Header.logo')">
                                         </div>
 
@@ -72,6 +76,9 @@ export default {
     components: {UploadLogoPopUp},
     data() {
         return {
+            elsaLight: require('../../assets/logos/ELSA_small.svg'),
+            elsaDark: require('../../assets/logos/ELSA_small_darkmode.svg'),
+
             showLogoUpload: false,
             // indicates which logo is getting changed
             type: -1
@@ -107,7 +114,13 @@ export default {
             logoLightType: 'theme/getLightLogoType',
             logoDark: 'theme/getDarkLogo',
             logoDarkType: 'theme/getDarkLogoType'
-        })
+        }),
+        lightEmpty() {
+            return this.logoLight === ""
+        },
+        darkEmpty() {
+            return this.logoDark === ""
+        }
     }
 }
 </script>

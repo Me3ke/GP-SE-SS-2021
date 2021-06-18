@@ -2,14 +2,18 @@
     <b-navbar toggleable="sm" id="background" sticky :class="[mobile ? 'mobile' : 'normal']">
         <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="$router.push(`/`)">
-            <img v-if="theme === '' "
+            <b-img v-if="theme === '' " :src="elsaLight" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <b-img v-else :src="elsaDark" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <img v-if="theme === '' && !lightEmpty"
                  :src="getLightSource()" class="responsive-img"
-                 :alt="$t('Header.logo')">
-            <img v-else
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
+            <img v-if="theme === 'darkMode' && !darkEmpty"
                  :src="getDarkSource()" class="responsive-img"
-                 :alt="$t('Header.logo')">
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
         </b-navbar-brand>
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target=" nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
                 <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
@@ -79,7 +83,13 @@ export default {
             logoDark: 'theme/getDarkLogo',
             logoLightType: 'theme/getLightLogoType',
             logoDarkType: 'theme/getDarkLogoType'
-        })
+        }),
+        lightEmpty() {
+            return this.logoLight === ""
+        },
+        darkEmpty() {
+            return this.logoDark === ""
+        }
     }
 }
 </script>

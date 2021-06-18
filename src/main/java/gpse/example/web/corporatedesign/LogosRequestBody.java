@@ -38,12 +38,12 @@ public class LogosRequestBody {
         this.logoType = logoType;
     }
 
-    public String getLogoDarkTyp() {
+    public String getLogoDarkType() {
         return logoDarkType;
     }
 
-    public void setLogoDarkTyp(final String logoDarkTyp) {
-        this.logoDarkType = logoDarkTyp;
+    public void setLogoDarkType(final String logoDarkType) {
+        this.logoDarkType = logoDarkType;
     }
 
     public boolean isDark() {

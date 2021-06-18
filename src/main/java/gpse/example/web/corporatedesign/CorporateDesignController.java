@@ -47,7 +47,7 @@ public class CorporateDesignController {
         logosRequestBody.setLogo(corporateDesign.getLogo());
         logosRequestBody.setLogoType(corporateDesign.getLogoType());
         logosRequestBody.setLogoDark(corporateDesign.getLogoDark());
-        logosRequestBody.setLogoDarkTyp(corporateDesign.getLogoDarkType());
+        logosRequestBody.setLogoDarkType(corporateDesign.getLogoDarkType());
         return logosRequestBody;
     }
 
