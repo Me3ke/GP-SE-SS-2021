@@ -101,6 +101,15 @@ import _ from "lodash";
 
 export default {
     name: "UploadLogoPopUp",
+    props: {
+        exp: {
+            type: Boolean,
+            default: false
+        },
+        type: {
+            type: [Number, String]
+        }
+    },
     data() {
         return {
             page: 1,
@@ -122,14 +131,37 @@ export default {
             // getting content out of image
             const content = await convertUploadFileToBase64(this.logo)
 
-            // sending logo to server (darkMode logo is the same)
-            await this.$store.dispatch('theme/putLogos', {
-                logo: content,
-                logoDark: content,
-                logoType: type,
-                logoDarkType: type
-            })
-
+            // checking if admin is using experimental settings
+            if (this.exp) {
+                // is uploading light mode logo
+                if (type === 0) {
+                    // sending logo to server (darkMode logo is null)
+                    await this.$store.dispatch('theme/putLogos', {
+                        logo: content,
+                        logoDark: null,
+                        logoType: type,
+                        logoDarkType: null
+                    })
+                }
+                // is uploading dark mode logo
+                else {
+                    // sending logo to server (lightMode logo is null)
+                    await this.$store.dispatch('theme/putLogos', {
+                        logo: null,
+                        logoDark: content,
+                        logoType: null,
+                        logoDarkType: type
+                    })
+                }
+            } else {
+                // sending logo to server (darkMode logo is the same)
+                await this.$store.dispatch('theme/putLogos', {
+                    logo: content,
+                    logoDark: content,
+                    logoType: type,
+                    logoDarkType: type
+                })
+            }
 
             // changes page if no error occurred, otherwise shows warning
             if (!this.hasSendingError()) {

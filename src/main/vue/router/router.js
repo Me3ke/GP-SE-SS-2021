@@ -20,6 +20,7 @@ import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
+import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
 
 
 Vue.use(VueRouter)
@@ -181,6 +182,14 @@ const router = new VueRouter({
                     path: 'adminSettings/corporate',
                     name: 'corporate',
                     component: CorporateDesignNormalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/corporate/experimental',
+                    name: 'corporateExp',
+                    component: CorporateDesignExperimentalPage,
                     meta: {
                         requiresAuth: true
                     }
