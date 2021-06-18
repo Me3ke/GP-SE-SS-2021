@@ -79,7 +79,7 @@
     box-shadow: rgba(67, 100, 149, 1) 0 1px 1px 2px;
     border-radius: 1vw 1vw 1vw 1vw;
 
-    height: 12em;
+    height: 10em;
     width: 35em;
 }
 
@@ -124,7 +124,7 @@
 
 
 /* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 575.98px) and (min-width: 200px){
+@media (max-width: 575.98px) {
     h4 {
         font-size: 1.12em;
         text-overflow-mode: ellipse;
@@ -149,23 +149,22 @@
     .pad {
         width: auto;
         height: 8em;
-        margin-left: -2.3em;
+        margin-left: -.3em;
     }
 
 
     .modal-fade .signature-pad {
         width: auto;
-        margin-left: 2em;
 
     }
 
     .modal-fade {
         width: 20em;
         display: inline-block;
-
-
     }
-
+    .pt-2 {
+        margin-left: -.3em;
+    }
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -209,6 +208,11 @@
         display: inline-block;
 
     }
+
+    .pt-2 {
+        margin-left: -2em;
+    }
+
 }
 
 /* Large Phones in landscape mode */

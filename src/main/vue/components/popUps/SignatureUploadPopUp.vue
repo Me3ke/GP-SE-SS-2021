@@ -9,7 +9,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="exampleModalLongTitle">
-                                        {{ $t('Settings.SignatureSettings.upload.popUp.heading') }}
+                                        {{ drawSignature ? $t('Settings.SignatureSettings.upload.popUp.heading2') : $t('Settings.SignatureSettings.upload.popUp.heading') }}
                                     </h4>
                                 </div>
 
@@ -45,12 +45,12 @@
                                     <div v-if="page === 1">
                                         <button type="button" class="light-btn" @click="drawSignature = false; page = page +1">
                                             <h5>
-                                                Unterschrift hochladen
+                                                {{ $t('Settings.SignatureSettings.upload.popUp.heading') }}
                                             </h5>
                                         </button>
                                         <button type="button" class="light-btn" @click="drawSignature = true; page = page +1">
                                             <h5>
-                                                Unterschrift zeichnen
+                                                {{ $t('Settings.SignatureSettings.upload.popUp.heading2') }}
                                             </h5>
                                         </button>
                                     </div>
@@ -58,7 +58,11 @@
                                     <!-- Page 2 Upload Signature --->
                                     <div v-if="page === 2 && drawSignature === false">
 
-
+                                            <div class="alert-div" v-if="padEmpty">
+                                                <b-alert show variant="danger">
+                                                    {{ $t('Settings.SignatureSettings.upload.alert') }}
+                                                </b-alert>
+                                            </div>
                                             <div class="step">
                                                 {{ $t('Settings.SignatureSettings.upload.popUp.exp') }}
                                                 <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
@@ -95,13 +99,27 @@
 
                                     <!-- Page 2 Draw Signature --->
                                     <div v-else-if="page === 2 && drawSignature === true" class="signature-pad">
+                                            <div v-if="padEmpty" style="text-align: center">
+                                                <div style="display: inline-block">
+                                                    <b-alert show variant="danger">
+                                                        {{ $t('Settings.SignatureSettings.upload.alert') }}
+                                                    </b-alert>
+                                                </div>
+                                            </div>
+
+                                            <div style="alignment: left">{{ $t('Settings.SignatureSettings.upload.popUp.signaturePad') }}
+                                            </div>
                                             <div class="step">
                                                 <div class="pad">
                                                     <VueSignaturePad ref="signaturePad" />
                                                 </div>
                                                 <div class="pt-2">
-                                                    <button class="light-btn" @click="clear">Clear</button>
-                                                    <button class="light-btn" @click="undo">Undo</button>
+                                                    <button class="light-btn btn-sm"
+                                                            id="clear-button"
+                                                            @click="clear"
+                                                            >
+                                                        {{ $t('Settings.SignatureSettings.upload.popUp.clear') }}
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -112,7 +130,7 @@
                                                         {{ $t('Settings.SignatureSettings.upload.popUp.cancel') }}
                                                     </span>
                                                 </button>
-                                                <button type="button" class="elsa-blue-btn" @click="upload(); page = 3">
+                                                <button type="button" class="elsa-blue-btn" @click="upload()">
                                                     <span class="button-txt">
                                                        {{ $t('Settings.SignatureSettings.upload.upload') }}
                                                     </span>
@@ -181,22 +199,40 @@ export default {
             alreadyUpload: false,
             signature: null,
             image: '',
-            drawSignature: false
+            drawSignature: false,
+            padEmpty: false
         }
     },
     methods: {
         // TODO: connect to API
         async upload() {
 
-            // checks if the user filled the signature pad or upload a image file
-            const { isEmpty,data } = this.$refs.signaturePad.saveSignature();
-            if(isEmpty){
-                this.image = await this.asyncHandleFunction()
-            } else {
-                this.image = data.replace('data:', '').replace(/^.+,/, '')
+            if(this.drawSignature) {
+                // checks if the user filled the signature pad or upload a image file
+                const {isEmpty, data} = this.$refs.signaturePad.saveSignature();
+                if(!isEmpty) {
+                    this.image = data.replace('data:', '').replace(/^.+,/, '')
+                } else {
+                    this.padEmpty = true
+                }
 
+            } else {
+                // this.signature is the file
+                if(this.signature != null) {
+                    this.image = await this.asyncHandleFunction()
+                } else {
+                    this.padEmpty = true
+                }
             }
-            console.log(this.image)
+
+            // checks whether the signature is not empty, if so then it will show an alert
+            if(this.image !== '') {
+                this.page = 4
+                this.padEmpty = false
+                this.drawSignature = false
+            }
+
+            // todo emit or dispatch (api)
         },
         closeModal() {
             this.$emit('uploadTrigger');
@@ -207,11 +243,6 @@ export default {
             return await convertImageToBase64(this.signature)
         },
 
-
-
-        undo() {
-            this.$refs.signaturePad.undoSignature();
-        },
         clear() {
             this.$refs.signaturePad.clearSignature()
         }
