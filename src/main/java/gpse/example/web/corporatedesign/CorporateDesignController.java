@@ -5,7 +5,6 @@ import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +75,7 @@ public class CorporateDesignController {
      * @return a JSONResponseObject showing the status of the request.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
-    @Secured("ROLE_ROLE_ADMIN")
+    // @Secured("ROLE_ADMIN")
     @PutMapping("/corporate/logo")
     public JSONResponseObject changeLogo(@RequestBody final LogosRequestBody logosRequestBody)
         throws CorporateDesignNotFoundException {
@@ -104,7 +103,7 @@ public class CorporateDesignController {
      * @return a JSONResponseObject showing the status of the request.
      * @throws CorporateDesignNotFoundException if the default corporateDesign was not properly created.
      */
-   // @Secured("ROLE_ADMIN")
+    // @Secured("ROLE_ADMIN")
     @PutMapping("/corporate/colors")
     public JSONResponseObject changeColors(@RequestBody final ColorsRequestBody colorsRequestBody)
         throws CorporateDesignNotFoundException {
@@ -114,7 +113,7 @@ public class CorporateDesignController {
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, null, null);
+            corporateDesign = new CorporateDesign(null, new byte[0], new byte[0]);
         }
         corporateDesign.setColors(colorsRequestBody.getColors(), defaultDesign.getColors());
         corporateDesignService.saveCorporateDesign(corporateDesign);

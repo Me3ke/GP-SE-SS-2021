@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +49,11 @@ public class InitializeDatabase implements InitializingBean {
     private static final String COLOR_TWO = "#D8D8D9";
     private static final String COLOR_THREE = "#ACACAC";
     private static final String COLOR_FOUR = "#ababab";
+    private static final String COLOR_FIVE = "#000000";
     private static final String[] DEFAULT_COLORS = {"#47525E", "#436495", COLOR_ONE, COLOR_TWO, COLOR_THREE, COLOR_FOUR,
-        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", COLOR_ONE, "#000000", COLOR_TWO, COLOR_ONE,
-        "#23292f", COLOR_THREE, COLOR_TWO, "#ababab", "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
-        "#501515", "#363f48", "#000000"};
+        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", COLOR_ONE, COLOR_FIVE, COLOR_TWO, COLOR_ONE,
+        "#23292f", COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
+        "#501515", "#363f48", COLOR_FIVE};
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final DocumentService documentService;
@@ -100,17 +99,13 @@ public class InitializeDatabase implements InitializingBean {
         try {
             corporateDesignService.getCorporateDesign(1L);
         } catch (CorporateDesignNotFoundException exception) {
-            try {
-                defaultLogo = Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small.svg"));
-                defaultLogoDark =
-                    Files.readAllBytes(Paths.get("src/main/vue/assets/logos/ELSA_small_darkmode.svg"));
-                CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, null, null);
-                defaultDesign.setLogo(defaultLogo, "svg");
-                defaultDesign.setLogoDark(defaultLogoDark, "svg");
-                corporateDesignService.saveCorporateDesign(defaultDesign);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+
+            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, null, null);
+            defaultDesign.setLogo(new byte[0], "");
+            defaultDesign.setLogoDark(new byte[0], "");
+            corporateDesignService.saveCorporateDesign(defaultDesign);
+
         }
         try {
             userService.getUser(USERNAME);
