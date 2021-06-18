@@ -3,7 +3,7 @@
         <transition>
             <div class="modal-mask">
                 <div class="modal-wrapper">
-                    <div class="modal-fade" style="padding-left: 3em; padding-right: 3em" role="dialog" id="exampleModalLong" tabindex="-1"
+                    <div class="modal-fade" role="dialog" id="exampleModalLong" tabindex="-1"
                          aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable" role="document">
                             <div class="modal-content">
@@ -95,7 +95,7 @@
 
                                     <!-- Page 2 Draw Signature --->
                                     <div v-else-if="page === 2 && drawSignature === true" class="signature-pad">
-                                            <div>
+                                            <div class="step">
                                                 <div class="pad">
                                                     <VueSignaturePad ref="signaturePad" />
                                                 </div>
@@ -107,7 +107,7 @@
 
                                             <div style="text-align: right">
                                                 <button type="button" class="light-btn"
-                                                        @click="pageBefore = page; page = 4">
+                                                        @click="pageBefore = page; page = 5">
                                                     <span class="button-txt">
                                                         {{ $t('Settings.SignatureSettings.upload.popUp.cancel') }}
                                                     </span>
