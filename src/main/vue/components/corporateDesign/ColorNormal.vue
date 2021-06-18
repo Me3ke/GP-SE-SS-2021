@@ -15,7 +15,6 @@
 
                         <!-- Color picker -->
                         <div>
-                            <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r0" @click="resetColor(0)"></b-icon>
                             <span>
                                 <input class="color-picker" type="color" v-model="colors[0]">
@@ -30,7 +29,6 @@
 
                         <!-- Color picker -->
                         <div>
-                            <!-- TODO: on click restore with value from api -->
                             <b-icon icon="arrow-clockwise" class="reset-icon" id="r1" @click="resetColor(1)"></b-icon>
                             <span>
                                 <input class="color-picker" type="color" v-model="colors[1]">
@@ -65,7 +63,7 @@
 </template>
 
 <script>
-import {constructSheet, loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import {constructSheet} from "@/main/vue/scripts/stylesheetManipulator";
 import {mapGetters} from "vuex";
 
 export default {
@@ -76,13 +74,9 @@ export default {
             colors: []
         }
     },
-    created() {
-        //TODO: use loadSheet method here, also do for every other page the same
-        loadSheet()
-    },
     async mounted() {
         await this.$store.dispatch('theme/fetchColors')
-        this.colors = JSON.parse(JSON.stringify(this.sheetColors))
+        this.colors = [...this.sheetColors]
     },
     methods: {
         async saveColors() {
@@ -101,7 +95,7 @@ export default {
         },
         resetColor(index) {
             //  reset color here with color from api
-            this.colors[index] = this.sheetColors[index]
+            this.$set(this.colors, index, this.sheetColors[index])
 
             // rotate animation
             document.querySelector("#r" + index).style.transform = "rotate(45deg)";
@@ -135,6 +129,11 @@ export default {
         ...mapGetters({
             sheetColors: 'theme/getColors'
         })
+    },
+    watch: {
+        colors(index, val) {
+            this.colors[index] = val
+        }
     },
     beforeDestroy() {
         this.$store.dispatch('theme/resetColors')

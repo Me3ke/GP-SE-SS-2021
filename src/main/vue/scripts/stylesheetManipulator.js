@@ -43,14 +43,21 @@ export function constructSheet(sheetInformation) {
 }
 
 // loads sheet saved in localStorage to dom (mandatory after initial start of application and after every page refresh)
-export function loadSheet() {
+export async function loadSheet() {
 
     // checks if sheet has initially been loaded
     if (!store.getters["theme/getInitialLoad"]) {
-        // TODO: add constructSheet with API info here
+
+        // getting colors from server
+        await store.dispatch('theme/fetchColors')
+        // constructing sheet with colors from server
+        constructSheet(store.getters["theme/getColors"])
+
+        // changing initialLoad to true, so sheet won't be constructed countless times
         store.dispatch('theme/setInitialLoad', true).then()
     }
 
+    /* Applying sheet to DOM */
     let style = document.createElement('style');
     // loading sheet from localStorage
     style.innerHTML = store.getters["theme/getSheet"]
