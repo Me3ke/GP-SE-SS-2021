@@ -94,18 +94,13 @@ public class InitializeDatabase implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        final byte[] defaultLogo;
-        final byte[] defaultLogoDark;
         try {
             corporateDesignService.getCorporateDesign(1L);
         } catch (CorporateDesignNotFoundException exception) {
-
-
-            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, null, null);
+            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
             defaultDesign.setLogo(new byte[0], "");
             defaultDesign.setLogoDark(new byte[0], "");
             corporateDesignService.saveCorporateDesign(defaultDesign);
-
         }
         try {
             userService.getUser(USERNAME);

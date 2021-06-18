@@ -35,19 +35,25 @@ public class CorporateDesign {
 
     /**
      * the default constructor for a corporate Design.
-     * @param colors the colors of the corporate Design.
-     * @param logo the logo of the corporate Design.
+     *
+     * @param colors   the colors of the corporate Design.
+     * @param logo     the logo of the corporate Design.
      * @param logoDark the logo in darkmode.
      */
     public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark) {
         if (colors != null) {
             this.colors = Lists.newArrayList(colors);
         }
-        if (logo.length == 0) {
+
+        if (logo.length != 0) {
             this.logo = Arrays.copyOf(logo, logo.length);
+        } else {
+            this.logo = new byte[0];
         }
-        if (logoDark.length == 0) {
+        if (logoDark.length != 0) {
             this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+        } else {
+            this.logoDark = new byte[0];
         }
     }
 
@@ -66,7 +72,8 @@ public class CorporateDesign {
     /**
      * Sets the colors of the corporate design. If the given color is null
      * the default color is used instead.
-     * @param colors the new colors of the corporate design.
+     *
+     * @param colors        the new colors of the corporate design.
      * @param defaultColors a list of default colors.
      */
     public void setColors(final String[] colors, final List<String> defaultColors) {
