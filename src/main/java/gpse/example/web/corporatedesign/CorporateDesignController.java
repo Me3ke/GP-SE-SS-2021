@@ -86,10 +86,13 @@ public class CorporateDesignController {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
             corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                null, null);
+                new byte[0], new byte[0]);
         }
-        corporateDesign.setLogo(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
-        corporateDesign.setLogoDark(logosRequestBody.getLogoDark(), logosRequestBody.getLogoDarkTyp());
+        if (logosRequestBody.isDark()) {
+            corporateDesign.setLogoDark(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
+        } else {
+            corporateDesign.setLogo(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
+        }
         corporateDesignService.saveCorporateDesign(corporateDesign);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage(SUCCESSFUL);

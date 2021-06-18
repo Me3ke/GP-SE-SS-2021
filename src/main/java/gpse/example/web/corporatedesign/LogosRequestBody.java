@@ -11,6 +11,8 @@ public class LogosRequestBody {
     private String logoTyp;
     private byte[] logoDark;
     private String logoDarkTyp;
+    private boolean dark;
+
 
     public byte[] getLogo() {
         return Arrays.copyOf(logo, logo.length);
@@ -42,5 +44,13 @@ public class LogosRequestBody {
 
     public void setLogoDarkTyp(final String logoDarkTyp) {
         this.logoDarkTyp = logoDarkTyp;
+    }
+
+    public boolean isDark() {
+        return dark;
+    }
+
+    public void setDark(boolean dark) {
+        this.dark = dark;
     }
 }

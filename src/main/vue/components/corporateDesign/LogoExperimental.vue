@@ -78,7 +78,10 @@ export default {
         }
     },
     methods: {
-        uploadLogo(type) {
+        async uploadLogo(type) {
+            if (type === -1) {
+                await this.$store.dispatch('theme/getLogos')
+            }
             this.type = type
             this.showLogoUpload = !this.showLogoUpload
             this.$emit('modalTrigger')

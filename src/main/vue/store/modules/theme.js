@@ -129,8 +129,8 @@ export const actions = {
         })
     },
     // puts logos into database
-    putLogos({commit}, {logo, logoDark, logoType, logoDarkType}) {
-        return themeAPI.putLogos(logo, logoDark, logoType, logoDarkType).then(response => {
+    putLogos({commit}, {logo, logoType, dark}) {
+        return themeAPI.putLogos(logo, logoType, dark).then(response => {
             commit('SET_PUT_LOGOS_RESPONSE', response.data)
             commit('SET_ERROR_PUT_LOGOS_RESPONSE', {})
         }).catch(error => {

@@ -43,10 +43,10 @@ public class CorporateDesign {
         if (colors != null) {
             this.colors = Lists.newArrayList(colors);
         }
-        if (logo != null) {
+        if (logo.length == 0) {
             this.logo = Arrays.copyOf(logo, logo.length);
         }
-        if (logoDark != null) {
+        if (logoDark.length == 0) {
             this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
         }
     }

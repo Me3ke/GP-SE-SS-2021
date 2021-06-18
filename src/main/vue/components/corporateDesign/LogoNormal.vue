@@ -41,7 +41,8 @@ export default {
         }
     },
     methods: {
-        uploadLogo() {
+        async uploadLogo() {
+            await this.$store.dispatch('theme/getLogos')
             this.showLogoUpload = !this.showLogoUpload
             this.$emit('modalTrigger')
         },
