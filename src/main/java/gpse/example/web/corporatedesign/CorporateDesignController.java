@@ -45,7 +45,7 @@ public class CorporateDesignController {
             corporateDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
         }
         logosRequestBody.setLogo(corporateDesign.getLogo());
-        logosRequestBody.setLogoTyp(corporateDesign.getLogoType());
+        logosRequestBody.setLogoType(corporateDesign.getLogoType());
         logosRequestBody.setLogoDark(corporateDesign.getLogoDark());
         logosRequestBody.setLogoDarkTyp(corporateDesign.getLogoDarkType());
         return logosRequestBody;
@@ -89,9 +89,9 @@ public class CorporateDesignController {
                 new byte[0], new byte[0]);
         }
         if (logosRequestBody.isDark()) {
-            corporateDesign.setLogoDark(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
+            corporateDesign.setLogoDark(logosRequestBody.getLogo(), logosRequestBody.getLogoType());
         } else {
-            corporateDesign.setLogo(logosRequestBody.getLogo(), logosRequestBody.getLogoTyp());
+            corporateDesign.setLogo(logosRequestBody.getLogo(), logosRequestBody.getLogoType());
         }
         corporateDesignService.saveCorporateDesign(corporateDesign);
         response.setStatus(STATUS_CODE_OK);
