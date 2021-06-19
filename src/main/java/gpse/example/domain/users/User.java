@@ -54,10 +54,16 @@ public class User implements UserDetails {
     //@OneToOne
     //private Keys activePair;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private PersonalData personalData;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private SecuritySettings securitySettings;
 
     @Column

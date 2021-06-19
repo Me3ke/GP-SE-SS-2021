@@ -1,4 +1,4 @@
-package gpse.example.web;
+package gpse.example.web.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.users.PersonalData;
