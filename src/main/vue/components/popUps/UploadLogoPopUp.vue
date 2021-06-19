@@ -131,7 +131,7 @@ export default {
             // getting content out of image
             const content = await convertUploadFileToBase64(this.logo)
 
-            // checking if logo is for dark mode
+            // checking if logo is for dark mode and if in exp-mode
             if (this.exp && this.type === 1) {
                 // sending logo to server
                 await this.$store.dispatch('theme/putLogos', {
@@ -139,12 +139,25 @@ export default {
                     logoType: type,
                     dark: true
                 })
+            } else if (this.exp && this.type === 0) {
+                // sending logo to server
+                await this.$store.dispatch('theme/putLogos', {
+                    logo: content,
+                    logoType: type,
+                    dark: false
+                })
             } else {
                 // sending logo to server
                 await this.$store.dispatch('theme/putLogos', {
                     logo: content,
                     logoType: type,
                     dark: false
+                })
+                // sending logo to server
+                await this.$store.dispatch('theme/putLogos', {
+                    logo: content,
+                    logoType: type,
+                    dark: true
                 })
             }
 
