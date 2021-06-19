@@ -112,6 +112,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
             user.setAdminValidated(true);
+            user.setPersonalData(personalData);
             userService.saveUser(user);
         }
         /*final List<Long> documentIDs = new ArrayList<>();

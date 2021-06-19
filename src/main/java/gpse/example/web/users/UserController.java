@@ -211,8 +211,12 @@ public class UserController {
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
-        userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
-        userService.saveUser(userService.getUser(username));
+        User user = userService.getUser(username);
+        if (user.getPublicKey() != null) {
+            user.getArchivedPublicKeys().add(user.getPublicKey());
+        }
+        user.setPublicKey(publicKeyCmd.getPublicKey());
+        userService.saveUser(user);
         response.setStatus(STATUS_CODE_OK);
         return response;
     }
