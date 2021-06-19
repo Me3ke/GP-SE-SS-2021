@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
@@ -70,6 +71,11 @@ public class Document {
 
     @Column
     private DocumentState state;
+
+    @OneToMany(
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private final List<Comment> commentList = new ArrayList<>();
 
     public Document() {
     }
@@ -349,6 +355,9 @@ public class Document {
         return advancedSignatures;
     }
 
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
 
     public List<Signatory> getSignatories() {
         return signatories;
