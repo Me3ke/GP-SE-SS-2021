@@ -15,10 +15,10 @@
                 <DocumentDropDown style="margin-top:0.5vh"
                     v-for="document in this.getEnv(envId).documents" :key="document.id"
                     :document="document"
-                    :signatories="settings.signatories"
-                    :readers="settings.readers"
-                    :endDate="settings.endDate"
-                    :orderRelevant="settings.orderRelevant">
+                    :signatories="getSignatories(getSettings(document.id))"
+                    :readers="getReaders(getSettings(document.id))"
+                    :endDate="getSettings(document.id).endDate"
+                    :orderRelevant="getSettings(document.id).orderRelevant">
                 </DocumentDropDown>
             </div>
             <div v-if="!individual">
@@ -36,7 +36,7 @@
                         {{$t('Settings.DocumentSettings.reader')}}
                     </div>
                     <div style="padding:2em">
-                        <ReaderMenu :readers="settings.readers"></ReaderMenu>
+                        <ReaderMenu :readers="getReaders(this.settings[0])"></ReaderMenu>
                     </div>
                 </div>
                 <div class="card" style="margin-top:3vh">
@@ -44,7 +44,7 @@
                         {{$t('Settings.DocumentSettings.signatory')}}
                     </div>
                     <div style="padding:2em">
-                        <SignatoryMenu :inModal="false" :signatories="settings.signatories"></SignatoryMenu>
+                        <SignatoryMenu :inModal="false" :signatories="getSignatories(this.settings[0])"></SignatoryMenu>
                     </div>
                 </div>
                 <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
@@ -73,21 +73,65 @@ export default {
     components: {Footer, Header, SignatoryMenu, ReaderMenu, DocumentDropDown},
     created() {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId})
     },
     computed: {
         ...mapGetters({
-            getEnv: 'envelopes/getEnvelope'
+            getEnv: 'envelopes/getEnvelope',
+            getEnvSettings: 'documentSettings/getEnvelopeSettings'
         })
     },
     data() {
-        // TODO: Replace initialization with data from API
         return{
-            individual: false,
-            settings: {
-                signatories: [],
-                readers: [],
-                endDate: null,
-                orderRelevant: true
+            individual: this.sameSettings(this.getEnvSettings),
+            settings: this.getEnvSettings.data
+        }
+    },
+    methods: {
+        sameSettings(settings) {
+            let initial = settings[0];
+            let i;
+            for(i = 1; i < settings.length; i++) {
+                if(!(initial.signatories === settings[i].signatories)) {
+                    return false;
+                }
+                if(!(initial.orderRelevant === settings[i].orderRelevant)) {
+                    return false;
+                }
+                if(!(initial.endDate === settings[i].endDate)) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        getReaders(settings) {
+            let readers = [];
+            let i;
+            for(i = 0; i < settings.signatories; i++) {
+                if(settings.signatories[i].type === "REVIEW") {
+                    readers.push(settings.signatories);
+                } else {
+                    return readers;
+                }
+            }
+            return readers;
+        },
+        getSignatories(settings) {
+            let signatories = [];
+            let i;
+            for(i = 0; i < settings.signatories; i++) {
+                if(!(settings.signatories[i].type === "REVIEW")) {
+                    signatories.push(settings.signatories);
+                }
+            }
+            return signatories;
+        },
+        getSettings(docId) {
+            let i;
+            for(i = 0; i < this.getEnvSettings.length; i++) {
+                if (this.getEnvSettings[i].documentID === docId) {
+                    return this.getEnvSettings[i];
+                }
             }
         }
     }
@@ -95,7 +139,6 @@ export default {
 </script>
 
 <style scoped>
-
 .background {
     padding: 0;
     margin: 0;
