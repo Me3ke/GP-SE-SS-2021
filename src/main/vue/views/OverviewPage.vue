@@ -50,7 +50,7 @@
         <div class="container-fluid">
             <div style="margin-top:1vh">
                 <div class="overflow-auto" style="height: 68vh">
-                    <div v-for="envelope in this.envelopes(filter)"
+                    <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
@@ -63,6 +63,18 @@
                 </div>
             </div>
         </div>
+
+        <b-pagination
+            v-model="page"
+            :total-rows="this.allEnvelopes(filter).length"
+            :per-page="pageLimit"
+            first-text="First"
+            prev-text="Prev"
+            next-text="Next"
+            last-text="Last"
+            style="margin: 1em 1.5em"
+        ></b-pagination>
+
         <Footer></Footer>
     </div>
 </template>
@@ -90,7 +102,6 @@ export default {
     },
     data() {
         return {
-            // Needs to be replaced with API Request TODO
             filter: {
                 //title: "",
                 //envelopeID: 0,
@@ -107,7 +118,7 @@ export default {
                 //signed: null,
                 //read: null
             },
-            pageLimit: 50,
+            pageLimit: 10,
             page: 1,
             sort: null
         }
@@ -139,7 +150,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            envelopes: 'envelopes/getEnvelopes',
+            envelopes: 'envelopes/getFilteredPagedEnvelopes',
+            allEnvelopes: 'envelopes/getFilteredEnvelopes',
             getError: 'envelopes/getErrorGetEnvelopes',
             user: 'getUser'
         })
