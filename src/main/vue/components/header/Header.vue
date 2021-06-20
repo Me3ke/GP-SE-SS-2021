@@ -104,7 +104,7 @@ export default {
 .normal {
     position: fixed;
     width: 100%;
-    height: 5vh
+    min-height: fit-content;
 }
 
 .mobile {

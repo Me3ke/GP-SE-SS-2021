@@ -489,6 +489,14 @@
         }
     },
     "CommentsPage": {
-        "title": "Comments"
+        "title": "Comments",
+        "comment": "comment",
+        "comments": "comments",
+        "sort": "Sort by",
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "writePrompt": "Leave comment as ",
+        "cancel": "Cancel",
+        "send": "Send"
     }
 }

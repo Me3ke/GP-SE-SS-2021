@@ -81,6 +81,6 @@ export const getters = {
     },
     // returns comments, sorted by newest first (answers are still oldest first to avoid confusions)
     getCommentsNewest: (state) => {
-        return state.comments.reverse()
+        return [].concat(state.comments).reverse();
     }
 }

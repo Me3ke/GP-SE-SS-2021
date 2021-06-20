@@ -490,6 +490,14 @@
         }
     },
     "CommentsPage": {
-        "title": "Kommentare"
+        "title": "Kommentare",
+        "comment": "Kommentar",
+        "comments": "Kommentare",
+        "sort": "Sortieren nach",
+        "newest": "Neuste zuerst",
+        "oldest": "Älteste zuerst",
+        "writePrompt": "Kommentar hinzufügen als ",
+        "cancel": "Abbrechen",
+        "send": "Absenden"
     }
 }

@@ -1,0 +1,216 @@
+.my-icon {
+    fill: var(--elsa-blue);
+    font-size: 1em;
+}
+
+.bigSpan {
+    font-weight: 500;
+}
+
+/* Sort drop-down */
+.my-dropdown-menu >>> .dropdown-menu {
+    padding-top: 0.1vw;
+    padding-bottom: 0.1vw;
+    margin: 0;
+    border-color: var(--elsa-blue);
+    min-width: 0;
+}
+
+.my-divider >>> .dropdown-divider {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.my-dropdown-item >>> .dropdown-item {
+    color: var(--dark-grey);
+    background-color: var(--whitesmoke);
+    text-align: left;
+}
+
+.my-dropdown-item:hover >>> .dropdown-item {
+    background-color: var(--light-grey);
+    transition-duration: 0.4s;
+}
+
+.my-dropdown-toggle >>> .dropdown-toggle {
+    background-color: var(--whitesmoke);
+    border: none;
+    height: fit-content;
+    padding: 0;
+    margin-right: 0.5em;
+}
+
+.my-dropdown-toggle:hover >>> .dropdown-toggle {
+    background-color: var(--whitesmoke);
+    border: none;
+}
+
+
+.my-dropdown-toggle:not(:disabled):not(.disabled):active, .my-dropdown-toggle:not(:disabled):not(.disabled).active, .show >>> .btn-secondary.dropdown-toggle {
+    background-color: var(--whitesmoke);
+    border: none;
+}
+
+/* Name Bubble */
+.name-bubble {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    font-size: 1.5em;
+    padding: 0.5em 0.5em 0.3em;
+    height: fit-content;
+    width: fit-content;
+}
+
+/* Container */
+.comment-container {
+    border: solid 0.1em var(--dark-grey);
+    border-radius: 0.2em;
+    width: 60%;
+    padding: 0.5em;
+    text-align: left;
+}
+
+.container-fluid {
+    margin-left: 0.75em;
+    margin-right: 0.75em;
+    width: auto;
+}
+
+/* Add Comment Box */
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    border: solid 0.1em var(--dark-grey);
+    border-radius: 0.2em;
+    margin-left: 2em;
+}
+
+.form-control:focus {
+    color: var(--dark-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--elsa-blue);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.form-control::placeholder {
+    color: var(--shadow-grey);
+    opacity: 1; /* Firefox */
+}
+
+.form-control:-ms-input-placeholder {
+    color: var(--shadow-grey);
+}
+
+.form-control::-ms-input-placeholder {
+    color: var(--shadow-grey);
+}
+
+/* Options effect */
+.option:hover {
+    cursor: pointer;
+}
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .dropdown-menu > li {
+        font-size: 0.5em;
+    }
+
+    span, .form-control {
+        font-size: 0.6em;
+    }
+
+    .name-bubble {
+        font-size: 0.9em;
+    }
+
+    .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
+        font-size: 0.5em;
+    }
+
+    .bigSpan {
+        font-size: 0.8em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+
+    span, .form-control {
+        font-size: 0.7em;
+    }
+
+    .name-bubble {
+        font-size: 1.2em;
+    }
+
+    .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
+        font-size: 0.7em;
+    }
+
+    .bigSpan {
+        font-size: 1.1em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .dropdown-menu > li {
+        font-size: 0.41em;
+    }
+
+
+    span, .form-control {
+        font-size: 0.7em;
+    }
+
+    .name-bubble {
+        font-size: 1.2em;
+    }
+
+    .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
+        font-size: 0.8em;
+    }
+
+    .bigSpan {
+        font-size: 1.15em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+
+    span, .form-control {
+        font-size: 0.7em;
+    }
+
+    .name-bubble {
+        font-size: 1.2em;
+    }
+
+    .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
+        font-size: 0.9em;
+    }
+
+    .bigSpan {
+        font-size: 1.17em;
+    }
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu > li {
+        font-size: 0.75em;
+    }
+
+    .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
+        font-size: 1.2em;
+    }
+
+    .bigSpan {
+        font-size: 1.17em;
+    }
+}
