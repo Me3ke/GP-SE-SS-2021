@@ -1,9 +1,12 @@
 package gpse.example;
 
 
+import gpse.example.domain.corporatedesign.CorporateDesign;
+import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
+import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
@@ -42,27 +45,48 @@ public class InitializeDatabase implements InitializingBean {
     private static final String DEUTSCHLAND = "Deutschland";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String PASSWORD = "{bcrypt}$2y$12$DdtBOd4cDqlvMGXPoNr9L.6YkszYXn364x172BKabx3ucOiYUmTfG";
+    private static final String COLOR_ONE = "#f5f5f5";
+    private static final String COLOR_TWO = "#D8D8D9";
+    private static final String COLOR_THREE = "#ACACAC";
+    private static final String COLOR_FOUR = "#ababab";
+    private static final String COLOR_FIVE = "#000000";
+    private static final String[] DEFAULT_COLORS = {"#47525E", "#436495", COLOR_ONE, COLOR_TWO, COLOR_THREE, COLOR_FOUR,
+        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", COLOR_ONE, COLOR_FIVE, COLOR_TWO, COLOR_ONE,
+        "#23292f", COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
+        "#501515", "#363f48", COLOR_FIVE};
     private final UserService userService;
     private final DocumentService documentService;
     private final EnvelopeService envelopeService;
+    private final CorporateDesignService corporateDesignService;
 
     /**
      * The standard constructor for the class initializing the database.
      *
-     * @param userService             used for saving user-objects in the database.
-     * @param documentService         used for saving document-objects in the database.
-     * @param envelopeService         used for saving envelope-objects in the database.
+     * @param userService            used for saving user-objects in the database.
+     * @param documentService        used for saving document-objects in the database.
+     * @param envelopeService        used for saving envelope-objects in the database.
+     * @param corporateDesignService used for saving the corporate design in the database.
      */
     @Autowired
     public InitializeDatabase(final UserService userService, final DocumentService documentService,
-                              final EnvelopeService envelopeService) {
+                              final EnvelopeService envelopeService,
+                              final CorporateDesignService corporateDesignService) {
         this.userService = userService;
         this.documentService = documentService;
         this.envelopeService = envelopeService;
+        this.corporateDesignService = corporateDesignService;
     }
 
     @Override
     public void afterPropertiesSet() {
+        try {
+            corporateDesignService.getCorporateDesign(1L);
+        } catch (CorporateDesignNotFoundException exception) {
+            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
+            defaultDesign.setLogo(new byte[0], "");
+            defaultDesign.setLogoDark(new byte[0], "");
+            corporateDesignService.saveCorporateDesign(defaultDesign);
+        }
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
@@ -88,6 +112,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
             user.setAdminValidated(true);
+            user.setPersonalData(personalData);
             userService.saveUser(user);
         }
         /*final List<Long> documentIDs = new ArrayList<>();

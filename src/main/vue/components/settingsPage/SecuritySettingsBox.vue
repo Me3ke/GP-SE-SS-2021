@@ -55,9 +55,9 @@
                     <b-list-group-item class="d-flex justify-content-end align-items-center">
 
                         <transition name="saved">
-                            <div v-if="showSave" class="content-div">
+                            <span v-if="showSave" class="content-div">
                                 {{ $t('Settings.saved') }}
-                            </div>
+                            </span>
                         </transition>
 
                         <b-button class="elsa-blue-btn"

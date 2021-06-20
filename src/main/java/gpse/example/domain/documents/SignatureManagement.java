@@ -28,7 +28,7 @@ public class SignatureManagement {
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
     private final DocumentService documentService;
     private final UserService userService;
-    private SMTPServerHelper smtpServerHelper;
+    private final SMTPServerHelper smtpServerHelper;
 
     /**
      * constructor of Signature management.

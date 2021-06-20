@@ -133,7 +133,7 @@
         ]
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "Deutsch",
             "en": "Englisch",
@@ -198,7 +198,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "saved" : "Gespeichert!",
+        "saved": "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -397,8 +397,10 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "verify": "Jetzt authentifizieren!",
         "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
         "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
+        "serverErrorTwoAdmin": "Bitte laden Sie die Seite neu oder wenden Sie sich an den technischen Support.",
         "fail": "Es scheint Server-Probleme zu geben. Fehlercode: ",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
@@ -461,6 +463,40 @@
             "go": "Los geht's",
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
             "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
+        }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Firmen Design",
+            "titleExp": "Experimentelles Design",
+            "exp": "Experimentelle Einstellungen",
+            "light": "Heller Modus",
+            "dark": "Dunkler Modus",
+            "logo": "Logo",
+            "currentLogo": "Aktuelles Logo:",
+            "logoUpload": "Logo hochladen",
+            "logoUploadHere": "Laden Sie hier Ihr Logo hoch.",
+            "logoUploadHereExp": "Akzeptiert werden Bild-Dateien. Für ein gutes Erbenis nutzen Sie 400x120-Pixel Bilder.",
+            "logoTitle": "Laden Sie Ihr Logo hoch!",
+            "logoPlaceholder": "Logo hier ablegen oder auswählen ",
+            "dropPlaceholder": "Hier fallen lassen",
+            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!",
+            "color": "Farbthema",
+            "color1": "Schrift- und Kontrastfarbe",
+            "color2": "Akzentfarbe",
+            "color3": "Hintergrund- und Hauptfarbe",
+            "color4": "Heller Neutralton",
+            "color5": "Dunkler Neutralton",
+            "color6": "Offenes Dokument - Hover",
+            "color7": "Geschlossenes Dokument",
+            "color8": "Geschlossenes Dokument - Hover",
+            "color9": "Dokument Aktion benötigt",
+            "color10": "Dokument Aktion benötigt - Hover",
+            "color11": "Helle Warnfarbe",
+            "color12": "Dunkle Warnfarbe",
+            "color13": "Einstellungsfarbe",
+            "color14": "Pop-Up Hintergrund",
+            "default": "Standard"
         }
     }
 }
