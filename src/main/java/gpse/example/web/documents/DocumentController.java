@@ -12,6 +12,7 @@ import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.MessageGenerationException;
 import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class DocumentController {
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final SignatoryServiceImpl signatoryService;
+    private final SignatureManagement signatureManagement;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -57,14 +59,18 @@ public class DocumentController {
      * @param userService             the userService
      * @param documentService         the documentService
      * @param signatoryService        the signatoryService
+     * @param signatureManagement     the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService) {
+                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
+                              final SignatureManagement signatureManagement) {
+
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.signatoryService = signatoryService;
+        this.signatureManagement = signatureManagement;
     }
 
     /**
@@ -157,6 +163,7 @@ public class DocumentController {
                 userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
+            //TODO Inform all signed Signatories about new version if order is relevant, inform all if not
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
@@ -174,7 +181,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
 
@@ -192,7 +199,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
     }
 
@@ -210,7 +217,7 @@ public class DocumentController {
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = computeSignatureRequest(userID,
             documentID, SignatureType.ADVANCED_SIGNATURE);
@@ -223,7 +230,7 @@ public class DocumentController {
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
-        throws DocumentNotFoundException {
+        throws DocumentNotFoundException, MessageGenerationException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
@@ -232,7 +239,6 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            final SignatureManagement signatureManagement = new SignatureManagement(documentService);
             return signatureManagement.manageSignatureRequest(reader, document, signatureType);
         }
     }

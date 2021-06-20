@@ -19,16 +19,20 @@ import java.util.List;
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
+
     private final DocumentRepository documentRepository;
-    private final DocumentCreator documentCreator = new DocumentCreator();
+    private final DocumentCreator documentCreator;
+
 
     /**
      * the standard constructor for documentServices.
      * @param documentRepository the documentRepository initialized by Spring
+     * @param documentCreator the documentCreator creates documents.
      */
     @Autowired
-    public DocumentServiceImpl(final DocumentRepository documentRepository) {
+    public DocumentServiceImpl(final DocumentRepository documentRepository, final DocumentCreator documentCreator) {
         this.documentRepository = documentRepository;
+        this.documentCreator = documentCreator;
     }
 
     @Override
@@ -59,7 +63,7 @@ public class DocumentServiceImpl implements DocumentService {
                                 throws CreatingFileException, IOException {
         final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatoriesID, userService);
+            ownerID, signatoriesID, userService, this);
         for (final Document currentDocument : envelope.getDocumentList()) {
             for (final Signatory signatory : currentDocument.getSignatories()) {
                 signatory.setStatus(false);

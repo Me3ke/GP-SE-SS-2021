@@ -18,6 +18,8 @@ import store from "@/main/vue/store/store";
 import BlankTestPage from "@/main/vue/views/BlankTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
+import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
+import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
 
 
 Vue.use(VueRouter)
@@ -170,6 +172,22 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'adminSettings/corporate',
+                    name: 'corporate',
+                    component: CorporateDesignNormalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/corporate/experimental',
+                    name: 'corporateExp',
+                    component: CorporateDesignExperimentalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: '*',
                     redirect: {name: '404'}
                 }]
@@ -178,8 +196,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    // using language from route guard or default language (de)
     store.commit('INITIALIZE_STORE')
+
+    // using language from route guard or default language (de)
     let language = to.params.lang;
     if (!language) {
         language = 'de'
@@ -213,8 +232,6 @@ router.beforeEach((to, from, next) => {
         }
     }
     next()
-
-
 })
 
 export default router

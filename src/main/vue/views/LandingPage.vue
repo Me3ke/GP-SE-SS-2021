@@ -173,7 +173,7 @@ export default {
 .button-Box{
   padding-top: 1vh;
   margin: 0;
-  padding-bottom: 0vh;
+  padding-bottom: 0;
 }
 .button-division{
   padding: 2vh;
