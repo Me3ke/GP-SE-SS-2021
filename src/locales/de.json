@@ -318,6 +318,7 @@
         "didSign": "Schon unterschrieben",
         "doRead": "Gegenlesen",
         "didRead": "Schon gegengelesen.",
+        "comments": "Kommentare",
         "protocol": "Protokoll anzeigen",
         "history": "Historie einsehen",
         "newVersion": "Neue Version",
@@ -487,5 +488,8 @@
             "color14": "Pop-Up Hintergrund",
             "default": "Standard"
         }
+    },
+    "CommentsPage": {
+        "title": "Kommentare"
     }
 }

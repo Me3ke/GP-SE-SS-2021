@@ -317,6 +317,7 @@
         "didSign": "Already signed",
         "doRead": "Proofread",
         "didRead": "Already proofread",
+        "comments": "Comments",
         "protocol": "Show protocol",
         "history": "Show history",
         "newVersion": "New Version",
@@ -486,5 +487,8 @@
             "color14": "Pop-Up background",
             "default": "Default"
         }
+    },
+    "CommentsPage": {
+        "title": "Comments"
     }
 }

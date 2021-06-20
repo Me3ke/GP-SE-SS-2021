@@ -25,6 +25,11 @@
                     <b-icon icon="pen" class="my-icon"></b-icon>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item @click="goToComments" class="mini-list">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                </b-list-group-item>
+
                 <!-- Protocol -->
                 <b-list-group-item v-if="protocol" @click="goToProtocol" class="mini-list">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
@@ -70,6 +75,12 @@
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
+                </b-list-group-item>
+
+                <!-- Comments -->
+                <b-list-group-item v-if="protocol" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
@@ -120,6 +131,12 @@
                     <b-icon icon="pen" class="my-icon"></b-icon>
                     <span v-if="signed"> {{ $t('DocumentPage.didSign') }} </span>
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
+                </b-list-group-item>
+
+                <!-- Comments -->
+                <b-list-group-item v-if="protocol" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
@@ -193,6 +210,9 @@ export default {
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.$emit('triggerOverflow')
+        },
+        goToComments() {
+            this.$router.push({name: 'comments', params: {envId: this.envId, docId: this.docId}})
         },
         goToProtocol() {
             this.$router.push({name: 'protocol', params: {envId: this.envId, docId: this.docId}})
