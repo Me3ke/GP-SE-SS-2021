@@ -35,11 +35,7 @@
         </div>
 
         <!-- All comments -->
-        <div class="container-fluid">
-            <div class="overflow-auto" style="height: 40em">
-                <AnswerBox :comments="comments"></AnswerBox>
-            </div>
-        </div>
+        <AllCommentsBox :comments="comments"></AllCommentsBox>
 
 
         <Footer></Footer>
@@ -51,7 +47,7 @@
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import WriteComment from "@/main/vue/components/commentsPage/WriteComment";
-import AnswerBox from "@/main/vue/components/commentsPage/AnswerBox";
+import AllCommentsBox from "@/main/vue/components/commentsPage/AllCommentsBox";
 
 import {mapGetters} from "vuex";
 
@@ -59,7 +55,7 @@ import {mapGetters} from "vuex";
 export default {
     name: "CommentsPage",
     components: {
-        AnswerBox,
+        AllCommentsBox,
         WriteComment,
         Footer,
         Header

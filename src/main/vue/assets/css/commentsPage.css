@@ -132,7 +132,7 @@
         font-size: 0.5em;
     }
 
-    span, .form-control {
+    span, .form-control, .my-icon-small {
         font-size: 0.6em;
     }
 
@@ -162,7 +162,7 @@
         font-size: 0.41em;
     }
 
-    span, .form-control {
+    span, .form-control, .my-icon-small {
         font-size: 0.7em;
     }
 
@@ -185,7 +185,7 @@
     }
 
 
-    span, .form-control {
+    span, .form-control, .my-icon-small {
         font-size: 0.7em;
     }
 
@@ -207,7 +207,7 @@
         font-size: 0.75em;
     }
 
-    span, .form-control {
+    span, .form-control, .my-icon-small {
         font-size: 0.7em;
     }
 
@@ -227,6 +227,10 @@
 @media (min-width: 992px) {
     .dropdown-menu > li {
         font-size: 0.75em;
+    }
+
+    .my-icon-small {
+        font-size: 1em;
     }
 
     .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {

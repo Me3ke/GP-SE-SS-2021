@@ -16,13 +16,13 @@
         <!-- Options -->
         <div style="display: flex;" class="justify-content-end mt-2">
             <!-- Cancel -->
-            <div @click="comment = ''" class="option">
-                <b-icon icon="x-circle" class="my-icon"></b-icon>
+            <div @click="cancel()" class="option">
+                <b-icon icon="x-circle-fill" class="my-icon"></b-icon>
                 <span class="action-text" style="margin-left: 0.3em">{{ $t('CommentsPage.cancel') }}</span>
             </div>
             <!-- Send -->
             <div class="option">
-                <b-icon icon="reply" class="my-icon" style="margin-left: 1em"></b-icon>
+                <b-icon icon="reply-fill" class="my-icon" style="margin-left: 1em"></b-icon>
                 <span class="action-text" style="margin-left: 0.3em">{{ $t('CommentsPage.send') }}</span>
             </div>
         </div>
@@ -43,6 +43,13 @@ export default {
     },
     mounted() {
         this.$store.dispatch('fetchUser')
+    },
+    methods: {
+        cancel() {
+            this.comment = ''
+            this.$emit('close')
+        }
+        // TODO: add reply method via api , also emit close then
     },
     computed: {
         ...mapGetters({
