@@ -231,6 +231,21 @@ public class EnvelopeController {
         }
         return resultList;
     }
+
+    /**
+     * The getMapping for the request to get the settings of all documents in an envelope.
+     * @param envelopeID the id of the relating envelope
+     * @return a fitting response in form of a list containing documentSetting-Objects.
+     */
+    @GetMapping("user/{userID}/envelope/{envelopeID}/settings")
+    public EnvelopeSettingsResponse getEnvelopeSettings(final @PathVariable(ENVELOPE_ID) long envelopeID) {
+        try {
+            return new EnvelopeSettingsResponse(envelopeService.getEnvelope(envelopeID));
+        } catch (DocumentNotFoundException exception) {
+            exception.printStackTrace();
+            return new EnvelopeSettingsResponse();
+        }
+    }
 }
 
 
