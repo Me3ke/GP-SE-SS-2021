@@ -498,6 +498,10 @@
         "oldest": "Älteste zuerst",
         "writePrompt": "Kommentar hinzufügen als ",
         "cancel": "Abbrechen",
-        "send": "Absenden"
+        "send": "Absenden",
+        "answers": "Antworten",
+        "doNotAnswers": "Antworten ausblenden",
+        "noAnswers": "Keine Antworten",
+        "reply": "Antworten"
     }
 }

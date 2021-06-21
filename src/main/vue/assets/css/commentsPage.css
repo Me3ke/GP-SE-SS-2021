@@ -4,7 +4,11 @@
 }
 
 .bigSpan {
-    font-weight: 500;
+    font-weight: 501;
+}
+
+.comment-divider {
+    background-color: var(--elsa-blue-transparent);
 }
 
 /* Sort drop-down */
@@ -55,7 +59,7 @@
 .name-bubble {
     background-color: var(--elsa-blue);
     color: var(--whitesmoke);
-    font-size: 1.5em;
+    font-size: 1.3em;
     padding: 0.5em 0.5em 0.3em;
     height: fit-content;
     width: fit-content;
@@ -65,9 +69,20 @@
 .comment-container {
     border: solid 0.1em var(--dark-grey);
     border-radius: 0.2em;
-    width: 60%;
+    width: 100%;
     padding: 0.5em;
     text-align: left;
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    margin-left: 2em;
+}
+
+.answer-container {
+    margin-left: 5em;
+}
+
+.write-container {
+    margin-bottom: 2em;
 }
 
 .container-fluid {
@@ -122,7 +137,7 @@
     }
 
     .name-bubble {
-        font-size: 0.9em;
+        font-size: 0.7em;
     }
 
     .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
@@ -131,6 +146,14 @@
 
     .bigSpan {
         font-size: 0.8em;
+    }
+
+    .answer-container {
+        margin-left: 2em;
+    }
+
+    .show-answers {
+        margin-left: 4em;
     }
 }
 
@@ -144,7 +167,7 @@
     }
 
     .name-bubble {
-        font-size: 1.2em;
+        font-size: 1em;
     }
 
     .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
@@ -167,7 +190,7 @@
     }
 
     .name-bubble {
-        font-size: 1.2em;
+        font-size: 1em;
     }
 
     .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {
@@ -189,7 +212,7 @@
     }
 
     .name-bubble {
-        font-size: 1.2em;
+        font-size: 1em;
     }
 
     .my-icon, .action-text, .my-dropdown-toggle >>> .dropdown-toggle {

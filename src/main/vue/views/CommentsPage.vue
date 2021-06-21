@@ -26,19 +26,20 @@
                     }}
                 </b-dropdown-item>
             </b-dropdown>
-            <span class="bigSpan" style="margin-bottom: 1em"> {{ $t('CommentsPage.sort') }} </span>
+            <span class="bigSpan" style="margin-bottom: 1.35em"> {{ $t('CommentsPage.sort') }} </span>
         </div>
-
 
         <!-- Writing comment -->
-        <div class="container-fluid">
-            <div class="overflow-auto" style="height: 68vh">
-                <WriteComment></WriteComment>
-            </div>
+        <div class="container-fluid write-container">
+            <WriteComment></WriteComment>
         </div>
 
-
         <!-- All comments -->
+        <div class="container-fluid">
+            <div class="overflow-auto" style="height: 40em">
+                <AnswerBox :comments="comments"></AnswerBox>
+            </div>
+        </div>
 
 
         <Footer></Footer>
@@ -50,6 +51,7 @@
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import WriteComment from "@/main/vue/components/commentsPage/WriteComment";
+import AnswerBox from "@/main/vue/components/commentsPage/AnswerBox";
 
 import {mapGetters} from "vuex";
 
@@ -57,13 +59,14 @@ import {mapGetters} from "vuex";
 export default {
     name: "CommentsPage",
     components: {
+        AnswerBox,
         WriteComment,
         Footer,
         Header
     },
     data() {
         return {
-            sortNew: true
+            sortNew: true,
         }
     },
     computed: {

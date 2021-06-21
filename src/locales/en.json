@@ -497,6 +497,10 @@
         "oldest": "Oldest first",
         "writePrompt": "Leave comment as ",
         "cancel": "Cancel",
-        "send": "Send"
+        "send": "Send",
+        "answers": "replies",
+        "doNotAnswers": "Hide replies",
+        "noAnswers": "No replies",
+        "reply": "Reply"
     }
 }
