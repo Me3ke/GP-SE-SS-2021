@@ -39,6 +39,12 @@
             <WriteComment></WriteComment>
         </div>
 
+
+        <!-- No comments -->
+        <div v-if="comments.length === 0" class="container-fluid bigSpan">
+            <span> {{ $t('CommentsPage.empty') }} </span>
+        </div>
+
         <!-- All comments -->
         <AllCommentsBox :comments="comments"></AllCommentsBox>
 
@@ -72,7 +78,7 @@ export default {
     },
     mounted() {
         this.$store.dispatch('document/fetchDocument', {
-            envId: this.$route.params.ennvId,
+            envId: this.$route.params.envId,
             docId: this.$route.params.docId
         })
     },
