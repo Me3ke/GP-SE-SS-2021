@@ -501,6 +501,7 @@
         "answers": "replies",
         "doNotAnswers": "Hide replies",
         "noAnswers": "No replies",
-        "reply": "Reply"
+        "reply": "Reply",
+        "owner": "Owner"
     }
 }

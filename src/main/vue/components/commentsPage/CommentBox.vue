@@ -7,6 +7,7 @@
                 <div class="action-text justify-content-between" style="display:flex;">
                     <div>
                         {{ comment.fromName }}
+                        <b-badge v-if="comment.fromMail === loggedIn">{{ $t('CommentsPage.owner') }}</b-badge>
                     </div>
                     {{ comment.date }}
                 </div>
@@ -21,13 +22,19 @@
 
 <script>
 import NameBubble from "@/main/vue/components/commentsPage/NameBubble";
+import {mapGetters} from "vuex";
 
 export default {
     name: "CommentBox",
     props: {
         comment: Object
     },
-    components: {NameBubble}
+    components: {NameBubble},
+    computed: {
+        ...mapGetters({
+            loggedIn: 'getUsername'
+        })
+    }
 }
 </script>
 

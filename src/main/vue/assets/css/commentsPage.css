@@ -126,6 +126,15 @@
     cursor: pointer;
 }
 
+/* Owner Badge */
+.badge {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    font-size: inherit;
+    font-weight: normal;
+    margin-left: 1em;
+}
+
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) {
     .dropdown-menu > li {

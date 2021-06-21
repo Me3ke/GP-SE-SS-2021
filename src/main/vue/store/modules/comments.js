@@ -6,7 +6,7 @@ export const state = {
         {
             commentID: 1,
             date: '17.06.2021',
-            fromMail: 'Hans.Schneide.Test@gmail.com',
+            fromMail: 'Hans.Schneide.test@gmail.com',
             fromName: 'Hans Schneider',
             content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
             answers: [
@@ -28,7 +28,7 @@ export const state = {
         {
             commentID: 2,
             date: '20.06.2021',
-            fromMail: 'Hans.Schneider.Test@gmail.com',
+            fromMail: 'Hans.Schneider.test@gmail.com',
             fromName: 'Hans Schneider',
             content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
             answers: []
@@ -36,7 +36,7 @@ export const state = {
         {
             commentID: 3,
             date: '20.06.2021',
-            fromMail: 'Hans.Schneider.Test@gmail.com',
+            fromMail: 'Hans.Schneider.test@gmail.com',
             fromName: 'Hans Schneider',
             content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
             answers: []
@@ -44,7 +44,7 @@ export const state = {
         {
             commentID: 4,
             date: '20.06.2021',
-            fromMail: 'Hans.Schneider.Test@gmail.com',
+            fromMail: 'Hans.Schneider.test@gmail.com',
             fromName: 'Hans Schneider',
             content: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
             answers: [{
