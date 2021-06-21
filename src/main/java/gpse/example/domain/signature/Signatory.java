@@ -96,8 +96,4 @@ public class Signatory {
     public void setSignatureType(final SignatureType signatureType) {
         this.signatureType = signatureType;
     }
-
-    public ProtoSignatory toProtoSignatory() {
-        return new ProtoSignatory(this.email, this.signatureType.toInteger());
-    }
 }
