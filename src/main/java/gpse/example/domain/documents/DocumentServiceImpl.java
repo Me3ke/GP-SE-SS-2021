@@ -64,18 +64,19 @@ public class DocumentServiceImpl implements DocumentService {
 
 
         final List<Signatory> alreadyDefinedSignatories = documentPutRequest.getAlreadyDefinedSignatories();
-        final List<ProtoSignatory> signatories;
+        final List<ProtoSignatory> signatories = new ArrayList<>();
 
         // TODO Signature Type
         if (alreadyDefinedSignatories != null) {
-            signatories = new ArrayList<>();
             for (Signatory signatory : alreadyDefinedSignatories) {
                 signatories.add(signatory.toProtoSignatory());
             }
-        } else {
-
-            signatories = documentPutRequest.getSignatories();
         }
+
+        if(documentPutRequest.getSignatories() != null) {
+            signatories.addAll(documentPutRequest.getSignatories());
+        }
+
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
             ownerID, signatories, userService, this);
 

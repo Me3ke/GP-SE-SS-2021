@@ -29,47 +29,47 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private long id;
+    protected long id;
 
 
     @OneToOne(
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private DocumentMetaData documentMetaData;
+    protected DocumentMetaData documentMetaData;
 
     @OneToMany(
         fetch = FetchType.EAGER,
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private List<Signatory> signatories = new ArrayList<>();
+    protected List<Signatory> signatories = new ArrayList<>();
 
     @OneToMany(
         orphanRemoval = true,
         cascade = CascadeType.ALL)
-    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+    protected final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
 
     @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
-    private Document previousVersion;
+    protected Document previousVersion;
 
     @Column
-    private String documentType;
+    protected String documentType;
 
     @Column
-    private SignatureType signatureType = SignatureType.NO_SIGNATURE;
+    protected SignatureType signatureType = SignatureType.NO_SIGNATURE;
 
     @Lob
-    private byte[] data;
+    protected byte[] data;
 
     @Column
-    private boolean orderRelevant;
+    protected boolean orderRelevant;
 
     @Column
-    private LocalDateTime endDate;
+    protected LocalDateTime endDate;
 
     @Column
-    private DocumentState state;
+    protected DocumentState state;
 
     public Document() {
     }

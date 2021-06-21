@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 public class ArchivedDocument extends Document {
-
+/*
     @Column
     @Id
     private long id;
@@ -55,6 +55,8 @@ public class ArchivedDocument extends Document {
     @OneToOne
     private Document previousVersion;
 
+ */
+
     /**
      * Default constructor for an archived Document.
      * @param document the document from which it descends.
@@ -63,7 +65,7 @@ public class ArchivedDocument extends Document {
         this.id = document.getId();
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
-        this.advancedSignatures = document.getAdvancedSignatures();
+        //this.advancedSignatures = document.getAdvancedSignatures();
         this.documentType = document.getDocumentType();
         this.signatureType = document.getSignatureType();
         this.data = document.getData();
@@ -80,7 +82,7 @@ public class ArchivedDocument extends Document {
     /*@Override
     public String getDocumentTitle() {
         return documentMetaData.getMetaDocumentTitle();
-    }*/
+    }
 
     @Override
     public String getOwner() {
@@ -146,6 +148,8 @@ public class ArchivedDocument extends Document {
     public Document getPreviousVersion() {
         return previousVersion;
     }
+
+     */
 
     @Override
     public void setSignatureType(final SignatureType signatureType) {
