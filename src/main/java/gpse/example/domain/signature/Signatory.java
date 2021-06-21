@@ -99,7 +99,4 @@ public class Signatory {
         this.signatureType = signatureType;
     }
 
-    public ProtoSignatory toProtoSignatory() {
-        return new ProtoSignatory(this.user.getEmail(), this.signatureType.toInteger());
-    }
 }
