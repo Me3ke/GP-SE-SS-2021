@@ -2,6 +2,7 @@ package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
+import gpse.example.util.email.EmailTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -73,6 +74,12 @@ public class User implements UserDetails {
 
     @Column
     private boolean adminValidated;
+
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private List<EmailTemplate> emailTemplates;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
@@ -337,5 +344,17 @@ public class User implements UserDetails {
 
     public void setFirstLogin(boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public List<EmailTemplate> getEmailTemplates() {
+        return emailTemplates;
+    }
+
+    public void setEmailTemplates(List<EmailTemplate> emailTemplates) {
+        this.emailTemplates = emailTemplates;
+    }
+
+    public void addEmailTemplate(EmailTemplate emailTemplate) {
+        this.emailTemplates.add(emailTemplate);
     }
 }
