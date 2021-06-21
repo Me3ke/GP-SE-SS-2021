@@ -62,7 +62,6 @@ public class EmailTemplate {
         while (temp.indexOf(CLOSE) > 0) {
             params.add(findFirst(temp));
             temp = temp.substring(temp.indexOf(CLOSE) + 1);
-            System.out.println(temp);
         }
         return params;
     }
