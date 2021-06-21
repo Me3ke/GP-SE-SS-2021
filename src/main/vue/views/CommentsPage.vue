@@ -5,10 +5,15 @@
 
         <BaseHeading name="CommentsPage.title"></BaseHeading>
 
+        <!-- Restricted Comments -->
+        <div v-if="!isPublic && !isOwner" class="container-fluid bigSpan" id="hint">
+            <span> {{ $t('CommentsPage.hint') }} </span>
+        </div>
+
         <!-- Comment Number and Sorting -->
         <div class="container-fluid" style="display: flex">
             <span class="bigSpan" v-if=" this.comments.length === 0"> {{ $t('CommentsPage.comment') }}</span>
-            <span class="bigSpan" v-else> {{ this.comments.length }} {{ $t('CommentsPage.comments') }}</span>
+            <span class="bigSpan" v-else> {{ commentsAmount }} {{ $t('CommentsPage.comments') }}</span>
 
             <b-dropdown class="my-dropdown-menu my-dropdown-toggle" style="margin-left: 2em" no-caret>
                 <template #button-content>
@@ -65,10 +70,18 @@ export default {
             sortNew: true,
         }
     },
+    mounted() {
+        this.$store.dispatch('document/fetchDocument', {
+            envId: this.$route.params.ennvId,
+            docId: this.$route.params.docId
+        })
+    },
     computed: {
         ...mapGetters({
             commentsOld: 'comments/getCommentsOldest',
             commentsNew: 'comments/getCommentsNewest',
+            isPublic: 'comments/getPublic',
+            document: 'document/getDocument'
         }),
 
         // gives back comments array depending on sorting option
@@ -78,7 +91,26 @@ export default {
             } else {
                 return this.commentsOld
             }
-        }
+        },
+
+        // returns the number of comments (including comments that are answers)
+        commentsAmount() {
+            let answerAmount = 0
+
+            for (let i = 0; i < this.comments.length; i++) {
+                answerAmount += this.comments[i].answers.length
+            }
+
+            return this.comments.length + answerAmount
+        },
+
+        // returns if user owner of current document
+        isOwner() {
+            if (this.document.owner) {
+                return this.document.owner.email === this.$store.state.auth.username
+            }
+            return false
+        },
     }
 }
 </script>

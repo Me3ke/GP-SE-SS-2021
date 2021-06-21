@@ -503,6 +503,7 @@
         "doNotAnswers": "Antworten ausblenden",
         "noAnswers": "Keine Antworten",
         "reply": "Antworten",
-        "owner": "Besitzer"
+        "owner": "Besitzer",
+        "hint" : "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen"
     }
 }

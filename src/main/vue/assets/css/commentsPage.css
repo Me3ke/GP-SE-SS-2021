@@ -135,6 +135,16 @@
     margin-left: 1em;
 }
 
+/* Hint if not public */
+#hint {
+    background-color: var(--elsa-blue-transparent);
+    padding: 1em;
+    margin-bottom: 1em;
+    font-weight: normal;
+    opacity: 80%;
+    border-radius: 0.2em;
+}
+
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) {
     .dropdown-menu > li {
