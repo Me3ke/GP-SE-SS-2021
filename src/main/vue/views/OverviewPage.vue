@@ -68,10 +68,6 @@
             v-model="page"
             :total-rows="this.allEnvelopes(filter).length"
             :per-page="pageLimit"
-            first-text="First"
-            prev-text="Prev"
-            next-text="Next"
-            last-text="Last"
             style="margin: 1em 1.5em"
         ></b-pagination>
 
@@ -161,4 +157,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
