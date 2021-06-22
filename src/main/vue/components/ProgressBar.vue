@@ -15,6 +15,11 @@
             ></b-progress-bar>
         </b-progress>
 
+
+        {{signatories}}
+        --------------
+        {{alreadySigned}}
+
         <b-popover
             class="popover-body"
             :target="`popover-1-${docId}`"
