@@ -8,6 +8,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -330,7 +332,18 @@ public class DocumentController {
             Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
-            document.setSignatories(documentSettingsCMD.getSignatories());
+            List<Signatory> signatories = new ArrayList<>();
+            List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
+            Signatory signatory;
+            for (SignatorySetting signatorySetting : signatorySettings) {
+                signatory = new Signatory(userService.getUser(signatorySetting.getUsername()),
+                    signatorySetting.getSignatureType());
+                signatory.setStatus(signatorySetting.isStatus());
+                signatory.setReminder(signatorySetting.getReminderTiming());
+                signatory.setSignedOn(signatorySetting.convertSignedOn());
+                signatories.add(signatory);
+            }
+            document.setSignatories(signatories);
 
             Document savedDoc = documentService.addDocument(document);
 

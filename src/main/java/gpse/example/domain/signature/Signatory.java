@@ -91,6 +91,10 @@ public class Signatory {
         return signedOn;
     }
 
+    public void setSignedOn(LocalDateTime signedOn) {
+        this.signedOn = signedOn;
+    }
+
     public SignatureType getSignatureType() {
         return signatureType;
     }

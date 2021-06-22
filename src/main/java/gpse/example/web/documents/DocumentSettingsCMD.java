@@ -1,7 +1,5 @@
 package gpse.example.web.documents;
 
-import gpse.example.domain.signature.Signatory;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.List;
  */
 public class DocumentSettingsCMD {
 
-    private List<Signatory> signatories;
+    private List<SignatorySetting> signatories;
     private boolean orderRelevant;
     private String endDate;
 
@@ -19,11 +17,11 @@ public class DocumentSettingsCMD {
         return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 
-    public List<Signatory> getSignatories() {
+    public List<SignatorySetting> getSignatories() {
         return signatories;
     }
 
-    public void setSignatories(List<Signatory> signatories) {
+    public void setSignatories(List<SignatorySetting> signatories) {
         this.signatories = signatories;
     }
 
