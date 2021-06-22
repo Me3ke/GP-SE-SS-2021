@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -101,6 +100,15 @@ public class SMTPServerHelper {
         mailSender.send(message.generateMessage());
     }
 
+    /**
+     * Test sending templated email.
+     * @param signatoryMail reciever
+     * @param template specified templateobject
+     * @param dataContainer specified data
+     * @throws MessageGenerationException when text, reciever mail, or subject is null
+     * @throws InvocationTargetException Wrong placeholder detected
+     * @throws MessagingException sending mail fails
+     */
     public void sendSignatureInvitationTemplated(final String signatoryMail, final EmailTemplate template,
                                                  final TemplateDataContainer dataContainer)
         throws MessageGenerationException, InvocationTargetException, MessagingException {

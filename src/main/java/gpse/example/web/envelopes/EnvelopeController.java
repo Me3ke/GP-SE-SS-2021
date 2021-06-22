@@ -39,6 +39,7 @@ public class EnvelopeController {
     private static final int FORBIDDEN = 403;
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
+    private static final String NEW_LINE = "\n";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -252,22 +253,24 @@ public class EnvelopeController {
     }
 
 
-    //Testmethod sending an basic templated email
+    /**
+     * Testmethod sending an basic templated email.
+     */
     @GetMapping("/testEmail")
     public void test() {
-        String text = "<!DOCTYPE html>\n" +
-            "<html lang = \"de\">\n" +
-            "\n" +
-            "\t<head>\n" +
-            "\n" +
-            "\t\t<meta charset = \"utf8\">\n" +
-            "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" >\n" +
-            "  </head>\n" +
-            "\n" +
-            "  <body>\n" +
-            "    <h1>Einladung!</h1>\n" +
-            "    <p>Ich lade dich [LastNameReciever], Signieren von [DocumentTitle] ein</p>\n" +
-            "  </body>";
+        String text = "<!DOCTYPE html>\n"
+            + "<html lang = \"de\">\n"
+            + NEW_LINE
+            + "\t<head>\n"
+            + NEW_LINE
+            + "\t\t<meta charset = \"utf8\">\n"
+            + "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" >\n"
+            + "  </head>\n"
+            + NEW_LINE
+            + "  <body>\n"
+            + "    <h1>Einladung!</h1>\n"
+            + "    <p>Ich lade dich [LastNameReciever], Signieren von [DocumentTitle] ein</p>\n"
+            + "  </body>";
         EmailTemplate template = new EmailTemplate();
         template.setHtmlTemplateBody(text);
         template.setSubject("Test");
