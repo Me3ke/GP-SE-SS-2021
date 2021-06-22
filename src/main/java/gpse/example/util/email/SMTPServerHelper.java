@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
@@ -80,7 +84,6 @@ public class SMTPServerHelper {
     }
 
     /**
-<<<<<<< HEAD
      * sending the Invitation for a signature.
      * @param signatoryMail     the signatory who should be reminded
      * @param owner             the owner of the relating document
@@ -96,6 +99,15 @@ public class SMTPServerHelper {
         message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
             + owner.getLastname(), document.getDocumentTitle()));
         mailSender.send(message.generateMessage());
+    }
+
+    public void sendSignatureInvitationTemplated(final String signatoryMail, final EmailTemplate template,
+                                                 final TemplateDataContainer dataContainer)
+        throws MessageGenerationException, InvocationTargetException, MessagingException {
+       Message message = new Message();
+       message.setRecievingUserMail(signatoryMail);
+       message.setupByTemplate(template, dataContainer);
+       mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
     }
 
     /**

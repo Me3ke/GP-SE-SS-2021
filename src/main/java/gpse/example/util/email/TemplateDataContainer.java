@@ -16,7 +16,7 @@ public class TemplateDataContainer {
 
     private String endDate;
 
-    private String envalopeName;
+    private String envelopeName;
 
     private String documentTitle;
 
@@ -64,12 +64,12 @@ public class TemplateDataContainer {
         this.endDate = endDate;
     }
 
-    public String getEnvalopeName() {
-        return envalopeName;
+    public String getEnvelopeName() {
+        return envelopeName;
     }
 
-    public void setEnvalopeName(String envalopeName) {
-        this.envalopeName = envalopeName;
+    public void setEnvelopeName(String envelopeName) {
+        this.envelopeName = envelopeName;
     }
 
     public String getDocumentTitle() {

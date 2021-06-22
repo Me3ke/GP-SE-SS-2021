@@ -2,8 +2,13 @@ package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.*;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 
 /**
@@ -63,6 +68,34 @@ public class Message {
         return message;
     }
 
+    public MimeMessage generateHtmlMessage(MimeMessage message) throws MessagingException, MessageGenerationException {
+
+        message.setSubject(subject, "UTF-8");
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        if (sendingUser == null) {
+            helper.setFrom("System");
+        } else {
+            helper.setFrom(sendingUser.getEmail());
+        }
+
+        if (recievingUserMail == null || subject == null || text == null) {
+            throw new MessageGenerationException(this.messageID);
+        }
+
+        helper.setTo(InternetAddress.parse(recievingUserMail));
+        message.setContent(text, "text/html");
+        return message;
+    }
+
+    public void setupByTemplate(EmailTemplate template, TemplateDataContainer dataContainer)
+            throws InvocationTargetException {
+        this.subject = template.getSubject();
+        this.text = template.filledTemplate(dataContainer);
+
+    }
+
 
     public long getMessageID() {
         return messageID;
@@ -111,4 +144,6 @@ public class Message {
     public void setSendingUser(final User sendingUser) {
         this.sendingUser = sendingUser;
     }
+
+
 }

@@ -7,8 +7,10 @@ import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.EmailTemplate;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.util.email.TemplateDataContainer;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -244,6 +248,40 @@ public class EnvelopeController {
         } catch (DocumentNotFoundException exception) {
             exception.printStackTrace();
             return new EnvelopeSettingsResponse();
+        }
+    }
+
+
+    //Testmethod sending an basic templated email
+    @GetMapping("/testEmail")
+    public void test() {
+        String text = "<!DOCTYPE html>\n" +
+            "<html lang = \"de\">\n" +
+            "\n" +
+            "\t<head>\n" +
+            "\n" +
+            "\t\t<meta charset = \"utf8\">\n" +
+            "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" >\n" +
+            "  </head>\n" +
+            "\n" +
+            "  <body>\n" +
+            "    <h1>Einladung!</h1>\n" +
+            "    <p>Ich lade dich [LastNameReciever], Signieren von [DocumentTitle] ein</p>\n" +
+            "  </body>";
+        EmailTemplate template = new EmailTemplate();
+        template.setHtmlTemplateBody(text);
+        template.setSubject("Test");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setLastNameReciever("haschke");
+        container.setDocumentTitle("TestDocument");
+        try {
+            smtpServerHelper.sendSignatureInvitationTemplated("jhaschke@techfak.de", template, container);
+        } catch (MessageGenerationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 }

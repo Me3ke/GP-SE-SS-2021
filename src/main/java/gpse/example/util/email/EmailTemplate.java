@@ -80,13 +80,17 @@ public class EmailTemplate {
      * @throws IllegalAccessException if invocation of the called method is illegal
      */
     public String filledTemplate(TemplateDataContainer dataContainer)
-            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+            throws InvocationTargetException {
         String filledTemplate = this.htmlTemplateBody;
         for (String placeholder:neededParams()) {
-            if (dataOf(placeholder, dataContainer) != null) {
-                filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
-                    dataOf(placeholder, dataContainer));
-            } else {
+            try {
+                if (dataOf(placeholder, dataContainer) != null) {
+                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
+                        dataOf(placeholder, dataContainer));
+                } else {
+                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
+                }
+            } catch (NoSuchMethodException | IllegalAccessException exc) {
                 filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
             }
         }
