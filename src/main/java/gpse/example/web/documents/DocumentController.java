@@ -13,7 +13,9 @@ import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.EmailTemplate;
 import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.TemplateDataContainer;
 import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
