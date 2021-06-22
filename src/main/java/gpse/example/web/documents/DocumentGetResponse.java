@@ -33,6 +33,12 @@ public class DocumentGetResponse {
     private boolean turnToSign;
     private final long id;
 
+   /* public List<Signatory> getSignatories() {
+        return signatories;
+    }
+
+    private final List<Signatory> signatories;
+*/
     /**
      * The default constructor creates the documentGet based on an existing document
      * which is created from the Database beforehand.
@@ -58,6 +64,7 @@ public class DocumentGetResponse {
         this.signed = false;
         this.id = document.getId();
         final List<Signatory> signatories = document.getSignatories();
+        //this.signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getUser().equals(currentUser)

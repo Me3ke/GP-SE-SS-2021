@@ -1,59 +1,95 @@
 <template>
 <div>
     <div
-        style="padding-bottom: 1em;">
+        style="padding-bottom: 1em;"
+        :id="'popover-' + docId"
+        @click="clicked"
+
+    >
         <!-- (Parent Component)
             :documentProgress -> progress bar for each documents // needs the documentProgressArray (state) with the id -1 because of the iD
         --->
 
 
-        <b-progress :max="max" :id="`popover-1-${docId}`">
-            <b-progress-bar
-                :value="docPercentage"
-                variant="success"
-                :label="docPercentage + '%'"
-            ></b-progress-bar>
-        </b-progress>
+            <b-progress :max="max" :id="`popover-1-${docId}`">
+                <b-progress-bar
+                    :value="docPercentage"
+                    variant="success"
+                    :label="docPercentage + '%'"
+                ></b-progress-bar>
+            </b-progress>
 
 
-        {{signatories}}
-        --------------
-        {{alreadySigned}}
+        <b-container style="max-width: 100%" v-if="isOpen" id="collapseExample" >
 
-        <b-popover
-            class="popover-body"
-            :target="`popover-1-${docId}`"
-            triggers="hover focus"
-            placement="bottomright"
+                <b-row>
+                    <b-col>Need to Sign
+                        <b-col>
+                            <b-container v-for="(signatory,index) in needToSign" :key="index">
+                                <b-col>{{signatory.user.email}}</b-col>
+                            </b-container>
+                        </b-col>
+
+                        <b-col v-if="alreadySigned.length > 0" style="margin-top: 1em">
+                            Already Signed
+                            <b-col>
+                                <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
+                                    <b-col>{{signatory.user.email}} {{alreadySigned.length}}</b-col>
+                                </b-container>
+
+                            </b-col>
+                        </b-col>
+
+                    </b-col>
 
 
-        >
-            <div>
+                    <!---Reader if available --->
+                    <b-col v-if="readers.length > 0">Need to Read
+                    <b-col>
+                        <b-container v-for="(signatory,index) in needToRead" :key="index">
+                            <b-col>{{signatory.user.email}}</b-col>
+                        </b-container>
+                    </b-col>
 
-                <h5 style="margin-bottom: 0" class="popover-content-missing" >Müssen noch Signieren:</h5>
+                    <b-col v-if="alreadyRead.length > 0" style="margin-top: 1em">
+                        Already Signed
+                        <b-col>
+                            <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
+                                <b-col>{{signatory.user.email}} {{alreadySigned.length}}</b-col>
+                            </b-container>
 
-                <div style="padding-bottom: -1em" class="d-flex flex-column" v-for="(user,index) in needToSign" :key="index">
-                    <div>{{user.user.firstname}} {{user.user.lastname}}</div>
+                        </b-col>
+                    </b-col>
+                    </b-col>
+                </b-row>
 
-                </div>
+        </b-container>
 
-                <hr>
 
-                <h5 class="popover-content-notMissing" >Schon unterschrieben:</h5>
 
-                 <div class="d-flex flex-column" v-for="(user,index) in alreadySigned" :key="index">
-                    <div class="p-2">{{user.user.firstname}} {{user.user.lastname}}</div>
 
-                 </div>
 
-            </div>
-
+        <!---TODO Arrow of Popover is not Whitesmoke --->
+        <!--
+        <b-popover placement="left" :target="'popover-' + docId" ref="popover" triggers= "focus" custom-class="my-popover-class">
+            <b-container class="bv-example-row">
+                <b-row>
+                    <b-col>Signatory</b-col>
+                    <b-col>Reader</b-col>
+                </b-row>
+                <b-row>
+                    <b-col v-for="(signatory,index) in signatories" :key="index">{{signatory.user.email}}</b-col>
+                    <b-col>2 of 2</b-col>
+                </b-row>
+                <b-row>
+                    <b-col>1 of 2</b-col>
+                    <b-col>2 of 2</b-col>
+                </b-row>
+            </b-container>
         </b-popover>
+
+        --->
     </div>
-
-
-
-
 </div>
 </template>
 
@@ -69,6 +105,7 @@ export default {
         return {
             max: 100,
             zero: 0,
+            isOpen: false
         }
     },
     computed: {
@@ -89,6 +126,10 @@ export default {
         needToSign() {
             console.log(this.signatories.filter(x => !this.alreadySigned.includes(x)))
             return this.signatories.filter(x => !this.alreadySigned.includes(x))
+        },
+
+        needToRead() {
+            return this.readers.filter(x => !this.alreadyRead.includes(x))
         },
 
 
@@ -114,36 +155,32 @@ export default {
 
     },
 
+    methods: {
+        clicked() {
+            //this.$root.$emit('bv::hide::popover')
+            //this.$refs.popover.$emit('open')
+            console.log("HALLOOOOOOOOOOOO")
+            this.isOpen = !this.isOpen
+        }
+    }
+
 
 }
 </script>
 
 <style scoped>
 
-.popover-content-missing {
-    font-size: 1em;
-    color: red;
-}
-.popover-content-notMissing {
-    font-size: 1em;
-    color: green;
+.my-popover-class {
+    background-color: var(--whitesmoke);
+    width: 15em;
 }
 
-.popover-body {
-    background-color: var(--whitesmoke);
-}
+
 
 @media screen and (max-width: 1200px) {
-    .popover {max-width: 70%}
 
-    .popover-content-missing {
-        font-size: 1em;
-        color: red;
-    }
-    .popover-content-notMissing {
-        font-size: 1em;
-        color: green;
-    }
+
+
 }
 
 </style>
