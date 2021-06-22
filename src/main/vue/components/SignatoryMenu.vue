@@ -22,7 +22,7 @@
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
             <draggable v-model="signatories">
-                <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
+                <div class="drag-drop-element" v-for="signatory in signatoriesNew" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
@@ -114,6 +114,14 @@ export default {
         console.log("new Copy of list:")
         console.log(this.signatoriesNew)
         console.log("--------------")
+
+        for(let i = 0; i < this.signatoriesNew.length; i++) {
+            if(this.signatoriesNew[i].signatureType === "ADVANCED_SIGNATURE") {
+                this.signatoriesNew[i].type = 2
+            } else if(this.signatoriesNew[i].signatureType === "SIMPLE_SIGNATURE") {
+                this.signatoriesNew[i].type = 1
+            }
+        }
 
         this.$emit('update-signatories', this.signatoriesNew)
 
