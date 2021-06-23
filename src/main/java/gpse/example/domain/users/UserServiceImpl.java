@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void validateUser(final User user) {
-        user.setAdminValidated(true);
+        user.setAccountNonLocked(true);
 
         securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);

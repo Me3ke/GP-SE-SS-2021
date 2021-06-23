@@ -24,7 +24,7 @@ public class UserResponseObject {
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
         this.enabled = user.isEnabled();
-        this.adminValidated = user.isAdminValidated();
+        this.adminValidated = user.isAccountNonLocked();
         this.firstLogin = user.isFirstLogin();
         this.publicKey = user.getPublicKey();
     }

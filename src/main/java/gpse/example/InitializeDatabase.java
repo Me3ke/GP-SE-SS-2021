@@ -97,7 +97,7 @@ public class InitializeDatabase implements InitializingBean {
                 "Schneider", PASSWORD);
             user.addRole(ROLE_USER);
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
             userService.saveUser(user);
         }
         try {
@@ -111,7 +111,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
             user.setPersonalData(personalData);
             userService.saveUser(user);
         }

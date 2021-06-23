@@ -8,6 +8,7 @@ import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -146,14 +147,14 @@ public class UserController {
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
-    @GetMapping("/user/{userID}/validate/")
+    @GetMapping("/user/{userID}/validate")
     public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
         final JSONResponseObject response = new JSONResponseObject();
         final User user = userService.getUser(username);
         userService.validateUser(user);
 
-        if (user.isAdminValidated()) {
+        if (user.isAccountNonLocked()) {
             response.setStatus(STATUS_CODE_OK);
         } else {
             response.setStatus(STATUS_CODE_VALIDATION_FAILED);
