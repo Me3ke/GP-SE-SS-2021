@@ -269,7 +269,7 @@ public class EnvelopeController {
             + NEW_LINE
             + "  <body>\n"
             + "    <h1>Einladung!</h1>\n"
-            + "    <p>Ich lade dich [LastNameReciever], Signieren von [DocumentTitle] ein</p>\n"
+            + "    <p>Ich lade dich [LastNameReciever], Signieren von [LastNameReciever] ein</p>\n"
             + "  </body>";
         EmailTemplate template = new EmailTemplate();
         template.setHtmlTemplateBody(text);
@@ -279,11 +279,7 @@ public class EnvelopeController {
         container.setDocumentTitle("TestDocument");
         try {
             smtpServerHelper.sendSignatureInvitationTemplated("jhaschke@techfak.de", template, container);
-        } catch (MessageGenerationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
+        } catch (MessageGenerationException | InvocationTargetException | MessagingException e) {
             e.printStackTrace();
         }
     }
