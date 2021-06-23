@@ -22,9 +22,8 @@ export const mutations = {
 
 export const actions = {
     fetchEnvelopeSettings({commit}, {envId}) {
-        return documentSettingsAPI.getEnvelopeSettings(envId).then(response => {
-            console.log(response)
-            commit('SET_ENVELOPE_SETTINGS', response.data)
+        return documentSettingsAPI.getEnvelopeSettings(envId).then(async response => {
+            await commit('SET_ENVELOPE_SETTINGS', response.data.documentSettings)
             commit('SET_ERROR_ENVELOPE_SETTINGS', {})
         }).catch(error => {
             console.log(error)

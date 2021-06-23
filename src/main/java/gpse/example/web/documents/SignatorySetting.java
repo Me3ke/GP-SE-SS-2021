@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class SignatorySetting {
 
-    private String username;
+    private String email;
     private SignatureType signatureType;
     private boolean status;
     private boolean remind;
@@ -23,7 +23,7 @@ public class SignatorySetting {
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
-        this.username = signatory.getUser().getUsername();
+        this.email = signatory.getUser().getUsername();
         this.signatureType = signatory.getSignatureType();
         this.status = signatory.isStatus();
         this.remind = (signatory.getReminder() == -1);
@@ -40,12 +40,12 @@ public class SignatorySetting {
         return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(final String username) {
-        this.username = username;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public SignatureType getSignatureType() {

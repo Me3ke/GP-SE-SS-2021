@@ -21,7 +21,7 @@
                                 </div>
                                 <!-- Menu -->
                                 <div class="modal-body">
-                                    <!-- Page 1 -->
+                                    <!-- Page 1 Choose Document -->
                                     <div v-if="page === 1">
                                         <b-alert :show="this.errors.noDocument">
                                             {{$t('UploadDoc.error.noDocument')}}
@@ -35,7 +35,7 @@
                                         ></b-form-file>
                                     </div>
 
-                                    <!-- Page 2 -->
+                                    <!-- Page 2 New or old envelope? -->
                                     <div v-if="page === 2">
                                         <button type="button" class="light-btn" @click="newEnv = false; page = page +1; selectedEnv.new = null;">
                                             <h5>
@@ -48,7 +48,7 @@
                                             </h5>
                                         </button>
                                     </div>
-                                    <!-- Page 3 -->
+                                    <!-- Page 3 select envelope/create envelope-->
                                     <div v-if="page === 3">
                                         <!-- Choose from envelopes -->
                                         <b-alert :show="this.errors.noEnvelope">
@@ -59,7 +59,7 @@
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
                                                 <select class="form-control" id="selectEnvelope" v-model="selectedEnv.old">
-                                                    <option v-for="envelope in this.envelopes({state: null})" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
+                                                    <option v-for="envelope in this.envelopes" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -83,52 +83,45 @@
                                             </b-form-group>
                                         </div>
                                     </div>
-                                    <!-- Page 4 -->
+                                    <!-- Page 4 Review process?-->
                                     <div v-if="page === 4">
                                         <button type="button" class="light-btn" @click="review = true; settings.signatories = []; settings.endDate = null; page = page +1">
                                             <h5>
                                                 {{$t('UploadDoc.addReaders')}}
                                             </h5>
                                         </button>
-                                        <button type="button" class="light-btn" @click="review = false; settings.readers = []; page = page +1">
+                                        <button type="button" class="light-btn" @click="review = false; readers = []; page = page +1">
                                             <h5>
                                                 {{$t('UploadDoc.skipReview')}}
                                             </h5>
                                         </button>
                                     </div>
-                                    <!-- Page 5 -->
+                                    <!-- Page 5 Add signatories/readers-->
                                     <div v-if="page === 5">
+                                        <!-- Add readers -->
                                         <div v-if="review">
                                             <b-alert :show="this.errors.noReaders">
                                                 {{$t('UploadDoc.error.noReaders')}}
                                             </b-alert>
                                             <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
-                                            <ReaderMenu :readers="settings.readers"></ReaderMenu>
+                                            <ReaderMenu :readers="readers"></ReaderMenu>
                                         </div>
+
+                                        <!-- Add signatories -->
                                         <div v-if="!review">
                                             <b-alert :show="this.errors.noEndDate">
                                                 {{$t('UploadDoc.error.noEndDate')}}
                                             </b-alert>
-
                                             <b-alert :show="this.errors.noSignatories">
                                                 {{$t('UploadDoc.error.noSignatories')}}
                                             </b-alert>
-
                                             <b-alert :show="this.errors.noSignatureType">
                                                 {{$t('UploadDoc.error.noSignatureType')}}
                                             </b-alert>
                                             <div>
-                                                <b-form-datepicker id="endDatePicker" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
-                                                <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                                                <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                                                <b-form-datepicker id="endDate" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
                                             </div>
-
-                                            <b-form-checkbox v-model="settings.remind" name="some-radios" style="margin: 1em 0">
-                                                {{$t('UploadDoc.remindSignatories')}}
-                                            </b-form-checkbox>
-                                            <b-row v-if="settings.remind" style="margin-bottom: 1em; margin-left: 1.5em">
-                                                <b-form-input type="number" v-model="settings.daysBefore" min="0" style="width:5em; margin-right: 0.5em"> </b-form-input>
-                                                {{$t('UploadDoc.remindDaysBefore')}}
-                                            </b-row>
 
                                             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
                                             <SignatoryMenu :inModal="true" :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
@@ -233,24 +226,25 @@ export default {
             show: false,
             page: 1,
             newEnv: false,
+            review: true,
+            signatories: [],
+            readers: [],
             selectedEnv: {
                 new: null,
                 old: null
             },
             fileInput: null,
             settings: {
-                review: true,
                 signatories: [],
-                readers: [],
                 endDate: null,
                 orderRelevant: true,
                 remind: false,
-                daysBefore: null
+                reminderTiming: null //TODO
             },
             file: {
                 data: null,
                 type: null,
-                name: null
+                title: null
             },
             errors: {
                 noDocument: false,
@@ -267,10 +261,13 @@ export default {
         close() {
             this.show = false;
             this.page = 1;
+            this.review = null
             this.fileInput = null;
-            this.file = {data: null, type: null, name: null}
+            this.signatories = [];
+            this.readers = [];
+            this.file = {data: null, type: null, title: null}
             this.selectedEnv = {old: null, new: null}
-            this.settings = {signatories: [], readers: [], endDate: null, orderRelevant: null, review: null}
+            this.settings = {signatories: [], endDate: null, orderRelevant: null}
             this.errors = {noEnvelope: null, noNewName: null, noDocument: null};
         },
         back() {
@@ -317,7 +314,7 @@ export default {
                     this.errors.noSignatureType = false;
                     let i;
                     for(i = 0; i < this.settings.signatories.length; i++) {
-                        if (this.settings.signatories[i].type === "") {
+                        if (this.settings.signatories[i].signatureType === "") {
                             this.errors.noSignatureType= true;
                         }
                     }
@@ -330,11 +327,10 @@ export default {
         async upload() {
             //TODO: Convert readers into signatories and concat arrays
             //TODO: Error-handling
-            this.file.name = this.fileInput.name.split('.')[0];
-            this.file.type = this.fileInput.name.split('.')[1];
-            this.file.data = await this.asyncHandleFunction(this.fileInput);
-            this.settings.endDate = this.settings.endDate + ' 12:00';
-            console.log(this.settings.signatories);
+            await this.fillFile()
+            this.fillSettings()
+
+
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
@@ -344,8 +340,21 @@ export default {
                 this.close();
             }
         },
-        convertReaders() {
-            //TODO
+        fillSettings() {
+            this.settings.endDate = this.settings.endDate + ' 12:00';
+            let i;
+            for (i = 0; i < this.readers.length; i++) {
+                this.settings.signatories.push({email: this.readers[i].email, type: 0})
+            }
+            for (i = 0; i < this.signatories.length; i++) {
+                this.settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
+            }
+
+        },
+        async fillFile() {
+            this.file.title = this.fileInput.name.split('.')[0];
+            this.file.type = this.fileInput.name.split('.')[1];
+            this.file.data = await this.asyncHandleFunction(this.fileInput);
         },
         // convert the file into an base64 string
         async asyncHandleFunction(file) {

@@ -6,7 +6,7 @@ export default {
     async getEnvelopeSettings(envId) {
         return axios({
             method: "get",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/settings'
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelope/' + envId + '/settings'
         })
     },
     // sets settings of a document

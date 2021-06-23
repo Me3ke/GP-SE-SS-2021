@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- Add Signatory -->
         <div class="form-group">
             <b-row no-gutters>
                 <b-col cols="11">
@@ -12,19 +13,34 @@
                 </b-col>
             </b-row>
         </div>
-        <div>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
-                <label class="custom-control-label" for="orderRelevantSwitch" style="margin-right:5em"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
 
-                <input type="checkbox" class="custom-control-input" id="reminderSwitch" style="margin-left:5em" v-model="reminder" v-if="!inModal">
-                <label class="custom-control-label" for="reminderSwitch" v-if="!inModal"> {{$t('UploadDoc.sendReminderEMails')}} </label>
-            </div>
-        </div>
+        <!-- Options for order and reminder -->
+        <b-row align-h="center" style="margin-bottom: 1em">
+            <b-col class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
+                <label class="custom-control-label" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+            </b-col>
+            <b-col>
+                <b-row>
+                    <b-form-checkbox v-model="remind" name="some-radios" v-if="!inModal">
+                        {{$t('UploadDoc.remindSignatories')}}
+                    </b-form-checkbox>
+                </b-row>
+                <b-row v-if="remind && !inModal" style="margin-top: 1em">
+                    <b-form-input type="number" v-model="reminderTiming" min="0" style="width:5em;"> </b-form-input>
+                    {{$t('UploadDoc.remindDaysBefore')}}
+                </b-row>
+            </b-col>
+        </b-row>
+
+
+
+        <!-- List of Signatories -->
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
             <draggable v-model="signatoriesArray">
                 <div class="drag-drop-element" v-for="signatory in signatoriesArray" :key="signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
+                        <!-- Email Address -->
                         <h6>
                             <b-col cols="auto">
                                 <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)"></b-icon>
@@ -33,15 +49,17 @@
                         </h6>
                         <b-col cols="auto">
                             <b-row align-h="end">
-                                <b-col cols="auto" v-if="!inModal && reminder" style="margin-right: 0.5em">
+                                <!-- reminder -->
+                                <b-col cols="auto" v-if="!inModal && remind" style="margin-right: 0.5em">
                                     <b-row>
                                         {{$t('UploadDoc.reminder')}}
-                                        <b-form-input type="number" v-model="signatory.reminder" min="0" style="width:5em; height: 2em; margin-right: 0.5em"> </b-form-input>
+                                        <b-form-input type="number" v-model="signatory.reminderTiming" min="0" style="width:5em; height: 2em; margin-right: 0.5em"> </b-form-input>
                                         {{$t('UploadDoc.reminderShort')}}
                                     </b-row>
                                 </b-col>
+                                <!-- signature type -->
                                 <b-col cols="auto">
-                                    <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.type">
+                                    <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.signatureType">
                                         <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
                                     </select>
                                 </b-col>
@@ -78,7 +96,8 @@ export default {
                 value: 2
             }],
             signatoriesArray: this.signatories,
-            reminder: false
+            remind: false,
+            reminderTiming: null
         }
     },
     methods: {
