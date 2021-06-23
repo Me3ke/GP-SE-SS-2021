@@ -1,6 +1,5 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.signature.SignatureType;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,7 +20,6 @@ public class ArchivedDocument extends Document {
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatories = document.getSignatories();
         this.documentType = document.getDocumentType();
-        this.signatureType = document.getSignatureType();
         this.data = document.getData();
         this.orderRelevant = document.isOrderRelevant();
         this.endDate = document.getEndDate();
@@ -30,11 +28,6 @@ public class ArchivedDocument extends Document {
     }
 
     protected ArchivedDocument() {
-
-    }
-
-    @Override
-    public void setSignatureType(final SignatureType signatureType) {
 
     }
 
