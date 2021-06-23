@@ -49,6 +49,7 @@ public class EnvelopeController {
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
+
     /**
      * The default constructor for an envelope Controller.
      *
@@ -133,21 +134,22 @@ public class EnvelopeController {
      * Sending invitation email to Guests or Users.
      * Guests getting the following link.
      * http://localhost:8080/de/envelope/{envelopeID}/document/{documentID}/{token}
-     * @param document the document that should be signed
-     * @param signatory the signatory
+     *
+     * @param document   the document that should be signed
+     * @param signatory  the signatory
      * @param envelopeId The EnvelopeId required for link.
      * @throws MessageGenerationException Thrown by smtpServerHelper if email could not be sended.
      */
 
     private void sendInvitation(Document document, Signatory signatory, long envelopeId)
-            throws MessageGenerationException {
+        throws MessageGenerationException {
         try {
             User user = userService.getUser(signatory.getEmail());
             smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
                 userService.getUser(document.getOwner()),
                 user.getLastname(), document);
         } catch (UsernameNotFoundException unf) {
-            if(signatory.getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
+            if (signatory.getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
                 GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
                 smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
                     "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
@@ -206,7 +208,7 @@ public class EnvelopeController {
      * The getAllEnvelopes methods gets all envelopes from the database and filters
      * them using the filter method.
      *
-     * @param userID  the id of the user doing the request.
+     * @param userID the id of the user doing the request.
      * @return the filtered envelope list.
      */
 
@@ -244,7 +246,6 @@ public class EnvelopeController {
             final List<Document> filteredDocumentList = envelope.getDocumentList()
                 .stream()
                 .filter(document -> document.hasTitle(request.getTitleFilter()))
-                .filter(document -> document.hasSignatureType(request.getSignatureTypeFilter()))
                 .filter(document -> document.hasState(request.getStateFilter()))
                 .filter(document -> document.hasEndDate(request.getEndDateFilterFrom(), request.getEndDateFilterTo()))
                 .filter(document -> document.hasDataType(request.getDataType()))

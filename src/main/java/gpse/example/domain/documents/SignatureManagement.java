@@ -32,9 +32,10 @@ public class SignatureManagement {
 
     /**
      * constructor of Signature management.
-     * @param smtpServerHelper smtpServerHelper
+     *
+     * @param smtpServerHelper     smtpServerHelper
      * @param givenDocumentService documentservice
-     * @param givenUserService userservice
+     * @param givenUserService     userservice
      */
     @Autowired
     public SignatureManagement(SMTPServerHelper smtpServerHelper,
@@ -56,7 +57,7 @@ public class SignatureManagement {
      */
     public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
                                                      final SignatureType signatureType)
-                    throws MessageGenerationException {
+        throws MessageGenerationException {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
@@ -183,7 +184,7 @@ public class SignatureManagement {
 
     private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
                                                       final SignatureType signatureType)
-                    throws MessageGenerationException {
+        throws MessageGenerationException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
@@ -202,8 +203,8 @@ public class SignatureManagement {
                     if (savedDocument.getCurrentSignatory().getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
                         GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(),
                             savedDocument.getId());
-                        smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(), savedDocument,
-                            "http://localhost:8080/de/" + "/document/" + savedDocument.getId() + "/"
+                        smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                            savedDocument, "http://localhost:8080/de/document/" + savedDocument.getId() + "/"
                                 + token.getToken());
                     } else {
                         smtpServerHelper.sendGuestInvitationAdvanced(savedDocument.getCurrentSignatory().getEmail(),
