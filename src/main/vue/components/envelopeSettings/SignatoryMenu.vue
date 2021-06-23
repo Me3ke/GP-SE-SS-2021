@@ -16,17 +16,17 @@
 
         <!-- Options for order and reminder -->
         <b-row align-h="center" style="margin-bottom: 1em">
-            <b-col class="custom-control custom-switch">
+            <b-col class="custom-control custom-switch" style="margin-left:1em">
                 <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
                 <label class="custom-control-label" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
             </b-col>
-            <b-col>
+            <b-col v-if="!inModal">
                 <b-row>
-                    <b-form-checkbox v-model="remind" name="some-radios" v-if="!inModal">
+                    <b-form-checkbox v-model="remind" name="some-radios">
                         {{$t('UploadDoc.remindSignatories')}}
                     </b-form-checkbox>
                 </b-row>
-                <b-row v-if="remind && !inModal" style="margin-top: 1em">
+                <b-row v-if="remind" style="margin-top: 1em">
                     <b-form-input type="number" v-model="reminderTiming" min="0" style="width:5em;"> </b-form-input>
                     {{$t('UploadDoc.remindDaysBefore')}}
                 </b-row>
@@ -82,7 +82,7 @@ export default {
     props: {
         signatories: Array,
         orderRelevant: Boolean,
-        inModal: Boolean
+        inModal: Boolean,
     },
     components: {draggable},
     data() {

@@ -24,11 +24,11 @@
         <b-container v-if="show">
             <div class="card" style="margin-top:3vh">
                 <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
-                    {{$t('Settings.DocumentSettings.chooseDate')}}
+                    {{$t('Settings.DocumentSettings.endDate')}}
                 </div>
                 <div>
-                    <b-form-datepicker class="mb-2"></b-form-datepicker>
-                    <!-- <p>{{this.settings.endDate}}</p> -->
+                    <p>{{this.endDate}}</p>
+                    <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
                 </div>
             </div>
             <div class="card" style="margin-top:3vh">
@@ -44,7 +44,7 @@
                     {{$t('Settings.DocumentSettings.signatory')}}
                 </div>
                 <div style="padding:2em">
-                    <SignatoryMenu :signatories="signatories"></SignatoryMenu>
+                    <SignatoryMenu :signatories="signatories" :order-relevant="orderRelevant" :in-modal="false"></SignatoryMenu>
                 </div>
             </div>
             <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>

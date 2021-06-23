@@ -278,7 +278,8 @@
             "reader": "Proofreaders",
             "save": "Save",
             "chooseDate": "Chose deadline",
-            "orderRelevant": "Order relevant"
+            "orderRelevant": "Order relevant",
+            "endDate": "Deadline"
         }
     },
     "UploadDoc": {

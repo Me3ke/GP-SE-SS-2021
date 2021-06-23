@@ -98,17 +98,32 @@
                                     </div>
                                     <!-- Page 5 Add signatories/readers-->
                                     <div v-if="page === 5">
+                                        <!-- Pick Deadline -->
+                                        <div>
+                                            <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                                            <b-form-datepicker id="endDate" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
+                                        </div>
+
                                         <!-- Add readers -->
-                                        <div v-if="review">
+                                        <div v-if="review" style="margin-bottom: 1em">
                                             <b-alert :show="this.errors.noReaders">
                                                 {{$t('UploadDoc.error.noReaders')}}
                                             </b-alert>
                                             <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
                                             <ReaderMenu :readers="readers"></ReaderMenu>
+
+                                            <b-row align-h="center" v-if="!reviewAddSignatory">
+                                                <button class="light-btn" @click="reviewAddSignatory = true">
+                                                    <h5>
+                                                        <b-icon icon="plus-circle"></b-icon>
+                                                        {{$t('Settings.DocumentSettings.addSignatory')}}
+                                                    </h5>
+                                                </button>
+                                            </b-row>
                                         </div>
 
                                         <!-- Add signatories -->
-                                        <div v-if="!review">
+                                        <div v-if="!review || reviewAddSignatory">
                                             <b-alert :show="this.errors.noEndDate">
                                                 {{$t('UploadDoc.error.noEndDate')}}
                                             </b-alert>
@@ -118,10 +133,6 @@
                                             <b-alert :show="this.errors.noSignatureType">
                                                 {{$t('UploadDoc.error.noSignatureType')}}
                                             </b-alert>
-                                            <div>
-                                                <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
-                                                <b-form-datepicker id="endDate" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
-                                            </div>
 
                                             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
                                             <SignatoryMenu :inModal="true" :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
@@ -184,7 +195,7 @@
                                                     </div>
                                                     <!-- Page 5 -->
                                                     <div v-if="page === 5">
-                                                        <button type="button" class="light-btn" @click="back() ">
+                                                        <button type="button" class="light-btn" @click="back(); reviewAddSignatory = false">
                                                             <h5>
                                                                 {{$t('UploadDoc.back')}}
                                                             </h5>
@@ -227,6 +238,7 @@ export default {
             page: 1,
             newEnv: false,
             review: true,
+            reviewAddSignatory: false,
             signatories: [],
             readers: [],
             selectedEnv: {
@@ -261,8 +273,9 @@ export default {
         close() {
             this.show = false;
             this.page = 1;
-            this.review = null
+            this.review = null;
             this.fileInput = null;
+            this.reviewAddSignatory = false;
             this.signatories = [];
             this.readers = [];
             this.file = {data: null, type: null, title: null}
@@ -302,23 +315,35 @@ export default {
                     }
                 }
             } else if (this.page === 5) {
+                // checks endDate
+                this.errors.noEndDate = this.settings.endDate === null;
                 if (this.review) {
                     // checks for readers
-                    this.errors.noReaders = this.settings.readers.length === 0;
+                    this.errors.noReaders = this.readers.length === 0;
+                    // check fpr signatories
+                    if (this.signatories.length > 0) {
+                        let i;
+                        for(i = 0; i < this.signatories.length; i++) {
+                            if (this.signatories[i].signatureType === "") {
+                                this.errors.noSignatureType= true;
+                            }
+                        }
+                    }
+                    if (!this.errors.noReaders && !this.errors.noEndDate && !this.errors.noSignatureType) {
+                        this.upload();
+                    }
                 } else {
-                    // checks endDate
-                    this.errors.noEndDate = this.settings.endDate === null;
-                    // cehcks for signatories
-                    this.errors.noSignatories = this.settings.signatories.length === 0;
+                    // checks for signatories
+                    this.errors.noSignatories = this.signatories.length === 0;
                     // checks signatories for signature types
                     this.errors.noSignatureType = false;
                     let i;
-                    for(i = 0; i < this.settings.signatories.length; i++) {
-                        if (this.settings.signatories[i].signatureType === "") {
+                    for(i = 0; i < this.signatories.length; i++) {
+                        if (this.signatories[i].signatureType === "") {
                             this.errors.noSignatureType= true;
                         }
                     }
-                    if (!this.errors.noSignatureType && !this.errors.noSignatories && !this.errors.noEndDate) {
+                    if (!this.errors.noSignatureType && !this.errors.noSignatories && !this.errors.noEndDate ) {
                         this.upload();
                     }
                 }
@@ -329,8 +354,6 @@ export default {
             //TODO: Error-handling
             await this.fillFile()
             this.fillSettings()
-
-
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
@@ -344,7 +367,7 @@ export default {
             this.settings.endDate = this.settings.endDate + ' 12:00';
             let i;
             for (i = 0; i < this.readers.length; i++) {
-                this.settings.signatories.push({email: this.readers[i].email, type: 0})
+                this.settings.signatories.push({email: this.readers[i], type: 0})
             }
             for (i = 0; i < this.signatories.length; i++) {
                 this.settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
@@ -388,6 +411,12 @@ export default {
 .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
+}
+
+.modal-content {
+    max-height: 50em;
+    overflow-y: scroll;
+    background-color: var(--whitesmoke);
 }
 
 .bi-x-square {

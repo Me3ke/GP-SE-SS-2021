@@ -40,7 +40,7 @@
                         {{$t('Settings.DocumentSettings.reader')}}
                     </div>
                     <div style="padding:2em">
-                        <ReaderMenu :readers="getReaders(this.envelopeSettings[0])"></ReaderMenu>
+                        <ReaderMenu :readers="getReaders(this.envelopeSettings[selectedId])"></ReaderMenu>
                     </div>
                 </div>
                 <div class="card" style="margin-top:3vh">
@@ -48,7 +48,7 @@
                         {{$t('Settings.DocumentSettings.signatory')}}
                     </div>
                     <div style="padding:2em">
-                        <SignatoryMenu :inModal="false" :signatories="getSignatories(this.envelopeSettings[0])"></SignatoryMenu>
+                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[selectedId].orderRelevant" :signatories="getSignatories(this.envelopeSettings[selectedId])"></SignatoryMenu>
                     </div>
                 </div>
                 <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>

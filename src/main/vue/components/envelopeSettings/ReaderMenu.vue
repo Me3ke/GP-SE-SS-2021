@@ -51,7 +51,7 @@ export default {
             this.readerInput = "";
         },
         deleteReader(reader) {
-            this.readerArray = this.readerArray.filter(read => !(read === reader))
+            this.readerArray.splice(this.readerArray.indexOf(reader), 1)
         }
     }
 }

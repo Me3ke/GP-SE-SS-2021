@@ -279,7 +279,8 @@
             "reader": "Gegenleser",
             "chooseDate": "Zeitraum bestimmen",
             "orderRelevant": "Reihenfolge berücksichtigen",
-            "save": "Speichern"
+            "save": "Speichern",
+            "endDate": "Zeitraum"
         }
     },
     "UploadDoc": {
@@ -305,7 +306,7 @@
             "noNewName": "Geben Sie einen Namen für den neuen Verbund ein.",
             "noReaders": "Fügen Sie Gegenleser hinzu.",
             "noSignatories": "Fügen Sie Unterzeichner hinzu.",
-            "noEndDate": "Wählen Sie ein Enddatum.",
+            "noEndDate": "Wählen Sie ein End-Datum.",
             "noSignatureType": "Wählen Sie für jeden Unterzeichner eine Unterschriftart aus."
         },
         "remindSignatories": "Unterzeichner erinnern",
