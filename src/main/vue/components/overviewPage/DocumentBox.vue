@@ -81,10 +81,10 @@ export default {
         if (this.document.state === "OPEN" || this.document.state === "READ") {
             open = true;
         }
-        if (this.document.signatory === true && this.document.signed === false) {
+        if (this.document.turnToSign === true) {
             toSign = true;
         }
-        if (this.document.reader === true && this.document.read === false) {
+        if (this.document.turnToReview === true) {
             toRead = true;
         }
         return {open: open, toSign: toSign, toRead: toRead};

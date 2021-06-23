@@ -13,37 +13,30 @@ import org.springframework.stereotype.Component;
 public class SMTPServerHelper {
 
     private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
-    /**
-     * Template for sending RegistrationEmail.
-     */
+
     private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
         + "Hier bestätigen: %s %n"
         + "%n %n"
         + "Bitte beachten Sie die eingeschränkte Gültigkeit Ihres Bestätigungslinks von 24 Stunden.";
 
-    /**
-     * The subject of Elsas registration emails.
-     */
     private static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
 
-    /**
-     * Basic template for sending validation requests to admin.
-     */
+
+    private static final String SIGNATURE_INVITATION = GREETING
+        + "%s hat sie zum signieren des Dokuments %s aufgefordert.";
+
+    private static final String SIGNATURE_INVITATION_SUBJECT = "Signatur des Dokuments %s";
+
+
     private static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
-    /**
-     * The subject of Elsas validation request emails.
-     */
+
     private static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
 
-    /**
-     * should be the from address, but because of whatever it doesnt work with thunderbird and K-9 emailclients.
-     */
-    private static final String NOREPLY_ADDRESS = "noreply@gmail.com";
     private static final String REMINDER_SUBJECT = "Erinnerung an Dokument %s";
     private static final String REMINDER = GREETING
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
@@ -60,11 +53,12 @@ public class SMTPServerHelper {
      * sending an Registration email to the specified address.
      *
      * @param recievingUser the recieving user.
-     * @param link validation link.
+     * @param link          validation link.
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
+
         Message message = new Message();
-        message.setRecievingUser(recievingUser.getEmail());
+        message.setRecievingUserMail(recievingUser.getEmail());
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
 
@@ -78,10 +72,29 @@ public class SMTPServerHelper {
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(admin.getEmail());
+        message.setRecievingUserMail(admin.getEmail());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
+        mailSender.send(message.generateMessage());
+    }
+
+    /**
+<<<<<<< HEAD
+     * sending the Invitation for a signature.
+     * @param signatoryMail     the signatory who should be reminded
+     * @param owner             the owner of the relating document
+     * @param lastnameSignatory the lastname of the signatory who should be reminded
+     * @param document the document that belongs to the requestet signature
+     * @throws MessageGenerationException
+     */
+    public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
+                                        final Document document) throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(signatoryMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
+            + owner.getLastname(), document.getDocumentTitle()));
         mailSender.send(message.generateMessage());
     }
 
@@ -95,7 +108,7 @@ public class SMTPServerHelper {
     public void sendReminder(final String userEmail, final int days, String userName, Document document)
             throws MessageGenerationException {
         Message message = new Message();
-        message.setRecievingUser(userEmail);
+        message.setRecievingUserMail(userEmail);
         message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
 

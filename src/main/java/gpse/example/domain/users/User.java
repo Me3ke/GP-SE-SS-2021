@@ -41,23 +41,31 @@ public class User implements UserDetails {
     // false: user has not had a first login yet; true: user has had a first login
     private boolean firstLogin;
 
-    //@OneToMany
-    //private List<Keys> keys = new ArrayList<>();
+    @ElementCollection
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private List<String> archivedPublicKeys = new ArrayList<>();
 
     @Lob
-    @Column
     private String publicKey;
 
     @Column
+    @JsonIgnore
     private String password;
 
     //@OneToOne
     //private Keys activePair;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private PersonalData personalData;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private SecuritySettings securitySettings;
 
     @Column
@@ -123,6 +131,14 @@ public class User implements UserDetails {
             activePair = keys.get(index);
         }
     }*/
+
+    public List<String> getArchivedPublicKeys() {
+        return archivedPublicKeys;
+    }
+
+    public void setArchivedPublicKeys(List<String> archivedPublicKeys) {
+        this.archivedPublicKeys = archivedPublicKeys;
+    }
 
     /**
      * the Method used to fill in information that is not necessarily needed.

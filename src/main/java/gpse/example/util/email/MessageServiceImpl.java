@@ -24,7 +24,7 @@ public class MessageServiceImpl implements MessageService {
         final ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
 
         for (int i = 0; i < userMessages.size(); i++) {
-            if (!userMessages.get(i).getRecievingUser().equals(user.getEmail())) {
+            if (!userMessages.get(i).getRecievingUserMail().equals(user.getEmail())) {
                 userMessages.remove(i);
                 i--;
             }
