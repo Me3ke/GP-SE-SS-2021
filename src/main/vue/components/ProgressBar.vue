@@ -20,10 +20,10 @@
             </b-progress>
 
 
-        <b-container style="max-width: 100%" v-if="isOpen" id="collapseExample" >
+        <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED'" id="collapseExample" >
 
                 <b-row>
-                    <b-col>Need to Sign
+                    <b-col v-if="signatories.length > 0">Need to Sign
                         <b-col>
                             <b-container v-for="(signatory,index) in needToSign" :key="index">
                                 <b-col>{{signatory.user.email}}</b-col>
@@ -99,7 +99,7 @@
 
 export default {
     name: "ProgressBar",
-    props: ['documentProgress', 'docId'],
+    props: ['documentProgress', 'docId', 'state'],
 
     data() {
         return {
@@ -124,8 +124,9 @@ export default {
         },
 
         needToSign() {
-            console.log(this.signatories.filter(x => !this.alreadySigned.includes(x)))
-            return this.signatories.filter(x => !this.alreadySigned.includes(x))
+            //console.log(this.compareArrays(this.signatories, this.alreadySigned))
+            return this.compareArrays(this.signatories, this.alreadySigned)
+
         },
 
         needToRead() {
@@ -161,6 +162,27 @@ export default {
             //this.$refs.popover.$emit('open')
             console.log("HALLOOOOOOOOOOOO")
             this.isOpen = !this.isOpen
+        },
+
+
+        // returning the array with only signatories who needs to sign
+        compareArrays(arr1, arr2) {
+            if(arr1.length === 0) {
+                return "Das Dokument ist abgeschlossen"
+            }
+
+            if(arr2.length === 0) {
+                return arr1
+            } else {
+
+                return arr1.filter((element) => {
+                    return arr2.some((x) => {
+                        return x.user.email !== element.user.email;
+                    });
+                });
+
+            }
+
         }
     }
 

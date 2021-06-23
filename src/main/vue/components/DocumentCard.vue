@@ -7,8 +7,10 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
-                    <div v-if="documentProgressById(document.id) && showProgress">
+                    <div v-if="documentProgressById(document.id)
+                    && this.document.owner.email === this.$store.state.auth.username && document">
                         <ProgressBar
+                            :document-state="document.state"
                             :documentProgress="documentProgressById(document.id)"
                             :docId="document.id"
                         ></ProgressBar>
