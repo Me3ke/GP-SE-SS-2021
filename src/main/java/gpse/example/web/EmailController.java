@@ -1,2 +1,4 @@
-package gpse.example.web;public class EmailController {
+package gpse.example.web;
+
+public class EmailController {
 }

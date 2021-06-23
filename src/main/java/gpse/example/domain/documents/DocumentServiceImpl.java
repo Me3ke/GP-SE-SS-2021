@@ -1,6 +1,5 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.*;
@@ -58,19 +57,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document creation(final DocumentPutRequest documentPutRequest, final Envelope envelope, final String ownerID,
+    public Document creation(final DocumentPutRequest documentPutRequest, final String ownerID,
                              final UserServiceImpl userService)
                                 throws CreatingFileException, IOException {
 
         final List<ProtoSignatory> signatories = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
             ownerID, signatories, userService, this);
-
-        for (final Document currentDocument : envelope.getDocumentList()) {
-            for (final Signatory signatory : currentDocument.getSignatories()) {
-                signatory.setStatus(false);
-            }
-        }
         return addDocument(newDocument);
     }
 }
