@@ -2,7 +2,6 @@ package gpse.example.web.envelopes;
 
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.envelopes.Envelope;
-import gpse.example.web.documents.DocumentGetResponse;
 import gpse.example.domain.users.User;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class EnvelopeGetResponse {
     private final String name;
     private final User owner;
     private final String creationDate;
-    private final List<DocumentGetResponse> documents;
+    private final List<DocumentOverviewResponse> documents;
 
     /**
      * The default constructor for an envelope response.
@@ -34,7 +33,7 @@ public class EnvelopeGetResponse {
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
             //rework soon to not mix up owners
-            this.documents.add(new DocumentGetResponse(document, owner, currentUser));
+            this.documents.add(new DocumentOverviewResponse(document, owner, currentUser));
         }
     }
 
@@ -54,7 +53,7 @@ public class EnvelopeGetResponse {
         return creationDate;
     }
 
-    public List<DocumentGetResponse> getDocuments() {
+    public List<DocumentOverviewResponse> getDocuments() {
         return documents;
     }
 }
