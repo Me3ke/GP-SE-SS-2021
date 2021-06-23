@@ -280,7 +280,10 @@
             "chooseDate": "Zeitraum bestimmen",
             "orderRelevant": "Reihenfolge berücksichtigen",
             "save": "Speichern",
-            "endDate": "Zeitraum"
+            "endDate": "Zeitraum",
+            "edit": "Bearbeiten",
+            "noSignatories": "Noch keine Unterzeichner hinzugefügt",
+            "noReaders": "Noch keine Gegenleser hinzugefügt"
         }
     },
     "UploadDoc": {

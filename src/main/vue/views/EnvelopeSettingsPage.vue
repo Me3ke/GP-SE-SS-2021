@@ -26,32 +26,91 @@
 
            <!-- Global settings -->
             <div v-if="(sameSettings(this.envelopeSettings) && editAll === null) || editAll === true">
+                <!-- End Date -->
                 <div class="card" style="margin-top:3vh">
                     <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
-                        {{$t('Settings.DocumentSettings.chooseDate')}}
+                        {{$t('Settings.DocumentSettings.endDate')}}
                     </div>
                     <div>
-                        <b-form-datepicker class="mb-2"></b-form-datepicker>
-                        <!-- <p>{{this.settings.endDate}}</p> -->
+                        <b-list-group-item v-if="!this.editDate">{{this.envelopeSettings[this.selectedId].endDate}}</b-list-group-item>
+
+                        <b-row align-h="end" v-if="!this.editDate">
+                            <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editDate = true">
+                                <b-icon icon="pencil-fill"></b-icon>
+                                {{$t('Settings.DocumentSettings.edit')}}
+                            </button>
+                        </b-row>
+
+                        <b-form-datepicker class="mb-2" v-if="this.editDate"></b-form-datepicker>
+
+                        <b-row align-h="end" v-if="this.editDate">
+                            <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em" class="light-btn" @click="editDate = false"> {{$t('DownloadDoc.cancel')}} </button>
+                            <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
+                        </b-row>
                     </div>
                 </div>
+
+                <!-- Reader -->
                 <div class="card" style="margin-top:3vh">
                     <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                         {{$t('Settings.DocumentSettings.reader')}}
                     </div>
-                    <div style="padding:2em">
-                        <ReaderMenu :readers="getReaders(this.envelopeSettings[selectedId])"></ReaderMenu>
+                    <div v-if="!this.editReaders">
+                        <SignatoryListItem v-for="reader in getReaders(this.envelopeSettings[this.selectedId])" :key="reader.email" :signatory="reader"></SignatoryListItem>
                     </div>
+
+                    <b-list-group-item v-if="getReaders(this.envelopeSettings[this.selectedId]).length === 0 && !this.editReaders">
+                        {{$t('Settings.DocumentSettings.noReaders')}}
+                    </b-list-group-item>
+
+                    <b-row align-h="end" v-if="!this.editReaders">
+                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true">
+                            <b-icon icon="pencil-fill"></b-icon>
+                            {{$t('Settings.DocumentSettings.edit')}}
+                        </button>
+                    </b-row>
+
+                    <div style="padding:2em" v-if="this.editReaders">
+                        <ReaderMenu :readers="getReaders(this.envelopeSettings[this.selectedId])"></ReaderMenu>
+                    </div>
+
+                    <b-row align-h="end" v-if="this.editReaders">
+                        <button style="width:8em; margin:1em" class="light-btn" @click="editReaders = false"> {{$t('DownloadDoc.cancel')}} </button>
+                        <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
+                    </b-row>
                 </div>
+
+                <!-- Signatories -->
                 <div class="card" style="margin-top:3vh">
                     <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                         {{$t('Settings.DocumentSettings.signatory')}}
                     </div>
-                    <div style="padding:2em">
-                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[selectedId].orderRelevant" :signatories="getSignatories(this.envelopeSettings[selectedId])"></SignatoryMenu>
+
+                    <div v-if="!this.editSignatories">
+                        <SignatoryListItem v-for="signatory in getSignatories(this.envelopeSettings[this.selectedId])" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
                     </div>
+
+                    <b-list-group-item v-if="getSignatories(this.envelopeSettings[this.selectedId]).length === 0 && !this.editSignatories">
+                        {{$t('Settings.DocumentSettings.noSignatories')}}
+                    </b-list-group-item>
+
+                    <b-row align-h="end" v-if="!this.editSignatories">
+                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editSignatories = true">
+                                <b-icon icon="pencil-fill"></b-icon>
+                                {{$t('Settings.DocumentSettings.edit')}}
+                        </button>
+                    </b-row>
+
+
+                    <div style="padding:2em" v-if="this.editSignatories">
+                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[this.selectedId].orderRelevant" :signatories="getSignatories(this.envelopeSettings[this.selectedId])"></SignatoryMenu>
+                    </div>
+
+                    <b-row align-h="end" v-if="this.editSignatories">
+                        <button style="width:8em; margin:1em" class="light-btn" @click="editSignatories = false"> {{$t('DownloadDoc.cancel')}} </button>
+                        <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
+                    </b-row>
                 </div>
-                <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
             </div>
             </b-container>
 
@@ -68,18 +127,22 @@ import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatoryMenu"
 import ReaderMenu from "@/main/vue/components/envelopeSettings/ReaderMenu";
 import {mapGetters} from "vuex";
 import DocumentDropDown from "@/main/vue/components/envelopeSettings/DocumentDropDown";
+import SignatoryListItem from "@/main/vue/components/SignatoryListItem";
 
 export default {
     name: "envSettingsPage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header, SignatoryMenu, ReaderMenu, DocumentDropDown},
+    components: {Footer, Header, SignatoryMenu, ReaderMenu, DocumentDropDown, SignatoryListItem},
     data() {
         return {
             editAllInput: null,
             editAll: null,
-            selectedId: 0
+            selectedId: 0,
+            editSignatories: false,
+            editReaders: false,
+            editDate: false
         }
     },
     created() {
@@ -176,5 +239,10 @@ export default {
     background-image: linear-gradient(to bottom, var(--background-fade-one) 0%, var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
     background-repeat: no-repeat;
     background-size: 100% auto;
+}
+
+.list-group-item {
+    height: 2.5em;
+    padding: 0.5em;
 }
 </style>
