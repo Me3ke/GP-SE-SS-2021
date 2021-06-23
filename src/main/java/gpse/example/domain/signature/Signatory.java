@@ -23,6 +23,9 @@ public class Signatory {
     private boolean status;
 
     @Column
+    private boolean seen;
+
+    @Column
     private LocalDateTime signedOn;
 
     @Column
@@ -45,6 +48,7 @@ public class Signatory {
         this.status = false;
         this.reminder = -1;
         this.signatureType = signatureType;
+        this.seen = false;
     }
 
     protected Signatory() {
@@ -101,5 +105,17 @@ public class Signatory {
 
     public void setSignatureType(final SignatureType signatureType) {
         this.signatureType = signatureType;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

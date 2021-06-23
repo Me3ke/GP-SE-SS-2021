@@ -18,6 +18,7 @@ import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -103,6 +104,13 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
+            if (document.getDocumentType().equals("pdf")) {
+                for (Signatory signatory: document.getSignatories()) {
+                    if (signatory.getUser().getEmail().equals(userID)) {
+                        signatory.setSeen(true);
+                    }
+                }
+            }
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
         } else {
             throw new DocumentNotFoundException();
@@ -128,6 +136,11 @@ public class DocumentController {
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
+        for (Signatory signatory: document.getSignatories()) {
+            if (signatory.getUser().getEmail().equals(userID)) {
+                signatory.setSeen(true);
+            }
+        }
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + name)
             .body(document.getData());
@@ -331,5 +344,29 @@ public class DocumentController {
             response.setMessage("Document not found.");
         }
         return response;
+    }
+
+    /**
+     * Request for get the info if user has seen specified document.
+     * @param documentId id of document
+     * @param userId id of user
+     * @return Response entity with the boolean in the body and documentId in the header
+     * @throws DocumentNotFoundException thrown if there is no document with specified Id
+     */
+    @GetMapping("/document/{documentID}/user/{userID}/seen")
+    public ResponseEntity<Boolean> isDocumentSeen(@PathVariable("documentID") final long documentId,
+                                                  @PathVariable("userID") final String userId)
+            throws DocumentNotFoundException {
+        Document document = documentService.getDocument(documentId);
+        for (Signatory signatory: document.getSignatories()) {
+            if (signatory.getUser().getEmail().equals(userId)) {
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+                    .body(signatory.isSeen());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+            .body(null);
     }
 }

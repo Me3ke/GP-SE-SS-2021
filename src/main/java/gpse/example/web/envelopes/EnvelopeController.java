@@ -43,9 +43,8 @@ public class EnvelopeController {
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
-    @Lazy
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
+
+    private final SMTPServerHelper smtpServerHelper;
     /**
      * The default constructor for an envelope Controller.
      *
@@ -53,14 +52,17 @@ public class EnvelopeController {
      * @param userService      the userService
      * @param signatoryService the signatoryService
      * @param documentService  the documentService
+     * @param smtpServerHelper the smtpServerHelper
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService) {
+                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService,
+                              final SMTPServerHelper smtpServerHelper) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.signatoryService = signatoryService;
         this.documentService = documentService;
+        this.smtpServerHelper = smtpServerHelper;
     }
 
     /**
@@ -107,16 +109,18 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService);
-            if (!document.isOrderRelevant()) {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
+            if (document.getSignatories().size() != 0) {
+                if (!document.isOrderRelevant()) {
+                    for (int i = 0; i < document.getSignatories().size(); i++) {
+                        smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
+                            userService.getUser(document.getOwner()),
+                            document.getSignatories().get(i).getUser().getLastname(), document);
+                    }
+                } else {
+                    smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
                         userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document);
+                        document.getCurrentSignatory().getUser().getLastname(), document);
                 }
-            } else {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
