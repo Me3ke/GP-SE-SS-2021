@@ -334,7 +334,6 @@ export default {
                 } else {
                     // if api call got to server, but server did not response wit 'ok' shows errorCode to user
                     // if api call did not go to server, shows that there are Server Network problems
-                    console.log("hallo ich bin's")
                     if (!this.showErrorAdvanced) {
                         this.showAlertSign = true
                     }

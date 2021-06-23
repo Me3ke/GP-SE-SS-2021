@@ -144,10 +144,6 @@ export default {
         setActualDoc() {
             this.actualDoc = this.document
 
-            console.log('------------')
-            console.log(this.actualDoc)
-            console.log('------------')
-
             this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
             this.actualDoc.signatoriesId = []

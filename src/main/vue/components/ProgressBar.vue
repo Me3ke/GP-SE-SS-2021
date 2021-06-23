@@ -34,7 +34,7 @@
                             Already Signed
                             <b-col>
                                 <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
-                                    <b-col>{{signatory.user.email}} {{alreadySigned.length}}</b-col>
+                                    <b-col>{{signatory.user.email}}</b-col>
                                 </b-container>
 
                             </b-col>
@@ -55,7 +55,7 @@
                         Already Signed
                         <b-col>
                             <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
-                                <b-col>{{signatory.user.email}} {{alreadySigned.length}}</b-col>
+                                <b-col>{{signatory.user.email}}</b-col>
                             </b-container>
 
                         </b-col>
@@ -158,9 +158,6 @@ export default {
 
     methods: {
         clicked() {
-            //this.$root.$emit('bv::hide::popover')
-            //this.$refs.popover.$emit('open')
-            console.log("HALLOOOOOOOOOOOO")
             this.isOpen = !this.isOpen
         },
 
