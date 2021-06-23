@@ -13,6 +13,7 @@
                                      @modalTrigger="toggleOverflow"></SecuritySettingsBox>
                 <SignatureSettingsBox @uploadTrigger="toggleOverflow"></SignatureSettingsBox>
                 <MessageSettingsBox></MessageSettingsBox>
+                <EmailTemplate></EmailTemplate>
             </div>
         </b-container>
     </div>
@@ -25,10 +26,11 @@ import {mapGetters} from 'vuex';
 import MessageSettingsBox from "@/main/vue/components/settingsPage/MessageSettingsBox";
 import SecuritySettingsBox from "@/main/vue/components/settingsPage/SecuritySettingsBox";
 import SignatureSettingsBox from "@/main/vue/components/settingsPage/SignatureSettingsBox";
+import EmailTemplate from "@/main/vue/components/EmailTemplate";
 
 export default {
     name: "UserPage",
-    components: {SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
+    components: {EmailTemplate, SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
     data() {
         return {
             showOverflow: true
