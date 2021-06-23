@@ -20,6 +20,8 @@ public class TemplateDataContainer {
 
     private String documentTitle;
 
+    private String link;
+
     public TemplateDataContainer() {
 
     }
@@ -78,5 +80,13 @@ public class TemplateDataContainer {
 
     public void setDocumentTitle(String documentTitle) {
         this.documentTitle = documentTitle;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }
