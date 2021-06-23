@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -315,6 +317,12 @@ public class DocumentController {
         userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
+
+        final List<Signatory> signatories = document.getSignatories();
+        LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
+        signatories.clear();
+        signatories.addAll(signatoryLinkedHashSet);
+
         return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 
