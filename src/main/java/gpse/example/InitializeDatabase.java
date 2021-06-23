@@ -95,6 +95,7 @@ public class InitializeDatabase implements InitializingBean {
             final User user = new User(USERNAME,
                 "Hans",
                 "Schneider", PASSWORD);
+            user.setPersonalData(personalData);
             user.addRole(ROLE_USER);
             user.setEnabled(true);
             user.setAccountNonLocked(true);

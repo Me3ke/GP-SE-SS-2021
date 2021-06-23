@@ -57,11 +57,11 @@ public class DocumentController {
     /**
      * The default constructor which initialises the services by autowiring.
      *
-     * @param envelopeService         the envelopeService
-     * @param userService             the userService
-     * @param documentService         the documentService
-     * @param signatoryService        the signatoryService
-     * @param signatureManagement     the signatureManagement
+     * @param envelopeService     the envelopeService
+     * @param userService         the userService
+     * @param documentService     the documentService
+     * @param signatoryService    the signatoryService
+     * @param signatureManagement the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -298,7 +298,8 @@ public class DocumentController {
 
     /**
      * Put request for changing documentsettings.
-     * @param documentID id of the document that should be changed
+     *
+     * @param documentID          id of the document that should be changed
      * @param documentSettingsCMD Container for the relevant settings
      * @return JsonResponse containing statuscode
      */
@@ -322,8 +323,7 @@ public class DocumentController {
                 signatories.add(signatory);
             }
             document.setSignatories(signatories);
-
-            Document savedDoc = documentService.addDocument(document);
+            documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {
