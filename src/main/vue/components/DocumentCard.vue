@@ -7,14 +7,16 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
+                <div v-if="document.signatory || document.reader">
                     <div v-if="documentProgressById(document.id)
-                    && this.document.owner.email === this.$store.state.auth.username && document">
+                    && this.document.owner.email === this.$store.state.auth.username">
                         <ProgressBar
                             :document-state="document.state"
                             :documentProgress="documentProgressById(document.id)"
                             :docId="document.id"
                         ></ProgressBar>
                     </div>
+                </div>
             </b-col>
             <b-col cols="1">
                 <settingsButton
@@ -86,10 +88,6 @@ export default {
             docId: this.document.id
         })
 
-    },
-     created() {
-        console.log("test")
-        console.log(this.documentProgressById(this.document.id))
     }
 }
 </script>
