@@ -40,13 +40,13 @@ public class PersonalData implements Serializable {
 
     /**
      * the standard constructor for personal data.
-     * @param street
-     * @param houseNumber
-     * @param postCode
-     * @param homeTown
-     * @param country
-     * @param birthday
-     * @param phoneNumber
+     * @param street the street the user lives in.
+     * @param houseNumber the number of the house the user lives in.
+     * @param postCode of the town the user lives in.
+     * @param homeTown the town the user lives in.
+     * @param country the country the user lives in.
+     * @param birthday the birthday of the user.
+     * @param phoneNumber the phonenumber of the user.
      */
     public PersonalData(final String street, final int houseNumber, final int postCode,
                         final String homeTown, final String country, final LocalDate birthday,
@@ -62,6 +62,10 @@ public class PersonalData implements Serializable {
 
     public PersonalData() {
 
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getStreet() {

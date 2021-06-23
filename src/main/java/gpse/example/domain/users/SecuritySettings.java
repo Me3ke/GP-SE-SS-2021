@@ -99,7 +99,7 @@ public class SecuritySettings implements Serializable {
         return twoFactorLogin;
     }
 
-    public void setTwoFactorLogin(boolean twoFactorLogin) {
+    public void setTwoFactorLogin(final boolean twoFactorLogin) {
         this.twoFactorLogin = twoFactorLogin;
     }
 }

@@ -28,7 +28,7 @@ public class EnvelopeGetResponse {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.creationDate = envelope.getCreationDate().format(formatter);
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {

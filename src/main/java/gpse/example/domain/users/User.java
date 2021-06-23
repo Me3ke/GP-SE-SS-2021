@@ -136,7 +136,7 @@ public class User implements UserDetails {
         return archivedPublicKeys;
     }
 
-    public void setArchivedPublicKeys(List<String> archivedPublicKeys) {
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
         this.archivedPublicKeys = archivedPublicKeys;
     }
 
@@ -331,7 +331,7 @@ public class User implements UserDetails {
         return firstLogin;
     }
 
-    public void setFirstLogin(boolean firstLogin) {
+    public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
     }
 }

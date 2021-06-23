@@ -21,7 +21,7 @@ public class DocumentSettingsCMD {
         return signatories;
     }
 
-    public void setSignatories(List<SignatorySetting> signatories) {
+    public void setSignatories(final List<SignatorySetting> signatories) {
         this.signatories = signatories;
     }
 
@@ -29,7 +29,7 @@ public class DocumentSettingsCMD {
         return orderRelevant;
     }
 
-    public void setOrderRelevant(boolean orderRelevant) {
+    public void setOrderRelevant(final boolean orderRelevant) {
         this.orderRelevant = orderRelevant;
     }
 
@@ -37,7 +37,7 @@ public class DocumentSettingsCMD {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(final String endDate) {
         this.endDate = endDate;
     }
 }

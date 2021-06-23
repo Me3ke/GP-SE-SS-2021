@@ -76,7 +76,7 @@ public class DocumentOverviewResponse {
                 }
             }
         }
-        OrderManager orderManager = new OrderManager();
+        final OrderManager orderManager = new OrderManager();
         turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
         turnToSign = orderManager.manageSignatoryTurn(currentUser, document, signatureType);
     }
@@ -113,7 +113,7 @@ public class DocumentOverviewResponse {
         return signatory;
     }
 
-    public void setSignatory(boolean signatory) {
+    public void setSignatory(final boolean signatory) {
         this.signatory = signatory;
     }
 
@@ -121,7 +121,7 @@ public class DocumentOverviewResponse {
         return reader;
     }
 
-    public void setReader(boolean reader) {
+    public void setReader(final boolean reader) {
         this.reader = reader;
     }
 
@@ -129,7 +129,7 @@ public class DocumentOverviewResponse {
         return signed;
     }
 
-    public void setSigned(boolean signed) {
+    public void setSigned(final boolean signed) {
         this.signed = signed;
     }
 
@@ -137,7 +137,7 @@ public class DocumentOverviewResponse {
         return read;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(final boolean read) {
         this.read = read;
     }
 
@@ -145,7 +145,7 @@ public class DocumentOverviewResponse {
         return turnToReview;
     }
 
-    public void setTurnToReview(boolean turnToReview) {
+    public void setTurnToReview(final boolean turnToReview) {
         this.turnToReview = turnToReview;
     }
 
@@ -153,7 +153,7 @@ public class DocumentOverviewResponse {
         return turnToSign;
     }
 
-    public void setTurnToSign(boolean turnToSign) {
+    public void setTurnToSign(final boolean turnToSign) {
         this.turnToSign = turnToSign;
     }
 

@@ -19,7 +19,7 @@ public class UserResponseObject {
      * The standard constructor for userResponseObjects.
      * @param user the user the object should be based on.
      */
-    public UserResponseObject(User user) {
+    public UserResponseObject(final User user) {
         this.email = user.getEmail();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();

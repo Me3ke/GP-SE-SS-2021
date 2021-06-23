@@ -83,7 +83,7 @@ public class Signatory {
         return reminder;
     }
 
-    public void setReminder(int reminder) {
+    public void setReminder(final int reminder) {
         this.reminder = reminder;
     }
 
@@ -91,7 +91,7 @@ public class Signatory {
         return signedOn;
     }
 
-    public void setSignedOn(LocalDateTime signedOn) {
+    public void setSignedOn(final LocalDateTime signedOn) {
         this.signedOn = signedOn;
     }
 

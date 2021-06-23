@@ -58,8 +58,8 @@ public class DocumentCreator {
      */
     //does not include directories.
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
-                                   final List<ProtoSignatory> signatories, UserService userService,
-                                   DocumentService documentService)
+                                   final List<ProtoSignatory> signatories, final UserService userService,
+                                   final DocumentService documentService)
         throws CreatingFileException, IOException {
         if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
@@ -79,7 +79,8 @@ public class DocumentCreator {
      * @param document    the document itself.
      */
     private void setSignatories(final List<ProtoSignatory> signatories,
-                                final Document document, UserService userService, DocumentService documentService) {
+                                final Document document, final UserService userService,
+                                final DocumentService documentService) {
         if (signatories != null) {
             for (final ProtoSignatory signatory : signatories) {
                 document.addSignatory(userService.getUser(signatory.getEmail()), signatory.getType());
