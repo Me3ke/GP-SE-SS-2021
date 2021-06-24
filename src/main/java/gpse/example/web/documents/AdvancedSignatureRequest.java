@@ -10,7 +10,7 @@ public class AdvancedSignatureRequest {
         return signature;
     }
 
-    public void setSignature(String signature) {
+    public void setSignature(final String signature) {
         this.signature = signature;
     }
 }

@@ -34,9 +34,9 @@ public class ScheduledTasks {
      * Scheduled method to check if there are signatories to get a notification email.
      * @throws MessageGenerationException if message sending failed
      */
-    @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60000)
+    @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
     public void checkForOpenReminder() throws MessageGenerationException {
-        for (Document doc: documentService.getDocuments()) {
+        for (final Document doc: documentService.getDocuments()) {
             if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
                 informSignatoriesInOrder(doc);
             } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
@@ -45,7 +45,7 @@ public class ScheduledTasks {
         }
     }
 
-    private void informSignatoriesInOrder(Document doc) throws MessageGenerationException {
+    private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException {
 
        /* for (final Signatory signatory : doc.getSignatories()) {
             if (!signatory.isStatus()) {
@@ -53,17 +53,16 @@ public class ScheduledTasks {
                 break;
             }
         }*/
-        Signatory currentSignatory = doc.getCurrentSignatory();
-        if (currentSignatory != null && currentSignatory.getReminder() > -1) {
-            if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-                smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
-                    currentSignatory.getUser().getLastname(), doc);
-            }
+        final Signatory currentSignatory = doc.getCurrentSignatory();
+        if (currentSignatory != null && currentSignatory.getReminder() > -1
+            && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+            smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
+                currentSignatory.getUser().getLastname(), doc);
         }
     }
 
-    private void informSignatoriesWithoutOrder(Document doc) throws MessageGenerationException {
-        for (Signatory signatory:doc.getSignatories()) {
+    private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException {
+        for (final Signatory signatory:doc.getSignatories()) {
             if (signatory.getReminder() > -1) {
                 if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
                     smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),

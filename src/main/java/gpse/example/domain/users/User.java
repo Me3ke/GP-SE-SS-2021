@@ -72,7 +72,7 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @Column
-    private boolean adminValidated;
+    private boolean accountNonLocked;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
@@ -97,7 +97,7 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
-        this.adminValidated = false;
+        this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
     }
@@ -136,7 +136,7 @@ public class User implements UserDetails {
         return archivedPublicKeys;
     }
 
-    public void setArchivedPublicKeys(List<String> archivedPublicKeys) {
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
         this.archivedPublicKeys = archivedPublicKeys;
     }
 
@@ -243,7 +243,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @JsonIgnore
@@ -307,12 +307,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public boolean isAdminValidated() {
-        return adminValidated;
-    }
-
-    public void setAdminValidated(final boolean adminValidated) {
-        this.adminValidated = adminValidated;
+    public void setAccountNonLocked(final boolean adminValidated) {
+        this.accountNonLocked = adminValidated;
     }
 
     public List<String> getRoles() {
@@ -335,7 +331,7 @@ public class User implements UserDetails {
         return firstLogin;
     }
 
-    public void setFirstLogin(boolean firstLogin) {
+    public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
     }
 }

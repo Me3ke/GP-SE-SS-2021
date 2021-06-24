@@ -83,12 +83,16 @@ public class Signatory {
         return reminder;
     }
 
-    public void setReminder(int reminder) {
+    public void setReminder(final int reminder) {
         this.reminder = reminder;
     }
 
     public LocalDateTime getSignedOn() {
         return signedOn;
+    }
+
+    public void setSignedOn(final LocalDateTime signedOn) {
+        this.signedOn = signedOn;
     }
 
     public SignatureType getSignatureType() {

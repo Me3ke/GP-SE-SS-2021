@@ -35,7 +35,6 @@ public class Message {
 
     public Message() {
         timeStamp = LocalDateTime.now();
-        sendingUser = null;
     }
 
     /**
@@ -99,7 +98,7 @@ public class Message {
         return recievingUserMail;
     }
 
-    public void setRecievingUserMail(String email) {
+    public void setRecievingUserMail(final String email) {
         this.recievingUserMail = email;
     }
 

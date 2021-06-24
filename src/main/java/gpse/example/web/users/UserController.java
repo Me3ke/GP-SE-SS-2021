@@ -2,7 +2,6 @@ package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
@@ -34,7 +33,6 @@ public class UserController {
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
-    private final StringToKeyConverter stringToKeyConverter;
 
 
     /**
@@ -50,7 +48,6 @@ public class UserController {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
-        stringToKeyConverter = new StringToKeyConverter();
     }
 
     /**
@@ -77,7 +74,7 @@ public class UserController {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
-                PersonalData personalData = signUpUser.generatePersonalData();
+                final PersonalData personalData = signUpUser.generatePersonalData();
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -146,14 +143,14 @@ public class UserController {
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
-    @GetMapping("/user/{userID}/validate/")
+    @GetMapping("/user/{userID}/validate")
     public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
         final JSONResponseObject response = new JSONResponseObject();
         final User user = userService.getUser(username);
         userService.validateUser(user);
 
-        if (user.isAdminValidated()) {
+        if (user.isAccountNonLocked()) {
             response.setStatus(STATUS_CODE_OK);
         } else {
             response.setStatus(STATUS_CODE_VALIDATION_FAILED);
@@ -174,7 +171,7 @@ public class UserController {
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
                                 @PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setPersonalData(personalData);
         userService.saveUser(user);
     }
@@ -192,10 +189,10 @@ public class UserController {
      */
     @PutMapping("/user/{userID}/firstLogin")
     public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setFirstLogin(true);
         userService.saveUser(user);
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
         return response;
     }
@@ -211,7 +208,7 @@ public class UserController {
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         if (user.getPublicKey() != null) {
             user.getArchivedPublicKeys().add(user.getPublicKey());
         }
@@ -272,8 +269,8 @@ public class UserController {
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
                                         @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
-        User user = userService.getUser(username);
-        SecuritySettings securitySettings = user.getSecuritySettings();
+        final User user = userService.getUser(username);
+        final SecuritySettings securitySettings = user.getSecuritySettings();
         securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
         userService.saveUser(user);
     }
