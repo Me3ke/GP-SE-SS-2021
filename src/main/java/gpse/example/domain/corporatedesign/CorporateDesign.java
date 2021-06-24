@@ -45,15 +45,15 @@ public class CorporateDesign {
             this.colors = Lists.newArrayList(colors);
         }
 
-        if (logo.length != 0) {
-            this.logo = Arrays.copyOf(logo, logo.length);
-        } else {
+        if (logo.length == 0) {
             this.logo = new byte[0];
-        }
-        if (logoDark.length != 0) {
-            this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
         } else {
+            this.logo = Arrays.copyOf(logo, logo.length);
+        }
+        if (logoDark.length == 0) {
             this.logoDark = new byte[0];
+        } else {
+            this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
         }
     }
 

@@ -28,7 +28,7 @@ public class HashSHA implements HashFunction {
             }
             return hashText;
         } catch (NoSuchAlgorithmException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

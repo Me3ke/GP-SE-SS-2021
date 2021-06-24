@@ -29,13 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityConstants securityConstants;
 
     @Autowired
-    public SecurityConfig(SecurityConstants securityConstants) {
+    public SecurityConfig(final SecurityConstants securityConstants) {
         this.securityConstants = securityConstants;
     }
 
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()

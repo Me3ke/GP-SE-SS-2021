@@ -4,7 +4,6 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
-import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
@@ -38,7 +37,6 @@ public class EnvelopeController {
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
-    private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
     @Lazy
     @Autowired
@@ -51,15 +49,13 @@ public class EnvelopeController {
      *
      * @param envelopeService  the envelopeService
      * @param userService      the userService
-     * @param signatoryService the signatoryService
      * @param documentService  the documentService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService) {
+                              final DocumentServiceImpl documentService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
-        this.signatoryService = signatoryService;
         this.documentService = documentService;
     }
 
@@ -77,7 +73,7 @@ public class EnvelopeController {
                                               final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            Envelope envelope = envelopeService.addEnvelope(name, owner);
+            final Envelope envelope = envelopeService.addEnvelope(name, owner);
             return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
@@ -97,7 +93,7 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             if (!envelope.getOwnerID().equals(ownerID)) {
@@ -107,16 +103,16 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService);
-            if (!document.isOrderRelevant()) {
+            if (document.isOrderRelevant()) {
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                    userService.getUser(document.getOwner()),
+                    document.getCurrentSignatory().getUser().getLastname(), document);
+            } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
                     smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
                         userService.getUser(document.getOwner()),
                         document.getSignatories().get(i).getUser().getLastname(), document);
                 }
-            } else {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
@@ -185,7 +181,7 @@ public class EnvelopeController {
     @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
         final User currentUser = userService.getUser(userID);
-        List<Envelope> envelopeList = envelopeService.getEnvelopes();
+        final List<Envelope> envelopeList = envelopeService.getEnvelopes();
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());

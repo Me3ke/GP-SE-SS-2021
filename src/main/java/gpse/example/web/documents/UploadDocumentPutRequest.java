@@ -21,7 +21,7 @@ public class UploadDocumentPutRequest {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -29,7 +29,7 @@ public class UploadDocumentPutRequest {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(final LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -37,7 +37,7 @@ public class UploadDocumentPutRequest {
         return orderRelevant;
     }
 
-    public void setOrderRelevant(boolean orderRelevant) {
+    public void setOrderRelevant(final boolean orderRelevant) {
         this.orderRelevant = orderRelevant;
     }
 
@@ -45,7 +45,7 @@ public class UploadDocumentPutRequest {
         return Arrays.copyOf(data, data.length);
     }
 
-    public void setData(byte[] data) {
+    public void setData(final byte[] data) {
         this.data = data.clone();
     }
 
@@ -53,7 +53,7 @@ public class UploadDocumentPutRequest {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -61,7 +61,7 @@ public class UploadDocumentPutRequest {
         return signatories;
     }
 
-    public void setSignatories(List<Signatory> signatories) {
+    public void setSignatories(final List<Signatory> signatories) {
         this.signatories = signatories;
     }
 

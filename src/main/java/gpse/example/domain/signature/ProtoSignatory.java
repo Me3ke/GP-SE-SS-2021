@@ -32,11 +32,11 @@ public class ProtoSignatory {
         }
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
-    public void setType(int type) {
+    public void setType(final int type) {
         this.type = type;
     }
 }
