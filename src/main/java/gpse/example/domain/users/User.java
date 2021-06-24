@@ -107,6 +107,7 @@ public class User implements UserDetails {
         this.adminValidated = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.emailTemplates = new ArrayList<>();
     }
 
     public static long getSerialVersionUID() {

@@ -109,28 +109,21 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService);
-            //FirstNameReciever, LastNameReciever, FirstNameOwner, LastNameOwner, DocumentTitle, Link
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
                     setupUserInvitation(document.getSignatories().get(i).getUser(),
                         userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
-                    /*smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
-                        userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document);*/
                 }
             } else {
                 setupUserInvitation(document.getCurrentSignatory().getUser(),
                     userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
-                /*smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);*/
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
-            | MessageGenerationException | TemplateNameNotFoundException e) {
+            | MessageGenerationException e) {
             response.setStatus(INTERNAL_ERROR);
             response.setMessage("The document could not be uploaded.");
             return response;
@@ -138,9 +131,9 @@ public class EnvelopeController {
     }
 
     private void setupUserInvitation(User signatory, User owner, Document document, Envelope envelope)
-        throws TemplateNameNotFoundException, MessageGenerationException {
+        throws MessageGenerationException {
 
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+        EmailTemplate template = document.getProcessEmailTemplate();
         TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameReciever(signatory.getFirstname());
         container.setLastNameReciever(signatory.getLastname());
@@ -268,27 +261,6 @@ public class EnvelopeController {
         } catch (DocumentNotFoundException exception) {
             exception.printStackTrace();
             return new EnvelopeSettingsResponse();
-        }
-    }
-
-
-    /**
-     * Testmethod sending an basic templated email.
-     */
-    @GetMapping("/testEmail")
-    public void test() {
-
-        TemplateDataContainer container = new TemplateDataContainer();
-        container.setLastNameOwner("Haschke");
-        container.setFirstNameOwner("Jonas");
-        container.setLink("http://localhost:8080/de/landing");
-        container.setDocumentTitle("TestDocument");
-
-        try {
-            EmailTemplate template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
-            smtpServerHelper.sendTemplatedEmail("jhaschke@techfak.de", template, container);
-        } catch (MessageGenerationException | TemplateNameNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

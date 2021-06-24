@@ -21,7 +21,7 @@ public class SMTPServerHelper {
     }
 
     /**
-     * Test sending templated email.
+     * sending templated email.
      * @param recieverMail reciever
      * @param template specified templateobject
      * @param dataContainer specified data

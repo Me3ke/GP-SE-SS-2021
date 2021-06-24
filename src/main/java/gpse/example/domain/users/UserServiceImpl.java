@@ -133,8 +133,6 @@ public class UserServiceImpl implements UserService {
         container.setLink("http://localhost:8080/de/register/confirm/" + token);
         smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container);
 
-      /*  smtpServerHelper.sendRegistrationEmail(user,
-            "http://localhost:8080/de/register/confirm/" + token);*/
     }
 
     @Override
@@ -159,7 +157,6 @@ public class UserServiceImpl implements UserService {
                 container.setRequestingEmail(user.getEmail());
                 container.setLink("http://localhost:8080/de/admin/settings");
                 smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container);
-                //smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;
                 //optional, without return -> notify all admins.
             }

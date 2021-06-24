@@ -26,23 +26,20 @@ public class SignatureManagement {
     private final DocumentService documentService;
     private final UserService userService;
     private SMTPServerHelper smtpServerHelper;
-    private EmailTemplateService emailTemplateService;
 
     /**
      * constructor of Signature management.
      * @param smtpServerHelper smtpServerHelper
      * @param givenDocumentService documentservice
      * @param givenUserService userservice
-     * @param emailTemplateService used to find a specified template by name, will be removed when the user templates could be used
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
-                               final UserService givenUserService, final EmailTemplateService emailTemplateService) {
+                               final UserService givenUserService) {
 
         this.smtpServerHelper = smtpServerHelper;
         documentService = givenDocumentService;
         userService = givenUserService;
-        this.emailTemplateService = emailTemplateService;
     }
 
     /**
@@ -193,7 +190,7 @@ public class SignatureManagement {
             if (savedDocument.getState() != DocumentState.CLOSED) {
                 User owner = userService.getUser(savedDocument.getOwner());
 
-                EmailTemplate template = emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+                EmailTemplate template = document.getProcessEmailTemplate();
                 TemplateDataContainer container = new TemplateDataContainer();
                 container.setFirstNameReciever(savedDocument.getCurrentSignatory().getUser().getFirstname());
                 container.setLastNameReciever(savedDocument.getCurrentSignatory().getUser().getLastname());
@@ -206,9 +203,6 @@ public class SignatureManagement {
                 container.setLink("http://localhost:8080/de/link/to/document/view");
                 smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getUser().getEmail(), template,
                     container);
-                /*smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
-                    userService.getUser(savedDocument.getOwner()),
-                    savedDocument.getCurrentSignatory().getUser().getLastname(), document);*/
             }
 
             response.setStatus(STATUS_CODE_OK);
