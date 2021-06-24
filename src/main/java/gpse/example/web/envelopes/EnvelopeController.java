@@ -278,7 +278,7 @@ public class EnvelopeController {
         container.setLastNameReciever("haschke");
         container.setDocumentTitle("TestDocument");
         try {
-            smtpServerHelper.sendSignatureInvitationTemplated("jhaschke@techfak.de", template, container);
+            smtpServerHelper.sendTemplatedEmail("jhaschke@techfak.de", template, container);
         } catch (MessageGenerationException | InvocationTargetException | MessagingException e) {
             e.printStackTrace();
         }

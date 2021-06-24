@@ -36,16 +36,21 @@ public class EmailTemplate {
     @Column
     private String name;
 
+    @Column
+    private boolean system;
+
     /**
      * Constructor of emailTemplate.
      * @param template String containing the string with the html message.
      * @param subject the subject of emails with this template
      * @param name name of template so user can name his/her templates
+     * @param system boolean is true when the template is a systemIntern one
      */
-    public EmailTemplate(String template, String subject, String name) {
+    public EmailTemplate(String template, String subject, String name, boolean system) {
         this.htmlTemplateBody = template;
         this.subject = subject;
         this.name = name;
+        this.system = system;
     }
 
     public EmailTemplate() {
@@ -135,5 +140,13 @@ public class EmailTemplate {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isSystem() {
+        return system;
+    }
+
+    public void setSystem(boolean system) {
+        this.system = system;
     }
 }

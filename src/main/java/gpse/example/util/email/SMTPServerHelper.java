@@ -109,12 +109,14 @@ public class SMTPServerHelper {
      * @throws InvocationTargetException Wrong placeholder detected
      * @throws MessagingException sending mail fails
      */
-    public void sendSignatureInvitationTemplated(final String signatoryMail, final EmailTemplate template,
-                                                 final TemplateDataContainer dataContainer)
+    public void sendTemplatedEmail(final String signatoryMail, final EmailTemplate template,
+                                   final TemplateDataContainer dataContainer)
         throws MessageGenerationException, InvocationTargetException, MessagingException {
+
        Message message = new Message();
        message.setRecievingUserMail(signatoryMail);
        message.setupByTemplate(template, dataContainer);
+
        mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
     }
 

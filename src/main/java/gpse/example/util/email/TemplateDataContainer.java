@@ -20,7 +20,13 @@ public class TemplateDataContainer {
 
     private String documentTitle;
 
+    /**
+     * link and requestingEmail are just for internal use.
+     * Do not Use in users Template designs!
+     */
     private String link;
+
+    private String requestingEmail;
 
     public TemplateDataContainer() {
 
@@ -88,5 +94,13 @@ public class TemplateDataContainer {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getRequestingEmail() {
+        return requestingEmail;
+    }
+
+    public void setRequestingEmail(String requestingEmail) {
+        this.requestingEmail = requestingEmail;
     }
 }

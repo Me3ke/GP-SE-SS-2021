@@ -1,6 +1,9 @@
 package gpse.example.util.email;
 
-final class BasicHtmlTemplates {
+/**
+ * Container of the basic systemintern EmailTemplates.
+ */
+public final class BasicHtmlTemplates {
 
 
     private static final String CLOSE_BODY_TAG = "  </body>";
@@ -239,6 +242,33 @@ final class BasicHtmlTemplates {
         + P_YOU_ARE_INVITED_BY_FIRST_NAME_OWNER_LAST_NAME_OWNER_P
         + P_TO_SIGN_THE_DOCUMENT_DOCUMENT_TITLE_P
         + P_YOU_CAN_FIND_THE_DOCUMENT_A_HREF_LINK_HERE_A_P
+        + NEWLINE
+        + NEWLINE
+        + P_LINK_URL_P
+        + CLOSE_BODY_TAG;
+
+    /**
+     * Template for ResetPasswordEmails.
+     * needs: FirstNameReciever, LastNameReciever, Link
+     * Link for password Reset
+     */
+    public static final String RESET_PASSWORD_TEMPLATE = HTML_HEAD
+        + P_I_ENGLISH_VERSION_BELOW_I_P
+        + NEWLINE
+        + GREETINGS_PERSONAL_GERMAN
+        + "\t\t<p>Um Ihr Password zurück zu setzen klicken sie <a href=\"[Link]\">hier</a>.</p>\n"
+        + NEWLINE
+        + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zurück zusetzen,</p>\n"
+        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto möglicherweise gehackt.</p>\n"
+        + "\t\t<p>In diesem Fall kontaktieren sie Ihren Systemadministrator.</p>\n"
+        + NEWLINE
+        + NEWLINE
+        + "\t\t<p>Hello [RecieverFirstName] [RecieverLastName],</p>\n"
+        + "\t\t<p>you can reset your password <a href=\"[Link]\">here</a>.</p>\n"
+        + NEWLINE
+        + "\t\t<p>If you did not try to reset your password, your ELSA-account or </p>\n"
+        + "\t\t<p>your email-account is possibly hacked.</p>\n"
+        + "\t\t<p>In this case contact your system administrator</p>\n"
         + NEWLINE
         + NEWLINE
         + P_LINK_URL_P
