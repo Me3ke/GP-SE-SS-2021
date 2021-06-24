@@ -18,10 +18,6 @@ public class EmailTemplateService {
         this.templateRepository = templateRepository;
     }
 
-    public EmailTemplate saveEmailTemplate(final EmailTemplate template) {
-        return templateRepository.save(template);
-    }
-
     /**
      * Find Systemintern Template by its name.
      * @param name name of searched template
