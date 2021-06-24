@@ -1,18 +1,13 @@
 <template>
-<div>
+<div v-if="!stateClosed">
     <div
         style="padding-bottom: 1em;"
         :id="'popover-' + docId"
         @click="clicked"
-
     >
-        <!-- (Parent Component)
-            :documentProgress -> progress bar for each documents // needs the documentProgressArray (state) with the id -1 because of the iD
-        --->
-
             <b-progress :max="max" :id="`popover-1-${docId}`">
                 <b-progress-bar
-                    :value="typeof env === 'undefined' ? docPercentage : 20"
+                    :value="typeof env === 'undefined' ? docPercentage : envPercentage"
                     variant="success"
                     :label="typeof env === 'undefined' ? docPercentage + '%' : envPercentage"
                 ></b-progress-bar>
@@ -22,8 +17,8 @@
         <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED' && typeof this.env === 'undefined'" id="collapseExample" >
 
                 <b-row>
-                    <b-col v-if="signatories.length > 0">
-                        Need to Sign
+                    <b-col v-if="needToSign.length > 0">
+                        <span style="color: red">Need to Sign</span>
                         <b-col>
                             <b-container v-for="(signatory,index) in needToSign" :key="index">
                                 <b-col>{{signatory.user.email}}</b-col>
@@ -31,7 +26,7 @@
                         </b-col>
 
                         <b-col v-if="alreadySigned.length > 0" style="margin-top: 1em">
-                            Already Signed
+                            <span style="color: green">Already Signed</span>
                             <b-col>
                                 <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
                                     <b-col>{{signatory.user.email}}</b-col>
@@ -44,7 +39,8 @@
 
 
                     <!---Reader if available --->
-                    <b-col v-if="readers.length > 0">Need to Read
+                    <b-col v-if="readers.length > 0">
+                        <span style="color: red">Need to Read</span>
                     <b-col>
                         <b-container v-for="(signatory,index) in needToRead" :key="index">
                             <b-col>{{signatory.user.email}}</b-col>
@@ -52,7 +48,7 @@
                     </b-col>
 
                     <b-col v-if="alreadyRead.length > 0" style="margin-top: 1em">
-                        Already Signed
+                        <span style="color: green">Already Signed</span>
                         <b-col>
                             <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
                                 <b-col>{{signatory.user.email}}</b-col>
@@ -67,7 +63,7 @@
 
         <b-container v-if="isOpen && env">
             <b-row>
-                <b-col> Not Finished
+                <b-col> <span style="color: red">Not Finished</span>
                     <b-col>
                         <b-container v-for="(documentTitle, index) in notFinishedEnvelope" :key="index">
                             <b-col>
@@ -76,8 +72,8 @@
                         </b-container>
                     </b-col>
 
-                    <b-col style="margin-top: 1em">
-                        Finished
+                    <b-col style="margin-top: 1em" v-if="finishedEnvelope.length > 0">
+                        <span style="color: green">Finished</span>
 
                         <b-col>
                             <b-container v-for="(documentTitle, index) in finishedEnvelope" :key="index">
@@ -133,7 +129,8 @@ export default {
         return {
             max: 100,
             zero: 0,
-            isOpen: false
+            isOpen: false,
+            stateClosed: false
         }
     },
     computed: {
@@ -164,7 +161,7 @@ export default {
            const finishedDocuments = []
 
             this.env.forEach(document => {
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 1.00) {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 100.00) {
                     for (let a = 0; a < this.envelope.documents.length; a++) {
                         if (this.envelope.documents[a].id === document.docId) {
                             finishedDocuments.push(this.envelope.documents[a].title)
@@ -178,7 +175,7 @@ export default {
         notFinishedEnvelope() {
             const notFinished = []
             this.env.forEach(document => {
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 1.00) {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 100.00) {
                     for (let a = 0; a < this.envelope.documents.length; a++) {
                         if(this.envelope.documents[a].id === document.docId) {
                             notFinished.push(this.envelope.documents[a].title)
@@ -203,6 +200,8 @@ export default {
             let percentage = ((array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.length * 100)) * 100)
                 .toFixed(2)
 
+            this.checkFinished(percentage)
+
 
             return percentage !== 'NaN' && percentage !== '0.00'  ? percentage + '%' : ''
 
@@ -210,9 +209,10 @@ export default {
 
         // calculate th percentage of the document progress (signatories with reader)
         docPercentage() {
-            return ((this.alreadySigned.length + this.alreadyRead.length )
+            this.checkFinished(((this.alreadySigned.length + this.alreadyRead.length )
+                / (this.signatories.length + this.readers.length) * 100).toFixed(2))
+            return((this.alreadySigned.length + this.alreadyRead.length )
                 / (this.signatories.length + this.readers.length) * 100).toFixed(2)
-
         },
 
     },
@@ -222,13 +222,13 @@ export default {
             this.isOpen = !this.isOpen
         },
 
+        checkFinished(value) {
+            this.stateClosed = value >= 100.00;
+        },
+
 
         // returning the array with only signatories who needs to sign
         compareArrays(arr1, arr2) {
-            if(arr1.length === 0) {
-                return "Das Dokument ist abgeschlossen"
-            }
-
             if(arr2.length === 0) {
                 return arr1
             } else {
@@ -238,9 +238,7 @@ export default {
                         return x.user.email !== element.user.email;
                     });
                 });
-
             }
-
         }
     }
 
