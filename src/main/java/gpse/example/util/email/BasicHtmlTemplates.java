@@ -51,7 +51,7 @@ public final class BasicHtmlTemplates {
     private static final String P_SIE_WURDEN_VON_FIRST_NAME_OWNER_LAST_NAME_OWNER_ZUM_SIGNIEREN_DES_P =
         "\t\t<p>Sie wurden von [FirstNameOwner] [LastNameOwner] zum Signieren des</p>\n";
 
-    private static final String GREETINGS_GERMAN = "    <p>Guten Tag,</p>\n";
+    private static final String GREETINGS_GERMAN = "<p>Guten Tag,</p>\n";
 
     private static final String NEWLINE = "\t\t<br>\n";
 
@@ -89,10 +89,10 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_GERMAN
-        + "\t\t<p>Sie wurden von [FirstNameOwner] [LastNameOwner] für eine erweiterte</p>\n"
+        + "\t\t<p>Sie wurden von [FirstNameOwner] [LastNameOwner] f&uumlr eine erweiterte</p>\n"
         + "\t\t<p>Signatur des Dokuments [DocumentTitle] eingetragen.</p>\n"
-        + "\t\t<p>Für eine erweiterte Signatur ist eine Registrierung erforderlich.</p>\n"
-        + "\t\t<p>Sie können sich <a href=\"[Link]\">hier</a> registrieren.</p>\n"
+        + "\t\t<p>F&uumlr eine erweiterte Signatur ist eine Registrierung erforderlich.</p>\n"
+        + "\t\t<p>Sie k&oumlnnen sich <a href=\"[Link]\">hier</a> registrieren.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_ENGLISH
@@ -139,8 +139,8 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>Sie können Ihre Email-Adresse <a href=\"[Link]\">hier</a> bestätigen.</p>\n"
-        + "\t\t<p>Beachten Sie bitte die Eingeschränkte Gültigkeit ihres Bestätigungslinks</p>\n"
+        + "\t\t<p>Sie k&oumlnnen Ihre Email-Adresse <a href=\"[Link]\">hier</a> best&aumltigen.</p>\n"
+        + "\t\t<p>Beachten Sie bitte die Eingeschr&aumlnkte G&uumlltigkeit ihres Best&aumltigungslinks</p>\n"
         + P_DEADLINE_P
         + NEWLINE
         + NEWLINE
@@ -158,15 +158,15 @@ public final class BasicHtmlTemplates {
      * needs:   FirstNameReciever, LastNameReciever -> Admin
      *          FirstNameOwner, LastNameOwner, RequestingEmail -> newUser
      *          Link -> to Admin Settings validate user
+     *          RequestingEmail, Link -> fields for internal use only
      */
     public static final String ADMIN_VALIDATION_TEMPLATE = HTML_HEAD
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>[FirstNameOwner] [LastNameOwner] möchte sich mit der Email-Adresse </p>\n"
-        + "\t\t<!-- RequestingEmail, Link -> fields for internal use only-->\n"
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] m&oumlchte sich mit der Email-Adresse </p>\n"
         + "\t\t<p>[RequestingEmail] Registrieren.</p>\n"
-        + "\t\t<p>Sie können die Anfrage <a href=\"[Link]\">hier</a> bestätigen.</p>\n"
+        + "\t\t<p>Sie k&oumlnnen die Anfrage <a href=\"[Link]\">hier</a> best&aumltigen.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_PERSONAL_ENGLISH
@@ -213,7 +213,7 @@ public final class BasicHtmlTemplates {
         + "    <br>\n"
         + "\t\t<p>Guten Tag [FirstNameReciever] [LastNameReciever],</p>\n"
         + "\t\t<p>der Signaturprozess des Dokuments [DocumentTitle] ist abgeschlossen.</p>\n"
-        + "\t\t<p>Sie können das Protokoll <a href=\"[Link]\">hier</a> Herunterladen.</p>\n"
+        + "\t\t<p>Sie k&oumlnnen das Protokoll <a href=\"[Link]\">hier</a> Herunterladen.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_PERSONAL_ENGLISH
@@ -256,10 +256,10 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>Um Ihr Password zurück zu setzen klicken sie <a href=\"[Link]\">hier</a>.</p>\n"
+        + "\t\t<p>Um Ihr Password zur&uumlck zu setzen klicken sie <a href=\"[Link]\">hier</a>.</p>\n"
         + NEWLINE
-        + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zurück zusetzen,</p>\n"
-        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto möglicherweise gehackt.</p>\n"
+        + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zur&uumlck zusetzen,</p>\n"
+        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto m&oumlglicherweise gehackt.</p>\n"
         + "\t\t<p>In diesem Fall kontaktieren sie Ihren Systemadministrator.</p>\n"
         + NEWLINE
         + NEWLINE

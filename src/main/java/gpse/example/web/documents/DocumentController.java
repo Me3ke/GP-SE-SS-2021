@@ -14,6 +14,7 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.TemplateNameNotFoundException;
 import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,7 +184,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
 
@@ -201,7 +202,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
     }
 
@@ -219,7 +220,7 @@ public class DocumentController {
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = computeSignatureRequest(userID,
             documentID, SignatureType.ADVANCED_SIGNATURE);
@@ -232,7 +233,7 @@ public class DocumentController {
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();

@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 @Component
 public class SMTPServerHelper {
 
-    private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
+   /* private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
 
     private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
@@ -44,7 +44,7 @@ public class SMTPServerHelper {
     private static final String REMINDER = GREETING
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
-
+*/
     @Autowired
     private final JavaMailSender mailSender;
 
@@ -58,7 +58,7 @@ public class SMTPServerHelper {
      * @param recievingUser the recieving user.
      * @param link          validation link.
      */
-    public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
+   /* public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
 
         Message message = new Message();
         message.setRecievingUserMail(recievingUser.getEmail());
@@ -67,20 +67,20 @@ public class SMTPServerHelper {
 
         mailSender.send(message.generateMessage());
     }
-
+*/
     /**
      * sending an info mail to an admin containing the requested emailaddress.
      * @param admin admin who should get this validation information
      * @param newUserEmail email adress of the user who needs to be validated
      */
-    public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
+    /*public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
         Message message = new Message();
         message.setRecievingUserMail(admin.getEmail());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
 
         mailSender.send(message.generateMessage());
-    }
+    }*/
 
     /**
      * sending the Invitation for a signature.
@@ -90,7 +90,7 @@ public class SMTPServerHelper {
      * @param document the document that belongs to the requestet signature
      * @throws MessageGenerationException
      */
-    public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
+    /*public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
                                         final Document document) throws MessageGenerationException {
         Message message = new Message();
         message.setRecievingUserMail(signatoryMail);
@@ -98,26 +98,27 @@ public class SMTPServerHelper {
         message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
             + owner.getLastname(), document.getDocumentTitle()));
         mailSender.send(message.generateMessage());
-    }
+    }*/
 
     /**
      * Test sending templated email.
-     * @param signatoryMail reciever
+     * @param recieverMail reciever
      * @param template specified templateobject
      * @param dataContainer specified data
      * @throws MessageGenerationException when text, reciever mail, or subject is null
-     * @throws InvocationTargetException Wrong placeholder detected
-     * @throws MessagingException sending mail fails
      */
-    public void sendTemplatedEmail(final String signatoryMail, final EmailTemplate template,
+    public void sendTemplatedEmail(final String recieverMail, final EmailTemplate template,
                                    final TemplateDataContainer dataContainer)
-        throws MessageGenerationException, InvocationTargetException, MessagingException {
+        throws MessageGenerationException {
+        Message message = new Message();
+        try {
+            message.setRecievingUserMail(recieverMail);
+            message.setupByTemplate(template, dataContainer);
 
-       Message message = new Message();
-       message.setRecievingUserMail(signatoryMail);
-       message.setupByTemplate(template, dataContainer);
-
-       mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
+            mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
+        } catch (InvocationTargetException | MessagingException exc) {
+            throw new MessageGenerationException(message.getMessageID());
+        }
     }
 
     /**
@@ -127,7 +128,7 @@ public class SMTPServerHelper {
      * @param userName name of User who recieves the email
      * @param document the document which is the 'reminding' one
      */
-    public void sendReminder(final String userEmail, final int days, String userName, Document document)
+    /*public void sendReminder(final String userEmail, final int days, String userName, Document document)
             throws MessageGenerationException {
         Message message = new Message();
         message.setRecievingUserMail(userEmail);
@@ -135,6 +136,6 @@ public class SMTPServerHelper {
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
 
         mailSender.send(message.generateMessage());
-    }
+    }*/
 
 }

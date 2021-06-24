@@ -4,8 +4,7 @@ import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +26,7 @@ public class SignatureManagement {
     private final DocumentService documentService;
     private final UserService userService;
     private SMTPServerHelper smtpServerHelper;
+    private EmailTemplateService emailTemplateService;
 
     /**
      * constructor of Signature management.
@@ -35,13 +35,13 @@ public class SignatureManagement {
      * @param givenUserService userservice
      */
     @Autowired
-    public SignatureManagement(SMTPServerHelper smtpServerHelper,
-                               final DocumentService givenDocumentService, final UserService givenUserService) {
+    public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
+                               final UserService givenUserService, final EmailTemplateService emailTemplateService) {
 
         this.smtpServerHelper = smtpServerHelper;
-
         documentService = givenDocumentService;
         userService = givenUserService;
+        this.emailTemplateService = emailTemplateService;
     }
 
     /**
@@ -54,7 +54,7 @@ public class SignatureManagement {
      */
     public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
                                                      final SignatureType signatureType)
-                    throws MessageGenerationException {
+        throws MessageGenerationException, TemplateNameNotFoundException {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
@@ -181,7 +181,7 @@ public class SignatureManagement {
 
     private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
                                                       final SignatureType signatureType)
-                    throws MessageGenerationException {
+        throws MessageGenerationException, TemplateNameNotFoundException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
@@ -190,10 +190,24 @@ public class SignatureManagement {
             checkIfClosed(document, signatories, response, currentReader);
             Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
+                User owner = userService.getUser(savedDocument.getOwner());
 
-                smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
+                EmailTemplate template = emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+                TemplateDataContainer container = new TemplateDataContainer();
+                container.setFirstNameReciever(savedDocument.getCurrentSignatory().getUser().getFirstname());
+                container.setLastNameReciever(savedDocument.getCurrentSignatory().getUser().getLastname());
+                container.setFirstNameOwner(owner.getFirstname());
+                container.setLastNameOwner(owner.getLastname());
+                container.setDocumentTitle(document.getDocumentTitle());
+                // TODO find out envelope container.setEnvelopeName(envelope.getName());
+                container.setEndDate(document.getEndDate().toString());
+                //TODO Link to documentview
+                container.setLink("http://localhost:8080/de/link/to/document/view");
+                smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getUser().getEmail(), template,
+                    container);
+                /*smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getUser().getUsername(),
                     userService.getUser(savedDocument.getOwner()),
-                    savedDocument.getCurrentSignatory().getUser().getLastname(), document);
+                    savedDocument.getCurrentSignatory().getUser().getLastname(), document);*/
             }
 
             response.setStatus(STATUS_CODE_OK);

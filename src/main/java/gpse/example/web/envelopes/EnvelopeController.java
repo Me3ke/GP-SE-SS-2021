@@ -111,27 +111,49 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService);
+            //FirstNameReciever, LastNameReciever, FirstNameOwner, LastNameOwner, DocumentTitle, Link
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
+                    setupUserInvitation(document.getSignatories().get(i).getUser(),
+                        userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
+                    /*smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
                         userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document);
+                        document.getSignatories().get(i).getUser().getLastname(), document);*/
                 }
             } else {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                setupUserInvitation(document.getCurrentSignatory().getUser(),
+                    userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
+                /*smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
                     userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
+                    document.getCurrentSignatory().getUser().getLastname(), document);*/
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
-            | MessageGenerationException e) {
+            | MessageGenerationException | TemplateNameNotFoundException e) {
             response.setStatus(INTERNAL_ERROR);
             response.setMessage("The document could not be uploaded.");
             return response;
         }
+    }
+
+    private void setupUserInvitation (User signatory, User owner, Document document, Envelope envelope)
+        throws TemplateNameNotFoundException, MessageGenerationException {
+
+        EmailTemplate template = emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameReciever(signatory.getFirstname());
+        container.setLastNameReciever(signatory.getLastname());
+        container.setFirstNameOwner(owner.getFirstname());
+        container.setLastNameOwner(owner.getLastname());
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setEnvelopeName(envelope.getName());
+        container.setEndDate(document.getEndDate().toString());
+        //TODO Link to documentview
+        container.setLink("http://localhost:8080/de/link/to/document/view");
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container);
     }
 
     /**
@@ -267,8 +289,7 @@ public class EnvelopeController {
         try {
             EmailTemplate template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
             smtpServerHelper.sendTemplatedEmail("jhaschke@techfak.de", template, container);
-        } catch (MessageGenerationException | InvocationTargetException | MessagingException
-            | TemplateNameNotFoundException e) {
+        } catch (MessageGenerationException | TemplateNameNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -1,7 +1,6 @@
 package gpse.example.domain.users;
 
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.util.email.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailTemplateService emailTemplateService;
 
     /**
      * the smtpServerHelper Service for sending emails.
@@ -91,9 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(final User user) throws MessageGenerationException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void signUpUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException{
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         securitySettingsRepository.save(user.getSecuritySettings());
         final User createdUser = userRepository.save(user);
@@ -113,9 +117,19 @@ public class UserServiceImpl implements UserService {
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException {
-        smtpServerHelper.sendRegistrationEmail(user,
-            "http://localhost:8080/de/register/confirm/" + token);
+
+    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException,
+            TemplateNameNotFoundException {
+
+        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ConfirmationTemplate");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameReciever(user.getFirstname());
+        container.setLastNameReciever(user.getLastname());
+        container.setLink("http://localhost:8080/de/register/confirm/" + token);
+        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container);
+
+      /*  smtpServerHelper.sendRegistrationEmail(user,
+            "http://localhost:8080/de/register/confirm/" + token);*/
     }
 
     @Override
@@ -127,11 +141,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void infoNewExtUser(final User user) throws MessageGenerationException  {
+    public void infoNewExtUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
        final List<User> userList = getUsers();
-        for (final User value : userList) {
-            if (value.getRoles().contains("ROLE_ADMIN")) {
-                smtpServerHelper.sendValidationInfo(value, user.getEmail());
+        for (final User admin : userList) {
+            if (admin.getRoles().contains("ROLE_ADMIN")) {
+                EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
+                TemplateDataContainer container = new TemplateDataContainer();
+                container.setFirstNameReciever(admin.getFirstname());
+                container.setLastNameReciever(admin.getLastname());
+                container.setFirstNameOwner(user.getFirstname());
+                container.setLastNameOwner(user.getLastname());
+                container.setRequestingEmail(user.getEmail());
+                container.setLink("http://localhost:8080/de/admin/settings");
+                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container);
+                //smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;
                 //optional, without return -> notify all admins.
             }
