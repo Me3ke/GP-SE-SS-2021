@@ -17,7 +17,7 @@ public class DocumentPutRequest {
     private String endDate;
     private boolean orderRelevant;
     private String lastModified;
-    private long emailTemplateId = 0;
+    private long emailTemplateId;
 
     public String getLastModified() {
         return lastModified;
@@ -76,6 +76,7 @@ public class DocumentPutRequest {
     }
 
     public long getEmailTemplateId() {
+        this.emailTemplateId = 0;
         return emailTemplateId;
     }
 

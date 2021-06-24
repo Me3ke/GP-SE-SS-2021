@@ -100,8 +100,8 @@ public class InitializeDatabase implements InitializingBean {
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12312,
-                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");
+           /* final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12312,
+                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");*/
             final User user = new User(USERNAME,
                 "Hans",
                 "Schneider", PASSWORD);
@@ -113,8 +113,6 @@ public class InitializeDatabase implements InitializingBean {
         try {
             userService.getUser(ADMINNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12312,
-                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
             final User user = new User(ADMINNAME,
                 "Ruediger",
                 "Spieler", PASSWORD);
@@ -122,7 +120,8 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
             user.setAdminValidated(true);
-            user.setPersonalData(personalData);
+            user.setPersonalData(new PersonalData(BERLINER_STRASSE, 3, 12312,
+                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145"));
             userService.saveUser(user);
         }
         saveEmailTemplate(BasicHtmlTemplates.ADMIN_VALIDATION_TEMPLATE,

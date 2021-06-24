@@ -36,7 +36,7 @@ public class SMTPServerHelper {
             message.setupByTemplate(template, dataContainer);
             mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
         } catch (InvocationTargetException | MessagingException exc) {
-            throw new MessageGenerationException(message.getMessageID());
+            throw new MessageGenerationException(message.getMessageID(), exc);
         }
     }
 
