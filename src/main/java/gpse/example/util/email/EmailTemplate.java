@@ -27,7 +27,7 @@ public class EmailTemplate {
     @Column
     private long templateID;
 
-    @Column
+    @Lob
     private String htmlTemplateBody;
 
     @Column

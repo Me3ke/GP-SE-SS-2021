@@ -7,10 +7,7 @@ import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.EmailTemplate;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.SMTPServerHelper;
-import gpse.example.util.email.TemplateDataContainer;
+import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +48,8 @@ public class EnvelopeController {
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
+    @Autowired
+    private EmailTemplateService emailTemplateService;
     /**
      * The default constructor for an envelope Controller.
      *
@@ -258,28 +257,18 @@ public class EnvelopeController {
      */
     @GetMapping("/testEmail")
     public void test() {
-        String text = "<!DOCTYPE html>\n"
-            + "<html lang = \"de\">\n"
-            + NEW_LINE
-            + "\t<head>\n"
-            + NEW_LINE
-            + "\t\t<meta charset = \"utf8\">\n"
-            + "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" >\n"
-            + "  </head>\n"
-            + NEW_LINE
-            + "  <body>\n"
-            + "    <h1>Einladung!</h1>\n"
-            + "    <p>Ich lade dich [LastNameReciever], Signieren von [LastNameReciever] ein</p>\n"
-            + "  </body>";
-        EmailTemplate template = new EmailTemplate();
-        template.setHtmlTemplateBody(text);
-        template.setSubject("Test");
+
         TemplateDataContainer container = new TemplateDataContainer();
-        container.setLastNameReciever("haschke");
+        container.setLastNameOwner("Haschke");
+        container.setFirstNameOwner("Jonas");
+        container.setLink("http://localhost:8080/de/landing");
         container.setDocumentTitle("TestDocument");
+
         try {
+            EmailTemplate template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
             smtpServerHelper.sendTemplatedEmail("jhaschke@techfak.de", template, container);
-        } catch (MessageGenerationException | InvocationTargetException | MessagingException e) {
+        } catch (MessageGenerationException | InvocationTargetException | MessagingException
+            | TemplateNameNotFoundException e) {
             e.printStackTrace();
         }
     }
