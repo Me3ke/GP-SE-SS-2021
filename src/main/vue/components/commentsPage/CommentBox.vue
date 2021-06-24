@@ -6,8 +6,8 @@
             <div class="comment-container">
                 <div class="action-text justify-content-between" style="display:flex;">
                     <div>
-                        {{ comment.fromName }}
-                        <b-badge v-if="comment.fromMail === loggedIn">{{ $t('CommentsPage.owner') }}</b-badge>
+                        {{ comment.authorName }}
+                        <b-badge v-if="comment.authorID === loggedIn">{{ $t('CommentsPage.owner') }}</b-badge>
                     </div>
                     {{ comment.date }}
                 </div>

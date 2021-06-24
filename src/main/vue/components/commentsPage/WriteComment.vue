@@ -1,5 +1,16 @@
 <template>
     <div>
+        <!-- Error Messages -->
+        <b-alert :show="showError" dismissible
+                 @dismissed="showError = false"
+                 style="margin-bottom: 1em">
+            <span>
+                {{ $t('CommentsPage.serverErrorOne') }}
+            </span>
+            <span>
+                {{ $t('CommentsPage.serverErrorTwo') }}
+            </span>
+        </b-alert>
 
         <!-- Write area -->
         <div style="display: flex">
@@ -21,7 +32,7 @@
                 <span class="action-text" style="margin-left: 0.3em">{{ $t('CommentsPage.cancel') }}</span>
             </div>
             <!-- Send -->
-            <div class="option">
+            <div @click="postComment()" class="option">
                 <b-icon icon="reply-fill" class="my-icon" style="margin-left: 1em"></b-icon>
                 <span class="action-text" style="margin-left: 0.3em">{{ $t('CommentsPage.send') }}</span>
             </div>
@@ -32,13 +43,22 @@
 <script>
 import NameBubble from "@/main/vue/components/commentsPage/NameBubble";
 import {mapGetters} from "vuex";
+import _ from "lodash";
 
 export default {
     name: "WriteComment",
     components: {NameBubble},
+    props: {
+        commentId: {
+            type: Number,
+            required: false,
+            default: -1
+        }
+    },
     data() {
         return {
-            comment: ''
+            comment: '',
+            showError: false
         }
     },
     mounted() {
@@ -48,13 +68,47 @@ export default {
         cancel() {
             this.comment = ''
             this.$emit('close')
+        },
+        async postComment() {
+            // checking if user put in something
+            if (this.comment !== '') {
+
+                // checking if it is a new comment or an answer
+                if (this.commentId === -1) {
+                    await this.$store.dispatch("comments/postComment", {
+                        docId: this.$route.params.docId,
+                        content: this.comment
+                    })
+                } else {
+                    await this.$store.dispatch("comments/postAnswers", {
+                        docId: this.$route.params.docId,
+                        commentId: this.commentId,
+                        content: this.comment
+                    })
+                }
+
+                // updating comments in store
+                await this.$store.dispatch('comments/fetchComments', this.$route.params.docId)
+
+                // closing if it's used as an answer
+                if (!this.hasError) {
+                    this.$emit('close')
+                    this.comment = ''
+                } else {
+                    this.showError = true
+                }
+            }
         }
-        // TODO: add reply method via api , also emit close then
     },
     computed: {
         ...mapGetters({
-            user: 'getUser'
-        })
+            user: 'getUser',
+            postErrorComment: 'comments/getPostCommentError',
+            postErrorAnswer: 'comments/getAnswerCommentError'
+        }),
+        hasError() {
+            return !_.isEmpty(this.postErrorAnswer) || !_.isEmpty(this.postErrorComment);
+        }
     }
 }
 </script>

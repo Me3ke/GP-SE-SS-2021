@@ -32,6 +32,7 @@
 
                     <!-- Write reply-->
                     <WriteComment v-if="reply[comment.commentID]" style="margin-bottom: 1em"
+                                  :commentId="comment.commentID"
                                   @close="closeReply(comment.commentID)"></WriteComment>
 
                     <CommentBox v-for="answer in comment.answers" :key="answer.answerID"

@@ -1,75 +1,74 @@
+import commentAPI from "@/main/vue/api/commentsAPI";
+
 export const namespaced = true
 
 export const state = {
     public: true,
-    comments: [
-        {
-            commentID: 1,
-            date: '17.06.2021',
-            fromMail: 'Hans.Schneide.test@gmail.com',
-            fromName: 'Hans Schneider',
-            content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
-            answers: [
-                {
-                    answerID: 1,
-                    date: '18.06.2021',
-                    fromMail: 'Ruediger.Spieler@gmail.com',
-                    fromName: 'Ruediger Spieler',
-                    content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et",
-                },
-                {
-                    answerID: 2,
-                    date: '20.06.2021',
-                    fromMail: 'Ruediger.Spieler@mail.com',
-                    fromName: 'Ruediger Spieler',
-                    content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et",
-                }]
-        },
-        {
-            commentID: 2,
-            date: '20.06.2021',
-            fromMail: 'Hans.Schneider.test@gmail.com',
-            fromName: 'Hans Schneider',
-            content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
-            answers: []
-        },
-        {
-            commentID: 3,
-            date: '20.06.2021',
-            fromMail: 'Hans.Schneider.test@gmail.com',
-            fromName: 'Hans Schneider',
-            content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-            answers: []
-        },
-        {
-            commentID: 4,
-            date: '20.06.2021',
-            fromMail: 'Hans.Schneider.test@gmail.com',
-            fromName: 'Hans Schneider',
-            content: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-            answers: [{
-                answerID: 3,
-                date: '18.06.2021',
-                fromMail: 'Ruediger.Spieler@gmail.com',
-                fromName: 'Ruediger Spieler',
-                content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et",
-            },
-                {
-                    answerID: 4,
-                    date: '20.06.2021',
-                    fromMail: 'Ruediger.Spieler@mail.com',
-                    fromName: 'Ruediger Spieler',
-                    content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et"
-                }]
-        }
-    ]
-
-
+    comments: {},
+    errorFetchComments: {},
+    answerResponse: {},
+    errorAnswerResponse: {},
+    commentResponse: {},
+    errorCommentResponse: {}
 }
 
-export const mutations = {}
+export const mutations = {
+    // sets comments-array
+    SET_COMMENTS(state, comments) {
+        state.comments = comments
+    },
+    SET_POST_ANSWER_RESPONSE(state, response) {
+        state.answerResponse = response
+    },
+    SET_POST_COMMENT_RESPONSE(state, response) {
+        state.commentResponse = response
+    },
 
-export const actions = {}
+    SET_ERROR_FETCH_COMMENTS(state, error) {
+        state.errorFetchComments = error
+    },
+
+    ERROR_SET_POST_ANSWER_RESPONSE(state, error) {
+        state.errorAnswerResponse = error
+    },
+
+    ERROR_SET_POST_COMMENT_RESPONSE(state, error) {
+        state.errorCommentResponse = error
+    }
+}
+
+export const actions = {
+
+    // fetches comments for document with id documentId
+    fetchComments({commit}, docId) {
+        return commentAPI.getComments(docId).then(response => {
+            commit('SET_COMMENTS', response.data)
+            commit('SET_ERROR_FETCH_COMMENTS', {})
+        }).catch(error => {
+            commit('SET_ERROR_FETCH_COMMENTS', error)
+        })
+    },
+
+    // posts answer to comment with id commentId
+    postAnswers({commit}, {docId, commentId, content}) {
+        return commentAPI.answerComment(docId, commentId, content).then(response => {
+            commit('SET_POST_ANSWER_RESPONSE', response.data)
+            commit('ERROR_SET_POST_ANSWER_RESPONSE', {})
+        }).catch(error => {
+            commit('ERROR_SET_POST_ANSWER_RESPONSE', error)
+        })
+    },
+
+    // posts comment on document with id docId
+    postComment({commit}, {docId, content}) {
+        return commentAPI.writeComment(docId, content).then(response => {
+            commit('SET_POST_COMMENT_RESPONSE', response.data)
+            commit('ERROR_SET_POST_COMMENT_RESPONSE', {})
+        }).catch(error => {
+            commit('ERROR_SET_POST_COMMENT_RESPONSE', error)
+        })
+    },
+}
 
 export const getters = {
     getPublic: (state) => {
@@ -77,10 +76,16 @@ export const getters = {
     },
     //return comments, sorted by oldest first
     getCommentsOldest: (state) => {
-        return state.comments
+        return state.comments.comments
     },
     // returns comments, sorted by newest first (answers are still oldest first to avoid confusions)
     getCommentsNewest: (state) => {
-        return [].concat(state.comments).reverse();
+        return [].concat(state.comments.comments).reverse();
+    },
+    getPostCommentError: (state) => {
+        return state.errorCommentResponse
+    },
+    getAnswerCommentError: (state) => {
+        return state.errorAnswerResponse
     }
 }

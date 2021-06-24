@@ -504,6 +504,8 @@
         "noAnswers": "No replies",
         "reply": "Reply",
         "owner": "Owner",
-        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments."
+        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments.",
+        "serverErrorOne": "Your comment could not be posted.",
+        "serverErrorTwo": "Please try again later or talk to an administrator."
     }
 }

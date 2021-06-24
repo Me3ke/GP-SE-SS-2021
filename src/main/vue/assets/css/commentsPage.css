@@ -145,6 +145,13 @@
     border-radius: 0.2em;
 }
 
+/* Alert */
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
+
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) {
     .dropdown-menu > li {

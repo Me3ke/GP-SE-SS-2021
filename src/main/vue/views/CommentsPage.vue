@@ -6,14 +6,14 @@
         <BaseHeading name="CommentsPage.title"></BaseHeading>
 
         <!-- Restricted Comments -->
-        <div v-if="!isPublic && !isOwner" class="container-fluid bigSpan" id="hint">
+        <div v-if="!isPublic && !isOwner && loaded" class="container-fluid bigSpan" id="hint">
             <span> {{ $t('CommentsPage.hint') }} </span>
         </div>
 
         <!-- Comment Number and Sorting -->
-        <div class="container-fluid" style="display: flex">
+        <div class="container-fluid" style="display: flex" v-if="loaded">
             <span class="bigSpan" v-if=" this.comments.length === 0"> {{ $t('CommentsPage.comment') }}</span>
-            <span class="bigSpan" v-else> {{ commentsAmount }} {{ $t('CommentsPage.comments') }}</span>
+            <span class="bigSpan" v-else> {{ commentsAmount }}  {{ $t('CommentsPage.comments') }}</span>
 
             <b-dropdown class="my-dropdown-menu my-dropdown-toggle" style="margin-left: 2em" no-caret>
                 <template #button-content>
@@ -41,12 +41,12 @@
 
 
         <!-- No comments -->
-        <div v-if="comments.length === 0" class="container-fluid bigSpan">
+        <div v-if="comments.length === 0 && loaded" class="container-fluid bigSpan">
             <span> {{ $t('CommentsPage.empty') }} </span>
         </div>
 
         <!-- All comments -->
-        <AllCommentsBox :comments="comments"></AllCommentsBox>
+        <AllCommentsBox v-if="loaded" :comments="comments"></AllCommentsBox>
 
 
         <Footer></Footer>
@@ -74,13 +74,16 @@ export default {
     data() {
         return {
             sortNew: true,
+            loaded: false
         }
     },
-    mounted() {
-        this.$store.dispatch('document/fetchDocument', {
+    async mounted() {
+        await this.$store.dispatch('document/fetchDocument', {
             envId: this.$route.params.envId,
             docId: this.$route.params.docId
         })
+        await this.$store.dispatch('comments/fetchComments', this.$route.params.docId)
+        this.loaded = true
     },
     computed: {
         ...mapGetters({
@@ -101,13 +104,18 @@ export default {
 
         // returns the number of comments (including comments that are answers)
         commentsAmount() {
-            let answerAmount = 0
+            if (this.loaded) {
+                let answerAmount = 0
 
-            for (let i = 0; i < this.comments.length; i++) {
-                answerAmount += this.comments[i].answers.length
+                for (let i = 0; i < this.comments.length; i++) {
+                    answerAmount += this.comments[i].answers.length
+                }
+
+                return this.comments.length + answerAmount
+            } else {
+                return -1
             }
 
-            return this.comments.length + answerAmount
         },
 
         // returns if user owner of current document
