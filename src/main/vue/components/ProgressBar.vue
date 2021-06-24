@@ -10,20 +10,20 @@
             :documentProgress -> progress bar for each documents // needs the documentProgressArray (state) with the id -1 because of the iD
         --->
 
-
             <b-progress :max="max" :id="`popover-1-${docId}`">
                 <b-progress-bar
-                    :value="docPercentage"
+                    :value="typeof env === 'undefined' ? docPercentage : 20"
                     variant="success"
-                    :label="docPercentage + '%'"
+                    :label="typeof env === 'undefined' ? docPercentage + '%' : envPercentage"
                 ></b-progress-bar>
             </b-progress>
 
 
-        <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED'" id="collapseExample" >
+        <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED' && typeof this.env === 'undefined'" id="collapseExample" >
 
                 <b-row>
-                    <b-col v-if="signatories.length > 0">Need to Sign
+                    <b-col v-if="signatories.length > 0">
+                        Need to Sign
                         <b-col>
                             <b-container v-for="(signatory,index) in needToSign" :key="index">
                                 <b-col>{{signatory.user.email}}</b-col>
@@ -65,6 +65,34 @@
 
         </b-container>
 
+        <b-container v-if="isOpen && env">
+            <b-row>
+                <b-col> Not Finished
+                    <b-col>
+                        <b-container v-for="(documentTitle, index) in notFinishedEnvelope" :key="index">
+                            <b-col>
+                                {{ documentTitle }}
+                            </b-col>
+                        </b-container>
+                    </b-col>
+
+                    <b-col style="margin-top: 1em">
+                        Finished
+
+                        <b-col>
+                            <b-container v-for="(documentTitle, index) in finishedEnvelope" :key="index">
+                                <b-col>
+                                    {{ documentTitle }}
+                                </b-col>
+                            </b-container>
+                        </b-col>
+                    </b-col>
+
+                </b-col>
+            </b-row>
+
+        </b-container>
+
 
 
 
@@ -99,7 +127,7 @@
 
 export default {
     name: "ProgressBar",
-    props: ['documentProgress', 'docId', 'state'],
+    props: ['documentProgress', 'docId', 'state', 'env', 'envelope'],
 
     data() {
         return {
@@ -124,13 +152,43 @@ export default {
         },
 
         needToSign() {
-            //console.log(this.compareArrays(this.signatories, this.alreadySigned))
             return this.compareArrays(this.signatories, this.alreadySigned)
 
         },
 
         needToRead() {
             return this.readers.filter(x => !this.alreadyRead.includes(x))
+        },
+
+        finishedEnvelope() {
+           const finishedDocuments = []
+
+            this.env.forEach(document => {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 1.00) {
+                    for (let a = 0; a < this.envelope.documents.length; a++) {
+                        if (this.envelope.documents[a].id === document.docId) {
+                            finishedDocuments.push(this.envelope.documents[a].title)
+                        }
+                    }
+                }
+            })
+            return finishedDocuments
+        },
+
+        notFinishedEnvelope() {
+            const notFinished = []
+            this.env.forEach(document => {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 1.00) {
+                    for (let a = 0; a < this.envelope.documents.length; a++) {
+                        if(this.envelope.documents[a].id === document.docId) {
+                            notFinished.push(this.envelope.documents[a].title)
+
+                        }
+
+                    }
+                }
+            })
+            return notFinished
         },
 
 
@@ -140,10 +198,13 @@ export default {
             let array = [];
 
             (this.env.forEach(i => {
-                array.push(((i.alreadySign.length / i.sign.length) * 100).toFixed(2))
+                array.push((((i.data.alreadySigned.length + i.data.alreadyRead.length) / (i.data.signatories.length + i.data.readers.length)) * 100).toFixed(2))
             }))
-            return ((array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.length * 100)) * 100)
+            let percentage = ((array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.length * 100)) * 100)
                 .toFixed(2)
+
+
+            return percentage !== 'NaN' && percentage !== '0.00'  ? percentage + '%' : ''
 
         },
 
