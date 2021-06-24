@@ -21,16 +21,22 @@ public class Answer {
     private String authorID;
 
     @Column
+    private String authorName;
+
+    @Column
     private LocalDateTime creationDate;
 
     /**
      * The constructor responsible for creating an answer object.
-     * @param text the text displayed in the answer
-     * @param authorID the author who wrote the answer
+     *
+     * @param text       the text displayed in the answer
+     * @param authorID   the id of the author who wrote the answer
+     * @param authorName the name of the author who wrote the answer
      */
-    public Answer(String text, String authorID) {
+    public Answer(String text, String authorID, String authorName) {
         this.text = text;
         this.authorID = authorID;
+        this.authorName = authorName;
         this.creationDate = LocalDateTime.now();
     }
 
@@ -44,6 +50,10 @@ public class Answer {
 
     public String getAuthorID() {
         return authorID;
+    }
+
+    public String getAuthorName() {
+        return authorName;
     }
 
     public LocalDateTime getCreationDate() {

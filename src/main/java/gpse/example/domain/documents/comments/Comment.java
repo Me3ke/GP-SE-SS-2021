@@ -11,46 +11,51 @@ import java.util.List;
 @Entity
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private long id;
-
-    @Lob
-    private String text;
-
-    @Column
-    private String authorID;
-
-    @Column
-    private LocalDateTime creationDate;
-
     @OneToMany(
             orphanRemoval = true,
             cascade = CascadeType.ALL)
-    private List<Answer> answerList = new ArrayList<>();
+    private final List<Answer> answerList = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private long commentID;
+    @Column
+    private String authorID;
+    @Lob
+    private String content;
+
+    @Column
+    private LocalDateTime creationDate;
+    @Column
+    private String authorName;
 
     /**
      * The constructor responsible for creating a comment object.
      *
-     * @param text     the text displayed in the comment
-     * @param authorID the author who wrote the comment
+     * @param content    the text displayed in the comment
+     * @param authorID   the id of the author who wrote the comment
+     * @param authorName the name of author who wrote the comment
      */
-    public Comment(String text, String authorID) {
-        this.text = text;
+    public Comment(String content, String authorID, String authorName) {
+        this.content = content;
         this.authorID = authorID;
+        this.authorName = authorName;
         this.creationDate = LocalDateTime.now();
     }
 
     protected Comment() {
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
     public String getAuthorID() {
         return authorID;
+    }
+
+    public String getAuthorName() {
+        return authorName;
     }
 
     public LocalDateTime getCreationDate() {
@@ -59,5 +64,13 @@ public class Comment {
 
     public List<Answer> getAnswerList() {
         return answerList;
+    }
+
+    public long getCommentID() {
+        return commentID;
+    }
+
+    public void addAnswer(Answer answer) {
+        answerList.add(answer);
     }
 }

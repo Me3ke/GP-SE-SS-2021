@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The model for the document responsible for initialising the necessary details about the document file.
@@ -417,6 +418,26 @@ public class Document {
             }
         }
         return advancedSignatories;
+    }
+
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+    }
+
+    /**
+     * the method searching for a specific comment in the list.
+     *
+     * @param commentID the ID of the comment the method is looking for
+     * @return the comment if found, otherwise an empty object
+     */
+    public Optional<Comment> searchComment(long commentID) {
+        for (Comment comment : commentList
+        ) {
+            if (comment.getCommentID() == commentID) {
+                return Optional.of(comment);
+            }
+        }
+        return Optional.empty();
     }
 
     public boolean isOrderRelevant() {
