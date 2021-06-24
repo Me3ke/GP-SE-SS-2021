@@ -101,7 +101,7 @@ export default {
             }
         },
         getDarkSource() {
-            if (this.logoLightType === 'svg') {
+            if (this.logoDarkType === 'svg') {
                 return 'data:image/svg+xml;base64,' + this.logoDark
             } else {
                 return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark

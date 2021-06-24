@@ -157,13 +157,13 @@ export const getters = {
         return state.logos.logo
     },
     getLightLogoType: (state) => {
-        return state.logos.logoTyp
+        return state.logos.logoType
     },
     getDarkLogo: (state) => {
         return state.logos.logoDark
     },
     getDarkLogoType: (state) => {
-        return state.logos.logoDarkTyp
+        return state.logos.logoDarkType
     },
     getErrorPutLogoResponse: (state) => {
         return state.errorPutLogosResponse

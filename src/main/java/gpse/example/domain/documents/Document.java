@@ -96,7 +96,7 @@ public class Document {
         this.signatories = signatories;
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
              /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
@@ -120,16 +120,11 @@ public class Document {
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
             if (signatories.get(i).getUser().getEmail().equals(user)) {
-                userIsSignatory = true;
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
             }
-        }
-        if (!userIsSignatory) {
-            System.out.println("The user is not a signatory for this document");
         }
     }
 
@@ -448,7 +443,7 @@ public class Document {
         this.state = documentState;
     }
 
-    public void setSignatories(List<Signatory> signatories) {
+    public void setSignatories(final List<Signatory> signatories) {
         this.signatories = signatories;
     }
 

@@ -34,6 +34,10 @@ public class AdvancedSignature {
         this.signature = signature.clone();
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getUserEmail() {
         return userEmail;
     }
