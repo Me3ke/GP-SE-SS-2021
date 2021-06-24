@@ -60,6 +60,8 @@ public class InitializeDatabase implements InitializingBean {
         "#501515", "#363f48", COLOR_FIVE};
     private static final String ELSA_SIGNATURE_INVITATION_SUBJECT =
         "ELSA - Signatureinladung/ELSA - signature invitation";
+    private static final int THREEEE = 3;
+    private static final int POST_CODE = 12312;
     private final UserService userService;
     private final DocumentService documentService;
     private final EnvelopeService envelopeService;
@@ -120,7 +122,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
             user.setAdminValidated(true);
-            user.setPersonalData(new PersonalData(BERLINER_STRASSE, 3, 12312,
+            user.setPersonalData(new PersonalData(BERLINER_STRASSE, THREEEE, POST_CODE,
                 LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145"));
             userService.saveUser(user);
         }
