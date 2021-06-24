@@ -12,6 +12,9 @@ public class CommentPostRequest {
         this.content = content;
     }
 
+    public CommentPostRequest() {
+    }
+
     public String getContent() {
         return content;
     }

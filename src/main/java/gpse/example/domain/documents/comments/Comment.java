@@ -14,7 +14,7 @@ public class Comment {
     @OneToMany(
             orphanRemoval = true,
             cascade = CascadeType.ALL)
-    private final List<Answer> answerList = new ArrayList<>();
+    private final List<Answer> answers = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -62,8 +62,8 @@ public class Comment {
         return creationDate;
     }
 
-    public List<Answer> getAnswerList() {
-        return answerList;
+    public List<Answer> getAnswers() {
+        return answers;
     }
 
     public long getCommentID() {
@@ -71,6 +71,6 @@ public class Comment {
     }
 
     public void addAnswer(Answer answer) {
-        answerList.add(answer);
+        answers.add(answer);
     }
 }

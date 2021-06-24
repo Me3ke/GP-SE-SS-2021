@@ -15,7 +15,7 @@ public class Answer {
     private long id;
 
     @Lob
-    private String text;
+    private String content;
 
     @Column
     private String authorID;
@@ -29,12 +29,12 @@ public class Answer {
     /**
      * The constructor responsible for creating an answer object.
      *
-     * @param text       the text displayed in the answer
+     * @param content       the text displayed in the answer
      * @param authorID   the id of the author who wrote the answer
      * @param authorName the name of the author who wrote the answer
      */
-    public Answer(String text, String authorID, String authorName) {
-        this.text = text;
+    public Answer(String content, String authorID, String authorName) {
+        this.content = content;
         this.authorID = authorID;
         this.authorName = authorName;
         this.creationDate = LocalDateTime.now();
@@ -44,8 +44,8 @@ public class Answer {
 
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
     public String getAuthorID() {
