@@ -33,6 +33,7 @@ public class SignatureManagement {
      * @param smtpServerHelper smtpServerHelper
      * @param givenDocumentService documentservice
      * @param givenUserService userservice
+     * @param emailTemplateService used to find a specified template by name, will be removed when the user templates could be used
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,

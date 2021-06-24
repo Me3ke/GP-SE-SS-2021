@@ -15,9 +15,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -139,7 +137,7 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation (User signatory, User owner, Document document, Envelope envelope)
+    private void setupUserInvitation(User signatory, User owner, Document document, Envelope envelope)
         throws TemplateNameNotFoundException, MessageGenerationException {
 
         EmailTemplate template = emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");

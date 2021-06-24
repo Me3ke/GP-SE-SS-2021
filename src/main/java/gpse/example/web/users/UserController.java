@@ -4,9 +4,7 @@ import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.MessageService;
-import gpse.example.util.email.TemplateNameNotFoundException;
+import gpse.example.util.email.*;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,7 @@ public class UserController {
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
+    private final EmailTemplateService emailTemplateService;
     private final StringToKeyConverter stringToKeyConverter;
 
 
@@ -47,13 +46,15 @@ public class UserController {
      * @param service                 Userservice Object
      * @param confService             ConfirmationTokenService object
      * @param messageService          the messageService to access the message table
+     * @param emailTemplateService    used to find the basic template by name
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final MessageService messageService) {
+                          final MessageService messageService, final EmailTemplateService emailTemplateService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
+        this.emailTemplateService = emailTemplateService;
         stringToKeyConverter = new StringToKeyConverter();
     }
 
@@ -65,7 +66,7 @@ public class UserController {
      */
     @PostMapping("/newUser")
     public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) throws MessagingException,
-            InvocationTargetException {
+        InvocationTargetException, TemplateNameNotFoundException {
         final JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
@@ -83,6 +84,9 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 PersonalData personalData = signUpUser.generatePersonalData();
+                EmailTemplate standardTemplate =
+                    emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+                user.addEmailTemplate(standardTemplate);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);

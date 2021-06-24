@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException{
+    public void signUpUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -118,6 +116,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * Sending and configurate the confirmation template.
+     * @param user user to register
+     * @param token the confirmation token to verify email
+     * @throws MessageGenerationException thrown if the email message could not be generated
+     * @throws TemplateNameNotFoundException thrown if the email template dont exist.
+     */
     public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException,
             TemplateNameNotFoundException {
 

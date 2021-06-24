@@ -20,7 +20,8 @@ public interface UserService extends UserDetailsService {
                     PersonalData personalData, String... roles);
     List<User> getUsers();
     User getUser(final String username) throws UsernameNotFoundException;
-    void signUpUser(User user) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException, InvocationTargetException;
+    void signUpUser(User user) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException,
+        InvocationTargetException;
     void confirmUser(ConfirmationToken confirmationToken);
     void validateUser(User user);
     void infoNewExtUser(User user) throws MessageGenerationException, TemplateNameNotFoundException;
