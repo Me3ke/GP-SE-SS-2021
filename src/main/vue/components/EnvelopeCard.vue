@@ -9,10 +9,10 @@
                 <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
                     <div v-if="this.envelope.owner.email === this.$store.state.auth.username">
-                        <ProgressBar
+                        <EnvelopeProgressBar
                             :envelope="envelopeProgress(envelope.documents)"
                             :env="envelope"
-                        ></ProgressBar>
+                        ></EnvelopeProgressBar>
                     </div>
                 </div>
             </b-col>
@@ -28,12 +28,12 @@
 import settingsButton from "@/main/vue/components/envSettingsButton";
 import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
-import ProgressBar from "@/main/vue/components/ProgressBar";
 import {mapGetters} from "vuex";
+import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
 
 export default {
     name: "EnvelopeCard",
-    components: {ProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
+    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
     props: {
         envelope: Object
     },
@@ -51,7 +51,11 @@ export default {
 })
     },
 
+    beforeMount() {
+        //this.$store.dispatch('document/resetState')
 
+
+    },
     mounted() {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)
         for (let i = 0; i < this.envelope.documents.length; i++) {
@@ -59,7 +63,12 @@ export default {
                 this.advanced = true
             }
         }
+
+        this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
+            envelope: this.envelope
+        })
     },
+
     methods: {
 
         // checks if env needs advanced signature, if so 2FacAuth has to be done; otherwise go to env directly

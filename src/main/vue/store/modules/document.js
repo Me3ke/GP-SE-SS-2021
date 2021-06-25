@@ -21,7 +21,6 @@ export const state = {
 export const mutations = {
     // will sets the state to []
     RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state){
-        console.log('I am runnin')
         state.documentProgressArray = []
     },
 
@@ -51,8 +50,8 @@ export const mutations = {
     },
 
     SET_DOCUMENT_PROGRESS(state,progress) {
-        state.documentProgress = progress
-        //state.documentProgressArray.push(progress)
+        //state.documentProgress = progress
+        state.documentProgressArray.push(progress)
     },
     SET_DOCUMENT_PROGRESS_ARRAY(state,progress) {
         state.documentProgressArray.push(progress)
@@ -87,6 +86,7 @@ export const actions = {
 
     // for resetting the state DOCUMENT_PROGRESS_ARRAY
     resetState({commit}) {
+        console.log('i am runnin')
         commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
     },
 
@@ -137,6 +137,7 @@ export const actions = {
     },
 
     async documentProgress({commit}, {envId, docId}) {
+        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
         await documentAPI.getDocumentProgress(envId, docId).then((response) => {
             let data = response.data
             //let docProgress = {docId, data}
@@ -150,11 +151,9 @@ export const actions = {
         //console.log("SUCCESS")
     },
 
-     progressOfAllDocumentsInEnv({commit,state}, {envelope}) {
-         commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
+     progressOfAllDocumentsInEnv({commit}, {envelope}) {
+         //commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
 
-         console.log('End State (After Clearing) ',state.documentProgressArray)
-        console.log('envelope documents: ', envelope.documents)
          envelope.documents.forEach(document => {
              documentAPI.getDocumentProgress(envelope.id, document.id).then((response) => {
                  let data = response.data
@@ -167,12 +166,7 @@ export const actions = {
                  commit('SET_ERROR_DOCUMENT_PROGRESS', err)
 
              })
-
          })
-
-        console.log('')
-        console.log('------------------')
-
      }
 }
 
@@ -202,6 +196,9 @@ export const getters = {
 
     getDocumentProgressArrayByEnvelope: (state) => (documents) => {
         let envelopeProgress = []
+
+
+
         for(let i = 0; i < state.documentProgressArray.length; i++) {
             for(let j = 0; j < documents.length; j++) {
                 if(state.documentProgressArray[i].docId === documents[j].id) {
@@ -210,7 +207,12 @@ export const getters = {
                 }
             }
         }
-        return envelopeProgress
+
+        let uniq = {};
+        let withOutDup = envelopeProgress.filter(obj => !uniq[obj.docId] && (uniq[obj.docId] = true))
+        //envelopeProgress.filter((item, index) => envelopeProgress.i)
+
+        return withOutDup
     },
 
     getErrorGetDocumentProgress: (state) => {

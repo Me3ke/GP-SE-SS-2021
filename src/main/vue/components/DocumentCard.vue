@@ -91,7 +91,9 @@ export default {
 
     }*/
 
-
+    /*beforeMount() {
+        this.$store.dispatch('document/resetState')
+    },*/
     mounted() {
         this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,
