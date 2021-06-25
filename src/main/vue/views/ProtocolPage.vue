@@ -73,8 +73,6 @@ export default {
                 array[i] = chars.charCodeAt(i)
             }
 
-            this.pdfSrc = null
-
             return array
         },
         toggleDownload() {

@@ -100,9 +100,6 @@ export default {
             for (let i = 0; i < chars.length; i++) {
                 array[i] = chars.charCodeAt(i)
             }
-
-            this.pdfSrc = null
-
             return array
         },
         toggleOverflow() {
