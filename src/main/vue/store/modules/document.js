@@ -5,8 +5,6 @@ export const namespaced = true
 export const state = {
     documentInfo: {},
     errorGetDocumentInfo: {},
-    protocol: {},
-    errorGetProtocol: {},
     reviewResponse: {},
     errorReviewDocument: {},
     simpleSignResponse: {},
@@ -19,10 +17,6 @@ export const mutations = {
     // sets given document as state
     SET_DOCUMENT_INFO(state, doc) {
         state.documentInfo = doc
-    },
-    // sets given document as state
-    SET_PROTOCOL(state, pro) {
-        state.protocol = pro
     },
     // sets response of reviewing (statusCode + message)
     SET_REVIEW_RESPONSE(state, res) {
@@ -43,10 +37,6 @@ export const mutations = {
     // sets error of getDocument request
     SET_ERROR_GET_DOCUMENT_INFO(state, error) {
         state.errorGetDocumentInfo = error
-    },
-    // sets error of getDocument request
-    SET_ERROR_GET_PROTOCOL(state, error) {
-        state.errorGetProtocol = error
     },
     // sets error of reviewDocument request
     SET_ERROR_REVIEW_DOCUMENT(state, error) {
@@ -76,15 +66,6 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT_INFO', {})
         }).catch(error => {
             commit('SET_ERROR_GET_DOCUMENT_INFO', error)
-        })
-    },
-    // makes axios call to get protocol of document, either sets protocol (success) or error (error)
-    fetchProtocol({commit}, {docId}) {
-        return documentAPI.getProtocol(docId).then(response => {
-            commit('SET_PROTOCOL', response.data)
-            commit('SET_ERROR_GET_PROTOCOL', {})
-        }).catch(error => {
-            commit('SET_ERROR_GET_PROTOCOL', error)
         })
     },
     // makes axios call to review document, either sets reviewResponse (success) or error (error)
@@ -120,9 +101,6 @@ export const getters = {
     getDocumentInfo: (state) => {
         return state.documentInfo
     },
-    getProtocol: (state) => {
-        return state.protocol
-    },
     getReviewStatus: (state) => {
         return state.reviewResponse.status
     },
@@ -134,9 +112,6 @@ export const getters = {
     },
     getErrorGetDocumentInfo: (state) => {
         return state.errorGetDocumentInfo
-    },
-    getErrorGetProtocol: (state) => {
-        return state.errorGetProtocol
     },
     getErrorReviewDocument: (state) => {
         return state.errorReviewDocument
