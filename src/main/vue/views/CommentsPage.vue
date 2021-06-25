@@ -94,7 +94,7 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('document/fetchDocument', {
+        await this.$store.dispatch('document/fetchDocumentInfo', {
             envId: this.$route.params.envId,
             docId: this.$route.params.docId
         })
@@ -111,7 +111,7 @@ export default {
             commentsError: 'comments/getFetchCommentsError',
 
             isPublic: 'comments/getPublic',
-            document: 'document/getDocument'
+            document: 'document/getDocumentInfo'
         }),
 
         // gives back comments array depending on sorting option

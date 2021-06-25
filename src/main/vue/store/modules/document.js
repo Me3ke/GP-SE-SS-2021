@@ -3,8 +3,8 @@ import documentAPI from "@/main/vue/api/documentAPI";
 export const namespaced = true
 
 export const state = {
-    document: {},
-    errorGetDocument: {},
+    documentInfo: {},
+    errorGetDocumentInfo: {},
     protocol: {},
     errorGetProtocol: {},
     reviewResponse: {},
@@ -17,8 +17,8 @@ export const state = {
 
 export const mutations = {
     // sets given document as state
-    SET_DOCUMENT(state, doc) {
-        state.document = doc
+    SET_DOCUMENT_INFO(state, doc) {
+        state.documentInfo = doc
     },
     // sets given document as state
     SET_PROTOCOL(state, pro) {
@@ -41,8 +41,8 @@ export const mutations = {
         state.document = doc
     },
     // sets error of getDocument request
-    SET_ERROR_GET_DOCUMENT(state, error) {
-        state.errorGetDocument = error
+    SET_ERROR_GET_DOCUMENT_INFO(state, error) {
+        state.errorGetDocumentInfo = error
     },
     // sets error of getDocument request
     SET_ERROR_GET_PROTOCOL(state, error) {
@@ -64,12 +64,18 @@ export const mutations = {
 
 export const actions = {
     // makes axios call to get document, either sets document (success) or error (error)
-    fetchDocument({commit}, {envId, docId}) {
+    fetchDocumentInfo({commit}, {envId, docId}) {
         return documentAPI.getDocument(envId, docId).then(response => {
-            commit('SET_DOCUMENT', response.data)
-            commit('SET_ERROR_GET_DOCUMENT', {})
+            var info = {}
+            for (const key in response.data) {
+                if (key !== 'data' && Object.prototype.hasOwnProperty.call(response.data, key)) {
+                    info[key] = response.data[key]
+                }
+            }
+            commit('SET_DOCUMENT_INFO', info)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', {})
         }).catch(error => {
-            commit('SET_ERROR_GET_DOCUMENT', error)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
     },
     // makes axios call to get protocol of document, either sets protocol (success) or error (error)
@@ -111,8 +117,8 @@ export const actions = {
 }
 
 export const getters = {
-    getDocument: (state) => {
-        return state.document
+    getDocumentInfo: (state) => {
+        return state.documentInfo
     },
     getProtocol: (state) => {
         return state.protocol
@@ -126,8 +132,8 @@ export const getters = {
     getAdvancedSignStatus: (state) => {
         return state.advancedSignResponse.status
     },
-    getErrorGetDocument: (state) => {
-        return state.errorGetDocument
+    getErrorGetDocumentInfo: (state) => {
+        return state.errorGetDocumentInfo
     },
     getErrorGetProtocol: (state) => {
         return state.errorGetProtocol

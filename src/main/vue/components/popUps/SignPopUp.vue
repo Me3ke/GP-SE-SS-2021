@@ -280,7 +280,7 @@ export default {
             // everything went fine
             if (this.statusCodeSimple === 200) {
                 // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                 // goes to success page and toggles alert
                 this.page = 3
                 this.showAlertSign = false

@@ -258,7 +258,7 @@ export default {
             logoLightType: 'theme/getLightLogoType',
             logoDarkType: 'theme/getDarkLogoType',
 
-            document: 'document/getDocument'
+            document: 'document/getDocumentInfo'
         }),
         isOwner() {
             if (this.document.owner) {
