@@ -6,13 +6,15 @@
         <BaseHeading name="CommentsPage.title"></BaseHeading>
 
         <!-- Restricted Comments -->
-        <div v-if="!isPublic && !isOwner && loaded" class="container-fluid bigSpan" id="hint">
+        <div v-if="!isPublic && !isOwner && loaded && !hasError" class="container-fluid bigSpan" id="hint">
             <span> {{ $t('CommentsPage.hint') }} </span>
         </div>
 
         <!-- Comment Number and Sorting -->
         <div class="container-fluid" style="display: flex" v-if="loaded">
-            <span class="bigSpan" v-if=" this.comments.length === 0"> {{ $t('CommentsPage.comment') }}</span>
+            <span class="bigSpan" v-if=" comments.length === 1"> {{ commentsAmount }} {{
+                    $t('CommentsPage.comment')
+                }}</span>
             <span class="bigSpan" v-else> {{ commentsAmount }}  {{ $t('CommentsPage.comments') }}</span>
 
             <b-dropdown class="my-dropdown-menu my-dropdown-toggle" style="margin-left: 2em" no-caret>
@@ -39,15 +41,28 @@
             <WriteComment></WriteComment>
         </div>
 
-
-        <!-- No comments -->
-        <div v-if="comments.length === 0 && loaded" class="container-fluid bigSpan">
-            <span> {{ $t('CommentsPage.empty') }} </span>
+        <!-- Comments did not load? -->
+        <div v-if="hasError" class="container-fluid">
+            <b-alert :show="hasError"
+                     style="margin-bottom: 1em">
+                <div class="my-icon-small">
+                    {{ $t('CommentsPage.serverErrorThree') }}
+                </div>
+                <div class="my-icon-small">
+                    {{ $t('CommentsPage.serverErrorTwo') }}
+                </div>
+            </b-alert>
         </div>
 
-        <!-- All comments -->
-        <AllCommentsBox v-if="loaded" :comments="comments"></AllCommentsBox>
+        <div v-else>
+            <!-- No comments -->
+            <div v-if="comments.length === 0 && loaded" class="container-fluid bigSpan">
+                <span> {{ $t('CommentsPage.empty') }} </span>
+            </div>
 
+            <!-- All comments -->
+            <AllCommentsBox v-if="loaded" :comments="comments"></AllCommentsBox>
+        </div>
 
         <Footer></Footer>
 
@@ -61,6 +76,7 @@ import WriteComment from "@/main/vue/components/commentsPage/WriteComment";
 import AllCommentsBox from "@/main/vue/components/commentsPage/AllCommentsBox";
 
 import {mapGetters} from "vuex";
+import _ from "lodash";
 
 
 export default {
@@ -85,10 +101,15 @@ export default {
         await this.$store.dispatch('comments/fetchComments', this.$route.params.docId)
         this.loaded = true
     },
+    beforeDestroy() {
+        this.$store.dispatch('comments/resetComments')
+    },
     computed: {
         ...mapGetters({
             commentsOld: 'comments/getCommentsOldest',
             commentsNew: 'comments/getCommentsNewest',
+            commentsError: 'comments/getFetchCommentsError',
+
             isPublic: 'comments/getPublic',
             document: 'document/getDocument'
         }),
@@ -125,6 +146,10 @@ export default {
             }
             return false
         },
+
+        hasError() {
+            return !_.isEmpty(this.commentsError);
+        }
     }
 }
 </script>

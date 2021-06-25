@@ -4,12 +4,12 @@
         <b-alert :show="showError" dismissible
                  @dismissed="showError = false"
                  style="margin-bottom: 1em">
-            <span>
+            <div class="my-icon-small">
                 {{ $t('CommentsPage.serverErrorOne') }}
-            </span>
-            <span>
+            </div>
+            <div class="my-icon-small">
                 {{ $t('CommentsPage.serverErrorTwo') }}
-            </span>
+            </div>
         </b-alert>
 
         <!-- Write area -->

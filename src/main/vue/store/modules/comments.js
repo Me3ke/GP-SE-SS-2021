@@ -68,6 +68,16 @@ export const actions = {
             commit('ERROR_SET_POST_COMMENT_RESPONSE', error)
         })
     },
+
+    // resets comments in order to clean local storage
+    resetComments({commit}) {
+        commit('SET_COMMENTS', {})
+        commit('SET_POST_ANSWER_RESPONSE', {})
+        commit('SET_POST_COMMENT_RESPONSE', {})
+        commit('SET_ERROR_FETCH_COMMENTS', {})
+        commit('ERROR_SET_POST_ANSWER_RESPONSE', {})
+        commit('ERROR_SET_POST_COMMENT_RESPONSE', {})
+    },
 }
 
 export const getters = {
@@ -81,6 +91,10 @@ export const getters = {
     // returns comments, sorted by newest first (answers are still oldest first to avoid confusions)
     getCommentsNewest: (state) => {
         return [].concat(state.comments.comments).reverse();
+    },
+
+    getFetchCommentsError: (state) => {
+        return state.errorFetchComments
     },
     getPostCommentError: (state) => {
         return state.errorCommentResponse

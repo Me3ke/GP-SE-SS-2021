@@ -507,6 +507,7 @@
         "owner": "Besitzer",
         "hint": "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen",
         "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
-        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator."
+        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
+        "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     }
 }
