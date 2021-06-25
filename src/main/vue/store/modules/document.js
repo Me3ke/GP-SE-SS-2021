@@ -20,8 +20,9 @@ export const state = {
 
 export const mutations = {
     // will sets the state to []
-    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state, reset){
-        state.documentProgressArray = reset
+    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state){
+        console.log('I am runnin')
+        state.documentProgressArray = []
     },
 
     // sets given document as state
@@ -50,10 +51,14 @@ export const mutations = {
     },
 
     SET_DOCUMENT_PROGRESS(state,progress) {
-        //state.documentProgress = progress
+        state.documentProgress = progress
+        //state.documentProgressArray.push(progress)
+    },
+    SET_DOCUMENT_PROGRESS_ARRAY(state,progress) {
         state.documentProgressArray.push(progress)
     },
-    SET_ERROR_GET_DOCUMENT_PROGRESS(state, error) {
+
+    SET_ERROR_DOCUMENT_PROGRESS(state, error) {
         state.errorGetDocumentProgress = error
     },
     // sets error of getDocument request
@@ -81,8 +86,8 @@ export const mutations = {
 export const actions = {
 
     // for resetting the state DOCUMENT_PROGRESS_ARRAY
-    resetState({commit}, reset) {
-        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY', reset)
+    resetState({commit}) {
+        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
     },
 
     // makes axios call to get document, either sets document (success) or error (error)
@@ -131,18 +136,44 @@ export const actions = {
         })
     },
 
-    async getDocumentProgress({commit}, {envId, docId}) {
+    async documentProgress({commit}, {envId, docId}) {
         await documentAPI.getDocumentProgress(envId, docId).then((response) => {
             let data = response.data
+            //let docProgress = {docId, data}
             let progress = {docId, data}
             commit('SET_DOCUMENT_PROGRESS', progress)
-            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', {})
+            commit('SET_ERROR_DOCUMENT_PROGRESS', {})
         }).catch(error => {
             console.error(error)
-            commit('SET_ERROR_GET_DOCUMENT_PROGRESS', error)
+            commit('SET_ERROR_DOCUMENT_PROGRESS', error)
         })
         //console.log("SUCCESS")
-    }
+    },
+
+     progressOfAllDocumentsInEnv({commit,state}, {envelope}) {
+         commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
+
+         console.log('End State (After Clearing) ',state.documentProgressArray)
+        console.log('envelope documents: ', envelope.documents)
+         envelope.documents.forEach(document => {
+             documentAPI.getDocumentProgress(envelope.id, document.id).then((response) => {
+                 let data = response.data
+                 let docId = document.id
+                 let progress = {docId, data}
+                 commit('SET_DOCUMENT_PROGRESS_ARRAY', progress)
+
+             }).catch(err => {
+                 console.error(err)
+                 commit('SET_ERROR_DOCUMENT_PROGRESS', err)
+
+             })
+
+         })
+
+        console.log('')
+        console.log('------------------')
+
+     }
 }
 
 export const getters = {
@@ -153,7 +184,7 @@ export const getters = {
     getDocumentProgress: (state) => {
         return state.documentProgress
     },
-
+    // for calculating all progress of all documents in env
     getDocumentProgressArray : (state) => {
         return state.documentProgressArray
     },
@@ -162,11 +193,26 @@ export const getters = {
         let documentProgress
         for (let i=0; i < state.documentProgressArray.length; i++){
             if(state.documentProgressArray[i].docId === id) {
-                documentProgress = state.documentProgressArray[i].data
+                documentProgress = state.documentProgressArray[i]
             }
         }
         return documentProgress
     },
+
+
+    getDocumentProgressArrayByEnvelope: (state) => (documents) => {
+        let envelopeProgress = []
+        for(let i = 0; i < state.documentProgressArray.length; i++) {
+            for(let j = 0; j < documents.length; j++) {
+                if(state.documentProgressArray[i].docId === documents[j].id) {
+                    envelopeProgress.push(state.documentProgressArray[i])
+                    break
+                }
+            }
+        }
+        return envelopeProgress
+    },
+
     getErrorGetDocumentProgress: (state) => {
         return state.errorGetDocumentProgress
     },

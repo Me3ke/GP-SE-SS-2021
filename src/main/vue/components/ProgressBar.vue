@@ -1,20 +1,22 @@
 <template>
-<div v-if="!stateClosed">
+<div>
     <div
         style="padding-bottom: 1em;"
-        :id="'popover-' + docId"
         @click="clicked"
     >
-            <b-progress :max="max" :id="`popover-1-${docId}`">
+        {{envelope === undefined? "undef" : 'def'}}
+        {{getDocumentProgress === undefined ? 'doc progress undef': 'doc progress def'}}
+
+        <b-progress :max="max">
                 <b-progress-bar
-                    :value="typeof env === 'undefined' ? docPercentage : envPercentage"
-                    variant="success"
-                    :label="typeof env === 'undefined' ? docPercentage + '%' : envPercentage"
+                    :value="envelope !== undefined ? envPercentage : docPercentage"
+                    :variant="state === 'CLOSED' ? 'darkgrey' : 'elsaBlue'"
+                    :label="envelope !== undefined ? envPercentage + '%' : docPercentage + '%'"
                 ></b-progress-bar>
             </b-progress>
 
 
-        <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED' && typeof this.env === 'undefined'" id="collapseExample" >
+        <b-container style="max-width: 100%" v-if="isOpen && state !== 'CLOSED' &&  envelope === undefined" id="collapseExample" >
 
                 <b-row>
                     <b-col v-if="needToSign.length > 0">
@@ -38,7 +40,6 @@
                     </b-col>
 
 
-                    <!---Reader if available --->
                     <b-col v-if="readers.length > 0">
                         <span style="color: red">Need to Read</span>
                     <b-col>
@@ -61,9 +62,9 @@
 
         </b-container>
 
-        <b-container v-if="isOpen && env">
+        <b-container v-if="isOpen && envelope !== undefined">
             <b-row>
-                <b-col> <span style="color: red">Not Finished</span>
+                <b-col> <span style="color: red" v-if="notFinishedEnvelope.length > 0">Not Finished</span>
                     <b-col>
                         <b-container v-for="(documentTitle, index) in notFinishedEnvelope" :key="index">
                             <b-col>
@@ -91,10 +92,11 @@
 
 
 
+        <!----
 
 
-        <!---TODO Arrow of Popover is not Whitesmoke --->
-        <!--
+        -TODO Arrow of Popover is not Whitesmoke
+
         <b-popover placement="left" :target="'popover-' + docId" ref="popover" triggers= "focus" custom-class="my-popover-class">
             <b-container class="bv-example-row">
                 <b-row>
@@ -111,41 +113,54 @@
                 </b-row>
             </b-container>
         </b-popover>
+    ---->
 
-        --->
     </div>
+
+
 </div>
 </template>
 
 <script>
 
-
-
 export default {
     name: "ProgressBar",
-    props: ['documentProgress', 'docId', 'state', 'env', 'envelope'],
+    props: {
+        getDocumentProgress: null,
+        docId: null,
+        state: null,
+        envId: null,
+        envelope: null,
+
+        env: null
+    },
 
     data() {
         return {
             max: 100,
             zero: 0,
             isOpen: false,
-            stateClosed: false
+            stateClosed: false,
+            envClosed: false,
+
+            isDocument: this.docId !== undefined, // checks if prop is entered
+
         }
     },
     computed: {
 
+
         readers() {
-            return this.documentProgress.readers
+            return this.getDocumentProgress.data.readers
         },
         signatories() {
-            return this.documentProgress.signatories
+            return this.getDocumentProgress.data.signatories
         },
         alreadySigned() {
-            return this.documentProgress.alreadySigned
+            return this.getDocumentProgress.data.alreadySigned
         },
         alreadyRead() {
-            return this.documentProgress.alreadyRead
+            return this.getDocumentProgress.data.alreadyRead
         },
 
         needToSign() {
@@ -158,62 +173,36 @@ export default {
         },
 
         finishedEnvelope() {
-           const finishedDocuments = []
-
-            this.env.forEach(document => {
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 100.00) {
-                    for (let a = 0; a < this.envelope.documents.length; a++) {
-                        if (this.envelope.documents[a].id === document.docId) {
-                            finishedDocuments.push(this.envelope.documents[a].title)
-                        }
-                    }
-                }
-            })
-            return finishedDocuments
+            return this.calculateFinishedDocuments()
         },
 
         notFinishedEnvelope() {
-            const notFinished = []
-            this.env.forEach(document => {
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length) / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 100.00) {
-                    for (let a = 0; a < this.envelope.documents.length; a++) {
-                        if(this.envelope.documents[a].id === document.docId) {
-                            notFinished.push(this.envelope.documents[a].title)
 
-                        }
-
-                    }
-                }
-            })
-            return notFinished
+            return this.calculateNotFinishedDocuments()
         },
 
 
 
         // optional ?
-        envPercentage() {
-            let array = [];
-
-            (this.env.forEach(i => {
-                array.push((((i.data.alreadySigned.length + i.data.alreadyRead.length) / (i.data.signatories.length + i.data.readers.length)) * 100).toFixed(2))
-            }))
-            let percentage = ((array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.length * 100)) * 100)
-                .toFixed(2)
-
-            this.checkFinished(percentage)
+      envPercentage() {
+            // TODO
+          //let documentPercentages = []
+          return 0
+      },
 
 
-            return percentage !== 'NaN' && percentage !== '0.00'  ? percentage + '%' : ''
-
-        },
 
         // calculate th percentage of the document progress (signatories with reader)
         docPercentage() {
-            this.checkFinished(((this.alreadySigned.length + this.alreadyRead.length )
-                / (this.signatories.length + this.readers.length) * 100).toFixed(2))
-            return((this.alreadySigned.length + this.alreadyRead.length )
-                / (this.signatories.length + this.readers.length) * 100).toFixed(2)
+            if(this.state === "CLOSED") {
+                return 100.00
+            } else {
+                return ((this.alreadySigned.length + this.alreadyRead.length)
+                    / (this.signatories.length + this.readers.length) * 100).toFixed(2)
+            }
         },
+
+
 
     },
 
@@ -222,8 +211,24 @@ export default {
             this.isOpen = !this.isOpen
         },
 
-        checkFinished(value) {
-            this.stateClosed = value >= 100.00;
+        checkFinishedDocument() {
+            console.log(this.state)
+            if(this.state === "CLOSED") {
+                console.log("hallo")
+                this.stateClosed = true;
+            }
+        },
+        checkFinishedEnvelope() {
+            let finished = []
+            this.env.documents.forEach(document => {
+                if(document.state === "CLOSED") {
+                    finished.push(true)
+                } else {
+                    finished.push(false)
+                }
+            })
+
+            this.envClosed = !finished.includes(false);
         },
 
 
@@ -239,8 +244,55 @@ export default {
                     });
                 });
             }
+        },
+
+
+        calculateFinishedDocuments() {
+            let arr = []
+            this.envelope.forEach(document => {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length)
+                    / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 100.00) {
+                    const docTitle = this.findFinishedDocTitle(this.env,document)
+                    arr.push(docTitle)
+                    }
+
+            })
+            //this.checkFinishedEnvelope()
+            return arr
+        },
+
+        calculateNotFinishedDocuments() {
+            let arr = []
+            this.envelope.forEach(document => {
+                if((((document.data.alreadySigned.length + document.data.alreadyRead.length)
+                    / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 100.00) {
+                    const docTitle = this.findFinishedDocTitle(this.env,document)
+                    arr.push(docTitle)
+                }
+
+            })
+            //this.checkFinishedEnvelope()
+            return arr
+        },
+
+        findFinishedDocTitle(envelope,doc) {
+            console.log(envelope)
+            for (let a = 0; a < envelope.documents.length; a++) {
+                if (envelope.documents[a].id === doc.docId) {
+                    return envelope.documents[a].title
+                }
+            }
         }
-    }
+    },
+    /*created() {
+        this.$store.dispatch('document/resetState')
+        console.log(this.documentProgressArray)
+
+    },*/
+
+
+
+
 
 
 }
@@ -248,9 +300,13 @@ export default {
 
 <style scoped>
 
-.my-popover-class {
-    background-color: var(--whitesmoke);
-    width: 15em;
+.bg-darkgrey {
+    background-color: var(--light-grey) !important;
+    color: var(--dark-grey);
+}
+
+.bg-elsaBlue {
+    background-color: var(--elsa-blue) !important;
 }
 
 

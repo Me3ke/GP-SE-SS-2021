@@ -10,8 +10,8 @@
                 <div>
                     <div v-if="this.envelope.owner.email === this.$store.state.auth.username">
                         <ProgressBar
-                            :env="documentProgressArray"
-                            :envelope="envelope"
+                            :envelope="envelopeProgress(envelope.documents)"
+                            :env="envelope"
                         ></ProgressBar>
                     </div>
                 </div>
@@ -43,24 +43,14 @@ export default {
             advanced: false
         }
     },
+
     computed: {
-      ...mapGetters({
-          documentProgressArray: 'document/getDocumentProgressArray',
-          document: 'document/getDocument'
+        ...mapGetters({
+            envelopeProgress: 'document/getDocumentProgressArrayByEnvelope',
 
-      })
+})
     },
 
-   async beforeCreate() {
-        await this.$store.dispatch('document/resetState', [])
-
-        for(let i = 0; i < this.envelope.documents.length; i++) {
-            await this.$store.dispatch('document/getDocumentProgress', {
-                envId: this.envelope.id,
-                docId: this.envelope.documents[i].id
-            })
-        }
-    },
 
     mounted() {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)

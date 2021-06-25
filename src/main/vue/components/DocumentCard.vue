@@ -8,12 +8,12 @@
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
                 <div v-if="document.signatory || document.reader">
-                    <div v-if="documentProgressById(document.id)
-                    && this.document.owner.email === this.$store.state.auth.username">
+                    <div  v-if="//documentProgressById(document.id) &&
+                     this.document.owner.email === this.$store.state.auth.username">
                         <ProgressBar
-                            :document-state="document.state"
-                            :documentProgress="documentProgressById(document.id)"
+                            :state="document.state"
                             :docId="document.id"
+                            :getDocumentProgress="documentProgressById(document.id)"
                         ></ProgressBar>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-        documentProgress: 'document/getDocumentProgressArray',
+        documentProgress: 'document/getDocumentProgress',
         documentProgressById: 'document/getDocumentProgressArrayById'
     }),
 
@@ -80,7 +80,8 @@ export default {
     // resets the state of documentProgress array to [] if this pages is going to reload
     // otherwise it will add by every refreshing or new loading of the page all documents to the already (previously)
     // added state array
-    async beforeCreate() {
+
+    /*async beforeCreate() {
         await this.$store.dispatch('document/resetState', [])
 
         await this.$store.dispatch('document/getDocumentProgress', {
@@ -88,6 +89,14 @@ export default {
             docId: this.document.id
         })
 
+    }*/
+
+
+    mounted() {
+        this.$store.dispatch('document/documentProgress', {
+            envId: this.envelopeId,
+            docId: this.document.id,
+        })
     }
 }
 </script>
