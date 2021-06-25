@@ -6,12 +6,20 @@
         <Header></Header>
 
         <!-- Page Title -->
-        <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
-            <b-row align-h="start">
-                <b-col>
+        <b-container fluid style="margin-top:10vh; margin-right:2vw; text-align: left">
+            <b-row align-h="between">
+                <b-col cols="auto">
                     <h2>
                         {{ $t('OverviewPage.heading') }}
                     </h2>
+                </b-col>
+                <b-col cols="auto">
+                    <b-input-group>
+                        <b-form-input v-model="filter.searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
+                        <h4>
+                            <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput)"></b-icon>
+                        </h4>
+                    </b-input-group>
                 </b-col>
             </b-row>
         </b-container>
@@ -48,7 +56,7 @@
 
         <!-- Documents -->
         <div class="container-fluid">
-            <div style="margin-top:1vh">
+            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)" class="card" >
                 <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
@@ -59,6 +67,11 @@
                         <div v-if="envelope.documents.length === 1">
                             <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
                         </div>
+                    </div>
+                    <div v-if="this.envelopes(filter, pageLimit, page).length === 0" style="color:var(--dark-grey); padding:1em">
+                        <h4>
+                            {{$t('OverviewPage.noDocuments')}}
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -113,6 +126,7 @@ export default {
                 //readers: null,
                 //signed: null,
                 //read: null
+                searchInput: "",
             },
             pageLimit: 10,
             page: 1,
@@ -138,6 +152,9 @@ export default {
         async setLogin() {
             await this.$store.dispatch('putFirstLogin')
             await this.$store.dispatch('fetchUser')
+        },
+        search() {
+            //TODO
         }
     },
     created() {
@@ -157,5 +174,17 @@ export default {
 </script>
 
 <style scoped>
+.input-group {
+    width: 20em;
+}
 
+.input-group:not(.has-validation) > .form-control:not(:last-child), .input-group:not(.has-validation) > .custom-select:not(:last-child), .input-group:not(.has-validation) > .custom-file:not(:last-child) .custom-file-label::after {
+    border-radius: 0.5em;
+    background-color: var(--whitesmoke);
+}
+
+.searchIcon:hover {
+    fill: var(--light-grey);
+    transition-duration: 0.4s;
+}
 </style>

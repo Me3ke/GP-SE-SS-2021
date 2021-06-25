@@ -173,7 +173,9 @@
         "toSignRead2": "gegenlesen und signieren",
         "envReadSign": "Gegenlesen und signieren",
         "envRead": "Gegenlesen",
-        "envSign": "Signieren"
+        "envSign": "Signieren",
+        "search": "Suchen",
+        "noDocuments": "Noch keine Dokumente"
     },
     "Document": {
         "owner": "Besitzer",

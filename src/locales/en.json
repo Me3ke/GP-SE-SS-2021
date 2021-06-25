@@ -58,7 +58,9 @@
         "toSignRead2": "",
         "envReadSign": "Read and sign",
         "envRead": "Read",
-        "envSign": "Sign"
+        "envSign": "Sign",
+        "search": "Search",
+        "noDocuments": "No documents yet"
     },
     "UserGuide": {
         "name": "User Guide",
