@@ -22,12 +22,12 @@
             </b-col>
             <b-col v-if="!inModal">
                 <b-row>
-                    <b-form-checkbox v-model="remind" name="some-radios">
+                    <b-form-checkbox v-model="remindInput" name="some-radios">
                         {{$t('UploadDoc.remindSignatories')}}
                     </b-form-checkbox>
                 </b-row>
                 <b-row v-if="remind" style="margin-top: 1em">
-                    <b-form-input type="number" v-model="reminderTiming" min="0" style="width:5em;"> </b-form-input>
+                    <b-form-input type="number" v-model="reminderTimingInput" min="0" style="width:5em;"> </b-form-input>
                     {{$t('UploadDoc.remindDaysBefore')}}
                 </b-row>
             </b-col>
@@ -49,14 +49,6 @@
                         </h6>
                         <b-col cols="auto">
                             <b-row align-h="end">
-                                <!-- reminder -->
-                                <b-col cols="auto" v-if="!inModal && remind" style="margin-right: 0.5em">
-                                    <b-row>
-                                        {{$t('UploadDoc.reminder')}}
-                                        <b-form-input type="number" v-model="signatory.reminderTiming" min="0" style="width:5em; height: 2em; margin-right: 0.5em"> </b-form-input>
-                                        {{$t('UploadDoc.reminderShort')}}
-                                    </b-row>
-                                </b-col>
                                 <!-- signature type -->
                                 <b-col cols="auto">
                                     <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.signatureType">
@@ -83,6 +75,8 @@ export default {
         signatories: Array,
         orderRelevant: Boolean,
         inModal: Boolean,
+        remind: Boolean,
+        reminderTiming: Number
     },
     components: {draggable},
     data() {
@@ -96,8 +90,8 @@ export default {
                 value: 2
             }],
             signatoriesArray: this.signatories,
-            remind: false,
-            reminderTiming: null
+            remindInput: this.remind,
+            reminderTimingInput: this.reminderTiming
         }
     },
     methods: {

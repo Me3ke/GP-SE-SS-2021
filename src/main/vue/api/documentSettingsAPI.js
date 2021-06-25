@@ -13,9 +13,11 @@ export default {
     async changeDocumentSettings(envId, docId, settings) {
         return axios({
             method: "put",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/settings',
+            url: 'http://localhost:8088/api/document/' + docId + '/settings',
             data: {
-                settings: settings //TODO
+                signatories: settings.signatories,
+                endDate: settings.endDate,
+                orderRelevant: settings.orderRelevant,
             }
         })
     }

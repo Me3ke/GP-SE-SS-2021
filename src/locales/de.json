@@ -283,7 +283,8 @@
             "endDate": "Zeitraum",
             "edit": "Bearbeiten",
             "noSignatories": "Noch keine Unterzeichner hinzugefügt",
-            "noReaders": "Noch keine Gegenleser hinzugefügt"
+            "noReaders": "Noch keine Gegenleser hinzugefügt",
+            "saveAll": "Alles Speichern"
         }
     },
     "UploadDoc": {

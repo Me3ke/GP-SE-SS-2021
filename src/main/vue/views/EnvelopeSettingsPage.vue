@@ -15,12 +15,11 @@
             <!-- Individual Settings -->
             <div v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh">
                 <DocumentDropDown style="margin-top:0.5vh"
-                    v-for="document in this.envelope(envId).documents" :key="document.id"
-                    :document="document"
+                    v-for="document in this.envelope(envId).documents" :key="document.id" :document="document"
                     :signatories="getSignatories(getSettings(document.id))"
                     :readers="getReaders(getSettings(document.id))"
                     :endDate="getSettings(document.id).endDate"
-                    :orderRelevant="getSettings(document.id).orderRelevant">
+                    :orderRelevant="getSettings(document.id).orderRelevant" :envId="envId">
                 </DocumentDropDown>
             </div>
 
@@ -32,7 +31,7 @@
                         {{$t('Settings.DocumentSettings.endDate')}}
                     </div>
                     <div>
-                        <b-list-group-item v-if="!this.editDate">{{this.envelopeSettings[this.selectedId].endDate}}</b-list-group-item>
+                        <b-list-group-item v-if="!this.editDate">{{this.envelopeSettings[this.selectedIndex].endDate}}</b-list-group-item>
 
                         <b-row align-h="end" v-if="!this.editDate">
                             <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editDate = true">
@@ -56,22 +55,22 @@
                         {{$t('Settings.DocumentSettings.reader')}}
                     </div>
                     <div v-if="!this.editReaders">
-                        <SignatoryListItem v-for="reader in getReaders(this.envelopeSettings[this.selectedId])" :key="reader.email" :signatory="reader"></SignatoryListItem>
+                        <SignatoryListItem v-for="reader in getReaders(this.envelopeSettings[this.selectedIndex])" :key="reader.email" :signatory="reader"></SignatoryListItem>
                     </div>
 
-                    <b-list-group-item v-if="getReaders(this.envelopeSettings[this.selectedId]).length === 0 && !this.editReaders">
+                    <b-list-group-item v-if="getReaders(this.envelopeSettings[this.selectedIndex]).length === 0 && !this.editReaders">
                         {{$t('Settings.DocumentSettings.noReaders')}}
                     </b-list-group-item>
 
                     <b-row align-h="end" v-if="!this.editReaders">
-                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true">
+                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true; initReaders()">
                             <b-icon icon="pencil-fill"></b-icon>
                             {{$t('Settings.DocumentSettings.edit')}}
                         </button>
                     </b-row>
 
                     <div style="padding:2em" v-if="this.editReaders">
-                        <ReaderMenu :readers="getReaders(this.envelopeSettings[this.selectedId])"></ReaderMenu>
+                        <ReaderMenu :readers="getReaders(this.envelopeSettings[this.selectedIndex])"></ReaderMenu>
                     </div>
 
                     <b-row align-h="end" v-if="this.editReaders">
@@ -87,15 +86,15 @@
                     </div>
 
                     <div v-if="!this.editSignatories">
-                        <SignatoryListItem v-for="signatory in getSignatories(this.envelopeSettings[this.selectedId])" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
+                        <SignatoryListItem v-for="signatory in getSignatories(this.envelopeSettings[this.selectedIndex])" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
                     </div>
 
-                    <b-list-group-item v-if="getSignatories(this.envelopeSettings[this.selectedId]).length === 0 && !this.editSignatories">
+                    <b-list-group-item v-if="getSignatories(this.envelopeSettings[this.selectedIndex]).length === 0 && !this.editSignatories">
                         {{$t('Settings.DocumentSettings.noSignatories')}}
                     </b-list-group-item>
 
                     <b-row align-h="end" v-if="!this.editSignatories">
-                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editSignatories = true">
+                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editSignatories = true; initSignatories()">
                                 <b-icon icon="pencil-fill"></b-icon>
                                 {{$t('Settings.DocumentSettings.edit')}}
                         </button>
@@ -103,7 +102,7 @@
 
 
                     <div style="padding:2em" v-if="this.editSignatories">
-                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[this.selectedId].orderRelevant" :signatories="getSignatories(this.envelopeSettings[this.selectedId])"></SignatoryMenu>
+                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[this.selectedIndex].orderRelevant" :signatories="getSignatories(this.envelopeSettings[this.selectedIndex])"></SignatoryMenu>
                     </div>
 
                     <b-row align-h="end" v-if="this.editSignatories">
@@ -139,10 +138,17 @@ export default {
         return {
             editAllInput: null,
             editAll: null,
-            selectedId: 0,
+            selectedIndex: 0,
             editSignatories: false,
             editReaders: false,
-            editDate: false
+            editDate: false,
+            settingsEdited:
+            {
+                signatories: [],
+                readers: [],
+                endDate: "",
+                orderRelevant: null
+            }
         }
     },
     created() {
@@ -225,6 +231,99 @@ export default {
             } else {
                 this.editAll = !this.editAll
             }
+        },
+        initSignatories() {
+            let signatories = this.getSignatories(this.envelopeSettings[this.selectedIndex])
+            this.settingsEdited.signatories = [];
+            let i
+            for(i = 0; i < signatories.length; i++) {
+                this.settingsEdited.signatories.push(signatories[i])
+            }
+            this.remind = signatories[0].remind
+            this.reminderTiming = signatories[0].reminderTiming
+        },
+        initReaders() {
+            let readers = this.getReaders(this.envelopeSettings[this.selectedIndex])
+            this.settingsEdited.readers = [];
+            let i
+            for(i = 0; i < readers.length; i++) {
+                this.settingsEdited.readers.push(readers[i])
+            }
+        },
+        async saveSettings() {
+            let oldSettings = this.envelopeSettings[this.selectedIndex]
+            let newSettings = {signatories: null, orderRelevant: null, endDate: null}
+            if (this.editDate) {
+                newSettings.endDate = this.settingsEdited.endDate + ' 12:00'
+            } else {
+                newSettings.endDate = oldSettings.endDate + ' 12:00'
+            }
+            if (this.editReaders && this.editSignatories) {
+                newSettings.orderRelevant = this.settingsEdited.orderRelevant
+                let newSignatories;
+                newSignatories = this.remindInSignatories(this.settingsEdited.signatories);
+                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, newSignatories)
+            } else if (this.editReaders) {
+                newSettings.orderRelevant = oldSettings.orderRelevant
+                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, oldSettings.signatories)
+            } else if (this.editSignatories) {
+                newSettings.orderRelevant = this.settingsEdited.orderRelevant
+                let newSignatories;
+                newSignatories = this.remindInSignatories(this.settingsEdited.signatories);
+                newSettings.signatories = this.makeSignatories(oldSettings.readers, newSignatories)
+            } else {
+                newSettings.orderRelevant = oldSettings.orderRelevant
+                newSettings.signatories = this.makeSignatories(oldSettings.readers, oldSettings.signatories)
+            }
+            let i;
+            for(i = 0; i < this.envelope.documents.length; i++) {
+                await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.envelope.documents.id, "envId": this.envId, "settings": newSettings})
+            }
+        },
+        remindInSignatories(signatories, remind, reminderTiming) {
+            let newSignatories = []
+            let i
+            for (i = 0; i < signatories.length; i++) {
+                newSignatories.push({email: signatories[i].email, signatureType: signatories[i].signatureType, remind: remind, reminderTiming: reminderTiming})
+            }
+            return newSignatories
+        },
+        makeSignatories(readers, signatories) {
+            let newSignatories = []
+            let i;
+            for (i = 0; i < readers.length; i++) {
+                let newStatus
+                newStatus = this.getStatusReader(readers[i])
+                newSignatories.push({email: readers[i], signatureType: 0, remind: false, reminderTiming: -1, status: newStatus.status, signedOn: newStatus.signedOn})
+            }
+            for (i = 0; i < signatories.length; i++) {
+                let newStatus
+                newStatus = this.getStatusSignatory(signatories[i])
+                newSignatories.push({email: signatories[i].email, signatureType: signatories[i].signatureType, remind: signatories[i].remind, reminderTiming: signatories[i].reminderTiming, status: newStatus.status, signedOn: newStatus.signedOn})
+            }
+            return newSignatories
+        },
+        getStatusSignatory(signatory) {
+            let i;
+            for (i = 0; i < this.signatories.length; i++) {
+                if(this.signatories[i].email === signatory.email) {
+                    if(this.signatories[i].signatureType === signatory.signatureType) {
+                        return {status: true, signedOn: this.signatories[i].signedOn}
+                    } else {
+                        return {status: false, signedOn: ""}
+                    }
+                }
+            }
+            return {status: false, signedOn: ""}
+        },
+        getStatusReader(reader) {
+            let i;
+            for (i = 0; i < this.readers.length; i++) {
+                if(this.readers[i].email === reader.email) {
+                    return {status: true, signedOn: this.readers[i].signedOn}
+                }
+            }
+            return {status: false, signedOn: ""}
         }
     }
 }

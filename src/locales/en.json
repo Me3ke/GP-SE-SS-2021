@@ -282,7 +282,8 @@
             "endDate": "Deadline",
             "edit": "Edit",
             "noSignatories": "There are no signatories",
-            "noReaders": "There are no proofreaders"
+            "noReaders": "There are no proofreaders",
+            "saveAll": "Save all changes"
         }
     },
     "UploadDoc": {
