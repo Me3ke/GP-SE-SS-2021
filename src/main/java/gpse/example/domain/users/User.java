@@ -74,6 +74,9 @@ public class User implements UserDetails {
     @Column
     private boolean accountNonLocked;
 
+    @Lob
+    private byte[] imageSignature;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -333,5 +336,13 @@ public class User implements UserDetails {
 
     public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public byte[] getImageSignature() {
+        return imageSignature;
+    }
+
+    public void setImageSignature(byte[] imageSignature) {
+        this.imageSignature = imageSignature;
     }
 }
