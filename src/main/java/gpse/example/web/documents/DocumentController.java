@@ -9,7 +9,6 @@ import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -52,27 +51,24 @@ public class DocumentController {
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
-    private final SignatoryServiceImpl signatoryService;
     private final SignatureManagement signatureManagement;
 
     /**
      * The default constructor which initialises the services by autowiring.
      *
-     * @param envelopeService         the envelopeService
-     * @param userService             the userService
-     * @param documentService         the documentService
-     * @param signatoryService        the signatoryService
-     * @param signatureManagement     the signatureManagement
+     * @param envelopeService     the envelopeService
+     * @param userService         the userService
+     * @param documentService     the documentService
+     * @param signatureManagement the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
+                              final DocumentServiceImpl documentService,
                               final SignatureManagement signatureManagement) {
 
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
-        this.signatoryService = signatoryService;
         this.signatureManagement = signatureManagement;
     }
 
@@ -311,22 +307,23 @@ public class DocumentController {
 
     /**
      * Put request for changing documentsettings.
-     * @param documentID id of the document that should be changed
+     *
+     * @param documentID          id of the document that should be changed
      * @param documentSettingsCMD Container for the relevant settings
      * @return JsonResponse containing statuscode
      */
     @PutMapping("/document/{documentID}/settings")
-    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
-                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
-        JSONResponseObject response = new JSONResponseObject();
+    public JSONResponseObject changeSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                             final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        final JSONResponseObject response = new JSONResponseObject();
         try {
-            Document document = documentService.getDocument(documentID);
+            final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
-            List<Signatory> signatories = new ArrayList<>();
-            List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
+            final List<Signatory> signatories = new ArrayList<>();
+            final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
-            for (SignatorySetting signatorySetting : signatorySettings) {
+            for (final SignatorySetting signatorySetting : signatorySettings) {
                 signatory = new Signatory(userService.getUser(signatorySetting.getUsername()),
                     signatorySetting.getSignatureType());
                 signatory.setStatus(signatorySetting.isStatus());
@@ -335,8 +332,7 @@ public class DocumentController {
                 signatories.add(signatory);
             }
             document.setSignatories(signatories);
-
-            Document savedDoc = documentService.addDocument(document);
+            documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {

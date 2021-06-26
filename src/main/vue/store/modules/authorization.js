@@ -54,6 +54,9 @@ const authorization = {
         },
         isAdmin(state) {
             return state.role.includes('ROLE_ADMIN')
+        },
+        getUsername(state) {
+            return state.username
         }
     }
 

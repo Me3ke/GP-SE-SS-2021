@@ -23,7 +23,6 @@ public class SMTPServerHelper {
     private static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
 
 
-
     private static final String SIGNATURE_INVITATION = GREETING
         + "%s hat sie zum signieren des Dokuments %s aufgefordert.";
 
@@ -57,7 +56,7 @@ public class SMTPServerHelper {
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
 
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(recievingUser.getEmail());
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
@@ -67,11 +66,12 @@ public class SMTPServerHelper {
 
     /**
      * sending an info mail to an admin containing the requested emailaddress.
-     * @param admin admin who should get this validation information
+     *
+     * @param admin        admin who should get this validation information
      * @param newUserEmail email adress of the user who needs to be validated
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(admin.getEmail());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
@@ -80,17 +80,18 @@ public class SMTPServerHelper {
     }
 
     /**
-<<<<<<< HEAD
      * sending the Invitation for a signature.
+     *
      * @param signatoryMail     the signatory who should be reminded
      * @param owner             the owner of the relating document
      * @param lastnameSignatory the lastname of the signatory who should be reminded
-     * @param document the document that belongs to the requestet signature
-     * @throws MessageGenerationException
+     * @param document          the document that belongs to the requestet signature
+     * @throws MessageGenerationException is thrown when the signatory mail doesn't exist, or if something goes wrong
+     *                                    with initializing th text or subject.
      */
     public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
                                         final Document document) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(signatoryMail);
         message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
@@ -100,14 +101,15 @@ public class SMTPServerHelper {
 
     /**
      * send a reminder to specified mail address with the given data.
+     *
      * @param userEmail the recieving email address
-     * @param days days bevor deadline
-     * @param userName name of User who recieves the email
-     * @param document the document which is the 'reminding' one
+     * @param days      days bevor deadline
+     * @param userName  name of User who recieves the email
+     * @param document  the document which is the 'reminding' one
      */
-    public void sendReminder(final String userEmail, final int days, String userName, Document document)
-            throws MessageGenerationException {
-        Message message = new Message();
+    public void sendReminder(final String userEmail, final int days, final String userName, final Document document)
+        throws MessageGenerationException {
+        final Message message = new Message();
         message.setRecievingUserMail(userEmail);
         message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));

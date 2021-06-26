@@ -4,7 +4,6 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
-import gpse.example.domain.signature.SignatoryServiceImpl;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
@@ -38,31 +37,27 @@ public class EnvelopeController {
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
-    private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
+    @Lazy
+    @Autowired
+    private SMTPServerHelper smtpServerHelper;
 
-    private final SMTPServerHelper smtpServerHelper;
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService  the envelopeService
-     * @param userService      the userService
-     * @param signatoryService the signatoryService
-     * @param documentService  the documentService
-     * @param smtpServerHelper the smtpServerHelper
+     * @param envelopeService the envelopeService
+     * @param userService     the userService
+     * @param documentService the documentService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService,
-                              final SMTPServerHelper smtpServerHelper) {
+                              final DocumentServiceImpl documentService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
-        this.signatoryService = signatoryService;
         this.documentService = documentService;
-        this.smtpServerHelper = smtpServerHelper;
     }
 
     /**
@@ -79,7 +74,7 @@ public class EnvelopeController {
                                               final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            Envelope envelope = envelopeService.addEnvelope(name, owner);
+            final Envelope envelope = envelopeService.addEnvelope(name, owner);
             return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
@@ -99,7 +94,7 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             if (!envelope.getOwnerID().equals(ownerID)) {
@@ -109,17 +104,15 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
                 userService);
-            if (document.getSignatories().size() != 0) {
-                if (!document.isOrderRelevant()) {
-                    for (int i = 0; i < document.getSignatories().size(); i++) {
-                        smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
-                            userService.getUser(document.getOwner()),
-                            document.getSignatories().get(i).getUser().getLastname(), document);
-                    }
-                } else {
-                    smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+            if (document.isOrderRelevant()) {
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                    userService.getUser(document.getOwner()),
+                    document.getCurrentSignatory().getUser().getLastname(), document);
+            } else {
+                for (int i = 0; i < document.getSignatories().size(); i++) {
+                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
                         userService.getUser(document.getOwner()),
-                        document.getCurrentSignatory().getUser().getLastname(), document);
+                        document.getSignatories().get(i).getUser().getLastname(), document);
                 }
             }
             envelopeService.updateEnvelope(envelope, document);
@@ -182,14 +175,14 @@ public class EnvelopeController {
      * The getAllEnvelopes methods gets all envelopes from the database and filters
      * them using the filter method.
      *
-     * @param userID  the id of the user doing the request.
+     * @param userID the id of the user doing the request.
      * @return the filtered envelope list.
      */
 
     @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
         final User currentUser = userService.getUser(userID);
-        List<Envelope> envelopeList = envelopeService.getEnvelopes();
+        final List<Envelope> envelopeList = envelopeService.getEnvelopes();
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
@@ -238,6 +231,7 @@ public class EnvelopeController {
 
     /**
      * The getMapping for the request to get the settings of all documents in an envelope.
+     *
      * @param envelopeID the id of the relating envelope
      * @return a fitting response in form of a list containing documentSetting-Objects.
      */
@@ -251,5 +245,4 @@ public class EnvelopeController {
         }
     }
 }
-
 

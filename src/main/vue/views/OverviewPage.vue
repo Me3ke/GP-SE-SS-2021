@@ -1,17 +1,25 @@
 <template>
     <div>
-
         <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
 
         <Header></Header>
 
+
         <!-- Page Title -->
-        <b-container fluid style="margin-top:6vh; margin-right:2vw; text-align: left">
-            <b-row align-h="start">
-                <b-col>
+        <b-container fluid style="margin-top:10vh; margin-right:2vw; text-align: left">
+            <b-row align-h="between">
+                <b-col cols="auto">
                     <h2>
                         {{ $t('OverviewPage.heading') }}
                     </h2>
+                </b-col>
+                <b-col cols="auto">
+                    <b-input-group>
+                        <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
+                        <h4>
+                            <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
+                        </h4>
+                    </b-input-group>
                 </b-col>
             </b-row>
         </b-container>
@@ -48,7 +56,7 @@
 
         <!-- Documents -->
         <div class="container-fluid">
-            <div style="margin-top:1vh">
+            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)" class="card" >
                 <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
@@ -59,6 +67,11 @@
                         <div v-if="envelope.documents.length === 1">
                             <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
                         </div>
+                    </div>
+                    <div v-if="this.envelopes(filter, pageLimit, page).length === 0" style="color:var(--dark-grey); padding:1em">
+                        <h4>
+                            {{$t('OverviewPage.noDocuments')}}
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -84,7 +97,10 @@ import {mapGetters} from "vuex";
 import DocumentCard from "@/main/vue/components/DocumentCard";
 import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
+import VueConfetti from 'vue-confetti'
+import Vue from 'vue'
 
+Vue.use(VueConfetti)
 export default {
     name: "OverviewPage",
     components: {
@@ -112,8 +128,10 @@ export default {
                 //signatories: null,
                 //readers: null,
                 //signed: null,
-                //read: null
+                //read: null,
+                search: null
             },
+            searchInput: "",
             pageLimit: 10,
             page: 1,
             sort: null
@@ -138,6 +156,58 @@ export default {
         async setLogin() {
             await this.$store.dispatch('putFirstLogin')
             await this.$store.dispatch('fetchUser')
+        },
+        search(keyword) {
+            this.filter.search = keyword
+            if(keyword.toLowerCase().includes("schildkröte")|| keyword.toLowerCase().includes("maskottchen")) {
+                this.launchMascots();
+            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| keyword.toLowerCase().includes("magenta-liebe")) {
+                this.launchMagenta();
+            }
+        },
+        launchMascots() {
+            this.$confetti.start();
+            this.$confetti.update({
+                particles: [
+                    {
+                        type: 'image',
+                        url: 'https://i.ibb.co/zQhz9Dq/turtle.png',
+                        size: 20,
+                    },
+                    {
+                        type:'circle',
+                        size: 10,
+                    },
+                    {
+                        type:'rect',
+                        size:10,
+                    }
+                ],
+            });
+            window.setTimeout(() => (this.$confetti.stop()), 5000);
+        },
+        launchMagenta() {
+            this.$confetti.start();
+            this.$confetti.update({
+                particles: [
+                    {
+                        type: 'image',
+                        url: 'https://logodownload.org/wp-content/uploads/2019/11/deutsche-telekom-logo-0.png',
+                        size: 40,
+                    },
+                    {
+                        type:'circle',
+                        size: 15,
+                        colors: ['#ea0a8e']
+                    },
+                    {
+                        type:'rect',
+                        size: 15,
+                        colors: ['#ea0a8e']
+                    }
+                ],
+            });
+            window.setTimeout(() => (this.$confetti.stop()), 5000);
         }
     },
     created() {
@@ -157,5 +227,17 @@ export default {
 </script>
 
 <style scoped>
+.input-group {
+    width: 20em;
+}
 
+.input-group:not(.has-validation) > .form-control:not(:last-child), .input-group:not(.has-validation) > .custom-select:not(:last-child), .input-group:not(.has-validation) > .custom-file:not(:last-child) .custom-file-label::after {
+    border-radius: 0.5em;
+    background-color: var(--whitesmoke);
+}
+
+.searchIcon:hover {
+    fill: var(--light-grey);
+    transition-duration: 0.4s;
+}
 </style>

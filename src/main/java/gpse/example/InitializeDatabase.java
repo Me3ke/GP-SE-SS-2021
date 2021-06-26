@@ -82,7 +82,7 @@ public class InitializeDatabase implements InitializingBean {
         try {
             corporateDesignService.getCorporateDesign(1L);
         } catch (CorporateDesignNotFoundException exception) {
-            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
+            final CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
             defaultDesign.setLogo(new byte[0], "");
             defaultDesign.setLogoDark(new byte[0], "");
             corporateDesignService.saveCorporateDesign(defaultDesign);
@@ -90,20 +90,21 @@ public class InitializeDatabase implements InitializingBean {
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12312,
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12_312,
                 LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");
             final User user = new User(USERNAME,
                 "Hans",
                 "Schneider", PASSWORD);
+            user.setPersonalData(personalData);
             user.addRole(ROLE_USER);
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
             userService.saveUser(user);
         }
         try {
             userService.getUser(ADMINNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12312,
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
                 LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
             final User user = new User(ADMINNAME,
                 "Ruediger",
@@ -111,7 +112,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
             user.setPersonalData(personalData);
             userService.saveUser(user);
         }

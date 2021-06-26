@@ -51,7 +51,7 @@
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
                                                 <select class="form-control" id="selectEnvelope" v-model="selectedEnv.old">
-                                                    <option v-for="envelope in this.envelopes({state: null})" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
+                                                    <option v-for="envelope in this.envelopes" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -243,7 +243,6 @@ export default {
             this.file.type = this.fileInput.name.split('.')[1];
             this.file.data = await this.asyncHandleFunction(this.fileInput);
             this.settings.endDate = this.settings.endDate + ' 12:00';
-            console.log(this.settings.signatories);
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();

@@ -58,7 +58,9 @@
         "toSignRead2": "",
         "envReadSign": "Read and sign",
         "envRead": "Read",
-        "envSign": "Sign"
+        "envSign": "Sign",
+        "search": "Search",
+        "noDocuments": "No documents yet"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -317,6 +319,7 @@
         "didSign": "Already signed",
         "doRead": "Proofread",
         "didRead": "Already proofread",
+        "comments": "Comments",
         "protocol": "Show protocol",
         "history": "Show history",
         "newVersion": "New Version",
@@ -486,5 +489,26 @@
             "color14": "Pop-Up background",
             "default": "Default"
         }
+    },
+    "CommentsPage": {
+        "title": "Comments",
+        "comment": "comment",
+        "comments": "comments",
+        "sort": "Sort by",
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "writePrompt": "Leave comment as ",
+        "cancel": "Cancel",
+        "send": "Send",
+        "empty": "No comments",
+        "answers": "replies",
+        "doNotAnswers": "Hide replies",
+        "noAnswers": "No replies",
+        "reply": "Reply",
+        "owner": "Owner",
+        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments.",
+        "serverErrorOne": "Your comment could not be posted.",
+        "serverErrorTwo": "Please try again later or talk to an administrator.",
+        "serverErrorThree": "The comments could not be loaded."
     }
 }
