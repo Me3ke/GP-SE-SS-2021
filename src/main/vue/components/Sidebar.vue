@@ -207,6 +207,7 @@ export default {
             this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleSign(val) {
             if (this.signed) {
@@ -215,10 +216,12 @@ export default {
             this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.$emit('triggerOverflow')
+            this.$store.dispatch('document/setSeenFalse')
         },
         goToComments() {
             this.$router.push({name: 'comments', params: {envId: this.envId, docId: this.docId}})

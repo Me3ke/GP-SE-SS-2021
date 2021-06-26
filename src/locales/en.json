@@ -427,7 +427,8 @@
             "notDone": "In order to sign you still have to set up the following.",
             "tfa": "Two-factor authentication",
             "keyPair": "Key-pair",
-            "toSettings": "To settings"
+            "toSettings": "To settings",
+            "notSeen": "You have to look at the document first!"
         },
         "read": {
             "read": "Proofread now!",

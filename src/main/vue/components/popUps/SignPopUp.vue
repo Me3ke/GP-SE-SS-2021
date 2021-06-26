@@ -16,6 +16,23 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page -1 (shows if user has not seen the document yet) -->
+                                    <div v-if="page === -1">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notSeen') }}
+                                        </div>
+
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="elsa-blue-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 0 -->
                                     <div v-if="page === 0">
                                         <div class="step">
@@ -271,6 +288,12 @@ export default {
                 this.page = 0
             }
         }
+
+        // checks if user has already looked at the document or not
+        await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+        if (!this.hasSeen) {
+            this.page = -1
+        }
     },
     methods: {
         // makes simple signature api call
@@ -360,6 +383,7 @@ export default {
             errorAdvanced: 'document/getErrorAdvancedSignDocument',
 
             hasKey: 'getHasKey',
+            hasSeen: 'document/getSeen',
 
             user: 'getUser'
         }),

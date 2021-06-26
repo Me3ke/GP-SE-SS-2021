@@ -428,7 +428,8 @@
             "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
             "tfa": "Zwei-Faktor-Authenifizierung",
             "keyPair": "Schlüsselpaar",
-            "toSettings": "Zu den Einstellungen"
+            "toSettings": "Zu den Einstellungen",
+            "notSeen": "Sie müssen sich das Dokument erst anschauen!"
         },
         "read": {
             "read": "Jetzt gegenlesen!",

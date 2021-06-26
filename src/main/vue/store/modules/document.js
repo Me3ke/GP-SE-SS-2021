@@ -5,6 +5,8 @@ export const namespaced = true
 export const state = {
     documentInfo: {},
     errorGetDocumentInfo: {},
+    documentSeen: {},
+    errorDocumentSeen: {},
     reviewResponse: {},
     errorReviewDocument: {},
     simpleSignResponse: {},
@@ -34,6 +36,9 @@ export const mutations = {
     EDIT_DOCUMENT(state, doc) {
         state.document = doc
     },
+    SET_DOCUMENT_SEEN(state, seen) {
+        state.documentSeen = seen
+    },
     // sets error of getDocument request
     SET_ERROR_GET_DOCUMENT_INFO(state, error) {
         state.errorGetDocumentInfo = error
@@ -49,6 +54,9 @@ export const mutations = {
     // sets error of advancedSignDocument request
     SET_ERROR_ADVANCED_SIGN_DOCUMENT(state, error) {
         state.errorSimpleSignResponse = error
+    },
+    SET_DOCUMENT_SEEN_ERROR(state, error) {
+        state.errorDocumentSeen = error
     }
 }
 
@@ -67,6 +75,18 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
+    },
+    // makes axios call to get information if user has already seen the document
+    fetchSeen({commit}, docId) {
+        return documentAPI.getDocumentSeen(docId).then(response => {
+            commit('SET_DOCUMENT_SEEN', response.data);
+            commit('SET_DOCUMENT_SEEN_ERROR', {})
+        }).catch(error => {
+            commit('SET_DOCUMENT_SEEN_ERROR', error)
+        })
+    },
+    setSeenFalse({commit}) {
+        commit('SET_DOCUMENT_SEEN', false);
     },
     // makes axios call to review document, either sets reviewResponse (success) or error (error)
     reviewDocument({commit}, {docId}) {
@@ -100,6 +120,9 @@ export const actions = {
 export const getters = {
     getDocumentInfo: (state) => {
         return state.documentInfo
+    },
+    getSeen: (state) => {
+        return state.documentSeen
     },
     getReviewStatus: (state) => {
         return state.reviewResponse.status
