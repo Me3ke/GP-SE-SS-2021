@@ -2,7 +2,7 @@
     <div>
         <!-- Write area -->
         <div style="display: flex; margin-bottom: 1em">
-            <NameBubble name="Hans Peter "></NameBubble>
+            <NameBubble :name="user.firstname + ' ' +  user.lastname"></NameBubble>
             <div class="comment-container">
                 <div class="action-text justify-content-between" style="display:flex;">
                     <div>
@@ -30,9 +30,13 @@ export default {
         comment: Object
     },
     components: {NameBubble},
+    mounted() {
+        this.$store.dispatch('fetchUser')
+    },
     computed: {
         ...mapGetters({
-            loggedIn: 'getUsername'
+            loggedIn: 'getUsername',
+            user: 'getUser'
         }),
         commentTime() {
             var now = new Date().toISOString();
@@ -49,9 +53,14 @@ export default {
             var postedMinute = parseInt(this.comment.creationDate.split('T')[1].slice(3, 5))
 
             if (nowYear === postedYear && nowMonth === postedMonth && nowDay === postedDay) {
-                console.log(nowHour === postedHour)
-                if (nowHour === postedHour) {
-                    var diff = nowMinute - postedMinute
+                if (nowHour - postedHour <= 1) {
+                    var diff = 0
+                    if (nowHour === postedHour) {
+                        diff = nowMinute - postedMinute
+                    } else {
+                        diff = nowMinute - postedMinute + 60
+                    }
+
                     if (diff === 0) {
                         if (this.$i18n.locale === 'de') {
                             return "Gerade eben"
