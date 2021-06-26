@@ -185,11 +185,10 @@
 </template>
 
 <script>
-import VueSignaturePad from 'vue-signature-pad';
 
 export default {
     name: "SignatureUploadPopUp",
-    components: {VueSignaturePad},
+
     data() {
         return {
             // TODO: axios call to check if already set up, if so change page to 1
