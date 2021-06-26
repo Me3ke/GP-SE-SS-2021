@@ -5,7 +5,6 @@
         @click="clicked"
     >
 
-        {{getDocumentProgress !== undefined ? 'document progress defined' : 'document progress undefined'}}
             <b-progress max="100">
                 <b-progress-bar
                     :value="docPercentage"
@@ -169,9 +168,6 @@ export default {
 
 
         getPercentage() {
-            /*if(this.state === 'CLOSED') {
-                return 100.00
-            } else {*/
                 return ((this.getDocumentProgress.data.alreadySigned.length + this.getDocumentProgress.data.alreadyRead.length)
                     / (this.getDocumentProgress.data.signatories.length
                         + this.getDocumentProgress.data.readers.length) * 100).toFixed(2)
@@ -193,11 +189,5 @@ export default {
 }
 
 
-
-@media screen and (max-width: 1200px) {
-
-
-
-}
 
 </style>

@@ -7,7 +7,6 @@ export const state = {
     errorGetDocument: {},
     errorGetDocumentProgress: {},
     documentProgressArray: [],
-    documentProgress: {},
     protocol: {},
     errorGetProtocol: {},
     reviewResponse: {},
@@ -20,7 +19,7 @@ export const state = {
 
 export const mutations = {
     // will sets the state to []
-    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state){
+    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state) {
         state.documentProgressArray = []
     },
 
@@ -49,14 +48,9 @@ export const mutations = {
         state.document = doc
     },
 
-    SET_DOCUMENT_PROGRESS(state,progress) {
-        //state.documentProgress = progress
+    SET_DOCUMENT_PROGRESS(state, progress) {
         state.documentProgressArray.push(progress)
     },
-    SET_DOCUMENT_PROGRESS_ARRAY(state,progress) {
-        state.documentProgressArray.push(progress)
-    },
-
     SET_ERROR_DOCUMENT_PROGRESS(state, error) {
         state.errorGetDocumentProgress = error
     },
@@ -86,7 +80,6 @@ export const actions = {
 
     // for resetting the state DOCUMENT_PROGRESS_ARRAY
     resetState({commit}) {
-        console.log('i am runnin')
         commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
     },
 
@@ -136,57 +129,70 @@ export const actions = {
         })
     },
 
-    async documentProgress({commit}, {envId, docId}) {
-        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
-        await documentAPI.getDocumentProgress(envId, docId).then((response) => {
-            let data = response.data
-            //let docProgress = {docId, data}
-            let progress = {docId, data}
-            commit('SET_DOCUMENT_PROGRESS', progress)
-            commit('SET_ERROR_DOCUMENT_PROGRESS', {})
-        }).catch(error => {
-            console.error(error)
-            commit('SET_ERROR_DOCUMENT_PROGRESS', error)
-        })
-        //console.log("SUCCESS")
+    async documentProgress({commit, state}, {envId, docId}) {
+        let doBreak = false
+        for(let i = 0; state.documentProgressArray.length; i++ ){
+            if (state.documentProgressArray[i].docId === docId) {
+                doBreak = true
+                break
+            }
+        }
+        if(!doBreak) {
+            await documentAPI.getDocumentProgress(envId, docId).then((response) => {
+                let data = response.data
+                let progress = {docId, data}
+                commit('SET_DOCUMENT_PROGRESS', progress)
+                commit('SET_ERROR_DOCUMENT_PROGRESS', {})
+            }).catch(error => {
+                console.error(error)
+                commit('SET_ERROR_DOCUMENT_PROGRESS', error)
+            })
+        }
     },
 
-     progressOfAllDocumentsInEnv({commit}, {envelope}) {
-         //commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
+    progressOfAllDocumentsInEnv({commit, state}, {envelope}) {
+        let doBreak = false;
+        let promises = []
 
-         envelope.documents.forEach(document => {
-             documentAPI.getDocumentProgress(envelope.id, document.id).then((response) => {
-                 let data = response.data
-                 let docId = document.id
-                 let progress = {docId, data}
-                 commit('SET_DOCUMENT_PROGRESS_ARRAY', progress)
+        for (let i = 0; i < envelope.documents.length; i++) {
+                for (let j = 0; j < state.documentProgressArray.length; j++) {
+                    if (state.documentProgressArray[j].docId === envelope.documents[i].id) {
+                        doBreak = true
+                        break
+                    }
+                }
+                if (!doBreak) {
 
-             }).catch(err => {
-                 console.error(err)
-                 commit('SET_ERROR_DOCUMENT_PROGRESS', err)
+                   promises.push(documentAPI.getDocumentProgress(envelope.id, envelope.documents[i].id).then((response) => {
+                        let data = response.data
+                        let docId = envelope.documents[i].id
+                        let progress = {docId, data}
+                        commit('SET_DOCUMENT_PROGRESS', progress)
 
-             })
-         })
-     }
+                    }).catch(err => {
+                        console.error(err)
+                        commit('SET_ERROR_DOCUMENT_PROGRESS', err)
+                    }))
+                }
+                doBreak = false
+            }
+            return Promise.all(promises)
+        }
 }
 
 export const getters = {
     getDocument: (state) => {
         return state.document
     },
-
-    getDocumentProgress: (state) => {
-        return state.documentProgress
-    },
     // for calculating all progress of all documents in env
-    getDocumentProgressArray : (state) => {
+    getDocumentProgressArray: (state) => {
         return state.documentProgressArray
     },
 
     getDocumentProgressArrayById: (state) => (id) => {
         let documentProgress
-        for (let i=0; i < state.documentProgressArray.length; i++){
-            if(state.documentProgressArray[i].docId === id) {
+        for (let i = 0; i < state.documentProgressArray.length; i++) {
+            if (state.documentProgressArray[i].docId === id) {
                 documentProgress = state.documentProgressArray[i]
             }
         }
@@ -196,23 +202,15 @@ export const getters = {
 
     getDocumentProgressArrayByEnvelope: (state) => (documents) => {
         let envelopeProgress = []
-
-
-
-        for(let i = 0; i < state.documentProgressArray.length; i++) {
-            for(let j = 0; j < documents.length; j++) {
-                if(state.documentProgressArray[i].docId === documents[j].id) {
+        for (let i = 0; i < state.documentProgressArray.length; i++) {
+            for (let j = 0; j < documents.length; j++) {
+                if (state.documentProgressArray[i].docId === documents[j].id) {
                     envelopeProgress.push(state.documentProgressArray[i])
                     break
                 }
             }
         }
-
-        let uniq = {};
-        let withOutDup = envelopeProgress.filter(obj => !uniq[obj.docId] && (uniq[obj.docId] = true))
-        //envelopeProgress.filter((item, index) => envelopeProgress.i)
-
-        return withOutDup
+        return envelopeProgress
     },
 
     getErrorGetDocumentProgress: (state) => {

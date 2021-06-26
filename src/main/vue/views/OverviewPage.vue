@@ -144,6 +144,11 @@ export default {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
         this.$store.dispatch('fetchUser')
     },
+
+    beforeDestroy() {
+        this.$store.dispatch('document/resetState')
+    },
+
     computed: {
         ...mapGetters({
             envelopes: 'envelopes/getFilteredPagedEnvelopes',

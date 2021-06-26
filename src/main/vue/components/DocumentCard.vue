@@ -77,23 +77,7 @@ export default {
             this.showAuth = false
         }
     },
-    // resets the state of documentProgress array to [] if this pages is going to reload
-    // otherwise it will add by every refreshing or new loading of the page all documents to the already (previously)
-    // added state array
 
-    /*async beforeCreate() {
-        await this.$store.dispatch('document/resetState', [])
-
-        await this.$store.dispatch('document/getDocumentProgress', {
-            envId: this.envelopeId,
-            docId: this.document.id
-        })
-
-    }*/
-
-    /*beforeMount() {
-        this.$store.dispatch('document/resetState')
-    },*/
     mounted() {
         this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,

@@ -8,7 +8,7 @@
             <b-col cols="11">
                 <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
-                    <div v-if="this.envelope.owner.email === this.$store.state.auth.username">
+                    <div v-if="this.envelope.owner.email === this.$store.state.auth.username && showProgress">
                         <EnvelopeProgressBar
                             :envelope="envelopeProgress(envelope.documents)"
                             :env="envelope"
@@ -40,7 +40,8 @@ export default {
     data() {
         return {
             showAuth: false,
-            advanced: false
+            advanced: false,
+            showProgress: false
         }
     },
 
@@ -56,7 +57,7 @@ export default {
 
 
     },
-    mounted() {
+    async mounted() {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)
         for (let i = 0; i < this.envelope.documents.length; i++) {
             if (this.envelope.documents[i].signatureType === 'ADVANCED_SIGNATURE') {
@@ -64,9 +65,11 @@ export default {
             }
         }
 
-        this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
+        await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
             envelope: this.envelope
         })
+        this.showProgress = true
+
     },
 
     methods: {

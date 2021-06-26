@@ -46,7 +46,10 @@ export default {
 
      async created() {
          await this.$store.dispatch('envelopes/fetchEnvelopes', {})
-     }
+     },
+     beforeDestroy() {
+        this.$store.dispatch('document/resetState')
+    }
 
 
 }
