@@ -47,7 +47,6 @@
     --light-grey: #ACACAC;
     --shadow-grey: #D8D8D9;
     --green: #81ba66;
-    --green-transparent: rgba(93, 149, 67, 0.3);
 
     --closed-doc: #070809;
     --closed-doc-hover: #788796;
@@ -92,6 +91,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: var(--dark-grey);
+    background-color: var(--whitesmoke);
     margin: 0;
     padding-bottom: 0;
     max-width: 100%;
@@ -282,4 +282,94 @@ body {
 .was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid:focus ~ .custom-file-label {
     border-color: var(--green);
     box-shadow: 0 0 0 0.2rem var(--green-transparent);
+}
+
+/* Sidebar */
+.b-sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    opacity: 100%;
+}
+
+.bg-dark {
+    background-color: var(--modalBackground) !important;
+}
+
+.text-dark {
+    color: var(--dark-grey) !important;
+}
+
+.b-sidebar > .b-sidebar-body {
+    background-color: var(--whitesmoke);
+    border: 1px solid var(--elsa-blue);
+}
+
+.b-sidebar {
+    width: 15em;
+    font-size: 1.3em;
+    text-align: left;
+    bottom: 0;
+    top: 3em
+}
+
+.page-item .page-link
+{
+    color: var(--dark-grey)!important;
+    background-color: var(--whitesmoke)!important;
+}
+
+.page-item.active .page-link
+{
+    color: var(--whitesmoke)!important;
+    background-color: var(--elsa-blue)!important;
+    border-color: var(--elsa-blue)!important;
+}
+
+.page-link:focus
+{
+    box-shadow: 0 0 0 0.2em var(--elsa-blue-transparent)!important;
+}
+
+#mini-sidebar.b-sidebar {
+    width: 4em;
+}
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .b-sidebar {
+        font-size: 0.5em;
+        top: 5em
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .b-sidebar {
+        font-size: 0.41em;
+        top: 6.5em
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .b-sidebar {
+        font-size: 0.41em;
+        top: 9.51em
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .b-sidebar {
+        font-size: 0.75em;
+        top: 5.2em
+    }
+}
+
+@media (min-width: 992px) {
+    .b-sidebar {
+        font-size: 1.3em;
+        top: 3em
+    }
 }

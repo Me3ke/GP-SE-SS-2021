@@ -18,7 +18,7 @@
         "back": "Go back"
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "German",
             "en": "English",
@@ -56,9 +56,11 @@
         "toRead2": "",
         "toSignRead1": "Read and sign until",
         "toSignRead2": "",
-        "envReadSign": "There are documents to sign or read",
-        "envRead": "There are documents to read",
-        "envSign": "There are documents to sign"
+        "envReadSign": "Read and sign",
+        "envRead": "Read",
+        "envSign": "Sign",
+        "search": "Search",
+        "noDocuments": "No documents yet"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -197,6 +199,7 @@
     "Settings": {
         "on": "On",
         "off": "Off",
+        "saved": "Saved!",
         "content": "Account settings",
         "UserInfoBox": {
             "profileInformation": "Profile information",
@@ -272,6 +275,14 @@
                 "text": "Protocol availability",
                 "exp": "Get website alerts about the availability of document protocols."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Edit all documents in the envelope",
+            "addSignatory": "Add signatories",
+            "placeholderMail": "Signatory@mail.de",
+            "signatory": "Signatory",
+            "addReader": "Add proofreader",
+            "reader": "Proofreaders"
         }
     },
     "UploadDoc": {
@@ -283,25 +294,41 @@
         "newEnv": "Create a new envelope",
         "selectEnv": "Select an existing envelope",
         "newEnvPlaceholder": "Name of new envelope",
-        "configureDoc": "Configure document"
+        "configureDoc": "Configure document",
+        "addReaders": "Add proofreaders",
+        "skipReview": "Skip review process",
+        "chooseDate": "Chose deadline",
+        "orderRelevant": "Order relevant",
+        "selectedDoc": "File: ",
+        "chooseFile": "Choose a file or drop it here...",
+        "simple": "Simple",
+        "advanced": "Advanced",
+        "signatureType": "Signaturetype"
     },
     "DownloadDoc": {
         "download": "Download",
         "heading": "Download now!",
         "sure": "Are you sure you want to download the document?",
-        "cancel": "Cancel",
-        "success": "You successfully downloaded the document!",
-        "close": "Close"
+        "cancel": "Cancel"
+    },
+    "DownloadProtocol": {
+        "protocol": "Protocol",
+        "sure": "Are you sure you want to download the protocol?",
+        "errorOne": "There have been problems fetching the protocol.",
+        "errorTwo": "Try refreshing the page or contact an admin."
     },
     "DocumentPage": {
         "noView": "No preview available. Download the document instead.",
         "download": "Download",
-        "doSign": "You have not signed this document yet. Sign now.",
-        "sign": "Sign",
-        "didSign": "You have successfully signed this document.",
-        "doRead": "You have not proofread this document yet. Confirm now that you have.",
-        "read": "Proofread",
-        "didRead": "You have successfully proofread this document.",
+        "doSign": "Sign",
+        "didSign": "Already signed",
+        "doRead": "Proofread",
+        "didRead": "Already proofread",
+        "comments": "Comments",
+        "protocol": "Show protocol",
+        "history": "Show history",
+        "newVersion": "New Version",
+        "settings": "Settings",
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
@@ -315,11 +342,14 @@
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
-        "fail": "Login failed."
+        "fail": "Login failed.",
+        "resetPassword": "reset Password",
+        "send": "send",
+        "reset": "To reset your password, you will receive an e-mail containing a reset link."
     },
     "Register": {
         "email": "e-mail",
-        "password": "password",
+        "password": "password (min. 8 characters)",
         "register": "sign up",
         "sign-up": "sign up",
         "feedback-invalid-email": "Please enter an valid e-mail.",
@@ -327,29 +357,49 @@
         "fail": "Login failed.",
         "firstname": "first name",
         "surname": "surname",
-        "feedback-invalid-name": "Please enter an valid name."
+        "feedback-invalid-name": "Please enter an valid name.",
+        "postcode": "postcode",
+        "city": "city",
+        "birthdate": "birth date",
+        "street": "street",
+        "streetNumber": " nr.",
+        "phoneNumber": "phone number",
+        "passwordRepeat": "confirm password",
+        "login": "go to login"
     },
     "KeypairAlert": {
-        "generate": "Generate Keypair",
-        "upload": "Upload Keypair",
-        "selectOption": "Select option",
-        "cancelText": "Cancel",
-        "forceChoose": "You need to choose something!",
-        "warning": "Warning",
-        "warningText": "If you continue, your current keypair will be lost forever. Are you sure you want to continue?",
-        "continueText": "Continue",
+        "title": "Set up your keypair",
+        "choose": "Do you want to upload your own keypair or generate one?",
+        "generate": "Generate",
+        "upload": "Upload ",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "close": "Close",
+        "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
+        "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
+        "cancelWarningTwo": "your keypair via the settings page.",
+        "privateKey": "Copy your private key and save it to a .txt file.",
+        "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
-        "uploadText": "Uploading"
+        "uploadHere": "Upload your public key here.",
+        "uploadHereExp": "Accepted are files that end on .txt. The key has to have 1024 characters",
+        "placeholder": "Drop key here or choose",
+        "dropPlaceholder": "Drop here",
+        "success": "You have successfully uploaded your public key!",
+        "successWarning": "Do not loose the corresponding private key!"
     },
     "TwoFakAuth": {
         "cancel": "Cancel",
         "continue": "Continue",
         "close": "Close",
         "back": "Back",
+        "verify": "Authenticate now!",
         "serverErrorOne": "There appear to be problems with your server connection.",
         "serverErrorTwo": "Please try reloading the page or talk to an administrator.",
+        "serverErrorTwoAdmin": "Please try reloading the page or contact TechSupport.",
+        "fail": "There appear to be server problems. Error Code: ",
         "login": {
-            "title": "Set-up your two-factor authentication",
+            "title": "Set up your two-factor authentication",
             "firstStep": "Step 1: Scan the qr-code with your authenticator app",
             "secondStep": "Step 2: Enter the 6-digit code from your authenticator app",
             "always": "Enable two-factor authentication for every login",
@@ -374,7 +424,15 @@
             "code": "Enter the 6-digit code from your authenticator app",
             "sure": "Are you sure you want to cancel the process?",
             "leftTries": "The code was wrong. Tries until logout:",
-            "logout": "You put in too many wrong codes. You will be logged out automatically."
+            "logout": "You put in too many wrong codes. You will be logged out automatically.",
+            "placeholder": "Drop key here or choose",
+            "dropPlaceholder": "Drop here",
+            "accepted": "Accepted are files that end on .txt.",
+            "uploadExp": "Upload your private key to confirm your identity.",
+            "notDone": "In order to sign you still have to set up the following.",
+            "tfa": "Two-factor authentication",
+            "keyPair": "Key-pair",
+            "toSettings": "To settings"
         },
         "read": {
             "read": "Proofread now!",
@@ -383,5 +441,79 @@
             "success": "You have successfully proofread!",
             "sure": "Are you sure you want to cancel the process?"
         }
+    },
+    "wizard": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "back": "Back",
+        "welcome": {
+            "welcome": "Welcome to ELSA!",
+            "toDo": "I'm Elsa. I'm going to help you use this page in the best way possible. Let's start be setting up some important elements for giving signatures.",
+            "2FakAuth": "Step 1: Two-factor authentication",
+            "2FakAuthExp": "A second factor used to confirm your identity will prevent people from using your computer in order to sign under your name.",
+            "setUp": "Set up",
+            "keypair": "Step 2: Keypair",
+            "keypairExp": "Another key element to keep your identity and signature save, because you are they only one that knows your private key.",
+            "done": "It is done!",
+            "fun": "You have successfully set up everything you need in order to use ELSA to its fullest.",
+            "go": "Let's go",
+            "cancelWarningOne": "If you cancel now you cannot use ELSA completely ",
+            "cancelWarningTwo": "without setting up every necessary element via the settings page."
+        }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Corporate design",
+            "titleExp": "Experimental Design",
+            "exp": "Experimental settings",
+            "light": "Light mode",
+            "dark": "Dark mode",
+            "logo": "Logo",
+            "currentLogo": "Current logo:",
+            "logoUpload": "Upload logo",
+            "logoUploadHere": "Upload your logo here",
+            "logoUploadHereExp": "Accepted are image files. To get a good result use an image with dimensions 400x120 pixel.",
+            "logoTitle": "Upload your logo!",
+            "logoPlaceholder": "Drop logo here or choose",
+            "dropPlaceholder": "Drop here",
+            "logoSuccess": "You have successfully uploaded your logo!",
+            "color": "Color scheme",
+            "color1": "Font and contrast color",
+            "color2": "Accent color",
+            "color3": "Background and main color",
+            "color4": "Light neutral",
+            "color5": "Dark neutral",
+            "color6": "Open document - hover",
+            "color7": "Closed document",
+            "color8": "Closed document - hover",
+            "color9": "Document action required",
+            "color10": "Document action required - Hover",
+            "color11": "Light warn color",
+            "color12": "Dark warn color",
+            "color13": "Setting color",
+            "color14": "Pop-Up background",
+            "default": "Default"
+        }
+    },
+    "CommentsPage": {
+        "title": "Comments",
+        "comment": "comment",
+        "comments": "comments",
+        "sort": "Sort by",
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "writePrompt": "Leave comment as ",
+        "cancel": "Cancel",
+        "send": "Send",
+        "empty": "No comments",
+        "answers": "replies",
+        "doNotAnswers": "Hide replies",
+        "noAnswers": "No replies",
+        "reply": "Reply",
+        "owner": "Owner",
+        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments.",
+        "serverErrorOne": "Your comment could not be posted.",
+        "serverErrorTwo": "Please try again later or talk to an administrator.",
+        "serverErrorThree": "The comments could not be loaded."
     }
 }

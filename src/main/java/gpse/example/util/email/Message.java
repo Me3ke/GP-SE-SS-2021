@@ -26,9 +26,8 @@ public class Message {
     @Column
     private LocalDateTime timeStamp;
 
-    @ManyToOne
-    @JoinColumn
-    private User recievingUser;
+    @Column
+    private String recievingUserMail;
 
     @ManyToOne
     @JoinColumn
@@ -36,7 +35,6 @@ public class Message {
 
     public Message() {
         timeStamp = LocalDateTime.now();
-        sendingUser = null;
     }
 
     /**
@@ -46,17 +44,18 @@ public class Message {
      */
     public SimpleMailMessage generateMessage() throws MessageGenerationException {
         final SimpleMailMessage message = new SimpleMailMessage();
+
         if (sendingUser == null) {
             message.setFrom("System");
         } else {
             message.setFrom(sendingUser.getEmail());
         }
 
-        if (recievingUser == null || subject == null || text == null) {
+        if (recievingUserMail == null || subject == null || text == null) {
             throw new MessageGenerationException(this.messageID);
         }
 
-        message.setTo(recievingUser.getEmail());
+        message.setTo(recievingUserMail);
         message.setSubject(subject);
         message.setText(text);
 
@@ -67,7 +66,7 @@ public class Message {
         return messageID;
     }
 
-    public void setMessageID(long messageID) {
+    public void setMessageID(final long messageID) {
         this.messageID = messageID;
     }
 
@@ -75,7 +74,7 @@ public class Message {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -83,7 +82,7 @@ public class Message {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(final String text) {
         this.text = text;
     }
 
@@ -91,23 +90,23 @@ public class Message {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(final LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 
-    public User getRecievingUser() {
-        return recievingUser;
+    public String getRecievingUserMail() {
+        return recievingUserMail;
     }
 
-    public void setRecievingUser(User user) {
-        this.recievingUser = user;
+    public void setRecievingUserMail(final String email) {
+        this.recievingUserMail = email;
     }
 
     public User getSendingUser() {
         return sendingUser;
     }
 
-    public void setSendingUser(User sendingUser) {
+    public void setSendingUser(final User sendingUser) {
         this.sendingUser = sendingUser;
     }
 }

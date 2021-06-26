@@ -8,12 +8,12 @@ package gpse.example.domain.exceptions;
  */
 public class SignatureTypeFromIntegerException extends Exception {
 
-    static final long serialVersionUID = 42L;
+    /*default*/ static final long serialVersionUID = 42L;
 
     /**
      * This message hold a description of the Exception.
      */
-    static final String MESSAGE = "Invalid input for SignatureType.fromInteger(int i), valid scope: -1,0,1";
+    /*default*/ static final String MESSAGE = "Invalid input for SignatureType.fromInteger(int i), valid scope: -1,0,1";
 
     @Override
     public String getMessage() {

@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,29 +37,42 @@ public class User implements UserDetails {
     @Column
     private String lastname;
 
-    //@OneToMany
-    //private List<Keys> keys = new ArrayList<>();
+    @Column
+    // false: user has not had a first login yet; true: user has had a first login
+    private boolean firstLogin;
+
+    @ElementCollection
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private List<String> archivedPublicKeys = new ArrayList<>();
+
+    @Lob
+    private String publicKey;
 
     @Column
-    private PublicKey publicKey;
-
-    @Column
+    @JsonIgnore
     private String password;
 
     //@OneToOne
     //private Keys activePair;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private PersonalData personalData;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private SecuritySettings securitySettings;
 
     @Column
     private boolean enabled;
 
     @Column
-    private boolean adminValidated;
+    private boolean accountNonLocked;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
@@ -85,7 +97,8 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
-        this.adminValidated = false;
+        this.accountNonLocked = false;
+        this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
     }
 
@@ -118,6 +131,14 @@ public class User implements UserDetails {
             activePair = keys.get(index);
         }
     }*/
+
+    public List<String> getArchivedPublicKeys() {
+        return archivedPublicKeys;
+    }
+
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
+        this.archivedPublicKeys = archivedPublicKeys;
+    }
 
     /**
      * the Method used to fill in information that is not necessarily needed.
@@ -222,7 +243,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @JsonIgnore
@@ -266,11 +287,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public PublicKey getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(final PublicKey publicKey) {
+    public void setPublicKey(final String publicKey) {
         this.publicKey = publicKey;
     }
 
@@ -286,12 +307,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public boolean isAdminValidated() {
-        return adminValidated;
-    }
-
-    public void setAdminValidated(final boolean adminValidated) {
-        this.adminValidated = adminValidated;
+    public void setAccountNonLocked(final boolean adminValidated) {
+        this.accountNonLocked = adminValidated;
     }
 
     public List<String> getRoles() {
@@ -308,5 +325,13 @@ public class User implements UserDetails {
 
     public void setSecuritySettings(final SecuritySettings securitySettings) {
         this.securitySettings = securitySettings;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(final boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 }

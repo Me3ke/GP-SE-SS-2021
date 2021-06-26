@@ -41,8 +41,8 @@ public class DocumentMetaData {
 
      */
 
-    @Column
-    private LocalDateTime lastModified;
+    //@Column
+    //private LocalDateTime lastModified;
 
     @Column
     private long size;
@@ -52,16 +52,15 @@ public class DocumentMetaData {
      *
      * @param metaTimeStampUpload the Timestamp created during the upload
      * @param metaDocumentTitle   the document file name
-     * @param lastModified        the date of last modification on the document
      * @param size                the size of the document
      * @param metaUserID          an ID referring to the owner of the envelope this document is a part of.
      */
     public DocumentMetaData(final LocalDateTime metaTimeStampUpload, final String metaDocumentTitle,
-                            final LocalDateTime lastModified, final long size, final String metaUserID) {
+                            /*final LocalDateTime lastModified,*/ final long size, final String metaUserID) {
         this.metaTimeStampUpload = metaTimeStampUpload;
         this.metaDocumentTitle = metaDocumentTitle;
         //this.creationDate = formatDateTime(creationDate);
-        this.lastModified = lastModified;
+        //this.lastModified = lastModified;
         //this.lastAccess = formatDateTime(lastAccess);
         this.size = size;
         this.metaUserID = metaUserID;
@@ -77,11 +76,11 @@ public class DocumentMetaData {
      * Constructor for meta data that is important for archived documents.
      * @param documentMetaData the old meta data.
      */
-    public DocumentMetaData(DocumentMetaData documentMetaData) {
+    public DocumentMetaData(final DocumentMetaData documentMetaData) {
         this.metaTimeStampUpload = documentMetaData.getMetaTimeStampUpload();
         this.metaDocumentTitle = documentMetaData.getMetaDocumentTitle();
         //this.creationDate = formatDateTime(creationDate);
-        this.lastModified = documentMetaData.getLastModified();
+        //this.lastModified = documentMetaData.getLastModified();
         //this.lastAccess = formatDateTime(lastAccess);
         this.size = documentMetaData.getSize();
         this.metaUserID = documentMetaData.getMetaUserID();
@@ -140,9 +139,9 @@ public class DocumentMetaData {
         return identifier;
     }
 
-    public LocalDateTime getLastModified() {
+    /*public LocalDateTime getLastModified() {
         return lastModified;
-    }
+    }*/
 
     public long getSize() {
         return size;

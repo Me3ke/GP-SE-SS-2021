@@ -3,7 +3,7 @@
         <b-container fluid id="heading">
             <b-row>
                 <h3>
-                    <b-icon icon="arrow-left" style="fill: var(--dark-grey); font-weight: bolder;"
+                    <b-icon icon="arrow-left" style="fill: var(--dark-grey); font-weight: bolder; margin-right: 0.25em"
                             @click="historyThere()  ? $router.go(-1) : $router.push('/')">
                     </b-icon>
                     <span v-if="translate">{{ $t(name) }}</span>
@@ -36,31 +36,47 @@ export default {
 </script>
 
 <style scoped>
-#heading {
-    margin-left: calc((2vh + 1vw) / 2);
-    height: calc((2vh + 1vw) / 2);
-    margin-top: calc((2vh + 1vw) / 2);
-    margin-bottom: 4vh;
+h3 {
+    margin-left: 0.75em;
+    height: fit-content;
+    margin-bottom: 1em;
 }
 
-/* Extra small devices (portrait phones, less than 576px) */
+/* Settings for differently sized screens */
 @media (max-width: 575.98px) {
+
     h3 {
-        font-size: 1.1em;
+        font-size: 1em;
+        margin-top: 3em;
     }
 }
 
-/* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
+
     h3 {
         font-size: 1.1em;
+        margin-top: 3em;
     }
 }
 
-/* Large Phones in landscape mode */
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+
     h3 {
-        font-size: 1.1em;
+        font-size: 1.15em;
+        margin-top: 3em;
     }
 }
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    h3 {
+        margin-top: 3em;
+    }
+}
+
+@media (min-width: 992px) {
+    h3 {
+        margin-top: 3em;
+    }
+}
+
 </style>

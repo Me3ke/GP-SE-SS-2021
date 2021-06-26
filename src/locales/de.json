@@ -133,7 +133,7 @@
         ]
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "Deutsch",
             "en": "Englisch",
@@ -171,9 +171,11 @@
         "toRead2": "gegenlesen",
         "toSignRead1": "Bis zum",
         "toSignRead2": "gegenlesen und signieren",
-        "envReadSign": "Enthält Dokumente zum signieren und zum gegenlesen",
-        "envRead": "Enthält Dokumente zum gegenlesen",
-        "envSign": "Enthält Dokumente zum signieren"
+        "envReadSign": "Gegenlesen und signieren",
+        "envRead": "Gegenlesen",
+        "envSign": "Signieren",
+        "search": "Suchen",
+        "noDocuments": "Noch keine Dokumente"
     },
     "Document": {
         "owner": "Besitzer",
@@ -198,6 +200,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
+        "saved": "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -274,6 +277,16 @@
                 "text": "Protokoll-Verfügbarkeit",
                 "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
+        },
+        "DocumentSettings": {
+            "editAll": "Alle Dokumente im Verbund bearbeiten",
+            "addSignatory": "Unterzeichner hinzufügen",
+            "placeholderMail": "MaxMustermann@mail.de",
+            "signatory": "Unterzeichner",
+            "addReader": "Gegenleser hinzufügen",
+            "reader": "Gegenleser",
+            "chooseDate": "Zeitraum bestimmen",
+            "orderRelevant": "Reihenfolge berücksichtigen"
         }
     },
     "UploadDoc": {
@@ -285,25 +298,39 @@
         "newEnv": "Neuen Verbund anlegen",
         "selectEnv": "Bestehenden Verbund auswählen",
         "newEnvPlaceholder": "Name des Verbundes",
-        "configureDoc": "Dokumenteneinstellungen"
+        "configureDoc": "Dokumenteneinstellungen",
+        "addReaders": "Gegenleser hinzufügen",
+        "skipReview": "Gegenlese-Prozess überspringen",
+        "selectedDoc": "Dokument: ",
+        "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
+        "simple": "Einfach",
+        "advanced": "Fortgeschritten",
+        "signatureType": "Signaturtyp"
     },
     "DownloadDoc": {
         "download": "Herunterladen",
         "heading": "Jetzt herunterladen!",
         "sure": "Möchten Sie das Dokument wirklich herunterladen?",
-        "cancel": "Abbrechen",
-        "success": "Sie haben das Dokument erfolgreich heruntergeladen!",
-        "close": "Schließen"
+        "cancel": "Abbrechen"
+    },
+    "DownloadProtocol": {
+        "protocol": "Protokoll",
+        "sure": "Möchten Sie das Protokoll wirklich herunterladen?",
+        "errorOne": "Es gab Probleme beim Laden des Protokolls.",
+        "errorTwo": "Laden Sie die Seite neu oder kontaktieren Sie einen Administrator."
     },
     "DocumentPage": {
         "noView": "Keine Vorschau verfügbar. Laden Sie das Dokument stattdessen herunter. ",
         "download": "Herunterladen",
-        "doSign": "Sie haben das Dokument noch nicht unterschrieben. Unterschreiben Sie jetzt.",
-        "sign": "Unterschreiben",
-        "didSign": "Sie haben das Dokument erfolgreich unterschrieben.",
-        "doRead": "Sie haben das Dokument noch nicht gegengelesen. Bestätigen Sie jetzt, dass Sie gegengelesen haben.",
-        "read": "Gegenlesen",
-        "didRead": "Sie haben das Dokument erfolgreich gegengelesen.",
+        "doSign": "Unterschreiben",
+        "didSign": "Schon unterschrieben",
+        "doRead": "Gegenlesen",
+        "didRead": "Schon gegengelesen.",
+        "comments": "Kommentare",
+        "protocol": "Protokoll anzeigen",
+        "history": "Historie einsehen",
+        "newVersion": "Neue Version",
+        "settings": "Einstellungen",
         "close": "Schließen",
         "errors": {
             "notFound": "Das Dokument konnte nicht gefunden werden.",
@@ -317,11 +344,14 @@
         "sign-in": "Anmelden",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
-        "fail": "Anmeldung fehlgeschlagen."
+        "fail": "Anmeldung fehlgeschlagen.",
+        "resetPassword": "Passwort zurücksetzen",
+        "send": "senden",
+        "reset": "Um Ihr Passwort zurück zu setzen senden wir Ihnen einen Bestätigungs-Link an Ihre E-Mail Adresse."
     },
     "Register": {
         "email": "E-Mail",
-        "password": "Passwort",
+        "password": "Passwort (min. 8 Zeichen)",
         "register": "Registrierung",
         "sign-up": "Registrieren",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
@@ -329,27 +359,47 @@
         "fail": "Registrierung fehlgeschlagen.",
         "firstname": "Vorname",
         "surname": "Nachname",
-        "feedback-invalid-name": "Bitte einen validen Namen eingeben."
+        "feedback-invalid-name": "Bitte einen validen Namen eingeben.",
+        "postcode": "Postleitzahl",
+        "city": "Stadt",
+        "birthdate": "Geburtsdatum",
+        "street": "Straße",
+        "streetNumber": " Nr.",
+        "phoneNumber": "Telefonnummer",
+        "passwordRepeat": "Passwort bestätigen",
+        "login": "Zum Login"
     },
     "KeypairAlert": {
-        "generate": "Generiere Schlüsselpaar",
-        "upload": "Lade Schlüsselpaar hoch",
-        "selectOption": "Wähle Option",
-        "cancelText": "Abbruch",
-        "forceChoose": "Es muss etwas ausgewählt werden!",
-        "warning": "Warnung",
-        "warningText": "Wenn Sie fortfahren, wird das alte Schlüsselpaar für immer verloren gehen; Sind Sie sich sicher?",
-        "continueText": "Fortfahren",
+        "title": "Richten Sie Ihr Schlüsselpaar ein",
+        "choose": "Möchten Sie ein eigenes Schlüsselpaar hochladen oder eins generieren lassen?",
+        "generate": "Generieren",
+        "upload": "Hochladen",
+        "continue": "Weiter",
+        "cancel": "Abbruch",
+        "close": "Schließen",
+        "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
+        "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
+        "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
-        "uploadText": "Hochladen..."
+        "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
+        "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
+        "placeholder": "Schlüssel hier ablegen oder auswählen",
+        "dropPlaceholder": "Hier fallen lassen",
+        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {
         "cancel": "Abbruch",
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "verify": "Jetzt authentifizieren!",
         "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
         "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
+        "serverErrorTwoAdmin": "Bitte laden Sie die Seite neu oder wenden Sie sich an den technischen Support.",
+        "fail": "Es scheint Server-Probleme zu geben. Fehlercode: ",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
             "firstStep": "Schritt 1: Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
@@ -366,7 +416,7 @@
             "tryAgain": "Versuchen Sie es direkt erneut oder beginnen Sie von vorne.",
             "again": "Erneut versuchen",
             "toStart": "Zum Beginn",
-            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Autehntifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
+            "attention": "Achtung! Sie haben schon Ihre Zwei-Faktor-Authentifizierung eingerichtet. Wenn Sie fortfahren, geht diese verloren!"
         },
         "sign": {
             "sureOne": "Sind Sie sich sicher, dass Sie folgendes Dokument unterschreiben wollen?",
@@ -376,7 +426,15 @@
             "code": "Geben Sie den 6-stelligen Sicherheitscode aus Ihrer  Authentifizierungs-App ein",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?",
             "leftTries": "Der Code war falsch. Versuche bis zum Logout:",
-            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt."
+            "logout": "Sie haben zu viele falsche Codes eingegeben und werden automatisch ausgeloggt.",
+            "placeholder": "Schlüssel hier ablegen oder auswählen",
+            "dropPlaceholder": "Hier fallen lassen",
+            "accepted": "Akzeptiert werden Dokumente, die mit .txt enden.",
+            "uploadExp": "Laden Sie Ihren Private Key zum Überprüfen Ihrer Identität hoch.",
+            "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
+            "tfa": "Zwei-Faktor-Authenifizierung",
+            "keyPair": "Schlüsselpaar",
+            "toSettings": "Zu den Einstellungen"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
@@ -385,5 +443,79 @@
             "success": "Sie haben erfolgreich gegengelesen!",
             "sure": "Sind Sie sich sicher, dass Sie den Prozess abbrechen wollen?"
         }
+    },
+    "wizard": {
+        "cancel": "Abbruch",
+        "continue": "Weiter",
+        "back": "Zurück",
+        "welcome": {
+            "welcome": "Willkommen bei ELSA!",
+            "toDo": "Um die Seite optimal zu nutzen, müssen Sie ein paar für die Signatur relevanten Einstellungen treffen.",
+            "2FakAuth": "Schritt 1: Zwei-Faktor-Authentifizierung einrichten",
+            "2FakAuthExp": "Damit sich niemand einfach an Ihren Computer setzt und für Sie wichtige Dokumente unterschreiben kann, sorgt ein zweiter Faktor zur Identitätsbestätigung für extra Sicherheit.",
+            "setUp": "Einrichten",
+            "keypair": "Schritt 2: Schlüsselpaar einrichten",
+            "keypairExp": "Auch hierbei handelt es sich um einen weiteren wichtigen Sicherheitsfaktor der Ihre Signatur schütz, denn den privaten Schlüssel kennen nur Sie.",
+            "done": "Geschafft!",
+            "fun": "Sie haben erfolgreich alle Einstellungen getroffen, um ELSA optimal nutzen zu können.",
+            "go": "Los geht's",
+            "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
+            "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
+        }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Firmen Design",
+            "titleExp": "Experimentelles Design",
+            "exp": "Experimentelle Einstellungen",
+            "light": "Heller Modus",
+            "dark": "Dunkler Modus",
+            "logo": "Logo",
+            "currentLogo": "Aktuelles Logo:",
+            "logoUpload": "Logo hochladen",
+            "logoUploadHere": "Laden Sie hier Ihr Logo hoch.",
+            "logoUploadHereExp": "Akzeptiert werden Bild-Dateien. Für ein gutes Erbenis nutzen Sie 400x120-Pixel Bilder.",
+            "logoTitle": "Laden Sie Ihr Logo hoch!",
+            "logoPlaceholder": "Logo hier ablegen oder auswählen ",
+            "dropPlaceholder": "Hier fallen lassen",
+            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!",
+            "color": "Farbthema",
+            "color1": "Schrift- und Kontrastfarbe",
+            "color2": "Akzentfarbe",
+            "color3": "Hintergrund- und Hauptfarbe",
+            "color4": "Heller Neutralton",
+            "color5": "Dunkler Neutralton",
+            "color6": "Offenes Dokument - Hover",
+            "color7": "Geschlossenes Dokument",
+            "color8": "Geschlossenes Dokument - Hover",
+            "color9": "Dokument Aktion benötigt",
+            "color10": "Dokument Aktion benötigt - Hover",
+            "color11": "Helle Warnfarbe",
+            "color12": "Dunkle Warnfarbe",
+            "color13": "Einstellungsfarbe",
+            "color14": "Pop-Up Hintergrund",
+            "default": "Standard"
+        }
+    },
+    "CommentsPage": {
+        "title": "Kommentare",
+        "comment": "Kommentar",
+        "comments": "Kommentare",
+        "sort": "Sortieren nach",
+        "newest": "Neuste zuerst",
+        "oldest": "Älteste zuerst",
+        "writePrompt": "Kommentar hinzufügen als ",
+        "cancel": "Abbrechen",
+        "send": "Absenden",
+        "empty": "Keine Kommentare",
+        "answers": "Antworten anzeigen",
+        "doNotAnswers": "Antworten ausblenden",
+        "noAnswers": "Keine Antworten",
+        "reply": "Antworten",
+        "owner": "Besitzer",
+        "hint": "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen",
+        "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
+        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
+        "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     }
 }

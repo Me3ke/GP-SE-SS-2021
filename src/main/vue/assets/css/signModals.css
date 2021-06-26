@@ -1,3 +1,11 @@
+.spinner-border {
+    width: 1em;
+    height: 1em;
+    border-width: 0.12em;
+    border-left-color: var(--elsa-blue);
+    border-top-color: var(--elsa-blue);
+    border-bottom-color: var(--elsa-blue);
+}
 
 .button-txt {
     float: left;
@@ -7,6 +15,7 @@
     fill: var(--elsa-blue);
     height: 1em;
     width: auto;
+    margin-left: 0.2em;
 }
 
 .my-icon:hover {
@@ -18,10 +27,19 @@
     width: auto;
 }
 
+.logo {
+    height: 1.2em;
+    width: auto;
+}
+
+
 .content-div, .step {
-    text-align: left;
+    text-align: center;
     margin-top: 1vh;
     margin-bottom: 1vh;
+    justify-content: center;
+    display: flex;
+    align-content: center;
 }
 
 .alert {
@@ -56,11 +74,14 @@
 
 .modal-content {
     background-color: var(--whitesmoke);
-    width: fit-content;
 }
 
 .modal-dialog {
-    max-width: fit-content;
+    position: relative;
+    display: table;
+    overflow-y: auto;
+    overflow-x: auto;
+    min-width: 50%;
 }
 
 .modal-title {
@@ -142,7 +163,7 @@
         font-size: 0.7em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.5em;
     }
 
@@ -186,7 +207,7 @@
         font-size: 0.6em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.41em;
     }
 
@@ -234,7 +255,7 @@
         font-size: 0.9em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.41em;
     }
 }
@@ -258,7 +279,7 @@
         font-size: 0.9em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.75em;
     }
     .pad {
@@ -285,7 +306,7 @@
         font-size: 1em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.75em;
     }
 }
@@ -310,7 +331,7 @@
         font-size: 1em;
     }
 
-    .nav-item {
+    .navbar-brand, .nav-item {
         font-size: 0.75em;
     }
 }

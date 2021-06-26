@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * the class that implements the UserService interface for communication with the database.
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private ConfirmationTokenService confirmationTokenService;
 
     private final UserRepository userRepository;
+    private final SecuritySettingsRepository securitySettingsRepository;
 
     @Lazy
     @Autowired
@@ -39,8 +41,10 @@ public class UserServiceImpl implements UserService {
     private SMTPServerHelper smtpServerHelper;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository) {
+    public UserServiceImpl(final UserRepository userRepository,
+                           final SecuritySettingsRepository securitySettingsRepository) {
         this.userRepository = userRepository;
+        this.securitySettingsRepository = securitySettingsRepository;
     }
 
     @Override
@@ -69,6 +73,8 @@ public class UserServiceImpl implements UserService {
         for (final String role : roles) {
             user.addRole(role);
         }
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 
@@ -81,13 +87,16 @@ public class UserServiceImpl implements UserService {
             user.addRole(role);
         }
         user.setPersonalData(personalData);
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 
     @Override
-    public void signUpUser(User user) throws MessageGenerationException {
+    public void signUpUser(final User user) throws MessageGenerationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         final User createdUser = userRepository.save(user);
         final ConfirmationToken token = new ConfirmationToken(user);
         final ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
@@ -100,25 +109,28 @@ public class UserServiceImpl implements UserService {
         final User user = confirmationToken.getUser();
 
         user.setEnabled(true);
+        securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
-    public void sendConfirmationMail(User user, String token) throws MessageGenerationException {
+    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException {
         smtpServerHelper.sendRegistrationEmail(user,
-            "http://localhost:8080/register/confirm/" + token);
+            "http://localhost:8080/de/register/confirm/" + token);
     }
 
     @Override
     public void validateUser(final User user) {
-        user.setAdminValidated(true);
+        user.setAccountNonLocked(true);
+
+        securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
     }
 
     @Override
-    public void infoNewExtUser(User user) throws MessageGenerationException {
-        List<User> userList = getUsers();
-        for (User value : userList) {
+    public void infoNewExtUser(final User user) throws MessageGenerationException  {
+       final List<User> userList = getUsers();
+        for (final User value : userList) {
             if (value.getRoles().contains("ROLE_ADMIN")) {
                 smtpServerHelper.sendValidationInfo(value, user.getEmail());
                 return;
@@ -130,11 +142,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeUser(final String username) {
+        final Optional<User> user = userRepository.findById(username);
+        user.ifPresent(value -> securitySettingsRepository.delete(value.getSecuritySettings()));
         userRepository.deleteById(username);
     }
 
     @Override
     public User saveUser(final User user) {
+        securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
     }
 }

@@ -1,350 +1,108 @@
+import envelopeAPI from "@/main/vue/api/envelopeAPI";
+
+export const namespaced = true
+
 export const state = {
-    envelopes: [
-        {
-            id: 1,
-            name: "Wichtige Änderungen der Essenspläne",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "01.05.2021",
-            documents: [
-                {
-                    id: 1,
-                    title: "Essensplan KW 25",
-                    creationDate: "01.05.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "15.06.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: false,
-                    read: false
-                },
-                {
-                    id: 2,
-                    title: "Essensplan KW 26",
-                    creationDate: "22.05.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "25.06.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-                , {
-                    id: 3,
-                    title: "Essensplan KW 24",
-                    creationDate: "01.05.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "closed",
-                    endDate: "15.06.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: true,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 10,
-            name: "Nutzungsbedingungen der Gemeinschafts-Kühlschränke",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "25.03.2021",
-            documents: [
-                {
-                    id: 4,
-                    title: "Kühlschrank EG",
-                    creationDate: "25.03.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "26.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: true,
-                    signed: false,
-                    read: false
-                },
-                {
-                    id: 5,
-                    title: "Kühlschrank 1.OG",
-                    creationDate: "26.03.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "02.06.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: false,
-                    reader: true,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 4,
-            name: "Bedienungsanleitung Wasserspender",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "15.04.2021",
-            documents: [
-                {
-                    id: 6,
-                    title: "Bedienungsanleitung Wasserspender",
-                    creationDate: "15.04.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "19.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 11,
-            name: "Kantinenordnung",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "01.04.2021",
-            documents: [
-                {
-                    id: 7,
-                    title: "Kantinenordnung",
-                    creationDate: "01.04.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "open",
-                    endDate: "25.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 5,
-            name: "International Congress 2021",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "03.03.2021",
-            documents: [
-                {
-                    id: 8,
-                    title: "Hygienics and reduced amount of visitor passes",
-                    creationDate: "03.03.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Hans",
-                        lastname: "Schneider"
-                    },
-                    state: "open",
-                    endDate: "25.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: false,
-                    reader: false,
-                    signed: false,
-                    read: false
-                },
-                {
-                    id: 9,
-                    title: "Programme",
-                    creationDate: "03.03.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Hans",
-                        lastname: "Schneider"
-                    },
-                    state: "open",
-                    endDate: "25.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: false,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 2,
-            name: "Mietvertrag Büroräume",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "10.01.2021",
-            documents: [
-                {
-                    id: 10,
-                    title: "Mietvertrag Büroräume ",
-                    creationDate: "10.01.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Hans",
-                        lastname: "Schneider"
-                    },
-                    state: "open",
-                    endDate: "23.06.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: false,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 3,
-            name: "Abgabe für das 2. Kundengespräch",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "25.01.2021",
-            documents: [
-                {
-                    id: 11,
-                    title: "Handout 2. Kundengespräch",
-                    creationDate: "25.01.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Otto",
-                        lastname: "Wehner"
-                    },
-                    state: "closed",
-                    endDate: "25.02.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: true,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-        , {
-            id: 9,
-            name: "Pläne die Weltherrschaft zu eroberen",
-            owner: {
-                eMail: "sehrTolle@email.com",
-                firstname: "Otto",
-                lastname: "Wehner"
-            },
-            creationDate: "05.01.2021",
-            documents: [
-                {
-                    id: 12,
-                    title: "Plan die Weltherrschaft zu eroberen",
-                    creationDate: "05.01.2021",
-                    owner: {
-                        eMail: "sehrTolle@email.com",
-                        firstname: "Hans",
-                        lastname: "Schneider"
-                    },
-                    state: "closed",
-                    endDate: "01.05.2021",
-                    dataType: "PDF",
-                    signatureType: "simple",
-                    signatory: false,
-                    reader: false,
-                    signed: false,
-                    read: false
-                }
-            ]
-        }
-    ]
+    envelopes: {},
+    errorGetEnvelopes: {}
+}
+
+export const mutations = {
+    // sets given envelopes as state
+    SET_ENVELOPES(state, envelopes) {
+        state.envelopes = envelopes
+    },
+
+    //sets error of getDocument request
+    SET_ERROR_GET_ENVELOPES(state, error) {
+        state.errorGetEnvelopes = error
+    }
+}
+
+export const actions = {
+    // makes axios call to get envelopes, either sets envelopes (success) or error (error)
+    fetchEnvelopes({commit}) {
+        envelopeAPI.getEnvelopes().then(response => {
+            commit('SET_ENVELOPES', response.data)
+            commit('SET_ERROR_GET_ENVELOPES', {})
+        }).catch(error => {
+            commit('SET_ERROR_GET_ENVELOPES', error)
+        })
+    }
 }
 
 export const getters = {
+    getFilteredPagedEnvelopes: (state) => (filters, pageLimit, page) => {
+        let result = [];
+        //filter
+        let i
+        for (i = 0; i < state.envelopes.length; i++) {
+            let open = false
+            let search = false
+            let j
+
+            for (j = 0; j < state.envelopes[i].documents.length; j++) {
+                let document = state.envelopes[i].documents[j]
+
+                // Filter for state
+                let env_state = document.state
+                if (!(filters.state === null) && (env_state === "OPEN" || env_state === "READ")) {
+                    open = true
+                }
+                //Search in document title
+                if(filters.search === null || document.title.toLowerCase().includes(filters.search.toLowerCase())) {
+                    search = true
+                }
+
+            }
+            //Search in Envelope name
+            if(filters.search === null || state.envelopes[i].name.toLowerCase().includes(filters.search.toLowerCase())) {
+                search = true
+            }
+
+            if ((open === true && filters.state === "open") || (open === false && filters.state === "closed") || filters.state === null) {
+                if(search) {
+                    result.push(state.envelopes[i])
+                }
+            }
+
+
+        }
+
+        //sorting
+
+
+        //paging
+        result = result.slice((page-1)*pageLimit, page*pageLimit)
+
+        return result
+    },
+    getFilteredEnvelopes: (state) => (filters) =>  {
+        let result = [];
+        let i
+        for (i = 0; i < state.envelopes.length; i++) {
+            let open = false
+            let j
+            for (j = 0; j < state.envelopes[i].documents.length; j++) {
+                // Filter for state TODO: Other filter functions
+                let env_state = state.envelopes[i].documents[j].state
+                if (!(filters.state === null) && (env_state === "OPEN" || env_state === "READ")) {
+                    open = true
+                }
+            }
+            if ((open === true && filters.state === "open") || (open === false && filters.state === "closed") || filters.state === null) {
+                result.push(state.envelopes[i])
+            }
+        }
+        return result;
+    },
     getEnvelopes: (state) => {
-        return state.envelopes
+        return state.envelopes;
+    },
+    getErrorGetEnvelopes: (state) => {
+        return state.errorGetEnvelopes
     },
     getEnvelope: (state) => (id) => {
         return state.envelopes.find(env => env.id === id)
-    },
-    getEnvelopesFiltered: (state) => (open, closed, onlyOwned) => {
-        let result;
-        result = [];
-        if (open === true) {
-            let i;
-            for (i = 0; i < state.envelopes.length; i++) {
-                if (!(state.envelopes[i].documents.filter(document => document.state === "open").length === 0)) {
-                    result.push(state.envelopes[i]);
-                }
-            }
-        } else if (closed === true) {
-            let i;
-            for (i = 0; i < state.envelopes.length; i++) {
-                if (state.envelopes[i].documents.filter(document => document.state === "open").length === 0) {
-                    result.push(state.envelopes[i]);
-                }
-            }
-        } else {
-            result = state.envelopes;
-        }
-        if (onlyOwned === true) {
-            result = result.filter(env => env.owner.eMail === "sehrTolle@email.com"); // TODO!!!!!!!!!!!!
-        }
-        return result;
     }
 }

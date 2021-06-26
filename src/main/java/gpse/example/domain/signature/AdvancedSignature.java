@@ -16,11 +16,9 @@ public class AdvancedSignature {
     @Column
     private String userEmail;
 
+    @Lob
     @Column
     private byte[] signature;
-
-    @Column
-    private int keyIndex;
 
     protected AdvancedSignature() {
     }
@@ -30,12 +28,14 @@ public class AdvancedSignature {
      *
      * @param userEmail the email of the signing user
      * @param signature the signature
-     * @param keyIndex  the index of the key the signature has been made with
      */
-    public AdvancedSignature(final String userEmail, final byte[] signature, final int keyIndex) {
+    public AdvancedSignature(final String userEmail, final byte[] signature) {
         this.userEmail = userEmail;
         this.signature = signature.clone();
-        this.keyIndex = keyIndex;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getUserEmail() {
@@ -46,19 +46,11 @@ public class AdvancedSignature {
         return signature.clone();
     }
 
-    public int getKeyIndex() {
-        return keyIndex;
-    }
-
     public void setUserEmail(final String userEmail) {
         this.userEmail = userEmail;
     }
 
     public void setSignature(final byte[] signature) {
         this.signature = signature.clone();
-    }
-
-    public void setKeyIndex(final int keyIndex) {
-        this.keyIndex = keyIndex;
     }
 }

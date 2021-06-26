@@ -30,6 +30,12 @@ public class Signatory {
 
 
     /**
+     * -1 = no reminder.
+     */
+    @Column
+    private int reminder;
+
+    /**
      * Default constructor for a Signatory. Status is initialized with false.
      * @param user the user that has to sign the corresponding document.
      * @param signatureType the signatureType the signatory refers to.
@@ -37,15 +43,12 @@ public class Signatory {
     public Signatory(final User user, final SignatureType signatureType) {
         this.user = user;
         this.status = false;
+        this.reminder = -1;
         this.signatureType = signatureType;
     }
 
     protected Signatory() {
 
-    }
-
-    public long getId() {
-        return id;
     }
 
     public User getUser() {
@@ -72,8 +75,24 @@ public class Signatory {
         this.status = status;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public int getReminder() {
+        return reminder;
+    }
+
+    public void setReminder(final int reminder) {
+        this.reminder = reminder;
+    }
+
     public LocalDateTime getSignedOn() {
         return signedOn;
+    }
+
+    public void setSignedOn(final LocalDateTime signedOn) {
+        this.signedOn = signedOn;
     }
 
     public SignatureType getSignatureType() {

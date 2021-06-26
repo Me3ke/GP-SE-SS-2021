@@ -37,6 +37,13 @@ public class SecuritySettings implements Serializable {
     @Column
     private String secret;
 
+    @Column
+    private boolean twoFactorLogin;
+
+    public SecuritySettings() {
+        this.twoFactorLogin = false;
+    }
+
     public void generateSecret() {
         final SecretGenerator secretGenerator = new DefaultSecretGenerator(SECRET_GENERATOR_NUMBER);
         this.secret = secretGenerator.generate();
@@ -49,8 +56,8 @@ public class SecuritySettings implements Serializable {
      * @return the QR-Code in form of a byte array
      * @throws QrGenerationException Gets thrown, if the username is incorrect
      */
-    public byte[] generateQRCode(String username) throws QrGenerationException {
-        QrData data = new QrData.Builder()
+    public byte[] generateQRCode(final String username) throws QrGenerationException {
+        final QrData data = new QrData.Builder()
             .label(username)
             .secret(secret)
             .issuer("ELSA")
@@ -58,7 +65,7 @@ public class SecuritySettings implements Serializable {
             .digits(CODE_DIGIT_NUMBER)
             .period(TIME_UNTIL_EXPIRED)
             .build();
-        QrGenerator generator = new ZxingPngQrGenerator();
+        final QrGenerator generator = new ZxingPngQrGenerator();
         return generator.generate(data);
     }
 
@@ -68,10 +75,10 @@ public class SecuritySettings implements Serializable {
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(String code) throws CodeGenerationException {
-        TimeProvider timeProvider = new SystemTimeProvider();
-        CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+    public boolean verifyCode(final String code) throws CodeGenerationException {
+        final TimeProvider timeProvider = new SystemTimeProvider();
+        final CodeGenerator codeGenerator = new DefaultCodeGenerator();
+        final DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
 
         return verifier.isValidCode(this.secret, code);
     }
@@ -86,5 +93,13 @@ public class SecuritySettings implements Serializable {
 
     public PublicKey getPublicKey() {
         return publicKey;
+    }
+
+    public boolean isTwoFactorLogin() {
+        return twoFactorLogin;
+    }
+
+    public void setTwoFactorLogin(final boolean twoFactorLogin) {
+        this.twoFactorLogin = twoFactorLogin;
     }
 }
