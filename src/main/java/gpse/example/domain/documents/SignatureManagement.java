@@ -195,20 +195,20 @@ public class SignatureManagement {
             if (savedDocument.getState() != DocumentState.CLOSED) {
 
                 try {
-                    User user = userService.getUser(savedDocument.getCurrentSignatory().getEmail());
+                    final User user = userService.getUser(savedDocument.getCurrentSignatory().getEmail());
                     smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getEmail(),
                         userService.getUser(document.getOwner()),
                         user.getLastname(), document);
                 } catch (UsernameNotFoundException unf) {
-                    if (savedDocument.getCurrentSignatory().getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
-                        GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(),
+                    if (savedDocument.getCurrentSignatory().getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
+                        smtpServerHelper.sendGuestInvitationAdvanced(savedDocument.getCurrentSignatory().getEmail(),
+                            savedDocument);
+                    } else {
+                        final GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(),
                             savedDocument.getId());
                         smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(),
                             savedDocument, "http://localhost:8080/de/document/" + savedDocument.getId() + "/"
                                 + token.getToken());
-                    } else {
-                        smtpServerHelper.sendGuestInvitationAdvanced(savedDocument.getCurrentSignatory().getEmail(),
-                            savedDocument);
                     }
                 }
             }

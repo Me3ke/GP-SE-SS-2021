@@ -423,7 +423,7 @@ public class Document {
         return advancedSignatories;
     }
 
-    public void addComment(Comment comment) {
+    public void addComment(final Comment comment) {
         this.commentList.add(comment);
     }
 
@@ -433,9 +433,8 @@ public class Document {
      * @param commentID the ID of the comment the method is looking for
      * @return the comment if found, otherwise an empty object
      */
-    public Optional<Comment> searchComment(long commentID) {
-        for (Comment comment : commentList
-        ) {
+    public Optional<Comment> searchComment(final long commentID) {
+        for (final Comment comment : commentList) {
             if (comment.getCommentID() == commentID) {
                 return Optional.of(comment);
             }

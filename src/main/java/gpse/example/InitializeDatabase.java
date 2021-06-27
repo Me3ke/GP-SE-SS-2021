@@ -218,7 +218,7 @@ public class InitializeDatabase implements InitializingBean {
                     signatories.add(new ProtoSignatory(owner.getUsername(), 2));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, userService, documentService);
+                    signatories, documentService);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {

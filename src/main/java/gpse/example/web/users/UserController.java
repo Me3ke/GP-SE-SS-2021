@@ -292,9 +292,9 @@ public class UserController {
      * @return the response containing the info if the request was successful or not
      */
     @PutMapping("/user/{userID}/settings/imageSignature")
-    public JSONResponseObject setImageSignature(@PathVariable(USERID) final String username,
-                                                @RequestBody final ImageSignatureToSend imageSignatureToSend) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+    public JSONResponseObject changeImageSignature(@PathVariable(USERID) final String username,
+                                                   @RequestBody final ImageSignatureToSend imageSignatureToSend) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         final User user = userService.getUser(username);
         user.setImageSignature(imageSignatureToSend.getImageSignature());
         user.setImageSignatureType(imageSignatureToSend.getImageSignatureType());

@@ -141,7 +141,7 @@ public class SMTPServerHelper {
      */
     public void sendGuestInvitation(final String guestMail, final Document document, final String link)
         throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(guestMail);
         message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(GUEST_INVITATION, document.getOwner(), document.getDocumentTitle(), link));
@@ -158,7 +158,7 @@ public class SMTPServerHelper {
      */
     public void sendGuestInvitationAdvanced(final String guestMail, final Document document)
         throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(guestMail);
         message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
         message.setText(GUEST_INVITATION_ADVANCED);

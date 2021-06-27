@@ -105,15 +105,11 @@ public class Signatory {
         this.signatureType = signatureType;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public boolean isSeen() {
         return seen;
     }
 
-    public void setSeen(boolean seen) {
+    public void setSeen(final boolean seen) {
         this.seen = seen;
     }
 }

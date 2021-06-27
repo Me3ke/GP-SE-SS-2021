@@ -94,7 +94,6 @@ public class DocumentController {
                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         Document document;
-        final User currentUser = userService.getUser(userID);
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         final List<Document> documentList = envelope.getDocumentList();
         boolean isInEnvelope = false;
@@ -107,8 +106,8 @@ public class DocumentController {
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
             if (document.getDocumentType().equals("pdf")) {
-                List<Signatory> signatories = document.getSignatories();
-                for (Signatory signatory : signatories) {
+                final List<Signatory> signatories = document.getSignatories();
+                for (final Signatory signatory : signatories) {
                     if (signatory.getEmail().equals(userID)) {
                         signatory.setSeen(true);
                     }
@@ -181,8 +180,8 @@ public class DocumentController {
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
-        List<Signatory> signatories = document.getSignatories();
-        for (Signatory signatory : signatories) {
+        final List<Signatory> signatories = document.getSignatories();
+        for (final Signatory signatory : signatories) {
             if (signatory.getEmail().equals(userID)) {
                 signatory.setSeen(true);
             }
@@ -434,11 +433,11 @@ public class DocumentController {
      * @throws DocumentNotFoundException thrown if there is no document with specified Id
      */
     @GetMapping("/document/{documentID}/user/{userID}/seen")
-    public ResponseEntity<Boolean> isDocumentSeen(@PathVariable("documentID") final long documentId,
+    public ResponseEntity<Boolean> hasDocumentBeenSeen(@PathVariable("documentID") final long documentId,
                                                   @PathVariable("userID") final String userId)
         throws DocumentNotFoundException {
-        Document document = documentService.getDocument(documentId);
-        for (Signatory signatory : document.getSignatories()) {
+        final Document document = documentService.getDocument(documentId);
+        for (final Signatory signatory : document.getSignatories()) {
             if (signatory.getEmail().equals(userId)) {
                 return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))

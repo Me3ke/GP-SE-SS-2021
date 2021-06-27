@@ -36,7 +36,7 @@ public class Comment {
      * @param authorID   the id of the author who wrote the comment
      * @param authorName the name of author who wrote the comment
      */
-    public Comment(String content, String authorID, String authorName) {
+    public Comment(final String content, final String authorID, final String authorName) {
         this.content = content;
         this.authorID = authorID;
         this.authorName = authorName;
@@ -70,7 +70,7 @@ public class Comment {
         return commentID;
     }
 
-    public void addAnswer(Answer answer) {
+    public void addAnswer(final Answer answer) {
         answers.add(answer);
     }
 }
