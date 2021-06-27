@@ -40,34 +40,15 @@ public class Message {
     @JoinColumn
     private User sendingUser;
 
+    @Column
+    private Category category;
+
+    @Column
+    private boolean watched;
+
     public Message() {
         timeStamp = LocalDateTime.now();
         sendingUser = null;
-    }
-
-    /**
-     * genrates a SimplemailMessage that could be send via Email.
-     * @return the Simple mail Message object.
-     * @throws MessageGenerationException Thrown if there are params missing that are needed.
-     */
-    public SimpleMailMessage generateMessage() throws MessageGenerationException {
-        final SimpleMailMessage message = new SimpleMailMessage();
-
-        if (sendingUser == null) {
-            message.setFrom(SYSTEM);
-        } else {
-            message.setFrom(sendingUser.getEmail());
-        }
-
-        if (recievingUserMail == null || subject == null || text == null) {
-            throw new MessageGenerationException(this.messageID);
-        }
-
-        message.setTo(recievingUserMail);
-        message.setSubject(subject);
-        message.setText(text);
-
-        return message;
     }
 
     /**
@@ -160,5 +141,19 @@ public class Message {
         this.sendingUser = sendingUser;
     }
 
+    public Category getCategory() {
+        return category;
+    }
 
+    public void setCategory(final Category category) {
+        this.category = category;
+    }
+
+    public boolean isWatched() {
+        return watched;
+    }
+
+    public void setWatched(boolean watched) {
+        this.watched = watched;
+    }
 }

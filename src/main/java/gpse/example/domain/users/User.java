@@ -3,6 +3,7 @@ package gpse.example.domain.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.util.email.EmailTemplate;
+import gpse.example.web.messages.MessageSettingsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -84,6 +85,12 @@ public class User implements UserDetails {
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private MessageSettingsContainer messageSettings;
 
     protected User() {
 
@@ -357,5 +364,13 @@ public class User implements UserDetails {
 
     public void addEmailTemplate(EmailTemplate emailTemplate) {
         this.emailTemplates.add(emailTemplate);
+    }
+
+    public MessageSettingsContainer getMessageSettings() {
+        return messageSettings;
+    }
+
+    public void setMessageSettings(final MessageSettingsContainer messageSettings) {
+        this.messageSettings = messageSettings;
     }
 }
