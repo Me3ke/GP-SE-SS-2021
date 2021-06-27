@@ -3,18 +3,25 @@ import documentAPI from "@/main/vue/api/documentAPI";
 export const namespaced = true
 
 export const state = {
-    document: {},
+
+    documentInfo: {},
+    errorGetDocumentInfo: {},
+    documentSeen: {},
+    errorDocumentSeen: {},
     errorGetDocument: {},
     errorGetDocumentProgress: {},
     documentProgressArray: [],
     protocol: {},
     errorGetProtocol: {},
+    newVersionIds: {},
+    errorEditDocument: {},
     reviewResponse: {},
     errorReviewDocument: {},
     simpleSignResponse: {},
     errorSimpleSignResponse: {},
     advancedSignResponse: {},
     errorAdvancedSignResponse: {}
+
 }
 
 export const mutations = {
@@ -24,13 +31,16 @@ export const mutations = {
     },
 
     // sets given document as state
-    SET_DOCUMENT(state, doc) {
-        state.document = doc
+    SET_DOCUMENT_INFO(state, doc) {
+        state.documentInfo = doc
     },
-    // sets given document as state
-    SET_PROTOCOL(state, pro) {
-        state.protocol = pro
+
+    // sets ids of new document
+    SET_IDS(state, ids) {
+        state.newVersionIds = ids
     },
+
+    //sets error of getDocument request
     // sets response of reviewing (statusCode + message)
     SET_REVIEW_RESPONSE(state, res) {
         state.reviewResponse = res
@@ -47,7 +57,6 @@ export const mutations = {
     EDIT_DOCUMENT(state, doc) {
         state.document = doc
     },
-
     SET_DOCUMENT_PROGRESS(state, progress) {
         state.documentProgressArray.push(progress)
     },
@@ -58,10 +67,19 @@ export const mutations = {
     SET_ERROR_GET_DOCUMENT(state, error) {
         state.errorGetDocument = error
     },
-    // sets error of getDocument request
-    SET_ERROR_GET_PROTOCOL(state, error) {
-        state.errorGetProtocol = error
+
+    SET_DOCUMENT_SEEN(state, seen) {
+        state.documentSeen = seen
     },
+    // sets error of getDocument request
+    SET_ERROR_GET_DOCUMENT_INFO(state, error) {
+        state.errorGetDocumentInfo = error
+    },
+    //sets error of getDocument request
+    SET_ERROR_EDIT_DOCUMENT(state, error) {
+        state.errorEditDocument = error
+    },
+
     // sets error of reviewDocument request
     SET_ERROR_REVIEW_DOCUMENT(state, error) {
         state.errorReviewDocument = error
@@ -73,7 +91,12 @@ export const mutations = {
     // sets error of advancedSignDocument request
     SET_ERROR_ADVANCED_SIGN_DOCUMENT(state, error) {
         state.errorSimpleSignResponse = error
+    },
+    SET_DOCUMENT_SEEN_ERROR(state, error) {
+        state.errorDocumentSeen = error
     }
+
+
 }
 
 export const actions = {
@@ -84,22 +107,40 @@ export const actions = {
     },
 
     // makes axios call to get document, either sets document (success) or error (error)
-    fetchDocument({commit}, {envId, docId}) {
+    fetchDocumentInfo({commit}, {envId, docId}) {
         return documentAPI.getDocument(envId, docId).then(response => {
-            commit('SET_DOCUMENT', response.data)
-            commit('SET_ERROR_GET_DOCUMENT', {})
+            var info = {}
+            for (const key in response.data) {
+                if (key !== 'data' && Object.prototype.hasOwnProperty.call(response.data, key)) {
+                    info[key] = response.data[key]
+                }
+            }
+            commit('SET_DOCUMENT_INFO', info)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', {})
         }).catch(error => {
-            commit('SET_ERROR_GET_DOCUMENT', error)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
     },
-    // makes axios call to get protocol of document, either sets protocol (success) or error (error)
-    fetchProtocol({commit}, {docId}) {
-        return documentAPI.getProtocol(docId).then(response => {
-            commit('SET_PROTOCOL', response.data)
-            commit('SET_ERROR_GET_PROTOCOL', {})
+    // makes axios call to get information if user has already seen the document
+    fetchSeen({commit}, docId) {
+        return documentAPI.getDocumentSeen(docId).then(response => {
+            commit('SET_DOCUMENT_SEEN', response.data);
+            commit('SET_DOCUMENT_SEEN_ERROR', {})
         }).catch(error => {
-            commit('SET_ERROR_GET_PROTOCOL', error)
+            commit('SET_DOCUMENT_SEEN_ERROR', error)
         })
+    },
+    // makes axios call to put the newDocument and archive the old one
+    editDocument({commit}, {newDoc, envId, docId}) {
+        return documentAPI.editDocument(envId, docId, newDoc).then((response) => {
+            commit('SET_IDS', response.data)
+            commit('SET_ERROR_EDIT_DOCUMENT', {})
+        }).catch(error => {
+            commit('SET_ERROR_EDIT_DOCUMENT', error)
+        })
+    },
+    setSeenFalse({commit}) {
+        commit('SET_DOCUMENT_SEEN', false);
     },
     // makes axios call to review document, either sets reviewResponse (success) or error (error)
     reviewDocument({commit}, {docId}) {
@@ -118,6 +159,7 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_SIMPLE_SIGN_DOCUMENT', error)
         })
+
     },
     // makes axios call to sign (advanced) document, either sets advancedSignResponse (success) or error (error)
     advancedSignDocument({commit}, {docId, signature}) {
@@ -181,8 +223,15 @@ export const actions = {
 }
 
 export const getters = {
-    getDocument: (state) => {
-        return state.document
+    getDocumentInfo: (state) => {
+        return state.documentInfo
+    },
+    getNewDocumentId: (state) => {
+        return state.newVersionIds.newDocumentID
+    },
+
+    getEditDocumentStatus: (state) => {
+        return state.newVersionIds.status
     },
     // for calculating all progress of all documents in env
     getDocumentProgressArray: (state) => {
@@ -219,6 +268,9 @@ export const getters = {
     getProtocol: (state) => {
         return state.protocol
     },
+    getSeen: (state) => {
+        return state.documentSeen
+    },
     getReviewStatus: (state) => {
         return state.reviewResponse.status
     },
@@ -228,11 +280,11 @@ export const getters = {
     getAdvancedSignStatus: (state) => {
         return state.advancedSignResponse.status
     },
-    getErrorGetDocument: (state) => {
-        return state.errorGetDocument
+    getErrorGetDocumentInfo: (state) => {
+        return state.errorGetDocumentInfo
     },
-    getErrorGetProtocol: (state) => {
-        return state.errorGetProtocol
+    getErrorEditDocument: (state) => {
+        return state.errorEditDocument
     },
     getErrorReviewDocument: (state) => {
         return state.errorReviewDocument

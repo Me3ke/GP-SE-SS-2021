@@ -10,6 +10,7 @@ import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 
@@ -38,9 +39,9 @@ public class UserController {
     /**
      * Constructor of UserController getting required services.
      *
-     * @param service                 Userservice Object
-     * @param confService             ConfirmationTokenService object
-     * @param messageService          the messageService to access the message table
+     * @param service        Userservice Object
+     * @param confService    ConfirmationTokenService object
+     * @param messageService the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
@@ -165,8 +166,9 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
+     *
      * @param personalData the new personal data of the user stating the request
-     * @param username the username of the user stating the request
+     * @param username     the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
@@ -263,7 +265,8 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
-     * @param username the username of the user stating the request
+     *
+     * @param username          the username of the user stating the request
      * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
@@ -278,5 +281,32 @@ public class UserController {
     @GetMapping("/user/{userID}/settings/twoFactorLogin")
     public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
+    }
+
+
+    /**
+     * The request handler for the settings regarding the image signature.
+     *
+     * @param username             the username of the user stating the request
+     * @param imageSignatureToSend the request containing the image signature
+     * @return the response containing the info if the request was successful or not
+     */
+    @PutMapping("/user/{userID}/settings/imageSignature")
+    public JSONResponseObject setImageSignature(@PathVariable(USERID) final String username,
+                                                @RequestBody final ImageSignatureToSend imageSignatureToSend) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final User user = userService.getUser(username);
+        user.setImageSignature(imageSignatureToSend.getImageSignature());
+        user.setImageSignatureType(imageSignatureToSend.getImageSignatureType());
+        userService.saveUser(user);
+        jsonResponseObject.setStatus(STATUS_CODE_OK);
+        jsonResponseObject.setMessage("Successfully send image Signature");
+        return jsonResponseObject;
+    }
+
+    @GetMapping("/user/{userID}/settings/imageSignature")
+    public ImageSignatureToSend getImageSignature(@PathVariable(USERID) final String username) {
+        return new ImageSignatureToSend(userService.getUser(username).getImageSignature(),
+            userService.getUser(username).getImageSignatureType());
     }
 }

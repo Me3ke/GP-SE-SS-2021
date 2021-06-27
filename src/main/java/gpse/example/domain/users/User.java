@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -74,6 +75,12 @@ public class User implements UserDetails {
     @Column
     private boolean accountNonLocked;
 
+    @Lob
+    private byte[] imageSignature;
+
+    @Column
+    private String imageSignatureType;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -100,6 +107,8 @@ public class User implements UserDetails {
         this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.imageSignature = new byte[0];
+        this.imageSignatureType = "";
     }
 
     public static long getSerialVersionUID() {
@@ -333,5 +342,22 @@ public class User implements UserDetails {
 
     public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public byte[] getImageSignature() {
+        return Arrays.copyOf(
+                imageSignature, imageSignature.length);
+    }
+
+    public void setImageSignature(byte[] imageSignature) {
+        this.imageSignature = imageSignature.clone();
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(final String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
     }
 }

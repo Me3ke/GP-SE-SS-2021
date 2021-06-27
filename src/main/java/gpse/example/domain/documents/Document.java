@@ -4,7 +4,6 @@ import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -31,51 +30,76 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private long id;
+    protected long id;
 
 
+    /**
+     * The object that contains metadata of the document, like the upload-date or the document-hash.
+     */
     @OneToOne(
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private DocumentMetaData documentMetaData;
+    protected DocumentMetaData documentMetaData;
 
+    /**
+     * The list of signatories for this document.
+     */
     @OneToMany(
         fetch = FetchType.EAGER,
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private List<Signatory> signatories = new ArrayList<>();
+    protected List<Signatory> signatories;
+
+    /**
+     * The list of all advanced signatures that have been made so far.
+     */
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
+    protected final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
+
+    /**
+     * If a document is an updated version, the last version will be saved here.
+     */
+    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
+    protected Document previousVersion;
+
+    /**
+     * The datatype of the document.
+     */
+    @Column
+    protected String documentType;
+
+    /**
+     * The byte-array representing the data of the document.
+     */
+    @Lob
+    protected byte[] data;
+
+    /**
+     * order Relevant indicates whether the order in which the signatories sign is important or not.
+     */
+    @Column
+    protected boolean orderRelevant;
+
+    /**
+     * The endDate describes the deadline for the process of this document.
+     */
+    @Column
+    protected LocalDateTime endDate;
+
+    /**
+     * The document state, describes in which phase of the process the document currently is.
+     * It can be either OPEN, READ or CLOSED.
+     */
+    @Column
+    protected DocumentState state;
 
     @OneToMany(
         orphanRemoval = true,
         cascade = CascadeType.ALL)
-    private final List<AdvancedSignature> advancedSignatures = new ArrayList<>();
-
-    @OneToOne(targetEntity = Document.class, fetch = FetchType.LAZY)
-    private Document previousVersion;
-
-    @Column
-    private String documentType;
-
-    @Column
-    private SignatureType signatureType = SignatureType.NO_SIGNATURE;
-
-    @Lob
-    private byte[] data;
-
-    @Column
-    private boolean orderRelevant;
-
-    @Column
-    private LocalDateTime endDate;
-
-    @Column
-    private DocumentState state;
-
-    @OneToMany(
-            orphanRemoval = true,
-            cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
     public Document() {
@@ -88,9 +112,9 @@ public class Document {
      * Also has to be checked for harmful content in the future.
      * This works only if documentTitle has no dot.
      *
-     * @param ownerID     an ID referring to the owner of the envelope this document is a part of.
+     * @param ownerID            an ID referring to the owner of the envelope this document is a part of.
      * @param documentPutRequest the requestBody of the request stated to generate this document
-     * @param signatories The list of signatories for a document.
+     * @param signatories        The list of signatories for a document.
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
@@ -99,7 +123,7 @@ public class Document {
         this.data = documentPutRequest.getData();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
-             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
+            /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
@@ -110,7 +134,7 @@ public class Document {
      * @param signatory     the user object that is needed as a signatory
      * @param signatureType the signatureType the signatory refers to
      */
-    public void addSignatory(final User signatory, final SignatureType signatureType) {
+    public void addSignatory(final String signatory, final SignatureType signatureType) {
         signatories.add(new Signatory(signatory, signatureType));
     }
 
@@ -122,7 +146,7 @@ public class Document {
      */
     public void advancedSignature(final String user, final String signature) {
         for (int i = 0; i < signatories.size(); i++) {
-            if (signatories.get(i).getUser().getEmail().equals(user)) {
+            if (signatories.get(i).getEmail().equals(user)) {
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
             }
@@ -195,19 +219,6 @@ public class Document {
     }
 
     /**
-     * The filter method for document signatureTypes.
-     *
-     * @param signatureTypeFilter the signatureType specifying the filter.
-     * @return true if this document has this signature type.
-     */
-    public boolean hasSignatureType(final SignatureType signatureTypeFilter) {
-        if (signatureTypeFilter == null) {
-            return true;
-        }
-        return this.signatureType.equals(signatureTypeFilter);
-    }
-
-    /**
      * The filter method for document states.
      *
      * @param documentStateFilter the state specifying the filter.
@@ -260,7 +271,7 @@ public class Document {
             return true;
         }
         for (final Signatory signatory : this.signatories) {
-            if (signatories.contains(signatory.getUser().getEmail())) {
+            if (signatories.contains(signatory.getEmail())) {
                 return true;
             }
         }
@@ -276,7 +287,7 @@ public class Document {
     public boolean hasReaders(final List<String> readers) {
         for (final String reader : readers) {
             for (final Signatory signatory : getReaders()) {
-                if (signatory.getUser().getUsername().equals(reader)) {
+                if (signatory.getEmail().equals(reader)) {
                     return true;
                 }
             }
@@ -337,14 +348,6 @@ public class Document {
 
     public String getDocumentType() {
         return documentType;
-    }
-
-    public SignatureType getSignatureType() {
-        return signatureType;
-    }
-
-    public void setSignatureType(final SignatureType signatureType) {
-        this.signatureType = signatureType;
     }
 
     public List<AdvancedSignature> getAdvancedSignatures() {

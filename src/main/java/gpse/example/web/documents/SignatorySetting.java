@@ -20,10 +20,11 @@ public class SignatorySetting {
 
     /**
      * The standard constructor.
+     *
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
-        this.username = signatory.getUser().getUsername();
+        this.username = signatory.getEmail();
         this.signatureType = signatory.getSignatureType();
         this.status = signatory.isStatus();
         this.remind = signatory.getReminder() == -1;

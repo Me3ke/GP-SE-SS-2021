@@ -20,6 +20,7 @@ import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
 import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
+import CommentsPage from "@/main/vue/views/CommentsPage";
 
 
 Vue.use(VueRouter)
@@ -109,6 +110,15 @@ const router = new VueRouter({
                     path: 'envelope/:envId/document/:docId/protocol',
                     name: 'protocol',
                     component: ProtocolPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/comments',
+                    name: 'comments',
+                    component: CommentsPage,
                     props: true,
                     meta: {
                         requiresAuth: true

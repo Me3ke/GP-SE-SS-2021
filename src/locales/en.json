@@ -58,7 +58,9 @@
         "toSignRead2": "",
         "envReadSign": "Read and sign",
         "envRead": "Read",
-        "envSign": "Sign"
+        "envSign": "Sign",
+        "search": "Search",
+        "noDocuments": "No documents yet"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -214,22 +216,31 @@
         },
         "SignatureSettings": {
             "settings": "Signature settings",
+            "signature": "Signature",
             "upload": {
+                "current": "Current signature",
                 "text": "Upload new signature",
+                "text2": "Draw new signature",
                 "exp": "Upload an image of your own signature. It will be added to the process protocol.",
                 "upload": "Upload",
+                "alert": "Error while uploading! \n Make sure the field is not empty",
                 "popUp": {
                     "heading": "Upload signature",
+                    "choose": "Do you want to upload an image of your signature or draw one?",
+                    "heading2": "Draw signature",
                     "exp": "Choose your signature.",
+                    "signaturePad": "Draw your signature in that specific field",
                     "cancel": "Cancel",
                     "sure": "Your progress will be lost if you cancel.",
                     "back": "Back",
                     "close": "Close",
+                    "clear": "Clear",
                     "attentionOne": "Warning! You have already uploaded your signature.",
                     "attentionTwo": "If you continue it will be lost!",
                     "placeholder": "Drop signature here or choose",
                     "dropPlaceholder": "Drop here",
-                    "accepted": "All image formats are accepted."
+                    "accepted": "All image formats are accepted.",
+                    "success": "You have successfully uploaded your signature!"
                 }
             }
         },
@@ -296,7 +307,19 @@
         "chooseFile": "Choose a file or drop it here...",
         "simple": "Simple",
         "advanced": "Advanced",
-        "signatureType": "Signaturetype"
+        "signatureType": "Signaturetype",
+
+        "UpdateDocument": {
+            "chooseFile": "Choose a file or drag it here...",
+            "update1": "update",
+            "update2": "Update Document",
+            "selectDocument": "Select the File to replace/update the Document ",
+            "replaceDoc": "Update of: ",
+            "confirmation": "Are you sure to update {documentTitle}",
+            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+
+        }
+
     },
     "DownloadDoc": {
         "download": "Download",
@@ -317,6 +340,7 @@
         "didSign": "Already signed",
         "doRead": "Proofread",
         "didRead": "Already proofread",
+        "comments": "Comments",
         "protocol": "Show protocol",
         "history": "Show history",
         "newVersion": "New Version",
@@ -424,7 +448,8 @@
             "notDone": "In order to sign you still have to set up the following.",
             "tfa": "Two-factor authentication",
             "keyPair": "Key-pair",
-            "toSettings": "To settings"
+            "toSettings": "To settings",
+            "notSeen": "You have to look at the document first!"
         },
         "read": {
             "read": "Proofread now!",
@@ -498,5 +523,27 @@
             "needToRead": "Need to be read by:",
             "alreadyRead": "Already read by:"
         }
+    },
+
+    "CommentsPage": {
+        "title": "Comments",
+        "comment": "comment",
+        "comments": "comments",
+        "sort": "Sort by",
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "writePrompt": "Leave comment as ",
+        "cancel": "Cancel",
+        "send": "Send",
+        "empty": "No comments",
+        "answers": "replies",
+        "doNotAnswers": "Hide replies",
+        "noAnswers": "No replies",
+        "reply": "Reply",
+        "owner": "Owner",
+        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments.",
+        "serverErrorOne": "Your comment could not be posted.",
+        "serverErrorTwo": "Please try again later or talk to an administrator.",
+        "serverErrorThree": "The comments could not be loaded."
     }
 }

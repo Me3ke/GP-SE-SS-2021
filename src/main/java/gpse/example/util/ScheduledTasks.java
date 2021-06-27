@@ -4,10 +4,12 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentService;
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.UserService;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,9 @@ public class ScheduledTasks {
 
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private SMTPServerHelper smtpServerHelper;
@@ -53,11 +58,17 @@ public class ScheduledTasks {
                 break;
             }
         }*/
-        final Signatory currentSignatory = doc.getCurrentSignatory();
-        if (currentSignatory != null && currentSignatory.getReminder() > -1
-            && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-            smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
-                currentSignatory.getUser().getLastname(), doc);
+        Signatory currentSignatory = doc.getCurrentSignatory();
+        if (currentSignatory != null && currentSignatory.getReminder() > -1) {
+            if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+                try {
+                    smtpServerHelper.sendReminder(currentSignatory.getEmail(), currentSignatory.getReminder(),
+                        userService.getUser(currentSignatory.getEmail()).getLastname(), doc);
+                } catch (UsernameNotFoundException exception) {
+                    exception.printStackTrace();
+                    //TODO: generate authentication token for guests and create a fitting e-mail.
+                }
+            }
         }
     }
 
@@ -65,8 +76,13 @@ public class ScheduledTasks {
         for (final Signatory signatory:doc.getSignatories()) {
             if (signatory.getReminder() > -1) {
                 if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
-                    smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
-                        signatory.getUser().getLastname(), doc);
+                    try {
+                        smtpServerHelper.sendReminder(signatory.getEmail(), signatory.getReminder(),
+                            userService.getUser(signatory.getEmail()).getLastname(), doc);
+                    } catch (UsernameNotFoundException exception) {
+                        exception.printStackTrace();
+                        //TODO: generate authentication token for guests and create a fitting e-mail.
+                    }
                 }
             }
         }
