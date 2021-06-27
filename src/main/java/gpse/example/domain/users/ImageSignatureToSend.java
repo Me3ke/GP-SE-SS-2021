@@ -1,5 +1,7 @@
 package gpse.example.domain.users;
 
+import java.util.Arrays;
+
 /**
  * The class responsible for sending the image siganture between frontend and backend.
  */
@@ -10,7 +12,7 @@ public class ImageSignatureToSend {
     private String imageSignatureType;
 
     public ImageSignatureToSend(byte[] imageSignature, String imageSignatureType) {
-        this.imageSignature = imageSignature;
+        this.imageSignature = imageSignature.clone();
         this.imageSignatureType = imageSignatureType;
     }
 
@@ -19,11 +21,11 @@ public class ImageSignatureToSend {
     }
 
     public byte[] getImageSignature() {
-        return imageSignature;
+        return Arrays.copyOf(imageSignature, imageSignature.length);
     }
 
     public void setImageSignature(byte[] imageSignature) {
-        this.imageSignature = imageSignature;
+        this.imageSignature = imageSignature.clone();
     }
 
     public String getImageSignatureType() {
