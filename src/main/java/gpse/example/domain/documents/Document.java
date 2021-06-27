@@ -1,5 +1,6 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
@@ -11,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The model for the document responsible for initialising the necessary details about the document file.
@@ -95,6 +97,11 @@ public class Document {
     @Column
     protected DocumentState state;
 
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
+    private final List<Comment> commentList = new ArrayList<>();
+
     public Document() {
     }
 
@@ -114,7 +121,7 @@ public class Document {
         this.signatories = signatories;
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
@@ -138,16 +145,12 @@ public class Document {
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        boolean userIsSignatory = false;
         for (int i = 0; i < signatories.size(); i++) {
             if (signatories.get(i).getEmail().equals(user)) {
                 userIsSignatory = true;
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
             }
-        }
-        if (!userIsSignatory) {
-            System.out.println("The user is not a signatory for this document");
         }
     }
 
@@ -351,6 +354,9 @@ public class Document {
         return advancedSignatures;
     }
 
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
 
     public List<Signatory> getSignatories() {
         return signatories;
@@ -417,6 +423,26 @@ public class Document {
         return advancedSignatories;
     }
 
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+    }
+
+    /**
+     * the method searching for a specific comment in the list.
+     *
+     * @param commentID the ID of the comment the method is looking for
+     * @return the comment if found, otherwise an empty object
+     */
+    public Optional<Comment> searchComment(long commentID) {
+        for (Comment comment : commentList
+        ) {
+            if (comment.getCommentID() == commentID) {
+                return Optional.of(comment);
+            }
+        }
+        return Optional.empty();
+    }
+
     public boolean isOrderRelevant() {
         return orderRelevant;
     }
@@ -441,7 +467,7 @@ public class Document {
         this.state = documentState;
     }
 
-    public void setSignatories(List<Signatory> signatories) {
+    public void setSignatories(final List<Signatory> signatories) {
         this.signatories = signatories;
     }
 

@@ -69,7 +69,7 @@ public class SMTPServerHelper {
      */
     public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
 
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(recievingUser.getEmail());
         message.setSubject(REGISTRATION_SUBJECT);
         message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
@@ -84,7 +84,7 @@ public class SMTPServerHelper {
      * @param newUserEmail email adress of the user who needs to be validated
      */
     public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(admin.getEmail());
         message.setSubject(VALIDATION_SUBJECT);
         message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
@@ -104,7 +104,7 @@ public class SMTPServerHelper {
      */
     public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
                                         final Document document) throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(signatoryMail);
         message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(SIGNATURE_INVITATION, lastnameSignatory, owner.getFirstname() + " "
@@ -120,9 +120,9 @@ public class SMTPServerHelper {
      * @param userName  name of User who recieves the email
      * @param document  the document which is the 'reminding' one
      */
-    public void sendReminder(final String userEmail, final int days, String userName, Document document)
+    public void sendReminder(final String userEmail, final int days, final String userName, final Document document)
         throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         message.setRecievingUserMail(userEmail);
         message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));

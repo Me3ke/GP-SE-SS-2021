@@ -50,7 +50,7 @@ public class LogosRequestBody {
         return dark;
     }
 
-    public void setDark(boolean dark) {
+    public void setDark(final boolean dark) {
         this.dark = dark;
     }
 }

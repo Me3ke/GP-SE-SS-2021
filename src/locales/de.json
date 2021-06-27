@@ -173,7 +173,9 @@
         "toSignRead2": "gegenlesen und signieren",
         "envReadSign": "Gegenlesen und signieren",
         "envRead": "Gegenlesen",
-        "envSign": "Signieren"
+        "envSign": "Signieren",
+        "search": "Suchen",
+        "noDocuments": "Noch keine Dokumente"
     },
     "Document": {
         "owner": "Besitzer",
@@ -329,6 +331,7 @@
         "didSign": "Schon unterschrieben",
         "doRead": "Gegenlesen",
         "didRead": "Schon gegengelesen.",
+        "comments": "Kommentare",
         "protocol": "Protokoll anzeigen",
         "history": "Historie einsehen",
         "newVersion": "Neue Version",
@@ -436,7 +439,8 @@
             "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
             "tfa": "Zwei-Faktor-Authenifizierung",
             "keyPair": "Schlüsselpaar",
-            "toSettings": "Zu den Einstellungen"
+            "toSettings": "Zu den Einstellungen",
+            "notSeen": "Sie müssen sich das Dokument erst anschauen!"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
@@ -498,5 +502,26 @@
             "color14": "Pop-Up Hintergrund",
             "default": "Standard"
         }
+    },
+    "CommentsPage": {
+        "title": "Kommentare",
+        "comment": "Kommentar",
+        "comments": "Kommentare",
+        "sort": "Sortieren nach",
+        "newest": "Neuste zuerst",
+        "oldest": "Älteste zuerst",
+        "writePrompt": "Kommentar hinzufügen als ",
+        "cancel": "Abbrechen",
+        "send": "Absenden",
+        "empty": "Keine Kommentare",
+        "answers": "Antworten anzeigen",
+        "doNotAnswers": "Antworten ausblenden",
+        "noAnswers": "Keine Antworten",
+        "reply": "Antworten",
+        "owner": "Besitzer",
+        "hint": "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen",
+        "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
+        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
+        "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     }
 }

@@ -8,6 +8,10 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
+<<<<<<< HEAD
+=======
+import gpse.example.domain.signature.Signatory;
+>>>>>>> develop
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -16,11 +20,13 @@ import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +107,16 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
-            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser.getEmail());
+            if (document.getDocumentType().equals("pdf")) {
+                List<Signatory> signatories = document.getSignatories();
+                for (Signatory signatory : signatories) {
+                    if (signatory.getUser().getEmail().equals(userID)) {
+                        signatory.setSeen(true);
+                        documentService.addDocument(document);
+                    }
+                }
+            }
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
         } else {
             throw new DocumentNotFoundException();
         }
@@ -166,6 +181,15 @@ public class DocumentController {
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
+        List<Signatory> signatories = document.getSignatories();
+        for (Signatory signatory : signatories) {
+            if (signatory.getUser().getEmail().equals(userID)) {
+                signatory.setSeen(true);
+            }
+        }
+
+        documentService.addDocument(document);
+
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + name)
             .body(document.getData());
@@ -338,21 +362,32 @@ public class DocumentController {
 
     /**
      * Put request for changing documentsettings.
-     * @param documentID id of the document that should be changed
+     *
+     * @param documentID          id of the document that should be changed
      * @param documentSettingsCMD Container for the relevant settings
      * @return JsonResponse containing statuscode
      */
     @PutMapping("/document/{documentID}/settings")
-    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
-                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
-        JSONResponseObject response = new JSONResponseObject();
+    public JSONResponseObject changeSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                             final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        final JSONResponseObject response = new JSONResponseObject();
         try {
-            Document document = documentService.getDocument(documentID);
+            final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
-            document.setSignatories(documentSettingsCMD.getSignatories());
-
-            Document savedDoc = documentService.addDocument(document);
+            final List<Signatory> signatories = new ArrayList<>();
+            final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
+            Signatory signatory;
+            for (final SignatorySetting signatorySetting : signatorySettings) {
+                signatory = new Signatory(userService.getUser(signatorySetting.getUsername()),
+                    signatorySetting.getSignatureType());
+                signatory.setStatus(signatorySetting.isStatus());
+                signatory.setReminder(signatorySetting.getReminderTiming());
+                signatory.setSignedOn(signatorySetting.convertSignedOn());
+                signatories.add(signatory);
+            }
+            document.setSignatories(signatories);
+            documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {
@@ -360,5 +395,30 @@ public class DocumentController {
             response.setMessage("Document not found.");
         }
         return response;
+    }
+
+    /**
+     * Request for get the info if user has seen specified document.
+     *
+     * @param documentId id of document
+     * @param userId     id of user
+     * @return Response entity with the boolean in the body and documentId in the header
+     * @throws DocumentNotFoundException thrown if there is no document with specified Id
+     */
+    @GetMapping("/document/{documentID}/user/{userID}/seen")
+    public ResponseEntity<Boolean> isDocumentSeen(@PathVariable("documentID") final long documentId,
+                                                  @PathVariable("userID") final String userId)
+        throws DocumentNotFoundException {
+        Document document = documentService.getDocument(documentId);
+        for (Signatory signatory : document.getSignatories()) {
+            if (signatory.getUser().getEmail().equals(userId)) {
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+                    .body(signatory.isSeen());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+            .body(null);
     }
 }

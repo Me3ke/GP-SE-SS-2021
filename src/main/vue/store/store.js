@@ -13,6 +13,7 @@ import * as theme from './modules/theme';
 import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
+import * as comments from "./modules/comments";
 
 Vue.use(Vuex)
 
@@ -27,6 +28,7 @@ const store = new Vuex.Store({
         keypair,
         theme,
         twoFakAuth,
+        comments,
         auth: authorization
     },
     mutations: {

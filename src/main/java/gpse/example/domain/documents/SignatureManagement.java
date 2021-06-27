@@ -38,7 +38,7 @@ public class SignatureManagement {
      * @param givenUserService     userservice
      */
     @Autowired
-    public SignatureManagement(SMTPServerHelper smtpServerHelper,
+    public SignatureManagement(final SMTPServerHelper smtpServerHelper,
                                final DocumentService givenDocumentService, final UserService givenUserService) {
 
         this.smtpServerHelper = smtpServerHelper;
@@ -191,7 +191,7 @@ public class SignatureManagement {
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
-            Document savedDocument = documentService.addDocument(document);
+            final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
 
                 try {

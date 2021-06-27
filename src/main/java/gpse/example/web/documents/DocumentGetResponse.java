@@ -1,37 +1,22 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentMetaData;
-import gpse.example.domain.documents.DocumentState;
-import gpse.example.domain.documents.OrderManager;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
-import java.time.format.DateTimeFormatter;
+import gpse.example.web.envelopes.DocumentOverviewResponse;
+
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * A class which represents a Response for a Document Get request.
  */
-public class DocumentGetResponse {
+public class DocumentGetResponse extends DocumentOverviewResponse {
 
-    private final String title;
-    private final DocumentState state;
-    private final User owner;
-    private final String creationDate;
-    private final String endDate;
+
     private final SignatureType signatureType;
-    private final String dataType;
-    private final String identifier;
-    private boolean signatory;
-    private boolean reader;
-    private boolean signed;
-    private boolean read;
     private final byte[] data;
-    private boolean turnToReview;
-    private boolean turnToSign;
-    private final long id;
 
     // getting the signatories and reader in the response
     private final List<Signatory> signatories;
@@ -45,148 +30,26 @@ public class DocumentGetResponse {
      * @param owner       the owner of the document.
      * @param currentUser the user doing the request
      */
-    public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
-        this.title = document.getDocumentTitle();
-        this.owner = owner;
-        final DocumentMetaData metaData = document.getDocumentMetaData();
-        //Replaced with uploadDate
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        this.creationDate = metaData.getMetaTimeStampUpload().format(formatter);
-        this.endDate = document.getEndDate().format(formatter);
-        this.dataType = document.getDocumentType();
+    public DocumentGetResponse(final Document document, final User owner, final User currentUser) {
+        super(document, owner, currentUser);
         this.data = document.getData();
-        this.state = document.getState();
-        this.identifier = document.getDocumentMetaData().getIdentifier();
-        this.signatory = false;
-        this.read = false;
-        this.signed = false;
-        this.id = document.getId();
-        // final List<Signatory> signatories = document.getSignatories();
-        this.signatories = document.getSignatories();
+        final List<Signatory> signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getEmail().equals(currentUser)
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
-                this.signatory = true;
                 signatureType = currentSignatory.getSignatureType();
-                if (currentSignatory.isStatus()) {
-                    this.signed = true;
-                    break;
-                }
             }
         }
         this.signatureType = signatureType;
-        //final List<Signatory> readers = document.getReaders();
-        this.readers = document.getReaders();
-        for (final Signatory currentReader : readers) {
-            if (currentReader.getEmail().equals(currentUser)) {
-                this.reader = true;
-                if (currentReader.isStatus()) {
-                    this.read = true;
-                    break;
-                }
-            }
-        }
-        OrderManager orderManager = new OrderManager();
-        turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
-        turnToSign = orderManager.manageSignatoryTurn(currentUser, document, this.signatureType);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public DocumentState getState() {
-        return state;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
     }
 
     public SignatureType getSignatureType() {
         return signatureType;
     }
 
-    public String getDataType() {
-        return dataType;
-    }
-
-    public boolean isSigned() {
-        return signed;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
     public byte[] getData() {
         return Arrays.copyOf(data, data.length);
-    }
-
-    public boolean isSignatory() {
-        return signatory;
-    }
-
-    public boolean isReader() {
-        return reader;
-    }
-
-    public boolean isTurnToReview() {
-        return turnToReview;
-    }
-
-    public void setTurnToReview(boolean turnToReview) {
-        this.turnToReview = turnToReview;
-    }
-
-    public boolean isTurnToSign() {
-        return turnToSign;
-    }
-
-    public void setTurnToSign(boolean turnToSign) {
-        this.turnToSign = turnToSign;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setSignatory(boolean signatory) {
-        this.signatory = signatory;
-    }
-
-    public void setReader(boolean reader) {
-        this.reader = reader;
-    }
-
-    public void setSigned(boolean signed) {
-        this.signed = signed;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-
-    public List<Signatory> getSignatories() {
-        return signatories;
-    }
-
-    public List<Signatory> getReaders() {
-        return readers;
     }
 }

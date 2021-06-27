@@ -3,8 +3,10 @@ import documentAPI from "@/main/vue/api/documentAPI";
 export const namespaced = true
 
 export const state = {
-    document: {},
-    errorGetDocument: {},
+    documentInfo: {},
+    errorGetDocumentInfo: {},
+    documentSeen: {},
+    errorDocumentSeen: {},
     protocol: {},
     errorGetProtocol: {},
     newVersionIds: {},
@@ -19,12 +21,8 @@ export const state = {
 
 export const mutations = {
     // sets given document as state
-    SET_DOCUMENT(state, doc) {
-        state.document = doc
-    },
-    // sets given document as state
-    SET_PROTOCOL(state, pro) {
-        state.protocol = pro
+    SET_DOCUMENT_INFO(state, doc) {
+        state.documentInfo = doc
     },
 
     // sets ids of new document
@@ -49,13 +47,12 @@ export const mutations = {
     EDIT_DOCUMENT(state, doc) {
         state.document = doc
     },
-    // sets error of getDocument request
-    SET_ERROR_GET_DOCUMENT(state, error) {
-        state.errorGetDocument = error
+    SET_DOCUMENT_SEEN(state, seen) {
+        state.documentSeen = seen
     },
     // sets error of getDocument request
-    SET_ERROR_GET_PROTOCOL(state, error) {
-        state.errorGetProtocol = error
+    SET_ERROR_GET_DOCUMENT_INFO(state, error) {
+        state.errorGetDocumentInfo = error
     },
     //sets error of getDocument request
     SET_ERROR_EDIT_DOCUMENT(state, error) {
@@ -73,6 +70,9 @@ export const mutations = {
     // sets error of advancedSignDocument request
     SET_ERROR_ADVANCED_SIGN_DOCUMENT(state, error) {
         state.errorSimpleSignResponse = error
+    },
+    SET_DOCUMENT_SEEN_ERROR(state, error) {
+        state.errorDocumentSeen = error
     }
 
 
@@ -80,25 +80,31 @@ export const mutations = {
 
 export const actions = {
     // makes axios call to get document, either sets document (success) or error (error)
-    fetchDocument({commit}, {envId, docId}) {
+    fetchDocumentInfo({commit}, {envId, docId}) {
         return documentAPI.getDocument(envId, docId).then(response => {
-            commit('SET_DOCUMENT', response.data)
-            commit('SET_ERROR_GET_DOCUMENT', {})
+            var info = {}
+            for (const key in response.data) {
+                if (key !== 'data' && Object.prototype.hasOwnProperty.call(response.data, key)) {
+                    info[key] = response.data[key]
+                }
+            }
+            commit('SET_DOCUMENT_INFO', info)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', {})
         }).catch(error => {
-            commit('SET_ERROR_GET_DOCUMENT', error)
+            commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
     },
-    // makes axios call to get protocol of document, either sets protocol (success) or error (error)
-    fetchProtocol({commit}, {docId}) {
-        return documentAPI.getProtocol(docId).then(response => {
-            commit('SET_PROTOCOL', response.data)
-            commit('SET_ERROR_GET_PROTOCOL', {})
+    // makes axios call to get information if user has already seen the document
+    fetchSeen({commit}, docId) {
+        return documentAPI.getDocumentSeen(docId).then(response => {
+            commit('SET_DOCUMENT_SEEN', response.data);
+            commit('SET_DOCUMENT_SEEN_ERROR', {})
         }).catch(error => {
-            commit('SET_ERROR_GET_PROTOCOL', error)
+            commit('SET_DOCUMENT_SEEN_ERROR', error)
         })
     },
-      // makes axios call to put the newDocument and archive the old one
-       editDocument({commit}, {newDoc, envId, docId}) {
+    // makes axios call to put the newDocument and archive the old one
+    editDocument({commit}, {newDoc, envId, docId}) {
         return documentAPI.editDocument(envId, docId, newDoc).then((response) => {
             commit('SET_IDS', response.data)
             commit('SET_ERROR_EDIT_DOCUMENT', {})
@@ -106,8 +112,9 @@ export const actions = {
             commit('SET_ERROR_EDIT_DOCUMENT', error)
         })
     },
-
-
+    setSeenFalse({commit}) {
+        commit('SET_DOCUMENT_SEEN', false);
+    },
     // makes axios call to review document, either sets reviewResponse (success) or error (error)
     reviewDocument({commit}, {docId}) {
         return documentAPI.reviewDocument(docId).then(response => {
@@ -139,8 +146,8 @@ export const actions = {
 }
 
 export const getters = {
-    getDocument: (state) => {
-        return state.document
+    getDocumentInfo: (state) => {
+        return state.documentInfo
     },
     getNewDocumentId: (state) => {
         return state.newVersionIds.newDocumentID
@@ -149,9 +156,8 @@ export const getters = {
     getEditDocumentStatus: (state) => {
         return state.newVersionIds.status
     },
-
-    getProtocol: (state) => {
-        return state.protocol
+    getSeen: (state) => {
+        return state.documentSeen
     },
     getReviewStatus: (state) => {
         return state.reviewResponse.status
@@ -162,11 +168,8 @@ export const getters = {
     getAdvancedSignStatus: (state) => {
         return state.advancedSignResponse.status
     },
-    getErrorGetDocument: (state) => {
-        return state.errorGetDocument
-    },
-    getErrorGetProtocol: (state) => {
-        return state.errorGetProtocol
+    getErrorGetDocumentInfo: (state) => {
+        return state.errorGetDocumentInfo
     },
     getErrorEditDocument: (state) => {
         return state.errorEditDocument
