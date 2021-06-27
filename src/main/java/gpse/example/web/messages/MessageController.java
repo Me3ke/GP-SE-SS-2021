@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,10 +41,27 @@ public class MessageController {
      * @param userID the email of the current user.
      * @return a list of all messages.
      */
-    @GetMapping("user/{userid}/messages")
+    @GetMapping("/user/{userid}/messages")
     public List<Message> getMessages(final @PathVariable(USER_ID) String userID) {
-        final List<Message> messages = messageService.getMessages(userService.getUser(userID));
+        final User user = userService.getUser(userID);
+        final MessageSettingsContainer container = user.getMessageSettings();
+        final List<Message> messages = messageService.getMessages(user);
         messages.removeIf(message -> message.getCategory().equals(Category.System));
+        for (final Iterator<Message> iterator = messages.iterator(); iterator.hasNext();) {
+            final Message message = iterator.next();
+            final Category category = message.getCategory();
+            if (category.equals(Category.READ) && !container.isRead()) {
+                iterator.remove();
+            } else if (category.equals(Category.SIGN) && !container.isSign()) {
+                iterator.remove();
+            } else if (category.equals(Category.NEW_VERSION) && !container.isNewVersion()) {
+                iterator.remove();
+            } else if (category.equals(Category.PROGRESS) && !container.isProgress()) {
+                iterator.remove();
+            } else if (category.equals(Category.TODO) && !container.isToDo()) {
+                iterator.remove();
+            }
+        }
         return messages;
     }
 
@@ -80,6 +98,7 @@ public class MessageController {
             message = messageService.getMessage(messageID).get();
             if (message.getRecievingUserMail().equals(userID)) {
                 message.setWatched(true);
+                messageService.saveMessage(message);
                 response.setStatus(STATUS_CODE_OKAY);
             } else {
                 response.setStatus(STATUS_NO_PERMISSION);

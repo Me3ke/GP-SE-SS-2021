@@ -115,6 +115,12 @@ public class User implements UserDetails {
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
         this.emailTemplates = new ArrayList<>();
+        this.messageSettings = new MessageSettingsContainer();
+        this.messageSettings.setToDo(true);
+        this.messageSettings.setProgress(true);
+        this.messageSettings.setNewVersion(true);
+        this.messageSettings.setSign(true);
+        this.messageSettings.setRead(true);
     }
 
     public static long getSerialVersionUID() {

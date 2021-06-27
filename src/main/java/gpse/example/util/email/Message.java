@@ -1,7 +1,6 @@
 package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
@@ -27,7 +26,7 @@ public class Message {
     @Column
     private String subject;
 
-    @Column
+    @Lob
     private String text;
 
     @Column

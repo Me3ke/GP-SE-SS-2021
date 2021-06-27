@@ -5,6 +5,7 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.*;
@@ -112,11 +113,13 @@ public class EnvelopeController {
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
                     setupUserInvitation(document.getSignatories().get(i).getUser(),
-                        userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
+                        userService.getUser(document.getOwner()), document,
+                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
                 }
             } else {
                 setupUserInvitation(document.getCurrentSignatory().getUser(),
-                    userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
+                    userService.getUser(document.getOwner()), document,
+                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
@@ -130,7 +133,8 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation(User signatory, User owner, Document document, Envelope envelope)
+    private void setupUserInvitation(User signatory, User owner, Document document,
+                                     Envelope envelope, SignatureType signatureType)
         throws MessageGenerationException {
 
         EmailTemplate template = document.getProcessEmailTemplate();
@@ -144,7 +148,14 @@ public class EnvelopeController {
         container.setEndDate(document.getEndDate().toString());
         //TODO Link to documentview
         container.setLink("http://localhost:8080/de/link/to/document/view");
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container);
+        Category category;
+        if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
+            || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+            category = Category.SIGN;
+        } else {
+            category = Category.READ;
+        }
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category);
     }
 
     /**

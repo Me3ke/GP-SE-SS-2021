@@ -16,8 +16,12 @@ public class SMTPServerHelper {
     @Autowired
     private final JavaMailSender mailSender;
 
-    public SMTPServerHelper(final JavaMailSender mailSender) {
+    @Autowired
+    private final MessageServiceImpl messageService;
+
+    public SMTPServerHelper(final JavaMailSender mailSender, MessageServiceImpl messageService) {
         this.mailSender = mailSender;
+        this.messageService = messageService;
     }
 
     /**
@@ -25,16 +29,19 @@ public class SMTPServerHelper {
      * @param recieverMail reciever
      * @param template specified templateobject
      * @param dataContainer specified data
+     * @param category the category of the email
      * @throws MessageGenerationException when text, reciever mail, or subject is null
      */
     public void sendTemplatedEmail(final String recieverMail, final EmailTemplate template,
-                                   final TemplateDataContainer dataContainer)
+                                   final TemplateDataContainer dataContainer, final Category category)
         throws MessageGenerationException {
         Message message = new Message();
         try {
+            message.setCategory(category);
             message.setRecievingUserMail(recieverMail);
             message.setupByTemplate(template, dataContainer);
             mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
+            messageService.saveMessage(message);
         } catch (InvocationTargetException | MessagingException exc) {
             throw new MessageGenerationException(message.getMessageID(), exc);
         }

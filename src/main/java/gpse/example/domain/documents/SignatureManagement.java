@@ -202,7 +202,7 @@ public class SignatureManagement {
                 //TODO Link to documentview
                 container.setLink("http://localhost:8080/de/link/to/document/view");
                 smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getUser().getEmail(), template,
-                    container);
+                    container, Category.SIGN);
             }
 
             response.setStatus(STATUS_CODE_OK);

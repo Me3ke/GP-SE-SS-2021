@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
         container.setLink("http://localhost:8080/de/register/confirm/" + token);
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container);
+        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.System);
 
     }
 
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
                 container.setLastNameOwner(user.getLastname());
                 container.setRequestingEmail(user.getEmail());
                 container.setLink("http://localhost:8080/de/admin/settings");
-                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container);
+                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO);
                 return;
                 //optional, without return -> notify all admins.
             }
