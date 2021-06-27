@@ -7,8 +7,11 @@ public class ImageSignatureToSend {
 
     private byte[] imageSignature;
 
-    public ImageSignatureToSend(byte[] imageSignature) {
+    private String imageSignatureType;
+
+    public ImageSignatureToSend(byte[] imageSignature, String imageSignatureType) {
         this.imageSignature = imageSignature;
+        this.imageSignatureType = imageSignatureType;
     }
 
     public ImageSignatureToSend() {
@@ -21,5 +24,13 @@ public class ImageSignatureToSend {
 
     public void setImageSignature(byte[] imageSignature) {
         this.imageSignature = imageSignature;
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
     }
 }

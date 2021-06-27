@@ -39,9 +39,9 @@ public class UserController {
     /**
      * Constructor of UserController getting required services.
      *
-     * @param service                 Userservice Object
-     * @param confService             ConfirmationTokenService object
-     * @param messageService          the messageService to access the message table
+     * @param service        Userservice Object
+     * @param confService    ConfirmationTokenService object
+     * @param messageService the messageService to access the message table
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
@@ -73,7 +73,7 @@ public class UserController {
                 return response;
             } catch (UsernameNotFoundException e) {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
-                        signUpUser.getLastname(), signUpUser.getPassword());
+                    signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 final PersonalData personalData = signUpUser.generatePersonalData();
                 user.setPersonalData(personalData);
@@ -104,7 +104,7 @@ public class UserController {
         final JSONResponseObject response = new JSONResponseObject();
 
         final Optional<ConfirmationToken> optionalConfirmationToken
-                = confirmationTokenService.findConfirmationTokenByToken(token);
+            = confirmationTokenService.findConfirmationTokenByToken(token);
 
         if (optionalConfirmationToken.isEmpty()) {
             response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
@@ -128,7 +128,7 @@ public class UserController {
                 } catch (MessageGenerationException mge) {
                     messageService.removeMessage(mge.getThrownByMessageID());
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
-                            + "an error occured please call systemadmin");
+                        + "an error occured please call systemadmin");
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
 
                     return response;
@@ -166,8 +166,9 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
+     *
      * @param personalData the new personal data of the user stating the request
-     * @param username the username of the user stating the request
+     * @param username     the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
@@ -264,7 +265,8 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
-     * @param username the username of the user stating the request
+     *
+     * @param username          the username of the user stating the request
      * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
@@ -295,6 +297,7 @@ public class UserController {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
         final User user = userService.getUser(username);
         user.setImageSignature(imageSignatureToSend.getImageSignature());
+        user.setImageSignatureType(imageSignatureToSend.getImageSignatureType());
         userService.saveUser(user);
         jsonResponseObject.setStatus(STATUS_CODE_OK);
         jsonResponseObject.setMessage("Successfully send image Signature");
@@ -303,6 +306,7 @@ public class UserController {
 
     @GetMapping("/user/{userID}/settings/imageSignature")
     public ImageSignatureToSend getImageSignature(@PathVariable(USERID) final String username) {
-        return new ImageSignatureToSend(userService.getUser(username).getImageSignature());
+        return new ImageSignatureToSend(userService.getUser(username).getImageSignature(),
+            userService.getUser(username).getImageSignatureType());
     }
 }

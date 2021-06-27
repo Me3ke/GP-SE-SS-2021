@@ -77,6 +77,9 @@ public class User implements UserDetails {
     @Lob
     private byte[] imageSignature;
 
+    @Column
+    private String imageSignatureType;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -344,5 +347,13 @@ public class User implements UserDetails {
 
     public void setImageSignature(byte[] imageSignature) {
         this.imageSignature = imageSignature;
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(final String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
     }
 }

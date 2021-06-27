@@ -216,7 +216,9 @@
         },
         "SignatureSettings": {
             "settings": "Signature settings",
+            "signature": "Signature",
             "upload": {
+                "current": "Current signature",
                 "text": "Upload new signature",
                 "text2": "Draw new signature",
                 "exp": "Upload an image of your own signature. It will be added to the process protocol.",
@@ -224,6 +226,7 @@
                 "alert": "Error while uploading! \n Make sure the field is not empty",
                 "popUp": {
                     "heading": "Upload signature",
+                    "choose": "Do you want to upload an image of your signature or draw one?",
                     "heading2": "Draw signature",
                     "exp": "Choose your signature.",
                     "signaturePad": "Draw your signature in that specific field",
@@ -236,7 +239,8 @@
                     "attentionTwo": "If you continue it will be lost!",
                     "placeholder": "Drop signature here or choose",
                     "dropPlaceholder": "Drop here",
-                    "accepted": "All image formats are accepted."
+                    "accepted": "All image formats are accepted.",
+                    "success": "You have successfully uploaded your signature!"
                 }
             }
         },

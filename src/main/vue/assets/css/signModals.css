@@ -151,7 +151,11 @@
         text-overflow-mode: ellipse;
     }
 
-    .step, .button-txt {
+    .button-txt {
+        font-size: 0.72em;
+    }
+
+    .step {
         font-size: .92em;
     }
 
@@ -183,6 +187,7 @@
         width: 20em;
         display: inline-block;
     }
+
     .pt-2 {
         margin-left: -.3em;
     }
@@ -282,8 +287,9 @@
     .navbar-brand, .nav-item {
         font-size: 0.75em;
     }
+
     .pad {
-        width: 30em  ;
+        width: 30em;
     }
 }
 
