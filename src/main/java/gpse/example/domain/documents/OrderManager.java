@@ -2,7 +2,6 @@ package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class OrderManager {
      * @param signatureType the type of signature the user needs to provide
      * @return true, if all the conditions are met; false otherwise
      */
-    public boolean manageSignatoryTurn(final User reader, final Document document,
+    public boolean manageSignatoryTurn(final String reader, final Document document,
                                        final SignatureType signatureType) {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
@@ -27,7 +26,7 @@ public class OrderManager {
         }
     }
 
-    private boolean manageSignatureWithoutOrder(final User reader, final Document document,
+    private boolean manageSignatureWithoutOrder(final String reader, final Document document,
                                                 final SignatureType signatureType) {
         List<Signatory> signatories;
         switch (signatureType) {
@@ -45,27 +44,28 @@ public class OrderManager {
         }
     }
 
-    private boolean findSignatoryInList(final List<Signatory> signatories, final User signatoryToFind,
+    private boolean findSignatoryInList(final List<Signatory> signatories, final String signatoryToFind,
                                         final SignatureType signatureType) {
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)
-                    && currentSignatory.getSignatureType().equals(signatureType)) {
+            if (currentSignatory.getEmail().equals(signatoryToFind)
+                && currentSignatory.getSignatureType().equals(signatureType)) {
                 foundSignatory = true;
+                break;
             }
         }
         return foundSignatory;
     }
 
-    private boolean manageSignatureInOrder(final User reader, final Document document,
+    private boolean manageSignatureInOrder(final String reader, final Document document,
                                            final SignatureType signatureType) {
         final Signatory currentReader = document.getCurrentSignatory();
         return matchesSignatory(reader, currentReader, signatureType);
     }
 
-    private boolean matchesSignatory(final User reader, final Signatory currentReader,
+    private boolean matchesSignatory(final String reader, final Signatory currentReader,
                                      final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
-                && currentReader.getUser().equals(reader);
+                && currentReader.getEmail().equals(reader);
     }
 }

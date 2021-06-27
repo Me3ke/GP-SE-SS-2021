@@ -2,7 +2,6 @@ package gpse.example.domain.signature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
@@ -20,8 +19,11 @@ public class SignatoryServiceImpl implements SignatoryService {
 
     @Override
     public  void delete(final List<Signatory> signatories) {
+        // TODO (fix the error: No class gpse.(...). Signatory entity with id 1 exists after
+        //  upload newer version of first document (only changed the endDate)
+        /*
         for (final Signatory signatory : signatories) {
             signatoryRepository.deleteById(signatory.getId());
-        }
+        }*/
     }
 }

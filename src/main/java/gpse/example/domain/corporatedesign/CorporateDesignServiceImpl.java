@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CorporateDesignServiceImpl implements CorporateDesignService {
 
-    private CorporateDesignRepository corporateDesignRepository;
+    private final CorporateDesignRepository corporateDesignRepository;
 
     @Autowired
     public CorporateDesignServiceImpl(final CorporateDesignRepository corporateDesignRepository) {

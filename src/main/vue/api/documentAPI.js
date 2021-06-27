@@ -9,6 +9,13 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     },
+    // gives if user has already seen document with id docId
+    async getDocumentSeen(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/document/' + docId + '/user/' + store.state.auth.username + '/seen'
+        })
+    },
     // gives back protocol of document with id docId
     async getProtocol(docId) {
         return axios({
@@ -46,17 +53,17 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId,
 
             data: {
-                //'byte': newDoc.byte[1],
                 'data': newDoc.data,
                 'title': newDoc.title,
                 'dataType': newDoc.dataType,
-                'signatoriesID': newDoc.signatoriesId,
-                'readersID': newDoc.readersId,
-                'signatureType': newDoc.signatureType,
-                'endDate': null,
+                'signatories': newDoc.signatories,
+                'alreadyDefinedSignatories': newDoc.signatories,
+                'readersID': newDoc.readers,
+                //'signatureType': newDoc.signatureType,
+                'endDate': newDoc.endDate,
                 'orderRelevant': newDoc.orderRelevant,
-                'state': newDoc.state,
-                'lastModified': null
+                //'state': newDoc.state,
+                'lastModified': newDoc.lastModified
             }
         })
     }

@@ -14,6 +14,8 @@ public class SMTPServerHelper {
 
     private static final String GREETING = "Guten Tag Herr/Frau %s, %n";
 
+    private static final String GUTEN_TAG_N = "Guten Tag, %n";
+
     private static final String INITIAL_REGISTER_TEMPLATE = GREETING
         + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
         + "Hier bestätigen: %s %n"
@@ -29,7 +31,7 @@ public class SMTPServerHelper {
     private static final String SIGNATURE_INVITATION_SUBJECT = "Signatur des Dokuments %s";
 
 
-    private static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
+    private static final String ADMIN_VALIDATION_INFO = GUTEN_TAG_N
         + "ein neuer Nutzer möchte sich registrieren. %n"
         + "Bitte bestätigen sie die Emailadresse %s ";
 
@@ -41,6 +43,17 @@ public class SMTPServerHelper {
         + "Bitte denken sie daran, dass das Dokument %s innerhalb der nächsten %s Tage abgeschlossen werden soll.";
 
 
+    /**
+     * use Invitation subject.
+     */
+    private static final String GUEST_INVITATION = GUTEN_TAG_N
+        + "Sie wurden von %s gebeten das Dokument %s zu Signieren.%n"
+        + "Sie finden das Dokument hier: %s";
+
+    private static final String GUEST_INVITATION_ADVANCED = GUTEN_TAG_N
+        + "Sie wurden aufgefordert ein Dokument mit einer Signatur zu signieren, die eine Anmeldung erfordert. %n"
+        + "Sie können sich hier http://localhost:8080/de/landing/ registrieren. %n"
+        + "Dort finden Sie auch weitere Informationen rund um unsere Anwendung.";
     @Autowired
     private final JavaMailSender mailSender;
 
@@ -86,8 +99,8 @@ public class SMTPServerHelper {
      * @param owner             the owner of the relating document
      * @param lastnameSignatory the lastname of the signatory who should be reminded
      * @param document          the document that belongs to the requestet signature
-     * @throws MessageGenerationException is thrown when the signatory mail doesn't exist, or if something goes wrong
-     *                                    with initializing th text or subject.
+     * @throws MessageGenerationException is thrown when the signatory mail does not exist, or when something goes wrong
+     *                                    while setting subject an text.
      */
     public void sendSignatureInvitation(final String signatoryMail, final User owner, final String lastnameSignatory,
                                         final Document document) throws MessageGenerationException {
@@ -113,6 +126,42 @@ public class SMTPServerHelper {
         message.setRecievingUserMail(userEmail);
         message.setSubject(String.format(REMINDER_SUBJECT, document.getDocumentTitle()));
         message.setText(String.format(REMINDER, userName, document.getDocumentTitle(), days));
+
+        mailSender.send(message.generateMessage());
+    }
+
+
+    /**
+     * sending an email with the guest invitation template.
+     *
+     * @param guestMail the reciever mail
+     * @param document  the document which the invitation belongs to
+     * @param link      the link to get the document view without log in
+     * @throws MessageGenerationException when message could not be generated or send
+     */
+    public void sendGuestInvitation(final String guestMail, final Document document, final String link)
+        throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(guestMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(String.format(GUEST_INVITATION, document.getOwner(), document.getDocumentTitle(), link));
+
+        mailSender.send(message.generateMessage());
+    }
+
+    /**
+     * send Information that Registration is required for signing advanced.
+     *
+     * @param guestMail Mail of guestsignatory
+     * @param document  document that should be signed advanced
+     * @throws MessageGenerationException when message could not be generated or send
+     */
+    public void sendGuestInvitationAdvanced(final String guestMail, final Document document)
+        throws MessageGenerationException {
+        Message message = new Message();
+        message.setRecievingUserMail(guestMail);
+        message.setSubject(String.format(SIGNATURE_INVITATION_SUBJECT, document.getDocumentTitle()));
+        message.setText(GUEST_INVITATION_ADVANCED);
 
         mailSender.send(message.generateMessage());
     }

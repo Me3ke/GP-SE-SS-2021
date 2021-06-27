@@ -4,12 +4,15 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
+import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
+import gpse.example.web.documents.GuestToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,12 +47,13 @@ public class EnvelopeController {
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
+
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService  the envelopeService
-     * @param userService      the userService
-     * @param documentService  the documentService
+     * @param envelopeService the envelopeService
+     * @param userService     the userService
+     * @param documentService the documentService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -74,7 +78,7 @@ public class EnvelopeController {
         try {
             final User owner = userService.getUser(ownerID);
             final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner().getEmail());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -101,28 +105,57 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
-            final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
+            final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
             if (document.isOrderRelevant()) {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getEmail(),
                     userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
+                    userService.getUser(document.getCurrentSignatory().getEmail()).getLastname(), document);
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    smtpServerHelper.sendSignatureInvitation(document.getSignatories().get(i).getUser().getEmail(),
-                        userService.getUser(document.getOwner()),
-                        document.getSignatories().get(i).getUser().getLastname(), document);
+                    sendInvitation(document, document.getSignatories().get(i), envelopeID);
                 }
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
+            System.out.println(response.getMessage());
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
             | MessageGenerationException e) {
             response.setStatus(INTERNAL_ERROR);
             response.setMessage("The document could not be uploaded.");
             return response;
+        }
+    }
+
+    /**
+     * Sending invitation email to Guests or Users.
+     * Guests getting the following link.
+     * http://localhost:8080/de/envelope/{envelopeID}/document/{documentID}/{token}
+     *
+     * @param document   the document that should be signed
+     * @param signatory  the signatory
+     * @param envelopeId The EnvelopeId required for link.
+     * @throws MessageGenerationException Thrown by smtpServerHelper if email could not be sended.
+     */
+
+    private void sendInvitation(Document document, Signatory signatory, long envelopeId)
+        throws MessageGenerationException {
+        try {
+            User user = userService.getUser(signatory.getEmail());
+            smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
+                userService.getUser(document.getOwner()),
+                user.getLastname(), document);
+        } catch (UsernameNotFoundException unf) {
+            if (signatory.getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
+                GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
+                smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
+                    "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
+                        + token.getToken());
+            } else {
+                smtpServerHelper.sendGuestInvitationAdvanced(signatory.getEmail(), document);
+            }
         }
     }
 
@@ -140,9 +173,8 @@ public class EnvelopeController {
                                            final @PathVariable(USER_ID) String userID)
         throws DocumentNotFoundException {
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-        final User currentUser = userService.getUser(userID);
         final User owner = userService.getUser(envelope.getOwnerID());
-        return new EnvelopeGetResponse(envelope, owner, currentUser);
+        return new EnvelopeGetResponse(envelope, owner, userID);
     }
 
     /**
@@ -164,7 +196,7 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final User owner = userService.getUser(envelope.getOwnerID());
             documentCreator.downloadEnvelope(envelope, path);
-            return new EnvelopeGetResponse(envelope, owner, currentUser);
+            return new EnvelopeGetResponse(envelope, owner, currentUser.getEmail());
         } catch (CreatingFileException | IOException | DocumentNotFoundException e) {
             throw new DownloadFileException(e);
         }
@@ -174,18 +206,17 @@ public class EnvelopeController {
      * The getAllEnvelopes methods gets all envelopes from the database and filters
      * them using the filter method.
      *
-     * @param userID  the id of the user doing the request.
+     * @param userID the id of the user doing the request.
      * @return the filtered envelope list.
      */
 
     @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
-        final User currentUser = userService.getUser(userID);
         final List<Envelope> envelopeList = envelopeService.getEnvelopes();
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
-            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, currentUser));
+            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, userID));
         }
         return envelopeGetResponseList;
 
@@ -212,7 +243,6 @@ public class EnvelopeController {
             final List<Document> filteredDocumentList = envelope.getDocumentList()
                 .stream()
                 .filter(document -> document.hasTitle(request.getTitleFilter()))
-                .filter(document -> document.hasSignatureType(request.getSignatureTypeFilter()))
                 .filter(document -> document.hasState(request.getStateFilter()))
                 .filter(document -> document.hasEndDate(request.getEndDateFilterFrom(), request.getEndDateFilterTo()))
                 .filter(document -> document.hasDataType(request.getDataType()))
@@ -230,6 +260,7 @@ public class EnvelopeController {
 
     /**
      * The getMapping for the request to get the settings of all documents in an envelope.
+     *
      * @param envelopeID the id of the relating envelope
      * @return a fitting response in form of a list containing documentSetting-Objects.
      */
@@ -243,5 +274,4 @@ public class EnvelopeController {
         }
     }
 }
-
 

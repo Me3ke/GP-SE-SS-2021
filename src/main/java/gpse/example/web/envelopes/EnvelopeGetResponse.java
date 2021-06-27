@@ -3,6 +3,7 @@ package gpse.example.web.envelopes;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.users.User;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,12 @@ public class EnvelopeGetResponse {
 
     /**
      * The default constructor for an envelope response.
-     * @param envelope The envelope on which the response is based.
-     * @param owner the owner of the envelope.
+     *
+     * @param envelope    The envelope on which the response is based.
+     * @param owner       the owner of the envelope.
      * @param currentUser the user doing the request.
      */
-    public EnvelopeGetResponse(final Envelope envelope, final User owner, final User currentUser) {
+    public EnvelopeGetResponse(final Envelope envelope, final User owner, final String currentUser) {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;

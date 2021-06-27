@@ -1,7 +1,5 @@
 package gpse.example.domain.signature;
 
-import gpse.example.domain.users.User;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,11 +14,14 @@ public class Signatory {
     @Column
     private long id;
 
-    @ManyToOne
-    private User user;
+    @Column
+    private String email;
 
     @Column
     private boolean status;
+
+    @Column
+    private boolean seen;
 
     @Column
     private LocalDateTime signedOn;
@@ -37,26 +38,27 @@ public class Signatory {
 
     /**
      * Default constructor for a Signatory. Status is initialized with false.
-     * @param user the user that has to sign the corresponding document.
+     * @param email the user that has to sign the corresponding document.
      * @param signatureType the signatureType the signatory refers to.
      */
-    public Signatory(final User user, final SignatureType signatureType) {
-        this.user = user;
+    public Signatory(final String email, final SignatureType signatureType) {
+        this.email = email;
         this.status = false;
         this.reminder = -1;
         this.signatureType = signatureType;
+        this.seen = false;
     }
 
     protected Signatory() {
 
     }
 
-    public User getUser() {
-        return user;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser(final User user) {
-        this.user = user;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public boolean isStatus() {
@@ -101,5 +103,17 @@ public class Signatory {
 
     public void setSignatureType(final SignatureType signatureType) {
         this.signatureType = signatureType;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

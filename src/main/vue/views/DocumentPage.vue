@@ -77,6 +77,7 @@ export default {
             dataError: false,
             showOverflow: true,
             showDownload: false,
+            showUploadNewVersion: false,
             showPdf: false
         }
     },
@@ -108,11 +109,15 @@ export default {
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.showOverflow = !this.showOverflow
-        }
+        },
+
     }
     ,
     computed: {
         ...mapGetters({
+            newDocumentId: 'document/getNewDocumentId',
+            newDocumentError: 'document/getNewDocumentError',
+
             document: 'document/getDocumentInfo',
             getError: 'document/getErrorGetDocumentInfo'
         }),
@@ -124,7 +129,8 @@ export default {
         },
         hasError() {
             return !_.isEmpty(this.getError);
-        }
+        },
+
     }
 }
 </script>

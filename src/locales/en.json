@@ -307,7 +307,19 @@
         "chooseFile": "Choose a file or drop it here...",
         "simple": "Simple",
         "advanced": "Advanced",
-        "signatureType": "Signaturetype"
+        "signatureType": "Signaturetype",
+
+        "UpdateDocument": {
+            "chooseFile": "Choose a file or drag it here...",
+            "update1": "update",
+            "update2": "Update Document",
+            "selectDocument": "Select the File to replace/update the Document ",
+            "replaceDoc": "Update of: ",
+            "confirmation": "Are you sure to update {documentTitle}",
+            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+
+        }
+
     },
     "DownloadDoc": {
         "download": "Download",
@@ -436,7 +448,8 @@
             "notDone": "In order to sign you still have to set up the following.",
             "tfa": "Two-factor authentication",
             "keyPair": "Key-pair",
-            "toSettings": "To settings"
+            "toSettings": "To settings",
+            "notSeen": "You have to look at the document first!"
         },
         "read": {
             "read": "Proofread now!",

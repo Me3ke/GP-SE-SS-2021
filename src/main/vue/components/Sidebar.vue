@@ -5,6 +5,8 @@
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 
+        <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
+
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>
             <b-list-group>
@@ -179,10 +181,12 @@
 import {mapGetters} from "vuex";
 import SignPopUp from "@/main/vue/components/popUps/SignPopUp";
 import ProofreadPopUp from "@/main/vue/components/popUps/ProofreadPopUp";
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
+import _ from "lodash";
 
 export default {
     name: "Sidebar",
-    components: {ProofreadPopUp, SignPopUp},
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp},
     data() {
         return {
             // TODO: get Info with api
@@ -192,6 +196,7 @@ export default {
             showProofread: false,
             showSign: false,
             showDownload: false,
+            showUploadNewVersion: false,
 
             elsaLight: require('../assets/logos/ELSA_medium.svg'),
             elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
@@ -207,6 +212,7 @@ export default {
             this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleSign(val) {
             if (this.signed) {
@@ -215,10 +221,12 @@ export default {
             this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.$emit('triggerOverflow')
+            this.$store.dispatch('document/setSeenFalse')
         },
         goToComments() {
             this.$router.push({name: 'comments', params: {envId: this.envId, docId: this.docId}})
@@ -229,8 +237,12 @@ export default {
         //TODO: add possibility to look at history
         showHistory() {
         },
-        //TODO: add uploading of new version here
         toggleNewVersion() {
+            this.showUploadNewVersion = !this.showUploadNewVersion
+            this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$emit('triggerOverflow')
+
+            this.$bvModal.show('modal-' + this.docId + 'a')
         },
         // TODO. add router push to settings site of document
         goToSettings() {
@@ -253,6 +265,9 @@ export default {
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
+            newDocumentId: 'document/getNewDocumentId',
+            newDocumentError: 'document/getNewDocumentError',
+            newDocumentStatus: 'document/getEditDocumentStatus',
             logoLight: 'theme/getLightLogo',
             logoDark: 'theme/getDarkLogo',
             logoLightType: 'theme/getLightLogoType',
@@ -288,7 +303,10 @@ export default {
             return this.$route.params.docId
         },
         envId() {
-            return this.$route.params.envId
+            return this.$route.params.envId;
+        },
+        uploadNewDocumentError() {
+            return !_.isEmpty(this.newDocumentError)
         },
         lightEmpty() {
             return this.logoLight === ""

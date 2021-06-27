@@ -32,7 +32,7 @@ public class Envelope implements Iterable<Document> {
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private List<Document> documentList = new ArrayList<>();
+    private final List<Document> documentList = new ArrayList<>();
 
     @Column
     private String name;

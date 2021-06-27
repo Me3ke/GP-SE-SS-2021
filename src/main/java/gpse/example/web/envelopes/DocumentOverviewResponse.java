@@ -38,7 +38,7 @@ public class DocumentOverviewResponse {
      * @param owner       the owner of the document.
      * @param currentUser the user doing the request
      */
-    public DocumentOverviewResponse(final Document document, final User owner, final User currentUser) {
+    public DocumentOverviewResponse(final Document document, final User owner, final String currentUser) {
         this.title = document.getDocumentTitle();
         this.owner = owner;
         //Replaced with uploadDate
@@ -55,7 +55,7 @@ public class DocumentOverviewResponse {
         final List<Signatory> signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(currentUser)
+            if (currentSignatory.getEmail().equals(currentUser)
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
                 this.signatory = true;
@@ -68,7 +68,7 @@ public class DocumentOverviewResponse {
         }
         final List<Signatory> readers = document.getReaders();
         for (final Signatory currentReader : readers) {
-            if (currentReader.getUser().equals(currentUser)) {
+            if (currentReader.getEmail().equals(currentUser)) {
                 this.reader = true;
                 if (currentReader.isStatus()) {
                     this.read = true;

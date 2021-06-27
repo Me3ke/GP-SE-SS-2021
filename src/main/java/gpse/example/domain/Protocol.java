@@ -3,6 +3,7 @@ package gpse.example.domain;
 import com.sun.istack.NotNull;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.UserService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -54,7 +55,7 @@ public class Protocol {
     private static final float SPACING_TWO = 2.0f;
     private static final String SIGNATURE_OF = "Signiert von: ";
 
-    private Document document;
+    private final Document document;
 
     public Protocol(@NotNull final Document document) {
         this.document = document;
@@ -62,10 +63,11 @@ public class Protocol {
 
     /**
      * printing the protocol with specified user data.
+     *
      * @return a stream which contains the written pdf protocol.
-     * @throws IOException
+     * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
-    public ByteArrayOutputStream writeProtocol() throws IOException {
+    public ByteArrayOutputStream writeProtocol(UserService userService) throws IOException {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         //TODO make linecount method so we can check if its <= 0 and create new page if needed
@@ -110,15 +112,16 @@ public class Protocol {
                 for (final Signatory signatory : document.getSignatories()) {
                     lineCount -= LINE_DIST;
                     if (signatory.isStatus()) {
-                        addIndentedLine(signatory.getUser().getUsername() + "    Am: "
-                                        + formatter.format(signatory.getSignedOn()),
-                                lineCount, SPACING_ONE_FIVE, contentStream);
-                        if (signatory.getUser().getImageSignature().length != 0) {
+                        addIndentedLine(signatory.getEmail() + "    Am: "
+                                + formatter.format(signatory.getSignedOn()),
+                            lineCount, SPACING_ONE_FIVE, contentStream);
+                        if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
                             lineCount -= 2 * LINE_DIST;
-                            addImageLine(signatory.getUser().getImageSignature(), protocol, lineCount, contentStream);
+                            addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
+                                lineCount, contentStream);
                         }
                     } else {
-                        addIndentedLine(signatory.getUser().getUsername() + "    noch nicht signiert",
+                        addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
                             lineCount, SPACING_ONE_FIVE, contentStream);
                     }
                 }
@@ -131,7 +134,7 @@ public class Protocol {
 
                     lineCount = lineCount - LINE_DIST;
                     addIndentedLine(document.getDocumentTitle() + " vom "
-                        + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
+                            + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
                         lineCount, SPACING_ONE_FIVE, contentStream);
 
                     lineCount -= LINE_DIST;
@@ -140,10 +143,10 @@ public class Protocol {
                     for (final Signatory signatory : document.getSignatories()) {
                         lineCount -= LINE_DIST;
                         if (signatory.isStatus()) {
-                            addIndentedLine(signatory.getUser().getUsername() + "    (ungültig) ",
+                            addIndentedLine(signatory.getEmail() + "    (ungültig) ",
                                 lineCount, SPACING_TWO_FIVE, contentStream);
                         } else {
-                            addIndentedLine(signatory.getUser().getUsername() + "    nicht signiert",
+                            addIndentedLine(signatory.getEmail() + "    nicht signiert",
                                 lineCount, SPACING_TWO_FIVE, contentStream);
                         }
                     }
@@ -161,7 +164,7 @@ public class Protocol {
      * @param value         value to add to pdf file
      * @param offSet        line offset from 0 to 700 from bottom of page
      * @param contentStream Stream that knows the file to that is written
-     * @throws IOException
+     * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
     private void addLine(final String value, final int offSet,
                          final PDPageContentStream contentStream) throws IOException {

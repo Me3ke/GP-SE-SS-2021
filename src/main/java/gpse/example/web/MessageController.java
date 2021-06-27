@@ -18,8 +18,8 @@ public class MessageController {
 
     private static final int STATUS_CODE_DELETE_FAILED = 520;
     private static final int STATUS_CODE_OKAY = 200;
-    private MessageService messageService;
-    private UserService userService;
+    private final MessageService messageService;
+    private final UserService userService;
 
     @Autowired
     public MessageController(final MessageService messageService, final UserService userService) {

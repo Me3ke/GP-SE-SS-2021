@@ -309,8 +309,19 @@
         "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
-        "signatureType": "Signaturtyp"
+        "signatureType": "Signaturtyp",
+
+        "UpdateDocument": {
+            "chooseFile":  "Dokument auswählen oder ins Feld ziehen...",
+            "update1": "aktualisieren",
+            "update2": "Dokument aktualisieren",
+            "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
+            "replaceDoc": "Das Aktualisieren des Dokumentes: ",
+            "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+       }
     },
+
     "DownloadDoc": {
         "download": "Herunterladen",
         "heading": "Jetzt herunterladen!",
@@ -438,7 +449,8 @@
             "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
             "tfa": "Zwei-Faktor-Authenifizierung",
             "keyPair": "Schlüsselpaar",
-            "toSettings": "Zu den Einstellungen"
+            "toSettings": "Zu den Einstellungen",
+            "notSeen": "Sie müssen sich das Dokument erst anschauen!"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
