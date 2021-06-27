@@ -107,6 +107,8 @@ public class User implements UserDetails {
         this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.imageSignature = new byte[0];
+        this.imageSignatureType = "";
     }
 
     public static long getSerialVersionUID() {
@@ -343,7 +345,8 @@ public class User implements UserDetails {
     }
 
     public byte[] getImageSignature() {
-        return Arrays.copyOf(imageSignature, imageSignature.length);
+        return Arrays.copyOf(
+                imageSignature, imageSignature.length);
     }
 
     public void setImageSignature(byte[] imageSignature) {

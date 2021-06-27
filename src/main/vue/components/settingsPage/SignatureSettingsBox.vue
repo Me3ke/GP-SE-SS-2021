@@ -33,7 +33,7 @@
                             {{ $t('Settings.SignatureSettings.upload.upload') }}
                         </b-button>
                     </b-list-group-item>
-                    <SignatureUploadPopUp :hasSignature="signature !== null" v-if="showUpload"
+                    <SignatureUploadPopUp :hasSignature="signatureType !== ''" v-if="showUpload"
                                           @uploadTrigger="upload()"></SignatureUploadPopUp>
                 </b-list-group>
             </div>
