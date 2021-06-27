@@ -1,12 +1,13 @@
 package gpse.example.domain;
 
 import com.sun.istack.NotNull;
+import gpse.example.domain.documents.Document;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.documents.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,6 +37,14 @@ public class Protocol {
     private static final int MARGIN_LEFT = 75;
 
     private static final int FONT_SIZE = 12;
+
+    /**
+     * Dimensions for the image signatures.
+     */
+    private static final int IMAGE_WIDTH = 80;
+
+    private static final int IMAGE_HEIGHT = 30;
+
 
     private static final String PROTOKOLL = "Protokoll: ";
 
@@ -102,7 +111,12 @@ public class Protocol {
                     lineCount -= LINE_DIST;
                     if (signatory.isStatus()) {
                         addIndentedLine(signatory.getUser().getUsername() + "    Am: "
-                            + formatter.format(signatory.getSignedOn()), lineCount, SPACING_ONE_FIVE, contentStream);
+                                        + formatter.format(signatory.getSignedOn()),
+                                lineCount, SPACING_ONE_FIVE, contentStream);
+                        if (signatory.getUser().getImageSignature().length != 0) {
+                            lineCount -= 2 * LINE_DIST;
+                            addImageLine(signatory.getUser().getImageSignature(), protocol, lineCount, contentStream);
+                        }
                     } else {
                         addIndentedLine(signatory.getUser().getUsername() + "    noch nicht signiert",
                             lineCount, SPACING_ONE_FIVE, contentStream);
@@ -133,7 +147,6 @@ public class Protocol {
                                 lineCount, SPACING_TWO_FIVE, contentStream);
                         }
                     }
-
 
                 }
             }
@@ -166,5 +179,11 @@ public class Protocol {
         contentStream.newLineAtOffset(MARGIN_LEFT * leftSpacing, offSet);
         contentStream.showText(value);
         contentStream.endText();
+    }
+
+    private void addImageLine(final byte[] image, final PDDocument document, final int offSet,
+                              final PDPageContentStream contentStream) throws IOException {
+        PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, image, null);
+        contentStream.drawImage(pdImage, MARGIN_LEFT * 2, offSet, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 }
