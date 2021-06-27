@@ -267,7 +267,7 @@ export default {
             theme: 'theme/getTheme',
             newDocumentId: 'document/getNewDocumentId',
             newDocumentError: 'document/getNewDocumentError',
-            newDocumentStatus: 'document/getEditDocumentStatus'
+            newDocumentStatus: 'document/getEditDocumentStatus',
             logoLight: 'theme/getLightLogo',
             logoDark: 'theme/getDarkLogo',
             logoLightType: 'theme/getLightLogoType',

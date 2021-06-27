@@ -147,7 +147,6 @@ public class Document {
     public void advancedSignature(final String user, final String signature) {
         for (int i = 0; i < signatories.size(); i++) {
             if (signatories.get(i).getEmail().equals(user)) {
-                userIsSignatory = true;
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 setSigned(i);
             }
@@ -218,6 +217,7 @@ public class Document {
     public boolean hasTitle(final String titleFilter) {
         return this.getDocumentTitle().contains(titleFilter);
     }
+
     /**
      * The filter method for document states.
      *
