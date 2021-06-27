@@ -184,7 +184,7 @@
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
 //import {mapActions} from "vuex";
-import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {convertUploadFileToBase64} from "@/main/vue/scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 export default {
     name: 'UploadButton',
