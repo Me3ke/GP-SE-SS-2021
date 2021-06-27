@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -49,7 +48,7 @@ public class Document {
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    protected List<Signatory> signatories = new ArrayList<>();
+    protected List<Signatory> signatories;
 
     /**
      * The list of all advanced signatures that have been made so far.
@@ -128,8 +127,8 @@ public class Document {
      * @param signatory     the user object that is needed as a signatory
      * @param signatureType the signatureType the signatory refers to
      */
-    public void addSignatory(final User signatory, final SignatureType signatureType) {
-        signatories.add(new Signatory(signatory.getUsername(), signatureType));
+    public void addSignatory(final String signatory, final SignatureType signatureType) {
+        signatories.add(new Signatory(signatory, signatureType));
     }
 
     /**

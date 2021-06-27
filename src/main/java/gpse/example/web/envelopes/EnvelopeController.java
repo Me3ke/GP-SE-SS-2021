@@ -109,7 +109,7 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
-            final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
+            final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
             if (!document.isOrderRelevant()) {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
@@ -121,6 +121,7 @@ public class EnvelopeController {
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
+            System.out.println(response.getMessage());
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
             | MessageGenerationException e) {

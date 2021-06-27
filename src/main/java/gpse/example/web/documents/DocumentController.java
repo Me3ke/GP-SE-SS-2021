@@ -113,7 +113,7 @@ public class DocumentController {
      * @param documentID id of document
      * @param token String Token to get the tokenobject (or not if its expired? or wrong)
      * @return the documentGetResponse
-     * @throws DocumentNotFoundException
+     * @throws DocumentNotFoundException is thrown if the document that the request relates to does not exist.
      */
     @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
     public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
@@ -200,7 +200,7 @@ public class DocumentController {
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
 
-            final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
+            final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
