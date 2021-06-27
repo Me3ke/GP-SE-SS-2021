@@ -251,6 +251,10 @@ export default {
             image: '',
             type: null,
 
+            options: {
+                penColor: '#FFF'
+            },
+
             drawSignature: false,
             padEmpty: false,
             showSendingError: false

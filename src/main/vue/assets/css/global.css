@@ -37,6 +37,9 @@
 
     /* Alert Dismiss */
     --darkRed: #a22c2c;
+
+    /* Draw - Pad*/
+    --pad-background: whitesmoke;
 }
 
 [data-theme="darkMode"] {
@@ -71,6 +74,9 @@
     --modalBackground: rgba(0, 0, 0, .65);
 
     --darkRed: #501515;
+
+    /* Draw- Pad Background */
+    --pad-background: whitesmoke;
 }
 
 
@@ -316,22 +322,19 @@ body {
     top: 3em
 }
 
-.page-item .page-link
-{
-    color: var(--dark-grey)!important;
-    background-color: var(--whitesmoke)!important;
+.page-item .page-link {
+    color: var(--dark-grey) !important;
+    background-color: var(--whitesmoke) !important;
 }
 
-.page-item.active .page-link
-{
-    color: var(--whitesmoke)!important;
-    background-color: var(--elsa-blue)!important;
-    border-color: var(--elsa-blue)!important;
+.page-item.active .page-link {
+    color: var(--whitesmoke) !important;
+    background-color: var(--elsa-blue) !important;
+    border-color: var(--elsa-blue) !important;
 }
 
-.page-link:focus
-{
-    box-shadow: 0 0 0 0.2em var(--elsa-blue-transparent)!important;
+.page-link:focus {
+    box-shadow: 0 0 0 0.2em var(--elsa-blue-transparent) !important;
 }
 
 #mini-sidebar.b-sidebar {
