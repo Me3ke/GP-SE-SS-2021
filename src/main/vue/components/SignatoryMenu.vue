@@ -2,7 +2,6 @@
     <div>
         <div class="form-group">
             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
-            {{signatories}}
             <b-row no-gutters>
                 <b-col cols="11">
                     <input type="text" class="form-control" v-model="signatoryInput" id="signatoryInput" :placeholder="$t('Settings.DocumentSettings.placeholderMail')">
@@ -21,7 +20,7 @@
             </div>
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
-            <draggable v-model="signatories">
+            <draggable v-model="signatoriesNew">
                 <div class="drag-drop-element" v-for="signatory in signatoriesNew" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
@@ -54,14 +53,19 @@ import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
     props: {
-        signatories: Array,
+        signatories: {
+            type: [
+                Array,
+                Object
+            ]
+        },
         orderRelevant: Boolean
     },
     components: {draggable},
     data() {
         return{
 
-            signatoriesNew: {},
+            signatoriesNew: [],
             signatoryInput: "",
             signatureTypes: [{
                 name: 'UploadDoc.simple',
@@ -74,9 +78,6 @@ export default {
     },
     methods: {
         addSignatory() {
-            console.log("new")
-            console.log(this.signatoriesNew)
-
 
             if(this.signatoriesNew.includes(this.signatoryInput)) {
                 // TODO: Error
@@ -85,35 +86,18 @@ export default {
             }
             this.signatoryInput = "";
 
-
-
-
-            /*if(this.signatories.includes(this.signatoryInput)) {
-                // TODO: Error
-            } else {
-                this.signatories.push({email: this.signatoryInput, type: ""});
-            }
-            this.signatoryInput = "";*/
-            this.$emit('update-signatories', this.signatoriesNew) // my try
-            console.log(this.signatories)
-
+            this.$emit('update-signatories', this.signatoriesNew)
         },
         deleteSignatory(signatory) {
-            //this.signatories = this.signatories.filter(sig => !(sig === signatory))
             this.signatoriesNew = this.signatoriesNew.filter(sig => !(sig === signatory))
 
-            this.$emit('update-signatories', this.signatoriesNew) // my try
-
+            this.$emit('update-signatories', this.signatoriesNew)
         }
 
     },
 
     mounted() {
-        console.log(this.signatories)
         this.signatoriesNew = this.signatories
-        console.log("new Copy of list:")
-        console.log(this.signatoriesNew)
-        console.log("--------------")
 
         for(let i = 0; i < this.signatoriesNew.length; i++) {
             if(this.signatoriesNew[i].signatureType === "ADVANCED_SIGNATURE") {
@@ -122,9 +106,7 @@ export default {
                 this.signatoriesNew[i].type = 1
             }
         }
-
         this.$emit('update-signatories', this.signatoriesNew)
-
 
     }
 }

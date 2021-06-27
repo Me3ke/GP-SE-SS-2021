@@ -109,9 +109,10 @@ public class DocumentController {
                 for (Signatory signatory : signatories) {
                     if (signatory.getEmail().equals(userID)) {
                         signatory.setSeen(true);
-                        documentService.addDocument(document);
                     }
                 }
+                documentService.addDocument(document);
+
             }
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {

@@ -132,7 +132,6 @@
                 <div>
                     <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                     <b-form-datepicker id="endDatePicker" v-model="actualDoc.endDate" class="mb-2"></b-form-datepicker>
-                    <p>{{actualDoc.endDate}}</p>
                 </div>
                 <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant" @update-signatories="updateSignatories"></SignatoryMenu>
             </div>
@@ -292,46 +291,19 @@ export default {
         },
 
         updateSignatories(newSignatories) {
-            console.log("Parent --------------")
-            console.log(newSignatories)
-            console.log("///Parent --------------")
-
-            //this.actualDoc.signatories = newSignatories
+           this.actualDoc.signatories = newSignatories[0]
         },
 
-
-        // get all necessary attributes of documents
-
-        /*
-
-        title, type < first modal page @clickAction
-        list readersId < second modal page @clickAction
-        list signatoriesID, orderRelevant, signatureType, localDateTime endDate < third modal page @clickAction
-        data < last modal Page
-
-        document state < - automatically open
-        lastModified <
-
-         */
         setActualDoc() {
-            console.log("BEFORE")
             this.actualDoc = this.document
-            console.log((this.actualDoc))
 
-
-            //this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
-            //this.actualDoc.signatoriesId = []
-            //this.actualDoc.readersId = []
 
-            // todo TimePicker needed ?
-            // todo have to change the date into iso type for the datePicker
             if(this.actualDoc.endDate !== '' || this.actualDoc.endDate != null) {
                 const [day, month, year] = this.actualDoc.endDate.split('.')
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
             this.actualDoc.dataType = this.fileString.split('.').pop()
-            //this.actualDoc.signed = false // reset the signed field to false
         },
 
         /// getting emitted value
@@ -343,8 +315,6 @@ export default {
             this.actualDoc.data =  await this.asyncHandleFunction()
 
 
-            console.log("READY")
-            console.log(this.actualDoc)
             // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
             await this.$store.dispatch('document/editDocument', payload)
@@ -359,12 +329,9 @@ export default {
             }
             else {
                 this.$refs['modal-page3'].hide()
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envID, docId: this.newDocumentId})
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
                 let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
                 this.showAlert = !this.showAlert
-                console.log(newUrl)
-
-
 
                 // will route the user to the newUploaded document page (with the new ID)
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file

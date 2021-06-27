@@ -17,6 +17,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
 
     private final SignatureType signatureType;
     private final byte[] data;
+    private final List<Signatory> signatories;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -29,7 +30,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
-        final List<Signatory> signatories = document.getSignatories();
+        this.signatories = document.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getEmail().equals(currentUser)
@@ -47,5 +48,9 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
 
     public byte[] getData() {
         return Arrays.copyOf(data, data.length);
+    }
+
+    public List<Signatory> getSignatories() {
+        return signatories;
     }
 }
