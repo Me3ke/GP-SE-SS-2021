@@ -33,7 +33,7 @@ public class Answer {
      * @param authorID   the id of the author who wrote the answer
      * @param authorName the name of the author who wrote the answer
      */
-    public Answer(String content, String authorID, String authorName) {
+    public Answer(final String content, final String authorID, final String authorName) {
         this.content = content;
         this.authorID = authorID;
         this.authorName = authorName;
@@ -58,5 +58,9 @@ public class Answer {
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public long getId() {
+        return id;
     }
 }

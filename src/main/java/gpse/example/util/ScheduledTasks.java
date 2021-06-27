@@ -58,31 +58,29 @@ public class ScheduledTasks {
                 break;
             }
         }*/
-        Signatory currentSignatory = doc.getCurrentSignatory();
-        if (currentSignatory != null && currentSignatory.getReminder() > -1) {
-            if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-                try {
-                    smtpServerHelper.sendReminder(currentSignatory.getEmail(), currentSignatory.getReminder(),
-                        userService.getUser(currentSignatory.getEmail()).getLastname(), doc);
-                } catch (UsernameNotFoundException exception) {
-                    exception.printStackTrace();
-                    //TODO: generate authentication token for guests and create a fitting e-mail.
-                }
+        final Signatory currentSignatory = doc.getCurrentSignatory();
+        if (currentSignatory != null && currentSignatory.getReminder() > -1
+            && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+            try {
+                smtpServerHelper.sendReminder(currentSignatory.getEmail(), currentSignatory.getReminder(),
+                    userService.getUser(currentSignatory.getEmail()).getLastname(), doc);
+            } catch (UsernameNotFoundException exception) {
+                exception.printStackTrace();
+                //TODO: generate authentication token for guests and create a fitting e-mail.
             }
         }
     }
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException {
         for (final Signatory signatory:doc.getSignatories()) {
-            if (signatory.getReminder() > -1) {
-                if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
-                    try {
-                        smtpServerHelper.sendReminder(signatory.getEmail(), signatory.getReminder(),
-                            userService.getUser(signatory.getEmail()).getLastname(), doc);
-                    } catch (UsernameNotFoundException exception) {
-                        exception.printStackTrace();
-                        //TODO: generate authentication token for guests and create a fitting e-mail.
-                    }
+            if (signatory.getReminder() > -1
+                && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+                try {
+                    smtpServerHelper.sendReminder(signatory.getEmail(), signatory.getReminder(),
+                        userService.getUser(signatory.getEmail()).getLastname(), doc);
+                } catch (UsernameNotFoundException exception) {
+                    exception.printStackTrace();
+                    //TODO: generate authentication token for guests and create a fitting e-mail.
                 }
             }
         }

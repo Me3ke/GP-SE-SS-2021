@@ -59,7 +59,7 @@ public class EnvelopeGetResponse {
         return documents;
     }
 
-    public void setDocuments(List<DocumentOverviewResponse> documents) {
+    public void setDocuments(final List<DocumentOverviewResponse> documents) {
         this.documents = documents;
     }
 }

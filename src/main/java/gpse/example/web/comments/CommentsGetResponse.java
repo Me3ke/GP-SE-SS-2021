@@ -15,7 +15,7 @@ public class CommentsGetResponse {
     public CommentsGetResponse() {
     }
 
-    public CommentsGetResponse(List<Comment> comments) {
+    public CommentsGetResponse(final List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -23,7 +23,7 @@ public class CommentsGetResponse {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(final List<Comment> comments) {
         this.comments = comments;
     }
 }

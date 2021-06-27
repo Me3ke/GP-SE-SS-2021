@@ -11,7 +11,7 @@ public class ImageSignatureToSend {
 
     private String imageSignatureType;
 
-    public ImageSignatureToSend(byte[] imageSignature, String imageSignatureType) {
+    public ImageSignatureToSend(final byte[] imageSignature, final String imageSignatureType) {
         this.imageSignature = imageSignature.clone();
         this.imageSignatureType = imageSignatureType;
     }
@@ -24,7 +24,7 @@ public class ImageSignatureToSend {
         return Arrays.copyOf(imageSignature, imageSignature.length);
     }
 
-    public void setImageSignature(byte[] imageSignature) {
+    public void setImageSignature(final byte[] imageSignature) {
         this.imageSignature = imageSignature.clone();
     }
 
@@ -32,7 +32,7 @@ public class ImageSignatureToSend {
         return imageSignatureType;
     }
 
-    public void setImageSignatureType(String imageSignatureType) {
+    public void setImageSignatureType(final String imageSignatureType) {
         this.imageSignatureType = imageSignatureType;
     }
 }

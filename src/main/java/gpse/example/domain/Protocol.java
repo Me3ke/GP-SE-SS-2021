@@ -68,7 +68,7 @@ public class Protocol {
      * @return a stream which contains the written pdf protocol.
      * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
-    public ByteArrayOutputStream writeProtocol(UserService userService) throws IOException {
+    public ByteArrayOutputStream writeProtocol(final UserService userService) throws IOException {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         //TODO make linecount method so we can check if its <= 0 and create new page if needed
@@ -187,7 +187,7 @@ public class Protocol {
 
     private void addImageLine(final byte[] image, final PDDocument document, final int offSet,
                               final PDPageContentStream contentStream) throws IOException {
-        PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, image, null);
+        final PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, image, null);
         contentStream.drawImage(pdImage, MARGIN_LEFT * 2, offSet, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 }

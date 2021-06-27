@@ -62,10 +62,10 @@ public class CommentController {
     public JSONResponseObject commentOnDocument(final @RequestBody CommentPostRequest commentPostRequest,
                                                 final @PathVariable(USER_ID) String userID,
                                                 final @PathVariable(DOCUMENT_ID) long documentID) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
-            Document document = documentService.getDocument(documentID);
-            User user = userService.getUser(userID);
+            final Document document = documentService.getDocument(documentID);
+            final User user = userService.getUser(userID);
             document.addComment(new Comment(commentPostRequest.getContent(), userID,
                     user.getFirstname() + SPACE + user.getLastname()));
             documentService.addDocument(document);
@@ -92,14 +92,14 @@ public class CommentController {
                                               final @PathVariable(USER_ID) String userID,
                                               final @PathVariable(DOCUMENT_ID) long documentID,
                                               final @PathVariable("commentID") long commentID) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
-            Document document = documentService.getDocument(documentID);
-            User user = userService.getUser(userID);
-            Optional<Comment> optionalComment = document.searchComment(commentID);
+            final Document document = documentService.getDocument(documentID);
+            final User user = userService.getUser(userID);
+            final Optional<Comment> optionalComment = document.searchComment(commentID);
 
             if (optionalComment.isPresent()) {
-                Comment comment = optionalComment.get();
+                final Comment comment = optionalComment.get();
                 comment.addAnswer(new Answer(commentPostRequest.getContent(), userID,
                         user.getFirstname() + SPACE + user.getLastname()));
                 documentService.addDocument(document);
@@ -130,7 +130,7 @@ public class CommentController {
             final @PathVariable(DOCUMENT_ID) long documentID) {
 
         try {
-            Document document = documentService.getDocument(documentID);
+            final Document document = documentService.getDocument(documentID);
             return new CommentsGetResponse(document.getCommentList());
         } catch (DocumentNotFoundException e) {
             return new CommentsGetResponse();

@@ -349,7 +349,7 @@ public class User implements UserDetails {
                 imageSignature, imageSignature.length);
     }
 
-    public void setImageSignature(byte[] imageSignature) {
+    public void setImageSignature(final byte[] imageSignature) {
         this.imageSignature = imageSignature.clone();
     }
 

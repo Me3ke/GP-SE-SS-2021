@@ -21,7 +21,7 @@ public class DocumentPutRequest {
     // for the case if the User do not want to edit the signatories
     // list on upload new Version (getter is going to be uses)
     private List<Signatory> alreadyDefinedSignatories;
-    public void setAlreadyDefinedSignatories(List<Signatory> alreadyDefinedSignatories) {
+    public void setAlreadyDefinedSignatories(final List<Signatory> alreadyDefinedSignatories) {
         this.alreadyDefinedSignatories = alreadyDefinedSignatories;
     }
     public List<Signatory> getAlreadyDefinedSignatories() {

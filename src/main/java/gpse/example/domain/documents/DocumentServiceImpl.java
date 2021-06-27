@@ -63,7 +63,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         final List<ProtoSignatory> signatories = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatories, userService, this);
+            ownerID, signatories, this);
         return addDocument(newDocument);
     }
 }

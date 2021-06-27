@@ -12,7 +12,7 @@ public class GuestTokenService {
 
     private final GuestTokenRepository guestTokenRepository;
 
-    public GuestTokenService(GuestTokenRepository repo) {
+    public GuestTokenService(final GuestTokenRepository repo) {
         this.guestTokenRepository = repo;
     }
 
@@ -30,7 +30,7 @@ public class GuestTokenService {
      * @param token the String token that is needed
      * @return returns an optional GuestToken which can be empty or contains the GuestToken
      */
-    public Optional<GuestToken> findGuestTokenByToken(String token) {
+    public Optional<GuestToken> findGuestTokenByToken(final String token) {
         final Iterable<GuestToken> guestTokens = guestTokenRepository.findAll();
 
         for (final GuestToken gToken : guestTokens) {

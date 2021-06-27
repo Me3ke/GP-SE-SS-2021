@@ -117,13 +117,12 @@ public class EnvelopeController {
                     userService.getUser(document.getCurrentSignatory().getEmail()).getLastname(), document);
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    sendInvitation(document, document.getSignatories().get(i), envelopeID);
+                    sendInvitation(document, document.getSignatories().get(i));
                 }
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
-            System.out.println(response.getMessage());
             return response;
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException
             | MessageGenerationException e) {
@@ -140,25 +139,24 @@ public class EnvelopeController {
      *
      * @param document   the document that should be signed
      * @param signatory  the signatory
-     * @param envelopeId The EnvelopeId required for link.
      * @throws MessageGenerationException Thrown by smtpServerHelper if email could not be sended.
      */
 
-    private void sendInvitation(Document document, Signatory signatory, long envelopeId)
+    private void sendInvitation(final Document document, final Signatory signatory)
         throws MessageGenerationException {
         try {
-            User user = userService.getUser(signatory.getEmail());
+            final User user = userService.getUser(signatory.getEmail());
             smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
                 userService.getUser(document.getOwner()),
                 user.getLastname(), document);
         } catch (UsernameNotFoundException unf) {
-            if (signatory.getSignatureType() != SignatureType.ADVANCED_SIGNATURE) {
-                GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
+            if (signatory.getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
+                smtpServerHelper.sendGuestInvitationAdvanced(signatory.getEmail(), document);
+            } else {
+                final GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
                 smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
                     "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
                         + token.getToken());
-            } else {
-                smtpServerHelper.sendGuestInvitationAdvanced(signatory.getEmail(), document);
             }
         }
     }

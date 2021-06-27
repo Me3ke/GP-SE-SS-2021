@@ -8,7 +8,7 @@ public class CommentPostRequest {
 
     private String content;
 
-    public CommentPostRequest(String content) {
+    public CommentPostRequest(final String content) {
         this.content = content;
     }
 
@@ -19,7 +19,7 @@ public class CommentPostRequest {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(final String content) {
         this.content = content;
     }
 }

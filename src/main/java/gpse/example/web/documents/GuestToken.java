@@ -32,7 +32,7 @@ public class GuestToken {
      * @param username username of the GuestUser (Emailaddress)
      * @param documentId document that is accessable for the Guest
      */
-    public GuestToken(String username, long documentId) {
+    public GuestToken(final String username, final long documentId) {
         this.username = username;
         this.documentId = documentId;
         this.createdDate = LocalDateTime.now();
@@ -47,7 +47,7 @@ public class GuestToken {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -55,7 +55,7 @@ public class GuestToken {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(final String token) {
         this.token = token;
     }
 
@@ -63,7 +63,7 @@ public class GuestToken {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(final LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -71,7 +71,7 @@ public class GuestToken {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -79,7 +79,7 @@ public class GuestToken {
         return documentId;
     }
 
-    public void setDocumentId(long documentId) {
+    public void setDocumentId(final long documentId) {
         this.documentId = documentId;
     }
 }
