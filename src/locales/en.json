@@ -486,5 +486,17 @@
             "color14": "Pop-Up background",
             "default": "Default"
         }
+    },
+    "ProgressBar": {
+        "envelope": {
+            "notFinished": "Not finished documents:",
+            "finished": "Already finished documents:"
+        },
+        "document": {
+            "needToSign": "Need to be signed by:",
+            "alreadySigned": "Already signed by:",
+            "needToRead": "Need to be read by:",
+            "alreadyRead": "Already read by:"
+        }
     }
 }

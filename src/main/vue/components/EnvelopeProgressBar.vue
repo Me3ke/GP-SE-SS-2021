@@ -4,7 +4,7 @@
             style="padding-bottom: 1em;"
             @click="clicked"
         >
-            <b-progress max="100">
+            <b-progress max="100" style="background-color: var(--progress-background); cursor: pointer">
                 <b-progress-bar
                     :value="percentage"
                     :variant="percentage >= 100.00 ? 'darkgrey' : 'elsaBlue'"
@@ -14,9 +14,13 @@
 
 
 
-            <b-container v-if="isOpen && envelope !== undefined">
+            <b-container
+                v-if="isOpen && envelope !== undefined"
+                style="max-width: 100%; margin-top: 1px ; border: .03vw solid var(--dark-grey); border-radius: .33vw"
+            >
                 <b-row>
-                    <b-col> <span style="color: red" v-if="notFinishedEnvelope.length > 0">Not Finished</span>
+                    <b-col v-if="notFinishedEnvelope.length > 0" style="margin-top: .75em; margin-bottom: .4em">
+                        <span style="color: var(--not-done)">{{ $t('ProgressBar.envelope.notFinished') }}</span>
                         <b-col>
                             <b-container v-for="(documentTitle, index) in notFinishedEnvelope" :key="index">
                                 <b-col>
@@ -25,8 +29,8 @@
                             </b-container>
                         </b-col>
 
-                        <b-col style="margin-top: 1em" v-if="finishedEnvelope.length > 0">
-                            <span style="color: green">Finished</span>
+                        <b-col style="margin-top: 1em; margin-bottom: .75em" v-if="finishedEnvelope.length > 0">
+                            <span style="color: var(--done)">{{ $t('ProgressBar.envelope.finished') }}</span>
 
                             <b-col>
                                 <b-container v-for="(documentTitle, index) in finishedEnvelope" :key="index">
@@ -78,31 +82,17 @@ export default {
             this.isOpen = !this.isOpen
         },
 
-        checkFinishedEnvelope() {
-            let finished = []
-            this.env.documents.forEach(document => {
-                if(document.state === "CLOSED") {
-                    finished.push(true)
-                } else {
-                    finished.push(false)
-                }
-            })
-
-            this.envClosed = !finished.includes(false);
-        },
-
         calculateFinishedDocuments() {
             let arr = []
             this.envelope.forEach(document => {
+
                 if((((document.data.alreadySigned.length + document.data.alreadyRead.length)
                     / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 100.00) {
                     const docTitle = this.findFinishedDocTitle(this.env,document)
-                    console.log('TITLE: ' ,docTitle)
                     arr.push(docTitle)
                 }
 
             })
-            //this.checkFinishedEnvelope()
             return arr
         },
 
@@ -116,7 +106,6 @@ export default {
                 }
 
             })
-            //this.checkFinishedEnvelope()
             return arr
         },
 
@@ -145,12 +134,14 @@ export default {
 <style scoped>
 
 .bg-darkgrey {
-    background-color: var(--light-grey) !important;
-    color: var(--dark-grey);
+    background-color: var(--closed-doc) !important;
+    color: var(--whitesmoke);
 }
 
 .bg-elsaBlue {
     background-color: var(--elsa-blue) !important;
+    color: var(--whitesmoke);
+
 }
 
 </style>
