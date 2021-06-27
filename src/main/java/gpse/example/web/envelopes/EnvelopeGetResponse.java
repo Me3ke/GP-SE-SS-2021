@@ -17,7 +17,7 @@ public class EnvelopeGetResponse {
     private final String name;
     private final User owner;
     private final String creationDate;
-    private final List<DocumentOverviewResponse> documents;
+    private List<DocumentOverviewResponse> documents;
 
     /**
      * The default constructor for an envelope response.
@@ -57,5 +57,9 @@ public class EnvelopeGetResponse {
 
     public List<DocumentOverviewResponse> getDocuments() {
         return documents;
+    }
+
+    public void setDocuments(List<DocumentOverviewResponse> documents) {
+        this.documents = documents;
     }
 }

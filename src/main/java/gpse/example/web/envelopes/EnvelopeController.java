@@ -10,6 +10,7 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.web.DocumentFilter;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
@@ -41,6 +42,7 @@ public class EnvelopeController {
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
+    private final DocumentFilter documentFilter;
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
@@ -54,13 +56,15 @@ public class EnvelopeController {
      * @param envelopeService the envelopeService
      * @param userService     the userService
      * @param documentService the documentService
+     * @param documentFilter  the documentFilter
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService) {
+                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
+        this.documentFilter = documentFilter;
     }
 
     /**
@@ -218,7 +222,7 @@ public class EnvelopeController {
             final User owner = userService.getUser(envelope.getOwnerID());
             envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, userID));
         }
-        return envelopeGetResponseList;
+        return documentFilter.filterEnvelopes(envelopeGetResponseList, userID);
 
     }
 

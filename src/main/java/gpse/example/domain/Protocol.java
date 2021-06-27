@@ -64,6 +64,7 @@ public class Protocol {
     /**
      * printing the protocol with specified user data.
      *
+     * @param userService the userService that is used to get the userObjects that signatories refer to.
      * @return a stream which contains the written pdf protocol.
      * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
