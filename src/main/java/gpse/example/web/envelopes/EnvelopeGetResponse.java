@@ -26,7 +26,7 @@ public class EnvelopeGetResponse {
      * @param owner       the owner of the envelope.
      * @param currentUser the user doing the request.
      */
-    public EnvelopeGetResponse(final Envelope envelope, final User owner, final User currentUser) {
+    public EnvelopeGetResponse(final Envelope envelope, final User owner, final String currentUser) {
         this.id = envelope.getId();
         this.name = envelope.getName();
         this.owner = owner;

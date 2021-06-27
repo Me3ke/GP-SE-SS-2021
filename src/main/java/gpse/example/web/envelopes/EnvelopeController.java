@@ -78,7 +78,7 @@ public class EnvelopeController {
         try {
             final User owner = userService.getUser(ownerID);
             final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner().getEmail());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -108,9 +108,9 @@ public class EnvelopeController {
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
             if (document.isOrderRelevant()) {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getUser().getEmail(),
+                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getEmail(),
                     userService.getUser(document.getOwner()),
-                    document.getCurrentSignatory().getUser().getLastname(), document);
+                    userService.getUser(document.getCurrentSignatory().getEmail()).getLastname(), document);
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
                     sendInvitation(document, document.getSignatories().get(i), envelopeID);
@@ -173,9 +173,8 @@ public class EnvelopeController {
                                            final @PathVariable(USER_ID) String userID)
         throws DocumentNotFoundException {
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-        final User currentUser = userService.getUser(userID);
         final User owner = userService.getUser(envelope.getOwnerID());
-        return new EnvelopeGetResponse(envelope, owner, currentUser);
+        return new EnvelopeGetResponse(envelope, owner, userID);
     }
 
     /**
@@ -197,7 +196,7 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final User owner = userService.getUser(envelope.getOwnerID());
             documentCreator.downloadEnvelope(envelope, path);
-            return new EnvelopeGetResponse(envelope, owner, currentUser);
+            return new EnvelopeGetResponse(envelope, owner, currentUser.getEmail());
         } catch (CreatingFileException | IOException | DocumentNotFoundException e) {
             throw new DownloadFileException(e);
         }
@@ -213,12 +212,11 @@ public class EnvelopeController {
 
     @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
-        final User currentUser = userService.getUser(userID);
         final List<Envelope> envelopeList = envelopeService.getEnvelopes();
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
-            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, currentUser));
+            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, userID));
         }
         return envelopeGetResponseList;
 

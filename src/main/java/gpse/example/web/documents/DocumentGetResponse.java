@@ -18,10 +18,6 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     private final SignatureType signatureType;
     private final byte[] data;
 
-    // getting the signatories and reader in the response
-    private final List<Signatory> signatories;
-    private final List<Signatory> readers;
-
     /**
      * The default constructor creates the documentGet based on an existing document
      * which is created from the Database beforehand.
@@ -30,7 +26,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
      * @param owner       the owner of the document.
      * @param currentUser the user doing the request
      */
-    public DocumentGetResponse(final Document document, final User owner, final User currentUser) {
+    public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
         final List<Signatory> signatories = document.getSignatories();

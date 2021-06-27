@@ -8,10 +8,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
-<<<<<<< HEAD
-=======
 import gpse.example.domain.signature.Signatory;
->>>>>>> develop
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -110,13 +107,13 @@ public class DocumentController {
             if (document.getDocumentType().equals("pdf")) {
                 List<Signatory> signatories = document.getSignatories();
                 for (Signatory signatory : signatories) {
-                    if (signatory.getUser().getEmail().equals(userID)) {
+                    if (signatory.getEmail().equals(userID)) {
                         signatory.setSeen(true);
                         documentService.addDocument(document);
                     }
                 }
             }
-            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
             throw new DocumentNotFoundException();
         }
@@ -183,7 +180,7 @@ public class DocumentController {
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
         List<Signatory> signatories = document.getSignatories();
         for (Signatory signatory : signatories) {
-            if (signatory.getUser().getEmail().equals(userID)) {
+            if (signatory.getEmail().equals(userID)) {
                 signatory.setSeen(true);
             }
         }
@@ -379,7 +376,7 @@ public class DocumentController {
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
             for (final SignatorySetting signatorySetting : signatorySettings) {
-                signatory = new Signatory(userService.getUser(signatorySetting.getUsername()),
+                signatory = new Signatory(signatorySetting.getUsername(),
                     signatorySetting.getSignatureType());
                 signatory.setStatus(signatorySetting.isStatus());
                 signatory.setReminder(signatorySetting.getReminderTiming());
@@ -411,7 +408,7 @@ public class DocumentController {
         throws DocumentNotFoundException {
         Document document = documentService.getDocument(documentId);
         for (Signatory signatory : document.getSignatories()) {
-            if (signatory.getUser().getEmail().equals(userId)) {
+            if (signatory.getEmail().equals(userId)) {
                 return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
                     .body(signatory.isSeen());
