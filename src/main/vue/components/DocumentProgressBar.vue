@@ -23,7 +23,7 @@
                             <span style="color: var(--not-done)">{{ $t('ProgressBar.document.needToRead') }}</span>
                             <b-col>
                                 <b-container v-for="(signatory,index) in needToRead" :key="index">
-                                    <b-col>{{signatory.user.email}}</b-col>
+                                    <b-col>{{signatory.email}}</b-col>
                                 </b-container>
                             </b-col>
 
@@ -32,7 +32,7 @@
                                 <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
                                 <b-col>
                                     <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
-                                        <b-col>{{signatory.user.email}}</b-col>
+                                        <b-col>{{signatory.email}}</b-col>
                                     </b-container>
 
                                 </b-col>
@@ -50,7 +50,7 @@
                             <span style="color: var(--not-done)">{{ $t('ProgressBar.document.needToSign') }}</span>
                             <b-col>
                                 <b-container v-for="(signatory,index) in needToSign" :key="index">
-                                    <b-col>{{signatory.user.email}}</b-col>
+                                    <b-col>{{signatory.email}}</b-col>
                                 </b-container>
                             </b-col>
 
@@ -58,7 +58,7 @@
                                 <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadySigned') }}</span>
                                 <b-col>
                                     <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
-                                        <b-col>{{signatory.user.email}}</b-col>
+                                        <b-col>{{signatory.email}}</b-col>
                                     </b-container>
 
                                 </b-col>
@@ -77,7 +77,7 @@
 <script>
 
 export default {
-    name: "ProgressBar",
+    name: "DocumentProgressBar",
     props: {
         getDocumentProgress: null,
         docId: null,
@@ -150,7 +150,7 @@ export default {
 
                 return arr1.filter((element) => {
                     return arr2.some((x) => {
-                        return x.user.email !== element.user.email;
+                        return x.email !== element.email;
                     });
                 });
             }

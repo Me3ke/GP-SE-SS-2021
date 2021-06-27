@@ -91,7 +91,6 @@ export default {
                     const docTitle = this.findFinishedDocTitle(this.env,document)
                     arr.push(docTitle)
                 }
-
             })
             return arr
         },
@@ -119,12 +118,21 @@ export default {
 
         getPercentage() {
                 let documentPercentages = []
-                this.envelope.forEach(progress => {
+                let envelopeLength = this.env.documents.length
+
+                this.env.documents.forEach(document => {
+                    if(document.state === 'CLOSED') {
+                        documentPercentages.push(document)
+                    }
+                })
+
+                return ((documentPercentages.length / envelopeLength) * 100).toFixed(2)
+                /*this.envelope.forEach(progress => {
                     documentPercentages.push((((progress.data.alreadySigned.length + progress.data.alreadyRead.length)
                         / (progress.data.signatories.length + progress.data.readers.length)) * 100).toFixed(2))
                 })
                 return ((documentPercentages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.documents.length * 100)) * 100)
-                    .toFixed(2)
+                    .toFixed(2)*/
         }
 
     }

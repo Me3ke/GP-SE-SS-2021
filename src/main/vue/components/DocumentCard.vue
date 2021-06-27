@@ -9,11 +9,11 @@
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
                     <div  v-if="//documentProgressById(document.id) &&
                      this.document.owner.email === this.$store.state.auth.username">
-                        <ProgressBar
+                        <DocumentProgressBar
                             :state="document.state"
                             :docId="document.id"
                             :getDocumentProgress="documentProgressById(document.id)"
-                        ></ProgressBar>
+                        ></DocumentProgressBar>
                     </div>
             </b-col>
             <b-col cols="1">
@@ -28,12 +28,12 @@
 import settingsButton from "@/main/vue/components/envSettingsButton";
 import DocumentBox from "@/main/vue/components/DocumentBox";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
-import ProgressBar from "@/main/vue/components/ProgressBar";
 import {mapGetters} from "vuex";
+import DocumentProgressBar from "@/main/vue/components/DocumentProgressBar";
 
 export default {
     name: "DocumentCard",
-    components: {ProgressBar, TwoFacAuth, DocumentBox, settingsButton},
+    components: {DocumentProgressBar, TwoFacAuth, DocumentBox, settingsButton},
     props: {
         document: Object,
         envelopeId: [String, Number],
