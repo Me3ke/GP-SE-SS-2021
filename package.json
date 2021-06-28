@@ -18,7 +18,7 @@
     "pdfjs-dist": "2.7.570",
     "vue": "^2.6.11",
     "vue-pdf": "^4.2.0",
-    "vue-quill": "^1.5.1",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.5.1",
     "vue-sweetalert2": "^4.3.1",
     "vuedraggable": "^2.24.3",
