@@ -12,10 +12,11 @@ import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +32,6 @@ import java.util.Optional;
  * The DocumentController class handles the requests from the frontend and
  * conducts the corresponding backend actions.
  */
-//TODO secured for permissions
-//TODO Reader Class?
-//TODO properties for download
 //TODO split documentController in two separate controllers.
 
 @RestController
@@ -54,6 +52,12 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
+
+    @Lazy
+    @Autowired
+    private SMTPServerHelper smtpServerHelper;
+    @Autowired
+    private EmailTemplateService emailTemplateService;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -209,7 +213,7 @@ public class DocumentController {
                                                         final @PathVariable(USER_ID) String ownerID,
                                                         final @PathVariable(ENVELOPE_ID) long envelopeID,
                                                         final @PathVariable(DOCUMENT_ID) long documentID)
-        throws UploadFileException {
+        throws UploadFileException, MessageGenerationException, TemplateNameNotFoundException {
         try {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
@@ -225,10 +229,39 @@ public class DocumentController {
                 userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
-            //TODO Inform all signed Signatories about new version if order is relevant, inform all if not
+            informSignatories(newDocument);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
+        }
+    }
+
+    /**
+     * The informSignatories method uses the smtpServerHelper to inform the
+     * signatories of a document that their signature has been invalidated while
+     * uploading a new version.
+     * @param document the new document.
+     * @throws TemplateNameNotFoundException if the template does not exist.
+     * @throws MessageGenerationException if the message could not be generated.
+     */
+    private void informSignatories(final Document document)
+        throws TemplateNameNotFoundException, MessageGenerationException {
+        final EmailTemplate emailTemplate = emailTemplateService.findSystemTemplateByName("NewVersionTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setLink("LinkToDocumentView");
+        if (document.isOrderRelevant()) {
+            for (Signatory signatory : document.getSignatories()) {
+                if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
+                    smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                        container, Category.NEW_VERSION);
+                }
+            }
+        } else {
+            for (Signatory signatory : document.getSignatories()) {
+                smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                    container, Category.NEW_VERSION);
+            }
         }
     }
 
@@ -243,7 +276,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
     }
 
@@ -261,7 +294,7 @@ public class DocumentController {
     @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
     }
 
@@ -279,7 +312,7 @@ public class DocumentController {
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = computeSignatureRequest(userID,
             documentID, SignatureType.ADVANCED_SIGNATURE);
@@ -292,7 +325,7 @@ public class DocumentController {
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
-        throws DocumentNotFoundException, MessageGenerationException {
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();

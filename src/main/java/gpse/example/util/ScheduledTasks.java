@@ -5,11 +5,9 @@ import gpse.example.domain.documents.DocumentService;
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.SMTPServerHelper;
+import gpse.example.util.email.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -32,16 +30,17 @@ public class ScheduledTasks {
     @Autowired
     private SMTPServerHelper smtpServerHelper;
 
-
+    @Autowired
+    private EmailTemplateService emailTemplateService;
 
 
     /**
      * Scheduled method to check if there are signatories to get a notification email.
      * @throws MessageGenerationException if message sending failed
      */
-    @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
-    public void checkForOpenReminder() throws MessageGenerationException {
-        for (final Document doc: documentService.getDocuments()) {
+    @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60000)
+    public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
+        for (Document doc: documentService.getDocuments()) {
             if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
                 informSignatoriesInOrder(doc);
             } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
@@ -50,7 +49,8 @@ public class ScheduledTasks {
         }
     }
 
-    private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException {
+    private void informSignatoriesInOrder(Document doc) throws MessageGenerationException,
+        TemplateNameNotFoundException {
 
        /* for (final Signatory signatory : doc.getSignatories()) {
             if (!signatory.isStatus()) {
@@ -59,32 +59,37 @@ public class ScheduledTasks {
             }
         }*/
         final Signatory currentSignatory = doc.getCurrentSignatory();
-        if (currentSignatory != null && currentSignatory.getReminder() > -1
-            && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-            try {
-                smtpServerHelper.sendReminder(currentSignatory.getEmail(), currentSignatory.getReminder(),
-                    userService.getUser(currentSignatory.getEmail()).getLastname(), doc);
-            } catch (UsernameNotFoundException exception) {
-                exception.printStackTrace();
-                //TODO: generate authentication token for guests and create a fitting e-mail.
+        if (currentSignatory != null && currentSignatory.getReminder() > -1) {
+            if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+                /*smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
+                    currentSignatory.getUser().getLastname(), doc);*/
+                setupUserReminder(doc, currentSignatory);
             }
         }
     }
 
-    private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException {
-        for (final Signatory signatory:doc.getSignatories()) {
-            if (signatory.getReminder() > -1
-                && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
-                try {
-                    smtpServerHelper.sendReminder(signatory.getEmail(), signatory.getReminder(),
-                        userService.getUser(signatory.getEmail()).getLastname(), doc);
-                } catch (UsernameNotFoundException exception) {
-                    exception.printStackTrace();
-                    //TODO: generate authentication token for guests and create a fitting e-mail.
+
+    private void informSignatoriesWithoutOrder(Document doc) throws MessageGenerationException,
+        TemplateNameNotFoundException {
+        for (Signatory signatory:doc.getSignatories()) {
+            if (signatory.getReminder() > -1) {
+                if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+                    /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
+                        signatory.getUser().getLastname(), doc);*/
+                    setupUserReminder(doc, signatory);
                 }
             }
         }
+    }
 
+    private void setupUserReminder(Document document, Signatory signatory) throws TemplateNameNotFoundException,
+        MessageGenerationException {
+        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setEndDate(document.getEndDate().toString());
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setLink("http://localhost:8080/link/to/document/view");
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS);
     }
 
 }

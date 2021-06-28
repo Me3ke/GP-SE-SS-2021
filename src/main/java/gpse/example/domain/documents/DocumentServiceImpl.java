@@ -4,6 +4,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.*;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,11 +60,22 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Document creation(final DocumentPutRequest documentPutRequest, final String ownerID,
                              final UserServiceImpl userService)
-                                throws CreatingFileException, IOException {
-
-        final List<ProtoSignatory> signatories = documentPutRequest.getSignatories();
+        throws CreatingFileException, IOException {
+        final List<ProtoSignatory> signatoriesID = documentPutRequest.getSignatories();
         final Document newDocument = documentCreator.createDocument(documentPutRequest,
-            ownerID, signatories, this);
+            ownerID, signatoriesID,  this);
+      /*  for (final Document currentDocument : envelope.getDocumentList()) {
+            for (final Signatory signatory : currentDocument.getSignatories()) {
+                signatory.setStatus(false);
+            }
+        } */
+        for (EmailTemplate temp:userService.getUser(ownerID).getEmailTemplates()) {
+            if (temp.getTemplateID() == documentPutRequest.getEmailTemplateId()) {
+                newDocument.setProcessEmailTemplate(temp);
+                return addDocument(newDocument);
+            }
+        }
+        newDocument.setProcessEmailTemplate(userService.getUser(ownerID).getEmailTemplates().get(0));
         return addDocument(newDocument);
     }
 }

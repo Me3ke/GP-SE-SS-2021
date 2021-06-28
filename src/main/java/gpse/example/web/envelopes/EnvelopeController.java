@@ -4,16 +4,13 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
-import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.DocumentFilter;
+import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
-import gpse.example.web.documents.GuestToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,6 +35,7 @@ public class EnvelopeController {
     private static final int FORBIDDEN = 403;
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
+    private static final String NEW_LINE = "\n";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -50,6 +48,8 @@ public class EnvelopeController {
     @Autowired
     private SMTPServerHelper smtpServerHelper;
 
+    @Autowired
+    private EmailTemplateService emailTemplateService;
     /**
      * The default constructor for an envelope Controller.
      *
@@ -112,12 +112,14 @@ public class EnvelopeController {
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
             if (document.isOrderRelevant()) {
-                smtpServerHelper.sendSignatureInvitation(document.getCurrentSignatory().getEmail(),
-                    userService.getUser(document.getOwner()),
-                    userService.getUser(document.getCurrentSignatory().getEmail()).getLastname(), document);
+                setupUserInvitation(userService.getUser(document.getCurrentSignatory().getEmail()),
+                    userService.getUser(document.getOwner()), document,
+                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    sendInvitation(document, document.getSignatories().get(i));
+                    setupUserInvitation(userService.getUser(document.getSignatories().get(i).getEmail()),
+                        userService.getUser(document.getOwner()), document,
+                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
                 }
             }
             envelopeService.updateEnvelope(envelope, document);
@@ -132,34 +134,31 @@ public class EnvelopeController {
         }
     }
 
-    /**
-     * Sending invitation email to Guests or Users.
-     * Guests getting the following link.
-     * http://localhost:8080/de/envelope/{envelopeID}/document/{documentID}/{token}
-     *
-     * @param document   the document that should be signed
-     * @param signatory  the signatory
-     * @throws MessageGenerationException Thrown by smtpServerHelper if email could not be sended.
-     */
-
-    private void sendInvitation(final Document document, final Signatory signatory)
+    private void setupUserInvitation(User signatory, User owner, Document document,
+                                     Envelope envelope, SignatureType signatureType)
         throws MessageGenerationException {
-        try {
-            final User user = userService.getUser(signatory.getEmail());
-            smtpServerHelper.sendSignatureInvitation(signatory.getEmail(),
-                userService.getUser(document.getOwner()),
-                user.getLastname(), document);
-        } catch (UsernameNotFoundException unf) {
-            if (signatory.getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
-                smtpServerHelper.sendGuestInvitationAdvanced(signatory.getEmail(), document);
-            } else {
-                final GuestToken token = new GuestToken(signatory.getEmail(), document.getId());
-                smtpServerHelper.sendGuestInvitation(signatory.getEmail(), document,
-                    "http://localhost:8080/de/" + "/document/" + document.getId() + "/"
-                        + token.getToken());
-            }
+
+        EmailTemplate template = document.getProcessEmailTemplate();
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameReciever(signatory.getFirstname());
+        container.setLastNameReciever(signatory.getLastname());
+        container.setFirstNameOwner(owner.getFirstname());
+        container.setLastNameOwner(owner.getLastname());
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setEnvelopeName(envelope.getName());
+        container.setEndDate(document.getEndDate().toString());
+        //TODO Link to documentview
+        container.setLink("http://localhost:8080/de/link/to/document/view");
+        Category category;
+        if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
+            || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+            category = Category.SIGN;
+        } else {
+            category = Category.READ;
         }
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category);
     }
+
 
     /**
      * The getEnvelope method returns one particular envelope specified by id.

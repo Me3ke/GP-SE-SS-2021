@@ -3,14 +3,14 @@ package gpse.example.web.users;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.users.*;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.MessageService;
+import gpse.example.util.email.*;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
+import javax.mail.MessagingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 
@@ -34,21 +34,24 @@ public class UserController {
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final MessageService messageService;
+    private final EmailTemplateService emailTemplateService;
 
 
     /**
      * Constructor of UserController getting required services.
      *
-     * @param service        Userservice Object
-     * @param confService    ConfirmationTokenService object
-     * @param messageService the messageService to access the message table
+     * @param service                 Userservice Object
+     * @param confService             ConfirmationTokenService object
+     * @param messageService          the messageService to access the message table
+     * @param emailTemplateService    used to find the basic template by name
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final MessageService messageService) {
+                          final MessageService messageService, final EmailTemplateService emailTemplateService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
+        this.emailTemplateService = emailTemplateService;
     }
 
     /**
@@ -58,7 +61,8 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @PostMapping("/newUser")
-    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) {
+    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) throws MessagingException,
+        InvocationTargetException, TemplateNameNotFoundException {
         final JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
@@ -76,15 +80,21 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole("ROLE_USER");
                 final PersonalData personalData = signUpUser.generatePersonalData();
+                EmailTemplate standardTemplate =
+                    emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+                user.addEmailTemplate(standardTemplate);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
                     response.setStatus(STATUS_CODE_OK);
-                } catch (MessageGenerationException mge) {
+                } catch (MessageGenerationException exc) {
                     userService.removeUser(user.getUsername());
-                    messageService.removeMessage(mge.getThrownByMessageID());
+                    messageService.removeMessage(exc.getThrownByMessageID());
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
                     response.setMessage("Error generating Confirmationmail. Try again later.");
+                } catch (TemplateNameNotFoundException exc) {
+                    response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                    response.setMessage("Template not Found");
                 }
                 return response;
             }
@@ -125,8 +135,7 @@ public class UserController {
                 try {
                     userService.infoNewExtUser(user);
                     response.setMessage(ADMINVALIDATION_REQUIRED + true);
-                } catch (MessageGenerationException mge) {
-                    messageService.removeMessage(mge.getThrownByMessageID());
+                } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
                         + "an error occured please call systemadmin");
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
