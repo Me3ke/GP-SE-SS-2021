@@ -14,8 +14,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -43,8 +42,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -72,8 +70,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -101,8 +98,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -130,8 +126,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
 
@@ -154,8 +149,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
 
@@ -203,35 +197,35 @@ import MessageBox from "@/main/vue/components/messagePage/MessageBox";
 import Footer from "@/main/vue/components/Footer";
 import MessageContentBox from "@/main/vue/components/messagePage/MessageContentBox";
 
-import {mapState} from 'vuex';
+import {mapGetters} from 'vuex';
 import _ from "lodash";
 
 export default {
     name: "MessagePage",
     components: {MessageContentBox, Footer, MessageBox, Header},
     methods: {
-        selectMsg(msg) {
-            this.$store.dispatch('patchChangeSelectedMsg', msg)
-            this.$store.dispatch('patchChangeWatchedStatus', msg)
+        async selectMsg(msg) {
+            var status = msg.watched
+            await this.$store.dispatch('messages/patchChangeSelectedMsg', msg)
+            await this.$store.dispatch('messages/patchChangeWatchedStatus', msg)
+            if (status !== msg.watched) {
+                await this.$store.dispatch('messages/fetchMessages')
+            }
         },
         isSelected() {
             return !_.isEmpty(this.selectedMsg);
         }
     },
     computed: {
-        ...mapState({
-            messages: state => state.messages.messages,
-            selectedMsg: state => state.messages.selectedMsg
+        ...mapGetters({
+            messages: 'messages/getMessages',
+            selectedMsg: 'messages/getSelectedMessage'
         })
     }
 }
 </script>
 
 <style scoped>
-.selectedMsg {
-    background-color: var(--light-grey);
-}
-
 .backCard {
     font-size: .53em;
     background-color: var(--elsa-blue);

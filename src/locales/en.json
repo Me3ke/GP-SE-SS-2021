@@ -186,7 +186,6 @@
         "heading": "Messages",
         "sentBy": "From",
         "sentOn": "On",
-        "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
         "toAll": "Back to all messages"
     },
@@ -308,7 +307,6 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
-
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
@@ -317,9 +315,7 @@
             "replaceDoc": "Update of: ",
             "confirmation": "Are you sure to update {documentTitle}",
             "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
-
         }
-
     },
     "DownloadDoc": {
         "download": "Download",

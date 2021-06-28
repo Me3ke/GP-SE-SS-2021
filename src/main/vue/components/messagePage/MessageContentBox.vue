@@ -1,5 +1,6 @@
 <template>
-    <b-container fluid class="card" style="padding:0.5vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
+    <b-container fluid class="card"
+                 style="padding:0.5vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
         <div class="media">
             <div class="media-body">
                 <b-container fluid style="overflow:hidden;">
@@ -8,19 +9,23 @@
                             <b-row align-h="between">
                                 <div class="col-auto">
                                     <h4>
-                                        {{ $t('MessagePage.concerns') }}: {{ this.msg.correspondingDocument.title }}
+                                        {{ msg.subject }}
                                     </h4>
                                 </div>
                             </b-row>
                             <b-row align-h="start">
                                 <div class="col-auto">
-                                    <h6>
-                                        {{ $t('MessagePage.sentBy') }}: {{ this.msg.sentBy }}
+                                    <h6 v-if="msg.sendingUser !== null">
+                                        {{ $t('MessagePage.sentBy') }}: {{ msg.sendingUser.firstname }}
+                                        {{ msg.sendingUser.lastname }}
+                                    </h6>
+                                    <h6 v-else>
+                                        {{ $t('MessagePage.sentBy') }}: System
                                     </h6>
                                 </div>
                                 <div class="col-auto">
                                     <h6>
-                                        {{ $t('MessagePage.sentOn') }}: {{ this.msg.dateSent }}
+                                        {{ $t('MessagePage.sentOn') }}: {{ getDate() }}
                                     </h6>
                                 </div>
                             </b-row>
@@ -29,8 +34,7 @@
 
                             <b-row style="margin-top: 3vh; overflow:hidden; display: flex; text-align: left">
                                 <div class="col-auto">
-                                    <h6>
-                                        {{ this.msg.content }}
+                                    <h6 v-html=" msg.text">
                                     </h6>
                                 </div>
                             </b-row>
@@ -47,6 +51,11 @@ export default {
     name: "MessageContentBox",
     props: {
         msg: Object
+    },
+    methods: {
+        getDate() {
+            return this.msg.timeStamp.split('T')[0]
+        }
     }
 }
 </script>
