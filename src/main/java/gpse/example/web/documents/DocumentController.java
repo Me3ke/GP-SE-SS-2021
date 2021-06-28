@@ -254,13 +254,13 @@ public class DocumentController {
             for (Signatory signatory : document.getSignatories()) {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                        container, Category.NEW_VERSION);
+                        container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 }
             }
         } else {
             for (Signatory signatory : document.getSignatories()) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                    container, Category.NEW_VERSION);
+                    container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
             }
         }
     }

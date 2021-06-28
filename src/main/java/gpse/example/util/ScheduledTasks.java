@@ -36,11 +36,12 @@ public class ScheduledTasks {
 
     /**
      * Scheduled method to check if there are signatories to get a notification email.
+     *
      * @throws MessageGenerationException if message sending failed
      */
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
-        for (Document doc: documentService.getDocuments()) {
+        for (Document doc : documentService.getDocuments()) {
             if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
                 informSignatoriesInOrder(doc);
             } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
@@ -71,7 +72,7 @@ public class ScheduledTasks {
 
     private void informSignatoriesWithoutOrder(Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        for (Signatory signatory:doc.getSignatories()) {
+        for (Signatory signatory : doc.getSignatories()) {
             if (signatory.getReminder() > -1) {
                 if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
                     /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
@@ -89,7 +90,8 @@ public class ScheduledTasks {
         container.setEndDate(document.getEndDate().toString());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink("http://localhost:8080/link/to/document/view");
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS);
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
+            userService.getUser(document.getOwner()));
     }
 
 }

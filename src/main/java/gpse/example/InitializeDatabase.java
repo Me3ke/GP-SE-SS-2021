@@ -99,35 +99,7 @@ public class InitializeDatabase implements InitializingBean {
             defaultDesign.setLogoDark(new byte[0], "");
             corporateDesignService.saveCorporateDesign(defaultDesign);
         }
-        try {
-            userService.getUser(USERNAME);
-        } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12_312,
-                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");
-            final User user = new User(USERNAME,
-                "Hans",
-                "Schneider", PASSWORD);
-            user.setPersonalData(personalData);
-            user.addRole(ROLE_USER);
-            user.setEnabled(true);
-            user.setAccountNonLocked(true);
-            userService.saveUser(user);
-        }
-        try {
-            userService.getUser(ADMINNAME);
-        } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
-                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
-            final User user = new User(ADMINNAME,
-                "Ruediger",
-                "Spieler", PASSWORD);
-            user.addRole(ROLE_USER);
-            user.addRole("ROLE_ADMIN");
-            user.setEnabled(true);
-            user.setAccountNonLocked(true);
-            user.setPersonalData(personalData);
-            userService.saveUser(user);
-        }
+
         saveEmailTemplate(BasicHtmlTemplates.ADMIN_VALIDATION_TEMPLATE,
             "ELSA - Nutzer Validierung/ELSA - User Validation", "AdminValidationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.RESET_PASSWORD_TEMPLATE,
@@ -143,10 +115,44 @@ public class InitializeDatabase implements InitializingBean {
         saveEmailTemplate(BasicHtmlTemplates.PROCESS_FINISHED_TEMPLATE,
             "ELSA - Signaturprozess Abgeschlossen/ELSA - signature process finished",
             "ProcessFinishedTemplate");
-        saveEmailTemplate(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
+        EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.ADVANCED_GUEST_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
+
+        try {
+            userService.getUser(USERNAME);
+        } catch (UsernameNotFoundException ex) {
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12_312,
+                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");
+            final User user = new User(USERNAME,
+                "Hans",
+                "Schneider", PASSWORD);
+            user.setPersonalData(personalData);
+            user.addRole(ROLE_USER);
+            user.setEnabled(true);
+            user.setAccountNonLocked(true);
+            user.addEmailTemplate(template);
+            userService.saveUser(user);
+        }
+        try {
+            userService.getUser(ADMINNAME);
+        } catch (UsernameNotFoundException ex) {
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
+                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
+            final User user = new User(ADMINNAME,
+                "Ruediger",
+                "Spieler", PASSWORD);
+            user.addRole(ROLE_USER);
+            user.addRole("ROLE_ADMIN");
+            user.setEnabled(true);
+            user.setAccountNonLocked(true);
+            user.setPersonalData(personalData);
+            user.addEmailTemplate(template);
+            userService.saveUser(user);
+        }
+
+
 
         /*final List<Long> documentIDs = new ArrayList<>();
         final List<String> documentPaths = new ArrayList<>();
@@ -187,6 +193,14 @@ public class InitializeDatabase implements InitializingBean {
         } catch (TemplateNameNotFoundException tne) {
             EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
             emailTemplateService.saveEmailTemplate(emailTemplate);
+        }
+    }
+
+    private EmailTemplate saveEmailTemplateWithReturnValue(String template, String subject, String name) {
+        try {
+            return emailTemplateService.findSystemTemplateByName(name);
+        } catch (TemplateNameNotFoundException tne) {
+            return new EmailTemplate(template, subject, name, true);
         }
     }
 

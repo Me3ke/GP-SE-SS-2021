@@ -50,6 +50,7 @@ public class EnvelopeController {
 
     @Autowired
     private EmailTemplateService emailTemplateService;
+
     /**
      * The default constructor for an envelope Controller.
      *
@@ -156,7 +157,7 @@ public class EnvelopeController {
         } else {
             category = Category.READ;
         }
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category);
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
     }
 
 
