@@ -1,14 +1,7 @@
 package gpse.example.domain;
 
-import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentPutRequest;
-import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.exceptions.CreatingFileException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 
 class DocumentTest {

@@ -13,6 +13,25 @@
     border-color: var(--dark-grey);
 }
 
+.responsive-img {
+    height: 8em;
+    width: auto;
+}
+
+#responsive-signature {
+    height: 3em;
+}
+
+.logo-border {
+    border-color: var(--light-grey);
+    border-width: 1px;
+    border-style: solid;
+    padding: 2em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    text-align: center;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {
@@ -30,6 +49,10 @@
 
     .bigSpan {
         font-size: 1em;
+    }
+
+    .responsive-img {
+        font-size: 0.7em;
     }
 }
 
@@ -52,6 +75,9 @@
         font-size: 1.2em;
     }
 
+    .responsive-img {
+        font-size: 0.6em;
+    }
 }
 
 /* Large Phones in landscape mode */
@@ -71,6 +97,10 @@
 
     .bigSpan {
         font-size: 1.2em;
+    }
+
+    .responsive-img {
+        font-size: 0.9em;
     }
 }
 
@@ -93,6 +123,9 @@
         font-size: 1.2em;
     }
 
+    .responsive-img {
+        font-size: 0.9em;
+    }
 }
 
 /* Large devices (desktops, 992px and up)*/
@@ -113,6 +146,10 @@
     .bigSpan {
         font-size: 1.6em;
     }
+
+    .responsive-img {
+        font-size: 1em;
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up)*/
@@ -128,6 +165,10 @@
 
     .toggle-container {
         font-size: 0.8em;
+    }
+
+    .responsive-img {
+        font-size: 1em;
     }
 }
 
@@ -150,11 +191,11 @@
 }
 
 .light-btn {
-    background-color: var(--light-grey);
+    background-color: var(--elsa-blue-transparent);
 }
 
 .light-btn:hover {
-    background-color: var(--shadow-grey);
+    background-color: var(--light-grey);
 }
 
 /* Toggle */
@@ -174,4 +215,25 @@
 
 .saved-enter, .saved-leave-to {
     opacity: 0
+}
+
+/* Color picker */
+.color-picker {
+    border: none;
+    width: 7em;
+    height: 2em;
+}
+
+.reset-icon {
+    fill: var(--dark-grey);
+    height: 1.5em;
+    width: auto;
+    margin-right: 1em;
+}
+
+/* Alert */
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
 }

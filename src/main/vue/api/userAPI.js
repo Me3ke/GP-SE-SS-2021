@@ -90,5 +90,26 @@ export default {
                 'setting': setting
             }
         })
+    },
+
+    // sets image of user signature on server
+    async putSignature(signature, signatureType) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/imageSignature',
+            headers: {"Content-Type": "application/json"},
+            data: {
+                'imageSignature': signature,
+                'imageSignatureType': signatureType
+            }
+        })
+    },
+
+    // gets image of user signature from server
+    async getSignature() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/imageSignature'
+        })
     }
 }

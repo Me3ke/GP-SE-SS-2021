@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,30 +42,44 @@ public class User implements UserDetails {
     // false: user has not had a first login yet; true: user has had a first login
     private boolean firstLogin;
 
-    //@OneToMany
-    //private List<Keys> keys = new ArrayList<>();
+    @ElementCollection
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private List<String> archivedPublicKeys = new ArrayList<>();
 
     @Lob
-    @Column
     private String publicKey;
 
     @Column
+    @JsonIgnore
     private String password;
 
     //@OneToOne
     //private Keys activePair;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private PersonalData personalData;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private SecuritySettings securitySettings;
 
     @Column
     private boolean enabled;
 
     @Column
-    private boolean adminValidated;
+    private boolean accountNonLocked;
+
+    @Lob
+    private byte[] imageSignature;
+
+    @Column
+    private String imageSignatureType;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
@@ -89,9 +104,11 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
-        this.adminValidated = false;
+        this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.imageSignature = new byte[0];
+        this.imageSignatureType = "";
     }
 
     public static long getSerialVersionUID() {
@@ -123,6 +140,14 @@ public class User implements UserDetails {
             activePair = keys.get(index);
         }
     }*/
+
+    public List<String> getArchivedPublicKeys() {
+        return archivedPublicKeys;
+    }
+
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
+        this.archivedPublicKeys = archivedPublicKeys;
+    }
 
     /**
      * the Method used to fill in information that is not necessarily needed.
@@ -227,7 +252,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @JsonIgnore
@@ -291,12 +316,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public boolean isAdminValidated() {
-        return adminValidated;
-    }
-
-    public void setAdminValidated(final boolean adminValidated) {
-        this.adminValidated = adminValidated;
+    public void setAccountNonLocked(final boolean adminValidated) {
+        this.accountNonLocked = adminValidated;
     }
 
     public List<String> getRoles() {
@@ -319,7 +340,24 @@ public class User implements UserDetails {
         return firstLogin;
     }
 
-    public void setFirstLogin(boolean firstLogin) {
+    public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public byte[] getImageSignature() {
+        return Arrays.copyOf(
+                imageSignature, imageSignature.length);
+    }
+
+    public void setImageSignature(final byte[] imageSignature) {
+        this.imageSignature = imageSignature.clone();
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(final String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
     }
 }

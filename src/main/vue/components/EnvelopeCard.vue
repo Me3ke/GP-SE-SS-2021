@@ -37,7 +37,6 @@ export default {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)
         for (let i = 0; i < this.envelope.documents.length; i++) {
             if (this.envelope.documents[i].signatureType === 'ADVANCED_SIGNATURE') {
-                console.log(this.envelope.documents[i].signatureType === 'ADVANCED_SIGNATURE')
                 this.advanced = true
             }
         }

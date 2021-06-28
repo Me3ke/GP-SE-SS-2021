@@ -7,7 +7,7 @@
 
         <BaseHeading name="DownloadProtocol.protocol"></BaseHeading>
 
-        <div v-if="hasError" style="margin-top: 25vh;">
+        <div v-if="dataError" style="margin-top: 25vh;">
             <div style="display: inline-block;" class="text">
                 <img :src="turtle" class="responsive-img" alt="turtle">
             </div>
@@ -36,8 +36,7 @@ import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
 import DownloadPopUp from "@/main/vue/components/popUps/DownloadPopUp";
 
-import _ from 'lodash';
-import {mapGetters} from 'vuex';
+import documentAPI from "@/main/vue/api/documentAPI";
 
 export default {
     name: "ProtocolPage",
@@ -50,26 +49,30 @@ export default {
     data() {
         return {
             turtle: require('../assets/turtle.svg'),
+            pdfSrc: null,
             showOverflow: true,
             showDownload: false,
-            showPdf: false
+            showPdf: false,
+            dataError: false
         }
     },
-    async created() {
-        await this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
-    },
     async mounted() {
-        await this.$store.dispatch('document/fetchProtocol', {docId: this.docId})
+        await documentAPI.getProtocol(this.docId).then(response => {
+            this.pdfSrc = response.data
+            this.dataError = false
+        }).catch(() => {
+            this.dataError = true
+        })
         this.showPdf = true
     },
     methods: {
         getProtocol() {
-            console.log(this.protocol)
-            let chars = atob(this.protocol);
+            let chars = atob(this.pdfSrc);
             let array = new Uint8Array(chars.length);
             for (let i = 0; i < chars.length; i++) {
                 array[i] = chars.charCodeAt(i)
             }
+
             return array
         },
         toggleDownload() {
@@ -79,18 +82,11 @@ export default {
     }
     ,
     computed: {
-        ...mapGetters({
-            protocol: 'document/getProtocol',
-            getError: 'document/getErrorGetProtocol'
-        }),
         docId() {
             return this.$route.params.docId;
         },
         envId() {
             return this.$route.params.envId;
-        },
-        hasError() {
-            return !_.isEmpty(this.getError);
         }
     }
 }

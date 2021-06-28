@@ -19,6 +19,9 @@ import BlankTestPage from "@/main/vue/views/BlankTestPage";
 import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
+import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
+import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
+import CommentsPage from "@/main/vue/views/CommentsPage";
 
 
 Vue.use(VueRouter)
@@ -114,6 +117,15 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'envelope/:envId/document/:docId/comments',
+                    name: 'comments',
+                    component: CommentsPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: '404',
                     name: '404',
                     component: NotFoundPage,
@@ -177,6 +189,22 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'adminSettings/corporate',
+                    name: 'corporate',
+                    component: CorporateDesignNormalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/corporate/experimental',
+                    name: 'corporateExp',
+                    component: CorporateDesignExperimentalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: '*',
                     redirect: {name: '404'}
                 }]
@@ -185,14 +213,24 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    // using language from route guard or default language (de)
     store.commit('INITIALIZE_STORE')
+
+    // using language from route guard or default language (de)
     let language = to.params.lang;
     if (!language) {
         language = 'de'
     }
     // setting current language
     i18n.locale = language
+
+    if (store.state.auth.exp < Date.now() / 1000) {
+        localStorage.removeItem('store')
+        localStorage.clear()
+        next({
+            path: '/' + language + '/login',
+            params: {nextUrl: to.fullPath}
+        })
+    }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.auth.authenticated !== true) {
@@ -211,8 +249,6 @@ router.beforeEach((to, from, next) => {
         }
     }
     next()
-
-
 })
 
 export default router

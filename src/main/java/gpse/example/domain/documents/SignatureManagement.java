@@ -1,17 +1,23 @@
 package gpse.example.domain.documents;
 
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatoryService;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserService;
+import gpse.example.util.email.MessageGenerationException;
+import gpse.example.util.email.SMTPServerHelper;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.documents.GuestToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * The class used to manage all signature and review requests.
  */
-
+@Component
 public class SignatureManagement {
 
     private static final int STATUS_CODE_OK = 200;
@@ -20,14 +26,25 @@ public class SignatureManagement {
     private static final int STATUS_CODE_INVALID_SIGNATURE_TYPE = 453;
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
-    private final SignatoryService signatoryService;
     private final DocumentService documentService;
+    private final UserService userService;
+    private final SMTPServerHelper smtpServerHelper;
 
+    /**
+     * constructor of Signature management.
+     *
+     * @param smtpServerHelper     smtpServerHelper
+     * @param givenDocumentService documentservice
+     * @param givenUserService     userservice
+     */
+    @Autowired
+    public SignatureManagement(final SMTPServerHelper smtpServerHelper,
+                               final DocumentService givenDocumentService, final UserService givenUserService) {
 
-    public SignatureManagement(final SignatoryService givenSignatoryService,
-                               final DocumentService givenDocumentService) {
-        signatoryService = givenSignatoryService;
+        this.smtpServerHelper = smtpServerHelper;
+
         documentService = givenDocumentService;
+        userService = givenUserService;
     }
 
     /**
@@ -39,7 +56,8 @@ public class SignatureManagement {
      * @return a fitting response.
      */
     public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
-                                                     final SignatureType signatureType) {
+                                                     final SignatureType signatureType)
+        throws MessageGenerationException {
         if (document.isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
@@ -141,10 +159,10 @@ public class SignatureManagement {
         }
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)) {
+            if (currentSignatory.getEmail().equals(signatoryToFind.getEmail())) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
-                signatoryService.saveSignatory(currentSignatory);
+                documentService.addDocument(document);
             }
         }
         return foundSignatory;
@@ -165,14 +183,36 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
-                                                      final SignatureType signatureType) {
+                                                      final SignatureType signatureType)
+        throws MessageGenerationException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
         if (matchesSignatory(reader, currentReader, signatureType)) {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
-            documentService.addDocument(document);
+            final Document savedDocument = documentService.addDocument(document);
+            if (savedDocument.getState() != DocumentState.CLOSED) {
+
+                try {
+                    final User user = userService.getUser(savedDocument.getCurrentSignatory().getEmail());
+                    smtpServerHelper.sendSignatureInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                        userService.getUser(document.getOwner()),
+                        user.getLastname(), document);
+                } catch (UsernameNotFoundException unf) {
+                    if (savedDocument.getCurrentSignatory().getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
+                        smtpServerHelper.sendGuestInvitationAdvanced(savedDocument.getCurrentSignatory().getEmail(),
+                            savedDocument);
+                    } else {
+                        final GuestToken token = new GuestToken(savedDocument.getCurrentSignatory().getEmail(),
+                            savedDocument.getId());
+                        smtpServerHelper.sendGuestInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                            savedDocument, "http://localhost:8080/de/document/" + savedDocument.getId() + "/"
+                                + token.getToken());
+                    }
+                }
+            }
+
             response.setStatus(STATUS_CODE_OK);
             return response;
         } else {
@@ -185,16 +225,18 @@ public class SignatureManagement {
 
     private void checkIfClosed(final Document document, final List<Signatory> signatories,
                                final JSONResponseObject response, final Signatory currentReader) {
+
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
             document.setState(DocumentState.CLOSED);
             response.setMessage("Document is now closed.");
         }
     }
 
+
     private boolean matchesSignatory(final User reader, final Signatory currentReader,
                                      final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
-            && currentReader.getUser().equals(reader);
+            && currentReader.getEmail().equals(reader.getEmail());
     }
 
 }

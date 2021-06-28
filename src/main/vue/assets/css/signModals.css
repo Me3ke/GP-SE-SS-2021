@@ -15,6 +15,7 @@
     fill: var(--elsa-blue);
     height: 1em;
     width: auto;
+    margin-left: 0.2em;
 }
 
 .my-icon:hover {
@@ -38,6 +39,7 @@
     margin-bottom: 1vh;
     justify-content: center;
     display: flex;
+    align-content: center;
 }
 
 .alert {
@@ -94,6 +96,16 @@
     align-items: center;
 }
 
+.pad {
+    box-shadow: var(--elsa-blue) 0 1px 1px 2px;
+    border-radius: 1vw 1vw 1vw 1vw;
+
+    height: 10em;
+    width: 35em;
+
+    background-color: var(--pad-background);
+}
+
 /* Form */
 .form-control {
     background-color: var(--whitesmoke);
@@ -141,7 +153,11 @@
         text-overflow-mode: ellipse;
     }
 
-    .step, .button-txt {
+    .button-txt {
+        font-size: 0.72em;
+    }
+
+    .step {
         font-size: .92em;
     }
 
@@ -155,6 +171,27 @@
 
     .navbar-brand, .nav-item {
         font-size: 0.5em;
+    }
+
+    .pad {
+        width: auto;
+        height: 8em;
+        margin-left: -.3em;
+    }
+
+
+    .modal-fade .signature-pad {
+        width: auto;
+
+    }
+
+    .modal-fade {
+        width: 20em;
+        display: inline-block;
+    }
+
+    .pt-2 {
+        margin-left: -.3em;
     }
 }
 
@@ -180,6 +217,30 @@
     .navbar-brand, .nav-item {
         font-size: 0.41em;
     }
+
+    .pad {
+        width: auto;
+        height: 8em;
+        margin-left: -2.3em;
+    }
+
+
+    .modal-fade .signature-pad {
+        width: auto;
+        margin-left: 2em;
+
+    }
+
+    .modal-fade {
+        width: 30em;
+        display: inline-block;
+
+    }
+
+    .pt-2 {
+        margin-left: -2em;
+    }
+
 }
 
 /* Large Phones in landscape mode */
@@ -227,6 +288,10 @@
 
     .navbar-brand, .nav-item {
         font-size: 0.75em;
+    }
+
+    .pad {
+        width: 30em;
     }
 }
 
