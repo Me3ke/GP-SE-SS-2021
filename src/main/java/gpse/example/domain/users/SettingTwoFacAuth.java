@@ -7,14 +7,11 @@ public class SettingTwoFacAuth {
 
     private String setting;
 
-    public SettingTwoFacAuth() {
-    }
-
     public String getSetting() {
         return setting;
     }
 
-    public void setSetting(String setting) {
+    public void setSetting(final String setting) {
         this.setting = setting;
     }
 }

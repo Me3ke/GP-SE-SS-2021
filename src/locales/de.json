@@ -133,7 +133,7 @@
         ]
     },
     "Header": {
-        "logo": "ELSA Logo",
+        "logo": "Logo",
         "LanguageSwitcher": {
             "de": "Deutsch",
             "en": "Englisch",
@@ -173,7 +173,9 @@
         "toSignRead2": "gegenlesen und signieren",
         "envReadSign": "Gegenlesen und signieren",
         "envRead": "Gegenlesen",
-        "envSign": "Signieren"
+        "envSign": "Signieren",
+        "search": "Suchen",
+        "noDocuments": "Noch keine Dokumente"
     },
     "Document": {
         "owner": "Besitzer",
@@ -198,7 +200,7 @@
     "Settings": {
         "on": "An",
         "off": "Aus",
-        "saved" : "Gespeichert!",
+        "saved": "Gespeichert!",
         "content": "Kontoeinstellungen",
         "UserInfoBox": {
             "profileInformation": "Profilinformationen",
@@ -223,22 +225,32 @@
         },
         "SignatureSettings": {
             "settings": "Signatur Einstellungen",
+            "signature": "Signatur",
             "upload": {
+                "current": "Derzeitige Signatur",
                 "text": "Neue Signatur hochladen",
+                "text2": "Neue Signatur zeichnen",
                 "exp": "Laden Sie ein Bild Ihrer Signatur hoch. Es wird dem  Prozess-Protokoll hinzugefügt werden.",
                 "upload": "Hochladen",
+                "alert": "Fehler beim hochladen! \n Vergewisseren Sie sich, dass das Feld nicht leer ist.",
                 "popUp": {
                     "heading": "Signatur hochladen",
+                    "heading2": "Signatur zeichnen",
+                    "choose": "Möchten Sie ein ein Bilder der Sigantur hochladen oder eine zeichnen?",
+                    "draw": "Signatur zeichnen",
                     "exp": "Wählen Sie Ihre Signatur aus.",
+                    "signaturePad": "Zeichnen Sie in das entsprechende Feld Ihre Signatur",
                     "cancel": "Abbruch",
                     "sure": "Wenn Sie das Hochladen jetzt abbrechen, geht all' Ihr Fortschritt verloren.",
                     "back": "Zurück",
                     "close": "Schließen",
+                    "clear": "Löschen",
                     "attentionOne": "Achtung! Sie haben schon eine Signatur hochgeladen.",
                     "attentionTwo": "Wenn Sie fortfahren, geht diese verloren!",
                     "placeholder": "Signatur hier ablegen oder auswählen",
                     "dropPlaceholder": "Hier fallen lassen",
-                    "accepted": "Akzeptiert werden sämtliche Bildformate."
+                    "accepted": "Akzeptiert werden sämtliche Bildformate.",
+                    "success": "Sie haben erfolgreich Ihre Signatur hochgeladen!"
                 }
             }
         },
@@ -297,8 +309,19 @@
         "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
-        "signatureType": "Signaturtyp"
+        "signatureType": "Signaturtyp",
+
+        "UpdateDocument": {
+            "chooseFile":  "Dokument auswählen oder ins Feld ziehen...",
+            "update1": "aktualisieren",
+            "update2": "Dokument aktualisieren",
+            "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
+            "replaceDoc": "Das Aktualisieren des Dokumentes: ",
+            "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+       }
     },
+
     "DownloadDoc": {
         "download": "Herunterladen",
         "heading": "Jetzt herunterladen!",
@@ -318,6 +341,7 @@
         "didSign": "Schon unterschrieben",
         "doRead": "Gegenlesen",
         "didRead": "Schon gegengelesen.",
+        "comments": "Kommentare",
         "protocol": "Protokoll anzeigen",
         "history": "Historie einsehen",
         "newVersion": "Neue Version",
@@ -386,8 +410,10 @@
         "continue": "Weiter",
         "close": "Schließen",
         "back": "Zurück",
+        "verify": "Jetzt authentifizieren!",
         "serverErrorOne": "Es gibt Schwierigkeiten mit Ihrer Verbindung zum Server.",
         "serverErrorTwo": "Bitte laden Sie die Seite neu oder wenden Sie sich an einen Administrator.",
+        "serverErrorTwoAdmin": "Bitte laden Sie die Seite neu oder wenden Sie sich an den technischen Support.",
         "fail": "Es scheint Server-Probleme zu geben. Fehlercode: ",
         "login": {
             "title": "Richten Sie jetzt Ihre Zwei-Faktor-Authentifizierung ein",
@@ -423,7 +449,8 @@
             "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
             "tfa": "Zwei-Faktor-Authenifizierung",
             "keyPair": "Schlüsselpaar",
-            "toSettings": "Zu den Einstellungen"
+            "toSettings": "Zu den Einstellungen",
+            "notSeen": "Sie müssen sich das Dokument erst anschauen!"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
@@ -451,5 +478,60 @@
             "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie ELSA nicht vollständig nutzen,",
             "cancelWarningTwo": "ohne zuvor alle nötigen Elemente auf der Einstellungs-Seite eingerichtet haben."
         }
+    },
+    "AdminSettings": {
+        "corporate": {
+            "title": "Firmen Design",
+            "titleExp": "Experimentelles Design",
+            "exp": "Experimentelle Einstellungen",
+            "light": "Heller Modus",
+            "dark": "Dunkler Modus",
+            "logo": "Logo",
+            "currentLogo": "Aktuelles Logo:",
+            "logoUpload": "Logo hochladen",
+            "logoUploadHere": "Laden Sie hier Ihr Logo hoch.",
+            "logoUploadHereExp": "Akzeptiert werden Bild-Dateien. Für ein gutes Erbenis nutzen Sie 400x120-Pixel Bilder.",
+            "logoTitle": "Laden Sie Ihr Logo hoch!",
+            "logoPlaceholder": "Logo hier ablegen oder auswählen ",
+            "dropPlaceholder": "Hier fallen lassen",
+            "logoSuccess": "Sie haben Ihr Logo erfolgreich hochgeladen!",
+            "color": "Farbthema",
+            "color1": "Schrift- und Kontrastfarbe",
+            "color2": "Akzentfarbe",
+            "color3": "Hintergrund- und Hauptfarbe",
+            "color4": "Heller Neutralton",
+            "color5": "Dunkler Neutralton",
+            "color6": "Offenes Dokument - Hover",
+            "color7": "Geschlossenes Dokument",
+            "color8": "Geschlossenes Dokument - Hover",
+            "color9": "Dokument Aktion benötigt",
+            "color10": "Dokument Aktion benötigt - Hover",
+            "color11": "Helle Warnfarbe",
+            "color12": "Dunkle Warnfarbe",
+            "color13": "Einstellungsfarbe",
+            "color14": "Pop-Up Hintergrund",
+            "default": "Standard"
+        }
+    },
+    "CommentsPage": {
+        "title": "Kommentare",
+        "comment": "Kommentar",
+        "comments": "Kommentare",
+        "sort": "Sortieren nach",
+        "newest": "Neuste zuerst",
+        "oldest": "Älteste zuerst",
+        "writePrompt": "Kommentar hinzufügen als ",
+        "cancel": "Abbrechen",
+        "send": "Absenden",
+        "empty": "Keine Kommentare",
+        "answers": "Antworten anzeigen",
+        "doNotAnswers": "Antworten ausblenden",
+        "noAnswers": "Keine Antworten",
+        "reply": "Antworten",
+        "owner": "Besitzer",
+        "hint": "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen",
+        "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
+        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
+        "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     }
 }

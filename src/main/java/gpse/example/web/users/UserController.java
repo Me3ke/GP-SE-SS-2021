@@ -3,7 +3,6 @@ package gpse.example.web.users;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.security.SecurityConstants;
-import gpse.example.domain.signature.StringToKeyConverter;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.MessageGenerationException;
 import gpse.example.util.email.MessageService;
@@ -22,6 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 
@@ -40,7 +40,6 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
-    //private static final int STATUS_CODE_PUBLIC_KEY_UPLOAD_FAILED = 426;
     private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
     private static final int STATUS_CODE_WRONG_USER = 229;
@@ -53,8 +52,6 @@ public class UserController {
     private final ResetPasswordTokenService resetPasswordTokenService;
     private final MessageService messageService;
     private final SMTPServerHelper smtpServerHelper;
-    private final StringToKeyConverter stringToKeyConverter;
-
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -79,7 +76,6 @@ public class UserController {
         this.messageService = messageService;
         this.resetPasswordTokenService = resetPasswordTokenService;
         this.smtpServerHelper = smtpServerHelper;
-        stringToKeyConverter = new StringToKeyConverter();
     }
 
     /**
@@ -106,7 +102,7 @@ public class UserController {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole(ROLE_USER);
-                PersonalData personalData = signUpUser.generatePersonalData();
+                final PersonalData personalData = signUpUser.generatePersonalData();
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -175,14 +171,14 @@ public class UserController {
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
-    @GetMapping("/user/{userID}/validate/")
+    @GetMapping("/user/{userID}/validate")
     public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
         final JSONResponseObject response = new JSONResponseObject();
         final User user = userService.getUser(username);
         userService.validateUser(user);
 
-        if (user.isAdminValidated()) {
+        if (user.isAccountNonLocked()) {
             response.setStatus(STATUS_CODE_OK);
         } else {
             response.setStatus(STATUS_CODE_VALIDATION_FAILED);
@@ -197,13 +193,14 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
+     *
      * @param personalData the new personal data of the user stating the request
-     * @param username the username of the user stating the request
+     * @param username     the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
                                 @PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setPersonalData(personalData);
         userService.saveUser(user);
     }
@@ -221,10 +218,10 @@ public class UserController {
      */
     @PutMapping("/user/{userID}/firstLogin")
     public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setFirstLogin(true);
         userService.saveUser(user);
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
         return response;
     }
@@ -240,8 +237,12 @@ public class UserController {
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
-        userService.getUser(username).setPublicKey(publicKeyCmd.getPublicKey());
-        userService.saveUser(userService.getUser(username));
+        final User user = userService.getUser(username);
+        if (user.getPublicKey() != null) {
+            user.getArchivedPublicKeys().add(user.getPublicKey());
+        }
+        user.setPublicKey(publicKeyCmd.getPublicKey());
+        userService.saveUser(user);
         response.setStatus(STATUS_CODE_OK);
         return response;
     }
@@ -291,14 +292,15 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
-     * @param username the username of the user stating the request
+     *
+     * @param username          the username of the user stating the request
      * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
                                         @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
-        User user = userService.getUser(username);
-        SecuritySettings securitySettings = user.getSecuritySettings();
+        final User user = userService.getUser(username);
+        final SecuritySettings securitySettings = user.getSecuritySettings();
         securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
         userService.saveUser(user);
     }
@@ -422,4 +424,29 @@ public class UserController {
         }
     }
 
+    /**
+     * The request handler for the settings regarding the image signature.
+     *
+     * @param username             the username of the user stating the request
+     * @param imageSignatureToSend the request containing the image signature
+     * @return the response containing the info if the request was successful or not
+     */
+    @PutMapping("/user/{userID}/settings/imageSignature")
+    public JSONResponseObject changeImageSignature(@PathVariable(USERID) final String username,
+                                                   @RequestBody final ImageSignatureToSend imageSignatureToSend) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final User user = userService.getUser(username);
+        user.setImageSignature(imageSignatureToSend.getImageSignature());
+        user.setImageSignatureType(imageSignatureToSend.getImageSignatureType());
+        userService.saveUser(user);
+        jsonResponseObject.setStatus(STATUS_CODE_OK);
+        jsonResponseObject.setMessage("Successfully send image Signature");
+        return jsonResponseObject;
+    }
+
+    @GetMapping("/user/{userID}/settings/imageSignature")
+    public ImageSignatureToSend getImageSignature(@PathVariable(USERID) final String username) {
+        return new ImageSignatureToSend(userService.getUser(username).getImageSignature(),
+            userService.getUser(username).getImageSignatureType());
+    }
 }

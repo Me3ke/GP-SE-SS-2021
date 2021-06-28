@@ -43,7 +43,8 @@ public class UserServiceImpl implements UserService {
     private SMTPServerHelper smtpServerHelper;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository, SecuritySettingsRepository securitySettingsRepository) {
+    public UserServiceImpl(final UserRepository userRepository,
+                           final SecuritySettingsRepository securitySettingsRepository) {
         this.userRepository = userRepository;
         this.securitySettingsRepository = securitySettingsRepository;
     }
@@ -122,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void validateUser(final User user) {
-        user.setAdminValidated(true);
+        user.setAccountNonLocked(true);
 
         securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
@@ -143,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeUser(final String username) {
-        Optional<User> user = userRepository.findById(username);
+        final Optional<User> user = userRepository.findById(username);
         user.ifPresent(value -> securitySettingsRepository.delete(value.getSecuritySettings()));
         userRepository.deleteById(username);
     }

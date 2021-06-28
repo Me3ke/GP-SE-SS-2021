@@ -8,7 +8,7 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
-import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
@@ -17,12 +17,15 @@ import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The DocumentController class handles the requests from the frontend and
@@ -49,7 +52,7 @@ public class DocumentController {
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
-    private final SignatoryServiceImpl signatoryService;
+    private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
 
     /**
@@ -58,18 +61,18 @@ public class DocumentController {
      * @param envelopeService         the envelopeService
      * @param userService             the userService
      * @param documentService         the documentService
-     * @param signatoryService        the signatoryService
+     * @param guestTokenService       the guestTokenService
      * @param signatureManagement     the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final SignatoryServiceImpl signatoryService,
+                              final DocumentServiceImpl documentService, final GuestTokenService guestTokenService,
                               final SignatureManagement signatureManagement) {
 
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
-        this.signatoryService = signatoryService;
+        this.guestTokenService = guestTokenService;
         this.signatureManagement = signatureManagement;
     }
 
@@ -89,7 +92,6 @@ public class DocumentController {
                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         Document document;
-        final User currentUser = userService.getUser(userID);
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         final List<Document> documentList = envelope.getDocumentList();
         boolean isInEnvelope = false;
@@ -101,10 +103,60 @@ public class DocumentController {
         }
         if (isInEnvelope) {
             document = documentService.getDocument(documentID);
-            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), currentUser);
+            if (document.getDocumentType().equals("pdf")) {
+                final List<Signatory> signatories = document.getSignatories();
+                for (final Signatory signatory : signatories) {
+                    if (signatory.getEmail().equals(userID)) {
+                        signatory.setSeen(true);
+                    }
+                }
+                documentService.addDocument(document);
+
+            }
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
             throw new DocumentNotFoundException();
         }
+    }
+
+    /**
+     * Getting the document with guestToken.
+     * @param envelopeID id of envelope
+     * @param documentID id of document
+     * @param token String Token to get the tokenobject (or not if its expired? or wrong)
+     * @return the documentGetResponse
+     * @throws DocumentNotFoundException is thrown if the document that the request relates to does not exist.
+     */
+    @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
+    public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
+                                                      @PathVariable final long documentID,
+                                                      @PathVariable final String token)
+            throws DocumentNotFoundException {
+        final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
+
+        if (guestTokenOptional.isEmpty()) {
+            //TODO Fehlermeldung
+            return null;
+        } else if (guestTokenOptional.get().getDocumentId() == documentID) {
+            Document document;
+            final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+            final List<Document> documentList = envelope.getDocumentList();
+            boolean isInEnvelope = false;
+            for (final Document currentDocument : documentList) {
+                if (currentDocument.getId() == documentID) {
+                    isInEnvelope = true;
+                    break;
+                }
+            }
+            if (isInEnvelope) {
+                document = documentService.getDocument(documentID);
+                return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
+                    guestTokenOptional.get().getUsername());
+            } else {
+                throw new DocumentNotFoundException();
+            }
+        }
+        return null;
     }
 
     /**
@@ -126,6 +178,15 @@ public class DocumentController {
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
+        final List<Signatory> signatories = document.getSignatories();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getEmail().equals(userID)) {
+                signatory.setSeen(true);
+            }
+        }
+
+        documentService.addDocument(document);
+
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + name)
             .body(document.getData());
@@ -153,13 +214,14 @@ public class DocumentController {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            //TODO old document does not have to be removed from the database
             envelope.removeDocument(oldDocument);
             documentService.remove(oldDocument);
+            //System.out.println("old document: " + oldDocument.getSignatories());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
             final Document savedDocument = documentService.addDocument(archivedDocument);
             //TODO archived document should not be saved in envelope!
-            final Document newDocument = documentService.creation(documentPutRequest, envelope, ownerID,
+
+            final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
@@ -267,7 +329,7 @@ public class DocumentController {
         throws DocumentNotFoundException, CreatingFileException {
         final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
-            return Base64.encodeBase64(protocol.writeProtocol().toByteArray());
+            return Base64.encodeBase64(protocol.writeProtocol(userService).toByteArray());
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
@@ -285,7 +347,8 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
-            final byte[] protocolBytes = protocol.writeProtocol().toByteArray();
+            // TODO Document Title is null after updated Document
+            final byte[] protocolBytes = protocol.writeProtocol(userService).toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
                 .body(protocolBytes);
@@ -296,21 +359,32 @@ public class DocumentController {
 
     /**
      * Put request for changing documentsettings.
-     * @param documentID id of the document that should be changed
+     *
+     * @param documentID          id of the document that should be changed
      * @param documentSettingsCMD Container for the relevant settings
      * @return JsonResponse containing statuscode
      */
     @PutMapping("/document/{documentID}/settings")
-    public JSONResponseObject setSettings(final @PathVariable(DOCUMENT_ID) long documentID,
-                                          final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
-        JSONResponseObject response = new JSONResponseObject();
+    public JSONResponseObject changeSettings(final @PathVariable(DOCUMENT_ID) long documentID,
+                                             final @RequestBody DocumentSettingsCMD documentSettingsCMD) {
+        final JSONResponseObject response = new JSONResponseObject();
         try {
-            Document document = documentService.getDocument(documentID);
+            final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
-            document.setSignatories(documentSettingsCMD.getSignatories());
-
-            Document savedDoc = documentService.addDocument(document);
+            final List<Signatory> signatories = new ArrayList<>();
+            final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
+            Signatory signatory;
+            for (final SignatorySetting signatorySetting : signatorySettings) {
+                signatory = new Signatory(signatorySetting.getUsername(),
+                    signatorySetting.getSignatureType());
+                signatory.setStatus(signatorySetting.isStatus());
+                signatory.setReminder(signatorySetting.getReminderTiming());
+                signatory.setSignedOn(signatorySetting.convertSignedOn());
+                signatories.add(signatory);
+            }
+            document.setSignatories(signatories);
+            documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {
@@ -318,5 +392,30 @@ public class DocumentController {
             response.setMessage("Document not found.");
         }
         return response;
+    }
+
+    /**
+     * Request for get the info if user has seen specified document.
+     *
+     * @param documentId id of document
+     * @param userId     id of user
+     * @return Response entity with the boolean in the body and documentId in the header
+     * @throws DocumentNotFoundException thrown if there is no document with specified Id
+     */
+    @GetMapping("/document/{documentID}/user/{userID}/seen")
+    public ResponseEntity<Boolean> hasDocumentBeenSeen(@PathVariable("documentID") final long documentId,
+                                                  @PathVariable("userID") final String userId)
+        throws DocumentNotFoundException {
+        final Document document = documentService.getDocument(documentId);
+        for (final Signatory signatory : document.getSignatories()) {
+            if (signatory.getEmail().equals(userId)) {
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+                    .body(signatory.isSeen());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))
+            .body(null);
     }
 }
