@@ -69,7 +69,7 @@ public class DocumentServiceImpl implements DocumentService {
                 signatory.setStatus(false);
             }
         } */
-        for (EmailTemplate temp:userService.getUser(ownerID).getEmailTemplates()) {
+        for (final EmailTemplate temp:userService.getUser(ownerID).getEmailTemplates()) {
             if (temp.getTemplateID() == documentPutRequest.getEmailTemplateId()) {
                 newDocument.setProcessEmailTemplate(temp);
                 return addDocument(newDocument);

@@ -488,7 +488,7 @@ public class Document {
         return processEmailTemplate;
     }
 
-    public void setProcessEmailTemplate(EmailTemplate processEmailTemplate) {
+    public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {
         this.processEmailTemplate = processEmailTemplate;
     }
 }

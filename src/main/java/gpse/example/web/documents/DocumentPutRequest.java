@@ -93,7 +93,7 @@ public class DocumentPutRequest {
         return emailTemplateId;
     }
 
-    public void setEmailTemplateId(long emailTemplateId) {
+    public void setEmailTemplateId(final long emailTemplateId) {
         this.emailTemplateId = emailTemplateId;
     }
 }

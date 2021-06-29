@@ -187,7 +187,7 @@ public class InitializeDatabase implements InitializingBean {
          */
     }
 
-    private void saveEmailTemplate(String template, String subject, String name) {
+    private void saveEmailTemplate(final String template, final String subject, final String name) {
         try {
             emailTemplateService.findSystemTemplateByName(name);
         } catch (TemplateNameNotFoundException tne) {
@@ -196,7 +196,7 @@ public class InitializeDatabase implements InitializingBean {
         }
     }
 
-    private EmailTemplate saveEmailTemplateWithReturnValue(String template, String subject, String name) {
+    private EmailTemplate saveEmailTemplateWithReturnValue(final String template, final String subject, final String name) {
         try {
             return emailTemplateService.findSystemTemplateByName(name);
         } catch (TemplateNameNotFoundException tne) {

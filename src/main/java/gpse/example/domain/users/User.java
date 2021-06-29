@@ -370,11 +370,11 @@ public class User implements UserDetails {
         return emailTemplates;
     }
 
-    public void setEmailTemplates(List<EmailTemplate> emailTemplates) {
+    public void setEmailTemplates(final List<EmailTemplate> emailTemplates) {
         this.emailTemplates = emailTemplates;
     }
 
-    public void addEmailTemplate(EmailTemplate emailTemplate) {
+    public void addEmailTemplate(final EmailTemplate emailTemplate) {
         this.emailTemplates.add(emailTemplate);
     }
 

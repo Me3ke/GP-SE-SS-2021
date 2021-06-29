@@ -13,11 +13,11 @@ public class ResetPasswordTokenService {
 
     private final ResetPasswordTokenRepository repo;
 
-    public ResetPasswordTokenService(ResetPasswordTokenRepository repo) {
+    public ResetPasswordTokenService(final ResetPasswordTokenRepository repo) {
         this.repo = repo;
     }
 
-    public ResetPasswordToken saveResetPasswordToken(ResetPasswordToken rpt) {
+    public ResetPasswordToken saveResetPasswordToken(final ResetPasswordToken rpt) {
         return repo.save(rpt);
     }
 

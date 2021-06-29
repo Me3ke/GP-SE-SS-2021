@@ -253,14 +253,14 @@ public class DocumentController {
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink("LinkToDocumentView");
         if (document.isOrderRelevant()) {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 }
             }
         } else {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                     container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
             }
@@ -413,7 +413,7 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
 
         final List<Signatory> signatories = document.getSignatories();
-        LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
+        final LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
         signatories.clear();
         signatories.addAll(signatoryLinkedHashSet);
 

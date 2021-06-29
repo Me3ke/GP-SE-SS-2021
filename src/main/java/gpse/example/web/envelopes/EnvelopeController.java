@@ -135,12 +135,12 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation(User signatory, User owner, Document document,
-                                     Envelope envelope, SignatureType signatureType)
+    private void setupUserInvitation(final User signatory, final User owner, final Document document,
+                                     final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
 
-        EmailTemplate template = document.getProcessEmailTemplate();
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = document.getProcessEmailTemplate();
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameReciever(signatory.getFirstname());
         container.setLastNameReciever(signatory.getLastname());
         container.setFirstNameOwner(owner.getFirstname());

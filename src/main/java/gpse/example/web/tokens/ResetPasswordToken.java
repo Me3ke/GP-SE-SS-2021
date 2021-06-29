@@ -44,7 +44,7 @@ public class ResetPasswordToken {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -52,7 +52,7 @@ public class ResetPasswordToken {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(final String token) {
         this.token = token;
     }
 
@@ -60,7 +60,7 @@ public class ResetPasswordToken {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(final LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -68,7 +68,7 @@ public class ResetPasswordToken {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.user = user;
     }
 }
