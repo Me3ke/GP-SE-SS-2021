@@ -40,6 +40,6 @@ public enum Category {
      * category is system.
      * For emails such as registration etc.
      */
-    System
+    SYSTEM
 
 }

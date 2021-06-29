@@ -1,6 +1,8 @@
 package gpse.example.domain.users;
 
 import gpse.example.util.email.*;
+import gpse.example.web.tokens.ConfirmationToken;
+import gpse.example.web.tokens.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -119,20 +121,21 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Sending and configurate the confirmation template.
-     * @param user user to register
+     *
+     * @param user  user to register
      * @param token the confirmation token to verify email
-     * @throws MessageGenerationException thrown if the email message could not be generated
+     * @throws MessageGenerationException    thrown if the email message could not be generated
      * @throws TemplateNameNotFoundException thrown if the email template dont exist.
      */
     public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException,
-            TemplateNameNotFoundException {
+        TemplateNameNotFoundException {
 
         EmailTemplate template = emailTemplateService.findSystemTemplateByName("ConfirmationTemplate");
         TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
         container.setLink("http://localhost:8080/de/register/confirm/" + token);
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.System, null);
+        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.SYSTEM, null);
 
     }
 
@@ -146,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void infoNewExtUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
-       final List<User> userList = getUsers();
+        final List<User> userList = getUsers();
         for (final User admin : userList) {
             if (admin.getRoles().contains("ROLE_ADMIN")) {
                 EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");

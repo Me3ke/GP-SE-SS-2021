@@ -13,18 +13,19 @@ export default {
         return axios(
             {
                 method: "get",
-                url: 'http://localhost:8088/api/user/resetPassword/' + username
+                url: 'http://localhost:8088/api/user/' + username + '/password/reset'
             }
         )
     },
     async setNewPassword(username, token, password) {
         return axios(
             {
-                method: "post",
-                url: 'http://localhost:8088/api/user/' + username + '/resetPassword/' + token,
+                method: "get",
+                url: 'http://localhost:8088/api/user/newpassword',
                 headers: {"Content-Type": "application/json", "Accept": "*/*", "Connection": "keep-alive"},
                 data: {
-                    "password": password
+                    "password": password,
+                    "token": token
                 }
             }
         )

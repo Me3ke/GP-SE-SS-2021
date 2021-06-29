@@ -47,7 +47,7 @@ public class MessageController {
         final User user = userService.getUser(userID);
         final MessageSettingsContainer container = user.getMessageSettings();
         final List<Message> messages = messageService.getMessages(user);
-        messages.removeIf(message -> message.getCategory().equals(Category.System));
+        messages.removeIf(message -> message.getCategory().equals(Category.SYSTEM));
         for (final Iterator<Message> iterator = messages.iterator(); iterator.hasNext();) {
             final Message message = iterator.next();
             final Category category = message.getCategory();
