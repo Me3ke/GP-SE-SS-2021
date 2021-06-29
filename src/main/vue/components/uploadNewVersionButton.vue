@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="text-right">
-                <button type="button" class="mt-1 light-btn" @click="resetTest('modal-page1')">
+                <button type="button" class="mt-1 light-btn" @click="resetSettings('modal-page1')">
                     <span class="button-txt">
                         {{ $t('UploadDoc.close') }}
                     </span>
@@ -60,7 +60,7 @@
             <div>
                 <button type="button"
                         class="light-btn"
-                        @click="settings.review = true;"
+                        @click="review = true;"
                         v-b-modal="'modal-' + docID + 'bbb'"
                 >
                     <h5>
@@ -69,7 +69,7 @@
                 </button>
                 <button type="button"
                         class="light-btn"
-                        @click="settings.review = false;"
+                        @click="review = false;"
                         v-b-modal="'modal-' + docID + 'bbbb'"
 
                 >
@@ -99,7 +99,7 @@
             <div>
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetTest('modal-page2')"
+                        @click="resetSettings('modal-page2')"
                         v-b-modal="'modal-' + docID + 'b'"
                 >
                     <span class="button-txt">
@@ -138,7 +138,7 @@
             <div>
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetTest('modal-page2')"
+                        @click="resetSettings('modal-page2')"
                         v-b-modal="this.actualDoc.review ? 'modal-' + docID + 'bbb' : 'modal-' + docID + 'bb' "
                 >
                     <span class="button-txt">
@@ -185,7 +185,7 @@
 
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetTest('modal-page3')"
+                        @click="resetSettings('modal-page3')"
                         v-b-modal="'modal-' + docID + 'bb'"
                 >
                     <span class="button-txt">
@@ -246,6 +246,8 @@ export default {
             fileString: "",
             file: null,
             showAlert: false,
+            review: true,
+
 
 
             // need document settings as variable
@@ -253,14 +255,6 @@ export default {
 
             // TODO Actual Doc which is going to be replaced
             actualDoc: {},
-
-            settings: {
-                review: true,
-                signatories: [],
-                readers: [],
-                endDate: '',
-                orderRelevant: true
-            }
         }
     },
     props: ['document', 'docID', 'envID'],
@@ -348,8 +342,7 @@ export default {
             return await convertUploadFileToBase64(this.file)
         },
 
-        //todo
-        resetTest(a) {
+        resetSettings(a) {
             if(a === 'modal-page1') {
                 this.$refs[a].hide()
                 this.fileString =""

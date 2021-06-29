@@ -339,5 +339,10 @@ $RECYCLE.BIN/
 
 ./data
 
+
+
+# package lock
+package-lock.json
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,maven,windows,linux,macos,vuejs,node
 
