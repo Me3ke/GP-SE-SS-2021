@@ -2,6 +2,8 @@ package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
+import gpse.example.util.email.trustedDomain.DomainSettingsGetResponse;
+import gpse.example.util.email.trustedDomain.DomainSettingsPutRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
@@ -74,12 +76,27 @@ public class EmailController {
                                     @PathVariable("templateId") final long templateId,
                                     @RequestParam("reworkedTemplate") final String reworkedTemplate) {
         User user = userService.getUser(userId);
-        for (EmailTemplate temp:user.getEmailTemplates()) {
+        for (EmailTemplate temp : user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId) {
                 temp.setHtmlTemplateBody(reworkedTemplate);
                 break;
             }
         }
         userService.saveUser(user);
+    }
+
+    /**
+     * PutMapping for reworked templates.
+     *
+     * @param domainSettingsPutRequest the settings to be applied
+     */
+    @PutMapping("/email/settings")
+    public void updateTrustedDomain(@RequestBody final DomainSettingsPutRequest domainSettingsPutRequest) {
+
+    }
+
+    @GetMapping("email/settings")
+    public void DomainSettingsGetResponse() {
+
     }
 }
