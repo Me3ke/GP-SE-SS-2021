@@ -2,6 +2,8 @@ package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
+import gpse.example.util.email.EmailTemplate;
+import gpse.example.web.messages.MessageSettingsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -81,9 +83,21 @@ public class User implements UserDetails {
     @Column
     private String imageSignatureType;
 
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private List<EmailTemplate> emailTemplates;
+
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private MessageSettingsContainer messageSettings;
 
     protected User() {
 
@@ -109,6 +123,13 @@ public class User implements UserDetails {
         this.securitySettings = new SecuritySettings();
         this.imageSignature = new byte[0];
         this.imageSignatureType = "";
+        this.emailTemplates = new ArrayList<>();
+        this.messageSettings = new MessageSettingsContainer();
+        this.messageSettings.setToDo(true);
+        this.messageSettings.setProgress(true);
+        this.messageSettings.setNewVersion(true);
+        this.messageSettings.setSign(true);
+        this.messageSettings.setRead(true);
     }
 
     public static long getSerialVersionUID() {
@@ -344,9 +365,30 @@ public class User implements UserDetails {
         this.firstLogin = firstLogin;
     }
 
+
+    public List<EmailTemplate> getEmailTemplates() {
+        return emailTemplates;
+    }
+
+    public void setEmailTemplates(List<EmailTemplate> emailTemplates) {
+        this.emailTemplates = emailTemplates;
+    }
+
+    public void addEmailTemplate(EmailTemplate emailTemplate) {
+        this.emailTemplates.add(emailTemplate);
+    }
+
+    public MessageSettingsContainer getMessageSettings() {
+        return messageSettings;
+    }
+
+    public void setMessageSettings(final MessageSettingsContainer messageSettings) {
+        this.messageSettings = messageSettings;
+    }
+
     public byte[] getImageSignature() {
         return Arrays.copyOf(
-                imageSignature, imageSignature.length);
+            imageSignature, imageSignature.length);
     }
 
     public void setImageSignature(final byte[] imageSignature) {

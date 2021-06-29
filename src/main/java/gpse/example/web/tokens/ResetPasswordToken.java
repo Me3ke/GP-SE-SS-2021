@@ -1,16 +1,16 @@
-package gpse.example.domain.users;
+package gpse.example.web.tokens;
+
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
 /**
- * the confirmationtoken-class.
+ * ResetPasswordToken class Referencing an user when he lost password.
  */
 @Entity
-public class ConfirmationToken {
-
+public class ResetPasswordToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -27,16 +27,16 @@ public class ConfirmationToken {
     private User user;
 
     /**
-     * Constructor of ConfirmationToken setting an user the creation date and a random string as the token.
-     * @param user the user the token should relate to
+     * Generate token with reference to an user.
+     * @param user referenced user
      */
-    public ConfirmationToken(final User user) {
+    public ResetPasswordToken(final User user) {
         this.user = user;
         this.createdDate = LocalDateTime.now();
         this.token = UUID.randomUUID().toString();
     }
 
-    public ConfirmationToken() {
+    public ResetPasswordToken() {
 
     }
 
@@ -44,7 +44,7 @@ public class ConfirmationToken {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -52,7 +52,7 @@ public class ConfirmationToken {
         return token;
     }
 
-    public void setToken(final String token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
@@ -60,7 +60,7 @@ public class ConfirmationToken {
         return createdDate;
     }
 
-    public void setCreatedDate(final LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -68,7 +68,7 @@ public class ConfirmationToken {
         return user;
     }
 
-    public void setUser(final User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

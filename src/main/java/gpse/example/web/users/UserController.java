@@ -2,15 +2,26 @@ package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.MessageService;
+import gpse.example.util.email.*;
+import gpse.example.web.tokens.ConfirmationToken;
+import gpse.example.web.tokens.ConfirmationTokenService;
+import gpse.example.web.tokens.ResetPasswordToken;
+import gpse.example.web.tokens.ResetPasswordTokenService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 
@@ -29,26 +40,45 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
+    private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
+    private static final int STATUS_CODE_WRONG_USER = 229;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
+    private static final String ROLE_USER = "ROLE_USER";
+    private static final String USER_NOT_FOUND = "User not Found";
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ResetPasswordTokenService resetPasswordTokenService;
     private final MessageService messageService;
+    private final EmailTemplateService emailTemplateService;
+    private final SMTPServerHelper smtpServerHelper;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     /**
      * Constructor of UserController getting required services.
      *
-     * @param service        Userservice Object
-     * @param confService    ConfirmationTokenService object
-     * @param messageService the messageService to access the message table
+     * @param service                   Userservice Object
+     * @param confService               ConfirmationTokenService object
+     * @param messageService            the messageService to access the message table
+     * @param emailTemplateService      used to find the basic template by name
+     * @param resetPasswordTokenService Service for the resetPasswordToken
+     * @param smtpServerHelper          smtpserverhelper to send emails
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final MessageService messageService) {
+                          final MessageService messageService, final EmailTemplateService emailTemplateService,
+                          final ResetPasswordTokenService resetPasswordTokenService,
+                          final SMTPServerHelper smtpServerHelper) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
+        this.emailTemplateService = emailTemplateService;
+        this.resetPasswordTokenService = resetPasswordTokenService;
+        this.smtpServerHelper = smtpServerHelper;
     }
 
     /**
@@ -58,7 +88,8 @@ public class UserController {
      * @return JSONResponse containing statusCode and a message
      */
     @PostMapping("/newUser")
-    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) {
+    public JSONResponseObject signUp(final @RequestBody UserSignUpCmd signUpUser) throws MessagingException,
+        InvocationTargetException, TemplateNameNotFoundException {
         final JSONResponseObject response = new JSONResponseObject();
         if (signUpUser.getUsername().isEmpty() || signUpUser.getPassword().isEmpty()) {
             response.setStatus(STATUS_CODE_MISSING_USERDATA);
@@ -74,17 +105,23 @@ public class UserController {
             } catch (UsernameNotFoundException e) {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
-                user.addRole("ROLE_USER");
+                user.addRole(ROLE_USER);
                 final PersonalData personalData = signUpUser.generatePersonalData();
+                EmailTemplate standardTemplate =
+                    emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
+                user.addEmailTemplate(standardTemplate);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
                     response.setStatus(STATUS_CODE_OK);
-                } catch (MessageGenerationException mge) {
+                } catch (MessageGenerationException exc) {
                     userService.removeUser(user.getUsername());
-                    messageService.removeMessage(mge.getThrownByMessageID());
+                    messageService.removeMessage(exc.getThrownByMessageID());
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
                     response.setMessage("Error generating Confirmationmail. Try again later.");
+                } catch (TemplateNameNotFoundException exc) {
+                    response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                    response.setMessage("Template not Found");
                 }
                 return response;
             }
@@ -125,8 +162,7 @@ public class UserController {
                 try {
                     userService.infoNewExtUser(user);
                     response.setMessage(ADMINVALIDATION_REQUIRED + true);
-                } catch (MessageGenerationException mge) {
-                    messageService.removeMessage(mge.getThrownByMessageID());
+                } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
                         + "an error occured please call systemadmin");
                     response.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
@@ -283,6 +319,127 @@ public class UserController {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
     }
 
+    /**
+     * Method to chenge password as logged in User.
+     *
+     * @param password the new password
+     * @param token    JWT token which identifies the user
+     * @return jsonResponse with statuscode
+     */
+    @PutMapping("/user/password/change")
+    public JSONResponseObject changePassword(@RequestParam("password") final String password,
+                                             @RequestHeader final String token) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+
+        SecurityConstants securityConstants = new SecurityConstants();
+        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        try {
+            User user = userService.getUser(parsedToken.getBody().getSubject());
+            if (user.getRoles().contains(ROLE_USER)) {
+                user.setPassword(passwordEncoder.encode(password));
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+            } else {
+                //TODO Fehlermelden? DOch Responseobject nutzen
+                jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+                jsonResponseObject.setMessage("User has not role user");
+            }
+            return jsonResponseObject;
+
+        } catch (UsernameNotFoundException unfe) {
+            //TODO Fehlermelden? DOch Responseobject nutzen
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
+            return jsonResponseObject;
+        }
+    }
+
+    /**
+     * GetRequest to get an Token via email to Reset a password.
+     *
+     * @param userId the requesting users id
+     * @return jsonResponse with statuscode
+     */
+    @GetMapping("/user/{userId}/password/reset")
+    public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        try {
+            User user = userService.getUser(userId);
+            ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
+            ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
+            try {
+                TemplateDataContainer emailContainer = new TemplateDataContainer();
+                EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
+                emailContainer.setFirstNameReciever(user.getFirstname());
+                emailContainer.setLastNameReciever(user.getLastname());
+                emailContainer.setLink("http://localhost:8080/de/login/reset/" + savedToken.getToken());
+                smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
+                    emailContainer, Category.SYSTEM, null);
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
+                resetPasswordTokenService.deleteResetPasswordToken(savedToken.getId());
+                jsonResponseObject.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                return jsonResponseObject;
+            }
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
+            return jsonResponseObject;
+        }
+    }
+
+    /**
+     * GetResponse Method to set a new password.
+     * call api/user?password={password}&token={token}
+     *
+     * @param password new password
+     * @param token    token which references the user who want to chnge password
+     * @param jwtToken jwt-token references current logged in user
+     * @return jsonResponse with statuscode
+     */
+    @GetMapping("/user/")
+    public JSONResponseObject resetPassword(@RequestParam("password") final String password,
+                                            @RequestParam("token") final String token,
+                                            @RequestHeader final String jwtToken) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+
+        SecurityConstants securityConstants = new SecurityConstants();
+        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        final Optional<ResetPasswordToken> optionalResetPasswordToken
+            = resetPasswordTokenService.findResetPasswordTokenByToken(token);
+
+        try {
+            User user = userService.getUser(parsedToken.getBody().getSubject());
+
+            if (optionalResetPasswordToken.isEmpty()) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+                return jsonResponseObject;
+            } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
+                return jsonResponseObject;
+            } else if (optionalResetPasswordToken.get().getUser().equals(user)) {
+                user.setPassword(passwordEncoder.encode(password));
+                userService.saveUser(user);
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            } else {
+                jsonResponseObject.setStatus(STATUS_CODE_WRONG_USER);
+                return jsonResponseObject;
+            }
+
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            return jsonResponseObject;
+        }
+    }
 
     /**
      * The request handler for the settings regarding the image signature.

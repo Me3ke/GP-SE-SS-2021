@@ -18,15 +18,20 @@ public class DocumentPutRequest {
     private String endDate;
     private boolean orderRelevant;
     private String lastModified;
+    private long emailTemplateId;
+
     // for the case if the User do not want to edit the signatories
     // list on upload new Version (getter is going to be uses)
     private List<Signatory> alreadyDefinedSignatories;
+
     public void setAlreadyDefinedSignatories(final List<Signatory> alreadyDefinedSignatories) {
         this.alreadyDefinedSignatories = alreadyDefinedSignatories;
     }
+
     public List<Signatory> getAlreadyDefinedSignatories() {
         return alreadyDefinedSignatories;
     }
+
     public String getLastModified() {
         return lastModified;
     }
@@ -81,5 +86,14 @@ public class DocumentPutRequest {
 
     public void setOrderRelevant(final boolean orderRelevant) {
         this.orderRelevant = orderRelevant;
+    }
+
+    public long getEmailTemplateId() {
+        this.emailTemplateId = 0;
+        return emailTemplateId;
+    }
+
+    public void setEmailTemplateId(long emailTemplateId) {
+        this.emailTemplateId = emailTemplateId;
     }
 }

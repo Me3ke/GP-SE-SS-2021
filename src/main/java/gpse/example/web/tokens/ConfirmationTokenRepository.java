@@ -1,4 +1,4 @@
-package gpse.example.domain.users;
+package gpse.example.web.tokens;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

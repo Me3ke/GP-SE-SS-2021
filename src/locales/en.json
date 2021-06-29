@@ -186,9 +186,13 @@
         "heading": "Messages",
         "sentBy": "From",
         "sentOn": "On",
-        "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
-        "toAll": "Back to all messages"
+        "toAll": "Back to all messages",
+        "sureDelete": "Delete forever?",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "deleteError": "Deleting failed",
+        "noMsgs": "No messages"
     },
     "LoginButton": {
         "content": "Login"
@@ -256,16 +260,16 @@
             "settings": "Message settings",
             "send": "Save",
             "toDo": {
-                "text": "Signature/proofread requests",
-                "exp": "Get website alerts for new signature/proofread requests."
+                "text": "Admin messages",
+                "exp": "Get website alerts for admin-specific messages."
             },
             "sign": {
-                "text": "Signature reminders",
-                "exp": "Get website alerts as a reminder to sign documents/envelopes."
+                "text": "Signature requests/reminders",
+                "exp": "Get website alerts as a request/reminder to sign documents/envelopes."
             },
             "read": {
-                "text": "Proofread reminders",
-                "exp": "Get website alerts as a reminder to proofread documents/envelopes."
+                "text": "Proofread requests/reminders",
+                "exp": "Get website alerts as a request/reminder to proofread documents/envelopes."
             },
             "progress": {
                 "text": "Document progress",
@@ -274,10 +278,6 @@
             "newVersion": {
                 "text": "Document updates",
                 "exp": "Get website alerts about updated documents."
-            },
-            "protocol": {
-                "text": "Protocol availability",
-                "exp": "Get website alerts about the availability of document protocols."
             }
         },
         "DocumentSettings": {
@@ -308,7 +308,6 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
-
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
@@ -317,9 +316,7 @@
             "replaceDoc": "Update of: ",
             "confirmation": "Are you sure to update {documentTitle}",
             "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
-
         }
-
     },
     "DownloadDoc": {
         "download": "Download",

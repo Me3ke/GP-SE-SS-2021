@@ -14,8 +14,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -25,7 +24,10 @@
                                            style="height: 75vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 75vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -43,8 +45,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -54,7 +55,10 @@
                                            style="height: 82vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 82vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh;">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -72,8 +76,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -83,7 +86,10 @@
                                            style="height: 75vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 75vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh;">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -101,8 +107,7 @@
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
                     </b-col>
@@ -112,7 +117,10 @@
                                            style="height: 60vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 60vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -127,11 +135,13 @@
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
                         <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
 
@@ -151,11 +161,13 @@
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
                         <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
-                                <MessageBox v-if="selectedMsg === msg" class="selectedMsg" :msg="msg"></MessageBox>
-                                <MessageBox v-else :msg="msg"></MessageBox>
+                                <MessageBox :msg="msg"></MessageBox>
                             </div>
                         </div>
 
@@ -175,6 +187,9 @@
                 <b-row key="msgList" cols="1">
                     <b-col style="margin-top:1.5vh;">
                         <div class="overflow-auto" style="height: 75vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
@@ -203,35 +218,35 @@ import MessageBox from "@/main/vue/components/messagePage/MessageBox";
 import Footer from "@/main/vue/components/Footer";
 import MessageContentBox from "@/main/vue/components/messagePage/MessageContentBox";
 
-import {mapState} from 'vuex';
+import {mapGetters} from 'vuex';
 import _ from "lodash";
 
 export default {
     name: "MessagePage",
     components: {MessageContentBox, Footer, MessageBox, Header},
     methods: {
-        selectMsg(msg) {
-            this.$store.dispatch('patchChangeSelectedMsg', msg)
-            this.$store.dispatch('patchChangeWatchedStatus', msg)
+        async selectMsg(msg) {
+            var status = msg.watched
+            await this.$store.dispatch('messages/patchChangeSelectedMsg', msg)
+            await this.$store.dispatch('messages/patchChangeWatchedStatus', msg)
+            if (status !== msg.watched) {
+                await this.$store.dispatch('messages/fetchMessages')
+            }
         },
         isSelected() {
             return !_.isEmpty(this.selectedMsg);
         }
     },
     computed: {
-        ...mapState({
-            messages: state => state.messages.messages,
-            selectedMsg: state => state.messages.selectedMsg
+        ...mapGetters({
+            messages: 'messages/getMessages',
+            selectedMsg: 'messages/getSelectedMessage'
         })
     }
 }
 </script>
 
 <style scoped>
-.selectedMsg {
-    background-color: var(--light-grey);
-}
-
 .backCard {
     font-size: .53em;
     background-color: var(--elsa-blue);
@@ -240,6 +255,7 @@ export default {
     padding-top: 0.7vh;
     padding-bottom: 0.7vh;
     border-radius: 3.5px;
+    cursor: pointer;
 }
 
 /* Settings for differently sized screens */
