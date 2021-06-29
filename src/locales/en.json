@@ -48,8 +48,6 @@
     },
     "OverviewPage": {
         "heading": "Overview",
-        "filterClosed": "Closed",
-        "filterOpen": "Open",
         "toSign1": "Sign until",
         "toSign2": "",
         "toRead1": "Read until",
@@ -61,6 +59,12 @@
         "envSign": "Sign",
         "search": "Search",
         "noDocuments": "No documents yet"
+    },
+    "Filter": {
+        "closed": "closed",
+        "open": "open",
+        "toSign": "sign",
+        "owned": "owned"
     },
     "UserGuide": {
         "name": "User Guide",

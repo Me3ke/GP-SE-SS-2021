@@ -39,14 +39,26 @@
                         <!-- Filter Buttons -->
                         <b-col>
                             <span @click="filterOpen()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filter.state === 'open'"></FilterButton>
+                                <FilterButton v-bind:text="$t('Filter.open')"
+                                              :isActive="this.filter.state === 'open'" ></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
+                                <FilterButton v-bind:text="$t('Filter.closed')"
                                               :isActive="this.filter.state === 'closed'"></FilterButton>
+                            </span>
+                        </b-col>
+                        <b-col>
+                            <span @click="filterOwn()">
+                                <FilterButton v-bind:text="$t('Filter.owned')"
+                                    :isActive="this.filter.owner === this.user.email"></FilterButton>
+                            </span>
+                        </b-col>
+                        <b-col>
+                            <span @click="filterToSign()">
+                                <FilterButton v-bind:text="$t('Filter.toSign')"
+                                              :isActive="this.filter.toSign" ></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -115,10 +127,9 @@ export default {
     data() {
         return {
             filter: {
-                //title: "",
-                //envelopeID: 0,
-                state: null,
-                //owner: "",
+                state: "",
+                toSign: false,
+                owner: "",
                 //creationDateMin: null,
                 //creationDateMax: null,
                 //endDateMin: null,
@@ -129,7 +140,7 @@ export default {
                 //readers: null,
                 //signed: null,
                 //read: null,
-                search: null
+                search: ""
             },
             searchInput: "",
             pageLimit: 10,
@@ -140,28 +151,39 @@ export default {
     methods: {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            if (this.filter.state === null || this.filter.state === "closed") {
+            if (this.filter.state === "" || this.filter.state === "closed") {
                 this.filter.state = "open";
             } else {
-                this.filter.state = null;
+                this.filter.state = "";
             }
         },
         filterClosed() {
-            if (this.filter.state === null || this.filter.state === "open") {
+            if (this.filter.state === "" || this.filter.state === "open") {
                 this.filter.state = "closed";
             } else {
-                this.filter.state = null;
+                this.filter.state = "";
             }
         },
-        async setLogin() {
-            await this.$store.dispatch('putFirstLogin')
-            await this.$store.dispatch('fetchUser')
+        filterToSign() {
+            if (!this.filter.toSign && this.filter.state === "closed") {
+                this.filter.state = "";
+                this.filter.toSign = true;
+            } else {
+                this.filter.toSign = !this.filter.toSign
+            }
+        },
+        filterOwn() {
+            if (this.filter.owner === this.user.email) {
+                this.filter.owner = ""
+            } else {
+                this.filter.owner = this.user.email
+            }
         },
         search(keyword) {
             this.filter.search = keyword
             if(keyword.toLowerCase().includes("schildkröte")|| keyword.toLowerCase().includes("maskottchen")) {
                 this.launchMascots();
-            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| keyword.toLowerCase().includes("magenta-liebe")) {
+            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| (keyword.toLowerCase().includes("magenta") && keyword.toLowerCase().includes("liebe"))) {
                 this.launchMagenta();
             }
         },
@@ -208,6 +230,10 @@ export default {
                 ],
             });
             window.setTimeout(() => (this.$confetti.stop()), 5000);
+        },
+        async setLogin() {
+            await this.$store.dispatch('putFirstLogin')
+            await this.$store.dispatch('fetchUser')
         }
     },
     created() {

@@ -163,8 +163,6 @@
     },
     "OverviewPage": {
         "heading": "Übersicht",
-        "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen",
         "toSign1": "Bis zum",
         "toSign2": "signieren",
         "toRead1": "Bis zum",
@@ -176,6 +174,12 @@
         "envSign": "Signieren",
         "search": "Suchen",
         "noDocuments": "Noch keine Dokumente"
+    },
+    "Filter": {
+        "closed": "Abgeschlossen",
+        "open": "Offen",
+        "toSign": "Unterschreiben",
+        "owned": "Eigene"
     },
     "Document": {
         "owner": "Besitzer",

@@ -39,34 +39,55 @@ export const getters = {
         for (i = 0; i < state.envelopes.length; i++) {
             let open = false
             let search = false
+            let toSign = false
             let j
-
             for (j = 0; j < state.envelopes[i].documents.length; j++) {
                 let document = state.envelopes[i].documents[j]
-
                 // Filter for state
                 let env_state = document.state
-                if (!(filters.state === null) && (env_state === "OPEN" || env_state === "READ")) {
+                if ((env_state === "OPEN" || env_state === "READ")) {
                     open = true
                 }
+                //Filter for documents that need to be signed
+                if(document.signatory && !document.signed||document.reader && !document.read){
+                    toSign = true
+                }
                 //Search in document title
-                if(filters.search === null || document.title.toLowerCase().includes(filters.search.toLowerCase())) {
+                if(document.title.toLowerCase().includes(filters.search.toLowerCase())) {
                     search = true
                 }
-
             }
             //Search in Envelope name
-            if(filters.search === null || state.envelopes[i].name.toLowerCase().includes(filters.search.toLowerCase())) {
+            if(state.envelopes[i].name.toLowerCase().includes(filters.search.toLowerCase())) {
                 search = true
             }
 
-            if ((open === true && filters.state === "open") || (open === false && filters.state === "closed") || filters.state === null) {
-                if(search) {
-                    result.push(state.envelopes[i])
+            // Add matching results
+            let matches = true
+            if(!(filters.state === "")){
+                if((filters.state === "open" && !open)||(filters.state === "closed" && open)) {
+                    matches = false
+                }
+            }
+            if(!(filters.owner === "")){
+                if(!(filters.owner === state.envelopes[i].owner.email)) {
+                    matches = false
+                }
+            }
+            if(filters.toSign){
+                if(!toSign) {
+                    matches = false
+                }
+            }
+            if(!(filters.search === "")) {
+                if(!search) {
+                    matches = false
                 }
             }
 
-
+            if(matches) {
+                result.push(state.envelopes[i])
+            }
         }
 
         //sorting
