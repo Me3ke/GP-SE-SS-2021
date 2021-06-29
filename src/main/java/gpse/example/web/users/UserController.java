@@ -5,6 +5,7 @@ import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.*;
+import gpse.example.util.email.trustedDomain.DomainSetterService;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import gpse.example.web.tokens.ResetPasswordToken;
@@ -53,6 +54,7 @@ public class UserController {
     private final MessageService messageService;
     private final EmailTemplateService emailTemplateService;
     private final SMTPServerHelper smtpServerHelper;
+    private final DomainSetterService domainSetterService;
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -67,18 +69,21 @@ public class UserController {
      * @param emailTemplateService      used to find the basic template by name
      * @param resetPasswordTokenService Service for the resetPasswordToken
      * @param smtpServerHelper          smtpserverhelper to send emails
+     * @param domainSetterService       Service to store the domain settings
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final MessageService messageService, final EmailTemplateService emailTemplateService,
                           final ResetPasswordTokenService resetPasswordTokenService,
-                          final SMTPServerHelper smtpServerHelper) {
+                          final SMTPServerHelper smtpServerHelper,
+                          final DomainSetterService domainSetterService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
         this.emailTemplateService = emailTemplateService;
         this.resetPasswordTokenService = resetPasswordTokenService;
         this.smtpServerHelper = smtpServerHelper;
+        this.domainSetterService = domainSetterService;
     }
 
     /**
@@ -155,7 +160,7 @@ public class UserController {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
 
-            if (user.getEmail().matches(".*@techfak\\.de")) {
+            if (user.getEmail().matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain())) {
                 response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {

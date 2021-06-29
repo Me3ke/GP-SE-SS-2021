@@ -3,18 +3,25 @@ package gpse.example;
 
 import gpse.example.domain.corporatedesign.CorporateDesign;
 import gpse.example.domain.corporatedesign.CorporateDesignService;
-import gpse.example.domain.documents.*;
+import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.DocumentCreator;
+import gpse.example.domain.documents.DocumentService;
+import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
-import gpse.example.domain.users.*;
+import gpse.example.domain.users.PersonalData;
+import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserService;
 import gpse.example.util.email.BasicHtmlTemplates;
 import gpse.example.util.email.EmailTemplate;
 import gpse.example.util.email.EmailTemplateService;
 import gpse.example.util.email.TemplateNameNotFoundException;
+import gpse.example.util.email.trustedDomain.DomainSetter;
+import gpse.example.util.email.trustedDomain.DomainSetterService;
 import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,11 +69,13 @@ public class InitializeDatabase implements InitializingBean {
         "ELSA - Signatureinladung/ELSA - signature invitation";
     private static final int THREEEE = 3;
     private static final int POST_CODE = 12312;
+    private static final int STANDARD_PORT = 587;
     private final UserService userService;
     private final DocumentService documentService;
     private final EnvelopeService envelopeService;
     private final CorporateDesignService corporateDesignService;
     private final EmailTemplateService emailTemplateService;
+    private final DomainSetterService domainSetterService;
 
     /**
      * The standard constructor for the class initializing the database.
@@ -76,17 +85,20 @@ public class InitializeDatabase implements InitializingBean {
      * @param envelopeService        used for saving envelope-objects in the database.
      * @param corporateDesignService used for saving the corporate design in the database.
      * @param emailTemplateService   used for saving the emailTemplates in the database.
+     * @param domainSetterService    used for saving the domainSettings in the database
      */
     @Autowired
     public InitializeDatabase(final UserService userService, final DocumentService documentService,
                               final EnvelopeService envelopeService,
                               final CorporateDesignService corporateDesignService,
-                              final EmailTemplateService emailTemplateService) {
+                              final EmailTemplateService emailTemplateService,
+                              final DomainSetterService domainSetterService) {
         this.userService = userService;
         this.documentService = documentService;
         this.envelopeService = envelopeService;
         this.corporateDesignService = corporateDesignService;
         this.emailTemplateService = emailTemplateService;
+        this.domainSetterService = domainSetterService;
     }
 
     @Override
@@ -139,10 +151,10 @@ public class InitializeDatabase implements InitializingBean {
             userService.getUser(ADMINNAME);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
-                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
+                    LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
             final User user = new User(ADMINNAME,
-                "Ruediger",
-                "Spieler", PASSWORD);
+                    "Ruediger",
+                    "Spieler", PASSWORD);
             user.addRole(ROLE_USER);
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
@@ -151,40 +163,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addEmailTemplate(template);
             userService.saveUser(user);
         }
-
-
-
-        /*final List<Long> documentIDs = new ArrayList<>();
-        final List<String> documentPaths = new ArrayList<>();
-        documentIDs.add(1L);
-        documentPaths.add(PROGRAM_PATH);
-        createExampleEnvelope(1, "international congress 2021", documentIDs, documentPaths,
-            DocumentState.OPEN, true, false);
-        documentIDs.clear();
-        documentPaths.clear();
-        documentIDs.add(2L);
-        documentIDs.add(ID_THREE);
-        documentIDs.add(ID_FOUR);
-        documentPaths.add(PROGRAM_PATH);
-        documentPaths.add("Handout_Kundengespraech.pdf");
-        documentPaths.add(PLAN_PATH);
-        createExampleEnvelope(2, "Wichtige änderungen am Essensplan", documentIDs,
-            documentPaths, DocumentState.OPEN, true, true);
-        documentIDs.clear();
-        documentPaths.clear();
-        documentIDs.add(ID_FIVE);
-        documentPaths.add(PLAN_PATH);
-        createExampleEnvelope(ID_THREE, "Pläne für die Weltherrschaft", documentIDs,
-            documentPaths, DocumentState.OPEN, true, true);
-        documentIDs.clear();
-        documentPaths.clear();
-        documentIDs.add(ID_SIX);
-        documentIDs.add(ID_SEVEN);
-        documentPaths.add(PROGRAM_PATH);
-        documentPaths.add("Dropbox.pdf");
-        createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
-            documentPaths, DocumentState.OPEN, true, true);
-         */
+        setDomainSettings();
     }
 
     private void saveEmailTemplate(String template, String subject, String name) {
@@ -285,6 +264,13 @@ public class InitializeDatabase implements InitializingBean {
             }
         }
         return null;
+    }
+
+    private void setDomainSettings() {
+        DomainSetter domainSetter = new DomainSetter("smtp.gmail.com", STANDARD_PORT,
+                "elsabeispiel@gmail.com", "1234elsaSuper", true,
+                true, ".*@techfak\\.de");
+        domainSetterService.saveDomainSettings(domainSetter);
     }
 
 }
