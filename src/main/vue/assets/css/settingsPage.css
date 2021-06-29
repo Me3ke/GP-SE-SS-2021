@@ -28,6 +28,16 @@
     text-align: center;
 }
 
+
+
+.ql-editor {
+    height: 10em !important;
+}
+
+.ql-container .ql-snow{
+    height: 10em !important;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {

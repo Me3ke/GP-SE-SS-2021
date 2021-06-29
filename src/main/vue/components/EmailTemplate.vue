@@ -55,6 +55,12 @@
                         <!-- You can also add your own -->
                         <button class="ql-add-user-button" @click="addUserHtml"
                                 style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
+
+                        <button class="ql-add-owner-button ql-float" @click="addOwnerHtml"
+                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
+
+                        <button class="ql-add-end-date-button ql-float" @click="addEndDateHtml"
+                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
                     </div>
 
                 </quill-editor>
@@ -104,7 +110,11 @@ export default {
             selected: 'Email Templates hier gestalten',
             editorOption: {
                 modules: {
-                    toolbar: '#toolbar'
+                    toolbar: '#toolbar',
+                    handler: {
+
+                    }
+
                 }
 
                /* modules: {
@@ -131,8 +141,24 @@ export default {
             let quill = this.$refs.editor.quill;
             quill.focus();
             const cursorPosition = quill.getSelection(true)
-            console.log(cursorPosition)
-            quill.insertText(cursorPosition,"<FirstNameReceiver> <LastNameReceiver>")
+            quill.insertText(cursorPosition,"[FirstNameSignatory] [LastNameSignatory]")
+        },
+
+        addOwnerHtml() {
+            let quill = this.$refs.editor.quill;
+            quill.focus();
+            const cursorPosition = quill.getSelection(true);
+            quill.insertText(cursorPosition, "[FirstNameOwner] [LastNameOwner]")
+        },
+
+        addEndDateHtml() {
+            let quill = this.$refs.editor.quill;
+            quill.focus();
+            const cursorPosition = quill.getSelection(true);
+            quill.insertText(cursorPosition, "[EndDate]")
+
+            console.log(this.selected)
+
         }
     }
 }

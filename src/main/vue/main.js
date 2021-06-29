@@ -16,7 +16,6 @@ import "@/main/vue/assets/css/global.css";
 import "@/main/vue/assets/css/quill.css"
 import 'sweetalert2/dist/sweetalert2.min.css';
 import Vuelidate from "vuelidate";
-import VueQuill from 'vue-quill'
 
 
 // Temp use
@@ -38,7 +37,6 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueSweetalert2);
 Vue.use(Vuelidate);
-Vue.use(VueQuill)
 
 Vue.component('BaseHeading', BaseHeading)
 
