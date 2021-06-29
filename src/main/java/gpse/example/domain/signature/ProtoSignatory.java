@@ -34,7 +34,7 @@ public class ProtoSignatory {
         }
     }
 
-    public int getType () {
+    public int getType() {
         return type;
     }
 

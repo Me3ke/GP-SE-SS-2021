@@ -32,12 +32,12 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
-        List<Signatory> signatories1 = document.getSignatories();
+        List<Signatory> givenSignatories = document.getSignatories();
 
         this.signatories = new ArrayList<>();
 
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
-        for (final Signatory currentSignatory : signatories1) {
+        for (final Signatory currentSignatory : givenSignatories) {
             if (currentSignatory.getEmail().equals(currentUser)
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {

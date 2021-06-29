@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +114,6 @@ public class DocumentController {
                 documentService.addDocument(document);
 
             }
-            System.out.println(new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID).getSignatories());
 
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
@@ -215,8 +213,6 @@ public class DocumentController {
                                                         final @PathVariable(DOCUMENT_ID) long documentID)
         throws UploadFileException {
         try {
-
-            System.out.println(documentPutRequest.getSignatories());
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
@@ -391,7 +387,7 @@ public class DocumentController {
         return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 
-    /*
+    /**
      * Put request for changing documentsettings.
      *
      * @param documentID          id of the document that should be changed

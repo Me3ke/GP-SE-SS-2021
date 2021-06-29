@@ -43,7 +43,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion" class="mini-list">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion" class="mini-list">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                 </b-list-group-item>
 
@@ -102,7 +102,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
@@ -163,7 +163,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner &&  document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
