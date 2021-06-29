@@ -1,5 +1,6 @@
 package gpse.example.domain.signature;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 
 /**
@@ -24,12 +25,17 @@ public class ProtoSignatory {
      * This method returns the SignatureType of the protoUser.
      * @return the type of the signature
      */
-    public SignatureType getType() {
+    @JsonIgnore
+    public SignatureType getSignatureType() {
         try {
             return SignatureType.fromInteger(type);
         } catch (SignatureTypeFromIntegerException e) {
             return SignatureType.NO_SIGNATURE;
         }
+    }
+
+    public int getType () {
+        return type;
     }
 
     public void setEmail(final String email) {

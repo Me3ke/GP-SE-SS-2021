@@ -81,7 +81,7 @@ public class DocumentCreator {
                                 final DocumentService documentService) {
         if (signatories != null) {
             for (final ProtoSignatory signatory : signatories) {
-                document.addSignatory(signatory.getEmail(), signatory.getType());
+                document.addSignatory(signatory.getEmail(), signatory.getSignatureType());
             }
             documentService.addDocument(document);
         }

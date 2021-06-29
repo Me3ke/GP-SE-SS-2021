@@ -77,6 +77,7 @@ export default {
     },
 
     mounted() {
+
         this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,
             docId: this.document.id,

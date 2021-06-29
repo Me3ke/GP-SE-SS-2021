@@ -291,6 +291,7 @@ export default {
         },
 
         updateSignatories(newSignatories) {
+            console.log(this.actualDoc)
            this.actualDoc.signatories = newSignatories[0]
         },
 
@@ -314,7 +315,7 @@ export default {
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
 
             this.actualDoc.data =  await this.asyncHandleFunction()
-
+            console.log(this.actualDoc)
 
             // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
@@ -334,11 +335,12 @@ export default {
                 let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
                 this.showAlert = !this.showAlert
 
+                console.log(newUrl)
                 // will route the user to the newUploaded document page (with the new ID)
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file
-                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
-                })
+                })*/
             }
         },
 

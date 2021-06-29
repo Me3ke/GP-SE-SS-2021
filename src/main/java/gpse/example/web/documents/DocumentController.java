@@ -115,6 +115,8 @@ public class DocumentController {
                 documentService.addDocument(document);
 
             }
+            System.out.println(new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID).getSignatories());
+
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
             throw new DocumentNotFoundException();
@@ -213,6 +215,8 @@ public class DocumentController {
                                                         final @PathVariable(DOCUMENT_ID) long documentID)
         throws UploadFileException {
         try {
+
+            System.out.println(documentPutRequest.getSignatories());
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
