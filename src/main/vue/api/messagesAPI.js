@@ -29,7 +29,7 @@ export default {
             method: "put",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/messages/settingsChange',
             data: {
-            //    id: settings[0],
+                id: settings.id,
                 toDo: settings.toDo,
                 sign: settings.sign,
                 read: settings.read,

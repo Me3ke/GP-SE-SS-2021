@@ -38,6 +38,7 @@ public class MessageController {
 
     /**
      * Request for getting all messages for the user.
+     *
      * @param userID the email of the current user.
      * @return a list of all messages.
      */
@@ -67,6 +68,7 @@ public class MessageController {
 
     /**
      * Request for delete a message from Database.
+     *
      * @param messageID ID of message that should be deleted
      * @return A response containing statuscode and a message
      */
@@ -85,13 +87,14 @@ public class MessageController {
 
     /**
      * Request for setting a message as "watched".
-     * @param userID the email of the current user.
+     *
+     * @param userID    the email of the current user.
      * @param messageID the id of the message to be read.
      * @return A response containing the status code.
      */
     @PutMapping("/user/{userid}/messages/{messageID}")
     public JSONResponseObject read(@PathVariable(USER_ID) final String userID,
-                                      @PathVariable("messageID") final long messageID) {
+                                   @PathVariable("messageID") final long messageID) {
         final JSONResponseObject response = new JSONResponseObject();
         final Message message;
         if (messageService.getMessage(messageID).isPresent()) {
@@ -113,7 +116,8 @@ public class MessageController {
 
     /**
      * Request for a changing the settings for messages.
-     * @param userID the email of the current user.
+     *
+     * @param userID                   the email of the current user.
      * @param messageSettingsContainer the request body which contains booleans for
      *                                 all categories to be send.
      * @return A response containing the status code.
@@ -124,8 +128,11 @@ public class MessageController {
         final JSONResponseObject response = new JSONResponseObject();
         try {
             final User user = userService.getUser(userID);
-            user.setMessageSettings(messageSettingsContainer);
-            userService.saveUser(user);
+            user.getMessageSettings().setNewVersion(messageSettingsContainer.isNewVersion());
+            user.getMessageSettings().setProgress(messageSettingsContainer.isProgress());
+            user.getMessageSettings().setRead(messageSettingsContainer.isRead());
+            user.getMessageSettings().setSign(messageSettingsContainer.isSign());
+            user.getMessageSettings().setToDo(messageSettingsContainer.isToDo());
             response.setStatus(STATUS_CODE_OKAY);
             return response;
         } catch (UsernameNotFoundException e) {

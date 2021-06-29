@@ -44,6 +44,7 @@ export default {
     async created() {
         await loadSheet()
         await this.$store.dispatch('theme/getLogos')
+        await this.$store.dispatch('messages/fetchMessages')
     },
     mounted() {
         // reacts when screen size changes

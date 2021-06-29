@@ -1,12 +1,15 @@
 package gpse.example.web.messages;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * A class for a put request to change settings regarding the messages.
  */
 @Entity
-public class MessageSettingsContainer {
+public class MessageSettingsContainer implements Serializable {
+
+    private static final long serialVersionUID = 7226705300676391165L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

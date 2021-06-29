@@ -1,6 +1,7 @@
 package gpse.example.util.email;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * Class of EmailTemplates that could be defined by user.
  */
 @Entity
-public class EmailTemplate {
+public class EmailTemplate implements Serializable {
 
     /**
      * close paramSpace.
@@ -21,6 +22,8 @@ public class EmailTemplate {
      * open paramSpace.
      */
     public static final String OPEN = "[";
+
+    private static final long serialVersionUID = -4794520836797714540L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +44,11 @@ public class EmailTemplate {
 
     /**
      * Constructor of emailTemplate.
+     *
      * @param template String containing the string with the html message.
-     * @param subject the subject of emails with this template
-     * @param name name of template so user can name his/her templates
-     * @param system boolean is true when the template is a systemIntern one
+     * @param subject  the subject of emails with this template
+     * @param name     name of template so user can name his/her templates
+     * @param system   boolean is true when the template is a systemIntern one
      */
     public EmailTemplate(String template, String subject, String name, boolean system) {
         this.htmlTemplateBody = template;
@@ -59,6 +63,7 @@ public class EmailTemplate {
 
     /**
      * Computes the params that are used in template.
+     *
      * @return an arraylist with the params
      */
     public List<String> neededParams() {
@@ -77,17 +82,15 @@ public class EmailTemplate {
 
     /**
      * change needed params in Template with the specified Data.
+     *
      * @param dataContainer contains the data
      * @return the filled out templatebody missing values are replaced with nothing
      * @throws InvocationTargetException if invocation goes wrong
-     * @throws NoSuchMethodException if there is a wrong placeholder so the corresponding getter is not found
-     *                                  in dataContainer.
-     * @throws IllegalAccessException if invocation of the called method is illegal
      */
     public String filledTemplate(TemplateDataContainer dataContainer)
-            throws InvocationTargetException {
+        throws InvocationTargetException {
         String filledTemplate = this.htmlTemplateBody;
-        for (String placeholder:neededParams()) {
+        for (String placeholder : neededParams()) {
             try {
                 if (dataOf(placeholder, dataContainer) != null) {
                     filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
@@ -104,7 +107,7 @@ public class EmailTemplate {
 
 
     private String dataOf(String searchedData, TemplateDataContainer dataContainer)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
 
         return (String) method.invoke(dataContainer);
