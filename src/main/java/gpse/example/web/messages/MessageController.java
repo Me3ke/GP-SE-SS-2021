@@ -70,7 +70,7 @@ public class MessageController {
      * @param messageID ID of message that should be deleted
      * @return A response containing statuscode and a message
      */
-    @GetMapping("/message/{messageID}/delete")
+    @PutMapping("/message/{messageID}/delete")
     public JSONResponseObject deleteMessage(@PathVariable("messageID") final long messageID) {
         final JSONResponseObject response = new JSONResponseObject();
         messageService.removeMessage(messageID);

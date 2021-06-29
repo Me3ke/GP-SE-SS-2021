@@ -22,13 +22,25 @@ export const mutations = {
     CHANGE_SELECTED_MSG(state, msg) {
         state.selectedMsg = msg
     },
+    SET_MESSAGES_CONFIG(state, config) {
+        state.messagesConfig = config
+    },
     /* Errors */
     SET_ERROR_GET_MESSAGES(state, error) {
         state.errorGetMessages = error
     },
+    SET_ERROR_MESSAGES_CONFIG(state, error) {
+        state.errorGetMessagesConfig = error
+    },
     /* Responses */
     SET_RES_PUT_WATCHED(state, res) {
         state.resPutMessageWatched = res
+    },
+    SET_RES_PUT_MESSAGES_CONFIG(state, res) {
+        state.resPutMessagesConfig = res
+    },
+    SET_RES_DELETE_MESSAGE(state, res) {
+        state.resDeleteMessage = res
     }
 }
 
@@ -42,6 +54,21 @@ export const actions = {
             commit('SET_ERROR_GET_MESSAGES', error)
         })
     },
+    fetchMessagesConfig({commit}) {
+        return messagesAPI.getMessagesConfig().then(response => {
+            commit('SET_MESSAGES_CONFIG', response.data)
+            commit('SET_ERROR_MESSAGES_CONFIG', {})
+        }).catch(error => {
+            commit('SET_ERROR_MESSAGES_CONFIG', error)
+        })
+    },
+    patchChangeMessageSettings({commit}, settings) {
+        return messagesAPI.putMessagesConfig(settings).then(response => {
+            commit('SET_RES_PUT_MESSAGES_CONFIG', response.data)
+        }).catch(error => {
+            commit('SET_RES_PUT_MESSAGES_CONFIG', error)
+        })
+    },
     patchChangeSelectedMsg({state, commit}, msg) {
         if (state.selectedMsg !== msg) {
             commit('CHANGE_SELECTED_MSG', msg)
@@ -49,13 +76,19 @@ export const actions = {
     },
     patchChangeWatchedStatus({state, commit}) {
         if (!_.isEmpty(state.selectedMsg) && state.selectedMsg.watched !== true) {
-            messagesAPI.updateWatched(state.selectedMsg.messageID).then(response => {
+            return messagesAPI.updateWatched(state.selectedMsg.messageID).then(response => {
                 commit('SET_RES_PUT_WATCHED', response.data)
             }).catch(error => {
                 commit('SET_RES_PUT_WATCHED', error)
             })
-
         }
+    },
+    patchDeleteMessage({state, commit}) {
+        return messagesAPI.deleteMessage(state.selectedMsg.messageID).then(response => {
+            commit('SET_RES_DELETE_MESSAGE', response.data)
+        }).catch(error => {
+            commit('SET_RES_DELETE_MESSAGE', error)
+        })
     }
 }
 
@@ -75,5 +108,11 @@ export const getters = {
     },
     isSelected: (state) => (id) => {
         return state.selectedMsg.messageID === id
+    },
+    getConfig: (state) => {
+        return state.messagesConfig
+    },
+    getDeleteResponse: (state) => {
+        return state.resDeleteMessage
     }
 }

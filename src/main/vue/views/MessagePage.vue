@@ -24,7 +24,10 @@
                                            style="height: 75vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 75vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -52,7 +55,10 @@
                                            style="height: 82vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 82vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh;">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -80,7 +86,10 @@
                                            style="height: 75vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 75vh;  background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh;">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh;">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -108,7 +117,10 @@
                                            style="height: 60vh;"></MessageContentBox>
                         <b-container v-else fluid class="card"
                                      style="padding:0.5vh; height: 60vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
-                            <h4 style="margin-top: 15vh">
+                            <h4 v-if="messages.length === 0" style="margin-top: 15vh">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
+                            <h4 v-else style="margin-top: 15vh">
                                 {{ $t('MessagePage.nonSelected') }}
                             </h4>
                         </b-container>
@@ -123,6 +135,9 @@
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
                         <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
@@ -146,6 +161,9 @@
                 <b-row cols="1">
                     <b-col style="margin-top:2.5vh;">
                         <div class="overflow-auto" style="height: 60vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
@@ -169,6 +187,9 @@
                 <b-row key="msgList" cols="1">
                     <b-col style="margin-top:1.5vh;">
                         <div class="overflow-auto" style="height: 75vh" v-if="!isSelected()">
+                            <h4 v-if="messages.length === 0">
+                                {{ $t('MessagePage.noMsgs') }}
+                            </h4>
                             <div v-for="msg in messages" :key="msg.id"
                                  @click="selectMsg(msg)"
                                  style="position: static; margin-top: 1vh; margin-left: 0.5vw; margin-right: 6vw">
@@ -234,6 +255,7 @@ export default {
     padding-top: 0.7vh;
     padding-bottom: 0.7vh;
     border-radius: 3.5px;
+    cursor: pointer;
 }
 
 /* Settings for differently sized screens */

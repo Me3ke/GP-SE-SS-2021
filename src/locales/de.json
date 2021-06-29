@@ -188,7 +188,12 @@
         "sentBy": "Von",
         "sentOn": "Am",
         "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
-        "toAll": "Zurück zu allen Benachrichtigungen"
+        "toAll": "Zurück zu allen Benachrichtigungen",
+        "sureDelete": "Für immer löschen?",
+        "delete": "Löschen",
+        "cancel": "Abbruch",
+        "deleteError": "Löschen fehlgeschlagen",
+        "noMsgs": "Keine Benachrichtigungen"
     },
     "LoginButton": {
         "content": "Anmelden"
@@ -257,16 +262,16 @@
             "settings": "Benachrichtigungs-Einstellungen",
             "send": "Speichern",
             "toDo": {
-                "text": "Signier-/Gegenlesen-Anfragen",
-                "exp": "Erhalten von Website-Benachrichtungen über neue Anfragen zum Signieren/Gegenlesen von Dokumenten/Dokumentenverbunden."
+                "text": "Admin Benachrichtigungen",
+                "exp": "Erhalten von Website-Benachrichtungen über Admintätigkeitenbezogene Nachrichten."
             },
             "sign": {
-                "text": "Signier-Erninnerungen",
-                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
+                "text": "Signier-Anfragen/Erninnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Anfragen/Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
             },
             "read": {
-                "text": "Gegenlesen-Erinnerungen",
-                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
+                "text": "Gegenlesen-Anfragen/Erinnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Anfragen/Erinnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
             },
             "progress": {
                 "text": "Dokumenten-Fortschritt",
@@ -275,10 +280,6 @@
             "newVersion": {
                 "text": "Dokumenten-Aktualisierung",
                 "exp": "Erhalten von Website-Benachrichtungen über die Aktualisierung von Dokumenten."
-            },
-            "protocol": {
-                "text": "Protokoll-Verfügbarkeit",
-                "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
         },
         "DocumentSettings": {
