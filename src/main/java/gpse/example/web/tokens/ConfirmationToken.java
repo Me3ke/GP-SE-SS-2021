@@ -38,9 +38,9 @@ public class ConfirmationToken {
         this.token = UUID.randomUUID().toString();
     }
 
-    public ConfirmationToken() {
+    /*public ConfirmationToken() {
 
-    }
+    }*/
 
     public Long getId() {
         return id;
