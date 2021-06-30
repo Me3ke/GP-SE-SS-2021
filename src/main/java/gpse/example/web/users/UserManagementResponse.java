@@ -2,11 +2,14 @@ package gpse.example.web.users;
 
 import gpse.example.domain.users.User;
 
+import java.util.List;
+
 /**
  * the class that represents a single user for userManagement.
  */
 public class UserManagementResponse extends UserResponseObject {
 
+    private List<String> roles;
     private boolean adminValidated;
     private boolean emailConfirmed;
 
@@ -19,6 +22,7 @@ public class UserManagementResponse extends UserResponseObject {
         super(user);
         this.adminValidated = user.isAccountNonLocked();
         this.emailConfirmed = user.isEnabled();
+        this.roles = user.getRoles();
     }
 
     public boolean isAdminValidated() {
@@ -35,5 +39,13 @@ public class UserManagementResponse extends UserResponseObject {
 
     public void setEmailConfirmed(boolean emailConfirmed) {
         this.emailConfirmed = emailConfirmed;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
