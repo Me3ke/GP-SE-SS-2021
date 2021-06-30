@@ -57,6 +57,7 @@ public class EmailTemplate implements Serializable {
         this.system = system;
     }
 
+
     public EmailTemplate() {
 
     }

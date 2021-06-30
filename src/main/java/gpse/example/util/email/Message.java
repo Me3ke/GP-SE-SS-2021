@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Message {
 
-    private static final String UTF_EIGHT = "UTF-8";
+    private static final String UTF_EIGHT = "utf-8";
     private static final String SYSTEM = "System";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
