@@ -115,8 +115,8 @@ public class InitializeDatabase implements InitializingBean {
         saveEmailTemplate(BasicHtmlTemplates.PROCESS_FINISHED_TEMPLATE,
             "ELSA - Signaturprozess Abgeschlossen/ELSA - signature process finished",
             "ProcessFinishedTemplate");
-        EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
-            ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
+        final EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates
+            .SIGNATURE_INVITATION_TEMPLATE, ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.ADVANCED_GUEST_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
 
@@ -188,16 +188,17 @@ public class InitializeDatabase implements InitializingBean {
          */
     }
 
-    private void saveEmailTemplate(String template, String subject, String name) {
+    private void saveEmailTemplate(final String template, final String subject, final String name) {
         try {
             emailTemplateService.findSystemTemplateByName(name);
         } catch (TemplateNameNotFoundException tne) {
-            EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
+            final EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
             emailTemplateService.saveEmailTemplate(emailTemplate);
         }
     }
 
-    private EmailTemplate saveEmailTemplateWithReturnValue(String template, String subject, String name) {
+    private EmailTemplate saveEmailTemplateWithReturnValue(final String template, final String subject,
+                                                           final String name) {
         try {
             return emailTemplateService.findSystemTemplateByName(name);
         } catch (TemplateNameNotFoundException tne) {

@@ -26,7 +26,7 @@ public class EmailController {
 
     @GetMapping("/user/{userId}/templates")
     public List<EmailTemplate> getUserTemplates(@PathVariable("userId") final String userId) {
-        User user = userService.getUser(userId);
+        final User user = userService.getUser(userId);
         return user.getEmailTemplates();
     }
 
@@ -38,7 +38,7 @@ public class EmailController {
     @PostMapping("/user/{userId}/templates")
     public void setEmailTemplate(@PathVariable("userId") final String userId,
                                  @RequestParam("template") final String template) {
-        User user = userService.getUser(userId);
+        final User user = userService.getUser(userId);
         user.addEmailTemplate(new EmailTemplate(template, "ELSA - Signatureinladung/ELSA - signature invitation",
             "name", false));
         userService.saveUser(user);
@@ -52,8 +52,8 @@ public class EmailController {
     @DeleteMapping("/user/{userId}/templates/{templateId}")
     public void deleteEmailTemplate(@PathVariable("userId") final String userId,
                                     @PathVariable("templateId") final long templateId) {
-        User user = userService.getUser(userId);
-        for (EmailTemplate temp:user.getEmailTemplates()) {
+        final User user = userService.getUser(userId);
+        for (final EmailTemplate temp:user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId && !temp.isSystem()) {
                 user.getEmailTemplates().remove(temp);
                 emailTemplateService.deleteTemplate(templateId);
@@ -73,8 +73,8 @@ public class EmailController {
     public void updateEmailTemplate(@PathVariable("userId") final String userId,
                                     @PathVariable("templateId") final long templateId,
                                     @RequestParam("reworkedTemplate") final String reworkedTemplate) {
-        User user = userService.getUser(userId);
-        for (EmailTemplate temp:user.getEmailTemplates()) {
+        final User user = userService.getUser(userId);
+        for (final EmailTemplate temp:user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId) {
                 temp.setHtmlTemplateBody(reworkedTemplate);
                 break;

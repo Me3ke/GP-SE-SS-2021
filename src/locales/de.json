@@ -511,6 +511,18 @@
             "default": "Standard"
         }
     },
+    "ProgressBar": {
+        "envelope": {
+            "notFinished": "Nicht fertiggestellte Dokumente:",
+            "finished": "Schon fertiggestellte Dokumente:"
+        },
+        "document": {
+            "needToSign": "Muss noch unterschrieben werden von:",
+            "alreadySigned": "Schon unterschrieben von:",
+            "needToRead": "Muss gelesen werden von:",
+            "alreadyRead": "Schon gelesen von:"
+        }
+    },
     "CommentsPage": {
         "title": "Kommentare",
         "comment": "Kommentar",

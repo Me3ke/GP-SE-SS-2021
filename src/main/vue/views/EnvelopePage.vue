@@ -11,10 +11,12 @@
                 <div class="overflow-auto" style="height: 83.25vh">
                     <div v-for="document in this.envelope(envId).documents" :key="document.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
-                        <DocumentCard :document="document" :envelopeId="envId">
-                        </DocumentCard>
+
+                        <!-- Default -->
+                        <DocumentCard :document="document" :envelopeId="envId" :show-progress="true"></DocumentCard>
                     </div>
                 </div>
+
             </div>
         </div>
         <Footer></Footer>
@@ -32,15 +34,24 @@ export default {
     props: {
         envId: [Number, String]
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-    },
+
     components: {Footer, Header, DocumentCard},
+
+
     computed: {
         ...mapGetters({
             envelope: 'envelopes/getEnvelope',
         })
+    },
+
+     async created() {
+         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+     },
+     beforeDestroy() {
+        this.$store.dispatch('document/resetState')
     }
+
+
 }
 </script>
 

@@ -116,8 +116,6 @@ export default {
     computed: {
         ...mapGetters({
             newDocumentId: 'document/getNewDocumentId',
-            newDocumentError: 'document/getNewDocumentError',
-
             document: 'document/getDocumentInfo',
             getError: 'document/getErrorGetDocumentInfo'
         }),

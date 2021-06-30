@@ -188,10 +188,10 @@ public class SignatureManagement {
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
-                User owner = userService.getUser(savedDocument.getOwner());
+                final User owner = userService.getUser(savedDocument.getOwner());
 
-                EmailTemplate template = document.getProcessEmailTemplate();
-                TemplateDataContainer container = new TemplateDataContainer();
+                final EmailTemplate template = document.getProcessEmailTemplate();
+                final TemplateDataContainer container = new TemplateDataContainer();
                 container.setFirstNameReciever(
                     userService.getUser(savedDocument.getCurrentSignatory().getEmail()).getFirstname());
                 container.setLastNameReciever(

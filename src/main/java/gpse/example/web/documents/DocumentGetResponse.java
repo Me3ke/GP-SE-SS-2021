@@ -1,11 +1,13 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.documents.Document;
+import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
 
     private final SignatureType signatureType;
     private final byte[] data;
-    private final List<Signatory> signatories;
+    private final List<ProtoSignatory> signatories;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -30,14 +32,21 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
-        this.signatories = document.getSignatories();
+        final List<Signatory> givenSignatories = document.getSignatories();
+
+        this.signatories = new ArrayList<>();
+
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
-        for (final Signatory currentSignatory : signatories) {
+        for (final Signatory currentSignatory : givenSignatories) {
             if (currentSignatory.getEmail().equals(currentUser)
                 && (currentSignatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
                 || currentSignatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
                 signatureType = currentSignatory.getSignatureType();
             }
+
+            signatories.add(new ProtoSignatory(currentSignatory.getEmail(), currentSignatory.getSignatureType()
+                .toInteger()));
+
         }
         this.signatureType = signatureType;
     }
@@ -50,7 +59,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
         return Arrays.copyOf(data, data.length);
     }
 
-    public List<Signatory> getSignatories() {
+    public List<ProtoSignatory> getSignatories() {
         return signatories;
     }
 }

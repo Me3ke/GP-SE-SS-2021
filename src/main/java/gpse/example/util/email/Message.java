@@ -56,11 +56,12 @@ public class Message {
      * @throws MessagingException thrown by internet address.parse
      * @throws MessageGenerationException thrown if relevant data is missing
      */
-    public MimeMessage generateHtmlMessage(MimeMessage message) throws MessagingException, MessageGenerationException {
+    public MimeMessage generateHtmlMessage(final MimeMessage message) throws MessagingException,
+            MessageGenerationException {
 
         message.setSubject(subject, UTF_EIGHT);
 
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_EIGHT);
+        final MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_EIGHT);
 
         if (sendingUser == null) {
             helper.setFrom(SYSTEM);
@@ -83,7 +84,7 @@ public class Message {
      * @param dataContainer the data needed to fill placeholder
      * @throws InvocationTargetException thrown by filled template
      */
-    public void setupByTemplate(EmailTemplate template, TemplateDataContainer dataContainer)
+    public void setupByTemplate(final EmailTemplate template, final TemplateDataContainer dataContainer)
             throws InvocationTargetException {
         this.subject = template.getSubject();
         this.text = template.filledTemplate(dataContainer);
@@ -151,7 +152,7 @@ public class Message {
         return watched;
     }
 
-    public void setWatched(boolean watched) {
+    public void setWatched(final boolean watched) {
         this.watched = watched;
     }
 }

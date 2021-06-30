@@ -20,7 +20,7 @@ public class SMTPServerHelper {
     private final MessageServiceImpl messageService;
 
 
-    public SMTPServerHelper(final JavaMailSender mailSender, MessageServiceImpl messageService) {
+    public SMTPServerHelper(final JavaMailSender mailSender, final MessageServiceImpl messageService) {
         this.mailSender = mailSender;
         this.messageService = messageService;
     }
@@ -39,7 +39,7 @@ public class SMTPServerHelper {
                                    final TemplateDataContainer dataContainer, final Category category,
                                    final User sendingUser)
         throws MessageGenerationException {
-        Message message = new Message();
+        final Message message = new Message();
         try {
             message.setCategory(category);
             message.setRecievingUserMail(recieverMail);

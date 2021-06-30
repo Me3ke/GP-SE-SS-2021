@@ -3,10 +3,14 @@ import documentAPI from "@/main/vue/api/documentAPI";
 export const namespaced = true
 
 export const state = {
+
     documentInfo: {},
     errorGetDocumentInfo: {},
     documentSeen: {},
     errorDocumentSeen: {},
+    errorGetDocument: {},
+    errorGetDocumentProgress: {},
+    documentProgressArray: [],
     protocol: {},
     errorGetProtocol: {},
     newVersionIds: {},
@@ -17,9 +21,15 @@ export const state = {
     errorSimpleSignResponse: {},
     advancedSignResponse: {},
     errorAdvancedSignResponse: {}
+
 }
 
 export const mutations = {
+    // will sets the state to []
+    RESET_STATE_DOCUMENT_PROGRESS_ARRAY(state) {
+        state.documentProgressArray = []
+    },
+
     // sets given document as state
     SET_DOCUMENT_INFO(state, doc) {
         state.documentInfo = doc
@@ -47,6 +57,17 @@ export const mutations = {
     EDIT_DOCUMENT(state, doc) {
         state.document = doc
     },
+    SET_DOCUMENT_PROGRESS(state, progress) {
+        state.documentProgressArray.push(progress)
+    },
+    SET_ERROR_DOCUMENT_PROGRESS(state, error) {
+        state.errorGetDocumentProgress = error
+    },
+    // sets error of getDocument request
+    SET_ERROR_GET_DOCUMENT(state, error) {
+        state.errorGetDocument = error
+    },
+
     SET_DOCUMENT_SEEN(state, seen) {
         state.documentSeen = seen
     },
@@ -79,6 +100,12 @@ export const mutations = {
 }
 
 export const actions = {
+
+    // for resetting the state DOCUMENT_PROGRESS_ARRAY
+    resetState({commit}) {
+        commit('RESET_STATE_DOCUMENT_PROGRESS_ARRAY')
+    },
+
     // makes axios call to get document, either sets document (success) or error (error)
     fetchDocumentInfo({commit}, {envId, docId}) {
         return documentAPI.getDocument(envId, docId).then(response => {
@@ -142,7 +169,57 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_ADVANCED_SIGN_DOCUMENT', error)
         })
-    }
+    },
+
+    async documentProgress({commit, state}, {envId, docId}) {
+        let doBreak = false
+        for(let i = 0; state.documentProgressArray.length; i++ ){
+            if (state.documentProgressArray[i].docId === docId) {
+                doBreak = true
+                break
+            }
+        }
+        if(!doBreak) {
+            await documentAPI.getDocumentProgress(envId, docId).then((response) => {
+                let data = response.data
+                let progress = {docId, data}
+                commit('SET_DOCUMENT_PROGRESS', progress)
+                commit('SET_ERROR_DOCUMENT_PROGRESS', {})
+            }).catch(error => {
+                console.error(error)
+                commit('SET_ERROR_DOCUMENT_PROGRESS', error)
+            })
+        }
+    },
+
+    progressOfAllDocumentsInEnv({commit, state}, {envelope}) {
+        let doBreak = false;
+        let promises = []
+
+        for (let i = 0; i < envelope.documents.length; i++) {
+                for (let j = 0; j < state.documentProgressArray.length; j++) {
+                    if (state.documentProgressArray[j].docId === envelope.documents[i].id) {
+                        doBreak = true
+                        break
+                    }
+                }
+                if (!doBreak) {
+
+                   promises.push(documentAPI.getDocumentProgress(envelope.id, envelope.documents[i].id).then((response) => {
+                        let data = response.data
+                        let docId = envelope.documents[i].id
+                        let progress = {docId, data}
+                        commit('SET_DOCUMENT_PROGRESS', progress)
+
+                    }).catch(err => {
+                        console.error(err)
+                        commit('SET_ERROR_DOCUMENT_PROGRESS', err)
+                    }))
+                }
+                doBreak = false
+            }
+            return Promise.all(promises)
+        }
 }
 
 export const getters = {
@@ -155,6 +232,41 @@ export const getters = {
 
     getEditDocumentStatus: (state) => {
         return state.newVersionIds.status
+    },
+    // for calculating all progress of all documents in env
+    getDocumentProgressArray: (state) => {
+        return state.documentProgressArray
+    },
+
+    getDocumentProgressArrayById: (state) => (id) => {
+        let documentProgress
+        for (let i = 0; i < state.documentProgressArray.length; i++) {
+            if (state.documentProgressArray[i].docId === id) {
+                documentProgress = state.documentProgressArray[i]
+            }
+        }
+        return documentProgress
+    },
+
+
+    getDocumentProgressArrayByEnvelope: (state) => (documents) => {
+        let envelopeProgress = []
+        for (let i = 0; i < state.documentProgressArray.length; i++) {
+            for (let j = 0; j < documents.length; j++) {
+                if (state.documentProgressArray[i].docId === documents[j].id) {
+                    envelopeProgress.push(state.documentProgressArray[i])
+                    break
+                }
+            }
+        }
+        return envelopeProgress
+    },
+
+    getErrorGetDocumentProgress: (state) => {
+        return state.errorGetDocumentProgress
+    },
+    getProtocol: (state) => {
+        return state.protocol
     },
     getSeen: (state) => {
         return state.documentSeen

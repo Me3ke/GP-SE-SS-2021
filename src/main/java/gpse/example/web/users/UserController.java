@@ -107,7 +107,7 @@ public class UserController {
                     signUpUser.getLastname(), signUpUser.getPassword());
                 user.addRole(ROLE_USER);
                 final PersonalData personalData = signUpUser.generatePersonalData();
-                EmailTemplate standardTemplate =
+                final EmailTemplate standardTemplate =
                     emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
                 EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
                     standardTemplate.getSubject(), standardTemplate.getName(), false);
@@ -331,16 +331,16 @@ public class UserController {
     @PutMapping("/user/password/change")
     public JSONResponseObject changePassword(@RequestParam("password") final String password,
                                              @RequestHeader final String token) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
 
-        SecurityConstants securityConstants = new SecurityConstants();
-        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        Jws<Claims> parsedToken = Jwts.parserBuilder()
+        final SecurityConstants securityConstants = new SecurityConstants();
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
             .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
 
         try {
-            User user = userService.getUser(parsedToken.getBody().getSubject());
+            final User user = userService.getUser(parsedToken.getBody().getSubject());
             if (user.getRoles().contains(ROLE_USER)) {
                 user.setPassword(passwordEncoder.encode(password));
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
@@ -367,14 +367,14 @@ public class UserController {
      */
     @GetMapping("/user/{userId}/password/reset")
     public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
-            User user = userService.getUser(userId);
-            ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
-            ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
+            final User user = userService.getUser(userId);
+            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
+            final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
             try {
-                TemplateDataContainer emailContainer = new TemplateDataContainer();
-                EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
+                final TemplateDataContainer emailContainer = new TemplateDataContainer();
+                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
                 emailContainer.setFirstNameReciever(user.getFirstname());
                 emailContainer.setLastNameReciever(user.getLastname());
                 emailContainer.setLink("http://localhost:8080/de/login/reset/" + savedToken.getToken());
@@ -407,11 +407,11 @@ public class UserController {
     public JSONResponseObject resetPassword(@RequestParam("password") final String password,
                                             @RequestParam("token") final String token,
                                             @RequestHeader final String jwtToken) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
 
-        SecurityConstants securityConstants = new SecurityConstants();
-        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        Jws<Claims> parsedToken = Jwts.parserBuilder()
+        final SecurityConstants securityConstants = new SecurityConstants();
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
             .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
 
@@ -419,7 +419,7 @@ public class UserController {
             = resetPasswordTokenService.findResetPasswordTokenByToken(token);
 
         try {
-            User user = userService.getUser(parsedToken.getBody().getSubject());
+            final User user = userService.getUser(parsedToken.getBody().getSubject());
 
             if (optionalResetPasswordToken.isEmpty()) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
@@ -427,7 +427,7 @@ public class UserController {
             } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
                 return jsonResponseObject;
-            } else if (optionalResetPasswordToken.get().getUser().equals(user)) {
+            } else if (optionalResetPasswordToken.get().getUserId().equals(user.getEmail())) {
                 user.setPassword(passwordEncoder.encode(password));
                 userService.saveUser(user);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);

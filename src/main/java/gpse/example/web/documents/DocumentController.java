@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +118,7 @@ public class DocumentController {
                 documentService.addDocument(document);
 
             }
+
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
             throw new DocumentNotFoundException();
@@ -251,14 +253,14 @@ public class DocumentController {
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink("LinkToDocumentView");
         if (document.isOrderRelevant()) {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 }
             }
         } else {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                     container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
             }
@@ -338,7 +340,8 @@ public class DocumentController {
         }
     }
 
-    /**
+
+    /*
      * The getDocumentHistory method does a get request to get the document history.
      *
      * @param documentID the id of the document of which the history is requested.
@@ -388,6 +391,33 @@ public class DocumentController {
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
+    }
+
+    /**
+<<<<<<< HEAD:src/main/java/gpse/example/domain/documents/DocumentController.java
+     * The getDocumentProgress method is used to track the progress of the signing process.
+     * It uses DocumentProgress response to create an appropriate response.
+     * @param userID the id of the user currently wanting to see the progress.
+     * @param envelopeID the id of the envelope in which the document appears to be.
+     * @param documentID the id of the document which's progress should be tracked.
+     * @return the documentProgressResponse
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/progress")
+    public DocumentProgressResponse getDocumentProgress(final @PathVariable(USER_ID) String userID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
+        userService.getUser(userID);
+        envelopeService.getEnvelope(envelopeID);
+        final Document document = documentService.getDocument(documentID);
+
+        final List<Signatory> signatories = document.getSignatories();
+        final LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
+        signatories.clear();
+        signatories.addAll(signatoryLinkedHashSet);
+
+        return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 
     /**
