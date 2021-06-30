@@ -10,7 +10,6 @@ import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
@@ -46,8 +45,10 @@ public class DocumentController {
     private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
+    private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
+    private static final String TOKEN = "token";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -134,14 +135,13 @@ public class DocumentController {
      * @throws DocumentNotFoundException is thrown if the document that the request relates to does not exist.
      */
     @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
-    public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
-                                                      @PathVariable final long documentID,
-                                                      @PathVariable final String token)
+    public DocumentGetResponse getDocumentGuestAccess(@PathVariable(ENVELOPE_ID) final long envelopeID,
+                                                      @PathVariable(DOCUMENT_ID) final long documentID,
+                                                      @PathVariable(TOKEN) final String token)
             throws DocumentNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            //TODO Fehlermeldung
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             Document document;
@@ -156,8 +156,13 @@ public class DocumentController {
             }
             if (isInEnvelope) {
                 document = documentService.getDocument(documentID);
-                return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
-                    guestTokenOptional.get().getUsername());
+                List<Signatory> signatories = document.getSignatories();
+                for (Signatory signatory : signatories) {
+                    if (signatory.getEmail().equals(guestTokenOptional.get().getUsername())) {
+                        return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
+                            guestTokenOptional.get().getUsername());
+                    }
+                }
             } else {
                 throw new DocumentNotFoundException();
             }
@@ -267,6 +272,38 @@ public class DocumentController {
         }
     }
 
+    @PutMapping("/token/{token}/documents/{documentID:\\d+}/signSimple")
+    public JSONResponseObject signSimpleAsGuest(@PathVariable(TOKEN) String token,
+                                                @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
+        return computeGuestSignatureRequest(token, documentID, SignatureType.SIMPLE_SIGNATURE);
+    }
+
+    @PutMapping("/token/{token}/documents/{documentID:\\d+}/review")
+    public JSONResponseObject reviewAsGuest(@PathVariable(TOKEN) String token,
+                                                @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
+        return computeGuestSignatureRequest(token, documentID, SignatureType.REVIEW);
+    }
+
+    private JSONResponseObject computeGuestSignatureRequest(String token, long documentID, SignatureType signatureType)
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
+        final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
+
+        if (guestTokenOptional.isEmpty()) {
+            JSONResponseObject response = new JSONResponseObject();
+            response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+            response.setMessage("The token that has benn send with the request is not valid for this server.");
+            return response;
+        } else if (guestTokenOptional.get().getDocumentId() == documentID) {
+            GuestToken guestToken = guestTokenOptional.get();
+            return computeSignatureRequest(guestToken.getUsername(), guestToken.getDocumentId(),
+                signatureType);
+        } else {
+            throw new DocumentNotFoundException();
+        }
+    }
+
     /**
      * The review method does a review for a given user on a given document.
      *
@@ -328,7 +365,6 @@ public class DocumentController {
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
         if (document.getState().equals(DocumentState.CLOSED)) {
@@ -336,7 +372,7 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
+            return signatureManagement.manageSignatureRequest(userID, document, signatureType);
         }
     }
 
