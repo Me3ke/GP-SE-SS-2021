@@ -61,22 +61,35 @@
                                             <option v-for="type in allDataTypes()" :key="type">{{type}}</option>
                                         </select>
                                     </div>
-                                    <!-- owner -->
-                                    <b-row >
-                                        <input class="form-check-input" type="checkbox" v-model="filterInput.owner">
-                                        {{$t('Filter.onlyOwnDocs')}}
+                                    <!-- role -->
+                                    Nur Dokumente und Verbünde anzeigen, denen ich als folgende Rollen zugewiesen bin:
+                                    <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetRole()"></b-icon>
+                                    <b-row>
+                                        <input class="form-check-input" type="checkbox" v-model="filterInput.owner" id="checkOwner">
+                                        <label class="form-check-label" for="checkOwner">
+                                            Owner
+                                        </label>
                                     </b-row>
-                                    <!-- signatory -->
-                                    <b-row >
-                                        <input class="form-check-input" type="checkbox" v-model="filterInput.signatory">
-                                        {{$t('Filter.onlyToSign')}}
-                                    </b-row>
-                                    <!-- reader -->
-                                    <b-row >
-                                        <input class="form-check-input" type="checkbox" v-model="filterInput.reader">
-                                        {{$t('Filter.onlyToRead')}}
-                                    </b-row>
-
+                                    <div class="form-check" style="padding: 0">
+                                        <b-row>
+                                            <input class="form-check-input" type="radio" name="role" id="checkReader" value="reader" v-model="filterInput.role">
+                                            <label class="form-check-label" for="checkReader">
+                                                Reader
+                                            </label>
+                                        </b-row>
+                                        <b-row>
+                                            <input class="form-check-input" type="radio" name="role" id="checkSignatory" value="signatory" v-model="filterInput.role">
+                                            <label class="form-check-label" for="checkSignatory">
+                                                Signatory
+                                            </label>
+                                        </b-row>
+                                        <b-row>
+                                            <input class="form-check-input" type="radio" name="role" id="checkReaderSignatory" value="readerOrSignatory" v-model="filterInput.role">
+                                            <label class="form-check-label" for="checkReaderSignatory">
+                                                Reader or Signatory
+                                            </label>
+                                        </b-row>
+                                    </div>
                                 </div>
                                 <!-- Buttons -->
                                 <div class="modal-footer">
@@ -118,8 +131,7 @@ export default {
             show: false,
             filterInput: {
                 owner: false,
-                signatory: false,
-                reader: false,
+                role: "",
                 state: "",
                 creationDateMin: "",
                 creationDateMax: "",
@@ -168,8 +180,7 @@ export default {
         resetFilter() {
             this.filterInput = {
                 owner: false,
-                signatory: false,
-                reader: false,
+                role: "",
                 state: "",
                 creationDateMin: "",
                 creationDateMax: "",
@@ -187,10 +198,24 @@ export default {
             this.filterInput.creationDateMin = "";
             this.filterInput.creationDateMax = "";
         },
+        resetRole() {
+            this.filterInput.role = null;
+        },
         setFilter() {
             this.newFilter.owner = this.filterInput.owner;
-            this.newFilter.signatory = this.filterInput.signatory;
-            this.newFilter.reader = this.filterInput.reader;
+            if(this.filterInput.role === "readerOrSignatory") {
+                this.newFilter.reader = true;
+                this.newFilter.signatory = true;
+            } else if(this.filterInput.role === "reader") {
+                this.newFilter.reader = true;
+                this.newFilter.signatory = false;
+            } else if(this.filterInput.role === "signatory") {
+                this.newFilter.reader = false;
+                this.newFilter.signatory = true;
+            } else {
+                this.newFilter.reader = false;
+                this.newFilter.signatory = false
+            }
             this.newFilter.creationDateMin = this.filterInput.creationDateMin;
             this.newFilter.creationDateMax = this.filterInput.creationDateMax;
             this.newFilter.endDateMin = this.filterInput.endDateMin;
@@ -200,8 +225,13 @@ export default {
         },
         initFilter() {
             this.filterInput.owner = this.filter.owner;
-            this.filterInput.signatory = this.filter.signatory;
-            this.filterInput.reader = this.filter.reader;
+            if(this.filter.signatory && this.filter.reader) {
+                this.filterInput.role = "readerOrSignatory"
+            } else if(this.filter.signatory) {
+                this.filterInput = "signatory"
+            } else if(this.filter.reader) {
+                this.filterInput = "reader"
+            }
             this.filterInput.creationDateMin = this.filter.creationDateMin;
             this.filterInput.creationDateMax = this.filter.creationDateMax;
             this.filterInput.endDateMin = this.filter.endDateMin;
