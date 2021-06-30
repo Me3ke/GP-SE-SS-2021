@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    private MessageRepository messageRepo;
+    private final MessageRepository messageRepo;
 
     public MessageServiceImpl(final MessageRepository messageRepo) {
         this.messageRepo = messageRepo;

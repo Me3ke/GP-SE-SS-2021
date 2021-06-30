@@ -1,7 +1,6 @@
 package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Message {
 
-    private static final String UTF_EIGHT = "UTF-8";
+    private static final String UTF_EIGHT = "utf-8";
     private static final String SYSTEM = "System";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +26,7 @@ public class Message {
     @Column
     private String subject;
 
-    @Column
+    @Lob
     private String text;
 
     @Column
@@ -40,34 +39,14 @@ public class Message {
     @JoinColumn
     private User sendingUser;
 
+    @Column
+    private Category category;
+
+    @Column
+    private boolean watched;
+
     public Message() {
         timeStamp = LocalDateTime.now();
-        sendingUser = null;
-    }
-
-    /**
-     * genrates a SimplemailMessage that could be send via Email.
-     * @return the Simple mail Message object.
-     * @throws MessageGenerationException Thrown if there are params missing that are needed.
-     */
-    public SimpleMailMessage generateMessage() throws MessageGenerationException {
-        final SimpleMailMessage message = new SimpleMailMessage();
-
-        if (sendingUser == null) {
-            message.setFrom(SYSTEM);
-        } else {
-            message.setFrom(sendingUser.getEmail());
-        }
-
-        if (recievingUserMail == null || subject == null || text == null) {
-            throw new MessageGenerationException(this.messageID);
-        }
-
-        message.setTo(recievingUserMail);
-        message.setSubject(subject);
-        message.setText(text);
-
-        return message;
     }
 
     /**
@@ -77,11 +56,12 @@ public class Message {
      * @throws MessagingException thrown by internet address.parse
      * @throws MessageGenerationException thrown if relevant data is missing
      */
-    public MimeMessage generateHtmlMessage(MimeMessage message) throws MessagingException, MessageGenerationException {
+    public MimeMessage generateHtmlMessage(final MimeMessage message) throws MessagingException,
+            MessageGenerationException {
 
         message.setSubject(subject, UTF_EIGHT);
 
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_EIGHT);
+        final MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_EIGHT);
 
         if (sendingUser == null) {
             helper.setFrom(SYSTEM);
@@ -104,7 +84,7 @@ public class Message {
      * @param dataContainer the data needed to fill placeholder
      * @throws InvocationTargetException thrown by filled template
      */
-    public void setupByTemplate(EmailTemplate template, TemplateDataContainer dataContainer)
+    public void setupByTemplate(final EmailTemplate template, final TemplateDataContainer dataContainer)
             throws InvocationTargetException {
         this.subject = template.getSubject();
         this.text = template.filledTemplate(dataContainer);
@@ -148,7 +128,7 @@ public class Message {
         return recievingUserMail;
     }
 
-    public void setRecievingUserMail(String email) {
+    public void setRecievingUserMail(final String email) {
         this.recievingUserMail = email;
     }
 
@@ -160,5 +140,19 @@ public class Message {
         this.sendingUser = sendingUser;
     }
 
+    public Category getCategory() {
+        return category;
+    }
 
+    public void setCategory(final Category category) {
+        this.category = category;
+    }
+
+    public boolean isWatched() {
+        return watched;
+    }
+
+    public void setWatched(final boolean watched) {
+        this.watched = watched;
+    }
 }

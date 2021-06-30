@@ -5,6 +5,8 @@
 
         <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
 
+        <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
+
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>
             <b-list-group>
@@ -25,6 +27,11 @@
                     <b-icon icon="pen" class="my-icon"></b-icon>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item @click="goToComments" class="mini-list">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                </b-list-group-item>
+
                 <!-- Protocol -->
                 <b-list-group-item v-if="protocol" @click="goToProtocol" class="mini-list">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
@@ -36,7 +43,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion" class="mini-list">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion" class="mini-list">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                 </b-list-group-item>
 
@@ -53,7 +60,11 @@
 
                 <b-list-group-item id="sidebar-title-light"
                                    style="text-align: center; background-color: var(--elsa-blue); padding: 1em 1.25em;">
-                    <b-img :src="logoDarkMode" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <b-img v-if="darkEmpty" :src="elsaDark" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <img v-else
+                         :src="getDarkSource()" class="logo"
+                         :alt="$t('Header.logo')"
+                         style="margin-left: 2em">
                 </b-list-group-item>
 
                 <!-- Proofread -->
@@ -72,6 +83,12 @@
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item v-if="protocol" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
+                </b-list-group-item>
+
                 <!-- Protocol -->
                 <b-list-group-item v-if="protocol" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
@@ -85,7 +102,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
@@ -103,7 +120,12 @@
             <b-list-group>
                 <b-list-group-item id="sidebar-title-dark"
                                    style="text-align: center; background-color: var(--elsa-blue); padding: 1em 1.25em;">
-                    <b-img :src="logoLightMode" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <b-img v-if="lightEmpty" :src="elsaLight" class="logo"
+                           :alt="$t('Header.logo')"></b-img>
+                    <img v-else
+                         :src="getLightSource()" class="logo"
+                         :alt="$t('Header.logo')"
+                         style="margin-left: 2em">
                 </b-list-group-item>
 
                 <!-- Proofread -->
@@ -122,6 +144,12 @@
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item v-if="protocol" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
+                </b-list-group-item>
+
                 <!-- Protocol -->
                 <b-list-group-item v-if="protocol" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
@@ -135,7 +163,7 @@
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner &&  document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
@@ -153,10 +181,12 @@
 import {mapGetters} from "vuex";
 import SignPopUp from "@/main/vue/components/popUps/SignPopUp";
 import ProofreadPopUp from "@/main/vue/components/popUps/ProofreadPopUp";
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
+import _ from "lodash";
 
 export default {
     name: "Sidebar",
-    components: {ProofreadPopUp, SignPopUp},
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp},
     data() {
         return {
             // TODO: get Info with api
@@ -166,9 +196,10 @@ export default {
             showProofread: false,
             showSign: false,
             showDownload: false,
+            showUploadNewVersion: false,
 
-            logoDarkMode: require('../assets/logos/ELSA_medium_darkmode.svg'),
-            logoLightMode: require('../assets/logos/ELSA_medium.svg'),
+            elsaLight: require('../assets/logos/ELSA_medium.svg'),
+            elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
 
             isClosed: true
         }
@@ -181,6 +212,7 @@ export default {
             this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleSign(val) {
             if (this.signed) {
@@ -189,10 +221,15 @@ export default {
             this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.$emit('triggerOverflow')
+            this.$store.dispatch('document/setSeenFalse')
+        },
+        goToComments() {
+            this.$router.push({name: 'comments', params: {envId: this.envId, docId: this.docId}})
         },
         goToProtocol() {
             this.$router.push({name: 'protocol', params: {envId: this.envId, docId: this.docId}})
@@ -200,17 +237,43 @@ export default {
         //TODO: add possibility to look at history
         showHistory() {
         },
-        //TODO: add uploading of new version here
         toggleNewVersion() {
+            this.showUploadNewVersion = !this.showUploadNewVersion
+            this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$emit('triggerOverflow')
+
+            this.$bvModal.show('modal-' + this.docId + 'a')
         },
         // TODO. add router push to settings site of document
         goToSettings() {
+        },
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        },
+        getDarkSource() {
+            if (this.logoDarkType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoDark
+            } else {
+                return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
+            }
         }
     },
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
-            document: 'document/getDocument'
+            newDocumentId: 'document/getNewDocumentId',
+            newDocumentError: 'document/getNewDocumentError',
+            newDocumentStatus: 'document/getEditDocumentStatus',
+            logoLight: 'theme/getLightLogo',
+            logoDark: 'theme/getDarkLogo',
+            logoLightType: 'theme/getLightLogoType',
+            logoDarkType: 'theme/getDarkLogoType',
+
+            document: 'document/getDocumentInfo'
         }),
         isOwner() {
             if (this.document.owner) {
@@ -240,7 +303,16 @@ export default {
             return this.$route.params.docId
         },
         envId() {
-            return this.$route.params.envId
+            return this.$route.params.envId;
+        },
+        uploadNewDocumentError() {
+            return !_.isEmpty(this.newDocumentError)
+        },
+        lightEmpty() {
+            return this.logoLight === ""
+        },
+        darkEmpty() {
+            return this.logoDark === ""
         }
     }
 }

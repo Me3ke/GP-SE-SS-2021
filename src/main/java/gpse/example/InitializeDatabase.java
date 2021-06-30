@@ -11,6 +11,10 @@ import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.users.*;
+import gpse.example.util.email.BasicHtmlTemplates;
+import gpse.example.util.email.EmailTemplate;
+import gpse.example.util.email.EmailTemplateService;
+import gpse.example.util.email.TemplateNameNotFoundException;
 import gpse.example.web.documents.DocumentPutRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +58,15 @@ public class InitializeDatabase implements InitializingBean {
         "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", COLOR_ONE, COLOR_FIVE, COLOR_TWO, COLOR_ONE,
         "#23292f", COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
         "#501515", "#363f48", COLOR_FIVE};
+    private static final String ELSA_SIGNATURE_INVITATION_SUBJECT =
+        "ELSA - Signatureinladung/ELSA - signature invitation";
+    private static final int THREEEE = 3;
+    private static final int POST_CODE = 12312;
     private final UserService userService;
     private final DocumentService documentService;
     private final EnvelopeService envelopeService;
     private final CorporateDesignService corporateDesignService;
+    private final EmailTemplateService emailTemplateService;
 
     /**
      * The standard constructor for the class initializing the database.
@@ -66,15 +75,18 @@ public class InitializeDatabase implements InitializingBean {
      * @param documentService        used for saving document-objects in the database.
      * @param envelopeService        used for saving envelope-objects in the database.
      * @param corporateDesignService used for saving the corporate design in the database.
+     * @param emailTemplateService   used for saving the emailTemplates in the database.
      */
     @Autowired
     public InitializeDatabase(final UserService userService, final DocumentService documentService,
                               final EnvelopeService envelopeService,
-                              final CorporateDesignService corporateDesignService) {
+                              final CorporateDesignService corporateDesignService,
+                              final EmailTemplateService emailTemplateService) {
         this.userService = userService;
         this.documentService = documentService;
         this.envelopeService = envelopeService;
         this.corporateDesignService = corporateDesignService;
+        this.emailTemplateService = emailTemplateService;
     }
 
     @Override
@@ -82,28 +94,52 @@ public class InitializeDatabase implements InitializingBean {
         try {
             corporateDesignService.getCorporateDesign(1L);
         } catch (CorporateDesignNotFoundException exception) {
-            CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
+            final CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
             defaultDesign.setLogo(new byte[0], "");
             defaultDesign.setLogoDark(new byte[0], "");
             corporateDesignService.saveCorporateDesign(defaultDesign);
         }
+
+        saveEmailTemplate(BasicHtmlTemplates.ADMIN_VALIDATION_TEMPLATE,
+            "ELSA - Nutzer Validierung/ELSA - User Validation", "AdminValidationTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.RESET_PASSWORD_TEMPLATE,
+            "ELSA - Passwort Zurücksetzen/ELSA - reset Password", "ResetPasswordTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.CONFIRMATION_TEMPLATE, "ELSA - Registrierung/ELSA - registration",
+            "ConfirmationTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.REMINDER_TEMPLATE,
+            "ELSA - Signaturerinnerung/ELSA - Signature reminder", "ReminderTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.NEW_VERSION_TEMPLATE,
+            "ELSA - Dokument wurde Aktualisiert/ELSA - document is updated", "NewVersionTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.GUEST_INVITATION_TEMPLATE,
+            ELSA_SIGNATURE_INVITATION_SUBJECT, "GuestInvitationTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.PROCESS_FINISHED_TEMPLATE,
+            "ELSA - Signaturprozess Abgeschlossen/ELSA - signature process finished",
+            "ProcessFinishedTemplate");
+        final EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates
+            .SIGNATURE_INVITATION_TEMPLATE, ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.ADVANCED_GUEST_INVITATION_TEMPLATE,
+            ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
+
         try {
             userService.getUser(USERNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12312,
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 2, 12_312,
                 LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3213145");
             final User user = new User(USERNAME,
                 "Hans",
                 "Schneider", PASSWORD);
+            user.setPersonalData(personalData);
             user.addRole(ROLE_USER);
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
+            user.addEmailTemplate(new EmailTemplate(template.getHtmlTemplateBody(), template.getSubject(),
+                template.getName(), false));
             userService.saveUser(user);
         }
         try {
             userService.getUser(ADMINNAME);
         } catch (UsernameNotFoundException ex) {
-            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12312,
+            final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
                 LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
             final User user = new User(ADMINNAME,
                 "Ruediger",
@@ -111,10 +147,14 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
-            user.setAdminValidated(true);
+            user.setAccountNonLocked(true);
             user.setPersonalData(personalData);
+            user.addEmailTemplate(template);
             userService.saveUser(user);
         }
+
+
+
         /*final List<Long> documentIDs = new ArrayList<>();
         final List<String> documentPaths = new ArrayList<>();
         documentIDs.add(1L);
@@ -146,6 +186,24 @@ public class InitializeDatabase implements InitializingBean {
         createExampleEnvelope(ID_FOUR, "Tutorialpläne", documentIDs,
             documentPaths, DocumentState.OPEN, true, true);
          */
+    }
+
+    private void saveEmailTemplate(final String template, final String subject, final String name) {
+        try {
+            emailTemplateService.findSystemTemplateByName(name);
+        } catch (TemplateNameNotFoundException tne) {
+            final EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
+            emailTemplateService.saveEmailTemplate(emailTemplate);
+        }
+    }
+
+    private EmailTemplate saveEmailTemplateWithReturnValue(final String template, final String subject,
+                                                           final String name) {
+        try {
+            return emailTemplateService.findSystemTemplateByName(name);
+        } catch (TemplateNameNotFoundException tne) {
+            return new EmailTemplate(template, subject, name, true);
+        }
     }
 
     private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,
@@ -217,7 +275,7 @@ public class InitializeDatabase implements InitializingBean {
                     signatories.add(new ProtoSignatory(owner.getUsername(), 2));
                 }
                 final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, userService, documentService);
+                    signatories, documentService);
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {

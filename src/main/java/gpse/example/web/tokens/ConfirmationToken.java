@@ -1,4 +1,6 @@
-package gpse.example.domain.users;
+package gpse.example.web.tokens;
+
+import gpse.example.domain.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,31 +45,24 @@ public class ConfirmationToken {
     public Long getId() {
         return id;
     }
-
     public void setId(final Long id) {
         this.id = id;
     }
-
     public String getToken() {
         return token;
     }
-
     public void setToken(final String token) {
         this.token = token;
     }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
-
     public void setCreatedDate(final LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
-
     public User getUser() {
         return user;
     }
-
     public void setUser(final User user) {
         this.user = user;
     }

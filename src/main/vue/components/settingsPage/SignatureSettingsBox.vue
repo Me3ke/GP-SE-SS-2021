@@ -8,6 +8,18 @@
                     </h4>
                 </div>
                 <b-list-group flush>
+
+                    <b-list-group-item v-if="signature" class="d-flex justify-content-between align-items-center">
+                          <span>
+                             {{ $t('Settings.SignatureSettings.upload.current') }}
+                          </span>
+
+                        <div>
+                            <img :src="getSignatureSource()" class="responsive-img" id="responsive-signature"
+                                 :alt="$t('Settings.SignatureSettings.signature')">
+                        </div>
+                    </b-list-group-item>
+
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                           <span>
                              {{ $t('Settings.SignatureSettings.upload.text') }}
@@ -21,7 +33,8 @@
                             {{ $t('Settings.SignatureSettings.upload.upload') }}
                         </b-button>
                     </b-list-group-item>
-                    <SignatureUploadPopUp v-if="showUpload" @uploadTrigger="upload()"></SignatureUploadPopUp>
+                    <SignatureUploadPopUp :hasSignature="signatureType !== ''" v-if="showUpload"
+                                          @uploadTrigger="upload()"></SignatureUploadPopUp>
                 </b-list-group>
             </div>
         </b-row>
@@ -30,19 +43,45 @@
 
 <script>
 import SignatureUploadPopUp from "@/main/vue/components/popUps/SignatureUploadPopUp";
+import userAPI from "@/main/vue/api/userAPI";
 
 export default {
     name: "SignatureSettingsBox",
     components: {SignatureUploadPopUp},
     data() {
         return {
-            showUpload: false
+            showUpload: false,
+            signature: null,
+            signatureType: null
         }
     },
+    async mounted() {
+        await userAPI.getSignature().then(response => {
+            this.signature = response.data.imageSignature
+            this.signatureType = response.data.imageSignatureType
+        }).catch(error => {
+            console.log(error)
+        })
+    },
     methods: {
-        upload() {
+        async upload() {
             this.showUpload = !this.showUpload
             this.$emit('uploadTrigger')
+
+            // updating signature image that gets displayed
+            await userAPI.getSignature().then(response => {
+                this.signature = response.data.imageSignature
+                this.signatureType = response.data.imageSignatureType
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+        getSignatureSource() {
+            if (this.signatureType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.signature
+            } else {
+                return 'data:image/' + this.signatureType + ';base64,' + this.signature
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package gpse.example.domain.users;
+package gpse.example.web.tokens;
 
 
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.save(confToken);
     }
 
-    public void deleteConfirmationToken(final Long id) {
+    public void deleteConfirmationToken(final long id) {
 
         confirmationTokenRepository.deleteById(id);
     }

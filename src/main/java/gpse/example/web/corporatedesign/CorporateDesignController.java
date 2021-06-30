@@ -21,8 +21,7 @@ public class CorporateDesignController {
     private static final long CHANGEABLE_DESIGN = 2L;
     private static final long DEFAULT_DESIGN = 1L;
     private static final String SUCCESSFUL = "corporate design changed successfully";
-
-    private CorporateDesignService corporateDesignService;
+    private final CorporateDesignService corporateDesignService;
 
     @Autowired
     public CorporateDesignController(final CorporateDesignService corporateDesignService) {

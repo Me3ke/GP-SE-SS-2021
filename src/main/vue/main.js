@@ -8,6 +8,9 @@ import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 import store from "@/main/vue/store/store";
 import router from "@/main/vue/router/router";
 import VueSweetalert2 from 'vue-sweetalert2';
+import Vuelidate from "vuelidate";
+import VueSignaturePad from 'vue-signature-pad';
+
 // Importing global components and styles
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -15,7 +18,7 @@ import BaseHeading from "@/main/vue/components/BaseHeading";
 import "@/main/vue/assets/css/global.css";
 import "@/main/vue/assets/css/quill.css"
 import 'sweetalert2/dist/sweetalert2.min.css';
-import Vuelidate from "vuelidate";
+
 
 
 // Temp use
@@ -37,6 +40,7 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueSweetalert2);
 Vue.use(Vuelidate);
+Vue.use(VueSignaturePad)
 
 Vue.component('BaseHeading', BaseHeading)
 
