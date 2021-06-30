@@ -132,7 +132,8 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.setEnabled(true);
             user.setAccountNonLocked(true);
-            user.addEmailTemplate(template);
+            user.addEmailTemplate(new EmailTemplate(template.getHtmlTemplateBody(), template.getSubject(),
+                template.getName(), false));
             userService.saveUser(user);
         }
         try {
