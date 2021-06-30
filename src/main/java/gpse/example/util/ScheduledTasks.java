@@ -83,7 +83,8 @@ public class ScheduledTasks {
         }
     }
 
-    private void setupUserReminder(final Document document, final Signatory signatory) throws TemplateNameNotFoundException,
+    private void setupUserReminder(final Document document, final Signatory signatory)
+                throws TemplateNameNotFoundException,
         MessageGenerationException {
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();

@@ -56,7 +56,8 @@ public class Message {
      * @throws MessagingException thrown by internet address.parse
      * @throws MessageGenerationException thrown if relevant data is missing
      */
-    public MimeMessage generateHtmlMessage(final MimeMessage message) throws MessagingException, MessageGenerationException {
+    public MimeMessage generateHtmlMessage(final MimeMessage message) throws MessagingException,
+            MessageGenerationException {
 
         message.setSubject(subject, UTF_EIGHT);
 
