@@ -219,6 +219,11 @@ export default {
         this.$store.dispatch('document/resetState')
     },
 
+    // TODO REMINDER:
+    //  Error creating the progress bar because of not updated progress state on overview page
+    //  but after switching to the document page and then go back to the overview page it will getting
+    // updated (onur)
+
     computed: {
         ...mapGetters({
             envelopes: 'envelopes/getFilteredPagedEnvelopes',

@@ -255,7 +255,7 @@ export default {
             }
 
             // TODO the env appears before the document is uploaded (reload necessary)
-            await this.$store.dispatch('envelopes/fetchEnvelopes')
+            //await this.$store.dispatch('envelopes/fetchEnvelopes')
         },
         convertReaders() {
             //TODO

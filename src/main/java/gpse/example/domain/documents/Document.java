@@ -103,9 +103,7 @@ public class Document {
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne(
-        orphanRemoval = true,
-        cascade = CascadeType.ALL)
+    @OneToOne
     private EmailTemplate processEmailTemplate;
 
     public Document() {
