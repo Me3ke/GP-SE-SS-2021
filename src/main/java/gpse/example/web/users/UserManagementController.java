@@ -45,8 +45,6 @@ public class UserManagementController {
      */
     @GetMapping("/admin/allusers")
     public UserManagementResponseList getAllUsers(@RequestHeader String token) {
-
-        System.out.println(securityConstants.getJwtSecret());
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
@@ -75,31 +73,13 @@ public class UserManagementController {
     @PutMapping("admin/validate")
     public JSONResponseObject validateUser(@RequestParam(USERID) final String userID,
                                            @RequestHeader String token) {
-        JSONResponseObject response = new JSONResponseObject();
-
-        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        final Jws<Claims> parsedToken = Jwts.parserBuilder()
-            .setSigningKey(signingKey).build()
-            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
-
-        try {
-            final User admin = userService.getUser(parsedToken.getBody().getSubject());
-            if (admin.getRoles().contains(ROLE_ADMIN)) {
-                User user = userService.getUser(userID);
-                user.setAccountNonLocked(true);
-                userService.saveUser(user);
-                response.setStatus(STATUS_CODE);
-                return response;
-            } else {
-                response.setStatus(STATUS_CODE_WRONG_ROLE);
-                response.setMessage(NO_ADMIN);
-                return response;
-            }
-        } catch (UsernameNotFoundException unfe) {
-            response.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
-            response.setMessage(NOT_REGISTERED_YET);
-            return response;
+        JSONResponseObject response = checkUserAndRole(userID, token);
+        if (response.getStatus() == STATUS_CODE) {
+            User user = userService.getUser(userID);
+            user.setAccountNonLocked(true);
+            userService.saveUser(user);
         }
+        return response;
     }
 
     /**
@@ -113,31 +93,13 @@ public class UserManagementController {
     @PutMapping("admin/makeadmin")
     public JSONResponseObject makeAdmin(@RequestParam(USERID) final String userID,
                                         @RequestHeader String token) {
-        JSONResponseObject response = new JSONResponseObject();
-
-        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        final Jws<Claims> parsedToken = Jwts.parserBuilder()
-            .setSigningKey(signingKey).build()
-            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
-
-        try {
-            final User admin = userService.getUser(parsedToken.getBody().getSubject());
-            if (admin.getRoles().contains(ROLE_ADMIN)) {
-                User user = userService.getUser(userID);
-                user.addRole(ROLE_ADMIN);
-                userService.saveUser(user);
-                response.setStatus(STATUS_CODE);
-                return response;
-            } else {
-                response.setStatus(STATUS_CODE_WRONG_ROLE);
-                response.setMessage(NO_ADMIN);
-                return response;
-            }
-        } catch (UsernameNotFoundException unfe) {
-            response.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
-            response.setMessage(NOT_REGISTERED_YET);
-            return response;
+        JSONResponseObject response = checkUserAndRole(userID, token);
+        if (response.getStatus() == STATUS_CODE) {
+            User user = userService.getUser(userID);
+            user.addRole(ROLE_ADMIN);
+            userService.saveUser(user);
         }
+        return response;
     }
 
     /**
@@ -151,6 +113,16 @@ public class UserManagementController {
     @PutMapping("admin/lockUser")
     public JSONResponseObject lockUser(@RequestParam(USERID) final String userID,
                                        @RequestHeader String token) {
+        JSONResponseObject response = checkUserAndRole(userID, token);
+        if (response.getStatus() == STATUS_CODE) {
+            User user = userService.getUser(userID);
+            user.setAccountNonLocked(false);
+            userService.saveUser(user);
+        }
+        return response;
+    }
+
+    private JSONResponseObject checkUserAndRole(@RequestParam(USERID) String userID, @RequestHeader String token) {
         JSONResponseObject response = new JSONResponseObject();
 
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
@@ -161,9 +133,6 @@ public class UserManagementController {
         try {
             final User admin = userService.getUser(parsedToken.getBody().getSubject());
             if (admin.getRoles().contains(ROLE_ADMIN)) {
-                User user = userService.getUser(userID);
-                user.setAccountNonLocked(false);
-                userService.saveUser(user);
                 response.setStatus(STATUS_CODE);
                 return response;
             } else {
