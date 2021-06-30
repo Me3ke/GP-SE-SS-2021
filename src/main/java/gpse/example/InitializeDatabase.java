@@ -115,8 +115,8 @@ public class InitializeDatabase implements InitializingBean {
         saveEmailTemplate(BasicHtmlTemplates.PROCESS_FINISHED_TEMPLATE,
             "ELSA - Signaturprozess Abgeschlossen/ELSA - signature process finished",
             "ProcessFinishedTemplate");
-        final EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
-            ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
+        final EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates
+            .SIGNATURE_INVITATION_TEMPLATE, ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.ADVANCED_GUEST_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
 
