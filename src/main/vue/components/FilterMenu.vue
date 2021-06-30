@@ -23,10 +23,10 @@
                                     <div class="form-group">
                                         <select class="form-control" v-model="filterInput.state">
                                             <option value="">{{$t('Filter.all')}}</option>
-                                            <option value="open">{{$t('Filter.open')}}</option>
-                                            <option value="sign">{{$t('Filter.signProcess')}}</option>
-                                            <option value="read">{{$t('Filter.readProcess')}}</option>
-                                            <option value="closed">{{$t('Filter.closed')}}</option>
+                                            <option value="OPENREAD">{{$t('Filter.open')}}</option>
+                                            <option value="READ">{{$t('Filter.signProcess')}}</option>
+                                            <option value="OPEN">{{$t('Filter.readProcess')}}</option>
+                                            <option value="CLOSED">{{$t('Filter.closed')}}</option>
                                         </select>
                                     </div>
                                     <!-- Creation Date Span / Day -->
@@ -70,16 +70,6 @@
                                     <b-row >
                                         <input class="form-check-input" type="checkbox" v-model="filterInput.signatory">
                                         {{$t('Filter.onlyToSign')}}
-                                    </b-row>
-                                    <b-row v-if="filterInput.signatory">
-                                        <b-col>
-                                            {{$t('Filter.withSignatureType')}}
-                                        </b-col>
-                                        <b-col>
-                                            <select class="form-control" v-model="filterInput.signatureType">
-                                                <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
-                                            </select>
-                                        </b-col>
                                     </b-row>
                                     <!-- reader -->
                                     <b-row >
@@ -129,7 +119,6 @@ export default {
             filterInput: {
                 owner: false,
                 signatory: false,
-                signatureType: 0,
                 reader: false,
                 state: "",
                 creationDateMin: "",
@@ -180,7 +169,6 @@ export default {
             this.filterInput = {
                 owner: false,
                 signatory: false,
-                signatureType: 0,
                 reader: false,
                 state: "",
                 creationDateMin: "",
@@ -202,7 +190,6 @@ export default {
         setFilter() {
             this.newFilter.owner = this.filterInput.owner;
             this.newFilter.signatory = this.filterInput.signatory;
-            this.newFilter.signatureType = this.filterInput.signatureType;
             this.newFilter.reader = this.filterInput.reader;
             this.newFilter.creationDateMin = this.filterInput.creationDateMin;
             this.newFilter.creationDateMax = this.filterInput.creationDateMax;
@@ -214,7 +201,6 @@ export default {
         initFilter() {
             this.filterInput.owner = this.filter.owner;
             this.filterInput.signatory = this.filter.signatory;
-            this.filterInput.signatureType = this.filter.signatureType;
             this.filterInput.reader = this.filter.reader;
             this.filterInput.creationDateMin = this.filter.creationDateMin;
             this.filterInput.creationDateMax = this.filter.creationDateMax;

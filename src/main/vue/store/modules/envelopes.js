@@ -36,22 +36,40 @@ export const getters = {
     getFilteredPagedEnvelopes: (state) => (filters, pageLimit, page) => {
         let result = [];
         //filter
+        /* Default Values:
+        state: "",
+        owner: false,
+        search: "",
+        signatory: false,
+        reader: false,
+
+        dataType: ""
+        creationDateMin: "",
+        creationDateMax: "",
+        endDateMin: "",
+        endDateMax: "",
+        */
+
         let i
         for (i = 0; i < state.envelopes.length; i++) {
-            let open = false
+            let stateFilter = false
             let search = false
             let signatory = false
+            let reader = false
             let j
             for (j = 0; j < state.envelopes[i].documents.length; j++) {
                 let document = state.envelopes[i].documents[j]
                 // Filter for state
-                let env_state = document.state
-                if ((env_state === "OPEN" || env_state === "READ")) {
-                    open = true
+                if (filters.state.includes(document.state)) {
+                    stateFilter = true
                 }
                 //Filter for documents that need to be signed
-                if(document.signatory && !document.signed||document.reader && !document.read){
+                if(document.signatory && !document.signed){
                     signatory = true
+                }
+                //Filter for documents that need to be read
+                if(document.reader && !document.read){
+                    reader = true
                 }
                 //Search in document title
                 if(document.title.toLowerCase().includes(filters.search.toLowerCase())) {
@@ -65,7 +83,7 @@ export const getters = {
             // Add matching results
             let matches = true
             if(!(filters.state === "")){
-                if((filters.state === "open" && !open)||(filters.state === "closed" && open)) {
+                if(!stateFilter) {
                     matches = false
                 }
             }
@@ -74,8 +92,16 @@ export const getters = {
                     matches = false
                 }
             }
-            if(filters.signatory){
+            if(filters.signatory && filters.reader){
+                if(!signatory && !reader) {
+                    matches = false
+                }
+            } else if (filters.signatory) {
                 if(!signatory) {
+                    matches = false
+                }
+            } else if(filters.reader){
+                if(!reader) {
                     matches = false
                 }
             }

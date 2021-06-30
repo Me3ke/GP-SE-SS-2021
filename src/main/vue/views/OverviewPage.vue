@@ -47,13 +47,13 @@
                         <b-col>
                             <span @click="filterOpen()">
                                 <FilterButton v-bind:text="$t('Filter.open')"
-                                              :isActive="this.filter.state === 'open'" ></FilterButton>
+                                              :isActive="this.filter.state === 'OPENREAD'" ></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
                                 <FilterButton v-bind:text="$t('Filter.closed')"
-                                              :isActive="this.filter.state === 'closed'"></FilterButton>
+                                              :isActive="this.filter.state === 'CLOSED'"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
@@ -65,7 +65,7 @@
                         <b-col>
                             <span @click="filterSignatory()">
                                 <FilterButton v-bind:text="$t('Filter.toSign')"
-                                              :isActive="this.filter.signatory" ></FilterButton>
+                                              :isActive="this.filter.signatory && this.filter.reader" ></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -96,7 +96,6 @@
             </div>
         </div>
 
-        <button @click="print()">Test</button>
         <b-pagination
             v-model="page"
             :total-rows="this.allEnvelopes(filter).length"
@@ -141,7 +140,6 @@ export default {
                 owner: false,
                 search: "",
                 signatory: false,
-                signatureType: 0,
                 reader: false,
                 creationDateMin: "",
                 creationDateMax: "",
@@ -156,30 +154,32 @@ export default {
         }
     },
     methods: {
-        print() {
-          console.log(this.filter)
-        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            if (this.filter.state === "" || this.filter.state === "closed") {
-                this.filter.state = "open";
+            if (this.filter.state === "" || this.filter.state === "CLOSED") {
+                this.filter.state = "OPENREAD";
             } else {
                 this.filter.state = "";
             }
         },
         filterClosed() {
-            if (this.filter.state === "" || this.filter.state === "open") {
-                this.filter.state = "closed";
+            if (this.filter.state === "" || this.filter.state === "OPENREAD") {
+                this.filter.state = "CLOSED";
             } else {
                 this.filter.state = "";
             }
         },
         filterSignatory() {
-            if (!this.filter.signatory && this.filter.state === "closed") {
+            if ((!this.filter.signatory || !this.filter.reader) && this.filter.state === "CLOSED") {
                 this.filter.state = "";
                 this.filter.signatory = true;
+                this.filter.reader = true;
+            } else if (!this.filter.signatory || !this.filter.reader) {
+                this.filter.signatory = true
+                this.filter.reader = true
             } else {
-                this.filter.signatory = !this.filter.signatory
+                this.filter.signatory = false
+                this.filter.reader = false
             }
         },
         filterOwn() {
