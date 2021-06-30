@@ -185,14 +185,16 @@
         "owned": "Eigene",
         "creationDate": "Erstellungsdatum",
         "endDate": "End-Datum",
-        "onlyOwnDocs": "Nur von mir erstellte Dokumente und Verbünde",
-        "onlyToRead": "Nur Dokumente und Verbünde die ich gegenlesen muss",
-        "onlyToSign": "Nur Dokumente und Verbünde die ich unterschreiben muss",
         "withSignatureType": "Mit Signaturtyp:",
         "dataType": "Dateiformat",
         "readProcess": "Gegenleseprozess",
         "signProcess": "Signierprozess",
-        "all": "Alle"
+        "all": "Alle",
+        "onlyRoles": "Nur Dokumente und Verbünde anzeigen, denen ich als folgende Rollen zugewiesen bin:",
+        "owner": "Besitzer",
+        "reader": "Gegenleser",
+        "signatory": "Unterzeichner",
+        "readerOrSignatory": "Gegenleser oder Unterzeichner"
     },
     "Document": {
         "owner": "Besitzer",

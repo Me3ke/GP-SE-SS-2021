@@ -70,14 +70,16 @@
         "owned": "owned",
         "creationDate": "Creation date",
         "endDate": "Deadline",
-        "onlyOwnDocs": "Only documents and envelopes I created",
-        "onlyToRead": "Only documents and envelopes I need to proofread",
-        "onlyToSign": "Only documents and envelopes I need to sign",
         "withSignatureType": "Type of Signature:",
         "dataType": "Datatype",
         "readProcess": "proofread process",
         "signProcess": "sign process",
-        "all": "all"
+        "all": "all",
+        "onlyRoles": "Only show documents and envelopes I am assigned to as following roles:",
+        "owner": "Owner",
+        "reader": "Proofreader",
+        "signatory": "Signatory",
+        "readerOrSignatory": "Proofreader or Signatory"
     },
     "UserGuide": {
         "name": "User Guide",

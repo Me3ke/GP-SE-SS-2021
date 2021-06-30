@@ -56,6 +56,7 @@ export const getters = {
             let search = false
             let signatory = false
             let reader = false
+            let type = false
             let j
             for (j = 0; j < state.envelopes[i].documents.length; j++) {
                 let document = state.envelopes[i].documents[j]
@@ -74,6 +75,10 @@ export const getters = {
                 //Search in document title
                 if(document.title.toLowerCase().includes(filters.search.toLowerCase())) {
                     search = true
+                }
+                //Filter data types
+                if(filters.dataType === "" || filters.dataType === document.dataType) {
+                    type = true;
                 }
             }
             //Search in Envelope name
@@ -109,6 +114,9 @@ export const getters = {
                 if(!search) {
                     matches = false
                 }
+            }
+            if(!type) {
+                matches = false
             }
             if(matches) {
                 result.push(state.envelopes[i])

@@ -57,36 +57,36 @@
                                     <div class="form-group">
                                         {{$t('Filter.dataType')}}
                                         <select class="form-control" v-model="filterInput.dataType">
-                                            <option>{{$t('Filter.all')}}</option>
+                                            <option value="">{{$t('Filter.all')}}</option>
                                             <option v-for="type in allDataTypes()" :key="type">{{type}}</option>
                                         </select>
                                     </div>
                                     <!-- role -->
-                                    Nur Dokumente und Verbünde anzeigen, denen ich als folgende Rollen zugewiesen bin:
+                                    {{$t('Filter.onlyRoles')}}
                                     <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetRole()"></b-icon>
                                     <b-row>
                                         <input class="form-check-input" type="checkbox" v-model="filterInput.owner" id="checkOwner">
                                         <label class="form-check-label" for="checkOwner">
-                                            Owner
+                                            {{$t('Filter.owner')}}
                                         </label>
                                     </b-row>
                                     <div class="form-check" style="padding: 0">
                                         <b-row>
                                             <input class="form-check-input" type="radio" name="role" id="checkReader" value="reader" v-model="filterInput.role">
                                             <label class="form-check-label" for="checkReader">
-                                                Reader
+                                                {{$t('Filter.reader')}}
                                             </label>
                                         </b-row>
                                         <b-row>
                                             <input class="form-check-input" type="radio" name="role" id="checkSignatory" value="signatory" v-model="filterInput.role">
                                             <label class="form-check-label" for="checkSignatory">
-                                                Signatory
+                                                {{$t('Filter.signatory')}}
                                             </label>
                                         </b-row>
                                         <b-row>
                                             <input class="form-check-input" type="radio" name="role" id="checkReaderSignatory" value="readerOrSignatory" v-model="filterInput.role">
                                             <label class="form-check-label" for="checkReaderSignatory">
-                                                Reader or Signatory
+                                                {{$t('Filter.readerOrSignatory')}}
                                             </label>
                                         </b-row>
                                     </div>
@@ -169,7 +169,7 @@ export default {
                 let envelope = this.allEnvelopes[i]
                 let j;
                 for(j = 0; j < envelope.documents.length; j++) {
-                    let document = envelope.documents[i];
+                    let document = envelope.documents[j];
                     if(!dataTypes.includes(document.dataType)) {
                         dataTypes.push(document.dataType);
                     }
