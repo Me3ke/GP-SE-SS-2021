@@ -24,7 +24,7 @@
                             </b-input-group>
                         </b-col>
                         <b-col>
-                            <FilterMenu></FilterMenu>
+                            <FilterMenu :filter="filter"></FilterMenu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -59,13 +59,13 @@
                         <b-col>
                             <span @click="filterOwn()">
                                 <FilterButton v-bind:text="$t('Filter.owned')"
-                                    :isActive="this.filter.owner === this.user.email"></FilterButton>
+                                    :isActive="this.filter.owner"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
-                            <span @click="filterToSign()">
+                            <span @click="filterSignatory()">
                                 <FilterButton v-bind:text="$t('Filter.toSign')"
-                                              :isActive="this.filter.toSign" ></FilterButton>
+                                              :isActive="this.filter.signatory" ></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -96,6 +96,7 @@
             </div>
         </div>
 
+        <button @click="print()">Test</button>
         <b-pagination
             v-model="page"
             :total-rows="this.allEnvelopes(filter).length"
@@ -137,19 +138,16 @@ export default {
         return {
             filter: {
                 state: "",
-                toSign: false,
-                owner: "",
-                //creationDateMin: null,
-                //creationDateMax: null,
-                //endDateMin: null,
-                //endDateMax: null,
-                //signatureType: "",
-                //datatype: "",
-                //signatories: null,
-                //readers: null,
-                //signed: null,
-                //read: null,
-                search: ""
+                owner: false,
+                search: "",
+                signatory: false,
+                signatureType: 0,
+                reader: false,
+                creationDateMin: "",
+                creationDateMax: "",
+                endDateMin: "",
+                endDateMax: "",
+                dataType: ""
             },
             searchInput: "",
             pageLimit: 10,
@@ -158,6 +156,9 @@ export default {
         }
     },
     methods: {
+        print() {
+          console.log(this.filter)
+        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
             if (this.filter.state === "" || this.filter.state === "closed") {
@@ -173,20 +174,16 @@ export default {
                 this.filter.state = "";
             }
         },
-        filterToSign() {
-            if (!this.filter.toSign && this.filter.state === "closed") {
+        filterSignatory() {
+            if (!this.filter.signatory && this.filter.state === "closed") {
                 this.filter.state = "";
-                this.filter.toSign = true;
+                this.filter.signatory = true;
             } else {
-                this.filter.toSign = !this.filter.toSign
+                this.filter.signatory = !this.filter.signatory
             }
         },
         filterOwn() {
-            if (this.filter.owner === this.user.email) {
-                this.filter.owner = ""
-            } else {
-                this.filter.owner = this.user.email
-            }
+            this.filter.owner = !this.filter.owner
         },
         search(keyword) {
             this.filter.search = keyword

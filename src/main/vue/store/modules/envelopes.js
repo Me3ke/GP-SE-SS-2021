@@ -1,4 +1,5 @@
 import envelopeAPI from "@/main/vue/api/envelopeAPI";
+import store from "@/main/vue/store/store";
 
 export const namespaced = true
 
@@ -39,7 +40,7 @@ export const getters = {
         for (i = 0; i < state.envelopes.length; i++) {
             let open = false
             let search = false
-            let toSign = false
+            let signatory = false
             let j
             for (j = 0; j < state.envelopes[i].documents.length; j++) {
                 let document = state.envelopes[i].documents[j]
@@ -50,7 +51,7 @@ export const getters = {
                 }
                 //Filter for documents that need to be signed
                 if(document.signatory && !document.signed||document.reader && !document.read){
-                    toSign = true
+                    signatory = true
                 }
                 //Search in document title
                 if(document.title.toLowerCase().includes(filters.search.toLowerCase())) {
@@ -68,13 +69,13 @@ export const getters = {
                     matches = false
                 }
             }
-            if(!(filters.owner === "")){
-                if(!(filters.owner === state.envelopes[i].owner.email)) {
+            if(filters.owner){
+                if(!(store.state.auth.username === state.envelopes[i].owner.email)) {
                     matches = false
                 }
             }
-            if(filters.toSign){
-                if(!toSign) {
+            if(filters.signatory){
+                if(!signatory) {
                     matches = false
                 }
             }

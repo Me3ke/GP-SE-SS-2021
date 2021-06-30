@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>
-            <b-icon class="filterIcon" icon="funnel" @click="show = true"></b-icon>
+            <b-icon class="filterIcon" icon="funnel" @click="show = true; initFilter()"></b-icon>
         </h3>
         <div v-if="show">
             <transition>
@@ -21,64 +21,69 @@
                                     <!-- state -->
                                     Status
                                     <div class="form-group">
-                                        <select class="form-control">
-                                            <option>{{$t('Filter.all')}}</option>
-                                            <option>{{$t('Filter.open')}}</option>
-                                            <option>{{$t('Filter.signProcess')}}</option>
-                                            <option>{{$t('Filter.readProcess')}}</option>
-                                            <option>{{$t('Filter.closed')}}</option>
+                                        <select class="form-control" v-model="filterInput.state">
+                                            <option value="">{{$t('Filter.all')}}</option>
+                                            <option value="open">{{$t('Filter.open')}}</option>
+                                            <option value="sign">{{$t('Filter.signProcess')}}</option>
+                                            <option value="read">{{$t('Filter.readProcess')}}</option>
+                                            <option value="closed">{{$t('Filter.closed')}}</option>
                                         </select>
                                     </div>
                                     <!-- Creation Date Span / Day -->
                                     {{$t('Filter.creationDate')}}
+                                    <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetCreationDate()"></b-icon>
                                     <b-row>
                                         <b-col>
-                                            <b-form-datepicker class="mb-2"></b-form-datepicker>
+                                            <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMin"></b-form-datepicker>
                                         </b-col>
                                         -
                                         <b-col>
-                                            <b-form-datepicker class="mb-2"></b-form-datepicker>
+                                            <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMax"></b-form-datepicker>
                                         </b-col>
                                     </b-row>
                                     <!-- End Date Span / Day -->
                                     {{$t('Filter.endDate')}}
+                                    <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetEndDate()"></b-icon>
                                     <b-row>
                                         <b-col>
-                                            <b-form-datepicker class="mb-2"></b-form-datepicker>
+                                            <b-form-datepicker class="mb-2" v-model="filterInput.endDateMin"></b-form-datepicker>
                                         </b-col>
                                         -
                                         <b-col>
-                                            <b-form-datepicker class="mb-2"></b-form-datepicker>
+                                            <b-form-datepicker class="mb-2" v-model="filterInput.endDateMax"></b-form-datepicker>
                                         </b-col>
                                     </b-row>
                                     <!-- data type -->
                                     <div class="form-group">
                                         {{$t('Filter.dataType')}}
-                                        <select class="form-control">
+                                        <select class="form-control" v-model="filterInput.dataType">
                                             <option>{{$t('Filter.all')}}</option>
+                                            <option v-for="type in allDataTypes()" :key="type">{{type}}</option>
                                         </select>
                                     </div>
                                     <!-- owner -->
                                     <b-row >
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <input class="form-check-input" type="checkbox" v-model="filterInput.owner">
                                         {{$t('Filter.onlyOwnDocs')}}
                                     </b-row>
                                     <!-- signatory -->
                                     <b-row >
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <input class="form-check-input" type="checkbox" v-model="filterInput.signatory">
                                         {{$t('Filter.onlyToSign')}}
                                     </b-row>
-                                    <b-row>
-                                        {{$t('Filter.withSignatureType')}}
-                                        <select class="form-control">
-                                            <option>{{$t('Filter.all')}}</option>
-                                            <option>{{$t('UploadDoc.simple')}}</option>
-                                            <option>{{$t('UploadDoc.advanced')}}</option>
-                                        </select>
+                                    <b-row v-if="filterInput.signatory">
+                                        <b-col>
+                                            {{$t('Filter.withSignatureType')}}
+                                        </b-col>
+                                        <b-col>
+                                            <select class="form-control" v-model="filterInput.signatureType">
+                                                <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
+                                            </select>
+                                        </b-col>
                                     </b-row>
                                     <!-- reader -->
                                     <b-row >
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <input class="form-check-input" type="checkbox" v-model="filterInput.reader">
                                         {{$t('Filter.onlyToRead')}}
                                     </b-row>
 
@@ -87,12 +92,12 @@
                                 <div class="modal-footer">
                                     <b-container fluid>
                                         <b-row align-h="end">
-                                            <button type="button" class="light-btn">
+                                            <button type="button" class="light-btn" @click="resetFilter(); show = false">
                                                 <h5>
                                                     {{$t('Filter.removeFilter')}}
                                                 </h5>
                                             </button>
-                                            <button type="button" class="elsa-blue-btn" >
+                                            <button type="button" class="elsa-blue-btn" @click="setFilter(); show = false">
                                                 <h5>
                                                     {{$t('Filter.filter')}}
                                                 </h5>
@@ -111,11 +116,112 @@
 
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "FilterMenu",
+    props: {
+        filter: Object
+    },
     data() {
         return{
-            show: false
+            show: false,
+            filterInput: {
+                owner: false,
+                signatory: false,
+                signatureType: 0,
+                reader: false,
+                state: "",
+                creationDateMin: "",
+                creationDateMax: "",
+                endDateMin: "",
+                endDateMax: "",
+                dataType: ""
+            },
+            newFilter: this.filter,
+            signatureTypes: [{
+                name: 'Filter.all',
+                value: 0
+            }, {
+                name: 'UploadDoc.simple',
+                value: 1
+            }, {
+                name: 'UploadDoc.advanced',
+                value: 2
+            }],
+
+        }
+    },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
+    computed: {
+        ...mapGetters({
+            allEnvelopes: 'envelopes/getEnvelopes',
+        })
+    },
+    methods: {
+        allDataTypes() {
+            let dataTypes = [];
+            let i;
+            for(i = 0; i < this.allEnvelopes.length; i++) {
+                let envelope = this.allEnvelopes[i]
+                let j;
+                for(j = 0; j < envelope.documents.length; j++) {
+                    let document = envelope.documents[i];
+                    if(!dataTypes.includes(document.dataType)) {
+                        dataTypes.push(document.dataType);
+                    }
+                }
+            }
+            return dataTypes;
+        },
+        resetFilter() {
+            this.filterInput = {
+                owner: false,
+                signatory: false,
+                signatureType: 0,
+                reader: false,
+                state: "",
+                creationDateMin: "",
+                creationDateMax: "",
+                endDateMin: "",
+                endDateMax: "",
+                dataType: ""
+            };
+            this.setFilter();
+        },
+        resetEndDate() {
+            this.filterInput.endDateMin = "";
+            this.filterInput.endDateMax = "";
+        },
+        resetCreationDate() {
+            this.filterInput.creationDateMin = "";
+            this.filterInput.creationDateMax = "";
+        },
+        setFilter() {
+            this.newFilter.owner = this.filterInput.owner;
+            this.newFilter.signatory = this.filterInput.signatory;
+            this.newFilter.signatureType = this.filterInput.signatureType;
+            this.newFilter.reader = this.filterInput.reader;
+            this.newFilter.creationDateMin = this.filterInput.creationDateMin;
+            this.newFilter.creationDateMax = this.filterInput.creationDateMax;
+            this.newFilter.endDateMin = this.filterInput.endDateMin;
+            this.newFilter.endDateMax = this.filterInput.endDateMax;
+            this.newFilter.dataType = this.filterInput.dataType;
+            this.newFilter.state = this.filterInput.state;
+        },
+        initFilter() {
+            this.filterInput.owner = this.filter.owner;
+            this.filterInput.signatory = this.filter.signatory;
+            this.filterInput.signatureType = this.filter.signatureType;
+            this.filterInput.reader = this.filter.reader;
+            this.filterInput.creationDateMin = this.filter.creationDateMin;
+            this.filterInput.creationDateMax = this.filter.creationDateMax;
+            this.filterInput.endDateMin = this.filter.endDateMin;
+            this.filterInput.endDateMax = this.filter.endDateMax;
+            this.filterInput.dataType = this.filter.dataType;
+            this.filterInput.state = this.filter.state;
         }
     }
 }
