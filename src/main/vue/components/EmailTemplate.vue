@@ -38,6 +38,7 @@
                         <!-- Add a bold button -->
                         <button class="ql-bold">Bold</button>
                         <button class="ql-italic">Italic</button>
+                        <button class="ql-underline">Underline</button>
                         <!-- Add font size dropdown -->
                         <select class="ql-size">
                             <option value="small"></option>
@@ -53,13 +54,13 @@
                         </select>
 
                         <!-- You can also add your own -->
-                        <button class="ql-add-user-button" @click="addUserHtml"
+                        <button class="ql-addUser" @click="addUserHtml"
                                 style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
 
-                        <button class="ql-add-owner-button ql-float" @click="addOwnerHtml"
+                       <button class="ql-addOwner" @click="addOwnerHtml"
                                 style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
 
-                        <button class="ql-add-end-date-button ql-float" @click="addEndDateHtml"
+                        <button class="ql-endDate" @click="addEndDateHtml"
                                 style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
                     </div>
 
@@ -86,7 +87,6 @@
 </template>
 
 <script>
-
 export default {
     name: "EmailTemplate",
     data() {
@@ -110,28 +110,8 @@ export default {
             selected: 'Email Templates hier gestalten',
             editorOption: {
                 modules: {
-                    toolbar: '#toolbar',
-                    handler: {
-
-                    }
-
+                    toolbar: '#toolbar'
                 }
-
-               /* modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline', 'strike'],
-                        ['blockquote', 'code-block'],
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                       // [{ 'direction': 'rtl' }],
-                        [{ 'font': [] }],
-                        [{ 'color': [] }, { 'background': [] }],
-                        [{ 'align': [] }],
-                        ['clean'],
-                        [{ 'name': ['small', false, 'large', 'huge'] }],  // custom dropdown
-
-                    ]
-                }*/
             }
         }
     },
