@@ -36,9 +36,9 @@ public class ResetPasswordToken {
         this.token = UUID.randomUUID().toString();
     }
 
-    /*public ResetPasswordToken() {
+    public ResetPasswordToken() {
 
-    }*/
+    }
 
     public Long getId() {
         return id;
