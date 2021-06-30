@@ -32,6 +32,9 @@ public class UserManagementController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SecurityConstants securityConstants;
+
     /**
      * The method used to get a list of all users that are registered with the information that is necessary for user
      * management. It is called by an admin via api-request.
@@ -43,7 +46,7 @@ public class UserManagementController {
     @GetMapping("/admin/allusers")
     public UserManagementResponseList getAllUsers(@RequestHeader String token) {
 
-        final SecurityConstants securityConstants = new SecurityConstants();
+        System.out.println(securityConstants.getJwtSecret());
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
@@ -74,7 +77,6 @@ public class UserManagementController {
                                            @RequestHeader String token) {
         JSONResponseObject response = new JSONResponseObject();
 
-        final SecurityConstants securityConstants = new SecurityConstants();
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
@@ -113,7 +115,6 @@ public class UserManagementController {
                                         @RequestHeader String token) {
         JSONResponseObject response = new JSONResponseObject();
 
-        final SecurityConstants securityConstants = new SecurityConstants();
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
@@ -152,7 +153,6 @@ public class UserManagementController {
                                        @RequestHeader String token) {
         JSONResponseObject response = new JSONResponseObject();
 
-        final SecurityConstants securityConstants = new SecurityConstants();
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()

@@ -57,6 +57,10 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
+
 
     /**
      * Constructor of UserController getting required services.
@@ -331,7 +335,6 @@ public class UserController {
                                              @RequestHeader final String token) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
 
-        final SecurityConstants securityConstants = new SecurityConstants();
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
