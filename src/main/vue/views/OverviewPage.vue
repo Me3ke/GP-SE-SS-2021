@@ -14,12 +14,19 @@
                     </h2>
                 </b-col>
                 <b-col cols="auto">
-                    <b-input-group>
-                        <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
-                        <h4>
-                            <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
-                        </h4>
-                    </b-input-group>
+                    <b-row>
+                        <b-col>
+                            <b-input-group>
+                                <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
+                                <h4>
+                                    <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
+                                </h4>
+                            </b-input-group>
+                        </b-col>
+                        <b-col>
+                            <FilterMenu></FilterMenu>
+                        </b-col>
+                    </b-row>
                 </b-col>
             </b-row>
         </b-container>
@@ -68,7 +75,7 @@
 
         <!-- Documents -->
         <div class="container-fluid">
-            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)" class="card" >
+            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--whitesmoke); border-top-color: var(--light-grey); border-radius: 0" class="card" >
                 <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
@@ -111,6 +118,7 @@ import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
+import FilterMenu from "@/main/vue/components/FilterMenu";
 
 Vue.use(VueConfetti)
 export default {
@@ -122,7 +130,8 @@ export default {
         FilterButton,
         UploadButton,
         EnvelopeCard,
-        DocumentCard
+        DocumentCard,
+        FilterMenu
     },
     data() {
         return {

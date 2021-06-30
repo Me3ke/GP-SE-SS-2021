@@ -61,7 +61,6 @@ export const getters = {
             if(state.envelopes[i].name.toLowerCase().includes(filters.search.toLowerCase())) {
                 search = true
             }
-
             // Add matching results
             let matches = true
             if(!(filters.state === "")){
@@ -84,7 +83,6 @@ export const getters = {
                     matches = false
                 }
             }
-
             if(matches) {
                 result.push(state.envelopes[i])
             }

@@ -176,10 +176,23 @@
         "noDocuments": "Noch keine Dokumente"
     },
     "Filter": {
+        "filterTitle": "Dokumente und Verbünde filtern",
+        "filter": "Filter anwenden",
+        "removeFilter": "Filter entfernen",
         "closed": "Abgeschlossen",
         "open": "Offen",
         "toSign": "Unterschreiben",
-        "owned": "Eigene"
+        "owned": "Eigene",
+        "creationDate": "Erstellungsdatum",
+        "endDate": "End-Datum",
+        "onlyOwnDocs": "Nur von mir erstellte Dokumente und Verbünde",
+        "onlyToRead": "Nur Dokumente und Verbünde die ich gegengelese muss",
+        "onlyToSign": "Nur Dokumente und Verbünde die ich unterschreiben muss",
+        "withSignatureType": "Mit Signaturtyp:",
+        "dataType": "Dateiformat",
+        "readProcess": "Gegenleseprozess",
+        "signProcess": "Signierprozess",
+        "all": "Alle"
     },
     "Document": {
         "owner": "Besitzer",

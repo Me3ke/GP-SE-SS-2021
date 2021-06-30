@@ -61,10 +61,23 @@
         "noDocuments": "No documents yet"
     },
     "Filter": {
+        "filterTitle": "Filter documents and envelopes",
+        "filter": "Use filter",
+        "removeFilter": "Remove filter",
         "closed": "closed",
         "open": "open",
         "toSign": "sign",
-        "owned": "owned"
+        "owned": "owned",
+        "creationDate": "Creation date",
+        "endDate": "Deadline",
+        "onlyOwnDocs": "Only documents and envelopes I created",
+        "onlyToRead": "Only documents and envelopes I need to proofread",
+        "onlyToSign": "Only documents and envelopes I need to sign",
+        "withSignatureType": "Type of Signature:",
+        "dataType": "Datatype",
+        "readProcess": "proofread process",
+        "signProcess": "sign process",
+        "all": "all"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -309,8 +322,8 @@
         "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
-        "simple": "Simple",
-        "advanced": "Advanced",
+        "simple": "simple",
+        "advanced": "advanced",
         "signatureType": "Signaturetype",
 
         "UpdateDocument": {
