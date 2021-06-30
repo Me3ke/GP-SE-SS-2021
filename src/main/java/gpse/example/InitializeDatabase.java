@@ -115,7 +115,7 @@ public class InitializeDatabase implements InitializingBean {
         saveEmailTemplate(BasicHtmlTemplates.PROCESS_FINISHED_TEMPLATE,
             "ELSA - Signaturprozess Abgeschlossen/ELSA - signature process finished",
             "ProcessFinishedTemplate");
-        EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
+        final EmailTemplate template = saveEmailTemplateWithReturnValue(BasicHtmlTemplates.SIGNATURE_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "SignatureInvitationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.ADVANCED_GUEST_INVITATION_TEMPLATE,
             ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
@@ -191,7 +191,7 @@ public class InitializeDatabase implements InitializingBean {
         try {
             emailTemplateService.findSystemTemplateByName(name);
         } catch (TemplateNameNotFoundException tne) {
-            EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
+            final EmailTemplate emailTemplate = new EmailTemplate(template, subject, name, true);
             emailTemplateService.saveEmailTemplate(emailTemplate);
         }
     }

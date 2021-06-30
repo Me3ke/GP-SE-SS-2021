@@ -1,7 +1,5 @@
 package gpse.example.web.tokens;
 
-import gpse.example.domain.users.User;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,16 +20,16 @@ public class ResetPasswordToken {
     @Column
     private LocalDateTime createdDate;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @Column
+    //@JoinColumn(name = "USER_ID")
+    private String userId;
 
     /**
      * Generate token with reference to an user.
-     * @param user referenced user
+     * @param userId referenced user
      */
-    public ResetPasswordToken(final User user) {
-        this.user = user;
+    public ResetPasswordToken(final String userId) {
+        this.userId = userId;
         this.createdDate = LocalDateTime.now();
         this.token = UUID.randomUUID().toString();
     }
@@ -64,11 +62,11 @@ public class ResetPasswordToken {
         this.createdDate = createdDate;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(final User user) {
-        this.user = user;
+    public void setUserId(final String user) {
+        this.userId = user;
     }
 }

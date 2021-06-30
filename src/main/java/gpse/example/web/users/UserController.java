@@ -368,7 +368,7 @@ public class UserController {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final User user = userService.getUser(userId);
-            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
+            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
             final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
             try {
                 final TemplateDataContainer emailContainer = new TemplateDataContainer();
@@ -425,7 +425,7 @@ public class UserController {
             } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
                 return jsonResponseObject;
-            } else if (optionalResetPasswordToken.get().getUser().equals(user)) {
+            } else if (optionalResetPasswordToken.get().getUserId().equals(user.getEmail())) {
                 user.setPassword(passwordEncoder.encode(password));
                 userService.saveUser(user);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
