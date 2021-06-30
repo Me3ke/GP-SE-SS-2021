@@ -10,8 +10,6 @@ public class UserResponseObject {
     private final String email;
     private final String firstname;
     private final String lastname;
-    private final boolean enabled;
-    private final boolean adminValidated;
     private final boolean firstLogin;
     private final String publicKey;
 
@@ -23,8 +21,6 @@ public class UserResponseObject {
         this.email = user.getEmail();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
-        this.enabled = user.isEnabled();
-        this.adminValidated = user.isAccountNonLocked();
         this.firstLogin = user.isFirstLogin();
         this.publicKey = user.getPublicKey();
     }
@@ -39,14 +35,6 @@ public class UserResponseObject {
 
     public String getLastname() {
         return lastname;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public boolean isAdminValidated() {
-        return adminValidated;
     }
 
     public boolean isFirstLogin() {

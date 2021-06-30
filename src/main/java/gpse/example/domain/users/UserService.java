@@ -25,6 +25,8 @@ public interface UserService extends UserDetailsService {
 
     User getUser(final String username) throws UsernameNotFoundException;
 
+    List<User> getAllUsers();
+
     void signUpUser(User user) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException,
         InvocationTargetException;
 
