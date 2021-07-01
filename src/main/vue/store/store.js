@@ -14,6 +14,7 @@ import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
 import * as comments from "./modules/comments";
+import * as emailTemplate from "./modules/emailTemplate.js"
 
 Vue.use(Vuex)
 
@@ -29,6 +30,7 @@ const store = new Vuex.Store({
         theme,
         twoFakAuth,
         comments,
+        emailTemplate,
         auth: authorization
     },
     mutations: {

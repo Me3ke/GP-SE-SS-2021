@@ -16,7 +16,7 @@
 
                     <select v-model="selected">
                         <option disabled value="">Please select one</option>
-                        <option v-for="(content, index) in contents" :key="index" v-bind:value="content.content"> {{content.name}}</option>
+                        <option v-for="(content, index) in contents" :key="index" v-bind:value="content.htmlTemplateBody"> {{content.name}}</option>
                     </select>
 
 
@@ -87,26 +87,18 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "EmailTemplate",
     data() {
         return {
 
             // todo api with saved templates
-            contents: [
-                {
-                    name: '1',
-                    content: '<h1>Hello World#1</h1><p>Here is some text</p'
-                },
-                {
-                    name: '2',
-                    content: '<h1>Hello World#2</h1><p>Here is some text</p'
-                },
-                {
-                    name: '3',
-                    content: '<h1>Hello World#3</h1><p>Here is some text</p'
-                }
-            ],
+            contents: null,
+            beforeBody: "<!DOCTYPE html>\\n<html lang = \\de\\>\\n\\n\\t<head>\\n\\n\\t\\t<meta charset " +
+                "= \\utf8\\>\\n\\t\\t<meta name=\\viewport\\ content=\\width = device - width, initial - " +
+                "scale = 1.0\\ >\\n  </head>\\n\\n  <body>\\n\\t\\t",
             selected: 'Email Templates hier gestalten',
             editorOption: {
                 modules: {
@@ -140,6 +132,16 @@ export default {
             console.log(this.selected)
 
         }
+    },
+
+    async mounted() {
+        await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+        this.contents = this.emailTemplate
+    },
+    computed: {
+        ...mapGetters({
+            emailTemplate: 'emailTemplate/getEmailTemplates'
+        })
     }
 }
 </script>
