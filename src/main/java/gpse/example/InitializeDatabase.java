@@ -68,8 +68,10 @@ public class InitializeDatabase implements InitializingBean {
     private static final String ELSA_SIGNATURE_INVITATION_SUBJECT =
         "ELSA - Signatureinladung/ELSA - signature invitation";
     private static final int THREEEE = 3;
+
     private static final int POST_CODE = 12312;
     private static final int STANDARD_PORT = 587;
+
     private final UserService userService;
     private final DocumentService documentService;
     private final EnvelopeService envelopeService;

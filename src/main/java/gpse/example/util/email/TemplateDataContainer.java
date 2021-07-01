@@ -28,10 +28,6 @@ public class TemplateDataContainer {
 
     private String requestingEmail;
 
-    public TemplateDataContainer() {
-
-    }
-
     public String getFirstNameReciever() {
         return firstNameReciever;
     }

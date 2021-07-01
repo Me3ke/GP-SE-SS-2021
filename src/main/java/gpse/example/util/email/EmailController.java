@@ -28,6 +28,9 @@ public class EmailController {
     private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final String SUCCESS_MESSAGE = "Success";
     private static final String ADMIN_VALIDATION_REQUIRED = "You are not an admin";
+
+    private static final String USER_ID = "userId";
+
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
@@ -42,7 +45,7 @@ public class EmailController {
     private SecurityConstants securityConstants;
 
     @GetMapping("/user/{userId}/templates")
-    public List<EmailTemplate> getUserTemplates(@PathVariable("userId") final String userId) {
+    public List<EmailTemplate> getUserTemplates(@PathVariable(USER_ID) final String userId) {
         final User user = userService.getUser(userId);
         return user.getEmailTemplates();
     }
@@ -53,7 +56,7 @@ public class EmailController {
      * @param template the templateBody
      */
     @PostMapping("/user/{userId}/templates")
-    public void setEmailTemplate(@PathVariable("userId") final String userId,
+    public void setEmailTemplate(@PathVariable(USER_ID) final String userId,
                                  @RequestParam("template") final String template) {
         final User user = userService.getUser(userId);
         user.addEmailTemplate(new EmailTemplate(template, "ELSA - Signatureinladung/ELSA - signature invitation",
@@ -67,7 +70,7 @@ public class EmailController {
      * @param templateId id of the Template
      */
     @DeleteMapping("/user/{userId}/templates/{templateId}")
-    public void deleteEmailTemplate(@PathVariable("userId") final String userId,
+    public void deleteEmailTemplate(@PathVariable(EmailController.USER_ID) final String userId,
                                     @PathVariable("templateId") final long templateId) {
         final User user = userService.getUser(userId);
         for (final EmailTemplate temp:user.getEmailTemplates()) {
@@ -87,7 +90,7 @@ public class EmailController {
      * @param reworkedTemplate the reworked TemplateBody
      */
     @PutMapping("/user/{userId}/templates/{templateId}")
-    public void updateEmailTemplate(@PathVariable("userId") final String userId,
+    public void updateEmailTemplate(@PathVariable(EmailController.USER_ID) final String userId,
                                     @PathVariable("templateId") final long templateId,
                                     @RequestParam("reworkedTemplate") final String reworkedTemplate) {
 

@@ -156,8 +156,8 @@ public class DocumentController {
             }
             if (isInEnvelope) {
                 document = documentService.getDocument(documentID);
-                List<Signatory> signatories = document.getSignatories();
-                for (Signatory signatory : signatories) {
+                final List<Signatory> signatories = document.getSignatories();
+                for (final Signatory signatory : signatories) {
                     if (signatory.getEmail().equals(guestTokenOptional.get().getUsername())) {
                         return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
                             guestTokenOptional.get().getUsername());
@@ -280,23 +280,24 @@ public class DocumentController {
     }
 
     @PutMapping("/token/{token}/documents/{documentID:\\d+}/review")
-    public JSONResponseObject reviewAsGuest(@PathVariable(TOKEN) String token,
-                                                @PathVariable(DOCUMENT_ID) long documentID)
+    public JSONResponseObject reviewAsGuest(final @PathVariable(TOKEN) String token,
+                                            final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
         return computeGuestSignatureRequest(token, documentID, SignatureType.REVIEW);
     }
 
-    private JSONResponseObject computeGuestSignatureRequest(String token, long documentID, SignatureType signatureType)
+    private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
+                                                            final SignatureType signatureType)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            JSONResponseObject response = new JSONResponseObject();
+            final JSONResponseObject response = new JSONResponseObject();
             response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
             response.setMessage("The token that has benn send with the request is not valid for this server.");
             return response;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
-            GuestToken guestToken = guestTokenOptional.get();
+            final GuestToken guestToken = guestTokenOptional.get();
             return computeSignatureRequest(guestToken.getUsername(), guestToken.getDocumentId(),
                 signatureType);
         } else {
@@ -501,8 +502,8 @@ public class DocumentController {
      * @throws DocumentNotFoundException thrown if there is no document with specified Id
      */
     @GetMapping("/document/{documentID}/user/{userID}/seen")
-    public ResponseEntity<Boolean> hasDocumentBeenSeen(@PathVariable("documentID") final long documentId,
-                                                  @PathVariable("userID") final String userId)
+    public ResponseEntity<Boolean> documentHasBeenSeen(@PathVariable("documentID") final long documentId,
+                                                       @PathVariable("userID") final String userId)
         throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentId);
         for (final Signatory signatory : document.getSignatories()) {

@@ -163,8 +163,6 @@
     },
     "OverviewPage": {
         "heading": "Übersicht",
-        "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen",
         "toSign1": "Bis zum",
         "toSign2": "signieren",
         "toRead1": "Bis zum",
@@ -176,6 +174,27 @@
         "envSign": "Signieren",
         "search": "Suchen",
         "noDocuments": "Noch keine Dokumente"
+    },
+    "Filter": {
+        "filterTitle": "Dokumente und Verbünde filtern",
+        "filter": "Filter anwenden",
+        "removeFilter": "Filter entfernen",
+        "closed": "Abgeschlossen",
+        "open": "Offen",
+        "toSign": "Unterschreiben",
+        "owned": "Eigene",
+        "creationDate": "Erstellungsdatum",
+        "endDate": "End-Datum",
+        "withSignatureType": "Mit Signaturtyp:",
+        "dataType": "Dateiformat",
+        "readProcess": "Gegenleseprozess",
+        "signProcess": "Signierprozess",
+        "all": "Alle",
+        "onlyRoles": "Nur Dokumente und Verbünde anzeigen, denen ich als folgende Rollen zugewiesen bin:",
+        "owner": "Besitzer",
+        "reader": "Gegenleser",
+        "signatory": "Unterzeichner",
+        "readerOrSignatory": "Gegenleser oder Unterzeichner"
     },
     "Document": {
         "owner": "Besitzer",

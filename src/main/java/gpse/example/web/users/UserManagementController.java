@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class UserManagementController {
 
-    private static final String ROLE_USER = "ROLE_USER";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String USERID = "userid";
     private static final int STATUS_CODE_WRONG_ROLE = 227;
@@ -44,7 +43,7 @@ public class UserManagementController {
      * @return a list of all users that are registered with the information that is necessary for user management.
      */
     @GetMapping("/admin/allusers")
-    public UserManagementResponseList getAllUsers(@RequestHeader String token) {
+    public UserManagementResponseList getAllUsers(final @RequestHeader String token) {
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
@@ -72,10 +71,10 @@ public class UserManagementController {
      */
     @PutMapping("admin/validate")
     public JSONResponseObject validateUser(@RequestParam(USERID) final String userID,
-                                           @RequestHeader String token) {
-        JSONResponseObject response = checkUserAndRole(userID, token);
+                                           final @RequestHeader String token) {
+        final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {
-            User user = userService.getUser(userID);
+            final User user = userService.getUser(userID);
             user.setAccountNonLocked(true);
             userService.saveUser(user);
         }
@@ -92,10 +91,10 @@ public class UserManagementController {
      */
     @PutMapping("admin/makeadmin")
     public JSONResponseObject makeAdmin(@RequestParam(USERID) final String userID,
-                                        @RequestHeader String token) {
-        JSONResponseObject response = checkUserAndRole(userID, token);
+                                        @RequestHeader final String token) {
+        final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {
-            User user = userService.getUser(userID);
+            final User user = userService.getUser(userID);
             user.addRole(ROLE_ADMIN);
             userService.saveUser(user);
         }
@@ -112,18 +111,18 @@ public class UserManagementController {
      */
     @PutMapping("admin/lockUser")
     public JSONResponseObject lockUser(@RequestParam(USERID) final String userID,
-                                       @RequestHeader String token) {
-        JSONResponseObject response = checkUserAndRole(userID, token);
+                                       @RequestHeader final String token) {
+        final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {
-            User user = userService.getUser(userID);
+            final User user = userService.getUser(userID);
             user.setAccountNonLocked(false);
             userService.saveUser(user);
         }
         return response;
     }
 
-    private JSONResponseObject checkUserAndRole(String userID, String token) {
-        JSONResponseObject response = new JSONResponseObject();
+    private JSONResponseObject checkUserAndRole(final String userID, final String token) {
+        final JSONResponseObject response = new JSONResponseObject();
 
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
@@ -132,6 +131,7 @@ public class UserManagementController {
 
         try {
             final User admin = userService.getUser(parsedToken.getBody().getSubject());
+            userService.getUser(userID);
             if (admin.getRoles().contains(ROLE_ADMIN)) {
                 response.setStatus(STATUS_CODE);
                 return response;

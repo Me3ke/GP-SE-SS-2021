@@ -216,7 +216,7 @@ public class SignatureManagement {
                     container.setFirstNameOwner(owner.getFirstname());
                     container.setLastNameOwner(owner.getLastname());
                     container.setDocumentTitle(document.getDocumentTitle());
-                    GuestToken token = new GuestToken(userID, document.getId());
+                    final GuestToken token = new GuestToken(userID, document.getId());
                     container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/"
                         + token.getToken());
                     if (signatureType.equals(SignatureType.REVIEW)) {

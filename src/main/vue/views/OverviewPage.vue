@@ -14,12 +14,19 @@
                     </h2>
                 </b-col>
                 <b-col cols="auto">
-                    <b-input-group>
-                        <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
-                        <h4>
-                            <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
-                        </h4>
-                    </b-input-group>
+                    <b-row>
+                        <b-col>
+                            <b-input-group>
+                                <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
+                                <h4>
+                                    <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
+                                </h4>
+                            </b-input-group>
+                        </b-col>
+                        <b-col>
+                            <FilterMenu :filter="filter"></FilterMenu>
+                        </b-col>
+                    </b-row>
                 </b-col>
             </b-row>
         </b-container>
@@ -39,14 +46,26 @@
                         <!-- Filter Buttons -->
                         <b-col>
                             <span @click="filterOpen()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterOpen')"
-                                              :isActive="this.filter.state === 'open'"></FilterButton>
+                                <FilterButton v-bind:text="$t('Filter.open')"
+                                              :isActive="this.filter.state === 'OPENREAD'" ></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span @click="filterClosed()">
-                                <FilterButton v-bind:text="$t('OverviewPage.filterClosed')"
-                                              :isActive="this.filter.state === 'closed'"></FilterButton>
+                                <FilterButton v-bind:text="$t('Filter.closed')"
+                                              :isActive="this.filter.state === 'CLOSED'"></FilterButton>
+                            </span>
+                        </b-col>
+                        <b-col>
+                            <span @click="filterOwn()">
+                                <FilterButton v-bind:text="$t('Filter.owned')"
+                                    :isActive="this.filter.owner"></FilterButton>
+                            </span>
+                        </b-col>
+                        <b-col>
+                            <span @click="filterSignatory()">
+                                <FilterButton v-bind:text="$t('Filter.toSign')"
+                                              :isActive="this.filter.signatory && this.filter.reader" ></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -56,7 +75,7 @@
 
         <!-- Documents -->
         <div class="container-fluid">
-            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)" class="card" >
+            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--whitesmoke); border-top-color: var(--light-grey); border-radius: 0" class="card" >
                 <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
@@ -99,6 +118,7 @@ import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
+import FilterMenu from "@/main/vue/components/FilterMenu";
 
 Vue.use(VueConfetti)
 export default {
@@ -110,26 +130,22 @@ export default {
         FilterButton,
         UploadButton,
         EnvelopeCard,
-        DocumentCard
+        DocumentCard,
+        FilterMenu
     },
     data() {
         return {
             filter: {
-                //title: "",
-                //envelopeID: 0,
-                state: null,
-                //owner: "",
-                //creationDateMin: null,
-                //creationDateMax: null,
-                //endDateMin: null,
-                //endDateMax: null,
-                //signatureType: "",
-                //datatype: "",
-                //signatories: null,
-                //readers: null,
-                //signed: null,
-                //read: null,
-                search: null
+                state: "",
+                owner: false,
+                search: "",
+                signatory: false,
+                reader: false,
+                creationDateMin: "",
+                creationDateMax: "",
+                endDateMin: "",
+                endDateMax: "",
+                dataType: ""
             },
             searchInput: "",
             pageLimit: 10,
@@ -140,28 +156,40 @@ export default {
     methods: {
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            if (this.filter.state === null || this.filter.state === "closed") {
-                this.filter.state = "open";
+            if (this.filter.state === "" || this.filter.state === "CLOSED") {
+                this.filter.state = "OPENREAD";
             } else {
-                this.filter.state = null;
+                this.filter.state = "";
             }
         },
         filterClosed() {
-            if (this.filter.state === null || this.filter.state === "open") {
-                this.filter.state = "closed";
+            if (this.filter.state === "" || this.filter.state === "OPENREAD") {
+                this.filter.state = "CLOSED";
             } else {
-                this.filter.state = null;
+                this.filter.state = "";
             }
         },
-        async setLogin() {
-            await this.$store.dispatch('putFirstLogin')
-            await this.$store.dispatch('fetchUser')
+        filterSignatory() {
+            if ((!this.filter.signatory || !this.filter.reader) && this.filter.state === "CLOSED") {
+                this.filter.state = "";
+                this.filter.signatory = true;
+                this.filter.reader = true;
+            } else if (!this.filter.signatory || !this.filter.reader) {
+                this.filter.signatory = true
+                this.filter.reader = true
+            } else {
+                this.filter.signatory = false
+                this.filter.reader = false
+            }
+        },
+        filterOwn() {
+            this.filter.owner = !this.filter.owner
         },
         search(keyword) {
             this.filter.search = keyword
             if(keyword.toLowerCase().includes("schildkröte")|| keyword.toLowerCase().includes("maskottchen")) {
                 this.launchMascots();
-            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| keyword.toLowerCase().includes("magenta-liebe")) {
+            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| (keyword.toLowerCase().includes("magenta") && keyword.toLowerCase().includes("liebe"))) {
                 this.launchMagenta();
             }
         },
@@ -208,6 +236,10 @@ export default {
                 ],
             });
             window.setTimeout(() => (this.$confetti.stop()), 5000);
+        },
+        async setLogin() {
+            await this.$store.dispatch('putFirstLogin')
+            await this.$store.dispatch('fetchUser')
         }
     },
     created() {
