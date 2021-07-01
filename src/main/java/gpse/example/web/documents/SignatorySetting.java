@@ -1,5 +1,7 @@
 package gpse.example.web.documents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 
@@ -12,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class SignatorySetting {
 
     private String email;
-    private SignatureType signatureType;
+    private int signatureType;
     private boolean status;
     private boolean remind;
     private int reminderTiming;
@@ -24,7 +26,7 @@ public class SignatorySetting {
      */
     public SignatorySetting(final Signatory signatory) {
         this.email = signatory.getUser().getUsername();
-        this.signatureType = signatory.getSignatureType();
+        this.signatureType = signatory.getSignatureType().toInteger();
         this.status = signatory.isStatus();
         this.remind = (signatory.getReminder() == -1);
         this.reminderTiming = signatory.getReminder();
@@ -48,12 +50,24 @@ public class SignatorySetting {
         this.email = email;
     }
 
-    public SignatureType getSignatureType() {
+    public int getSignatureType() {
         return signatureType;
     }
 
+    /**
+     * The Method used to convert the int that represents the signature Type to the enum representation.
+     * @return the enum representation of the signaturetype.
+     */
+    @JsonIgnore
+    public SignatureType getSignatureTypeAsEnum() {
+        try {
+            return SignatureType.fromInteger(signatureType);
+        } catch (SignatureTypeFromIntegerException e) {
+            return SignatureType.NO_SIGNATURE;
+        }
+    }
     public void setSignatureType(final SignatureType signatureType) {
-        this.signatureType = signatureType;
+        this.signatureType = signatureType.toInteger();
     }
 
     public boolean isStatus() {
