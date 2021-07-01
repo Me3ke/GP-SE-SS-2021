@@ -48,8 +48,6 @@
     },
     "OverviewPage": {
         "heading": "Overview",
-        "filterClosed": "Closed",
-        "filterOpen": "Open",
         "toSign1": "Sign until",
         "toSign2": "",
         "toRead1": "Read until",
@@ -61,6 +59,27 @@
         "envSign": "Sign",
         "search": "Search",
         "noDocuments": "No documents yet"
+    },
+    "Filter": {
+        "filterTitle": "Filter documents and envelopes",
+        "filter": "Use filter",
+        "removeFilter": "Remove filter",
+        "closed": "closed",
+        "open": "open",
+        "toSign": "sign",
+        "owned": "owned",
+        "creationDate": "Creation date",
+        "endDate": "Deadline",
+        "withSignatureType": "Type of Signature:",
+        "dataType": "Datatype",
+        "readProcess": "proofread process",
+        "signProcess": "sign process",
+        "all": "all",
+        "onlyRoles": "Only show documents and envelopes I am assigned to as following roles:",
+        "owner": "Owner",
+        "reader": "Proofreader",
+        "signatory": "Signatory",
+        "readerOrSignatory": "Proofreader or Signatory"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -305,8 +324,8 @@
         "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
-        "simple": "Simple",
-        "advanced": "Advanced",
+        "simple": "simple",
+        "advanced": "advanced",
         "signatureType": "Signaturetype",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",

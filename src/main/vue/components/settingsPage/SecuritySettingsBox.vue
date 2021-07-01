@@ -12,7 +12,6 @@
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-
                         <b-button class="light-btn" @click="keySetUp">
                             {{ $t('Settings.SecuritySettings.newKeypair') }}
                         </b-button>

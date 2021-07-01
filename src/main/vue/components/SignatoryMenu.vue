@@ -64,7 +64,6 @@ export default {
     components: {draggable},
     data() {
         return{
-
             signatoriesNew: [],
             signatoryInput: "",
             signatureTypes: [{
