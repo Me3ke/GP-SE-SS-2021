@@ -4,12 +4,10 @@ import gpse.example.domain.users.User;
 import gpse.example.util.email.trustedDomain.DomainSetter;
 import gpse.example.util.email.trustedDomain.DomainSetterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Authenticator;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.lang.reflect.InvocationTargetException;
@@ -20,8 +18,9 @@ import java.util.Properties;
  */
 @Component
 public class SMTPServerHelper {
-    @Autowired
-    private final JavaMailSender mailSender;
+
+
+    private final JavaMailSenderImpl mailSender;
 
     @Autowired
     private final MessageServiceImpl messageService;
@@ -33,13 +32,12 @@ public class SMTPServerHelper {
 
     /**
      * something else.
-     * @param mailSender a
      * @param messageService s
      * @param domainSetterService t
      */
-    public SMTPServerHelper(final JavaMailSender mailSender, MessageServiceImpl messageService,
+    public SMTPServerHelper(MessageServiceImpl messageService,
                             DomainSetterService domainSetterService) {
-        this.mailSender = mailSender;
+        this.mailSender = new JavaMailSenderImpl();
         this.messageService = messageService;
         this.domainSetterService = domainSetterService;
     }
@@ -49,18 +47,19 @@ public class SMTPServerHelper {
     public void changeDomainSettings() {
         try {
             DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
-            Properties properties = new Properties();
-            properties.put("mail.smtp.host", domainSetter.getHost());
-            properties.put("mail.smtp.port", Integer.toString(domainSetter.getPort()));
-            properties.put("mail.smtp.auth", domainSetter.isMailSMPTAuth());
+            mailSender.setHost(domainSetter.getHost());
+            mailSender.setPort(domainSetter.getPort());
+            mailSender.setUsername(domainSetter.getUsername());
+            mailSender.setPassword(domainSetter.getPassword());
+            Properties properties = mailSender.getJavaMailProperties();
+            properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
             properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
-
-             session = Session.getInstance(properties, new Authenticator() {
+             /*session = Session.getInstance(properties, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(domainSetter.getUsername(), domainSetter.getPassword());
+                    return new PasswordAuthentication(, domainSetter.getPassword());
                 }
-            });
+            });*/
         } catch (NullPointerException e) {
             throw e;
         }

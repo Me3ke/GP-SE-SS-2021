@@ -19,19 +19,19 @@ public class DomainSetter {
     @Column
     private String password;
     @Column
-    private boolean mailSMPTAuth;
+    private boolean mailSMTPAuth;
     @Column
     private boolean mailSMTPStartTLSEnable;
     @Column
     private String trustedMailDomain;
 
     public DomainSetter(String host, int port, String username, String password,
-                        boolean mailSMPTAuth, boolean mailSMTPStartTLSEnable, String trustedMailDomain) {
+                        boolean mailSMTPAuth, boolean mailSMTPStartTLSEnable, String trustedMailDomain) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
-        this.mailSMPTAuth = mailSMPTAuth;
+        this.mailSMTPAuth = mailSMTPAuth;
         this.mailSMTPStartTLSEnable = mailSMTPStartTLSEnable;
         this.trustedMailDomain = trustedMailDomain;
     }
@@ -52,8 +52,8 @@ public class DomainSetter {
         return username;
     }
 
-    public boolean isMailSMPTAuth() {
-        return mailSMPTAuth;
+    public boolean isMailSMTPAuth() {
+        return mailSMTPAuth;
     }
 
     public boolean isMailSMTPStartTLSEnable() {
@@ -76,8 +76,8 @@ public class DomainSetter {
         this.password = password;
     }
 
-    public void setMailSMPTAuth(boolean mailSMPTOut) {
-        this.mailSMPTAuth = mailSMPTOut;
+    public void setMailSMTPAuth(boolean mailSMPTOut) {
+        this.mailSMTPAuth = mailSMPTOut;
     }
 
     public void setMailSMTPStartTLSEnable(boolean mailSMTPStartTLSEnable) {

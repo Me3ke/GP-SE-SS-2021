@@ -122,7 +122,7 @@ public class UserManagementController {
         return response;
     }
 
-    private JSONResponseObject checkUserAndRole(@RequestParam(USERID) String userID, @RequestHeader String token) {
+    private JSONResponseObject checkUserAndRole(String userID, String token) {
         JSONResponseObject response = new JSONResponseObject();
 
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();

@@ -8,15 +8,16 @@ public class DomainSettingsGetResponse {
     private final String host;
     private final int port;
     private final String username;
-    private final boolean mailSMPTAuth;
+    private final boolean mailSMTPAuth;
     private final boolean mailSMTPStartTLSEnable;
 
 
-    public DomainSettingsGetResponse(String host, int port, String username, boolean mailSMPTAuth, boolean mailSMTPStartTLSEnable) {
+    public DomainSettingsGetResponse(final String host, final int port, final String username,
+                                     final boolean mailSMTPAuth, final boolean mailSMTPStartTLSEnable) {
         this.host = host;
         this.port = port;
         this.username = username;
-        this.mailSMPTAuth = mailSMPTAuth;
+        this.mailSMTPAuth = mailSMTPAuth;
         this.mailSMTPStartTLSEnable = mailSMTPStartTLSEnable;
     }
 
@@ -32,8 +33,8 @@ public class DomainSettingsGetResponse {
         return username;
     }
 
-    public boolean isMailSMPTAuth() {
-        return mailSMPTAuth;
+    public boolean isMailSMTPAuth() {
+        return mailSMTPAuth;
     }
 
     public boolean isMailSMTPStartTLSEnable() {

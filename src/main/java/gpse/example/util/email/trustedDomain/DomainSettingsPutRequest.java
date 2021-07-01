@@ -8,9 +8,9 @@ public class DomainSettingsPutRequest extends DomainSettingsGetResponse {
 
     private final String password;
 
-    public DomainSettingsPutRequest(String host, int port, String username, boolean mailSMPTOut,
+    public DomainSettingsPutRequest(String host, int port, String username, boolean mailSMTPAuth,
                                     boolean mailSMTPStartTLSEnable, String password) {
-        super(host, port, username, mailSMPTOut, mailSMTPStartTLSEnable);
+        super(host, port, username, mailSMTPAuth, mailSMTPStartTLSEnable);
         this.password = password;
     }
     public String getPassword() {

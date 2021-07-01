@@ -103,9 +103,9 @@ public class EmailController {
 
 
     @GetMapping("email/settings/trustedDomain")
-    public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String jwtToken) {
+    public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String token) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(jwtToken)) {
+        if (checkIfAdmin(token)) {
             jsonResponseObject.setStatus(STATUS_CODE_OK);
             jsonResponseObject.setMessage(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
         } else {
@@ -122,11 +122,11 @@ public class EmailController {
      * @return if the request was successful
      */
     @PutMapping("/email/settings/trustedDomain")
-    public JSONResponseObject updateTrustedDomain(@RequestHeader final String jwtToken,
+    public JSONResponseObject updateTrustedDomain(@RequestHeader final String token,
                                                   @RequestParam("domain") final String domain) {
 
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(jwtToken)) {
+        if (checkIfAdmin(token)) {
             DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setTrustedMailDomain(domain);
             domainSetterService.saveDomainSettings(domainSetter);
@@ -145,11 +145,12 @@ public class EmailController {
      * @return the domain settings
      */
     @GetMapping("email/settings")
-    public DomainSettingsGetResponse getDomainSettings(@RequestHeader final String jwtToken) {
-        if (checkIfAdmin(jwtToken)) {
+    public DomainSettingsGetResponse getDomainSettings(@RequestHeader final String token) {
+
+        if (checkIfAdmin(token)) {
             DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             return new DomainSettingsGetResponse(domainSetter.getHost(), domainSetter.getPort(),
-                    domainSetter.getUsername(), domainSetter.isMailSMPTAuth(),
+                    domainSetter.getUsername(), domainSetter.isMailSMTPAuth(),
                     domainSetter.isMailSMTPStartTLSEnable());
         } else {
             return null;
@@ -163,15 +164,15 @@ public class EmailController {
      * @return if the request was successful or not
      */
     @PutMapping("email/settings")
-    public JSONResponseObject updateSMTPSettings(@RequestHeader final String jwtToken,
+    public JSONResponseObject updateSMTPSettings(@RequestHeader final String token,
                                                  @RequestBody DomainSettingsPutRequest domainSettingsPutRequest) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(jwtToken)) {
+        if (checkIfAdmin(token)) {
             DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setHost(domainSettingsPutRequest.getHost());
             domainSetter.setPort(domainSettingsPutRequest.getPort());
             domainSetter.setPassword(domainSettingsPutRequest.getPassword());
-            domainSetter.setMailSMPTAuth(domainSettingsPutRequest.isMailSMPTAuth());
+            domainSetter.setMailSMTPAuth(domainSettingsPutRequest.isMailSMTPAuth());
             domainSetter.setMailSMTPStartTLSEnable(domainSettingsPutRequest.isMailSMTPStartTLSEnable());
             domainSetterService.saveDomainSettings(domainSetter);
             jsonResponseObject.setStatus(STATUS_CODE_OK);
@@ -183,11 +184,11 @@ public class EmailController {
         return jsonResponseObject;
     }
 
-    private boolean checkIfAdmin(String jwtToken) {
+    private boolean checkIfAdmin(String token) {
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
                 .setSigningKey(signingKey).build()
-                .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
+                .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
 
 
         final User user = userService.getUser(parsedToken.getBody().getSubject());

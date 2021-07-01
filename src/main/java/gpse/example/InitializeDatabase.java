@@ -164,7 +164,9 @@ public class InitializeDatabase implements InitializingBean {
             user.addEmailTemplate(template);
             userService.saveUser(user);
         }
-        setDomainSettings();
+        if (domainSetterService.isEmpty()) {
+            setDomainSettings();
+        }
     }
 
     private void saveEmailTemplate(final String template, final String subject, final String name) {
