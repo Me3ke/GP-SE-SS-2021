@@ -5,6 +5,7 @@ import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
+import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     private final SignatureType signatureType;
     private final byte[] data;
     private final List<ProtoSignatory> signatories;
-    private final String emailTemplateHtml;
+    private final EmailTemplate emailTemplateHtml;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -34,7 +35,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
         super(document, owner, currentUser);
         this.data = document.getData();
         final List<Signatory> givenSignatories = document.getSignatories();
-        this.emailTemplateHtml = document.getProcessEmailTemplate().getHtmlTemplateBody();
+        this.emailTemplateHtml = document.getProcessEmailTemplate();
 
         this.signatories = new ArrayList<>();
 
@@ -65,7 +66,7 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
         return signatories;
     }
 
-    public String getEmailTemplateHtml() {
+    public EmailTemplate getEmailTemplateHtml() {
         return emailTemplateHtml;
     }
 }

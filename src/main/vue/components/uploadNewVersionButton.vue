@@ -159,23 +159,75 @@
         </b-modal>
 
 
+        <!--- Email Template --->
+        <b-modal
+        :id="'modal-'+ docID + 'c'"
+        ref="modal-page3"
+        class="modal-emailTemplate"
+        centered
+        :title= "document.title + ' Email Template' "
+        style="margin-top: 2em"
+        hide-footer ok-only
+        >
+            <b-container>
+                <b-row style="padding-bottom: 1em">
+                    <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
+                    <button type="button"
+                            class="mt-1 light-btn"
+                            v-b-modal="'modal-' + docID + 'c-preview'"
+                    >
+                    <span class="button-txt">
+                        Preview
+                    </span>
+                    </button>
+                </b-row>
+            </b-container>
 
 
+            <div class="flex-box-2">
+                <button type="button"
+                        class="mt-1 light-btn"
+                        v-b-modal="'modal-' + docID + 'bbbb'"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.back') }}
+                    </span>
+                </button>
 
+                <button type="button"
+                        class="ml-1 elsa-blue-btn"
+                        v-b-modal="'modal-' + docID + 'd'"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.continue') }}
+                    </span>
+                </button>
+            </div>
 
+        </b-modal>
 
+        <!--- Preview --->
+        <b-modal
+            :id="'modal-' + docID + 'c-preview'"
+            centered
+            :title="'Email Template Preview'"
+            hide-footer ok-only
+            v-if="actualDoc.emailTemplateHtml">
+            <b-container v-html="actualDoc.emailTemplateHtml.htmlTemplateBody"></b-container>
+        </b-modal>
 
+        <!-- Modal Page for save written email template--->
 
 
 
         <!-- Last PAGE  -->
         <b-modal
-            :id="'modal-' + docID + 'c'"
-            ref="modal-page3"
+            :id="'modal-' + docID + 'd'"
+            ref="modal-page4"
             centered
             hide-footer hide-header ok-only no-stacking
         >
-            <div>
+            <div style="height: 20em">
                 <h3>{{document.title}}</h3>
                 <h5> {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</h5>
             </div>
@@ -186,7 +238,7 @@
                 <button type="button"
                         class="mt-1 light-btn"
                         @click="resetSettings('modal-page3')"
-                        v-b-modal="'modal-' + docID + 'bb'"
+                        v-b-modal="'modal-' + docID + 'c'"
                 >
                     <span class="button-txt">
                         {{ $t('UploadDoc.back') }}
@@ -198,18 +250,10 @@
                         @click="uploadNewFile"
                 >
                     <span class="button-txt">
-                        {{ $t('UploadDoc.continue') }}
+                        {{ $t('UploadDoc.continue') }} <!--UPLOAD -->
                     </span>
                 </button>
 
-
-
-
-                <!--<b-button
-                    @click="uploadNewFile"
-                    >
-                    {{ $t('UploadDoc.UpdateDocument.update1') }}
-                </b-button>-->
             </div>
         </b-modal>
 
@@ -222,7 +266,7 @@
 
         >
             <b-alert align="center">
-                ERROR TEST
+                ERROR Page
             </b-alert>
 
         </b-modal>
@@ -236,10 +280,11 @@ import {mapGetters} from "vuex";
 import _ from "lodash";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
+import EmailTemplate from "@/main/vue/components/EmailTemplate";
 
 export default {
     name: "uploadNewVersionButton",
-    components: {SignatoryMenu, ReaderMenu},
+    components: {EmailTemplate, SignatoryMenu, ReaderMenu},
     data() {
         return {
             // filename of uploaded file
@@ -291,6 +336,7 @@ export default {
         setActualDoc() {
             this.actualDoc = this.document
 
+
             this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
 
@@ -299,6 +345,13 @@ export default {
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
             this.actualDoc.dataType = this.fileString.split('.').pop()
+        },
+
+
+        // temp is the selected template
+        setEmailTemplate(temp){
+            // emailTemplates is an array instead of an object (in document)
+            this.actualDoc.emailTemplateHtml = temp
         },
 
         /// getting emitted value
@@ -322,18 +375,20 @@ export default {
                 this.file = null
             }
             else {
-                this.$refs['modal-page3'].hide()
+                this.$refs['modal-page4'].hide()
                 await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
                 let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
                 this.showAlert = !this.showAlert
 
                 // will route the user to the newUploaded document page (with the new ID)
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file
+                console.log(newUrl)
 
+                console.log(this.actualDoc)
                 await this.$store.dispatch('envelopes/fetchEnvelopes')
-                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
-                })
+                })*/
             }
         },
 
@@ -366,6 +421,5 @@ export default {
 </script>
 
 <style scoped src="../assets/css/signModals.css">
-
 
 </style>
