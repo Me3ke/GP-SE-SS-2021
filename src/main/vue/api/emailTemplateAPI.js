@@ -8,6 +8,19 @@ export default {
             method: "get",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates'
         })
+    },
+
+    // TODO add subject, name, system
+    async createEmailTemplate(emailTemp) {
+        return axios({
+            method: "post",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates',
+            data: {
+                'htmlTemplateBody': emailTemp,
+            }
+
+        })
     }
+
 }
 
