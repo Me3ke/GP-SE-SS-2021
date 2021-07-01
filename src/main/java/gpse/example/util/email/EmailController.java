@@ -1,5 +1,6 @@
 package gpse.example.util.email;
 
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import gpse.example.util.email.trustedDomain.DomainSetter;
@@ -7,6 +8,9 @@ import gpse.example.util.email.trustedDomain.DomainSetterService;
 import gpse.example.util.email.trustedDomain.DomainSettingsGetResponse;
 import gpse.example.util.email.trustedDomain.DomainSettingsPutRequest;
 import gpse.example.web.JSONResponseObject;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +25,9 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmailController {
     private static final int STATUS_CODE_OK = 200;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final String SUCCESS_MESSAGE = "Success";
+    private static final String ADMIN_VALIDATION_REQUIRED = "You are not an admin";
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
@@ -31,6 +37,9 @@ public class EmailController {
     private UserService userService;
     @Autowired
     private DomainSetterService domainSetterService;
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
 
     @GetMapping("/user/{userId}/templates")
     public List<EmailTemplate> getUserTemplates(@PathVariable("userId") final String userId) {
@@ -93,55 +102,94 @@ public class EmailController {
 
 
     @GetMapping("email/settings/trustedDomain")
-    public String getTrustedDomainSettings() {
-        return domainSetterService.getDomainSettings().get(0).getTrustedMailDomain();
+    public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String jwtToken) {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        if (checkIfAdmin(jwtToken)) {
+            jsonResponseObject.setStatus(STATUS_CODE_OK);
+            jsonResponseObject.setMessage(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
+        } else {
+            jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+            jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
+        }
+        return jsonResponseObject;
     }
 
     /**
      * PutMapping for reworked templates.
+     *
      * @param domain the settings to be applied
      * @return if the request was successful
      */
     @PutMapping("/email/settings/trustedDomain")
-    public JSONResponseObject updateTrustedDomain(@RequestParam("domain") final String domain) {
+    public JSONResponseObject updateTrustedDomain(@RequestHeader final String jwtToken,
+                                                  @RequestParam("domain") final String domain) {
+
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
-        domainSetter.setTrustedMailDomain(domain);
-        domainSetterService.saveDomainSettings(domainSetter);
-        jsonResponseObject.setStatus(STATUS_CODE_OK);
-        jsonResponseObject.setMessage(SUCCESS_MESSAGE);
+        if (checkIfAdmin(jwtToken)) {
+            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            domainSetter.setTrustedMailDomain(domain);
+            domainSetterService.saveDomainSettings(domainSetter);
+            jsonResponseObject.setStatus(STATUS_CODE_OK);
+            jsonResponseObject.setMessage(SUCCESS_MESSAGE);
+        } else {
+            jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+            jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
+        }
         return jsonResponseObject;
     }
 
     /**
      * The request responsible for sending the domain settings to the frontend.
+     *
      * @return the domain settings
      */
     @GetMapping("email/settings")
-    public DomainSettingsGetResponse getDomainSettings() {
-        DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
-        return new DomainSettingsGetResponse(domainSetter.getHost(), domainSetter.getPort(),
-                domainSetter.getUsername(), domainSetter.isMailSMPTAuth(),
-                domainSetter.isMailSMTPStartTLSEnable());
+    public DomainSettingsGetResponse getDomainSettings(@RequestHeader final String jwtToken) {
+        if (checkIfAdmin(jwtToken)) {
+            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            return new DomainSettingsGetResponse(domainSetter.getHost(), domainSetter.getPort(),
+                    domainSetter.getUsername(), domainSetter.isMailSMPTAuth(),
+                    domainSetter.isMailSMTPStartTLSEnable());
+        } else {
+            return null;
+        }
     }
 
     /**
      * The request responsible for sending the domain settings to the backend.
+     *
      * @param domainSettingsPutRequest the settings to be changed
      * @return if the request was successful or not
      */
     @PutMapping("email/settings")
-    public JSONResponseObject updateSMTPSettings(@RequestBody DomainSettingsPutRequest domainSettingsPutRequest) {
+    public JSONResponseObject updateSMTPSettings(@RequestHeader final String jwtToken,
+                                                 @RequestBody DomainSettingsPutRequest domainSettingsPutRequest) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
-        domainSetter.setHost(domainSettingsPutRequest.getHost());
-        domainSetter.setPort(domainSettingsPutRequest.getPort());
-        domainSetter.setPassword(domainSettingsPutRequest.getPassword());
-        domainSetter.setMailSMPTAuth(domainSettingsPutRequest.isMailSMPTAuth());
-        domainSetter.setMailSMTPStartTLSEnable(domainSettingsPutRequest.isMailSMTPStartTLSEnable());
-        domainSetterService.saveDomainSettings(domainSetter);
-        jsonResponseObject.setStatus(STATUS_CODE_OK);
-        jsonResponseObject.setMessage(SUCCESS_MESSAGE);
+        if (checkIfAdmin(jwtToken)) {
+            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            domainSetter.setHost(domainSettingsPutRequest.getHost());
+            domainSetter.setPort(domainSettingsPutRequest.getPort());
+            domainSetter.setPassword(domainSettingsPutRequest.getPassword());
+            domainSetter.setMailSMPTAuth(domainSettingsPutRequest.isMailSMPTAuth());
+            domainSetter.setMailSMTPStartTLSEnable(domainSettingsPutRequest.isMailSMTPStartTLSEnable());
+            domainSetterService.saveDomainSettings(domainSetter);
+            jsonResponseObject.setStatus(STATUS_CODE_OK);
+            jsonResponseObject.setMessage(SUCCESS_MESSAGE);
+        } else {
+            jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+            jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
+        }
         return jsonResponseObject;
+    }
+
+    private boolean checkIfAdmin(String jwtToken) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+                .setSigningKey(signingKey).build()
+                .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
+
+
+        final User user = userService.getUser(parsedToken.getBody().getSubject());
+        return user.getRoles().contains("ROLE_ADMIN");
     }
 }
