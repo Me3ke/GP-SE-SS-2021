@@ -163,15 +163,11 @@
                                             {{ $t('KeypairAlert.generatingText') }}
                                             <b-spinner></b-spinner>
                                         </div>
-                                        <div v-else class="content-div" style="display: flex; justify-content: center">
-                                            {{ privateKey }}
-                                        </div>
-
                                         <!-- Button to close -->
                                         <div style="text-align: right">
-                                            <button type="button" class="elsa-blue-btn" @click="closeModal()">
+                                            <button type="button" class="elsa-blue-btn" @click="downloadKeyAndClose()">
                                                 <span class="button-txt">
-                                                    {{ $t('KeypairAlert.close') }}
+                                                    {{ $t('DownloadKey.download') }}
                                                 </span>
                                             </button>
                                         </div>
@@ -215,6 +211,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import savePrivateKeyToLink from "../../scripts/privateKeyToFile"
 import _ from "lodash";
 
 export default {
@@ -223,7 +220,7 @@ export default {
         return {
             page: 0,
             pageBefore: 0,
-
+            pkLink: null,
             key: null,
             showSendingAlert: false,
             generating: true
@@ -266,6 +263,7 @@ export default {
                 this.generating = false
                 this.sendKey(this.publicKey)
             }, 1000);
+            this.pkLink = savePrivateKeyToLink(this.privateKey);
         },
         // sends given public key to server
         async sendKey(key) {
@@ -282,7 +280,12 @@ export default {
         closeModal() {
             this.$emit('keyPairTrigger');
             this.page = 0
-        }
+        },
+      downloadKeyAndClose() {
+        this.pkLink.click();
+        this.$emit('keyPairTrigger');
+        this.page = 0
+      }
     },
     computed: {
         ...mapGetters({

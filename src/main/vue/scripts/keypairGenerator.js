@@ -6,6 +6,7 @@ export default function generateKeyPair() {
     var pub = kp.pubKeyObj;
     var prvpem = rs.KEYUTIL.getPEM(prv, "PKCS8PRV");
     var pubpem = rs.KEYUTIL.getPEM(pub, "PKCS8PUB");
-
+    console.log(prvpem);
+    console.log(pubpem);
     return ({"privateKey": prvpem, "publicKey": pubpem});
 }

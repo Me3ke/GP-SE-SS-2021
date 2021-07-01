@@ -345,6 +345,9 @@
         "sure": "Möchten Sie das Dokument wirklich herunterladen?",
         "cancel": "Abbrechen"
     },
+    "DownloadKey": {
+    "download": "Herunterladen"
+    },
     "DownloadProtocol": {
         "protocol": "Protokoll",
         "sure": "Möchten Sie das Protokoll wirklich herunterladen?",
@@ -419,7 +422,7 @@
         "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
         "placeholder": "Schlüssel hier ablegen oder auswählen",
         "dropPlaceholder": "Hier fallen lassen",
-        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "success": "Sie haben erfolgreich Ihren öffentlichen Schlüssel hochgeladen!",
         "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {

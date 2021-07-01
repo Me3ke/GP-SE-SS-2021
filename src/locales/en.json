@@ -343,6 +343,9 @@
         "sure": "Are you sure you want to download the document?",
         "cancel": "Cancel"
     },
+    "DownloadKey": {
+    "download": "Download"
+    },
     "DownloadProtocol": {
         "protocol": "Protocol",
         "sure": "Are you sure you want to download the protocol?",
