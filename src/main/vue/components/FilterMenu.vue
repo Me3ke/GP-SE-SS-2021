@@ -36,7 +36,6 @@
                                         <b-col>
                                             <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMin"></b-form-datepicker>
                                         </b-col>
-                                        <div>{{this.filterInput.creationDateMin}}</div>
                                         -
                                         <b-col>
                                             <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMax"></b-form-datepicker>
@@ -229,9 +228,11 @@ export default {
             if(this.filter.signatory && this.filter.reader) {
                 this.filterInput.role = "readerOrSignatory"
             } else if(this.filter.signatory) {
-                this.filterInput = "signatory"
+                this.filterInput.role = "signatory"
             } else if(this.filter.reader) {
-                this.filterInput = "reader"
+                this.filterInput.role = "reader"
+            } else {
+                this.filterInput.role = ""
             }
             this.filterInput.creationDateMin = this.filter.creationDateMin;
             this.filterInput.creationDateMax = this.filter.creationDateMax;
