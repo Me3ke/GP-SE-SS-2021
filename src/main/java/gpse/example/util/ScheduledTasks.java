@@ -41,7 +41,7 @@ public class ScheduledTasks {
      */
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
-        for (Document doc : documentService.getDocuments()) {
+        for (final Document doc : documentService.getDocuments()) {
             if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
                 informSignatoriesInOrder(doc);
             } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
@@ -50,7 +50,7 @@ public class ScheduledTasks {
         }
     }
 
-    private void informSignatoriesInOrder(Document doc) throws MessageGenerationException,
+    private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
 
        /* for (final Signatory signatory : doc.getSignatories()) {
@@ -70,9 +70,9 @@ public class ScheduledTasks {
     }
 
 
-    private void informSignatoriesWithoutOrder(Document doc) throws MessageGenerationException,
+    private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        for (Signatory signatory : doc.getSignatories()) {
+        for (final Signatory signatory : doc.getSignatories()) {
             if (signatory.getReminder() > -1) {
                 if (LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
                     /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
@@ -83,10 +83,11 @@ public class ScheduledTasks {
         }
     }
 
-    private void setupUserReminder(Document document, Signatory signatory) throws TemplateNameNotFoundException,
+    private void setupUserReminder(final Document document, final Signatory signatory)
+                throws TemplateNameNotFoundException,
         MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setEndDate(document.getEndDate().toString());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink("http://localhost:8080/link/to/document/view");

@@ -11,14 +11,14 @@ import java.util.List;
 @Service
 public class EmailTemplateService {
 
-    private EmailTemplateRepository templateRepository;
+    private final EmailTemplateRepository templateRepository;
 
     @Autowired
     public EmailTemplateService(final EmailTemplateRepository templateRepository) {
         this.templateRepository = templateRepository;
     }
 
-    public EmailTemplate saveEmailTemplate(EmailTemplate emailTemplate) {
+    public EmailTemplate saveEmailTemplate(final EmailTemplate emailTemplate) {
         return templateRepository.save(emailTemplate);
     }
 
@@ -28,10 +28,10 @@ public class EmailTemplateService {
      * @return the template opbject
      * @throws TemplateNameNotFoundException if there is no systemtemplate with this name
      */
-    public EmailTemplate findSystemTemplateByName(String name) throws TemplateNameNotFoundException {
+    public EmailTemplate findSystemTemplateByName(final String name) throws TemplateNameNotFoundException {
         final List<EmailTemplate> systemTemplates = (List<EmailTemplate>) templateRepository.findAll();
 
-        for (EmailTemplate temp: systemTemplates) {
+        for (final EmailTemplate temp: systemTemplates) {
             if (temp.isSystem() && temp.getName().equals(name)) {
                 return temp;
             }
@@ -39,7 +39,7 @@ public class EmailTemplateService {
         throw new TemplateNameNotFoundException();
     }
 
-    public void deleteTemplate(long templateId) {
+    public void deleteTemplate(final long templateId) {
         templateRepository.deleteById(templateId);
     }
 }

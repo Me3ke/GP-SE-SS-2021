@@ -50,12 +50,13 @@ public class EmailTemplate implements Serializable {
      * @param name     name of template so user can name his/her templates
      * @param system   boolean is true when the template is a systemIntern one
      */
-    public EmailTemplate(String template, String subject, String name, boolean system) {
+    public EmailTemplate(final String template, final String subject, final String name, final boolean system) {
         this.htmlTemplateBody = template;
         this.subject = subject;
         this.name = name;
         this.system = system;
     }
+
 
     public EmailTemplate() {
 
@@ -68,7 +69,7 @@ public class EmailTemplate implements Serializable {
      */
     public List<String> neededParams() {
         String temp = this.htmlTemplateBody;
-        ArrayList<String> params = new ArrayList<>();
+        final ArrayList<String> params = new ArrayList<>();
         while (temp.indexOf(CLOSE) > 0) {
             params.add(findFirst(temp));
             temp = temp.substring(temp.indexOf(CLOSE) + 1);
@@ -76,7 +77,7 @@ public class EmailTemplate implements Serializable {
         return params;
     }
 
-    private String findFirst(String str) {
+    private String findFirst(final String str) {
         return str.substring(str.indexOf(OPEN) + 1, str.indexOf(CLOSE));
     }
 
@@ -87,10 +88,10 @@ public class EmailTemplate implements Serializable {
      * @return the filled out templatebody missing values are replaced with nothing
      * @throws InvocationTargetException if invocation goes wrong
      */
-    public String filledTemplate(TemplateDataContainer dataContainer)
+    public String filledTemplate(final TemplateDataContainer dataContainer)
         throws InvocationTargetException {
         String filledTemplate = this.htmlTemplateBody;
-        for (String placeholder : neededParams()) {
+        for (final String placeholder : neededParams()) {
             try {
                 if (dataOf(placeholder, dataContainer) != null) {
                     filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
@@ -106,9 +107,9 @@ public class EmailTemplate implements Serializable {
     }
 
 
-    private String dataOf(String searchedData, TemplateDataContainer dataContainer)
+    private String dataOf(final String searchedData, final TemplateDataContainer dataContainer)
         throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
+        final Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
 
         return (String) method.invoke(dataContainer);
     }
@@ -117,7 +118,7 @@ public class EmailTemplate implements Serializable {
         return templateID;
     }
 
-    public void setTemplateID(long templateID) {
+    public void setTemplateID(final long templateID) {
         this.templateID = templateID;
     }
 
@@ -125,7 +126,7 @@ public class EmailTemplate implements Serializable {
         return htmlTemplateBody;
     }
 
-    public void setHtmlTemplateBody(String htmlTemplateBody) {
+    public void setHtmlTemplateBody(final String htmlTemplateBody) {
         this.htmlTemplateBody = htmlTemplateBody;
     }
 
@@ -133,7 +134,7 @@ public class EmailTemplate implements Serializable {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -141,7 +142,7 @@ public class EmailTemplate implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -149,7 +150,7 @@ public class EmailTemplate implements Serializable {
         return system;
     }
 
-    public void setSystem(boolean system) {
+    public void setSystem(final boolean system) {
         this.system = system;
     }
 }

@@ -7,6 +7,14 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
+                    <div  v-if="//documentProgressById(document.id) &&
+                     this.document.owner.email === this.$store.state.auth.username">
+                        <DocumentProgressBar
+                            :state="document.state"
+                            :docId="document.id"
+                            :getDocumentProgress="documentProgressById(document.id)"
+                        ></DocumentProgressBar>
+                    </div>
             </b-col>
             <b-col cols="1">
                 <settingsButton
@@ -20,13 +28,23 @@
 import settingsButton from "@/main/vue/components/envSettingsButton";
 import DocumentBox from "@/main/vue/components/DocumentBox";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import {mapGetters} from "vuex";
+import DocumentProgressBar from "@/main/vue/components/DocumentProgressBar";
 
 export default {
     name: "DocumentCard",
-    components: {TwoFacAuth, DocumentBox, settingsButton},
+    components: {DocumentProgressBar, TwoFacAuth, DocumentBox, settingsButton},
     props: {
         document: Object,
-        envelopeId: [String, Number]
+        envelopeId: [String, Number],
+        showProgress: Boolean
+    },
+    computed: {
+        ...mapGetters({
+        documentProgress: 'document/getDocumentProgress',
+        documentProgressById: 'document/getDocumentProgressArrayById'
+    }),
+
     },
     data() {
         return {
@@ -56,6 +74,14 @@ export default {
         closeAuth() {
             this.showAuth = false
         }
+    },
+
+    mounted() {
+
+        this.$store.dispatch('document/documentProgress', {
+            envId: this.envelopeId,
+            docId: this.document.id,
+        })
     }
 }
 </script>

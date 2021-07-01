@@ -103,9 +103,7 @@ public class Document {
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne(
-        orphanRemoval = true,
-        cascade = CascadeType.ALL)
+    @OneToOne
     private EmailTemplate processEmailTemplate;
 
     public Document() {
@@ -488,7 +486,7 @@ public class Document {
         return processEmailTemplate;
     }
 
-    public void setProcessEmailTemplate(EmailTemplate processEmailTemplate) {
+    public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {
         this.processEmailTemplate = processEmailTemplate;
     }
 }

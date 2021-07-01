@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return (List<User>) userRepository.findAll();
+    }
+
+    @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
@@ -130,8 +135,8 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException,
         TemplateNameNotFoundException {
 
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ConfirmationTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ConfirmationTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
         container.setLink("http://localhost:8080/de/register/confirm/" + token);
@@ -152,8 +157,8 @@ public class UserServiceImpl implements UserService {
         final List<User> userList = getUsers();
         for (final User admin : userList) {
             if (admin.getRoles().contains("ROLE_ADMIN")) {
-                EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
-                TemplateDataContainer container = new TemplateDataContainer();
+                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
+                final TemplateDataContainer container = new TemplateDataContainer();
                 container.setFirstNameReciever(admin.getFirstname());
                 container.setLastNameReciever(admin.getLastname());
                 container.setFirstNameOwner(user.getFirstname());

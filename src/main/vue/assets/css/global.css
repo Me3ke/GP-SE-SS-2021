@@ -38,6 +38,12 @@
     /* Alert Dismiss */
     --darkRed: #a22c2c;
 
+    /* Progress Bar*/
+    --progress-background: var(--elsa-blue-transparent);
+    --done: green;
+    --not-done: red;
+
+
     /* Draw - Pad*/
     --pad-background: whitesmoke;
 
@@ -77,6 +83,11 @@
     --modalBackground: rgba(0, 0, 0, .65);
 
     --darkRed: #501515;
+
+    /* ProgressBar*/
+    --progress-background: var(--user-info);
+    --done: #81c784;
+    --not-done: #e57373;
 
     /* Draw- Pad Background */
     --pad-background: whitesmoke;

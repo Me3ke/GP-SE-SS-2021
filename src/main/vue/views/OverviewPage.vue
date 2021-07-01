@@ -65,7 +65,7 @@
                             <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"></DocumentCard>
+                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id" :show-progress="false"></DocumentCard>
                         </div>
                     </div>
                     <div v-if="this.envelopes(filter, pageLimit, page).length === 0" style="color:var(--dark-grey); padding:1em">
@@ -214,6 +214,16 @@ export default {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
         this.$store.dispatch('fetchUser')
     },
+
+    beforeDestroy() {
+        this.$store.dispatch('document/resetState')
+    },
+
+    // TODO REMINDER:
+    //  Error creating the progress bar because of not updated progress state on overview page
+    //  but after switching to the document page and then go back to the overview page it will getting
+    // updated (onur)
+
     computed: {
         ...mapGetters({
             envelopes: 'envelopes/getFilteredPagedEnvelopes',

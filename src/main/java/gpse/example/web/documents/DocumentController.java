@@ -10,7 +10,6 @@ import gpse.example.domain.exceptions.DownloadFileException;
 import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,8 +45,10 @@ public class DocumentController {
     private static final int STATUS_CODE_DOCUMENT_NOT_FOUND = 453;
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
+    private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
+    private static final String TOKEN = "token";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -117,6 +119,7 @@ public class DocumentController {
                 documentService.addDocument(document);
 
             }
+
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         } else {
             throw new DocumentNotFoundException();
@@ -132,14 +135,13 @@ public class DocumentController {
      * @throws DocumentNotFoundException is thrown if the document that the request relates to does not exist.
      */
     @GetMapping("/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/token/{token}")
-    public DocumentGetResponse getDocumentGuestAccess(@PathVariable final long envelopeID,
-                                                      @PathVariable final long documentID,
-                                                      @PathVariable final String token)
+    public DocumentGetResponse getDocumentGuestAccess(@PathVariable(ENVELOPE_ID) final long envelopeID,
+                                                      @PathVariable(DOCUMENT_ID) final long documentID,
+                                                      @PathVariable(TOKEN) final String token)
             throws DocumentNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            //TODO Fehlermeldung
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             Document document;
@@ -154,8 +156,13 @@ public class DocumentController {
             }
             if (isInEnvelope) {
                 document = documentService.getDocument(documentID);
-                return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
-                    guestTokenOptional.get().getUsername());
+                List<Signatory> signatories = document.getSignatories();
+                for (Signatory signatory : signatories) {
+                    if (signatory.getEmail().equals(guestTokenOptional.get().getUsername())) {
+                        return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
+                            guestTokenOptional.get().getUsername());
+                    }
+                }
             } else {
                 throw new DocumentNotFoundException();
             }
@@ -251,17 +258,49 @@ public class DocumentController {
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink("LinkToDocumentView");
         if (document.isOrderRelevant()) {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 }
             }
         } else {
-            for (Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatories()) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                     container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
             }
+        }
+    }
+
+    @PutMapping("/token/{token}/documents/{documentID:\\d+}/signSimple")
+    public JSONResponseObject signSimpleAsGuest(@PathVariable(TOKEN) String token,
+                                                @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
+        return computeGuestSignatureRequest(token, documentID, SignatureType.SIMPLE_SIGNATURE);
+    }
+
+    @PutMapping("/token/{token}/documents/{documentID:\\d+}/review")
+    public JSONResponseObject reviewAsGuest(@PathVariable(TOKEN) String token,
+                                                @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
+        return computeGuestSignatureRequest(token, documentID, SignatureType.REVIEW);
+    }
+
+    private JSONResponseObject computeGuestSignatureRequest(String token, long documentID, SignatureType signatureType)
+        throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
+        final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
+
+        if (guestTokenOptional.isEmpty()) {
+            JSONResponseObject response = new JSONResponseObject();
+            response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+            response.setMessage("The token that has benn send with the request is not valid for this server.");
+            return response;
+        } else if (guestTokenOptional.get().getDocumentId() == documentID) {
+            GuestToken guestToken = guestTokenOptional.get();
+            return computeSignatureRequest(guestToken.getUsername(), guestToken.getDocumentId(),
+                signatureType);
+        } else {
+            throw new DocumentNotFoundException();
         }
     }
 
@@ -326,7 +365,6 @@ public class DocumentController {
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
                                                        final SignatureType signatureType)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        final User reader = userService.getUser(userID);
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
         if (document.getState().equals(DocumentState.CLOSED)) {
@@ -334,11 +372,12 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            return signatureManagement.manageSignatureRequest(reader, document, signatureType);
+            return signatureManagement.manageSignatureRequest(userID, document, signatureType);
         }
     }
 
-    /**
+
+    /*
      * The getDocumentHistory method does a get request to get the document history.
      *
      * @param documentID the id of the document of which the history is requested.
@@ -388,6 +427,32 @@ public class DocumentController {
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
+    }
+
+    /**
+     * The getDocumentProgress method is used to track the progress of the signing process.
+     * It uses DocumentProgress response to create an appropriate response.
+     * @param userID the id of the user currently wanting to see the progress.
+     * @param envelopeID the id of the envelope in which the document appears to be.
+     * @param documentID the id of the document which's progress should be tracked.
+     * @return the documentProgressResponse
+     * @throws DocumentNotFoundException if the document was not found.
+     */
+    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/progress")
+    public DocumentProgressResponse getDocumentProgress(final @PathVariable(USER_ID) String userID,
+                                                        final @PathVariable(ENVELOPE_ID) long envelopeID,
+                                                        final @PathVariable(DOCUMENT_ID) long documentID)
+        throws DocumentNotFoundException {
+        userService.getUser(userID);
+        envelopeService.getEnvelope(envelopeID);
+        final Document document = documentService.getDocument(documentID);
+
+        final List<Signatory> signatories = document.getSignatories();
+        final LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
+        signatories.clear();
+        signatories.addAll(signatoryLinkedHashSet);
+
+        return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
     }
 
     /**

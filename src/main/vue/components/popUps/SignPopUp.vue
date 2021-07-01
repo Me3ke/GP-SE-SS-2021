@@ -159,7 +159,7 @@
                                         <!-- Error Messages -->
                                         <b-alert :show="showAlertSign"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeAdvanced }}
+                                            {{ $t('TwoFakAuth.fail') }} <!---{{ statusCodeAdvanced }}--->
                                         </b-alert>
 
 
@@ -320,6 +320,8 @@ export default {
             await this.$store.dispatch('fetchUser')
             // gets data out of user file that contains key
             const reader = new FileReader()
+            console.log("KEY")
+            console.log(this.key)
             reader.readAsText(this.key)
 
             // getting user so there is access public key

@@ -11,6 +11,7 @@ import gpse.example.web.DocumentFilter;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
+import gpse.example.web.documents.GuestToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -112,13 +113,13 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (document.isOrderRelevant()) {
-                setupUserInvitation(userService.getUser(document.getCurrentSignatory().getEmail()),
+            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
+                setupUserInvitation(document.getCurrentSignatory().getEmail(),
                     userService.getUser(document.getOwner()), document,
                     envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(userService.getUser(document.getSignatories().get(i).getEmail()),
+                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
                         userService.getUser(document.getOwner()), document,
                         envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
                 }
@@ -135,29 +136,57 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation(User signatory, User owner, Document document,
-                                     Envelope envelope, SignatureType signatureType)
+    private void setupUserInvitation(final String userID, final User owner, final Document document,
+                                     final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
-
-        EmailTemplate template = document.getProcessEmailTemplate();
-        TemplateDataContainer container = new TemplateDataContainer();
-        container.setFirstNameReciever(signatory.getFirstname());
-        container.setLastNameReciever(signatory.getLastname());
-        container.setFirstNameOwner(owner.getFirstname());
-        container.setLastNameOwner(owner.getLastname());
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setEnvelopeName(envelope.getName());
-        container.setEndDate(document.getEndDate().toString());
-        //TODO Link to documentview
-        container.setLink("http://localhost:8080/de/link/to/document/view");
-        Category category;
-        if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
-            || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
-            category = Category.SIGN;
-        } else {
-            category = Category.READ;
+        try {
+            final EmailTemplate template = document.getProcessEmailTemplate();
+            final TemplateDataContainer container = new TemplateDataContainer();
+            final User signatory = userService.getUser(userID);
+            container.setFirstNameReciever(signatory.getFirstname());
+            container.setLastNameReciever(signatory.getLastname());
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(document.getDocumentTitle());
+            container.setEnvelopeName(envelope.getName());
+            container.setEndDate(document.getEndDate().toString());
+            //TODO Link to documentview
+            container.setLink("http://localhost:8080/de/link/to/document/view");
+            Category category;
+            if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
+                || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                category = Category.SIGN;
+            } else {
+                category = Category.READ;
+            }
+            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
+        } catch (UsernameNotFoundException exception) {
+            EmailTemplate template;
+            try {
+                template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
+            } catch (TemplateNameNotFoundException e) {
+                return;
+            }
+            TemplateDataContainer container = new TemplateDataContainer();
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(document.getDocumentTitle());
+            GuestToken token = new GuestToken(userID, document.getId());
+            container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/" + token.getToken());
+            if (signatureType.equals(SignatureType.REVIEW)) {
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
+            } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.SIGN, owner);
+            } else {
+                container.setLink("http://localhost:8080/de/landing");
+                try {
+                    template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
+                } catch (TemplateNameNotFoundException e) {
+                    return;
+                }
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.TODO, owner);
+            }
         }
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
     }
 
 

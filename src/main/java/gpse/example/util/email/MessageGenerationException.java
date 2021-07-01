@@ -14,7 +14,7 @@ public class MessageGenerationException extends Exception {
         thrownByMessageID = messageID;
     }
 
-    public MessageGenerationException(final long messageID, Throwable throwable) {
+    public MessageGenerationException(final long messageID, final Throwable throwable) {
         super(throwable);
         thrownByMessageID = messageID;
     }
