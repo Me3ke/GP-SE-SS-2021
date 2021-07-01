@@ -430,7 +430,6 @@ public class DocumentController {
     }
 
     /**
-<<<<<<< HEAD:src/main/java/gpse/example/domain/documents/DocumentController.java
      * The getDocumentProgress method is used to track the progress of the signing process.
      * It uses DocumentProgress response to create an appropriate response.
      * @param userID the id of the user currently wanting to see the progress.
