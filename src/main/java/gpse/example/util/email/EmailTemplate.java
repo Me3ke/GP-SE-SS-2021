@@ -93,11 +93,11 @@ public class EmailTemplate implements Serializable {
         String filledTemplate = this.htmlTemplateBody;
         for (final String placeholder : neededParams()) {
             try {
-                if (dataOf(placeholder, dataContainer) != null) {
+                if (dataOf(placeholder, dataContainer) == null) {
+                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
+                } else {
                     filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
                         dataOf(placeholder, dataContainer));
-                } else {
-                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
                 }
             } catch (NoSuchMethodException | IllegalAccessException exc) {
                 filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");

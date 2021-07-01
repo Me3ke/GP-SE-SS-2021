@@ -113,7 +113,7 @@ public class UserController {
                 final PersonalData personalData = signUpUser.generatePersonalData();
                 final EmailTemplate standardTemplate =
                     emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
-                EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
+                final EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
                     standardTemplate.getSubject(), standardTemplate.getName(), false);
                 user.addEmailTemplate(newTemplate);
                 user.setPersonalData(personalData);

@@ -29,7 +29,7 @@ public class UserManagementResponse extends UserResponseObject {
         return adminValidated;
     }
 
-    public void setAdminValidated(boolean adminValidated) {
+    public void setAdminValidated(final boolean adminValidated) {
         this.adminValidated = adminValidated;
     }
 
@@ -37,7 +37,7 @@ public class UserManagementResponse extends UserResponseObject {
         return emailConfirmed;
     }
 
-    public void setEmailConfirmed(boolean emailConfirmed) {
+    public void setEmailConfirmed(final boolean emailConfirmed) {
         this.emailConfirmed = emailConfirmed;
     }
 
@@ -45,7 +45,7 @@ public class UserManagementResponse extends UserResponseObject {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(final List<String> roles) {
         this.roles = roles;
     }
 }
