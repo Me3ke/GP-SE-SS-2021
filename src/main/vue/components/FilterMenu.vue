@@ -36,7 +36,7 @@
                                         <b-col>
                                             <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMin"></b-form-datepicker>
                                         </b-col>
-                                        <p>{{}}</p>
+                                        <div>{{this.filterInput.creationDateMin}}</div>
                                         -
                                         <b-col>
                                             <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMax"></b-form-datepicker>

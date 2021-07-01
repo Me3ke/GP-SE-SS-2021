@@ -18,12 +18,15 @@ function filterEnvelopes(envelopes, filters) {
     let i;
     for (i = 0; i < envelopes.length; i++) {
         let envelope = envelopes[i]
-
         let stateFilter = false
         let search = false
         let signatory = false
         let reader = false
         let type = false
+        let creationDateMin = false
+        let creationDateMax = false
+        let endDateMin = false
+        let endDateMax = false
         let j
         for (j = 0; j < envelope.documents.length; j++) {
             let document = envelope.documents[j]
@@ -46,6 +49,20 @@ function filterEnvelopes(envelopes, filters) {
             //Filter data types
             if(filters.dataType === "" || filters.dataType === document.dataType) {
                 type = true;
+            }
+            //Filter CreationDate
+            if(filters.creationDateMin === "" || !(dateCompare(document.creationDate, filters.creationDateMin) === -1)) {
+                creationDateMin = true
+            }
+            if(filters.creationDateMax === "" || !(dateCompare(document.creationDate, filters.creationDateMax) === 1)) {
+                creationDateMax = true
+            }
+            //Filter EndDate
+            if(filters.endDateMin === "" || !(dateCompare(document.endDate, filters.endDateMin) === -1)) {
+                endDateMin = true
+            }
+            if(filters.endDateMax === "" || !(dateCompare(document.endDate, filters.endDateMax) === 1)) {
+                endDateMax = true
             }
         }
         //Search in Envelope name
@@ -82,7 +99,7 @@ function filterEnvelopes(envelopes, filters) {
                 matches = false
             }
         }
-        if(!type) {
+        if(!(type && creationDateMin && creationDateMax && endDateMin && endDateMax)) {
             matches = false
         }
         if(matches) {
@@ -92,3 +109,46 @@ function filterEnvelopes(envelopes, filters) {
     return result
 }
 export{filterEnvelopes};
+
+function dateToInts(date, divider) {
+    let day;
+    let month;
+    let year;
+    let numbers = date.split(divider)
+    if (divider === "-") {
+        day = parseInt(numbers[2])
+        month = parseInt(numbers[1])
+        year = parseInt(numbers[0])
+    } else if (divider === ".") {
+        day = parseInt(numbers[0])
+        month = parseInt(numbers[1])
+        year = parseInt(numbers[2])
+    }
+    return {day: day, month: month, year: year}
+}
+
+// returns 1 if envelopeDate is later than filterDate, -1 if envelopeDate is earlier than filterDate and 0 if envelopeDate and filterDate are the same
+function dateCompare(envelopeDate, filterDate) {
+    let dateA = dateToInts(envelopeDate, ".");
+    let dateB = dateToInts(filterDate, "-")
+
+    if(dateA.year > dateB.year) {
+        return 1;
+    } else if(dateA.year < dateB.year) {
+        return -1;
+    } else {
+        if(dateA.month > dateB.month) {
+            return 1;
+        } else if(dateA.month < dateB.month) {
+            return -1;
+        } else {
+            if(dateA.day > dateB.day) {
+                return 1;
+            } else if(dateA.day < dateB.day) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
