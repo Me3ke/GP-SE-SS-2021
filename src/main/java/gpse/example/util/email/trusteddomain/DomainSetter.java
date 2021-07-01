@@ -1,11 +1,11 @@
-package gpse.example.util.email.trustedDomain;
+package gpse.example.util.email.trusteddomain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- *
+ * Domain Setter Entity stores Domain Settings.
  */
 @Entity
 public class DomainSetter {
@@ -25,6 +25,16 @@ public class DomainSetter {
     @Column
     private String trustedMailDomain;
 
+    /**
+     * Standard constructor.
+     * @param host the host
+     * @param port the port
+     * @param username the username
+     * @param password the password
+     * @param mailSMTPAuth activate SMTPAuth
+     * @param mailSMTPStartTLSEnable activate StartTLS
+     * @param trustedMailDomain the trusted mail Domain
+     */
     public DomainSetter(String host, int port, String username, String password,
                         boolean mailSMTPAuth, boolean mailSMTPStartTLSEnable, String trustedMailDomain) {
         this.host = host;

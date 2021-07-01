@@ -3,10 +3,10 @@ package gpse.example.util.email;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.trustedDomain.DomainSetter;
-import gpse.example.util.email.trustedDomain.DomainSetterService;
-import gpse.example.util.email.trustedDomain.DomainSettingsGetResponse;
-import gpse.example.util.email.trustedDomain.DomainSettingsPutRequest;
+import gpse.example.util.email.trusteddomain.DomainSetter;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
+import gpse.example.util.email.trusteddomain.DomainSettingsGetResponse;
+import gpse.example.util.email.trusteddomain.DomainSettingsPutRequest;
 import gpse.example.web.JSONResponseObject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -101,7 +101,11 @@ public class EmailController {
         userService.saveUser(user);
     }
 
-
+    /**
+     * Method to get the trusted domain in the frontend.
+     * @param token the jwt token
+     * @return json Response object
+     */
     @GetMapping("email/settings/trustedDomain")
     public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String token) {
         JSONResponseObject jsonResponseObject = new JSONResponseObject();
@@ -117,7 +121,7 @@ public class EmailController {
 
     /**
      * PutMapping for reworked templates.
-     *
+     * @param token the jwt token
      * @param domain the settings to be applied
      * @return if the request was successful
      */
@@ -141,7 +145,7 @@ public class EmailController {
 
     /**
      * The request responsible for sending the domain settings to the frontend.
-     *
+     * @param token the jwt token
      * @return the domain settings
      */
     @GetMapping("email/settings")
@@ -159,7 +163,7 @@ public class EmailController {
 
     /**
      * The request responsible for sending the domain settings to the backend.
-     *
+     * @param token the jwt token
      * @param domainSettingsPutRequest the settings to be changed
      * @return if the request was successful or not
      */

@@ -1,4 +1,4 @@
-package gpse.example.util.email.trustedDomain;
+package gpse.example.util.email.trusteddomain;
 
 /**
  * The handler responsible for sending the current settings of the GET request to
@@ -11,7 +11,14 @@ public class DomainSettingsGetResponse {
     private final boolean mailSMTPAuth;
     private final boolean mailSMTPStartTLSEnable;
 
-
+    /**
+     * Constructor of DomainSettingsGetResponse.
+     * @param host the host server
+     * @param port the port
+     * @param username the username
+     * @param mailSMTPAuth activate SMTPAuth
+     * @param mailSMTPStartTLSEnable activate StartTls
+     */
     public DomainSettingsGetResponse(final String host, final int port, final String username,
                                      final boolean mailSMTPAuth, final boolean mailSMTPStartTLSEnable) {
         this.host = host;

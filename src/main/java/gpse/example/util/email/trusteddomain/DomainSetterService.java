@@ -1,9 +1,12 @@
-package gpse.example.util.email.trustedDomain;
+package gpse.example.util.email.trusteddomain;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for DomainSettings in database.
+ */
 @Service
 public class DomainSetterService {
 

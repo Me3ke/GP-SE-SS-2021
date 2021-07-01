@@ -1,4 +1,4 @@
-package gpse.example.util.email.trustedDomain;
+package gpse.example.util.email.trusteddomain;
 
 /**
  * The handler responsible for sending the settings of the PUT request to

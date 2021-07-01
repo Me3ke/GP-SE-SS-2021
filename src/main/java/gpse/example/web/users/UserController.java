@@ -5,7 +5,7 @@ import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.*;
-import gpse.example.util.email.trustedDomain.DomainSetterService;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import gpse.example.web.tokens.ResetPasswordToken;

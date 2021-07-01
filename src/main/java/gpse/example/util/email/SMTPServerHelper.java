@@ -1,8 +1,8 @@
 package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
-import gpse.example.util.email.trustedDomain.DomainSetter;
-import gpse.example.util.email.trustedDomain.DomainSetterService;
+import gpse.example.util.email.trusteddomain.DomainSetter;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
