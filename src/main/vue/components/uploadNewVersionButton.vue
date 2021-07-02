@@ -172,14 +172,6 @@
             <b-container>
                 <b-row style="padding-bottom: 1em">
                     <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
-                    <button type="button"
-                            class="mt-1 light-btn"
-                            v-b-modal="'modal-' + docID + 'c-preview'"
-                    >
-                    <span class="button-txt">
-                        Preview
-                    </span>
-                    </button>
                 </b-row>
             </b-container>
 
@@ -206,15 +198,6 @@
 
         </b-modal>
 
-        <!--- Preview --->
-        <b-modal
-            :id="'modal-' + docID + 'c-preview'"
-            centered
-            :title="'Email Template Preview'"
-            hide-footer ok-only
-            v-if="actualDoc.emailTemplateHtml">
-            <b-container v-html="actualDoc.emailTemplateHtml.htmlTemplateBody"></b-container>
-        </b-modal>
 
         <!-- Modal Page for save written email template--->
 

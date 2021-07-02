@@ -61,6 +61,29 @@
 
                 </quill-editor>
 
+                    <button type="button"
+                            class="mt-1 light-btn"
+                            v-b-modal="'modal-preview'"
+                    >
+                    <span class="button-txt">
+                        Preview
+                    </span>
+                    </button>
+
+                    <!--- Preview --->
+                    <b-modal
+                        :id="'modal-preview'"
+                        centered
+                        :title="'Email Template Preview'"
+                        hide-footer ok-only
+                        v-if="selected.htmlTemplateBody"
+                        style="margin-top: 2em"
+                    >
+                        <b-container v-html="selected.htmlTemplateBody"></b-container>
+                    </b-modal>
+
+
+
                 </b-container>
 
                 <!---<div class="output ql-snow" style="border: 1px solid black; margin-top: 1em">
