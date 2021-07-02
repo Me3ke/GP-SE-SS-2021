@@ -158,23 +158,38 @@
                                         <div class="content-div" style="display: flex; justify-content: center">
                                             {{ $t('KeypairAlert.noLose') }}
                                         </div>
-                                        <div v-if="generating" class="step"
-                                             style="display: flex; justify-content: center">
-                                            {{ $t('KeypairAlert.generatingText') }}
-                                            <b-spinner></b-spinner>
-                                        </div>
-                                        <div v-else class="content-div" style="display: flex; justify-content: center">
-                                            {{ privateKey }}
-                                        </div>
+                                      <div v-if="generating" class="step"
+                                           style="display: flex; justify-content: center">
+                                        {{ $t('KeypairAlert.generatingText') }}
+                                        <b-spinner></b-spinner>
+                                      </div>
+                                      <div v-else class="content-div" style="display: flex; justify-content: center">
+                                        <transition name="saved">
+                                         <span v-if="showReceived" class="content-div">
+                                             {{ $t('Settings.saved') }}
+                                          </span>
+                                        </transition>
+                                        {{ privateKey }}
+                                      </div>
 
-                                        <!-- Button to close -->
-                                        <div style="text-align: right">
-                                            <button type="button" class="elsa-blue-btn" @click="downloadKeyAndClose()">
+                                      <!-- Download Buttons for the private Key -->
+                                      <div v-if="!generating" style="text-align: right">
+                                        <button type="button" class="light-btn" @click="copyClipBoard()">
+                                                <span class="button-txt">
+                                                    {{ $t('DownloadKey.clipBoard') }}
+                                                </span>
+                                        </button>
+                                        <button type="button" class="elsa-blue-btn" @click="downloadKeyAndClose()">
                                                 <span class="button-txt">
                                                     {{ $t('DownloadKey.download') }}
                                                 </span>
-                                            </button>
-                                        </div>
+                                        </button>
+                                        <button type="button" class="light-btn" @click="closeModal()">
+                                                <span class="button-txt">
+                                                    {{ $t('DocumentPage.close') }}
+                                                </span>
+                                        </button>
+                                      </div>
                                     </div>
 
                                     <!-- Page 5 (shows when trying to abort) -->
@@ -216,18 +231,21 @@
 <script>
 import {mapGetters} from "vuex";
 import savePrivateKeyToLink from "../../scripts/privateKeyToFile";
+import {copyToClipboard} from "@/main/vue/scripts/privateKeyToClipBoard";
 import _ from "lodash";
 
 export default {
     name: "KeyPairSetUp",
     data() {
         return {
-            page: 0,
-            pageBefore: 0,
-            pkLink: null,
-            key: null,
-            showSendingAlert: false,
-            generating: true
+          page: 0,
+          pageBefore: 0,
+          pkLink: null,
+          key: null,
+          clipboardPrivateKey: null,
+          showSendingAlert: false,
+          generating: true,
+          showReceived: false
         }
     },
     async created() {
@@ -279,14 +297,19 @@ export default {
         },
         // checks if public key got send to server correctly
         hasSendingError() {
-            return !_.isEmpty(this.sendingSuccess);
+          return !_.isEmpty(this.sendingSuccess);
         },
-        closeModal() {
-            this.$emit('keyPairTrigger');
-            this.page = 0
-        },
+      closeModal() {
+        this.$emit('keyPairTrigger');
+        this.page = 0
+      },
       downloadKeyAndClose() {
         this.pkLink.click();
+        this.$emit('keyPairTrigger');
+        this.page = 0
+      },
+      copyClipBoard() {
+        copyToClipboard(this.privateKey);
         this.$emit('keyPairTrigger');
         this.page = 0
       }

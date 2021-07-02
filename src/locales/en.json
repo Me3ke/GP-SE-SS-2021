@@ -344,7 +344,8 @@
         "cancel": "Cancel"
     },
     "DownloadKey": {
-    "download": "Download"
+      "download": "Download",
+      "clipBoard": "Copy"
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
