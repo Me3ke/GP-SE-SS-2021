@@ -142,6 +142,7 @@ public class DocumentController {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
+            System.out.println("Test1");
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             Document document;
@@ -167,6 +168,7 @@ public class DocumentController {
                 throw new DocumentNotFoundException();
             }
         }
+        System.out.println("Test2");
         return null;
     }
 

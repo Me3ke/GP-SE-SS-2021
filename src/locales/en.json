@@ -365,6 +365,31 @@
         "history": "Show history",
         "newVersion": "New Version",
         "settings": "Settings",
+        "meta": {
+            "meta": "Metadata",
+            "metaShow": "Show metadata",
+            "metaNo": "Hide metadata",
+            "title": "Title",
+            "docType": "File type",
+            "state": "Process state",
+            "open": "Open",
+            "read": "Read",
+            "closed": "Closed",
+            "error": "Error: Unknown state",
+            "owner": "Owner",
+            "created": "Creation date",
+            "end": "End date",
+            "readers": "Readers",
+            "didRead": "Already read",
+            "noRead": "Not read yet",
+            "noReaders": "No readers assigned",
+            "signatories": "Signatories",
+            "signed": "already signed",
+            "noSigned": "not signed yet",
+            "noSignatories": "No signatories assigned",
+            "simple": "simple signature",
+            "advanced": "advanced signature"
+        },
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
@@ -375,6 +400,7 @@
         "email": "e-mail",
         "password": "password",
         "login": "login",
+        "failMail": "failMail",
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
@@ -544,7 +570,6 @@
             "alreadyRead": "Already read by:"
         }
     },
-
     "CommentsPage": {
         "title": "Comments",
         "comment": "comment",

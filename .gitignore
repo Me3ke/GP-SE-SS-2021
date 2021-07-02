@@ -341,6 +341,7 @@ $RECYCLE.BIN/
 ./data*
 data/*
 data
+data*
 
 
 

@@ -8,6 +8,54 @@
     border: 0.03vw solid var(--dark-grey);
 }
 
+.meta-container {
+    border: solid 1px var(--dark-grey);
+    width: 67%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 5em;
+}
+
+.has-doc {
+    width: 50%;
+    margin: 0;
+    height: 70vh;
+}
+
+.meta-text {
+    text-align: left;
+    padding-left: 1em;
+}
+
+.meta-heading {
+    text-align: left;
+    margin-left: 1.5em;
+    margin-top: 1em;
+    font-size: 1.1em;
+}
+
+.meta-inner {
+    font-size: 0.8em;
+}
+
+.first-heading {
+    text-align: center;
+    margin: 0;
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    padding-top: 1em;
+    padding-bottom: 1rem;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     span {
@@ -15,7 +63,7 @@
     }
 
     .text {
-        font-size: .62em;
+        font-size: .52em;
     }
 
     .responsive-img {
