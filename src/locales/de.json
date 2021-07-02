@@ -345,6 +345,10 @@
         "sure": "Möchten Sie das Dokument wirklich herunterladen?",
         "cancel": "Abbrechen"
     },
+    "DownloadKey": {
+      "download": "Herunterladen",
+      "clipBoard": "Kopieren"
+    },
     "DownloadProtocol": {
         "protocol": "Protokoll",
         "sure": "Möchten Sie das Protokoll wirklich herunterladen?",
@@ -363,6 +367,31 @@
         "history": "Historie einsehen",
         "newVersion": "Neue Version",
         "settings": "Einstellungen",
+        "meta": {
+            "meta": "Details",
+            "metaShow": "Details anzeigen",
+            "metaNo": "Details ausblenden",
+            "title": "Titel",
+            "docType": "Datei-Typ",
+            "state": "Prozess-Status",
+            "open": "Offen",
+            "read": "Gegenlesen",
+            "closed": "Geschlossen",
+            "error": "Fehler: Kein bekannter Satus",
+            "owner": "Besitzer",
+            "created": "Erstellungsdatum",
+            "end": "Enddatum",
+            "readers": "Gegenleser",
+            "didRead": "Schon gegengelesen",
+            "noRead": "Noch nicht gegengelesen",
+            "noReaders": "Keine Gegenleser eingetragen",
+            "signatories": "Unterzeichner",
+            "signed": "schon unterschrieben",
+            "noSigned": "noch nicht unterschrieben",
+            "noSignatories": "Keine Unterzeichner eingetragen",
+            "simple": "einfache Unterschrift",
+            "advanced": "fortgeschrittene Unterschrift"
+        },
         "close": "Schließen",
         "errors": {
             "notFound": "Das Dokument konnte nicht gefunden werden.",
@@ -413,14 +442,14 @@
         "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
         "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
         "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
-        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab, oder laden Sie ihn herunter.",
         "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
         "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
         "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
         "placeholder": "Schlüssel hier ablegen oder auswählen",
         "dropPlaceholder": "Hier fallen lassen",
-        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "success": "Sie haben erfolgreich Ihren öffentlichen Schlüssel hochgeladen!",
         "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {
