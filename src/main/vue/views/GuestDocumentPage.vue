@@ -1,6 +1,5 @@
 <template>
     <div>
-      <!-- Comment
         <Header></Header>
 
         <DownloadPopUp v-if="showDownload" :doc-id="docId" :env-id="envId"
@@ -25,7 +24,7 @@
                 <BaseHeading :name="document.title" :translate="false"></BaseHeading>
                 <PDFViewer v-if="showPdf" :pdf-src=getPDF() :overflow="showOverflow"
                            @openDownload="toggleDownload()"></PDFViewer>
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
+                <Sidebar @triggerOverflow="toggleOverflow" :is-guest="true"></Sidebar>
             </div>
 
             <div v-else>
@@ -34,33 +33,20 @@
                     {{ $t("DocumentPage.noView") }}
                 </div>
                 <button type="button" class="elsa-blue-btn" @click="toggleDownload">
-                <span class="button-txt">
-                    {{ $t('DownloadDoc.download') }}
-                </span>
+                  <span class="button-txt">
+                      {{ $t('DownloadDoc.download') }}
+                  </span>
                 </button>
 
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
+                <Sidebar @triggerOverflow="toggleOverflow" :is-guest="true"></Sidebar>
             </div>
         </div>
 
         <Footer></Footer>
-        -->
-
-        <!-- !TEST OUPUT! -->
-      <h1> Hello World </h1>
-      <h1> AUTHENTICATED </h1>
-      <h1> {{ this.$store.state.guestAuth.guestAuthenticated.toString() }}</h1>
-      <h1> USERNAME </h1>
-      <h1> {{ this.$store.state.guestAuth.guestUsername.toString() }}</h1>
-      <h1> TOKEN </h1>
-      <h1> {{ this.$store.state.guestAuth.guestToken.toString() }}</h1>
-
-
     </div>
 </template>
 
 <script>
-/*
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
@@ -71,36 +57,44 @@ import documentAPI from "@/main/vue/api/documentAPI";
 
 import _ from 'lodash';
 import {mapGetters} from 'vuex';
-*/
+
 
 export default {
     name: "GuestDocumentPage",
     components: {
-      /*
         DownloadPopUp,
         Sidebar,
         PDFViewer,
         Footer,
         Header
-
-       */
     },
     data() {
         return {
-
-          /*
             turtle: require('../assets/turtle.svg'),
             pdfSrc: null,
             dataError: false,
             showOverflow: true,
             showDownload: false,
             showUploadNewVersion: false,
-            showPdf: false
+            showPdf: false,
 
-           */
+            show: false
         }
     },
-    /*
+    async created() {
+        //pushing a logged in user to normal Document Page
+        if (this.$store.state.auth.authenticated) {
+            await this.$router.push('/' + this.$i18n.locale + '/envelope/' + this.envId + '/document/' + this.docId)
+        } else {
+            localStorage.clear()
+            await this.$store.dispatch('requestGuestInfo', {
+                envId: this.envId,
+                docId: this.docId,
+                guestToken: this.tokenId
+            })
+            this.show = true
+        }
+    },
     async mounted() {
         await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
         await documentAPI.getDocument(this.envId, this.docId).then(response => {
@@ -111,12 +105,7 @@ export default {
         })
         this.showPdf = true
     },
-    beforeDestroy() {
-
-    },
-    */
     methods: {
-      /*
         getPDF() {
             let chars = atob(this.pdfSrc);
             let array = new Uint8Array(chars.length);
@@ -132,18 +121,16 @@ export default {
             this.showDownload = !this.showDownload
             this.showOverflow = !this.showOverflow
         },
-      */
     }
     ,
     computed: {
-
-      /*
         ...mapGetters({
-            newDocumentId: 'document/getNewDocumentId',
             document: 'document/getDocumentInfo',
-            getError: 'document/getErrorGetDocumentInfo'
+            getError: 'document/getErrorGetDocumentInfo',
+
+            guestSignatory: 'getGuestSignatory'
         }),
-       */
+
         docId() {
             return this.$route.params.docId;
         },
@@ -151,22 +138,12 @@ export default {
             return this.$route.params.envId;
         },
         tokenId() {
-        return this.$route.params.tokenId;
+            return this.$route.params.tokenId;
         },
-      /*
         hasError() {
             return !_.isEmpty(this.getError);
-        }*/
+        }
 
-    },
-    created() {
-      //pushing a logged in user to normal Document Page
-      if (this.$store.state.auth.authenticated === true) {
-        this.$router.push('/' + this.$i18n.locale + '/envelope/' + this.envId + '/document/' + this.docId )
-      } else {
-        localStorage.clear()
-        this.$store.dispatch('requestGuestInfo', { envId:this.envId, docId:this.docId, guestToken:this.tokenId })
-      }
     }
 }
 </script>

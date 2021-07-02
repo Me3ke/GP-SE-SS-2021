@@ -297,7 +297,7 @@ public class DocumentController {
         }
     }
 
-    @PutMapping("/token/{token}/envelope/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
+    @PutMapping("/token/{token}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimpleAsGuest(final @PathVariable(TOKEN) String token,
                                                 final @PathVariable(DOCUMENT_ID) long documentID,
                                                 final @PathVariable(ENVELOPE_ID) long envelopeID)
@@ -305,7 +305,7 @@ public class DocumentController {
         return computeGuestSignatureRequest(token, documentID, SignatureType.SIMPLE_SIGNATURE, envelopeID);
     }
 
-    @PutMapping("/token/{token}/envelope/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/token/{token}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public JSONResponseObject reviewAsGuest(final @PathVariable(TOKEN) String token,
                                             final @PathVariable(DOCUMENT_ID) long documentID,
                                             final @PathVariable(ENVELOPE_ID) long envelopeID)
@@ -341,7 +341,7 @@ public class DocumentController {
      * @return true if the review was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("/user/{userID}/envelope/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
                                      final @PathVariable(DOCUMENT_ID) long documentID,
                                      final @PathVariable(ENVELOPE_ID) long envelopeID)
@@ -360,7 +360,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelope/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID,
                                          final @PathVariable(ENVELOPE_ID) long envelopeID)
@@ -379,7 +379,7 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/envelope/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
                                            final @PathVariable(ENVELOPE_ID) long envelopeID,
