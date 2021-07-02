@@ -14,4 +14,17 @@ export default {
             }
         })
     },
+
+    async makeAdmin(userID) {
+        return axios({
+            method: 'put',
+            url: 'http://localhost:8088/api/admin/makeadmin',
+            params: {
+                userid: userID
+            },
+            headers: {
+                'token': store.state.auth.token
+            }
+        })
+    }
 }
