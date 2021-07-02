@@ -15,7 +15,6 @@ import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import EnvelopeSettingsPage from "@/main/vue/views/EnvelopeSettingsPage";
 import store from "@/main/vue/store/store";
-import BlankTestPage from "@/main/vue/views/BlankTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
@@ -176,11 +175,6 @@ const router = new VueRouter({
                     meta: {
                         requiresAuth: true
                     }
-                },
-                {
-                    path: 'test',
-                    name: 'test',
-                    component: BlankTestPage
                 },
                 {
                     path: 'settings/:envId',
