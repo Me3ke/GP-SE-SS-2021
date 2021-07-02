@@ -1,30 +1,69 @@
 package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
+import gpse.example.util.email.trusteddomain.DomainSetter;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 /**
  * SMTPServerHelper generates connection to smtpserver and sends emails.
  */
 @Component
 public class SMTPServerHelper {
-    @Autowired
-    private final JavaMailSender mailSender;
+
+
+    private final JavaMailSenderImpl mailSender;
 
     @Autowired
     private final MessageServiceImpl messageService;
 
+    @Autowired
+    private final DomainSetterService domainSetterService;
 
-    public SMTPServerHelper(final JavaMailSender mailSender, final MessageServiceImpl messageService) {
-        this.mailSender = mailSender;
+    private Session session;
+
+    /**
+     * something else.
+     * @param messageService s
+     * @param domainSetterService t
+     */
+    public SMTPServerHelper(MessageServiceImpl messageService,
+                            DomainSetterService domainSetterService) {
+        this.mailSender = new JavaMailSenderImpl();
         this.messageService = messageService;
+        this.domainSetterService = domainSetterService;
     }
-
+    /**
+     * something.
+     */
+    public void changeDomainSettings() {
+        try {
+            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            mailSender.setHost(domainSetter.getHost());
+            mailSender.setPort(domainSetter.getPort());
+            mailSender.setUsername(domainSetter.getUsername());
+            mailSender.setPassword(domainSetter.getPassword());
+            Properties properties = mailSender.getJavaMailProperties();
+            properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
+            properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
+             /*session = Session.getInstance(properties, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(, domainSetter.getPassword());
+                }
+            });*/
+        } catch (NullPointerException e) {
+            throw e;
+        }
+    }
     /**
      * sending templated email.
      *
@@ -39,13 +78,14 @@ public class SMTPServerHelper {
                                    final TemplateDataContainer dataContainer, final Category category,
                                    final User sendingUser)
         throws MessageGenerationException {
-        final Message message = new Message();
+        changeDomainSettings();
+        Message message = new Message();
         try {
             message.setCategory(category);
             message.setRecievingUserMail(recieverMail);
             message.setupByTemplate(template, dataContainer);
             message.setSendingUser(sendingUser);
-            mailSender.send(message.generateHtmlMessage(mailSender.createMimeMessage()));
+            mailSender.send(message.generateHtmlMessage(new MimeMessage(session)));
             messageService.saveMessage(message);
         } catch (InvocationTargetException | MessagingException exc) {
             throw new MessageGenerationException(message.getMessageID(), exc);

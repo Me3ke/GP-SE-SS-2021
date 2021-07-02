@@ -48,8 +48,6 @@
     },
     "OverviewPage": {
         "heading": "Overview",
-        "filterClosed": "Closed",
-        "filterOpen": "Open",
         "toSign1": "Sign until",
         "toSign2": "",
         "toRead1": "Read until",
@@ -61,6 +59,27 @@
         "envSign": "Sign",
         "search": "Search",
         "noDocuments": "No documents yet"
+    },
+    "Filter": {
+        "filterTitle": "Filter documents and envelopes",
+        "filter": "Use filter",
+        "removeFilter": "Remove filter",
+        "closed": "closed",
+        "open": "open",
+        "toSign": "sign",
+        "owned": "owned",
+        "creationDate": "Creation date",
+        "endDate": "Deadline",
+        "withSignatureType": "Type of Signature:",
+        "dataType": "Datatype",
+        "readProcess": "proofread process",
+        "signProcess": "sign process",
+        "all": "all",
+        "onlyRoles": "Only show documents and envelopes I am assigned to as following roles:",
+        "owner": "Owner",
+        "reader": "Proofreader",
+        "signatory": "Signatory",
+        "readerOrSignatory": "Proofreader or Signatory"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -305,8 +324,8 @@
         "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
-        "simple": "Simple",
-        "advanced": "Advanced",
+        "simple": "simple",
+        "advanced": "advanced",
         "signatureType": "Signaturetype",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
@@ -323,6 +342,10 @@
         "heading": "Download now!",
         "sure": "Are you sure you want to download the document?",
         "cancel": "Cancel"
+    },
+    "DownloadKey": {
+      "download": "Download",
+      "clipBoard": "Copy"
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
@@ -342,6 +365,31 @@
         "history": "Show history",
         "newVersion": "New Version",
         "settings": "Settings",
+        "meta": {
+            "meta": "Metadata",
+            "metaShow": "Show metadata",
+            "metaNo": "Hide metadata",
+            "title": "Title",
+            "docType": "File type",
+            "state": "Process state",
+            "open": "Open",
+            "read": "Read",
+            "closed": "Closed",
+            "error": "Error: Unknown state",
+            "owner": "Owner",
+            "created": "Creation date",
+            "end": "End date",
+            "readers": "Readers",
+            "didRead": "Already read",
+            "noRead": "Not read yet",
+            "noReaders": "No readers assigned",
+            "signatories": "Signatories",
+            "signed": "already signed",
+            "noSigned": "not signed yet",
+            "noSignatories": "No signatories assigned",
+            "simple": "simple signature",
+            "advanced": "advanced signature"
+        },
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
@@ -352,6 +400,7 @@
         "email": "e-mail",
         "password": "password",
         "login": "login",
+        "failMail": "failMail",
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
@@ -391,7 +440,7 @@
         "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
         "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
         "cancelWarningTwo": "your keypair via the settings page.",
-        "privateKey": "Copy your private key and save it to a .txt file.",
+        "privateKey": "Copy your private key and save it to a .txt file, or download it directly.",
         "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
         "uploadHere": "Upload your public key here.",
@@ -521,7 +570,6 @@
             "alreadyRead": "Already read by:"
         }
     },
-
     "CommentsPage": {
         "title": "Comments",
         "comment": "comment",

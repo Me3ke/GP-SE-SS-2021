@@ -1,6 +1,7 @@
 import axios from "axios";
 import api from "@/main/vue/api";
 
+
 const authorization = {
     state: () => ({
         authenticated: null,

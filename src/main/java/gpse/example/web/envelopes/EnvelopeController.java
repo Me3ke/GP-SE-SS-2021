@@ -172,7 +172,7 @@ public class EnvelopeController {
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(document.getDocumentTitle());
             GuestToken token = new GuestToken(userID, document.getId());
-            container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/" + token.getToken());
+            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + "/document/" + document.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {
                 smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
             } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {

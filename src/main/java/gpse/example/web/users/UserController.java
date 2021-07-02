@@ -5,6 +5,7 @@ import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.*;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import gpse.example.web.tokens.ResetPasswordToken;
@@ -53,6 +54,7 @@ public class UserController {
     private final MessageService messageService;
     private final EmailTemplateService emailTemplateService;
     private final SMTPServerHelper smtpServerHelper;
+    private final DomainSetterService domainSetterService;
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -71,18 +73,21 @@ public class UserController {
      * @param emailTemplateService      used to find the basic template by name
      * @param resetPasswordTokenService Service for the resetPasswordToken
      * @param smtpServerHelper          smtpserverhelper to send emails
+     * @param domainSetterService       Service to store the domain settings
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final MessageService messageService, final EmailTemplateService emailTemplateService,
                           final ResetPasswordTokenService resetPasswordTokenService,
-                          final SMTPServerHelper smtpServerHelper) {
+                          final SMTPServerHelper smtpServerHelper,
+                          final DomainSetterService domainSetterService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
         this.emailTemplateService = emailTemplateService;
         this.resetPasswordTokenService = resetPasswordTokenService;
         this.smtpServerHelper = smtpServerHelper;
+        this.domainSetterService = domainSetterService;
     }
 
     /**
@@ -113,7 +118,7 @@ public class UserController {
                 final PersonalData personalData = signUpUser.generatePersonalData();
                 final EmailTemplate standardTemplate =
                     emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
-                EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
+                final EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
                     standardTemplate.getSubject(), standardTemplate.getName(), false);
                 user.addEmailTemplate(newTemplate);
                 user.setPersonalData(personalData);
@@ -161,7 +166,7 @@ public class UserController {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
 
-            if (user.getEmail().matches(".*@techfak\\.de")) {
+            if (user.getEmail().matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain())) {
                 response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
@@ -402,41 +407,30 @@ public class UserController {
      * call api/user?password={password}&token={token}
      *
      * @param password new password
-     * @param token    token which references the user who want to chnge password
-     * @param jwtToken jwt-token references current logged in user
+     * @param token    token which references the user who want to change password
      * @return jsonResponse with statuscode
      */
     @GetMapping("/user/")
     public JSONResponseObject resetPassword(@RequestParam("password") final String password,
-                                            @RequestParam("token") final String token,
-                                            @RequestHeader final String jwtToken) {
+                                            @RequestParam("token") final String token) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-
-        final SecurityConstants securityConstants = new SecurityConstants();
-        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        final Jws<Claims> parsedToken = Jwts.parserBuilder()
-            .setSigningKey(signingKey).build()
-            .parseClaimsJws(jwtToken.replace(securityConstants.getTokenPrefix(), "").strip());
-
         final Optional<ResetPasswordToken> optionalResetPasswordToken
             = resetPasswordTokenService.findResetPasswordTokenByToken(token);
 
         try {
-            final User user = userService.getUser(parsedToken.getBody().getSubject());
-
             if (optionalResetPasswordToken.isEmpty()) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
                 return jsonResponseObject;
-            } else if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
+            }
+            final User user = userService.getUser(optionalResetPasswordToken.get().getUserId());
+
+            if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
                 jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
                 return jsonResponseObject;
-            } else if (optionalResetPasswordToken.get().getUserId().equals(user.getEmail())) {
+            } else {
                 user.setPassword(passwordEncoder.encode(password));
                 userService.saveUser(user);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
-                return jsonResponseObject;
-            } else {
-                jsonResponseObject.setStatus(STATUS_CODE_WRONG_USER);
                 return jsonResponseObject;
             }
 

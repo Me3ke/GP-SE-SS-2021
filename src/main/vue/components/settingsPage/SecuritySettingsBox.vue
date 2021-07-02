@@ -12,7 +12,6 @@
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-
                         <b-button class="light-btn" @click="keySetUp">
                             {{ $t('Settings.SecuritySettings.newKeypair') }}
                         </b-button>
@@ -23,12 +22,11 @@
                         <span>
                              {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
                         </span>
-
                         <b-button class="light-btn" @click="setUp()">
-                            {{ $t('Settings.SecuritySettings.setUp') }}
+                          {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
                     </b-list-group-item>
-                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
+                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp()"></TwoFakAuthSetUp>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
@@ -92,7 +90,7 @@ export default {
             showKey: false,
             showSetUp: false,
             showSave: false,
-
+            showKeyChanged: false,
             loginActive: false
         }
     },
@@ -106,8 +104,8 @@ export default {
     },
     methods: {
         keySetUp() {
-            this.showKey = !this.showKey
-            this.$emit('modalTrigger')
+          this.showKey = !this.showKey
+          this.$emit('modalTrigger')
         },
         setUp() {
             this.showSetUp = !this.showSetUp

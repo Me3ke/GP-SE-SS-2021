@@ -15,6 +15,8 @@ import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
 import * as comments from "./modules/comments";
 import * as emailTemplate from "./modules/emailTemplate.js"
+import guestAuthorization from "@/main/vue/store/modules/guestAuthorization";
+
 
 Vue.use(Vuex)
 
@@ -31,7 +33,8 @@ const store = new Vuex.Store({
         twoFakAuth,
         comments,
         emailTemplate,
-        auth: authorization
+        auth: authorization,
+        guestAuth: guestAuthorization
     },
     mutations: {
         INITIALIZE_STORE(state) {

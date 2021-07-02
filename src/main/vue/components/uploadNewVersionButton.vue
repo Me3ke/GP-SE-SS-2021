@@ -38,7 +38,7 @@
                         v-b-modal="'modal-' + docID + 'bb'"
                         :disabled="file == null"
                         @click="setActualDoc"
-                        >
+                >
                     <span class="button-txt">
                         {{ $t('UploadDoc.continue') }}
                     </span>
@@ -47,14 +47,11 @@
         </b-modal>
 
 
-
-
-
         <b-modal
             :id="'modal-' + docID + 'bb'"
             ref="modal-page2"
             centered
-            :title= "document.title + '  Documentsettings'"
+            :title="document.title + '  Documentsettings'"
             hide-footer ok-only no-stacking
         >
             <div>
@@ -64,7 +61,7 @@
                         v-b-modal="'modal-' + docID + 'bbb'"
                 >
                     <h5>
-                        {{$t('UploadDoc.addReaders')}}
+                        {{ $t('UploadDoc.addReaders') }}
                     </h5>
                 </button>
                 <button type="button"
@@ -74,14 +71,11 @@
 
                 >
                     <h5>
-                        {{$t('UploadDoc.skipReview')}}
+                        {{ $t('UploadDoc.skipReview') }}
                     </h5>
                 </button>
             </div>
         </b-modal>
-
-
-
 
 
         <!---Readers --->
@@ -89,7 +83,7 @@
             :id="'modal-' + docID + 'bbb'"
             ref="modal-page2"
             centered
-            :title= "document.title"
+            :title="document.title"
             hide-footer ok-only no-stacking
         >
             <div>
@@ -125,15 +119,16 @@
             :id="'modal-' + docID + 'bbbb'"
             ref="modal-page2"
             centered
-            :title= "document.title"
+            :title="document.title"
             hide-footer ok-only no-stacking
         >
             <div>
                 <div>
-                    <label for="endDatePicker">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+                    <label for="endDatePicker">{{ $t('Settings.DocumentSettings.chooseDate') }}</label>
                     <b-form-datepicker id="endDatePicker" v-model="actualDoc.endDate" class="mb-2"></b-form-datepicker>
                 </div>
-                <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant" @update-signatories="updateSignatories"></SignatoryMenu>
+                <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant"
+                               @update-signatories="updateSignatories"></SignatoryMenu>
             </div>
             <div>
                 <button type="button"
@@ -157,7 +152,6 @@
             </div>
 
         </b-modal>
-
 
         <!--- Email Template --->
         <b-modal
@@ -197,12 +191,7 @@
             </div>
 
         </b-modal>
-
-
         <!-- Modal Page for save written email template--->
-
-
-
         <!-- Last PAGE  -->
         <b-modal
             :id="'modal-' + docID + 'd'"
@@ -210,11 +199,11 @@
             centered
             hide-footer hide-header ok-only no-stacking
         >
-            <div style="height: 20em">
-                <h3>{{document.title}}</h3>
+            <div>
+                <h3>{{ document.title }}</h3>
                 <h5> {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</h5>
             </div>
-            <p class="my-4"> {{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }}  {{showAlert}} </p>
+            <p class="my-4"> {{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }} {{ showAlert }} </p>
             <div class="text-right">
 
 
@@ -236,6 +225,11 @@
                         {{ $t('UploadDoc.continue') }} <!--UPLOAD -->
                     </span>
                 </button>
+                <!--<b-button
+                    @click="uploadNewFile"
+                    >
+                    {{ $t('UploadDoc.UpdateDocument.update1') }}
+                </b-button>-->
 
             </div>
         </b-modal>
@@ -258,7 +252,7 @@
 </template>
 
 <script>
-import {convertUploadFileToBase64} from "./fileToBase64Converter";
+import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 import _ from "lodash";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
@@ -275,7 +269,6 @@ export default {
             file: null,
             showAlert: false,
             review: true,
-
 
 
             // need document settings as variable
@@ -298,7 +291,7 @@ export default {
             }
         },
 
-        isoDate(enDate){
+        isoDate(enDate) {
             const [day, month, year] = enDate.split('.')
             return year + '-' + month + '-' + day
         }
@@ -313,7 +306,7 @@ export default {
         },
 
         updateSignatories(newSignatories) {
-           this.actualDoc.signatories = newSignatories
+            this.actualDoc.signatories = newSignatories
         },
 
         setActualDoc() {
@@ -323,7 +316,7 @@ export default {
             this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
 
-            if(this.actualDoc.endDate !== '' || this.actualDoc.endDate != null) {
+            if (this.actualDoc.endDate !== '' || this.actualDoc.endDate != null) {
                 const [day, month, year] = this.actualDoc.endDate.split('.')
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
@@ -343,14 +336,14 @@ export default {
             this.fileString = ""
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
 
-            this.actualDoc.data =  await this.asyncHandleFunction()
+            this.actualDoc.data = await this.asyncHandleFunction()
 
             // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
             await this.$store.dispatch('document/editDocument', payload)
 
             // here show error
-            if(this.showAlert) {
+            if (this.showAlert) {
                 this.$refs['modal-page3'].hide()
                 this.$bvModal.show('modal-' + this.docID + 'error')
                 this.actualDoc = {}
@@ -359,6 +352,7 @@ export default {
             }
             else {
                 this.$refs['modal-page4'].hide()
+
                 await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
                 let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
                 this.showAlert = !this.showAlert
@@ -381,24 +375,16 @@ export default {
         },
 
         resetSettings(a) {
-            if(a === 'modal-page1') {
+            if (a === 'modal-page1') {
                 this.$refs[a].hide()
-                this.fileString =""
+                this.fileString = ""
                 this.actualDoc = {}
-            } else if(a === 'modal-page2') {
+            } else if (a === 'modal-page2') {
                 this.actualDoc = {}
             }
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 </script>
