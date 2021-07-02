@@ -371,6 +371,7 @@
         "email": "e-mail",
         "password": "password",
         "login": "login",
+        "failMail": "failMail",
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",

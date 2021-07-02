@@ -374,6 +374,7 @@
         "password": "Passwort",
         "login": "Anmeldung",
         "sign-in": "Anmelden",
+        "failMail": "Mail Fehler",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen.",

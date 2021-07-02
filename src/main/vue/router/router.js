@@ -21,6 +21,7 @@ import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
 import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
 import CommentsPage from "@/main/vue/views/CommentsPage";
+import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
 
 
 Vue.use(VueRouter)
@@ -104,6 +105,15 @@ const router = new VueRouter({
                     props: true,
                     meta: {
                         requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/:tokenId',
+                    name: 'guestDocument',
+                    component: GuestDocumentPage,
+                    props: true,
+                    meta: {
+                        guest: true
                     }
                 },
                 {
