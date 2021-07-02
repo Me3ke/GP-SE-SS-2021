@@ -163,7 +163,7 @@ export default {
     methods: {
         // TODO: make adaptions once it is possible to review multiple files at at time
         async proofread() {
-            await this.$store.dispatch('document/reviewDocument', {docId: this.docId})
+            await this.$store.dispatch('document/reviewDocument', {nvId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCode === 200) {

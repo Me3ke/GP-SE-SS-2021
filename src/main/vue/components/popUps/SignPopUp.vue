@@ -298,7 +298,7 @@ export default {
     methods: {
         // makes simple signature api call
         async signSimple() {
-            await this.$store.dispatch('document/simpleSignDocument', {docId: this.docId})
+            await this.$store.dispatch('document/simpleSignDocument', {envId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCodeSimple === 200) {
@@ -342,6 +342,7 @@ export default {
                 const isValid = sig2.verify(signature);
                 if (isValid) {
                     await this.$store.dispatch('document/advancedSignDocument', {
+                        envId: this.envId,
                         docId: this.docId,
                         signature: signature
                     })
