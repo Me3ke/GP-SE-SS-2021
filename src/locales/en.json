@@ -413,7 +413,7 @@
         "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
         "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
         "cancelWarningTwo": "your keypair via the settings page.",
-        "privateKey": "Copy your private key and save it to a .txt file.",
+        "privateKey": "Copy your private key and save it to a .txt file, or download it directly.",
         "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
         "uploadHere": "Upload your public key here.",

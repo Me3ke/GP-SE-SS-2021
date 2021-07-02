@@ -163,6 +163,10 @@
                                             {{ $t('KeypairAlert.generatingText') }}
                                             <b-spinner></b-spinner>
                                         </div>
+                                        <div v-else class="content-div" style="display: flex; justify-content: center">
+                                            {{ privateKey }}
+                                        </div>
+
                                         <!-- Button to close -->
                                         <div style="text-align: right">
                                             <button type="button" class="elsa-blue-btn" @click="downloadKeyAndClose()">
@@ -211,7 +215,7 @@
 
 <script>
 import {mapGetters} from "vuex";
-import savePrivateKeyToLink from "../../scripts/privateKeyToFile"
+import savePrivateKeyToLink from "../../scripts/privateKeyToFile";
 import _ from "lodash";
 
 export default {
@@ -262,8 +266,8 @@ export default {
                 this.$store.dispatch('callToGenerate')
                 this.generating = false
                 this.sendKey(this.publicKey)
+                this.pkLink = savePrivateKeyToLink(this.privateKey);
             }, 1000);
-            this.pkLink = savePrivateKeyToLink(this.privateKey);
         },
         // sends given public key to server
         async sendKey(key) {

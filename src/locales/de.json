@@ -415,7 +415,7 @@
         "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
         "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
         "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
-        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab, oder laden Sie ihn herunter.",
         "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
         "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
