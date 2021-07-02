@@ -33,23 +33,29 @@
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item v-if="protocol" @click="goToProtocol" class="mini-list">
+                <b-list-group-item @click="goToProtocol" class="mini-list">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory" class="mini-list">
+                <b-list-group-item @click="showHistory" class="mini-list">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion" class="mini-list">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion"
+                                   class="mini-list">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- Settings -->
                 <b-list-group-item v-if="isOwner" @click="goToSettings()" class="mini-list">
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
+                </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item @click="showMeta()" class="mini-list">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
                 </b-list-group-item>
             </b-list-group>
         </b-sidebar>
@@ -84,19 +90,19 @@
                 </b-list-group-item>
 
                 <!-- Comments -->
-                <b-list-group-item v-if="protocol" @click="goToComments">
+                <b-list-group-item @click="goToComments">
                     <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
                     <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item v-if="protocol" @click="goToProtocol">
+                <b-list-group-item @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory">
+                <b-list-group-item @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
@@ -112,6 +118,14 @@
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.settings') }} </span>
                 </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item @click="showMeta()">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
+                    <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
+                    <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
+                </b-list-group-item>
+
             </b-list-group>
         </b-sidebar>
 
@@ -145,19 +159,19 @@
                 </b-list-group-item>
 
                 <!-- Comments -->
-                <b-list-group-item v-if="protocol" @click="goToComments">
+                <b-list-group-item @click="goToComments">
                     <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
                     <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item v-if="protocol" @click="goToProtocol">
+                <b-list-group-item @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory">
+                <b-list-group-item @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
@@ -172,6 +186,13 @@
                 <b-list-group-item v-if="isOwner" @click="goToSettings()">
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.settings') }} </span>
+                </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item @click="showMeta()">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
+                    <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
+                    <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
                 </b-list-group-item>
             </b-list-group>
         </b-sidebar>
@@ -189,10 +210,6 @@ export default {
     components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp},
     data() {
         return {
-            // TODO: get Info with api
-            protocol: true,
-            history: true,
-
             showProofread: false,
             showSign: false,
             showDownload: false,
@@ -201,7 +218,8 @@ export default {
             elsaLight: require('../assets/logos/ELSA_medium.svg'),
             elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
 
-            isClosed: true
+            isClosed: true,
+            metaShown: false
         }
     },
     methods: {
@@ -246,6 +264,10 @@ export default {
         },
         // TODO. add router push to settings site of document
         goToSettings() {
+        },
+        showMeta() {
+            this.metaShown = !this.metaShown
+            this.$emit('detailTrigger')
         },
         getLightSource() {
             if (this.logoLightType === 'svg') {
@@ -326,7 +348,7 @@ export default {
 .list-group-item {
     background-color: var(--whitesmoke);
     border-color: var(--light-grey);
-    padding: 2em 1.25em;
+    padding: 1.5em 1.25em;
 }
 
 .mini-list.list-group-item {

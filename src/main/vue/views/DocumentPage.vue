@@ -23,12 +23,100 @@
             <!-- No error, can be shown -->
             <div v-if="document.dataType === 'pdf'">
                 <BaseHeading :name="document.title" :translate="false"></BaseHeading>
-                <PDFViewer v-if="showPdf" :pdf-src=getPDF() :overflow="showOverflow"
-                           @openDownload="toggleDownload()"></PDFViewer>
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
+
+                <transition name="fade" mode="out-in">
+                    <div style="display: flex; width: 100%" v-if="showDetails" key="1">
+                        <PDFViewer v-if="showPdf" :pdf-src=getPDF() :overflow="showOverflow"
+                                   @openDownload="toggleDownload()"></PDFViewer>
+
+                        <!-- Meta data -->
+                        <div class="meta-container has-doc overflow-auto">
+                            <div class="meta-heading first-heading">
+                                <span> {{ $t('DocumentPage.meta.meta') }} </span>
+                            </div>
+
+                            <hr style="border-color: var(--dark-grey); margin-top: 0">
+
+                            <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.title') }}: <span
+                            class="meta-inner"> {{ document.title }} </span> </span>
+                            </div>
+
+                            <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.docType') }}: <span
+                            class="meta-inner"> {{ document.dataType }} </span> </span>
+                            </div>
+
+                            <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.state') }}: <span
+                            class="meta-inner"> {{ $t('DocumentPage.meta.' + getDocState()) }} </span> </span>
+                            </div>
+
+                            <div class="meta-heading">
+                        <span> {{ $t('DocumentPage.meta.owner') }}: <span
+                            class="meta-inner"> {{ document.owner.firstname }} {{
+                                document.owner.lastname
+                            }} </span> </span>
+                            </div>
+
+                            <div class="meta-heading">
+                        <span>  {{ $t('DocumentPage.meta.created') }}: <span
+                            class="meta-inner"> {{ document.creationDate }} </span></span>
+                            </div>
+
+                            <div class="meta-heading">
+                        <span>  {{ $t('DocumentPage.meta.end') }}: <span
+                            class="meta-inner"> {{ document.endDate }} </span></span>
+                            </div>
+
+                            <div class="meta-heading">
+                                <span> {{ $t('DocumentPage.meta.readers') }}</span>
+
+                                <div v-if="documentProgress[0]">
+                                    <ul class="text" v-if="documentProgress[0].data.readers.length === 0">
+                                        <li> {{ $t('DocumentPage.meta.noReaders') }}</li>
+                                    </ul>
+                                    <ul class="text" v-else>
+                                        <li v-for="(reader, index) in documentProgress[0].data.readers" :key="index">
+                                            {{ reader.email }}:
+                                            {{ $t('DocumentPage.meta.' + getRead(reader.email)) }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="meta-heading">
+                                <span>  {{ $t('DocumentPage.meta.signatories') }}</span>
+                                <div v-if="documentProgress[0]">
+                                    <ul class="text" v-if="documentProgress[0].data.signatories.length === 0">
+                                        <li> {{ $t('DocumentPage.meta.noSignatories') }}</li>
+                                    </ul>
+                                    <ul class="text" v-else>
+                                        <li v-for="(signatory, index) in documentProgress[0].data.signatories"
+                                            :key="index">
+                                            {{ signatory.email }}: {{
+                                                $t('DocumentPage.meta.' + getSignatureType(index))
+                                            }},
+                                            {{ $t('DocumentPage.meta.' + getSigned(index)) }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div v-else key="2">
+                        <PDFViewer v-if="showPdf" :pdf-src=getPDF() :overflow="showOverflow"
+                                   @openDownload="toggleDownload()"></PDFViewer>
+                    </div>
+
+                </transition>
+                <Sidebar @triggerOverflow="toggleOverflow" @detailTrigger="showDetails = !showDetails"></Sidebar>
             </div>
 
-            <!-- Error, cannot be shown -->
+            <!-- No error, cannot be shown -->
             <div v-else>
                 <BaseHeading :name="document.title" :translate="false"></BaseHeading>
                 <div class="text">
@@ -40,7 +128,83 @@
                 </span>
                 </button>
 
-                <Sidebar @triggerOverflow="toggleOverflow"></Sidebar>
+                <!-- Meta data -->
+                <transition name="fade">
+                    <div v-if="showDetails" class="meta-container">
+                        <div class="meta-heading first-heading">
+                            <span> {{ $t('DocumentPage.meta.meta') }} </span>
+                        </div>
+
+                        <hr style="border-color: var(--dark-grey); margin-top: 0">
+
+                        <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.title') }}: <span
+                            class="meta-inner"> {{ document.title }} </span> </span>
+                        </div>
+
+                        <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.docType') }}: <span
+                            class="meta-inner"> {{ document.dataType }} </span> </span>
+                        </div>
+
+                        <div class="meta-heading">
+                        <span>{{ $t('DocumentPage.meta.state') }}: <span
+                            class="meta-inner"> {{ $t('DocumentPage.meta.' + getDocState()) }} </span> </span>
+                        </div>
+
+                        <div class="meta-heading">
+                        <span> {{ $t('DocumentPage.meta.owner') }}: <span
+                            class="meta-inner"> {{ document.owner.firstname }} {{
+                                document.owner.lastname
+                            }} </span> </span>
+                        </div>
+
+                        <div class="meta-heading">
+                        <span>  {{ $t('DocumentPage.meta.created') }}: <span
+                            class="meta-inner"> {{ document.creationDate }} </span></span>
+                        </div>
+
+                        <div class="meta-heading">
+                        <span>  {{ $t('DocumentPage.meta.end') }}: <span
+                            class="meta-inner"> {{ document.endDate }} </span></span>
+                        </div>
+
+                        <div class="meta-heading">
+                            <span> {{ $t('DocumentPage.meta.readers') }}</span>
+
+                            <div v-if="documentProgress[0]">
+                                <ul class="text" v-if="documentProgress[0].data.readers.length === 0">
+                                    <li> {{ $t('DocumentPage.meta.noReaders') }}</li>
+                                </ul>
+                                <ul class="text" v-else>
+                                    <li v-for="(reader, index) in documentProgress[0].data.readers" :key="index">
+                                        {{ reader.email }}:
+                                        {{ $t('DocumentPage.meta.' + getRead(reader.email)) }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div class="meta-heading">
+                            <span>  {{ $t('DocumentPage.meta.signatories') }}</span>
+                            <div v-if="documentProgress[0]">
+                                <ul class="text" v-if="documentProgress[0].data.signatories.length === 0">
+                                    <li> {{ $t('DocumentPage.meta.noSignatories') }}</li>
+                                </ul>
+                                <ul class="text" v-else>
+                                    <li v-for="(signatory, index) in documentProgress[0].data.signatories" :key="index">
+                                        {{ signatory.email }}: {{ $t('DocumentPage.meta.' + getSignatureType(index)) }},
+                                        {{ $t('DocumentPage.meta.' + getSigned(index)) }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </transition>
+
+                <Sidebar @triggerOverflow="toggleOverflow" @detailTrigger="showDetails = !showDetails"></Sidebar>
             </div>
         </div>
 
@@ -75,13 +239,17 @@ export default {
             turtle: require('../assets/turtle.svg'),
             pdfSrc: null,
             dataError: false,
+
             showOverflow: true,
             showDownload: false,
             showUploadNewVersion: false,
-            showPdf: false
+            showPdf: false,
+            showDetails: false
         }
     },
     async mounted() {
+        await this.$store.dispatch('document/resetState')
+        await this.$store.dispatch('document/documentProgress', {envId: this.envId, docId: this.docId})
         await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
         await documentAPI.getDocument(this.envId, this.docId).then(response => {
             this.pdfSrc = response.data.data
@@ -92,7 +260,7 @@ export default {
         this.showPdf = true
     },
     beforeDestroy() {
-
+        this.$store.dispatch('document/resetState')
     },
     methods: {
         getPDF() {
@@ -110,14 +278,52 @@ export default {
             this.showDownload = !this.showDownload
             this.showOverflow = !this.showOverflow
         },
+        // returns state of document as string
+        getDocState() {
+            if (this.document.state === 'OPEN') {
+                return 'open'
+            } else if (this.document.state === 'READ') {
+                return 'read'
+            } else if (this.document.state === 'CLOSED') {
+                return 'closed'
+            } else {
+                return 'error'
+            }
+        },
+        getRead(mail) {
+            const haveRead = this.documentProgress[0].data.alreadyRead
 
-    }
-    ,
+            for (var i = 0; i < haveRead; i++) {
+                if (haveRead[i].email === mail) {
+                    return "didRead"
+                }
+            }
+
+            return "noRead"
+        },
+        // returns signed as string
+        getSigned(index) {
+            if (this.documentProgress[0].data.signatories[index].status) {
+                return 'signed'
+            } else {
+                return 'noSigned'
+            }
+        },
+        // returns signature type as string
+        getSignatureType(index) {
+            if (this.documentProgress[0].data.signatories[index].signatureType === 'SIMPLE_SIGNATURE') {
+                return 'simple'
+            } else if (this.documentProgress[0].data.signatories[index].signatureType === 'ADVANCED_SIGNATURE') {
+                return 'advanced'
+            }
+        }
+    },
     computed: {
         ...mapGetters({
             newDocumentId: 'document/getNewDocumentId',
             document: 'document/getDocumentInfo',
-            getError: 'document/getErrorGetDocumentInfo'
+            getError: 'document/getErrorGetDocumentInfo',
+            documentProgress: 'document/getDocumentProgressArray'
         }),
         docId() {
             return this.$route.params.docId;
