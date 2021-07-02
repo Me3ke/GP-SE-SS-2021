@@ -3,10 +3,12 @@ import UserManagementAPI from "@/main/vue/api/UserManagementAPI";
 
 export const state = {
     allUsers: [],
-    userValidate: {},
-    userMakeAdmin: {},
+    userValidateStatus: {},
+    userMakeAdminStatus: {},
+    lockUserStatus: {},
     userManagementError: {}
 }
+
 
 export const mutations = {
     FETCH_ALL_USERS(state, users) {
@@ -14,11 +16,15 @@ export const mutations = {
     },
 
     SET_USER_VALIDATE(state, progress) {
-        state.userValidate = progress
+        state.userValidateStatus = progress
+    },
+
+    SET_USER_LOCK(state, progress) {
+        state.lockUserStatus = progress
     },
 
     SET_USER_MAKE_ADMIN(state, progress) {
-        state.userMakeAdmin = progress
+        state.userMakeAdminStatus = progress
     },
 
     SET_USER_MANAGEMENT_ERROR(state, error) {
@@ -29,9 +35,11 @@ export const mutations = {
 
 export const actions = {
 
+
+    // Example await this.$store.dispatch('fetchAllUsers') not 'userManage/fetchAllUsers'
+
     fetchAllUsers({commit}) {
         return UserManagementAPI.getAllUser().then(response => {
-            console.log(response.data)
             commit('FETCH_ALL_USERS', response.data)
             commit('SET_USER_MANAGEMENT_ERROR', {})
         }).catch(error => {
@@ -41,8 +49,23 @@ export const actions = {
 
     makeUserAdmin({commit}, userId) {
         return UserManagementAPI.makeAdmin(userId).then(response => {
-                console.log(response.data.status)
                 commit('SET_USER_MAKE_ADMIN', response.data)
+        }).catch(error => {
+            commit('SET_USER_MANAGEMENT_ERROR', error)
+        })
+    },
+
+    validateUser({commit}, userId) {
+        return UserManagementAPI.validateUser(userId).then(response => {
+            commit('SET_USER_VALIDATE', response.data)
+        }).catch(error => {
+            commit('SET_USER_MANAGEMENT_ERROR', error)
+        })
+    },
+
+    lockUser({commit}, userId) {
+        return UserManagementAPI.lockUser(userId).then(response => {
+            commit('SET_USER_LOCK', response.data)
         }).catch(error => {
             commit('SET_USER_MANAGEMENT_ERROR', error)
         })
@@ -51,13 +74,20 @@ export const actions = {
 
 
 export const getters = {
-    // returning the list
     getAllUsers: (state) => {
         return state.allUsers.allUsers
     },
 
     getMakeAdminStatus: (state) => {
-        return state.userMakeAdmin
+        return state.userMakeAdminStatus
+    },
+
+    getValidationStatus: (state) => {
+      return state.userValidateStatus
+    },
+
+    getLockedUserStatus: (state) => {
+        return state.lockUserStatus
     },
 
     userManagementError: (state) => {

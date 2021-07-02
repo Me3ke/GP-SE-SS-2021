@@ -4,8 +4,8 @@ import store from "@/main/vue/store/store";
 
 
 export default {
+
     async getAllUser() {
-        console.log('#1')
         return axios({
             method: "get",
             url: 'http://localhost:8088/api/admin/allusers',
@@ -26,5 +26,31 @@ export default {
                 'token': store.state.auth.token
             }
         })
-    }
+    },
+
+    async validateUser(userID) {
+        return axios({
+            method: 'put',
+            url: 'http://localhost:8088/api/admin/validate',
+            params: {
+                userid: userID
+            },
+            headers: {
+                'token': store.state.auth.token
+            }
+        })
+    },
+
+    async lockUser(userID) {
+        return axios({
+            method: 'put',
+            url: 'http://localhost:8088/api/admin/lockUser',
+            params: {
+                userid: userID
+            },
+            headers: {
+                'token': store.state.auth.token
+            }
+        })
+    },
 }
