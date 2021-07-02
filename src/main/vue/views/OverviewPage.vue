@@ -102,7 +102,6 @@
             :per-page="pageLimit"
             style="margin: 1em 1.5em"
         ></b-pagination>
-
         <Footer></Footer>
     </div>
 </template>
@@ -261,7 +260,7 @@ export default {
             envelopes: 'envelopes/getFilteredPagedEnvelopes',
             allEnvelopes: 'envelopes/getFilteredEnvelopes',
             getError: 'envelopes/getErrorGetEnvelopes',
-            user: 'getUser'
+            user: 'getUser',
         })
     }
 }
