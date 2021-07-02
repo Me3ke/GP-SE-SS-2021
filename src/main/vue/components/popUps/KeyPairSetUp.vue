@@ -164,17 +164,24 @@
                                         <b-spinner></b-spinner>
                                       </div>
                                       <div v-else class="content-div" style="display: flex; justify-content: center">
-                                        <transition name="saved">
-                                         <span v-if="showReceived" class="content-div">
-                                             {{ $t('Settings.saved') }}
-                                          </span>
-                                        </transition>
                                         {{ privateKey }}
                                       </div>
 
                                       <!-- Download Buttons for the private Key -->
                                       <div v-if="!generating" style="text-align: right">
-                                        <button type="button" class="light-btn" @click="copyClipBoard()">
+
+                                          <transition name="saved">
+                                            <span v-if="showReceived" class="button-txt">
+                                              {{ $t('Settings.saved') }}
+                                            </span>
+                                        </transition>
+
+                                        <button type="button" class="light-btn" @click="closeModal()">
+                                                <span class="button-txt">
+                                                    {{ $t('DocumentPage.close') }}
+                                                </span>
+                                        </button>
+                                        <button type="button" class="elsa-blue-btn" @click="copyClipBoard()">
                                                 <span class="button-txt">
                                                     {{ $t('DownloadKey.clipBoard') }}
                                                 </span>
@@ -182,11 +189,6 @@
                                         <button type="button" class="elsa-blue-btn" @click="downloadKeyAndClose()">
                                                 <span class="button-txt">
                                                     {{ $t('DownloadKey.download') }}
-                                                </span>
-                                        </button>
-                                        <button type="button" class="light-btn" @click="closeModal()">
-                                                <span class="button-txt">
-                                                    {{ $t('DocumentPage.close') }}
                                                 </span>
                                         </button>
                                       </div>
@@ -305,13 +307,13 @@ export default {
       },
       downloadKeyAndClose() {
         this.pkLink.click();
-        this.$emit('keyPairTrigger');
-        this.page = 0
       },
       copyClipBoard() {
         copyToClipboard(this.privateKey);
-        this.$emit('keyPairTrigger');
-        this.page = 0
+        this.showReceived = true
+        setTimeout(() => {
+          this.showReceived = false
+        }, 2000);
       }
     },
     computed: {
