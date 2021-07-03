@@ -273,7 +273,7 @@ public class InitializeDatabase implements InitializingBean {
     }
 
     private void setDomainSettings() {
-        DomainSetter domainSetter = new DomainSetter("smtp.gmail.com", STANDARD_PORT,
+        final DomainSetter domainSetter = new DomainSetter("smtp.gmail.com", STANDARD_PORT,
                 "elsabeispiel@gmail.com", "1234elsaSuper", true,
                 true, ".*@techfak\\.de");
         domainSetterService.saveDomainSettings(domainSetter);

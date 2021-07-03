@@ -34,7 +34,7 @@ class SignatureTypeTest {
             assertSame(SignatureType.fromInteger(1), simpleSignature);
             assertSame(SignatureType.fromInteger(2), advancedSignature);
         } catch (SignatureTypeFromIntegerException e) {
-            Assertions.fail();
+            fail();
         }
             assertThrows(SignatureTypeFromIntegerException.class, () ->
                 SignatureType.fromInteger(3));
@@ -53,14 +53,6 @@ class SignatureTypeTest {
         review = SignatureType.REVIEW;
         simpleSignature = SignatureType.SIMPLE_SIGNATURE;
         advancedSignature = SignatureType.ADVANCED_SIGNATURE;
-    }
-
-    @AfterEach
-    void tearDown() {
-        noSignature = null;
-        review = null;
-        simpleSignature = null;
-        advancedSignature = null;
     }
 
 }

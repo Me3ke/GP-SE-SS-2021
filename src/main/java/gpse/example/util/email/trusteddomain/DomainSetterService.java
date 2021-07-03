@@ -17,7 +17,7 @@ public class DomainSetterService {
     }
 
     public boolean isEmpty() {
-        List<DomainSetter> setter = (List<DomainSetter>) domainSetterRepository.findAll();
+        final List<DomainSetter> setter = (List<DomainSetter>) domainSetterRepository.findAll();
         return setter.size() == 0;
     }
 
