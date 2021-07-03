@@ -196,6 +196,10 @@
     .checker {
         font-size: 1em;
     }
+
+    #empty-user {
+        font-size: 1.2em;
+    }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -217,6 +221,10 @@
 
     .checker {
         font-size: 1em;
+    }
+
+    #empty-user {
+        font-size: 1.2em;
     }
 }
 
@@ -245,6 +253,10 @@
     .checker {
         font-size: 1.1em;
     }
+
+    #empty-user {
+        font-size: 1.3em;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
@@ -271,6 +283,10 @@
     .checker {
         font-size: 1.2em;
     }
+
+    #empty-user {
+        font-size: 1.4em;
+    }
 }
 
 @media (min-width: 992px) {
@@ -288,5 +304,9 @@
 
     .checker {
         font-size: 1.5em;
+    }
+
+    #empty-user {
+        font-size: 1.7em;
     }
 }

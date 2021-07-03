@@ -22,21 +22,9 @@
 export default {
     name: "UserBox",
     props: {
-        user: Object
-    },
-    data() {
-        return {
-            deactivated: false,
-            admin: false
-        }
-    },
-    mounted() {
-        if (!this.user.adminValidated) {
-            this.deactivated = true
-        }
-        if (this.user.roles.includes('ROLE_ADMIN')) {
-            this.admin = true
-        }
+        user: Object,
+        deactivated: Boolean,
+        admin: Boolean
     }
 }
 </script>

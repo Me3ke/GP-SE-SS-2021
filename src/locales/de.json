@@ -346,8 +346,8 @@
         "cancel": "Abbrechen"
     },
     "DownloadKey": {
-      "download": "Herunterladen",
-      "clipBoard": "Kopieren"
+        "download": "Herunterladen",
+        "clipBoard": "Kopieren"
     },
     "DownloadProtocol": {
         "protocol": "Protokoll",
@@ -561,6 +561,7 @@
         },
         "manage": {
             "title": "Nutzerverwaltung",
+            "empty": "Keine Benutzer gefunden.",
             "filter": {
                 "active": "Aktiviert",
                 "inactive": "Deaktiviert",

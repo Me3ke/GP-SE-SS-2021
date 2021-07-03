@@ -98,12 +98,19 @@
         <!-- User -->
         <div class="container-fluid">
             <div class="user-container">
-                <div v-for="(user,index) in allUsers" :key="index" style="display: flex">
-                    <UserBox :user="user"></UserBox>
+                <div v-for="(user,index) in allUsers(filter, pageLimit,page)" :key="index" style="display: flex">
+                    <UserBox :user="user" :deactivated="!user.adminValidated"
+                             :admin="user.roles.includes('ROLE_ADMIN')"></UserBox>
                     <b-icon v-if="!selected.includes(index)" icon="circle" class="my-icon checker"
                             @click="changeSelected(index)"></b-icon>
                     <b-icon v-else icon="check-circle" class="my-icon checker" @click="changeSelected(index)"></b-icon>
                 </div>
+            </div>
+            <div v-if="allUsers(filter, pageLimit,page).length === 0"
+                 style="margin-bottom: 2em; border: solid 1px var(--whitesmoke); border-bottom-color: var(--light-grey)">
+                <span id="empty-user">
+                    {{ $t('AdminSettings.manage.empty') }}
+                </span>
             </div>
         </div>
 
@@ -208,7 +215,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            allUsers: 'userManagement/getAllUsers'
+            allUsers: 'userManagement/getFilteredPagesUsers'
         })
     }
 }

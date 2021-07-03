@@ -1,4 +1,5 @@
 import UserManagementAPI from "@/main/vue/api/UserManagementAPI";
+import {filterUser, sortUser} from "@/main/vue/scripts/filterSortUser";
 
 export const namespaced = true
 
@@ -50,7 +51,7 @@ export const actions = {
 
     makeUserAdmin({commit}, userId) {
         return UserManagementAPI.makeAdmin(userId).then(response => {
-                commit('SET_USER_MAKE_ADMIN', response.data)
+            commit('SET_USER_MAKE_ADMIN', response.data)
         }).catch(error => {
             commit('SET_USER_MANAGEMENT_ERROR', error)
         })
@@ -79,12 +80,23 @@ export const getters = {
         return state.allUsers.allUsers
     },
 
+    getFilteredPagesUsers: (state) => (filters, pageLimit, page) => {
+        //filter
+        let filteredUsers = filterUser(state.allUsers.allUsers, filters);
+
+        //sorting
+        let sortedUsers = sortUser(filteredUsers, filters);
+
+        //paging
+        return sortedUsers.slice((page - 1) * pageLimit, page * pageLimit)
+    },
+
     getMakeAdminStatus: (state) => {
         return state.userMakeAdminStatus
     },
 
     getValidationStatus: (state) => {
-      return state.userValidateStatus
+        return state.userValidateStatus
     },
 
     getLockedUserStatus: (state) => {
