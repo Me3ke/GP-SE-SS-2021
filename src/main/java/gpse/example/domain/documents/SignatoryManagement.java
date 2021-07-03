@@ -30,7 +30,7 @@ public class SignatoryManagement {
     )
     protected List<Signatory> signatories;
 
-    public SignatoryManagement(long id, List<Signatory> signatories) {
+    public SignatoryManagement(final long id, final List<Signatory> signatories) {
         this.id = id;
         this.signatories = signatories;
     }

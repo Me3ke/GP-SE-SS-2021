@@ -272,7 +272,7 @@ public class DocumentController {
                         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                             container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     } catch (UsernameNotFoundException exception) {
-                        GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                        final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                             document.getId()));
                         container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
                             + document.getId() + "/" + token.getToken());
@@ -288,7 +288,7 @@ public class DocumentController {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 } catch (UsernameNotFoundException exception) {
-                    GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                         document.getId()));
                     container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
                         + document.getId() + "/" + token.getToken());

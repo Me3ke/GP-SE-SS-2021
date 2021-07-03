@@ -37,7 +37,6 @@ public class EnvelopeController {
     private static final int FORBIDDEN = 403;
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
-    private static final String NEW_LINE = "\n";
     private static final String DOCUMENT_URL = "/document/";
 
     private final EnvelopeServiceImpl envelopeService;
@@ -176,11 +175,11 @@ public class EnvelopeController {
             } catch (TemplateNameNotFoundException e) {
                 return;
             }
-            TemplateDataContainer container = new TemplateDataContainer();
+            final TemplateDataContainer container = new TemplateDataContainer();
             container.setFirstNameOwner(owner.getFirstname());
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(document.getDocumentTitle());
-            GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
             container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
                 + document.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {

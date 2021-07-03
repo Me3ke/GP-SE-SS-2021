@@ -35,8 +35,9 @@ public class DomainSetter {
      * @param mailSMTPStartTLSEnable activate StartTLS
      * @param trustedMailDomain the trusted mail Domain
      */
-    public DomainSetter(String host, int port, String username, String password,
-                        boolean mailSMTPAuth, boolean mailSMTPStartTLSEnable, String trustedMailDomain) {
+    public DomainSetter(final String host, final int port, final String username, final String password,
+                        final boolean mailSMTPAuth, final boolean mailSMTPStartTLSEnable,
+                        final String trustedMailDomain) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -70,27 +71,27 @@ public class DomainSetter {
         return mailSMTPStartTLSEnable;
     }
 
-    public void setHost(String host) {
+    public void setHost(final String host) {
         this.host = host;
     }
 
-    public void setPort(int port) {
+    public void setPort(final int port) {
         this.port = port;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
-    public void setMailSMTPAuth(boolean mailSMPTOut) {
+    public void setMailSMTPAuth(final boolean mailSMPTOut) {
         this.mailSMTPAuth = mailSMPTOut;
     }
 
-    public void setMailSMTPStartTLSEnable(boolean mailSMTPStartTLSEnable) {
+    public void setMailSMTPStartTLSEnable(final boolean mailSMTPStartTLSEnable) {
         this.mailSMTPStartTLSEnable = mailSMTPStartTLSEnable;
     }
 
@@ -102,7 +103,7 @@ public class DomainSetter {
         return trustedMailDomain;
     }
 
-    public void setTrustedMailDomain(String trustedMailDomain) {
+    public void setTrustedMailDomain(final String trustedMailDomain) {
         this.trustedMailDomain = trustedMailDomain;
     }
 }

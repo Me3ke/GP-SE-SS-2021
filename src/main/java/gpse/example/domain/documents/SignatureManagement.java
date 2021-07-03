@@ -26,6 +26,7 @@ public class SignatureManagement {
     private static final int STATUS_CODE_INVALID_SIGNATURE_TYPE = 453;
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
+    private static final String DOCUMENT_URL = "/document/";
     private final DocumentService documentService;
     private final UserService userService;
     private final SMTPServerHelper smtpServerHelper;
@@ -214,7 +215,8 @@ public class SignatureManagement {
                     // TODO find out envelope container.setEnvelopeName(envelope.getName());
                     container.setEndDate(document.getEndDate().toString());
                     //TODO Link to documentview
-                    container.setLink("http://localhost:8080/de/link/to/document/view");
+                    container.setLink("http://localhost:8080/de/envelope/" + envelopeID + DOCUMENT_URL
+                        + document.getId());
                     smtpServerHelper.sendTemplatedEmail(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
                         container, Category.SIGN, owner);
                 } catch (UsernameNotFoundException exception) {
@@ -223,8 +225,8 @@ public class SignatureManagement {
                     container.setLastNameOwner(owner.getLastname());
                     container.setDocumentTitle(document.getDocumentTitle());
                     final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
-                    container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/"
-                        + token.getToken());
+                    container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
+                        + document.getId() + "/" + token.getToken());
                     if (signatureType.equals(SignatureType.REVIEW)) {
                         smtpServerHelper.sendTemplatedEmail(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(),
                             template, container, Category.READ, owner);

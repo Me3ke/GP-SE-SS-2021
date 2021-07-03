@@ -35,8 +35,8 @@ public class SMTPServerHelper {
      * @param messageService s
      * @param domainSetterService t
      */
-    public SMTPServerHelper(MessageServiceImpl messageService,
-                            DomainSetterService domainSetterService) {
+    public SMTPServerHelper(final MessageServiceImpl messageService,
+                            final DomainSetterService domainSetterService) {
         this.mailSender = new JavaMailSenderImpl();
         this.messageService = messageService;
         this.domainSetterService = domainSetterService;
