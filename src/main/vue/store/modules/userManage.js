@@ -1,5 +1,6 @@
 import UserManagementAPI from "@/main/vue/api/UserManagementAPI";
 
+export const namespaced = true
 
 export const state = {
     allUsers: [],

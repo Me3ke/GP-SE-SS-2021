@@ -17,9 +17,11 @@
                     <b-row>
                         <b-col>
                             <b-input-group>
-                                <b-form-input v-model="searchInput" :placeholder="$t('OverviewPage.search')"></b-form-input>
+                                <b-form-input v-model="searchInput"
+                                              :placeholder="$t('OverviewPage.search')"></b-form-input>
                                 <h4>
-                                    <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em" @click="search(searchInput);"></b-icon>
+                                    <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em"
+                                            @click="search(searchInput);"></b-icon>
                                 </h4>
                             </b-input-group>
                         </b-col>
@@ -45,27 +47,33 @@
                     <b-row align-h="end">
                         <!-- Filter Buttons -->
                         <b-col>
-                            <span @click="filterOpen()">
+                            <span>
                                 <FilterButton v-bind:text="$t('Filter.open')"
-                                              :isActive="this.filter.state === 'OPENREAD'" ></FilterButton>
+                                              :isActive="this.filter.state === 'OPENREAD'"
+                                              :switch="true"
+                                              @activeChange="filterOpen()"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
-                            <span @click="filterClosed()">
+                            <span>
                                 <FilterButton v-bind:text="$t('Filter.closed')"
-                                              :isActive="this.filter.state === 'CLOSED'"></FilterButton>
+                                              :isActive="this.filter.state === 'CLOSED'"
+                                              :switch="true"
+                                              @activeChange="filterClosed()"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
-                            <span @click="filterOwn()">
+                            <span>
                                 <FilterButton v-bind:text="$t('Filter.owned')"
-                                    :isActive="this.filter.owner"></FilterButton>
+                                              :isActive="this.filter.owner"
+                                              @activeChange="filterOwn()"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
-                            <span @click="filterSignatory()">
+                            <span>
                                 <FilterButton v-bind:text="$t('Filter.toSign')"
-                                              :isActive="this.filter.signatory && this.filter.reader" ></FilterButton>
+                                              :isActive="this.filter.signatory && this.filter.reader"
+                                              @activeChange="filterSignatory()"></FilterButton>
                             </span>
                         </b-col>
                     </b-row>
@@ -75,7 +83,9 @@
 
         <!-- Documents -->
         <div class="container-fluid">
-            <div style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--whitesmoke); border-top-color: var(--light-grey); border-radius: 0" class="card" >
+            <div
+                style="margin-top:1vh; background-color: var(--whitesmoke); border-color: var(--whitesmoke); border-top-color: var(--light-grey); border-radius: 0"
+                class="card">
                 <div class="overflow-auto" style="height: 68vh">
                     <div v-for="envelope in this.envelopes(filter, pageLimit, page)"
                          :key="envelope.id"
@@ -84,12 +94,14 @@
                             <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
-                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id" :show-progress="false"></DocumentCard>
+                            <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"
+                                          :show-progress="false"></DocumentCard>
                         </div>
                     </div>
-                    <div v-if="this.envelopes(filter, pageLimit, page).length === 0" style="color:var(--dark-grey); padding:1em">
+                    <div v-if="this.envelopes(filter, pageLimit, page).length === 0"
+                         style="color:var(--dark-grey); padding:1em">
                         <h4>
-                            {{$t('OverviewPage.noDocuments')}}
+                            {{ $t('OverviewPage.noDocuments') }}
                         </h4>
                     </div>
                 </div>
@@ -186,9 +198,9 @@ export default {
         },
         search(keyword) {
             this.filter.search = keyword
-            if(keyword.toLowerCase().includes("schildkröte")|| keyword.toLowerCase().includes("maskottchen")) {
+            if (keyword.toLowerCase().includes("schildkröte") || keyword.toLowerCase().includes("maskottchen")) {
                 this.launchMascots();
-            } else if(keyword.toLowerCase().includes("erleben, was verbindet")|| (keyword.toLowerCase().includes("magenta") && keyword.toLowerCase().includes("liebe"))) {
+            } else if (keyword.toLowerCase().includes("erleben, was verbindet") || (keyword.toLowerCase().includes("magenta") && keyword.toLowerCase().includes("liebe"))) {
                 this.launchMagenta();
             }
         },
@@ -202,12 +214,12 @@ export default {
                         size: 20,
                     },
                     {
-                        type:'circle',
+                        type: 'circle',
                         size: 10,
                     },
                     {
-                        type:'rect',
-                        size:10,
+                        type: 'rect',
+                        size: 10,
                     }
                 ],
             });
@@ -223,12 +235,12 @@ export default {
                         size: 40,
                     },
                     {
-                        type:'circle',
+                        type: 'circle',
                         size: 15,
                         colors: ['#ea0a8e']
                     },
                     {
-                        type:'rect',
+                        type: 'rect',
                         size: 15,
                         colors: ['#ea0a8e']
                     }

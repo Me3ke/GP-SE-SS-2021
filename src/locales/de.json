@@ -558,6 +558,9 @@
             "color13": "Einstellungsfarbe",
             "color14": "Pop-Up Hintergrund",
             "default": "Standard"
+        },
+        "manage": {
+            "title": "Nutzerverwaltung"
         }
     },
     "ProgressBar": {

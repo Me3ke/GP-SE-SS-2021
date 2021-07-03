@@ -21,6 +21,7 @@ import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPag
 import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
 import CommentsPage from "@/main/vue/views/CommentsPage";
 import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
+import UserManagement from "@/main/vue/views/UserManagement";
 
 
 Vue.use(VueRouter)
@@ -197,6 +198,14 @@ const router = new VueRouter({
                     path: 'adminSettings/corporate/experimental',
                     name: 'corporateExp',
                     component: CorporateDesignExperimentalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/userManagement',
+                    name: 'userManagement',
+                    component: UserManagement,
                     meta: {
                         requiresAuth: true
                     }

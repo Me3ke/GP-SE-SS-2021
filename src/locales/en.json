@@ -556,6 +556,9 @@
             "color13": "Setting color",
             "color14": "Pop-Up background",
             "default": "Default"
+        },
+        "manage": {
+            "title": "User management"
         }
     },
     "ProgressBar": {
