@@ -31,9 +31,6 @@ public class EmailController {
 
     private static final String USER_ID = "userId";
 
-    @Lazy
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
     @Autowired
     private EmailTemplateService emailTemplateService;
     @Autowired
@@ -111,7 +108,7 @@ public class EmailController {
      */
     @GetMapping("email/settings/trustedDomain")
     public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String token) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (checkIfAdmin(token)) {
             jsonResponseObject.setStatus(STATUS_CODE_OK);
             jsonResponseObject.setMessage(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
@@ -132,9 +129,9 @@ public class EmailController {
     public JSONResponseObject updateTrustedDomain(@RequestHeader final String token,
                                                   @RequestParam("domain") final String domain) {
 
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (checkIfAdmin(token)) {
-            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setTrustedMailDomain(domain);
             domainSetterService.saveDomainSettings(domainSetter);
             jsonResponseObject.setStatus(STATUS_CODE_OK);
@@ -155,7 +152,7 @@ public class EmailController {
     public DomainSettingsGetResponse getDomainSettings(@RequestHeader final String token) {
 
         if (checkIfAdmin(token)) {
-            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             return new DomainSettingsGetResponse(domainSetter.getHost(), domainSetter.getPort(),
                     domainSetter.getUsername(), domainSetter.isMailSMTPAuth(),
                     domainSetter.isMailSMTPStartTLSEnable());
@@ -172,10 +169,10 @@ public class EmailController {
      */
     @PutMapping("email/settings")
     public JSONResponseObject updateSMTPSettings(@RequestHeader final String token,
-                                                 @RequestBody DomainSettingsPutRequest domainSettingsPutRequest) {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+                                                 @RequestBody final DomainSettingsPutRequest domainSettingsPutRequest) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (checkIfAdmin(token)) {
-            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setHost(domainSettingsPutRequest.getHost());
             domainSetter.setPort(domainSettingsPutRequest.getPort());
             domainSetter.setPassword(domainSettingsPutRequest.getPassword());
@@ -191,7 +188,7 @@ public class EmailController {
         return jsonResponseObject;
     }
 
-    private boolean checkIfAdmin(String token) {
+    private boolean checkIfAdmin(final String token) {
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
                 .setSigningKey(signingKey).build()
