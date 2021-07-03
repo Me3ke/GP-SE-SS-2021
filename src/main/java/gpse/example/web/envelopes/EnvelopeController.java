@@ -156,7 +156,6 @@ public class EnvelopeController {
             container.setDocumentTitle(document.getDocumentTitle());
             container.setEnvelopeName(envelope.getName());
             container.setEndDate(document.getEndDate().toString());
-            //TODO Link to documentview
             container.setLink("http://localhost:8080/de/envelope/" + envelope.getId() + DOCUMENT_URL
                 + document.getId());
             Category category;

@@ -347,23 +347,21 @@ export default {
             await this.$store.dispatch('fetchUser')
             // gets data out of user file that contains key
             const reader = new FileReader()
-            console.log("KEY")
-            console.log(this.key)
             reader.readAsText(this.key)
 
             // getting user so there is access public key
             reader.onload = async (keyData) => {
                 const privateKey = keyData.target.result
-
                 const docId = this.documents[0].identifier
 
                 // encrypting hashed docId with given private key
                 var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
+
                 sig.init(privateKey);
                 sig.updateString(docId);
-                const signature = sig.sign();
-                // decrypting hashed docId with registered public key
+                const signature = sig.sign();// decrypting hashed docId with registered public key
                 var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+                console.log(this.publicKey)
                 sig2.init(this.publicKey);
                 sig2.updateString(docId);
                 const isValid = sig2.verify(signature);
@@ -378,7 +376,7 @@ export default {
                 // everything went fine
                 if (this.statusCodeAdvanced === 200) {
                     // reloading document in store, so information is coherent with server information
-                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                    await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                     // goes to success page and toggles alert
                     this.page = 3
                     this.showAlertSign = false
