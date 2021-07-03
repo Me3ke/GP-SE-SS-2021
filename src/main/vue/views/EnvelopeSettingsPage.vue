@@ -193,11 +193,10 @@ export default {
         getReaders(settings) {
             let readers = [];
             let i;
-            for(i = 0; i < settings.signatories; i++) {
-                if(settings.signatories[i].signatureType === "REVIEW") {
-                    readers.push({email: settings.signatories[i].email, signatureType: 0, reminderTiming: settings.signatories[i].reminderTiming});
-                } else {
-                    return readers;
+            for(i = 0; i < settings.signatories.length; i++) {
+                let signatory = settings.signatories[i]
+                if(signatory.signatureType === 0) {
+                    readers.push(signatory);
                 }
             }
             return readers;
@@ -206,12 +205,9 @@ export default {
             let signatories = [];
             let i;
             for(i = 0; i < settings.signatories.length; i++) {
-                if(!(settings.signatories[i].signatureType === "REVIEW")) {
-                    if(settings.signatories[i].signatureType === "SIMPLE_SIGNATURE") {
-                        signatories.push({email: settings.signatories[i].email, signatureType: 1, reminderTiming: settings.signatories[i].reminderTiming});
-                    } else {
-                        signatories.push({email: settings.signatories[i].email, signatureType: 2, reminderTiming: settings.signatories[i].reminderTiming});
-                    }
+                let signatory = settings.signatories[i]
+                if(!(signatory.signatureType === 0)) {
+                    signatories.push(signatory);
                 }
             }
             return signatories;

@@ -99,7 +99,7 @@ export default {
             if(this.signatoriesArray.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatoriesArray.push({email: this.signatoryInput, type: "", reminder: ""});
+                this.signatoriesArray.push({email: this.signatoryInput, signatureType: "", reminder: ""});
             }
             this.signatoryInput = "";
         },

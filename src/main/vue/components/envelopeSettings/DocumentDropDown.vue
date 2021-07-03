@@ -198,6 +198,9 @@ export default {
                 newSettings.orderRelevant = this.orderRelevant
                 newSettings.signatories = this.makeSignatories(this.readers, this.signatories)
             }
+            console.log(this.readers)
+            console.log(this.signatories)
+            console.log(newSettings)
             await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings})
         },
         remindInSignatories(signatories, remind, reminderTiming) {
@@ -214,7 +217,7 @@ export default {
             for (i = 0; i < readers.length; i++) {
                 let newStatus
                 newStatus = this.getStatusReader(readers[i])
-                newSignatories.push({email: readers[i], signatureType: 0, remind: false, reminderTiming: -1, status: newStatus.status, signedOn: newStatus.signedOn})
+                newSignatories.push({email: readers[i].email, signatureType: 0, remind: false, reminderTiming: -1, status: newStatus.status, signedOn: newStatus.signedOn})
             }
             for (i = 0; i < signatories.length; i++) {
                 let newStatus
@@ -228,7 +231,7 @@ export default {
             for (i = 0; i < this.signatories.length; i++) {
                 if(this.signatories[i].email === signatory.email) {
                     if(this.signatories[i].signatureType === signatory.signatureType) {
-                        return {status: true, signedOn: this.signatories[i].signedOn}
+                        return {status: this.signatories[i].status, signedOn: this.signatories[i].signedOn}
                     } else {
                         return {status: false, signedOn: ""}
                     }
@@ -240,7 +243,7 @@ export default {
             let i;
             for (i = 0; i < this.readers.length; i++) {
                 if(this.readers[i].email === reader.email) {
-                    return {status: true, signedOn: this.readers[i].signedOn}
+                    return {status: this.readers[i].status, signedOn: this.readers[i].signedOn}
                 }
             }
             return {status: false, signedOn: ""}

@@ -14,7 +14,10 @@ public class DocumentSettingsCMD {
     private String endDate;
 
     public LocalDateTime convertEndDate() {
-        return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        if(endDate.equals("")) {
+            return null;
+        }
+        return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     public List<SignatorySetting> getSignatories() {

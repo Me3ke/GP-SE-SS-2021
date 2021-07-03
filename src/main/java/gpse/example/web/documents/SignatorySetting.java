@@ -28,7 +28,7 @@ public class SignatorySetting {
         this.email = signatory.getUser().getUsername();
         this.signatureType = signatory.getSignatureType().toInteger();
         this.status = signatory.isStatus();
-        this.remind = (signatory.getReminder() == -1);
+        this.remind = !(signatory.getReminder() == -1);
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -38,8 +38,17 @@ public class SignatorySetting {
         }
     }
 
+    /**
+     * Empty Constructor for objects created from JSON
+     */
+    public SignatorySetting() {
+    }
+
     public LocalDateTime convertSignedOn() {
-        return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        if(signedOn.equals("")) {
+            return null;
+        }
+        return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     public String getEmail() {
@@ -66,8 +75,8 @@ public class SignatorySetting {
             return SignatureType.NO_SIGNATURE;
         }
     }
-    public void setSignatureType(final SignatureType signatureType) {
-        this.signatureType = signatureType.toInteger();
+    public void setSignatureType(final int signatureType) {
+        this.signatureType = signatureType;
     }
 
     public boolean isStatus() {

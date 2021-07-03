@@ -99,6 +99,9 @@
                                     <!-- Page 5 Add signatories/readers-->
                                     <div v-if="page === 5">
                                         <!-- Pick Deadline -->
+                                        <b-alert :show="this.errors.noEndDate">
+                                            {{$t('UploadDoc.error.noEndDate')}}
+                                        </b-alert>
                                         <div>
                                             <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
                                             <b-form-datepicker id="endDate" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
@@ -124,9 +127,6 @@
 
                                         <!-- Add signatories -->
                                         <div v-if="!review || reviewAddSignatory">
-                                            <b-alert :show="this.errors.noEndDate">
-                                                {{$t('UploadDoc.error.noEndDate')}}
-                                            </b-alert>
                                             <b-alert :show="this.errors.noSignatories">
                                                 {{$t('UploadDoc.error.noSignatories')}}
                                             </b-alert>
@@ -135,7 +135,7 @@
                                             </b-alert>
 
                                             <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
-                                            <SignatoryMenu :inModal="true" :signatories="settings.signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
+                                            <SignatoryMenu :inModal="true" :signatories="signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
                                         </div>
                                     </div>
                                 </div>
