@@ -89,10 +89,10 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_GERMAN
-        + "\t\t<p>Sie wurden von [FirstNameOwner] [LastNameOwner] f&uumlr eine erweiterte</p>\n"
+        + "\t\t<p>Sie wurden von [FirstNameOwner] [LastNameOwner] f&#252r eine erweiterte</p>\n"
         + "\t\t<p>Signatur des Dokuments [DocumentTitle] eingetragen.</p>\n"
-        + "\t\t<p>F&uumlr eine erweiterte Signatur ist eine Registrierung erforderlich.</p>\n"
-        + "\t\t<p>Sie k&oumlnnen sich <a href=\"[Link]\">hier</a> registrieren.</p>\n"
+        + "\t\t<p>F&#252r eine erweiterte Signatur ist eine Registrierung erforderlich.</p>\n"
+        + "\t\t<p>Sie k&#246nnen sich <a href=\"[Link]\">hier</a> registrieren.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_ENGLISH
@@ -139,8 +139,8 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>Sie k&oumlnnen Ihre Email-Adresse <a href=\"[Link]\">hier</a> best&aumltigen.</p>\n"
-        + "\t\t<p>Beachten Sie bitte die Eingeschr&aumlnkte G&uumlltigkeit ihres Best&aumltigungslinks</p>\n"
+        + "\t\t<p>Sie k&#246nnen Ihre Email-Adresse <a href=\"[Link]\">hier</a> best&#228tigen.</p>\n"
+        + "\t\t<p>Beachten Sie bitte die Eingeschr&#228nkte G&#252ltigkeit ihres Best&#228tigungslinks</p>\n"
         + P_DEADLINE_P
         + NEWLINE
         + NEWLINE
@@ -164,9 +164,9 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>[FirstNameOwner] [LastNameOwner] m&oumlchte sich mit der Email-Adresse </p>\n"
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] m&#246chte sich mit der Email-Adresse </p>\n"
         + "\t\t<p>[RequestingEmail] Registrieren.</p>\n"
-        + "\t\t<p>Sie k&oumlnnen die Anfrage <a href=\"[Link]\">hier</a> best&aumltigen.</p>\n"
+        + "\t\t<p>Sie k&#246nnen die Anfrage <a href=\"[Link]\">hier</a> best&#228tigen.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_PERSONAL_ENGLISH
@@ -213,7 +213,7 @@ public final class BasicHtmlTemplates {
         + "    <br>\n"
         + "\t\t<p>Guten Tag [FirstNameReciever] [LastNameReciever],</p>\n"
         + "\t\t<p>der Signaturprozess des Dokuments [DocumentTitle] ist abgeschlossen.</p>\n"
-        + "\t\t<p>Sie k&oumlnnen das Protokoll <a href=\"[Link]\">hier</a> Herunterladen.</p>\n"
+        + "\t\t<p>Sie k&#246nnen das Protokoll <a href=\"[Link]\">hier</a> Herunterladen.</p>\n"
         + NEWLINE
         + NEWLINE
         + GREETINGS_PERSONAL_ENGLISH
@@ -256,10 +256,10 @@ public final class BasicHtmlTemplates {
         + P_I_ENGLISH_VERSION_BELOW_I_P
         + NEWLINE
         + GREETINGS_PERSONAL_GERMAN
-        + "\t\t<p>Um Ihr Password zur&uumlck zu setzen klicken sie <a href=\"[Link]\">hier</a>.</p>\n"
+        + "\t\t<p>Um Ihr Password zur&#252ck zu setzen klicken sie <a href=\"[Link]\">hier</a>.</p>\n"
         + NEWLINE
-        + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zur&uumlck zusetzen,</p>\n"
-        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto m&oumlglicherweise gehackt.</p>\n"
+        + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zur&#252ck zusetzen,</p>\n"
+        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto m&#246glicherweise gehackt.</p>\n"
         + "\t\t<p>In diesem Fall kontaktieren sie Ihren Systemadministrator.</p>\n"
         + NEWLINE
         + NEWLINE

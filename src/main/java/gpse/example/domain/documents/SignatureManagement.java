@@ -7,6 +7,7 @@ import gpse.example.domain.users.UserService;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.GuestToken;
+import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class SignatureManagement {
     private final UserService userService;
     private final SMTPServerHelper smtpServerHelper;
     private final EmailTemplateService emailTemplateService;
+    private final GuestTokenService guestTokenService;
 
     /**
      * constructor of Signature management.
@@ -37,14 +39,17 @@ public class SignatureManagement {
      * @param givenDocumentService documentservice
      * @param givenUserService     userservice
      * @param emailTemplateService emailTemplateService
+     * @param guestTokenService guestTokenService
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
-                               final UserService givenUserService, final EmailTemplateService emailTemplateService) {
+                               final UserService givenUserService, final EmailTemplateService emailTemplateService,
+                               final GuestTokenService guestTokenService) {
         this.smtpServerHelper = smtpServerHelper;
         documentService = givenDocumentService;
         userService = givenUserService;
         this.emailTemplateService = emailTemplateService;
+        this.guestTokenService = guestTokenService;
     }
 
     /**
@@ -53,13 +58,14 @@ public class SignatureManagement {
      * @param userID        the user who stated the request
      * @param document      the document that should be reviewed or signed
      * @param signatureType the type of the signature
+     * @param envelopeID the envelope the document refers to.
      * @return a fitting response.
      */
     public JSONResponseObject manageSignatureRequest(final String userID, final Document document,
-                                                     final SignatureType signatureType)
+                                                     final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException {
         if (document.isOrderRelevant()) {
-            return manageSignatureInOrder(userID, document, signatureType);
+            return manageSignatureInOrder(userID, document, signatureType, envelopeID);
         } else {
             return manageSignatureWithoutOrder(userID, document, signatureType);
         }
@@ -183,7 +189,7 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject manageSignatureInOrder(final String userID, final Document document,
-                                                      final SignatureType signatureType)
+                                                      final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
@@ -216,7 +222,7 @@ public class SignatureManagement {
                     container.setFirstNameOwner(owner.getFirstname());
                     container.setLastNameOwner(owner.getLastname());
                     container.setDocumentTitle(document.getDocumentTitle());
-                    final GuestToken token = new GuestToken(userID, document.getId());
+                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
                     container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/"
                         + token.getToken());
                     if (signatureType.equals(SignatureType.REVIEW)) {

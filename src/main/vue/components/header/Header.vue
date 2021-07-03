@@ -17,8 +17,8 @@
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
                 <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
-                <Messages v-if="user.firstLogin"></Messages>
-                <Avatar v-if="user.firstLogin"></Avatar>
+                <Messages v-if="user.firstLogin && isNotGuest"></Messages>
+                <Avatar v-if="user.firstLogin && isNotGuest"></Avatar>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
@@ -30,6 +30,7 @@ import Avatar from "@/main/vue/components/header/Avatar";
 import Messages from "@/main/vue/components/header/Messages";
 import {mapGetters} from "vuex";
 import {loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import _ from "lodash";
 
 export default {
     name: "Header",
@@ -44,7 +45,9 @@ export default {
     async created() {
         await loadSheet()
         await this.$store.dispatch('theme/getLogos')
-        await this.$store.dispatch('messages/fetchMessages')
+        if (!this.$route.params.tokenId) {
+            await this.$store.dispatch('messages/fetchMessages')
+        }
     },
     mounted() {
         // reacts when screen size changes
@@ -58,14 +61,16 @@ export default {
         updateMobile() {
             // sets mobile depending on screen width (if smaller than 576 dropdown menu is collapsed)
             this.mobile = window.innerWidth < 576
-        },
+        }
+        ,
         getLightSource() {
             if (this.logoLightType === 'svg') {
                 return 'data:image/svg+xml;base64,' + this.logoLight
             } else {
                 return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
             }
-        },
+        }
+        ,
         getDarkSource() {
             if (this.logoDarkType === 'svg') {
                 return 'data:image/svg+xml;base64,' + this.logoDark
@@ -76,20 +81,28 @@ export default {
     }
     ,
     computed: {
-        ...mapGetters({
-            theme: 'theme/getTheme',
-            user: 'getUser',
+        ...
+            mapGetters({
+                theme: 'theme/getTheme',
+                user: 'getUser',
 
-            logoLight: 'theme/getLightLogo',
-            logoDark: 'theme/getDarkLogo',
-            logoLightType: 'theme/getLightLogoType',
-            logoDarkType: 'theme/getDarkLogoType'
-        }),
+                logoLight: 'theme/getLightLogo',
+                logoDark: 'theme/getDarkLogo',
+                logoLightType: 'theme/getLightLogoType',
+                logoDarkType: 'theme/getDarkLogoType',
+
+                guest: 'getGuestSignatory'
+            }),
         lightEmpty() {
             return this.logoLight === ""
-        },
+        }
+        ,
         darkEmpty() {
             return this.logoDark === ""
+        }
+        ,
+        isNotGuest() {
+            return _.isEmpty(this.getGuestSignatory);
         }
     }
 }
