@@ -1,6 +1,8 @@
 package gpse.example.domain.users;
 
-import gpse.example.util.email.*;
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
+import gpse.example.domain.email.*;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(final String username) throws UsernameNotFoundException {
+    public User getUser(final String username) {
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
     }
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) {
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
     }

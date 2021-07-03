@@ -3,37 +3,22 @@ package gpse.example;
 
 import gpse.example.domain.corporatedesign.CorporateDesign;
 import gpse.example.domain.corporatedesign.CorporateDesignService;
-import gpse.example.domain.documents.Document;
-import gpse.example.domain.documents.DocumentCreator;
-import gpse.example.domain.documents.DocumentService;
-import gpse.example.domain.documents.DocumentState;
-import gpse.example.domain.envelopes.Envelope;
-import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.users.PersonalData;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.BasicHtmlTemplates;
-import gpse.example.util.email.EmailTemplate;
-import gpse.example.util.email.EmailTemplateService;
-import gpse.example.util.email.TemplateNameNotFoundException;
-import gpse.example.util.email.trusteddomain.DomainSetter;
-import gpse.example.util.email.trusteddomain.DomainSetterService;
-import gpse.example.web.documents.DocumentPutRequest;
+import gpse.example.domain.email.BasicHtmlTemplates;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
+import gpse.example.domain.email.trusteddomain.DomainSetter;
+import gpse.example.domain.email.trusteddomain.DomainSetterService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class initializes the Database with some example data on serverstart.
@@ -42,16 +27,8 @@ import java.util.List;
 public class InitializeDatabase implements InitializingBean {
 
     private static final String BERLINER_STRASSE = "Berliner Straße";
-    private static final String PROGRAM_PATH = "Programme.pdf";
-    private static final String PLAN_PATH = "Essensplan.txt";
     private static final String USERNAME = "hans.schneider@mail.de";
     private static final String ADMINNAME = "Hans.Schneider.test@gmail.com";
-    private static final String DOUBLE_BACKSLASH = "\\.";
-    private static final long ID_THREE = 3L;
-    private static final long ID_FOUR = 4L;
-    private static final long ID_FIVE = 5L;
-    private static final long ID_SIX = 6L;
-    private static final long ID_SEVEN = 7L;
     private static final String LIEBEFELD = "Liebefeld";
     private static final String DEUTSCHLAND = "Deutschland";
     private static final String ROLE_USER = "ROLE_USER";
@@ -67,14 +44,9 @@ public class InitializeDatabase implements InitializingBean {
         "#501515", "#363f48", COLOR_FIVE};
     private static final String ELSA_SIGNATURE_INVITATION_SUBJECT =
         "ELSA - Signatureinladung/ELSA - signature invitation";
-    private static final int THREEEE = 3;
-
-    private static final int POST_CODE = 12312;
     private static final int STANDARD_PORT = 587;
 
     private final UserService userService;
-    private final DocumentService documentService;
-    private final EnvelopeService envelopeService;
     private final CorporateDesignService corporateDesignService;
     private final EmailTemplateService emailTemplateService;
     private final DomainSetterService domainSetterService;
@@ -83,21 +55,16 @@ public class InitializeDatabase implements InitializingBean {
      * The standard constructor for the class initializing the database.
      *
      * @param userService            used for saving user-objects in the database.
-     * @param documentService        used for saving document-objects in the database.
-     * @param envelopeService        used for saving envelope-objects in the database.
      * @param corporateDesignService used for saving the corporate design in the database.
      * @param emailTemplateService   used for saving the emailTemplates in the database.
      * @param domainSetterService    used for saving the domainSettings in the database
      */
     @Autowired
-    public InitializeDatabase(final UserService userService, final DocumentService documentService,
-                              final EnvelopeService envelopeService,
+    public InitializeDatabase(final UserService userService,
                               final CorporateDesignService corporateDesignService,
                               final EmailTemplateService emailTemplateService,
                               final DomainSetterService domainSetterService) {
         this.userService = userService;
-        this.documentService = documentService;
-        this.envelopeService = envelopeService;
         this.corporateDesignService = corporateDesignService;
         this.emailTemplateService = emailTemplateService;
         this.domainSetterService = domainSetterService;
@@ -187,89 +154,6 @@ public class InitializeDatabase implements InitializingBean {
         } catch (TemplateNameNotFoundException tne) {
             return new EmailTemplate(template, subject, name, true);
         }
-    }
-
-    private void createExampleEnvelope(final long id, final String name, final List<Long> documentIDs,
-                                       final List<String> documentPaths, final DocumentState documentState,
-                                       final boolean docsRead, final boolean docsSigned) {
-        final User owner = userService.getUser(USERNAME);
-        try {
-            final Envelope envelope = envelopeService.getEnvelope(id);
-            for (int i = 0; i < documentIDs.size(); i++) {
-                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
-                    final byte[] data = inputStream.readAllBytes();
-                    final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
-                        .getName().split(DOUBLE_BACKSLASH);
-                    final Document document = createExampleDocument(documentIDs.get(i), data,
-                        documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]);
-                    if (document != null) {
-                        envelope.addDocument(document);
-                        envelopeService.saveEnvelope(envelope);
-                    }
-                } catch (CreatingFileException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (DocumentNotFoundException exception) {
-            try {
-                final Envelope envelope = owner.createNewEnvelope(name);
-                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                for (int i = 0; i < documentIDs.size(); i++) {
-                    try (InputStream inputStream = classLoader.getResourceAsStream(documentPaths.get(i))) {
-                        final byte[] data = inputStream.readAllBytes();
-                        final String[] titleAndType = new File(classLoader.getResource(documentPaths.get(i)).getFile())
-                            .getName().split(DOUBLE_BACKSLASH);
-                        envelope.addDocument(
-                            createExampleDocument(documentIDs.get(i), data,
-                                documentState, docsRead, docsSigned, titleAndType[0], titleAndType[1]));
-                        envelopeService.saveEnvelope(envelope);
-                    }
-                }
-            } catch (IOException | CreatingFileException e) {
-                exception.printStackTrace();
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    private Document createExampleDocument(final long id,
-                                           final byte[] data, final DocumentState documentState,
-                                           final boolean read, final boolean signed, final String title,
-                                           final String type) throws CreatingFileException, IOException {
-        final User owner = userService.getUser(USERNAME);
-        try {
-            documentService.getDocument(id);
-        } catch (DocumentNotFoundException exception) {
-            final DocumentCreator creator = new DocumentCreator();
-            final DocumentPutRequest documentPutRequestRequest = new DocumentPutRequest();
-            documentPutRequestRequest.setOrderRelevant(true);
-            documentPutRequestRequest.setData(data);
-            documentPutRequestRequest.setTitle(title);
-            documentPutRequestRequest.setDataType(type);
-            documentPutRequestRequest.setEndDate("2021-06-13 12:00");
-            try {
-                final List<ProtoSignatory> signatories = new ArrayList<>();
-                if (read) {
-                    signatories.add(new ProtoSignatory(owner.getUsername(), 0));
-                }
-                if (signed) {
-                    signatories.add(new ProtoSignatory(owner.getUsername(), 2));
-                }
-                final Document document = creator.createDocument(documentPutRequestRequest, USERNAME,
-                    signatories, documentService);
-                try {
-                    document.setState(documentState);
-                } catch (IllegalStateException stateException) {
-                    document.setState(DocumentState.OPEN);
-                }
-                return documentService.addDocument(document);
-            } catch (CreatingFileException | IOException e) {
-                throw e;
-            }
-        }
-        return null;
     }
 
     private void setDomainSettings() {

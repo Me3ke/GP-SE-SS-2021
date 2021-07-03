@@ -78,56 +78,6 @@ public class Envelope implements Iterable<Document> {
         documentList.remove(document);
     }
 
-    //--------- Filter methods ------------
-
-    /**
-     * The filter method for envelope names.
-     * @param nameFilter the filter for the name.
-     * @return true if the name of this envelope contains the filter.
-     */
-    public boolean hasName(final String nameFilter) {
-        return this.getName().contains(nameFilter);
-    }
-
-    /**
-     * The filter method for envelopeIDs.
-     * @param idFilter the id of the specific envelope.
-     * @return true if this envelope has the id in the filter.
-     */
-    public boolean hasID(final long idFilter) {
-        if (idFilter == 0) {
-            return true;
-        }
-        return this.getId() == idFilter;
-    }
-
-    /**
-     * The filter method for ownerIDs.
-     * @param ownerIDFilter the if of the specific owner.
-     * @return true if the owner in the filter, owns this envelope.
-     */
-    public boolean hasOwnerID(final String ownerIDFilter) {
-        return this.owner.getEmail().contains(ownerIDFilter);
-    }
-
-    /**
-     * The filter method for creation Date.
-     * @param creationDateFrom earliest Date for the filter.
-     * @param creationDateTo latest Date for the filter.
-     * @return true if the creationDate is in this range given by the filters.
-     */
-    public boolean hasCreationDate(final LocalDateTime creationDateFrom, final LocalDateTime creationDateTo) {
-        if (creationDateFrom == null && creationDateTo == null) {
-            return true;
-        } else if (creationDateFrom == null) {
-            return this.creationDate.isBefore(creationDateTo);
-        } else if (creationDateTo == null) {
-            return this.creationDate.isAfter(creationDateFrom);
-        } else {
-            return this.creationDate.isAfter(creationDateFrom) && this.creationDate.isBefore(creationDateTo);
-        }
-    }
-
     //--------- Getter and Setter ------------
 
     public long getId() {

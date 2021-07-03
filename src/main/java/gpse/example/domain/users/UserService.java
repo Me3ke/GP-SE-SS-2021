@@ -1,11 +1,10 @@
 package gpse.example.domain.users;
 
 
-import gpse.example.util.email.MessageGenerationException;
-import gpse.example.util.email.TemplateNameNotFoundException;
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.web.tokens.ConfirmationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +22,7 @@ public interface UserService extends UserDetailsService {
 
     List<User> getUsers();
 
-    User getUser(final String username) throws UsernameNotFoundException;
+    User getUser(final String username);
 
     List<User> getAllUsers();
 
@@ -36,7 +35,7 @@ public interface UserService extends UserDetailsService {
 
     void infoNewExtUser(User user) throws MessageGenerationException, TemplateNameNotFoundException;
 
-    void removeUser(final String username) throws UsernameNotFoundException;
+    void removeUser(final String username);
 
     User saveUser(User user);
 }

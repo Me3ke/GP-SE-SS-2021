@@ -3,7 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.util.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -41,8 +41,8 @@ public class Document {
      * The object responsible for managing the signatories.
      */
     @OneToOne(
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
     )
     protected SignatoryManagement signatoryManagement;
 
@@ -120,7 +120,7 @@ public class Document {
         this.data = documentPutRequest.getData();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
-            /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
+            this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
     }
@@ -140,35 +140,7 @@ public class Document {
         }
     }
 
-    /*
-    /**
-     * the method used to verify a signature for a specific user, by checking all public keys a user has.
-     *
-     * @param user           the user who relates to the signature that needs to be checked
-     * @param givenSignature the signature that needs to be validated
-     * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
-     */
-    /*
-    public boolean verifySignature(final User user, final String givenSignature) {
-
-        boolean valid = false;
-        final byte[] signature = givenSignature.getBytes();
-        try {
-            StringToKeyConverter stringToKeyConverter = new StringToKeyConverter();
-            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
-            final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-            final String stringPublicKey = user.getPublicKey();
-            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);;
-            sign.initVerify(publicKey);
-            sign.update(id);
-            valid = sign.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException
-                | SignatureException | InvalidKeySpecException exception) {
-            exception.printStackTrace();
-        }
-        return valid;
-    } */
-
+    //TODO
     private AdvancedSignature getUsersSignature(final String user) {
         for (final AdvancedSignature advancedSignature : advancedSignatures) {
             if (advancedSignature.getUserEmail().equals(user)) {
@@ -191,70 +163,6 @@ public class Document {
             temp = temp.getPreviousVersion();
         }
         return history;
-    }
-
-    //--------- Filter methods--------
-
-    /**
-     * The filter method for document titles.
-     *
-     * @param titleFilter a String specifying the filter.
-     * @return true if this document contains the titleFilter.
-     */
-    public boolean hasTitle(final String titleFilter) {
-        return this.getDocumentTitle().contains(titleFilter);
-    }
-
-    /**
-     * The filter method for document states.
-     *
-     * @param documentStateFilter the state specifying the filter.
-     * @return true if this document has this state.
-     */
-    public boolean hasState(final DocumentState documentStateFilter) {
-        if (documentStateFilter == null) {
-            return true;
-        }
-        return this.state.equals(documentStateFilter);
-    }
-
-    /**
-     * The filter method for document titles.
-     *
-     * @param endDateFrom a Date which specifies the earliest moment.
-     * @param endDateTo   a Date which specifies the latest moment.
-     * @return true if this document is in between these endDates.
-     */
-    public boolean hasEndDate(final LocalDateTime endDateFrom, final LocalDateTime endDateTo) {
-        if (endDateFrom == null && endDateTo == null) {
-            return true;
-        } else if (endDateFrom == null) {
-            return this.endDate.isBefore(endDateTo);
-        } else if (endDateTo == null) {
-            return this.endDate.isAfter(endDateFrom);
-        } else {
-            return this.endDate.isAfter(endDateFrom) && this.endDate.isBefore(endDateTo);
-        }
-    }
-
-    /**
-     * The filter method for document data types.
-     *
-     * @param dataType a String specifying the datatypeFilter.
-     * @return true if this document is from this type, or contains it.
-     */
-    public boolean hasDataType(final String dataType) {
-        return this.documentType.contains(dataType);
-    }
-
-    /**
-     * The filter method for read.
-     *
-     * @param read a boolean specifying the filter if the document has been read.
-     * @return true if this document corresponds to the filter.
-     */
-    public boolean hasRead(final boolean read) {
-        return false;
     }
 
     //--------- Getter and Setter --------

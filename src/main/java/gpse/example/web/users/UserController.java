@@ -2,10 +2,12 @@ package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
-import gpse.example.util.email.*;
-import gpse.example.util.email.trusteddomain.DomainSetterService;
+import gpse.example.domain.email.*;
+import gpse.example.domain.email.trusteddomain.DomainSetterService;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import gpse.example.web.tokens.ResetPasswordToken;
@@ -43,7 +45,6 @@ public class UserController {
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
     private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
-    private static final int STATUS_CODE_WRONG_USER = 229;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";

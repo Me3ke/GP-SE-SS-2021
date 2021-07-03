@@ -8,7 +8,7 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.DocumentFilter;
-import gpse.example.util.email.*;
+import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The envelopeController class handles the request from the frontend and
@@ -44,9 +43,7 @@ public class EnvelopeController {
     private final DocumentServiceImpl documentService;
     private final DocumentFilter documentFilter;
     private final GuestTokenService guestTokenService;
-    @Lazy
-    @Autowired
-    private DocumentCreator documentCreator;
+
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
@@ -218,31 +215,6 @@ public class EnvelopeController {
     }
 
     /**
-     * The downloadEnvelope method downloads an envelope with all documents.
-     *
-     * @param envelopeID the id of the envelope to be downloaded.
-     * @param userID     the id of the user doing the request.
-     * @param path       the path where the envelope should be downloaded.
-     * @return the response object
-     * @throws DownloadFileException if the download was not successful.
-     */
-    @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/download")
-    public EnvelopeGetResponse downloadEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
-                                                final @PathVariable(USER_ID) String userID,
-                                                final @RequestParam("path") String path)
-        throws DownloadFileException {
-        try {
-            final User currentUser = userService.getUser(userID);
-            final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-            final User owner = userService.getUser(envelope.getOwnerID());
-            documentCreator.downloadEnvelope(envelope, path);
-            return new EnvelopeGetResponse(envelope, owner, currentUser.getEmail());
-        } catch (CreatingFileException | IOException | DocumentNotFoundException e) {
-            throw new DownloadFileException(e);
-        }
-    }
-
-    /**
      * The getAllEnvelopes methods gets all envelopes from the database and filters
      * them using the filter method.
      *
@@ -260,42 +232,6 @@ public class EnvelopeController {
         }
         return documentFilter.filterEnvelopes(envelopeGetResponseList, userID);
 
-    }
-
-    /**
-     * The filter method filters an envelope list on multiple criteria.
-     *
-     * @param request      the Request object which keeps the filter data.
-     * @param envelopeList the list containing all envelopes in the database.
-     * @return the filtered envelope list.
-     */
-    public List<Envelope> filter(final EnvelopeGetRequest request, final List<Envelope> envelopeList) {
-        final List<Envelope> resultList = new ArrayList<>();
-        final List<Envelope> filteredEnvelopeList = envelopeList
-            .stream()
-            .filter(envelope -> envelope.hasName(request.getNameFilter()))
-            .filter(envelope -> envelope.hasID(request.getEnvelopeIDFilter()))
-            .filter(envelope -> envelope.hasOwnerID(request.getOwnerIDFilter()))
-            .filter(envelope -> envelope.hasCreationDate(request.getCreationDateFilterFrom(),
-                request.getCreationDateFilterTo()))
-            .collect(Collectors.toList());
-        for (final Envelope envelope : filteredEnvelopeList) {
-            final List<Document> filteredDocumentList = envelope.getDocumentList()
-                .stream()
-                .filter(document -> document.hasTitle(request.getTitleFilter()))
-                .filter(document -> document.hasState(request.getStateFilter()))
-                .filter(document -> document.hasEndDate(request.getEndDateFilterFrom(), request.getEndDateFilterTo()))
-                .filter(document -> document.hasDataType(request.getDataType()))
-                .filter(document -> document.getSignatoryManagement().hasSignatories(request.getSignatoryIDs()))
-                .filter(document -> document.getSignatoryManagement().hasReaders(request.getReaderIDs()))
-                .filter(document -> document.getSignatoryManagement().hasSigned(request.isSigned()))
-                .filter(document -> document.hasRead(request.isRead()))
-                .collect(Collectors.toList());
-            final Envelope filteredEnvelope = new Envelope(envelope.getName(), filteredDocumentList,
-                envelope.getOwner());
-            resultList.add(filteredEnvelope);
-        }
-        return resultList;
     }
 
     /**

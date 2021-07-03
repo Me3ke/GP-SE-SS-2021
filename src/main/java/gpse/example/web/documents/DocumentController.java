@@ -1,17 +1,14 @@
 package gpse.example.web.documents;
 
-import gpse.example.domain.Protocol;
+import gpse.example.util.Protocol;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.exceptions.DownloadFileException;
-import gpse.example.domain.exceptions.UploadFileException;
+import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.*;
+import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,11 +228,8 @@ public class DocumentController {
             final Document oldDocument = documentService.getDocument(documentID);
             envelope.removeDocument(oldDocument);
             documentService.remove(oldDocument);
-            //System.out.println("old document: " + oldDocument.getSignatories());
             final Document archivedDocument = new ArchivedDocument(oldDocument);
             final Document savedDocument = documentService.addDocument(archivedDocument);
-            //TODO archived document should not be saved in envelope!
-
             final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
@@ -359,7 +353,6 @@ public class DocumentController {
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
                                          final @PathVariable(DOCUMENT_ID) long documentID,
@@ -378,7 +371,6 @@ public class DocumentController {
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    //TODO if orderRelevant test if current user is next in line.
     @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
@@ -410,7 +402,7 @@ public class DocumentController {
     }
 
 
-    /*
+    /**
      * The getDocumentHistory method does a get request to get the document history.
      *
      * @param documentID the id of the document of which the history is requested.
@@ -452,7 +444,6 @@ public class DocumentController {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
-            // TODO Document Title is null after updated Document
             final byte[] protocolBytes = protocol.writeProtocol(userService).toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)

@@ -1,10 +1,12 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.*;
+import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;

@@ -2,14 +2,13 @@ package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
-import gpse.example.util.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplate;
 import gpse.example.web.messages.MessageSettingsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,9 +54,6 @@ public class User implements UserDetails {
     @Column
     @JsonIgnore
     private String password;
-
-    //@OneToOne
-    //private Keys activePair;
 
     @OneToOne(
         orphanRemoval = true,
@@ -136,56 +132,12 @@ public class User implements UserDetails {
         return serialVersionUID;
     }
 
-    /*
-     * The Method to add a new keyPair to the list of existing ones.
-     *
-     * param pathToPrivate a filePath referring to the file of the private key that relates to the public key that
-     *                      should be stored
-     * param publicKey     the public key that should be stored
-
-    public void addKeyPair(final String pathToPrivate, final PublicKey publicKey) {
-        if (publicKey.getAlgorithm().equals("RSA")) {
-            keys.add(new Keys(publicKey, pathToPrivate));
-            changeActiveKeyPair(keys.size() - 1);
-        }
-    } */
-
-    /*
-     * the Method used to change the active key-pair to an existing one.
-     *
-     * param index the id of the new active key-pair
-
-    public void changeActiveKeyPair(final int index) {
-        //avoid outOfBounds exceptions
-        if (index < keys.size()) {
-            activePair = keys.get(index);
-        }
-    }*/
-
     public List<String> getArchivedPublicKeys() {
         return archivedPublicKeys;
     }
 
     public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
         this.archivedPublicKeys = archivedPublicKeys;
-    }
-
-    /**
-     * the Method used to fill in information that is not necessarily needed.
-     *
-     * @param street      the street the user lives in.
-     * @param houseNumber the house number of the user.
-     * @param postCode    the postcode for the hometown of the user
-     * @param homeTown    the hometown of the user
-     * @param country     the country the user lives in
-     * @param birthday    the birthday of the user
-     * @param phoneNumber the phoneNumber of the user
-     */
-    public void setPersonalData(final String street, final int houseNumber, final int postCode,
-                                final String homeTown, final String country, final LocalDate birthday,
-                                final String phoneNumber) {
-        this.personalData = new PersonalData(street, houseNumber, postCode, homeTown,
-            country, birthday, phoneNumber);
     }
 
     public void setPersonalData(final PersonalData personalData) {
@@ -203,32 +155,6 @@ public class User implements UserDetails {
         }
         this.roles.add(role);
     }
-
-    /*
-     * the method used to generate an advanced signature, using the active private key.
-     *
-     * @return the signature represented by a byte list
-     */
-    //no private Key in backend -> delete
-    /*
-    public byte[] advancedSign(final String hash) {
-        byte[] signature = null;
-        try {
-            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
-            sign.initSign(activePrivate);
-            sign.update(hash.getBytes());
-            signature = sign.sign();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return signature;
-    }
-
-     */
-
-
-    //TODO
-    // Methods that are required for using the interface
 
     /**
      * the method to create a new envelope with the user object, that calls this as the owner.
