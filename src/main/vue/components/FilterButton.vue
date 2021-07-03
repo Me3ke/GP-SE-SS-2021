@@ -2,9 +2,12 @@
     <span>
         <span :class="{active: isActiveMutate, inactive: !isActiveMutate}" @click="changeActive()"
               style="padding: 0.5vh 1vw 0; margin:0">
-            <h4>
+            <h4 v-if="!userManagement">
                 {{ this.text }}
             </h4>
+            <div v-else>
+                  {{ this.text }}
+            </div>
         </span>
     </span>
 </template>
@@ -16,6 +19,10 @@ export default {
         text: String,
         isActive: Boolean,
         switch: {
+            type: Boolean,
+            default: false
+        },
+        userManagement: {
             type: Boolean,
             default: false
         }

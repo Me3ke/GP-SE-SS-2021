@@ -5,38 +5,137 @@
         <BaseHeading name="AdminSettings.manage.title"></BaseHeading>
 
 
-        <b-container fluid style="margin-top:2vh; margin-right:2vw; text-align: left">
-            <b-row align-h="between" no-gutters>
-                <div class="col-aut">
-                    <b-row align-h="end">
-                        <!-- Filter Buttons -->
-                        <b-col>
-                            <span>
-                                <FilterButton v-bind:text="$t('Filter.open')"
-                                              :isActive="filter.active"
-                                              :switch="true"
-                                              @activeChange="filterActive()"></FilterButton>
-                            </span>
-                        </b-col>
-                        <b-col>
-                            <span>
-                                <FilterButton v-bind:text="$t('Filter.closed')"
-                                              :isActive="filter.inactive"
-                                              :switch="true"
-                                              @activeChange="filterInactive()"></FilterButton>
-                            </span>
-                        </b-col>
-                        <b-col>
-                            <span @click="filterAdmin()">
-                                <FilterButton v-bind:text="$t('Filter.owned')"
-                                              :isActive="filter.admin"
-                                              @activeChange="filter.admin = !filter.admin"></FilterButton>
-                            </span>
-                        </b-col>
-                    </b-row>
+        <div class="container-fluid justify-content-between" style="display: flex">
+            <!-- Filter Buttons -->
+            <div>
+                <FilterButton :text="$t('AdminSettings.manage.filter.active')"
+                              :isActive="filter.active"
+                              :switch="true"
+                              :user-management="true"
+                              @activeChange="filterActive()"
+                              class="filter-button"></FilterButton>
+
+                <FilterButton :text="$t('AdminSettings.manage.filter.inactive')"
+                              :isActive="filter.inactive"
+                              :switch="true"
+                              :user-management="true"
+                              @activeChange="filterInactive()"
+                              class="filter-button"></FilterButton>
+
+                <FilterButton :text="$t('AdminSettings.manage.filter.admin')"
+                              :isActive="filter.admin"
+                              :user-management="true"
+                              @activeChange="filterAdmin()"
+                              class="filter-button"></FilterButton>
+            </div>
+
+            <div style="display: flex">
+                <div>
+                    <b-input-group>
+                        <!-- Searchbar -->
+                        <b-form-input v-model="filter.search"
+                                      :placeholder="$t('OverviewPage.search')"></b-form-input>
+
+                        <b-icon class="my-icon" icon="search" id="search"></b-icon>
+                    </b-input-group>
                 </div>
-            </b-row>
-        </b-container>
+
+                <div>
+                    <!-- Sort -->
+                    <b-dropdown class="my-dropdown-menu my-dropdown-toggle" style="margin-left: 2em" no-caret right>
+                        <template #button-content>
+                            <b-icon icon="bar-chart-fill" rotate="-90"
+                                    style="transform: rotateY(180deg);"
+                                    class="my-icon"></b-icon>
+                        </template>
+                        <b-dropdown-item
+                            :class="filter.sort === 'NEWEST' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'NEWEST'">
+                            {{
+                                $t('AdminSettings.manage.sort.new')
+                            }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+                        <b-dropdown-item
+                            :class="filter.sort === 'OLDEST' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'OLDEST'">{{
+                                $t('AdminSettings.manage.sort.old')
+                            }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+                        <b-dropdown-item
+                            :class="filter.sort === 'ABCN' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'ABCN'">{{
+                                $t('AdminSettings.manage.sort.abcN')
+                            }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+                        <b-dropdown-item
+                            :class="filter.sort === 'CBAN' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'CBAN'">{{
+                                $t('AdminSettings.manage.sort.cbaN')
+                            }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+                        <b-dropdown-item
+                            :class="filter.sort === 'ABCE' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'ABCE'">{{
+                                $t('AdminSettings.manage.sort.abcE')
+                            }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+                        <b-dropdown-item
+                            :class="filter.sort === 'CBAE' ? 'my-dropdown-item my-dropdown-item-selected' : 'my-dropdown-item'"
+                            @click="filter.sort = 'CBAE'">{{
+                                $t('AdminSettings.manage.sort.cbaE')
+                            }}
+                        </b-dropdown-item>
+                    </b-dropdown>
+                </div>
+            </div>
+        </div>
+
+        <!-- User -->
+        <div class="container-fluid">
+            <div class="user-container">
+                <div v-for="(user,index) in allUsers" :key="index" style="display: flex">
+                    <UserBox :user="user"></UserBox>
+                    <b-icon v-if="!selected.includes(index)" icon="circle" class="my-icon checker"
+                            @click="changeSelected(index)"></b-icon>
+                    <b-icon v-else icon="check-circle" class="my-icon checker" @click="changeSelected(index)"></b-icon>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination and Buttons -->
+        <div style="display: flex; margin-top: 0.5em" class="justify-content-between container-fluid">
+            <b-pagination
+                v-model="page"
+                :total-rows="allUsers.length"
+                :per-page="pageLimit"
+                class="button-txt"
+                style="margin-top: auto;margin-bottom: auto;"
+            ></b-pagination>
+
+            <div>
+                <button type="button" class="elsa-blue-btn">
+                    <span class="button-txt">
+                        {{ $t('AdminSettings.manage.options.admin') }}
+                    </span>
+                </button>
+                <button type="button" class="elsa-blue-btn">
+                      <span class="button-txt">
+                           {{ $t('AdminSettings.manage.options.inactive') }}
+                      </span>
+                </button>
+                <button type="button" class="elsa-blue-btn">
+                      <span class="button-txt">
+                           {{ $t('AdminSettings.manage.options.active') }}
+                      </span>
+                </button>
+            </div>
+
+        </div>
 
 
         <Footer></Footer>
@@ -48,17 +147,25 @@ import {mapGetters} from "vuex";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
+import UserBox from "@/main/vue/components/userManagement/UserBox";
 
 export default {
     name: "UserManagement",
-    components: {Footer, Header, FilterButton},
+    components: {UserBox, Footer, Header, FilterButton},
     data() {
         return {
             filter: {
+                search: '',
+                sort: 'NEWEST',
+
                 active: false,
                 inactive: false,
-                admin: false
+                admin: false,
             },
+            selected: [],
+
+            pageLimit: 10,
+            page: 1,
         }
     },
     async mounted() {
@@ -88,6 +195,15 @@ export default {
         },
         filterAdmin() {
             this.filter.admin = !this.filter.admin
+        },
+
+        // sets selected array
+        changeSelected(index) {
+            if (this.selected.includes(index)) {
+                this.selected.splice(this.selected.indexOf(index), 1)
+            } else {
+                this.selected.push(index)
+            }
         }
     },
     computed: {
@@ -98,6 +214,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped src="../assets/css/userManagement.css">
 </style>

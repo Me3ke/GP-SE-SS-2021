@@ -344,8 +344,8 @@
         "cancel": "Cancel"
     },
     "DownloadKey": {
-      "download": "Download",
-      "clipBoard": "Copy"
+        "download": "Download",
+        "clipBoard": "Copy"
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
@@ -558,7 +558,25 @@
             "default": "Default"
         },
         "manage": {
-            "title": "User management"
+            "title": "User management",
+            "filter": {
+                "active": "Active",
+                "inactive": "Deactivated",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Newest first",
+                "old": "Oldest first",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-mail A-Z",
+                "cbaE": "E-mail Z-A"
+            },
+            "options": {
+                "active": "Activate",
+                "inactive": "Deactivate",
+                "admin": "Make admin"
+            }
         }
     },
     "ProgressBar": {

@@ -560,7 +560,25 @@
             "default": "Standard"
         },
         "manage": {
-            "title": "Nutzerverwaltung"
+            "title": "Nutzerverwaltung",
+            "filter": {
+                "active": "Aktiviert",
+                "inactive": "Deaktiviert",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Neuste zuerst",
+                "old": "Älteste zuerst",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-Mail A-Z",
+                "cbaE": "E-Mail Z-A"
+            },
+            "options": {
+                "active": "Aktivieren",
+                "inactive": "Deaktivieren",
+                "admin": "Adminrechte geben"
+            }
         }
     },
     "ProgressBar": {
