@@ -276,6 +276,8 @@ public class DocumentController {
                             document.getId()));
                         container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
                             + document.getId() + "/" + token.getToken());
+                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     }
                 }
             }
