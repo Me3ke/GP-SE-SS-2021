@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatureType;
 import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
@@ -21,18 +20,13 @@ import java.util.Optional;
 @Entity
 public class Document {
 
-    //needed for verification
-    private static final String SIGNING_ALGORITHM = "SHA256withRSA";
     /**
-     * The documentMetaData containing the identifier as well as other information.
-     * The path leading to the document.
+     * The id to identify the document.
      */
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     protected long id;
-
 
     /**
      * The object that contains metadata of the document, like the upload-date or the document-hash.
@@ -44,14 +38,13 @@ public class Document {
     protected DocumentMetaData documentMetaData;
 
     /**
-     * The list of signatories for this document.
+     * The object responsible for managing the signatories.
      */
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        orphanRemoval = true,
-        cascade = CascadeType.ALL
+    @OneToOne(
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
     )
-    protected List<Signatory> signatories;
+    protected SignatoryManagement signatoryManagement;
 
     /**
      * The list of all advanced signatures that have been made so far.
@@ -122,7 +115,7 @@ public class Document {
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
-        this.signatories = signatories;
+        this.signatoryManagement = new SignatoryManagement(this.id, signatories);
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -133,26 +126,16 @@ public class Document {
     }
 
     /**
-     * adds a new user as a signatory to the signatory list.
-     *
-     * @param signatory     the user object that is needed as a signatory
-     * @param signatureType the signatureType the signatory refers to
-     */
-    public void addSignatory(final String signatory, final SignatureType signatureType) {
-        signatories.add(new Signatory(signatory, signatureType));
-    }
-
-    /**
      * the Method to add an advanced signature for a specific user to the document.
      *
      * @param user      the user that signs the document
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        for (int i = 0; i < signatories.size(); i++) {
-            if (signatories.get(i).getEmail().equals(user)) {
+        for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
+            if (signatoryManagement.getSignatories().get(i).getEmail().equals(user)) {
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
-                setSigned(i);
+                signatoryManagement.setSigned(i);
             }
         }
     }
@@ -265,56 +248,6 @@ public class Document {
     }
 
     /**
-     * The filter method for document signatories.
-     *
-     * @param signatories The list of signatories by which should be filtered.
-     * @return true if this document contains one of the signatories of the filter.
-     */
-    public boolean hasSignatories(final List<String> signatories) {
-        if (signatories == null) {
-            return true;
-        }
-        for (final Signatory signatory : this.signatories) {
-            if (signatories.contains(signatory.getEmail())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * The filter method for document readers.
-     *
-     * @param readers The list of reader by which should be filtered.
-     * @return true if this document contains one of the readers of the filter.
-     */
-    public boolean hasReaders(final List<String> readers) {
-        for (final String reader : readers) {
-            for (final Signatory signatory : getReaders()) {
-                if (signatory.getEmail().equals(reader)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * The filter method for signed.
-     *
-     * @param signed a boolean specifying the filter if the document is signed.
-     * @return true if this document corresponds to the filter.
-     */
-    public boolean hasSigned(final boolean signed) {
-        for (final Signatory signatory : this.signatories) {
-            if (signed == signatory.isStatus()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * The filter method for read.
      *
      * @param read a boolean specifying the filter if the document has been read.
@@ -338,10 +271,6 @@ public class Document {
         return Arrays.copyOf(data, data.length);
     }
 
-    public void setSigned(final int index) {
-        signatories.get(index).setStatus(true);
-    }
-
     public DocumentMetaData getDocumentMetaData() {
         return documentMetaData;
     }
@@ -360,71 +289,6 @@ public class Document {
 
     public List<Comment> getCommentList() {
         return commentList;
-    }
-
-    public List<Signatory> getSignatories() {
-        return signatories;
-    }
-
-    /**
-     * The method that returns the first signatory, that hasn't signed or reviewed.
-     *
-     * @return the first signatory, that hasn't signed or reviewed from any given list.
-     */
-    public Signatory getCurrentSignatory() {
-        for (final Signatory signatory : signatories) {
-            if (!signatory.isStatus()) {
-
-                return signatory;
-
-            }
-        }
-        return null;
-    }
-
-    /**
-     * returns a list of only those signatories that have review as their signature Type.
-     *
-     * @return a list of only those signatories that have review as their signature Type
-     */
-    public List<Signatory> getReaders() {
-        final List<Signatory> readers = new ArrayList<>();
-        for (final Signatory signatory : signatories) {
-            if (signatory.getSignatureType().equals(SignatureType.REVIEW)) {
-                readers.add(signatory);
-            }
-        }
-        return readers;
-    }
-
-    /**
-     * returns a list of only those signatories that have simple signature as their signature Type.
-     *
-     * @return a list of only those signatories that have simple signature as their signature Type
-     */
-    public List<Signatory> getSimpleSignatories() {
-        final List<Signatory> simpleSignatories = new ArrayList<>();
-        for (final Signatory signatory : signatories) {
-            if (signatory.getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)) {
-                simpleSignatories.add(signatory);
-            }
-        }
-        return simpleSignatories;
-    }
-
-    /**
-     * returns a list of only those signatories that have advanced signature as their signature Type.
-     *
-     * @return a list of only those signatories that have advanced signature as their signature Type
-     */
-    public List<Signatory> getAdvancedSignatories() {
-        final List<Signatory> advancedSignatories = new ArrayList<>();
-        for (final Signatory signatory : signatories) {
-            if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
-                advancedSignatories.add(signatory);
-            }
-        }
-        return advancedSignatories;
     }
 
     public void addComment(final Comment comment) {
@@ -470,10 +334,6 @@ public class Document {
         this.state = documentState;
     }
 
-    public void setSignatories(final List<Signatory> signatories) {
-        this.signatories = signatories;
-    }
-
     public Document getPreviousVersion() {
         return previousVersion;
     }
@@ -484,6 +344,10 @@ public class Document {
 
     public EmailTemplate getProcessEmailTemplate() {
         return processEmailTemplate;
+    }
+
+    public SignatoryManagement getSignatoryManagement() {
+        return signatoryManagement;
     }
 
     public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {

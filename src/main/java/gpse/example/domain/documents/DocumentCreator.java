@@ -81,7 +81,7 @@ public class DocumentCreator {
                                 final DocumentService documentService) {
         if (signatories != null) {
             for (final ProtoSignatory signatory : signatories) {
-                document.addSignatory(signatory.getEmail(), signatory.getSignatureType());
+                document.getSignatoryManagement().addSignatory(signatory.getEmail(), signatory.getSignatureType());
             }
             documentService.addDocument(document);
         }
@@ -97,7 +97,7 @@ public class DocumentCreator {
     private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
         if (signatories == null) {
             document.setState(DocumentState.CLOSED);
-        } else if (document.getReaders().size() == 0 && !document.isOrderRelevant()) {
+        } else if (document.getSignatoryManagement().getReaders().size() == 0 && !document.isOrderRelevant()) {
             document.setState(DocumentState.READ);
         } else {
             document.setState(DocumentState.OPEN);

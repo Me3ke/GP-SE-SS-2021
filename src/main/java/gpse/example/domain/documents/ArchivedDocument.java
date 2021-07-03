@@ -18,7 +18,7 @@ public class ArchivedDocument extends Document {
     public ArchivedDocument(final Document document) {
         this.id = document.getId();
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
-        this.signatories = document.getSignatories();
+        this.signatoryManagement = document.getSignatoryManagement();
         this.documentType = document.getDocumentType();
         this.data = document.getData();
         this.orderRelevant = document.isOrderRelevant();

@@ -1,6 +1,7 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.documents.Document;
+import gpse.example.domain.documents.SignatoryManagement;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,9 +23,10 @@ public class DocumentSetting {
      */
     public DocumentSetting(final Document document) {
         this.documentID = document.getId();
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
         signatories = new ArrayList<>();
-        for (int i = 0; i < document.getSignatories().size(); i++) {
-            signatories.add(new SignatorySetting(document.getSignatories().get(i)));
+        for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
+            signatories.add(new SignatorySetting(signatoryManagement.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

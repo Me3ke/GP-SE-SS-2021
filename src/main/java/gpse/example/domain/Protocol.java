@@ -110,7 +110,7 @@ public class Protocol {
                 lineCount -= LINE_DIST;
                 addLine(SIGNATURE_OF, lineCount, contentStream);
 
-                for (final Signatory signatory : document.getSignatories()) {
+                for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
                     lineCount -= LINE_DIST;
                     if (signatory.isStatus()) {
                         addIndentedLine(signatory.getEmail() + "    Am: "
@@ -141,7 +141,7 @@ public class Protocol {
                     lineCount -= LINE_DIST;
                     addIndentedLine(SIGNATURE_OF, lineCount, SPACING_TWO, contentStream);
 
-                    for (final Signatory signatory : document.getSignatories()) {
+                    for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
                         lineCount -= LINE_DIST;
                         if (signatory.isStatus()) {
                             addIndentedLine(signatory.getEmail() + "    (ungültig) ",

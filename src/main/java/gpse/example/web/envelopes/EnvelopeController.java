@@ -119,15 +119,18 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
-                setupUserInvitation(document.getCurrentSignatory().getEmail(),
-                    userService.getUser(document.getOwner()), document,
-                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
+            final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+            if (document.isOrderRelevant() && signatoryManagement.getCurrentSignatory() != null) {
+                setupUserInvitation(signatoryManagement.getCurrentSignatory().getEmail(),
+                    userService.getUser(document.getOwner()),
+                        document, envelopeService.getEnvelope(envelopeID),
+                        signatoryManagement.getCurrentSignatory().getSignatureType());
             } else {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
+                for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
+                    setupUserInvitation(signatoryManagement.getSignatories().get(i).getEmail(),
                         userService.getUser(document.getOwner()), document,
-                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                        envelopeService.getEnvelope(envelopeID),
+                            signatoryManagement.getSignatories().get(i).getSignatureType());
                 }
             }
             envelopeService.updateEnvelope(envelope, document);
@@ -284,9 +287,9 @@ public class EnvelopeController {
                 .filter(document -> document.hasState(request.getStateFilter()))
                 .filter(document -> document.hasEndDate(request.getEndDateFilterFrom(), request.getEndDateFilterTo()))
                 .filter(document -> document.hasDataType(request.getDataType()))
-                .filter(document -> document.hasSignatories(request.getSignatoryIDs()))
-                .filter(document -> document.hasReaders(request.getReaderIDs()))
-                .filter(document -> document.hasSigned(request.isSigned()))
+                .filter(document -> document.getSignatoryManagement().hasSignatories(request.getSignatoryIDs()))
+                .filter(document -> document.getSignatoryManagement().hasReaders(request.getReaderIDs()))
+                .filter(document -> document.getSignatoryManagement().hasSigned(request.isSigned()))
                 .filter(document -> document.hasRead(request.isRead()))
                 .collect(Collectors.toList());
             final Envelope filteredEnvelope = new Envelope(envelope.getName(), filteredDocumentList,

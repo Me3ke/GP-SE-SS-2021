@@ -99,7 +99,6 @@ public class DocumentController {
                                                        final @PathVariable(USER_ID) String userID,
                                                        final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        Document document;
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         final List<Document> documentList = envelope.getDocumentList();
         boolean isInEnvelope = false;
@@ -110,9 +109,10 @@ public class DocumentController {
             }
         }
         if (isInEnvelope) {
-            document = documentService.getDocument(documentID);
+            final Document document = documentService.getDocument(documentID);
+            final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
             if (document.getDocumentType().equals("pdf")) {
-                final List<Signatory> signatories = document.getSignatories();
+                final List<Signatory> signatories = signatoryManagement.getSignatories();
                 for (final Signatory signatory : signatories) {
                     if (signatory.getEmail().equals(userID)) {
                         signatory.setSeen(true);
@@ -145,10 +145,8 @@ public class DocumentController {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            System.out.println("Test1");
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
-            Document document;
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final List<Document> documentList = envelope.getDocumentList();
             boolean isInEnvelope = false;
@@ -159,8 +157,9 @@ public class DocumentController {
                 }
             }
             if (isInEnvelope) {
-                document = documentService.getDocument(documentID);
-                final List<Signatory> signatories = document.getSignatories();
+                final Document document = documentService.getDocument(documentID);
+                final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+                final List<Signatory> signatories = signatoryManagement.getSignatories();
                 for (final Signatory signatory : signatories) {
                     if (signatory.getEmail().equals(guestTokenOptional.get().getUsername())) {
                         return new DocumentGetResponse(document, userService.getUser(document.getOwner()),
@@ -171,7 +170,6 @@ public class DocumentController {
                 throw new DocumentNotFoundException();
             }
         }
-        System.out.println("Test2");
         return null;
     }
 
@@ -193,8 +191,9 @@ public class DocumentController {
         userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
         final String name = document.getDocumentTitle() + "." + document.getDocumentType();
-        final List<Signatory> signatories = document.getSignatories();
+        final List<Signatory> signatories = signatoryManagement.getSignatories();
         for (final Signatory signatory : signatories) {
             if (signatory.getEmail().equals(userID)) {
                 signatory.setSeen(true);
@@ -262,9 +261,10 @@ public class DocumentController {
         final EmailTemplate emailTemplate = emailTemplateService.findSystemTemplateByName("NewVersionTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
         if (document.isOrderRelevant()) {
-            for (final Signatory signatory : document.getSignatories()) {
-                if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
+            for (final Signatory signatory : signatoryManagement.getSignatories()) {
+                if (signatory.isStatus() || signatoryManagement.getCurrentSignatory().equals(signatory)) {
                     try {
                         userService.getUser(signatory.getEmail());
                         container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
@@ -280,7 +280,7 @@ public class DocumentController {
                 }
             }
         } else {
-            for (final Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : signatoryManagement.getSignatories()) {
                 try {
                     userService.getUser(signatory.getEmail());
                     container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
@@ -480,13 +480,13 @@ public class DocumentController {
         userService.getUser(userID);
         envelopeService.getEnvelope(envelopeID);
         final Document document = documentService.getDocument(documentID);
-
-        final List<Signatory> signatories = document.getSignatories();
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+        final List<Signatory> signatories = signatoryManagement.getSignatories();
         final LinkedHashSet<Signatory> signatoryLinkedHashSet = new LinkedHashSet<>(signatories);
         signatories.clear();
         signatories.addAll(signatoryLinkedHashSet);
 
-        return new DocumentProgressResponse(document.getSignatories(), document.getReaders(), document.getEndDate());
+        return new DocumentProgressResponse(signatoryManagement.getSignatories(), signatoryManagement.getReaders(), document.getEndDate());
     }
 
     /**
@@ -515,7 +515,7 @@ public class DocumentController {
                 signatory.setSignedOn(signatorySetting.convertSignedOn());
                 signatories.add(signatory);
             }
-            document.setSignatories(signatories);
+            document.getSignatoryManagement().setSignatories(signatories);
             documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
@@ -539,7 +539,8 @@ public class DocumentController {
                                                        @PathVariable("userID") final String userId)
         throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentId);
-        for (final Signatory signatory : document.getSignatories()) {
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+        for (final Signatory signatory : signatoryManagement.getSignatories()) {
             if (signatory.getEmail().equals(userId)) {
                 return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, Long.toString(documentId))

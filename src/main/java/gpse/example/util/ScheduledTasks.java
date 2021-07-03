@@ -59,7 +59,7 @@ public class ScheduledTasks {
                 break;
             }
         }*/
-        final Signatory currentSignatory = doc.getCurrentSignatory();
+        final Signatory currentSignatory = doc.getSignatoryManagement().getCurrentSignatory();
         if (currentSignatory != null && currentSignatory.getReminder() > -1
             && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
             /*smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
@@ -71,7 +71,7 @@ public class ScheduledTasks {
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        for (final Signatory signatory : doc.getSignatories()) {
+        for (final Signatory signatory : doc.getSignatoryManagement().getSignatories()) {
             if (signatory.getReminder() > -1
                 && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
                 /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),

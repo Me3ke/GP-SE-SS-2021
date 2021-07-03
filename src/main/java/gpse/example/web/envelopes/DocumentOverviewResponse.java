@@ -3,6 +3,7 @@ package gpse.example.web.envelopes;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.documents.OrderManager;
+import gpse.example.domain.documents.SignatoryManagement;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -52,7 +53,8 @@ public class DocumentOverviewResponse {
         this.read = false;
         this.signed = false;
         this.id = document.getId();
-        final List<Signatory> signatories = document.getSignatories();
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+        final List<Signatory> signatories = signatoryManagement.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getEmail().equals(currentUser)
@@ -66,7 +68,7 @@ public class DocumentOverviewResponse {
                 }
             }
         }
-        final List<Signatory> readers = document.getReaders();
+        final List<Signatory> readers = signatoryManagement.getReaders();
         for (final Signatory currentReader : readers) {
             if (currentReader.getEmail().equals(currentUser)) {
                 this.reader = true;

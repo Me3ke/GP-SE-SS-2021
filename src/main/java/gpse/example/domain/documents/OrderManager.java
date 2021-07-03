@@ -31,12 +31,12 @@ public class OrderManager {
         List<Signatory> signatories;
         switch (signatureType) {
             case REVIEW:
-                signatories = document.getReaders();
+                signatories = document.getSignatoryManagement().getReaders();
                 return findSignatoryInList(signatories, reader, signatureType)
                         && document.getState().equals(DocumentState.OPEN);
             case SIMPLE_SIGNATURE:
             case ADVANCED_SIGNATURE:
-                signatories = document.getSignatories();
+                signatories = document.getSignatoryManagement().getSignatories();
                 return findSignatoryInList(signatories, reader, signatureType)
                         && document.getState().equals(DocumentState.READ);
             default:
@@ -59,7 +59,7 @@ public class OrderManager {
 
     private boolean manageSignatureInOrder(final String reader, final Document document,
                                            final SignatureType signatureType) {
-        final Signatory currentReader = document.getCurrentSignatory();
+        final Signatory currentReader = document.getSignatoryManagement().getCurrentSignatory();
         return matchesSignatory(reader, currentReader, signatureType);
     }
 
