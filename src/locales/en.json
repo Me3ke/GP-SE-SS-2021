@@ -560,6 +560,7 @@
         "manage": {
             "title": "User management",
             "empty": "No users found.",
+            "error": "Error!",
             "filter": {
                 "active": "Active",
                 "inactive": "Deactivated",

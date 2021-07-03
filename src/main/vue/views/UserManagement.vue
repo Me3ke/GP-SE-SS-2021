@@ -125,17 +125,27 @@
             ></b-pagination>
 
             <div>
-                <button type="button" class="elsa-blue-btn">
+                <transition name="saved">
+                            <span v-if="showSave">
+                                {{ $t('Settings.saved') }}
+                            </span>
+                </transition>
+                <transition name="saved">
+                            <span v-if="showError">
+                                {{ $t('AdminSettings.manage.error') }}
+                            </span>
+                </transition>
+                <button type="button" class="elsa-blue-btn" @click="makeAdmin()">
                     <span class="button-txt">
                         {{ $t('AdminSettings.manage.options.admin') }}
                     </span>
                 </button>
-                <button type="button" class="elsa-blue-btn">
+                <button type="button" class="elsa-blue-btn" @click="deactivate()">
                       <span class="button-txt">
                            {{ $t('AdminSettings.manage.options.inactive') }}
                       </span>
                 </button>
-                <button type="button" class="elsa-blue-btn">
+                <button type="button" class="elsa-blue-btn" @click="activate()">
                       <span class="button-txt">
                            {{ $t('AdminSettings.manage.options.active') }}
                       </span>
@@ -143,7 +153,6 @@
             </div>
 
         </div>
-
 
         <Footer></Footer>
     </div>
@@ -155,6 +164,7 @@ import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import FilterButton from "@/main/vue/components/FilterButton";
 import UserBox from "@/main/vue/components/userManagement/UserBox";
+import _ from "lodash";
 
 export default {
     name: "UserManagement",
@@ -173,10 +183,16 @@ export default {
 
             pageLimit: 10,
             page: 1,
+
+            showSave: false,
+            showError: false
         }
     },
     async mounted() {
         await this.$store.dispatch('userManagement/fetchAllUsers')
+    },
+    beforeDestroy() {
+        this.$store.dispatch('userManagement/emptyStore')
     },
     methods: {
         // Change filter and make sure active and inactive filter is not activated at the same time
@@ -211,11 +227,90 @@ export default {
             } else {
                 this.selected.push(index)
             }
+        },
+
+        // makes user(s) admin
+        async makeAdmin() {
+            if (this.selected.length === 0) {
+                return
+            }
+
+            let user = this.allUsers(this.filter, this.pageLimit, this.page)
+            let didSomething = false
+            for (let i = 0; i < this.selected.length; i++) {
+                if (!user[this.selected[i]].roles.includes('ROLE_ADMIN')) {
+                    await this.$store.dispatch('userManagement/makeUserAdmin', user[this.selected[i]].email)
+                    didSomething = true
+                }
+            }
+
+            await this.resolve(didSomething)
+        },
+
+        // deactivates user(s)
+        async deactivate() {
+            if (this.selected.length === 0) {
+                return
+            }
+
+            let user = this.allUsers(this.filter, this.pageLimit, this.page)
+            let didSomething = false
+            for (let i = 0; i < this.selected.length; i++) {
+                if (user[this.selected[i]].adminValidated && !user[this.selected[i]].roles.includes('ROLE_ADMIN')) {
+                    await this.$store.dispatch('userManagement/lockUser', user[this.selected[i]].email)
+                    didSomething = true
+                }
+            }
+
+            await this.resolve(didSomething)
+        },
+
+        // activates user(s)
+        async activate() {
+            if (this.selected.length === 0) {
+                return
+            }
+
+            let user = this.allUsers(this.filter, this.pageLimit, this.page)
+            let didSomething = false
+            for (let i = 0; i < this.selected.length; i++) {
+                if (!user[this.selected[i]].adminValidated) {
+                    await this.$store.dispatch('userManagement/validateUser', user[this.selected[i]].email)
+                    didSomething = true
+                }
+            }
+
+            await this.resolve(didSomething)
+        },
+
+        // method after admin toke action via button
+        async resolve(didSomething) {
+            await this.$store.dispatch('userManagement/fetchAllUsers')
+            this.selected = []
+
+            if (didSomething && !this.hasError()) {
+                // show saved notification
+                this.showSave = true
+                setTimeout(() => {
+                    this.showSave = false
+                }, 2000);
+            } else {
+                // show error notification
+                this.showError = true
+                setTimeout(() => {
+                    this.showError = false
+                }, 2000);
+            }
+        },
+
+        hasError() {
+            return !_.isEmpty(this.error);
         }
     },
     computed: {
         ...mapGetters({
-            allUsers: 'userManagement/getFilteredPagesUsers'
+            allUsers: 'userManagement/getFilteredPagesUsers',
+            error: 'userManagement/userManagementError'
         })
     }
 }

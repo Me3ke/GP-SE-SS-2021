@@ -31,6 +31,14 @@ export const mutations = {
 
     SET_USER_MANAGEMENT_ERROR(state, error) {
         state.userManagementError = error
+    },
+
+    EMPTY_EVERYTHING(state) {
+        state.allUsers = []
+        state.userValidateStatus = {}
+        state.userMakeAdminStatus = {}
+        state.lockUserStatus = {}
+        state.userManagementError = {}
     }
 }
 
@@ -71,6 +79,11 @@ export const actions = {
         }).catch(error => {
             commit('SET_USER_MANAGEMENT_ERROR', error)
         })
+    },
+
+    // empties store part
+    emptyStore({commit}) {
+        commit('EMPTY_EVERYTHING')
     }
 }
 

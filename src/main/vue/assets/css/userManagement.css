@@ -1,3 +1,12 @@
+/* Saved notification */
+.saved-enter-active, .saved-leave-active {
+    transition: opacity .7s
+}
+
+.saved-enter, .saved-leave-to {
+    opacity: 0
+}
+
 /* Icon */
 .my-icon {
     fill: var(--elsa-blue);

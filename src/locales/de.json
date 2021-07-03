@@ -562,6 +562,7 @@
         "manage": {
             "title": "Nutzerverwaltung",
             "empty": "Keine Benutzer gefunden.",
+            "error": "Fehler!",
             "filter": {
                 "active": "Aktiviert",
                 "inactive": "Deaktiviert",
