@@ -177,7 +177,6 @@ public class Protocol {
                     addIndentedLine(signature.getUserEmail(), lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                 }
                 String hash = signature.getSignature().toString();
-                System.out.println(hash);
                 String[] hashLines = getSubStrings(hash);
                 for (String hashline : hashLines) {
                     try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
@@ -231,7 +230,8 @@ public class Protocol {
             pageCount++;
             lineCounter.setCount(TOP_OF_PAGE);
         }
-        return new PDPageContentStream(protocol, protocol.getPage(pageCount));
+        return new PDPageContentStream(protocol, protocol.getPage(pageCount), PDPageContentStream.AppendMode.APPEND,
+            false);
     }
 
     private String[] getSubStrings(String string) {
