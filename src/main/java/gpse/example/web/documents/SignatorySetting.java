@@ -22,6 +22,7 @@ public class SignatorySetting {
 
     /**
      * The standard constructor.
+     *
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
@@ -39,13 +40,18 @@ public class SignatorySetting {
     }
 
     /**
-     * Empty Constructor for objects created from JSON
+     * Empty Constructor for objects created from JSON.
      */
     public SignatorySetting() {
     }
 
+    /**
+     * the method used to convert the String, that we get from the frontend to LocalDateTime.
+     *
+     * @return the time the user signed on as LocalDateTime
+     */
     public LocalDateTime convertSignedOn() {
-        if(signedOn.equals("")) {
+        if (signedOn.equals("")) {
             return null;
         }
         return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -65,6 +71,7 @@ public class SignatorySetting {
 
     /**
      * The Method used to convert the int that represents the signature Type to the enum representation.
+     *
      * @return the enum representation of the signaturetype.
      */
     @JsonIgnore
@@ -75,6 +82,7 @@ public class SignatorySetting {
             return SignatureType.NO_SIGNATURE;
         }
     }
+
     public void setSignatureType(final int signatureType) {
         this.signatureType = signatureType;
     }

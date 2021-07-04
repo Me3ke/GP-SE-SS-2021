@@ -98,6 +98,7 @@ public class InitializeDatabase implements InitializingBean {
             user.addRole(ROLE_USER);
             user.setEnabled(true);
             user.setAdminValidated(true);
+            user.setPersonalData(personalData);
             userService.saveUser(user);
         }
         try {

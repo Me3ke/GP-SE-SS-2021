@@ -43,7 +43,7 @@ public class Document {
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )
-    private List<Signatory> signatories = new ArrayList<>();
+    private final List<Signatory> signatories;
 
     @OneToMany(
         orphanRemoval = true,
@@ -72,6 +72,7 @@ public class Document {
     private DocumentState state;
 
     public Document() {
+        this.signatories = new ArrayList<>();
     }
 
     /**
@@ -439,8 +440,9 @@ public class Document {
         this.state = documentState;
     }
 
-    public void setSignatories(List<Signatory> signatories) {
-        this.signatories = signatories;
+    public void setSignatories(final List<Signatory> signatories) {
+        this.signatories.clear();
+        this.signatories.addAll(signatories);
     }
 
     public Document getPreviousVersion() {

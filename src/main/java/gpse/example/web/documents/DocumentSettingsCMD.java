@@ -13,8 +13,13 @@ public class DocumentSettingsCMD {
     private boolean orderRelevant;
     private String endDate;
 
+    /**
+     * the method used to convert the String, that we get from the frontend to LocalDateTime.
+     *
+     * @return the deadline as LocalDateTime
+     */
     public LocalDateTime convertEndDate() {
-        if(endDate.equals("")) {
+        if (endDate.equals("")) {
             return null;
         }
         return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

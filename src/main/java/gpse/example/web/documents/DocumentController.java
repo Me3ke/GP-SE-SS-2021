@@ -323,7 +323,7 @@ public class DocumentController {
             }
             document.setSignatories(signatories);
 
-            Document savedDoc = documentService.addDocument(document);
+            documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
         } catch (DocumentNotFoundException e) {
