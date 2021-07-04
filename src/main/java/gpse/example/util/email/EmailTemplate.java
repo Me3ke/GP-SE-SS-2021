@@ -1,6 +1,7 @@
 package gpse.example.util.email;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * Class of EmailTemplates that could be defined by user.
  */
 @Entity
-public class EmailTemplate {
+public class EmailTemplate implements Serializable {
 
     /**
      * close paramSpace.
@@ -21,6 +22,8 @@ public class EmailTemplate {
      * open paramSpace.
      */
     public static final String OPEN = "[";
+
+    private static final long serialVersionUID = -4794520836797714540L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,17 +44,19 @@ public class EmailTemplate {
 
     /**
      * Constructor of emailTemplate.
+     *
      * @param template String containing the string with the html message.
-     * @param subject the subject of emails with this template
-     * @param name name of template so user can name his/her templates
-     * @param system boolean is true when the template is a systemIntern one
+     * @param subject  the subject of emails with this template
+     * @param name     name of template so user can name his/her templates
+     * @param system   boolean is true when the template is a systemIntern one
      */
-    public EmailTemplate(String template, String subject, String name, boolean system) {
+    public EmailTemplate(final String template, final String subject, final String name, final boolean system) {
         this.htmlTemplateBody = template;
         this.subject = subject;
         this.name = name;
         this.system = system;
     }
+
 
     public EmailTemplate() {
 
@@ -59,11 +64,12 @@ public class EmailTemplate {
 
     /**
      * Computes the params that are used in template.
+     *
      * @return an arraylist with the params
      */
     public List<String> neededParams() {
         String temp = this.htmlTemplateBody;
-        ArrayList<String> params = new ArrayList<>();
+        final ArrayList<String> params = new ArrayList<>();
         while (temp.indexOf(CLOSE) > 0) {
             params.add(findFirst(temp));
             temp = temp.substring(temp.indexOf(CLOSE) + 1);
@@ -71,29 +77,27 @@ public class EmailTemplate {
         return params;
     }
 
-    private String findFirst(String str) {
+    private String findFirst(final String str) {
         return str.substring(str.indexOf(OPEN) + 1, str.indexOf(CLOSE));
     }
 
     /**
      * change needed params in Template with the specified Data.
+     *
      * @param dataContainer contains the data
      * @return the filled out templatebody missing values are replaced with nothing
      * @throws InvocationTargetException if invocation goes wrong
-     * @throws NoSuchMethodException if there is a wrong placeholder so the corresponding getter is not found
-     *                                  in dataContainer.
-     * @throws IllegalAccessException if invocation of the called method is illegal
      */
-    public String filledTemplate(TemplateDataContainer dataContainer)
-            throws InvocationTargetException {
+    public String filledTemplate(final TemplateDataContainer dataContainer)
+        throws InvocationTargetException {
         String filledTemplate = this.htmlTemplateBody;
-        for (String placeholder:neededParams()) {
+        for (final String placeholder : neededParams()) {
             try {
-                if (dataOf(placeholder, dataContainer) != null) {
+                if (dataOf(placeholder, dataContainer) == null) {
+                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
+                } else {
                     filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE,
                         dataOf(placeholder, dataContainer));
-                } else {
-                    filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
                 }
             } catch (NoSuchMethodException | IllegalAccessException exc) {
                 filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
@@ -103,9 +107,9 @@ public class EmailTemplate {
     }
 
 
-    private String dataOf(String searchedData, TemplateDataContainer dataContainer)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
+    private String dataOf(final String searchedData, final TemplateDataContainer dataContainer)
+        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        final Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
 
         return (String) method.invoke(dataContainer);
     }
@@ -114,7 +118,7 @@ public class EmailTemplate {
         return templateID;
     }
 
-    public void setTemplateID(long templateID) {
+    public void setTemplateID(final long templateID) {
         this.templateID = templateID;
     }
 
@@ -122,7 +126,7 @@ public class EmailTemplate {
         return htmlTemplateBody;
     }
 
-    public void setHtmlTemplateBody(String htmlTemplateBody) {
+    public void setHtmlTemplateBody(final String htmlTemplateBody) {
         this.htmlTemplateBody = htmlTemplateBody;
     }
 
@@ -130,7 +134,7 @@ public class EmailTemplate {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -138,7 +142,7 @@ public class EmailTemplate {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -146,7 +150,7 @@ public class EmailTemplate {
         return system;
     }
 
-    public void setSystem(boolean system) {
+    public void setSystem(final boolean system) {
         this.system = system;
     }
 }

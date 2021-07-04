@@ -2,13 +2,23 @@ package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import gpse.example.domain.signature.StringToKeyConverter;
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
 import gpse.example.util.email.*;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
+import gpse.example.web.tokens.ConfirmationToken;
+import gpse.example.web.tokens.ConfirmationTokenService;
+import gpse.example.web.tokens.ResetPasswordToken;
+import gpse.example.web.tokens.ResetPasswordTokenService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -31,31 +41,53 @@ public class UserController {
     private static final int STATUS_CODE_MISSING_USERDATA = 420;
     private static final int STATUS_CODE_VALIDATION_FAILED = 424;
     private static final int STATUS_CODE_EMAIL_GENERATION_FAILED = 425;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
+    private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
+    private static final int STATUS_CODE_WRONG_USER = 229;
     private static final String ADMINVALIDATION_REQUIRED = "Adminvalidation required:";
     private static final String USERID = "userID";
+    private static final String ROLE_USER = "ROLE_USER";
+    private static final String USER_NOT_FOUND = "User not Found";
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ResetPasswordTokenService resetPasswordTokenService;
     private final MessageService messageService;
     private final EmailTemplateService emailTemplateService;
-    private final StringToKeyConverter stringToKeyConverter;
+    private final SMTPServerHelper smtpServerHelper;
+    private final DomainSetterService domainSetterService;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
 
 
     /**
      * Constructor of UserController getting required services.
      *
-     * @param service                 Userservice Object
-     * @param confService             ConfirmationTokenService object
-     * @param messageService          the messageService to access the message table
-     * @param emailTemplateService    used to find the basic template by name
+     * @param service                   Userservice Object
+     * @param confService               ConfirmationTokenService object
+     * @param messageService            the messageService to access the message table
+     * @param emailTemplateService      used to find the basic template by name
+     * @param resetPasswordTokenService Service for the resetPasswordToken
+     * @param smtpServerHelper          smtpserverhelper to send emails
+     * @param domainSetterService       Service to store the domain settings
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
-                          final MessageService messageService, final EmailTemplateService emailTemplateService) {
+                          final MessageService messageService, final EmailTemplateService emailTemplateService,
+                          final ResetPasswordTokenService resetPasswordTokenService,
+                          final SMTPServerHelper smtpServerHelper,
+                          final DomainSetterService domainSetterService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
         this.emailTemplateService = emailTemplateService;
-        stringToKeyConverter = new StringToKeyConverter();
+        this.resetPasswordTokenService = resetPasswordTokenService;
+        this.smtpServerHelper = smtpServerHelper;
+        this.domainSetterService = domainSetterService;
     }
 
     /**
@@ -82,11 +114,13 @@ public class UserController {
             } catch (UsernameNotFoundException e) {
                 final User user = new User(signUpUser.getUsername(), signUpUser.getFirstname(),
                     signUpUser.getLastname(), signUpUser.getPassword());
-                user.addRole("ROLE_USER");
-                PersonalData personalData = signUpUser.generatePersonalData();
-                EmailTemplate standardTemplate =
+                user.addRole(ROLE_USER);
+                final PersonalData personalData = signUpUser.generatePersonalData();
+                final EmailTemplate standardTemplate =
                     emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
-                user.addEmailTemplate(standardTemplate);
+                final EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
+                    standardTemplate.getSubject(), standardTemplate.getName(), false);
+                user.addEmailTemplate(newTemplate);
                 user.setPersonalData(personalData);
                 try {
                     userService.signUpUser(user);
@@ -132,7 +166,7 @@ public class UserController {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
 
-            if (user.getEmail().matches(".*@techfak\\.de")) {
+            if (user.getEmail().matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain())) {
                 response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
@@ -157,14 +191,14 @@ public class UserController {
      * @param username the identifier of the useraccount that needs to be validated
      * @return SONResponse containing statusCode and a message
      */
-    @GetMapping("/user/{userID}/validate/")
+    @GetMapping("/user/{userID}/validate")
     public JSONResponseObject adminUserValidation(@PathVariable(USERID) final String username) {
 
         final JSONResponseObject response = new JSONResponseObject();
         final User user = userService.getUser(username);
         userService.validateUser(user);
 
-        if (user.isAdminValidated()) {
+        if (user.isAccountNonLocked()) {
             response.setStatus(STATUS_CODE_OK);
         } else {
             response.setStatus(STATUS_CODE_VALIDATION_FAILED);
@@ -179,13 +213,14 @@ public class UserController {
 
     /**
      * the request handling for changing personal data.
+     *
      * @param personalData the new personal data of the user stating the request
-     * @param username the username of the user stating the request
+     * @param username     the username of the user stating the request
      */
     @PutMapping("user/{userID}/personal")
     public void setPersonalData(@RequestBody final PersonalData personalData,
                                 @PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setPersonalData(personalData);
         userService.saveUser(user);
     }
@@ -203,10 +238,10 @@ public class UserController {
      */
     @PutMapping("/user/{userID}/firstLogin")
     public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         user.setFirstLogin(true);
         userService.saveUser(user);
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
         return response;
     }
@@ -222,7 +257,7 @@ public class UserController {
     public JSONResponseObject changePublicKey(@PathVariable(USERID) final String username,
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
-        User user = userService.getUser(username);
+        final User user = userService.getUser(username);
         if (user.getPublicKey() != null) {
             user.getArchivedPublicKeys().add(user.getPublicKey());
         }
@@ -277,14 +312,15 @@ public class UserController {
 
     /**
      * The request handler for the settings regarding a two-factor-login.
-     * @param username the username of the user stating the request
+     *
+     * @param username          the username of the user stating the request
      * @param settingTwoFacAuth true if the user wants a two-factor-login, false if not
      */
     @PutMapping("/user/{userID}/settings/twoFactorLogin")
     public void changeTwofaLoginSetting(@PathVariable(USERID) final String username,
                                         @RequestBody final SettingTwoFacAuth settingTwoFacAuth) {
-        User user = userService.getUser(username);
-        SecuritySettings securitySettings = user.getSecuritySettings();
+        final User user = userService.getUser(username);
+        final SecuritySettings securitySettings = user.getSecuritySettings();
         securitySettings.setTwoFactorLogin(Boolean.parseBoolean(settingTwoFacAuth.getSetting()));
         userService.saveUser(user);
     }
@@ -292,5 +328,141 @@ public class UserController {
     @GetMapping("/user/{userID}/settings/twoFactorLogin")
     public Boolean getTwofaLoginSetting(@PathVariable(USERID) final String username) {
         return userService.getUser(username).getSecuritySettings().isTwoFactorLogin();
+    }
+
+    /**
+     * Method to chenge password as logged in User.
+     *
+     * @param password the new password
+     * @param token    JWT token which identifies the user
+     * @return jsonResponse with statuscode
+     */
+    @PutMapping("/user/password/change")
+    public JSONResponseObject changePassword(@RequestParam("password") final String password,
+                                             @RequestHeader final String token) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        try {
+            final User user = userService.getUser(parsedToken.getBody().getSubject());
+            if (user.getRoles().contains(ROLE_USER)) {
+                user.setPassword(passwordEncoder.encode(password));
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+            } else {
+                //TODO Fehlermelden? DOch Responseobject nutzen
+                jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+                jsonResponseObject.setMessage("User has not role user");
+            }
+            return jsonResponseObject;
+
+        } catch (UsernameNotFoundException unfe) {
+            //TODO Fehlermelden? DOch Responseobject nutzen
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
+            return jsonResponseObject;
+        }
+    }
+
+    /**
+     * GetRequest to get an Token via email to Reset a password.
+     *
+     * @param userId the requesting users id
+     * @return jsonResponse with statuscode
+     */
+    @GetMapping("/user/{userId}/password/reset")
+    public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        try {
+            final User user = userService.getUser(userId);
+            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
+            final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
+            try {
+                final TemplateDataContainer emailContainer = new TemplateDataContainer();
+                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
+                emailContainer.setFirstNameReciever(user.getFirstname());
+                emailContainer.setLastNameReciever(user.getLastname());
+                emailContainer.setLink("http://localhost:8080/de/login/reset/" + savedToken.getToken());
+                smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
+                    emailContainer, Category.SYSTEM, null);
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
+                resetPasswordTokenService.deleteResetPasswordToken(savedToken.getId());
+                jsonResponseObject.setStatus(STATUS_CODE_EMAIL_GENERATION_FAILED);
+                return jsonResponseObject;
+            }
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            jsonResponseObject.setMessage(USER_NOT_FOUND);
+            return jsonResponseObject;
+        }
+    }
+
+    /**
+     * GetResponse Method to set a new password.
+     * call api/user?password={password}&token={token}
+     *
+     * @param password new password
+     * @param token    token which references the user who want to change password
+     * @return jsonResponse with statuscode
+     */
+    @GetMapping("/user/")
+    public JSONResponseObject resetPassword(@RequestParam("password") final String password,
+                                            @RequestParam("token") final String token) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final Optional<ResetPasswordToken> optionalResetPasswordToken
+            = resetPasswordTokenService.findResetPasswordTokenByToken(token);
+
+        try {
+            if (optionalResetPasswordToken.isEmpty()) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+                return jsonResponseObject;
+            }
+            final User user = userService.getUser(optionalResetPasswordToken.get().getUserId());
+
+            if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
+                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
+                return jsonResponseObject;
+            } else {
+                user.setPassword(passwordEncoder.encode(password));
+                userService.saveUser(user);
+                jsonResponseObject.setStatus(STATUS_CODE_OK);
+                return jsonResponseObject;
+            }
+
+        } catch (UsernameNotFoundException unfe) {
+            jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
+            return jsonResponseObject;
+        }
+    }
+
+    /**
+     * The request handler for the settings regarding the image signature.
+     *
+     * @param username             the username of the user stating the request
+     * @param imageSignatureToSend the request containing the image signature
+     * @return the response containing the info if the request was successful or not
+     */
+    @PutMapping("/user/{userID}/settings/imageSignature")
+    public JSONResponseObject changeImageSignature(@PathVariable(USERID) final String username,
+                                                   @RequestBody final ImageSignatureToSend imageSignatureToSend) {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final User user = userService.getUser(username);
+        user.setImageSignature(imageSignatureToSend.getImageSignature());
+        user.setImageSignatureType(imageSignatureToSend.getImageSignatureType());
+        userService.saveUser(user);
+        jsonResponseObject.setStatus(STATUS_CODE_OK);
+        jsonResponseObject.setMessage("Successfully send image Signature");
+        return jsonResponseObject;
+    }
+
+    @GetMapping("/user/{userID}/settings/imageSignature")
+    public ImageSignatureToSend getImageSignature(@PathVariable(USERID) final String username) {
+        return new ImageSignatureToSend(userService.getUser(username).getImageSignature(),
+            userService.getUser(username).getImageSignatureType());
     }
 }

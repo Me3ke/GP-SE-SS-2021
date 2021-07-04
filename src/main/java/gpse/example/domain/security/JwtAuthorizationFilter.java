@@ -27,16 +27,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private final  SecurityConstants securityConstants;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+    public JwtAuthorizationFilter(final AuthenticationManager authenticationManager,
                                   final SecurityConstants securityConstants) {
         super(authenticationManager);
         this.securityConstants = securityConstants;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws IOException, ServletException {
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+                                    final FilterChain filterChain) throws IOException, ServletException {
+        final UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         if (authentication == null) {
             filterChain.doFilter(request, response);
             return;
@@ -46,20 +46,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         filterChain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(final HttpServletRequest request) {
 
-        String token = request.getHeader(securityConstants.getTokenHeader());
+        final String token = request.getHeader(securityConstants.getTokenHeader());
         if (token != null && !token.equals("") && token.startsWith(securityConstants.getTokenPrefix())) {
             try {
-                byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+                final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
 
-                Jws<Claims> parsedToken = Jwts.parserBuilder()
+                final Jws<Claims> parsedToken = Jwts.parserBuilder()
                     .setSigningKey(signingKey).build()
                     .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
 
-                String username = parsedToken.getBody().getSubject();
+                final String username = parsedToken.getBody().getSubject();
 
-                List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody()
+                final List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody()
                     .get("rol")).stream()
                     .map(authority -> new SimpleGrantedAuthority((String) authority))
                     .collect(Collectors.toList());

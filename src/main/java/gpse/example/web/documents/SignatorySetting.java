@@ -20,16 +20,17 @@ public class SignatorySetting {
 
     /**
      * The standard constructor.
+     *
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
-        this.username = signatory.getUser().getUsername();
+        this.username = signatory.getEmail();
         this.signatureType = signatory.getSignatureType();
         this.status = signatory.isStatus();
-        this.remind = (signatory.getReminder() == -1);
+        this.remind = signatory.getReminder() == -1;
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             this.signedOn = signatory.getSignedOn().format(formatter);
         } else {
             this.signedOn = "";

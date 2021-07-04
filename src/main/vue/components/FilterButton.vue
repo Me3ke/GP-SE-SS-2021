@@ -1,9 +1,13 @@
 <template>
     <span>
-        <span :class="{active: isActive, inactive: !isActive}" @click="isActive = !isActive" style="padding: 0.5vh 1vw 0; margin:0">
-            <h4>
-                {{this.text}}
+        <span :class="{active: isActiveMutate, inactive: !isActiveMutate}" @click="changeActive()"
+              style="padding: 0.5vh 1vw 0; margin:0">
+            <h4 v-if="!userManagement">
+                {{ this.text }}
             </h4>
+            <div v-else>
+                  {{ this.text }}
+            </div>
         </span>
     </span>
 </template>
@@ -13,7 +17,39 @@ export default {
     name: 'FilterButton',
     props: {
         text: String,
-        isActive: Boolean
+        isActive: Boolean,
+        switch: {
+            type: Boolean,
+            default: false
+        },
+        userManagement: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data() {
+        return {
+            isActiveMutate: this.isActive
+        }
+    },
+    methods: {
+        // emits event that filter got clicked
+        changeActive() {
+            this.$emit('activeChange')
+            this.isActiveMutate = !this.isActiveMutate
+        }
+    },
+    watch: {
+        // watches for changes in inActive prop, if only one of multiple filters should be activated at once
+        // changes value of isActiveMutate to current prop value
+        isActive: {
+            immediate: true,
+            handler(val) {
+                if (this.switch) {
+                    this.isActiveMutate = val
+                }
+            }
+        }
     }
 }
 </script>

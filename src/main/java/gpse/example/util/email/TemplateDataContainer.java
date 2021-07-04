@@ -28,15 +28,11 @@ public class TemplateDataContainer {
 
     private String requestingEmail;
 
-    public TemplateDataContainer() {
-
-    }
-
     public String getFirstNameReciever() {
         return firstNameReciever;
     }
 
-    public void setFirstNameReciever(String firstNameReciever) {
+    public void setFirstNameReciever(final String firstNameReciever) {
         this.firstNameReciever = firstNameReciever;
     }
 
@@ -44,7 +40,7 @@ public class TemplateDataContainer {
         return lastNameReciever;
     }
 
-    public void setLastNameReciever(String lastNameReciever) {
+    public void setLastNameReciever(final String lastNameReciever) {
         this.lastNameReciever = lastNameReciever;
     }
 
@@ -52,7 +48,7 @@ public class TemplateDataContainer {
         return firstNameOwner;
     }
 
-    public void setFirstNameOwner(String firstNameOwner) {
+    public void setFirstNameOwner(final String firstNameOwner) {
         this.firstNameOwner = firstNameOwner;
     }
 
@@ -60,7 +56,7 @@ public class TemplateDataContainer {
         return lastNameOwner;
     }
 
-    public void setLastNameOwner(String lastNameOwner) {
+    public void setLastNameOwner(final String lastNameOwner) {
         this.lastNameOwner = lastNameOwner;
     }
 
@@ -68,7 +64,7 @@ public class TemplateDataContainer {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(final String endDate) {
         this.endDate = endDate;
     }
 
@@ -76,7 +72,7 @@ public class TemplateDataContainer {
         return envelopeName;
     }
 
-    public void setEnvelopeName(String envelopeName) {
+    public void setEnvelopeName(final String envelopeName) {
         this.envelopeName = envelopeName;
     }
 
@@ -84,7 +80,7 @@ public class TemplateDataContainer {
         return documentTitle;
     }
 
-    public void setDocumentTitle(String documentTitle) {
+    public void setDocumentTitle(final String documentTitle) {
         this.documentTitle = documentTitle;
     }
 
@@ -92,7 +88,7 @@ public class TemplateDataContainer {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(final String link) {
         this.link = link;
     }
 
@@ -100,7 +96,7 @@ public class TemplateDataContainer {
         return requestingEmail;
     }
 
-    public void setRequestingEmail(String requestingEmail) {
+    public void setRequestingEmail(final String requestingEmail) {
         this.requestingEmail = requestingEmail;
     }
 }

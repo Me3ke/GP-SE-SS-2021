@@ -4,12 +4,15 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
-import gpse.example.domain.signature.SignatoryServiceImpl;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.web.DocumentFilter;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
+import gpse.example.web.documents.GuestToken;
+import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,34 +38,41 @@ public class EnvelopeController {
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
     private static final String NEW_LINE = "\n";
+    private static final String DOCUMENT_URL = "/document/";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
-    private final SignatoryServiceImpl signatoryService;
     private final DocumentServiceImpl documentService;
+    private final DocumentFilter documentFilter;
+    private final GuestTokenService guestTokenService;
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
     @Lazy
     @Autowired
     private SMTPServerHelper smtpServerHelper;
+
     @Autowired
     private EmailTemplateService emailTemplateService;
+
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService  the envelopeService
-     * @param userService      the userService
-     * @param signatoryService the signatoryService
-     * @param documentService  the documentService
+     * @param envelopeService the envelopeService
+     * @param userService     the userService
+     * @param documentService the documentService
+     * @param documentFilter  the documentFilter
+     * @param guestTokenService the guestTokenService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final SignatoryServiceImpl signatoryService, final DocumentServiceImpl documentService) {
+                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter,
+                              final GuestTokenService guestTokenService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
-        this.signatoryService = signatoryService;
         this.documentService = documentService;
+        this.documentFilter = documentFilter;
+        this.guestTokenService = guestTokenService;
     }
 
     /**
@@ -79,8 +89,8 @@ public class EnvelopeController {
                                               final @RequestParam("name") String name) throws UploadFileException {
         try {
             final User owner = userService.getUser(ownerID);
-            Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner());
+            final Envelope envelope = envelopeService.addEnvelope(name, owner);
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner().getEmail());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -99,7 +109,7 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
-        JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             if (!envelope.getOwnerID().equals(ownerID)) {
@@ -107,16 +117,18 @@ public class EnvelopeController {
                 response.setMessage("Forbidden. Not permitted to upload document.");
                 return response;
             }
-            final Document document = documentService.creation(documentPutRequest, envelope, ownerID,
+            final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (!document.isOrderRelevant()) {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(document.getSignatories().get(i).getUser(),
-                        userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
-                }
+            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
+                setupUserInvitation(document.getCurrentSignatory().getEmail(),
+                    userService.getUser(document.getOwner()), document,
+                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             } else {
-                setupUserInvitation(document.getCurrentSignatory().getUser(),
-                    userService.getUser(document.getOwner()), document, envelopeService.getEnvelope(envelopeID));
+                for (int i = 0; i < document.getSignatories().size(); i++) {
+                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
+                        userService.getUser(document.getOwner()), document,
+                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                }
             }
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
@@ -130,22 +142,60 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation(User signatory, User owner, Document document, Envelope envelope)
+    private void setupUserInvitation(final String userID, final User owner, final Document document,
+                                     final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
-
-        EmailTemplate template = document.getProcessEmailTemplate();
-        TemplateDataContainer container = new TemplateDataContainer();
-        container.setFirstNameReciever(signatory.getFirstname());
-        container.setLastNameReciever(signatory.getLastname());
-        container.setFirstNameOwner(owner.getFirstname());
-        container.setLastNameOwner(owner.getLastname());
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setEnvelopeName(envelope.getName());
-        container.setEndDate(document.getEndDate().toString());
-        //TODO Link to documentview
-        container.setLink("http://localhost:8080/de/link/to/document/view");
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container);
+        try {
+            final EmailTemplate template = document.getProcessEmailTemplate();
+            final TemplateDataContainer container = new TemplateDataContainer();
+            final User signatory = userService.getUser(userID);
+            container.setFirstNameReciever(signatory.getFirstname());
+            container.setLastNameReciever(signatory.getLastname());
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(document.getDocumentTitle());
+            container.setEnvelopeName(envelope.getName());
+            container.setEndDate(document.getEndDate().toString());
+            container.setLink("http://localhost:8080/de/envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId());
+            Category category;
+            if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
+                || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                category = Category.SIGN;
+            } else {
+                category = Category.READ;
+            }
+            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
+        } catch (UsernameNotFoundException exception) {
+            EmailTemplate template;
+            try {
+                template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
+            } catch (TemplateNameNotFoundException e) {
+                return;
+            }
+            TemplateDataContainer container = new TemplateDataContainer();
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(document.getDocumentTitle());
+            GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId() + "/" + token.getToken());
+            if (signatureType.equals(SignatureType.REVIEW)) {
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
+            } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.SIGN, owner);
+            } else {
+                container.setLink("http://localhost:8080/de/landing");
+                try {
+                    template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
+                } catch (TemplateNameNotFoundException e) {
+                    return;
+                }
+                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.TODO, owner);
+            }
+        }
     }
+
 
     /**
      * The getEnvelope method returns one particular envelope specified by id.
@@ -161,9 +211,8 @@ public class EnvelopeController {
                                            final @PathVariable(USER_ID) String userID)
         throws DocumentNotFoundException {
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
-        final User currentUser = userService.getUser(userID);
         final User owner = userService.getUser(envelope.getOwnerID());
-        return new EnvelopeGetResponse(envelope, owner, currentUser);
+        return new EnvelopeGetResponse(envelope, owner, userID);
     }
 
     /**
@@ -185,7 +234,7 @@ public class EnvelopeController {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final User owner = userService.getUser(envelope.getOwnerID());
             documentCreator.downloadEnvelope(envelope, path);
-            return new EnvelopeGetResponse(envelope, owner, currentUser);
+            return new EnvelopeGetResponse(envelope, owner, currentUser.getEmail());
         } catch (CreatingFileException | IOException | DocumentNotFoundException e) {
             throw new DownloadFileException(e);
         }
@@ -195,20 +244,19 @@ public class EnvelopeController {
      * The getAllEnvelopes methods gets all envelopes from the database and filters
      * them using the filter method.
      *
-     * @param userID  the id of the user doing the request.
+     * @param userID the id of the user doing the request.
      * @return the filtered envelope list.
      */
 
     @GetMapping("/user/{userID}/envelopes")
     public List<EnvelopeGetResponse> getAllEnvelopes(final @PathVariable(USER_ID) String userID) {
-        final User currentUser = userService.getUser(userID);
-        List<Envelope> envelopeList = envelopeService.getEnvelopes();
+        final List<Envelope> envelopeList = envelopeService.getEnvelopes();
         final List<EnvelopeGetResponse> envelopeGetResponseList = new ArrayList<>();
         for (final Envelope envelope : envelopeList) {
             final User owner = userService.getUser(envelope.getOwnerID());
-            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, currentUser));
+            envelopeGetResponseList.add(new EnvelopeGetResponse(envelope, owner, userID));
         }
-        return envelopeGetResponseList;
+        return documentFilter.filterEnvelopes(envelopeGetResponseList, userID);
 
     }
 
@@ -233,7 +281,6 @@ public class EnvelopeController {
             final List<Document> filteredDocumentList = envelope.getDocumentList()
                 .stream()
                 .filter(document -> document.hasTitle(request.getTitleFilter()))
-                .filter(document -> document.hasSignatureType(request.getSignatureTypeFilter()))
                 .filter(document -> document.hasState(request.getStateFilter()))
                 .filter(document -> document.hasEndDate(request.getEndDateFilterFrom(), request.getEndDateFilterTo()))
                 .filter(document -> document.hasDataType(request.getDataType()))
@@ -251,6 +298,7 @@ public class EnvelopeController {
 
     /**
      * The getMapping for the request to get the settings of all documents in an envelope.
+     *
      * @param envelopeID the id of the relating envelope
      * @return a fitting response in form of a list containing documentSetting-Objects.
      */
@@ -264,5 +312,4 @@ public class EnvelopeController {
         }
     }
 }
-
 

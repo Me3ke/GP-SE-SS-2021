@@ -4,7 +4,8 @@ export const state = {
     user: {},
     firstLoginChange: {},
     twoFactorLogin: Boolean,
-    errorPutTwoFactorLogin: {}
+    errorPutTwoFactorLogin: {},
+    putSignatureResponse: {}
 }
 
 export const mutations = {
@@ -19,6 +20,9 @@ export const mutations = {
     },
     SET_ERROR_PUT_TWO_FACTOR_LOGIN(state, error) {
         state.errorPutTwoFactorLogin = error
+    },
+    SET_PUT_SIGNATURE_RESPONSE(state, res) {
+        state.putSignatureResponse = res
     }
 }
 
@@ -53,6 +57,14 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_PUT_TWO_FACTOR_LOGIN', error)
         })
+    },
+    // sets status of putSignature request
+    putSignature({commit}, {signature, type}) {
+        return api.user.putSignature(signature, type).then(response => {
+            commit('SET_PUT_SIGNATURE_RESPONSE', response.data)
+        }).catch(error => {
+            commit('SET_PUT_SIGNATURE_RESPONSE', error)
+        })
     }
 }
 
@@ -62,5 +74,8 @@ export const getters = {
     },
     getTwoFactorLogin: (state) => {
         return state.twoFactorLogin
+    },
+    getPutSignatureResponse: (state) => {
+        return state.putSignatureResponse
     }
 }

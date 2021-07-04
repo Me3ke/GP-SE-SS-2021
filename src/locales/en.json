@@ -48,8 +48,6 @@
     },
     "OverviewPage": {
         "heading": "Overview",
-        "filterClosed": "Closed",
-        "filterOpen": "Open",
         "toSign1": "Sign until",
         "toSign2": "",
         "toRead1": "Read until",
@@ -58,7 +56,30 @@
         "toSignRead2": "",
         "envReadSign": "Read and sign",
         "envRead": "Read",
-        "envSign": "Sign"
+        "envSign": "Sign",
+        "search": "Search",
+        "noDocuments": "No documents yet"
+    },
+    "Filter": {
+        "filterTitle": "Filter documents and envelopes",
+        "filter": "Use filter",
+        "removeFilter": "Remove filter",
+        "closed": "closed",
+        "open": "open",
+        "toSign": "sign",
+        "owned": "owned",
+        "creationDate": "Creation date",
+        "endDate": "Deadline",
+        "withSignatureType": "Type of Signature:",
+        "dataType": "Datatype",
+        "readProcess": "proofread process",
+        "signProcess": "sign process",
+        "all": "all",
+        "onlyRoles": "Only show documents and envelopes I am assigned to as following roles:",
+        "owner": "Owner",
+        "reader": "Proofreader",
+        "signatory": "Signatory",
+        "readerOrSignatory": "Proofreader or Signatory"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -184,9 +205,13 @@
         "heading": "Messages",
         "sentBy": "From",
         "sentOn": "On",
-        "concerns": "Concerns",
         "nonSelected": "Select a message to show its content.",
-        "toAll": "Back to all messages"
+        "toAll": "Back to all messages",
+        "sureDelete": "Delete forever?",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "deleteError": "Deleting failed",
+        "noMsgs": "No messages"
     },
     "LoginButton": {
         "content": "Login"
@@ -214,22 +239,31 @@
         },
         "SignatureSettings": {
             "settings": "Signature settings",
+            "signature": "Signature",
             "upload": {
+                "current": "Current signature",
                 "text": "Upload new signature",
+                "text2": "Draw new signature",
                 "exp": "Upload an image of your own signature. It will be added to the process protocol.",
                 "upload": "Upload",
+                "alert": "Error while uploading! \n Make sure the field is not empty",
                 "popUp": {
                     "heading": "Upload signature",
+                    "choose": "Do you want to upload an image of your signature or draw one?",
+                    "heading2": "Draw signature",
                     "exp": "Choose your signature.",
+                    "signaturePad": "Draw your signature in that specific field",
                     "cancel": "Cancel",
                     "sure": "Your progress will be lost if you cancel.",
                     "back": "Back",
                     "close": "Close",
+                    "clear": "Clear",
                     "attentionOne": "Warning! You have already uploaded your signature.",
                     "attentionTwo": "If you continue it will be lost!",
                     "placeholder": "Drop signature here or choose",
                     "dropPlaceholder": "Drop here",
-                    "accepted": "All image formats are accepted."
+                    "accepted": "All image formats are accepted.",
+                    "success": "You have successfully uploaded your signature!"
                 }
             }
         },
@@ -245,16 +279,16 @@
             "settings": "Message settings",
             "send": "Save",
             "toDo": {
-                "text": "Signature/proofread requests",
-                "exp": "Get website alerts for new signature/proofread requests."
+                "text": "Admin messages",
+                "exp": "Get website alerts for admin-specific messages."
             },
             "sign": {
-                "text": "Signature reminders",
-                "exp": "Get website alerts as a reminder to sign documents/envelopes."
+                "text": "Signature requests/reminders",
+                "exp": "Get website alerts as a request/reminder to sign documents/envelopes."
             },
             "read": {
-                "text": "Proofread reminders",
-                "exp": "Get website alerts as a reminder to proofread documents/envelopes."
+                "text": "Proofread requests/reminders",
+                "exp": "Get website alerts as a request/reminder to proofread documents/envelopes."
             },
             "progress": {
                 "text": "Document progress",
@@ -263,10 +297,6 @@
             "newVersion": {
                 "text": "Document updates",
                 "exp": "Get website alerts about updated documents."
-            },
-            "protocol": {
-                "text": "Protocol availability",
-                "exp": "Get website alerts about the availability of document protocols."
             }
         },
         "DocumentSettings": {
@@ -294,15 +324,28 @@
         "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
-        "simple": "Simple",
-        "advanced": "Advanced",
-        "signatureType": "Signaturetype"
+        "simple": "simple",
+        "advanced": "advanced",
+        "signatureType": "Signaturetype",
+        "UpdateDocument": {
+            "chooseFile": "Choose a file or drag it here...",
+            "update1": "update",
+            "update2": "Update Document",
+            "selectDocument": "Select the File to replace/update the Document ",
+            "replaceDoc": "Update of: ",
+            "confirmation": "Are you sure to update {documentTitle}",
+            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+        }
     },
     "DownloadDoc": {
         "download": "Download",
         "heading": "Download now!",
         "sure": "Are you sure you want to download the document?",
         "cancel": "Cancel"
+    },
+    "DownloadKey": {
+        "download": "Download",
+        "clipBoard": "Copy"
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
@@ -317,10 +360,36 @@
         "didSign": "Already signed",
         "doRead": "Proofread",
         "didRead": "Already proofread",
+        "comments": "Comments",
         "protocol": "Show protocol",
         "history": "Show history",
         "newVersion": "New Version",
         "settings": "Settings",
+        "meta": {
+            "meta": "Metadata",
+            "metaShow": "Show metadata",
+            "metaNo": "Hide metadata",
+            "title": "Title",
+            "docType": "File type",
+            "state": "Process state",
+            "open": "Open",
+            "read": "Read",
+            "closed": "Closed",
+            "error": "Error: Unknown state",
+            "owner": "Owner",
+            "created": "Creation date",
+            "end": "End date",
+            "readers": "Readers",
+            "didRead": "Already read",
+            "noRead": "Not read yet",
+            "noReaders": "No readers assigned",
+            "signatories": "Signatories",
+            "signed": "already signed",
+            "noSigned": "not signed yet",
+            "noSignatories": "No signatories assigned",
+            "simple": "simple signature",
+            "advanced": "advanced signature"
+        },
         "close": "Close",
         "errors": {
             "notFound": "The document you were looking for cannot be found.",
@@ -331,6 +400,7 @@
         "email": "e-mail",
         "password": "password",
         "login": "login",
+        "failMail": "failMail",
         "sign-in": "login",
         "feedback-invalid-email": "Please enter an valid e-mail.",
         "feedback-invalid-password": "Minimum password length is 4 characters.",
@@ -370,7 +440,7 @@
         "warningText": "Warning! You have already set up your keypair. If you continue it will be lost!",
         "cancelWarningOne": "If you cancel now you cannot make advanced signatures until you set-up ",
         "cancelWarningTwo": "your keypair via the settings page.",
-        "privateKey": "Copy your private key and save it to a .txt file.",
+        "privateKey": "Copy your private key and save it to a .txt file, or download it directly.",
         "noLose": "Do not lose the key!",
         "generatingText": "Generating...",
         "uploadHere": "Upload your public key here.",
@@ -424,7 +494,8 @@
             "notDone": "In order to sign you still have to set up the following.",
             "tfa": "Two-factor authentication",
             "keyPair": "Key-pair",
-            "toSettings": "To settings"
+            "toSettings": "To settings",
+            "notSeen": "You have to look at the document first!"
         },
         "read": {
             "read": "Proofread now!",
@@ -485,6 +556,62 @@
             "color13": "Setting color",
             "color14": "Pop-Up background",
             "default": "Default"
+        },
+        "manage": {
+            "title": "User management",
+            "empty": "No users found.",
+            "error": "Error!",
+            "filter": {
+                "active": "Active",
+                "inactive": "Deactivated",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Newest first",
+                "old": "Oldest first",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-mail A-Z",
+                "cbaE": "E-mail Z-A"
+            },
+            "options": {
+                "active": "Activate",
+                "inactive": "Deactivate",
+                "admin": "Make admin"
+            }
         }
+    },
+    "ProgressBar": {
+        "envelope": {
+            "notFinished": "Not finished documents:",
+            "finished": "Already finished documents:"
+        },
+        "document": {
+            "needToSign": "Need to be signed by:",
+            "alreadySigned": "Already signed by:",
+            "needToRead": "Need to be read by:",
+            "alreadyRead": "Already read by:"
+        }
+    },
+    "CommentsPage": {
+        "title": "Comments",
+        "comment": "comment",
+        "comments": "comments",
+        "sort": "Sort by",
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "writePrompt": "Leave comment as ",
+        "cancel": "Cancel",
+        "send": "Send",
+        "empty": "No comments",
+        "answers": "replies",
+        "doNotAnswers": "Hide replies",
+        "noAnswers": "No replies",
+        "reply": "Reply",
+        "owner": "Owner",
+        "hint": "Attention: The comments for this document are restricted. You can only view your own and the owners comments. Only the owner can view your comments.",
+        "serverErrorOne": "Your comment could not be posted.",
+        "serverErrorTwo": "Please try again later or talk to an administrator.",
+        "serverErrorThree": "The comments could not be loaded."
     }
 }

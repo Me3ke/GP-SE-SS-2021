@@ -1,4 +1,4 @@
-import generateKeyPair from "./keypairGenerator"
+import generateKeyPair from "../../scripts/keypairGenerator"
 import api from "@/main/vue/api";
 
 export const state = {

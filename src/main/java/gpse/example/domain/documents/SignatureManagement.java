@@ -6,7 +6,10 @@ import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.documents.GuestToken;
+import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,52 +28,60 @@ public class SignatureManagement {
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
     private final DocumentService documentService;
     private final UserService userService;
-    private SMTPServerHelper smtpServerHelper;
+    private final SMTPServerHelper smtpServerHelper;
+    private final EmailTemplateService emailTemplateService;
+    private final GuestTokenService guestTokenService;
 
     /**
      * constructor of Signature management.
-     * @param smtpServerHelper smtpServerHelper
+     *
+     * @param smtpServerHelper     smtpServerHelper
      * @param givenDocumentService documentservice
-     * @param givenUserService userservice
+     * @param givenUserService     userservice
+     * @param emailTemplateService emailTemplateService
+     * @param guestTokenService guestTokenService
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
-                               final UserService givenUserService) {
-
+                               final UserService givenUserService, final EmailTemplateService emailTemplateService,
+                               final GuestTokenService guestTokenService) {
         this.smtpServerHelper = smtpServerHelper;
         documentService = givenDocumentService;
         userService = givenUserService;
+        this.emailTemplateService = emailTemplateService;
+        this.guestTokenService = guestTokenService;
     }
 
     /**
      * the standard method for managing requests, regarding reviews or signatures.
      *
-     * @param reader        the user who stated the request
+     * @param userID        the user who stated the request
      * @param document      the document that should be reviewed or signed
      * @param signatureType the type of the signature
+     * @param envelopeID the envelope the document refers to.
      * @return a fitting response.
      */
-    public JSONResponseObject manageSignatureRequest(final User reader, final Document document,
-                                                     final SignatureType signatureType)
+    public JSONResponseObject manageSignatureRequest(final String userID, final Document document,
+                                                     final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException {
         if (document.isOrderRelevant()) {
-            return manageSignatureInOrder(reader, document, signatureType);
+            return manageSignatureInOrder(userID, document, signatureType, envelopeID);
         } else {
-            return manageSignatureWithoutOrder(reader, document, signatureType);
+            return manageSignatureWithoutOrder(userID, document, signatureType);
         }
     }
 
-    private JSONResponseObject manageSignatureWithoutOrder(final User reader,
+    private JSONResponseObject manageSignatureWithoutOrder(final String userID,
                                                            final Document document, final SignatureType signatureType) {
         List<Signatory> signatories;
         final JSONResponseObject response = new JSONResponseObject();
         switch (signatureType) {
             case REVIEW:
                 signatories = document.getReaders();
-                return manageReadersWithoutOrder(reader, document, signatories, response);
+                return manageReadersWithoutOrder(userID, document, signatories, response);
             case SIMPLE_SIGNATURE:
             case ADVANCED_SIGNATURE:
-                return manageSignatoriesWithoutOrder(reader, document, response, signatureType);
+                return manageSignatoriesWithoutOrder(userID, document, response, signatureType);
             default:
                 response.setStatus(STATUS_CODE_INVALID_SIGNATURE_TYPE);
                 response.setMessage("The given signature type is invalid");
@@ -78,11 +89,11 @@ public class SignatureManagement {
         }
     }
 
-    private JSONResponseObject manageSignatoriesWithoutOrder(final User reader, final Document document,
+    private JSONResponseObject manageSignatoriesWithoutOrder(final String userID, final Document document,
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType) {
         if (document.getState().equals(DocumentState.READ)) {
-            if (findSignatoryInList(document, reader, signatureType)) {
+            if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
                     return changeDocumentStateToClosed(document);
                 } else {
@@ -99,10 +110,10 @@ public class SignatureManagement {
         }
     }
 
-    private JSONResponseObject manageReadersWithoutOrder(final User reader, final Document document,
+    private JSONResponseObject manageReadersWithoutOrder(final String userID, final Document document,
                                                          final List<Signatory> signatories,
                                                          final JSONResponseObject response) {
-        if (findSignatoryInList(document, reader, SignatureType.REVIEW)) {
+        if (findSignatoryInList(document, userID, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
                 return changeDocumentStateToClosed(document);
             } else {
@@ -138,7 +149,7 @@ public class SignatureManagement {
         return response;
     }
 
-    private boolean findSignatoryInList(final Document document, final User signatoryToFind,
+    private boolean findSignatoryInList(final Document document, final String signatoryToFind,
                                         final SignatureType signatureType) {
         List<Signatory> signatories;
         switch (signatureType) {
@@ -154,7 +165,7 @@ public class SignatureManagement {
         }
         boolean foundSignatory = false;
         for (final Signatory currentSignatory : signatories) {
-            if (currentSignatory.getUser().equals(signatoryToFind)) {
+            if (currentSignatory.getEmail().equals(signatoryToFind)) {
                 currentSignatory.setStatus(true);
                 foundSignatory = true;
                 documentService.addDocument(document);
@@ -177,32 +188,56 @@ public class SignatureManagement {
         return response;
     }
 
-    private JSONResponseObject manageSignatureInOrder(final User reader, final Document document,
-                                                      final SignatureType signatureType)
+    private JSONResponseObject manageSignatureInOrder(final String userID, final Document document,
+                                                      final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException {
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
-        if (matchesSignatory(reader, currentReader, signatureType)) {
+        if (matchesSignatory(userID, currentReader, signatureType)) {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
-            Document savedDocument = documentService.addDocument(document);
+            final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
-                User owner = userService.getUser(savedDocument.getOwner());
+                final User owner = userService.getUser(savedDocument.getOwner());
 
                 EmailTemplate template = document.getProcessEmailTemplate();
-                TemplateDataContainer container = new TemplateDataContainer();
-                container.setFirstNameReciever(savedDocument.getCurrentSignatory().getUser().getFirstname());
-                container.setLastNameReciever(savedDocument.getCurrentSignatory().getUser().getLastname());
-                container.setFirstNameOwner(owner.getFirstname());
-                container.setLastNameOwner(owner.getLastname());
-                container.setDocumentTitle(document.getDocumentTitle());
-                // TODO find out envelope container.setEnvelopeName(envelope.getName());
-                container.setEndDate(document.getEndDate().toString());
-                //TODO Link to documentview
-                container.setLink("http://localhost:8080/de/link/to/document/view");
-                smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getUser().getEmail(), template,
-                    container);
+                final TemplateDataContainer container = new TemplateDataContainer();
+                try {
+                    container.setFirstNameReciever(
+                        userService.getUser(savedDocument.getCurrentSignatory().getEmail()).getFirstname());
+                    container.setLastNameReciever(
+                        userService.getUser(savedDocument.getCurrentSignatory().getEmail()).getLastname());
+                    container.setFirstNameOwner(owner.getFirstname());
+                    container.setLastNameOwner(owner.getLastname());
+                    container.setDocumentTitle(document.getDocumentTitle());
+                    // TODO find out envelope container.setEnvelopeName(envelope.getName());
+                    container.setEndDate(document.getEndDate().toString());
+                    //TODO Link to documentview
+                    container.setLink("http://localhost:8080/de/link/to/document/view");
+                    smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(), template,
+                        container, Category.SIGN, owner);
+                } catch (UsernameNotFoundException exception) {
+                    template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
+                    container.setFirstNameOwner(owner.getFirstname());
+                    container.setLastNameOwner(owner.getLastname());
+                    container.setDocumentTitle(document.getDocumentTitle());
+                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+                    container.setLink("http://localhost:8080/de/" + "/document/" + document.getId() + "/"
+                        + token.getToken());
+                    if (signatureType.equals(SignatureType.REVIEW)) {
+                        smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(),
+                            template, container, Category.READ, owner);
+                    } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                        smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(),
+                            template, container, Category.SIGN, owner);
+                    } else {
+                        container.setLink("http://localhost:8080/de/landing");
+                        template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
+                        smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(),
+                            template, container, Category.TODO, owner);
+                    }
+                }
             }
 
             response.setStatus(STATUS_CODE_OK);
@@ -225,10 +260,10 @@ public class SignatureManagement {
     }
 
 
-    private boolean matchesSignatory(final User reader, final Signatory currentReader,
+    private boolean matchesSignatory(final String userID, final Signatory currentReader,
                                      final SignatureType signatureType) {
         return currentReader != null && currentReader.getSignatureType().equals(signatureType)
-            && currentReader.getUser().equals(reader);
+            && currentReader.getEmail().equals(userID);
     }
 
 }

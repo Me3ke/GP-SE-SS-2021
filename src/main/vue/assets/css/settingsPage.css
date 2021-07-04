@@ -18,6 +18,10 @@
     width: auto;
 }
 
+#responsive-signature {
+    height: 3em;
+}
+
 .logo-border {
     border-color: var(--light-grey);
     border-width: 1px;

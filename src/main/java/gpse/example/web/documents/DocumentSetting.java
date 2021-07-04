@@ -27,7 +27,7 @@ public class DocumentSetting {
             signatories.add(new SignatorySetting(document.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.endDate = document.getEndDate().format(formatter);
     }
 

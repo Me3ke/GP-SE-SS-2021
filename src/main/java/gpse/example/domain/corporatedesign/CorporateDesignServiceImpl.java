@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CorporateDesignServiceImpl implements CorporateDesignService {
 
-    private CorporateDesignRepository corporateDesignRepository;
+    private final CorporateDesignRepository corporateDesignRepository;
 
     @Autowired
     public CorporateDesignServiceImpl(final CorporateDesignRepository corporateDesignRepository) {
@@ -25,7 +25,7 @@ public class CorporateDesignServiceImpl implements CorporateDesignService {
     @Override
     public CorporateDesign getCorporateDesign(final long id) throws CorporateDesignNotFoundException {
         return corporateDesignRepository.findById(id)
-            .orElseThrow(() -> new CorporateDesignNotFoundException());
+            .orElseThrow(CorporateDesignNotFoundException::new);
     }
 
 }

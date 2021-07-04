@@ -23,47 +23,52 @@
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-        <b-dropdown-item class="my-dropdown-item" v-for="msg in getMessages(7)" :key="msg.id"
+        <b-dropdown-item class="my-dropdown-item" v-for="msg in firstNMessages(7)" :key="msg.id"
                          @click="showMsg(msg)">
 
-            <!-- For reminder messages -->
-            <b-iconstack v-if="msg.category === 'Reminder'" class="my-icon">
+            <!-- For admin stuff-->
+            <b-iconstack v-if="msg.category === 'TODO'" class="my-icon">
+                <b-icon class="my-icon" stacked icon="file-earmark-person" scale="1"></b-icon>
+                <b-icon v-if="msg.watched===false" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
+            </b-iconstack>
+
+            <!-- For sign stuff -->
+            <b-iconstack v-else-if="msg.category === 'SIGN'" class="my-icon">
                 <b-icon class="my-icon" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
                         rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                <b-icon v-if="msg.watched===false" stacked icon="exclamation-circle-fill" class="my-icon"
                         scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
-            <!-- For signed messages -->
-            <b-iconstack v-else-if="msg.category === 'Sign'" class="my-icon">
-                <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
-                <b-icon class="my-icon" stacked icon="pen-fill" scale="0.5" shift-v="-2" shift-h="4.5"
-                        rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
-                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
-            </b-iconstack>
-
-            <!-- For checked messages -->
-            <b-iconstack v-else-if="msg.category === 'Checked'" class="my-icon">
-                <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
+            <!-- For proofread stuff -->
+            <b-iconstack v-else-if="msg.category === 'READ'" class="my-icon">
+                <b-icon class="my-icon" stacked icon="file-earmark-text" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="eye-fill" scale="0.5" shift-v="-4" shift-h="3.5"
                         rotate="5"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                <b-icon v-if="msg.watched===false" stacked icon="exclamation-circle-fill" class="my-icon"
                         scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
-            <!-- For updated messages -->
+            <!-- Document made Progress -->
+            <b-iconstack v-else-if="msg.category === 'PROGRESS'" class="my-icon">
+                <b-icon class="my-icon" stacked icon="file-earmark-check" scale="1"></b-icon>
+                <b-icon v-if="msg.watched===false" stacked icon="exclamation-circle-fill" class="my-icon"
+                        scale="0.5" shift-v="3" shift-h="-5"></b-icon>
+            </b-iconstack>
+
+            <!-- New Version of Document -->
             <b-iconstack v-else class="my-icon">
                 <b-icon class="my-icon" stacked icon="file-earmark" scale="1"></b-icon>
                 <b-icon class="my-icon" stacked icon="arrow-clockwise" scale="0.7" shift-v="-0.4" rotate="45"></b-icon>
-                <b-icon v-if="msg.watched==='False'" stacked icon="exclamation-circle-fill" class="my-icon"
+                <b-icon v-if="msg.watched===false" stacked icon="exclamation-circle-fill" class="my-icon"
                         scale="0.5" shift-v="3" shift-h="-5"></b-icon>
             </b-iconstack>
 
             <!-- For all messages -->
-            <span class="letters">{{ msg.dateSent }}: </span>
-            <span class="letters">{{ msg.correspondingDocument.title }}</span>
+            <span class="letters">{{ getDate(msg) }}: </span>
+            <span class="letters">{{ msg.subject }}</span>
         </b-dropdown-item>
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
@@ -81,11 +86,21 @@ import {mapGetters} from 'vuex';
 
 export default {
     name: "Messages",
+    async created() {
+        await this.$store.dispatch('messages/fetchMessages')
+    },
+    async mounted() {
+        await this.$store.dispatch('messages/fetchMessages')
+    },
     methods: {
-        showMsg: function (msg) {
+        showMsg: async function (msg) {
             //changes selected message and its watched status
-            this.$store.dispatch('patchChangeSelectedMsg', msg)
-            this.$store.dispatch('patchChangeWatchedStatus', msg)
+            var status = msg.watched
+            await this.$store.dispatch('messages/patchChangeSelectedMsg', msg)
+            await this.$store.dispatch('messages/patchChangeWatchedStatus', msg)
+            if (status !== msg.watched) {
+                await this.$store.dispatch('messages/fetchMessages')
+            }
 
             // navigates to messages page, passes msg as selectedMsg as prop to MessagePage
             this.$router.push({
@@ -99,14 +114,15 @@ export default {
                     console.log(e);
                 }
             })
+        },
+        getDate(msg) {
+            return msg.timeStamp.split('T')[0]
         }
     },
     computed: {
-        getMessages() {
-            return this.$store.getters.getFirstNMessages
-        },
         ...mapGetters({
-            count: 'unwatchedCount'
+            firstNMessages: 'messages/getFirstNMessages',
+            count: 'messages/unwatchedCount',
         })
     }
 }

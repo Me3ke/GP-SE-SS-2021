@@ -163,8 +163,6 @@
     },
     "OverviewPage": {
         "heading": "Übersicht",
-        "filterClosed": "Abgeschlossen",
-        "filterOpen": "Offen",
         "toSign1": "Bis zum",
         "toSign2": "signieren",
         "toRead1": "Bis zum",
@@ -173,7 +171,30 @@
         "toSignRead2": "gegenlesen und signieren",
         "envReadSign": "Gegenlesen und signieren",
         "envRead": "Gegenlesen",
-        "envSign": "Signieren"
+        "envSign": "Signieren",
+        "search": "Suchen",
+        "noDocuments": "Noch keine Dokumente"
+    },
+    "Filter": {
+        "filterTitle": "Dokumente und Verbünde filtern",
+        "filter": "Filter anwenden",
+        "removeFilter": "Filter entfernen",
+        "closed": "Abgeschlossen",
+        "open": "Offen",
+        "toSign": "Unterschreiben",
+        "owned": "Eigene",
+        "creationDate": "Erstellungsdatum",
+        "endDate": "End-Datum",
+        "withSignatureType": "Mit Signaturtyp:",
+        "dataType": "Dateiformat",
+        "readProcess": "Gegenleseprozess",
+        "signProcess": "Signierprozess",
+        "all": "Alle",
+        "onlyRoles": "Nur Dokumente und Verbünde anzeigen, denen ich als folgende Rollen zugewiesen bin:",
+        "owner": "Besitzer",
+        "reader": "Gegenleser",
+        "signatory": "Unterzeichner",
+        "readerOrSignatory": "Gegenleser oder Unterzeichner"
     },
     "Document": {
         "owner": "Besitzer",
@@ -185,9 +206,13 @@
         "heading": "Benachrichtigungen",
         "sentBy": "Von",
         "sentOn": "Am",
-        "concerns": "Betrifft",
         "nonSelected": "Klicken Sie auf eine Nachricht, um diese vollständig anzuzeigen.",
-        "toAll": "Zurück zu allen Benachrichtigungen"
+        "toAll": "Zurück zu allen Benachrichtigungen",
+        "sureDelete": "Für immer löschen?",
+        "delete": "Löschen",
+        "cancel": "Abbruch",
+        "deleteError": "Löschen fehlgeschlagen",
+        "noMsgs": "Keine Benachrichtigungen"
     },
     "LoginButton": {
         "content": "Anmelden"
@@ -223,22 +248,32 @@
         },
         "SignatureSettings": {
             "settings": "Signatur Einstellungen",
+            "signature": "Signatur",
             "upload": {
+                "current": "Derzeitige Signatur",
                 "text": "Neue Signatur hochladen",
+                "text2": "Neue Signatur zeichnen",
                 "exp": "Laden Sie ein Bild Ihrer Signatur hoch. Es wird dem  Prozess-Protokoll hinzugefügt werden.",
                 "upload": "Hochladen",
+                "alert": "Fehler beim hochladen! \n Vergewisseren Sie sich, dass das Feld nicht leer ist.",
                 "popUp": {
                     "heading": "Signatur hochladen",
+                    "heading2": "Signatur zeichnen",
+                    "choose": "Möchten Sie ein ein Bilder der Sigantur hochladen oder eine zeichnen?",
+                    "draw": "Signatur zeichnen",
                     "exp": "Wählen Sie Ihre Signatur aus.",
+                    "signaturePad": "Zeichnen Sie in das entsprechende Feld Ihre Signatur",
                     "cancel": "Abbruch",
                     "sure": "Wenn Sie das Hochladen jetzt abbrechen, geht all' Ihr Fortschritt verloren.",
                     "back": "Zurück",
                     "close": "Schließen",
+                    "clear": "Löschen",
                     "attentionOne": "Achtung! Sie haben schon eine Signatur hochgeladen.",
                     "attentionTwo": "Wenn Sie fortfahren, geht diese verloren!",
                     "placeholder": "Signatur hier ablegen oder auswählen",
                     "dropPlaceholder": "Hier fallen lassen",
-                    "accepted": "Akzeptiert werden sämtliche Bildformate."
+                    "accepted": "Akzeptiert werden sämtliche Bildformate.",
+                    "success": "Sie haben erfolgreich Ihre Signatur hochgeladen!"
                 }
             }
         },
@@ -246,16 +281,16 @@
             "settings": "Benachrichtigungs-Einstellungen",
             "send": "Speichern",
             "toDo": {
-                "text": "Signier-/Gegenlesen-Anfragen",
-                "exp": "Erhalten von Website-Benachrichtungen über neue Anfragen zum Signieren/Gegenlesen von Dokumenten/Dokumentenverbunden."
+                "text": "Admin Benachrichtigungen",
+                "exp": "Erhalten von Website-Benachrichtungen über Admintätigkeitenbezogene Nachrichten."
             },
             "sign": {
-                "text": "Signier-Erninnerungen",
-                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
+                "text": "Signier-Anfragen/Erninnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Anfragen/Erninnerung zum Signieren von Dokumenten/Dokumentenverbunden."
             },
             "read": {
-                "text": "Gegenlesen-Erinnerungen",
-                "exp": "Erhalten von Website-Benachrichtungen als Erninnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
+                "text": "Gegenlesen-Anfragen/Erinnerungen",
+                "exp": "Erhalten von Website-Benachrichtungen als Anfragen/Erinnerung zum Gegenlesen von Dokumenten/Dokumentenverbunden."
             },
             "progress": {
                 "text": "Dokumenten-Fortschritt",
@@ -264,10 +299,6 @@
             "newVersion": {
                 "text": "Dokumenten-Aktualisierung",
                 "exp": "Erhalten von Website-Benachrichtungen über die Aktualisierung von Dokumenten."
-            },
-            "protocol": {
-                "text": "Protokoll-Verfügbarkeit",
-                "exp": "Erhalten von Website-Benachrichtungen über die Freischaltung von Protokollen zum Signierprozess."
             }
         },
         "DocumentSettings": {
@@ -297,13 +328,26 @@
         "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
-        "signatureType": "Signaturtyp"
+        "signatureType": "Signaturtyp",
+        "UpdateDocument": {
+            "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
+            "update1": "aktualisieren",
+            "update2": "Dokument aktualisieren",
+            "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
+            "replaceDoc": "Das Aktualisieren des Dokumentes: ",
+            "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+        }
     },
     "DownloadDoc": {
         "download": "Herunterladen",
         "heading": "Jetzt herunterladen!",
         "sure": "Möchten Sie das Dokument wirklich herunterladen?",
         "cancel": "Abbrechen"
+    },
+    "DownloadKey": {
+        "download": "Herunterladen",
+        "clipBoard": "Kopieren"
     },
     "DownloadProtocol": {
         "protocol": "Protokoll",
@@ -318,10 +362,36 @@
         "didSign": "Schon unterschrieben",
         "doRead": "Gegenlesen",
         "didRead": "Schon gegengelesen.",
+        "comments": "Kommentare",
         "protocol": "Protokoll anzeigen",
         "history": "Historie einsehen",
         "newVersion": "Neue Version",
         "settings": "Einstellungen",
+        "meta": {
+            "meta": "Details",
+            "metaShow": "Details anzeigen",
+            "metaNo": "Details ausblenden",
+            "title": "Titel",
+            "docType": "Datei-Typ",
+            "state": "Prozess-Status",
+            "open": "Offen",
+            "read": "Gegenlesen",
+            "closed": "Geschlossen",
+            "error": "Fehler: Kein bekannter Satus",
+            "owner": "Besitzer",
+            "created": "Erstellungsdatum",
+            "end": "Enddatum",
+            "readers": "Gegenleser",
+            "didRead": "Schon gegengelesen",
+            "noRead": "Noch nicht gegengelesen",
+            "noReaders": "Keine Gegenleser eingetragen",
+            "signatories": "Unterzeichner",
+            "signed": "schon unterschrieben",
+            "noSigned": "noch nicht unterschrieben",
+            "noSignatories": "Keine Unterzeichner eingetragen",
+            "simple": "einfache Unterschrift",
+            "advanced": "fortgeschrittene Unterschrift"
+        },
         "close": "Schließen",
         "errors": {
             "notFound": "Das Dokument konnte nicht gefunden werden.",
@@ -333,6 +403,7 @@
         "password": "Passwort",
         "login": "Anmeldung",
         "sign-in": "Anmelden",
+        "failMail": "Mail Fehler",
         "feedback-invalid-email": "Bitte eine valide E-Mail Adresse angeben.",
         "feedback-invalid-password": "Passwörter sind mindestens 4 Zeichen lang.",
         "fail": "Anmeldung fehlgeschlagen.",
@@ -371,14 +442,14 @@
         "warningText": "Achtung! Sie haben schon Ihre Schlüsselpaar eingerichtet. Wenn Sie fortfahren, geht dieses verloren!",
         "cancelWarningOne": "Wenn Sie jetzt abbrechen, können Sie keine erweiterten Signaturen geben,",
         "cancelWarningTwo": "bis Sie Ihr Schlüsselpaar auf der Einstellungs-Seite eingerichtet haben.",
-        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab.",
+        "privateKey": "Kopieren Sie Ihren privaten Schlüssel und speichern Sie diesen sicher in einem .txt Dokument ab, oder laden Sie ihn herunter.",
         "noLose": "Verlieren Sie den Schlüssel nicht!",
         "generatingText": "Generieren...",
         "uploadHere": "Laden Sie hier Ihren öffentlichen Schlüssel hoch.",
         "uploadHereExp": "Akzeptiert werden Dateien, die auf .txt enden. Der Schlüssel muss 1024 Zeichen lang sein.",
         "placeholder": "Schlüssel hier ablegen oder auswählen",
         "dropPlaceholder": "Hier fallen lassen",
-        "success": "Sie haben erfolgreich Ihren öffetnlichen Schlüssel hochgeladen!",
+        "success": "Sie haben erfolgreich Ihren öffentlichen Schlüssel hochgeladen!",
         "successWarning": "Verlieren Sie den zugehörigen privaten Schlüssel nicht!"
     },
     "TwoFakAuth": {
@@ -425,7 +496,8 @@
             "notDone": "Um diese Sigantur zu tätigen, müssen Sie noch folgendes einichten.",
             "tfa": "Zwei-Faktor-Authenifizierung",
             "keyPair": "Schlüsselpaar",
-            "toSettings": "Zu den Einstellungen"
+            "toSettings": "Zu den Einstellungen",
+            "notSeen": "Sie müssen sich das Dokument erst anschauen!"
         },
         "read": {
             "read": "Jetzt gegenlesen!",
@@ -486,6 +558,62 @@
             "color13": "Einstellungsfarbe",
             "color14": "Pop-Up Hintergrund",
             "default": "Standard"
+        },
+        "manage": {
+            "title": "Nutzerverwaltung",
+            "empty": "Keine Benutzer gefunden.",
+            "error": "Fehler!",
+            "filter": {
+                "active": "Aktiviert",
+                "inactive": "Deaktiviert",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Neuste zuerst",
+                "old": "Älteste zuerst",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-Mail A-Z",
+                "cbaE": "E-Mail Z-A"
+            },
+            "options": {
+                "active": "Aktivieren",
+                "inactive": "Deaktivieren",
+                "admin": "Adminrechte geben"
+            }
         }
+    },
+    "ProgressBar": {
+        "envelope": {
+            "notFinished": "Nicht fertiggestellte Dokumente:",
+            "finished": "Schon fertiggestellte Dokumente:"
+        },
+        "document": {
+            "needToSign": "Muss noch unterschrieben werden von:",
+            "alreadySigned": "Schon unterschrieben von:",
+            "needToRead": "Muss gelesen werden von:",
+            "alreadyRead": "Schon gelesen von:"
+        }
+    },
+    "CommentsPage": {
+        "title": "Kommentare",
+        "comment": "Kommentar",
+        "comments": "Kommentare",
+        "sort": "Sortieren nach",
+        "newest": "Neuste zuerst",
+        "oldest": "Älteste zuerst",
+        "writePrompt": "Kommentar hinzufügen als ",
+        "cancel": "Abbrechen",
+        "send": "Absenden",
+        "empty": "Keine Kommentare",
+        "answers": "Antworten anzeigen",
+        "doNotAnswers": "Antworten ausblenden",
+        "noAnswers": "Keine Antworten",
+        "reply": "Antworten",
+        "owner": "Besitzer",
+        "hint": "Hinweis: Die Kommentare für dieses Dokument befinden sich im  eingeschränkten Modus. Sie können nur Ihre eigenen Kommentare und die des Owners sehen. Nur der Owner kann Ihre Kommentare sehen",
+        "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
+        "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
+        "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     }
 }

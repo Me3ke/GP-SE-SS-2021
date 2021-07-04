@@ -13,6 +13,9 @@ import * as theme from './modules/theme';
 import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
+import * as userManagement from './modules/userManage'
+import * as comments from "./modules/comments";
+import guestAuthorization from "@/main/vue/store/modules/guestAuthorization";
 
 Vue.use(Vuex)
 
@@ -27,7 +30,12 @@ const store = new Vuex.Store({
         keypair,
         theme,
         twoFakAuth,
-        auth: authorization
+        comments,
+
+        userManagement,
+
+        auth: authorization,
+        guestAuth: guestAuthorization
     },
     mutations: {
         INITIALIZE_STORE(state) {

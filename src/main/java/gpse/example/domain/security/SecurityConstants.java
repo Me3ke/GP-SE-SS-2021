@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * This Class loads Constants to proived for different security features.
  */
 @ConfigurationProperties("security")
-public final class SecurityConstants {
+public class SecurityConstants {
 
     private String authLoginUrl;
 

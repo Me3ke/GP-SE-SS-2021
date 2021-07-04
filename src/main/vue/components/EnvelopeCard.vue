@@ -7,6 +7,14 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
+                <div>
+                    <div v-if="this.envelope.owner.email === this.$store.state.auth.username && showProgress">
+                        <EnvelopeProgressBar
+                            :envelope="envelopeProgress(envelope.documents)"
+                            :env="envelope"
+                        ></EnvelopeProgressBar>
+                    </div>
+                </div>
             </b-col>
             <b-col cols="1">
                 <settingsButton
@@ -20,28 +28,52 @@
 import settingsButton from "@/main/vue/components/envSettingsButton";
 import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import {mapGetters} from "vuex";
+import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
 
 export default {
     name: "EnvelopeCard",
-    components: {TwoFacAuth, EnvelopeBox, settingsButton},
+    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
     props: {
         envelope: Object
     },
     data() {
         return {
             showAuth: false,
-            advanced: false
+            advanced: false,
+            showProgress: false
         }
     },
-    mounted() {
+
+    computed: {
+        ...mapGetters({
+            envelopeProgress: 'document/getDocumentProgressArrayByEnvelope',
+
+})
+    },
+
+    beforeMount() {
+        //this.$store.dispatch('document/resetState')
+
+
+    },
+    async mounted() {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)
         for (let i = 0; i < this.envelope.documents.length; i++) {
             if (this.envelope.documents[i].signatureType === 'ADVANCED_SIGNATURE') {
                 this.advanced = true
             }
         }
+
+        await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
+            envelope: this.envelope
+        })
+        this.showProgress = true
+
     },
+
     methods: {
+
         // checks if env needs advanced signature, if so 2FacAuth has to be done; otherwise go to env directly
         async checkEnv() {
             // checking signatureType and is current user is not owner of document

@@ -3,6 +3,7 @@ package gpse.example.domain.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.util.email.EmailTemplate;
+import gpse.example.web.messages.MessageSettingsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -73,7 +75,13 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @Column
-    private boolean adminValidated;
+    private boolean accountNonLocked;
+
+    @Lob
+    private byte[] imageSignature;
+
+    @Column
+    private String imageSignatureType;
 
     @OneToMany(
         orphanRemoval = true,
@@ -84,6 +92,12 @@ public class User implements UserDetails {
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private MessageSettingsContainer messageSettings;
 
     protected User() {
 
@@ -104,10 +118,18 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
-        this.adminValidated = false;
+        this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.imageSignature = new byte[0];
+        this.imageSignatureType = "";
         this.emailTemplates = new ArrayList<>();
+        this.messageSettings = new MessageSettingsContainer();
+        this.messageSettings.setToDo(true);
+        this.messageSettings.setProgress(true);
+        this.messageSettings.setNewVersion(true);
+        this.messageSettings.setSign(true);
+        this.messageSettings.setRead(true);
     }
 
     public static long getSerialVersionUID() {
@@ -144,7 +166,7 @@ public class User implements UserDetails {
         return archivedPublicKeys;
     }
 
-    public void setArchivedPublicKeys(List<String> archivedPublicKeys) {
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
         this.archivedPublicKeys = archivedPublicKeys;
     }
 
@@ -251,7 +273,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @JsonIgnore
@@ -315,12 +337,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public boolean isAdminValidated() {
-        return adminValidated;
-    }
-
-    public void setAdminValidated(final boolean adminValidated) {
-        this.adminValidated = adminValidated;
+    public void setAccountNonLocked(final boolean adminValidated) {
+        this.accountNonLocked = adminValidated;
     }
 
     public List<String> getRoles() {
@@ -343,19 +361,45 @@ public class User implements UserDetails {
         return firstLogin;
     }
 
-    public void setFirstLogin(boolean firstLogin) {
+    public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
     }
+
 
     public List<EmailTemplate> getEmailTemplates() {
         return emailTemplates;
     }
 
-    public void setEmailTemplates(List<EmailTemplate> emailTemplates) {
+    public void setEmailTemplates(final List<EmailTemplate> emailTemplates) {
         this.emailTemplates = emailTemplates;
     }
 
-    public void addEmailTemplate(EmailTemplate emailTemplate) {
+    public void addEmailTemplate(final EmailTemplate emailTemplate) {
         this.emailTemplates.add(emailTemplate);
+    }
+
+    public MessageSettingsContainer getMessageSettings() {
+        return messageSettings;
+    }
+
+    public void setMessageSettings(final MessageSettingsContainer messageSettings) {
+        this.messageSettings = messageSettings;
+    }
+
+    public byte[] getImageSignature() {
+        return Arrays.copyOf(
+            imageSignature, imageSignature.length);
+    }
+
+    public void setImageSignature(final byte[] imageSignature) {
+        this.imageSignature = imageSignature.clone();
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(final String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
     }
 }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import api from "@/main/vue/api";
 
+
 const authorization = {
     state: () => ({
         authenticated: null,
@@ -54,6 +55,9 @@ const authorization = {
         },
         isAdmin(state) {
             return state.role.includes('ROLE_ADMIN')
+        },
+        getUsername(state) {
+            return state.username
         }
     }
 
