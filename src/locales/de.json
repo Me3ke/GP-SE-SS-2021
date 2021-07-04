@@ -615,5 +615,10 @@
         "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
         "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
         "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
+    },
+    "HistoryPage": {
+        "title": "Historie",
+        "abc": "Titel A-Z",
+        "cba" : "Titel Z-A"
     }
 }

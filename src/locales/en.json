@@ -613,5 +613,10 @@
         "serverErrorOne": "Your comment could not be posted.",
         "serverErrorTwo": "Please try again later or talk to an administrator.",
         "serverErrorThree": "The comments could not be loaded."
+    },
+    "HistoryPage": {
+        "title": "History",
+        "abc": "Title A-Z",
+        "cba" : "Title Z-A"
     }
 }

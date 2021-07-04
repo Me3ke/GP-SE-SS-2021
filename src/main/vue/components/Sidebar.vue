@@ -260,8 +260,8 @@ export default {
         goToProtocol() {
             this.$router.push({name: 'protocol', params: {envId: this.envId, docId: this.docId}})
         },
-        //TODO: add possibility to look at history
         showHistory() {
+            this.$router.push({name: 'history', params: {envId: this.envId, docId: this.docId}})
         },
         toggleNewVersion() {
             this.showUploadNewVersion = !this.showUploadNewVersion
