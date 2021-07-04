@@ -320,7 +320,6 @@ export default {
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
             this.actualDoc.dataType = this.fileString.split('.').pop()
-            console.log(this.actualDoc)
 
             this.showHideModal('modal-page1', 'modal-page2')
         },
@@ -330,16 +329,10 @@ export default {
         setEmailTemplate(temp){
             // emailTemplates is an array instead of an object (in document)
             this.actualDoc.emailTemplateHtml = temp
-            console.log(this.actualDoc.emailTemplateHtml)
-        },
-
-        async tst() {
-            console.log('test')
         },
 
         /// getting emitted value
         async uploadNewFile() {
-            console.log("TEST")
             this.fileString = ""
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
 
@@ -366,15 +359,12 @@ export default {
 
                 // will route the user to the newUploaded document page (with the new ID)
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file
-                console.log(newUrl)
-
-                console.log(this.actualDoc)
                 this.file = null
 
                 await this.$store.dispatch('envelopes/fetchEnvelopes')
-                /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
-                })*/
+                })
             }
         },
 
@@ -384,7 +374,6 @@ export default {
         },
 
         resetSettings(a) {
-            console.log(this.actualDoc)
             if (a === 'modal-page1') {
                 this.$refs[a].hide()
                 this.fileString = ""
@@ -397,14 +386,6 @@ export default {
             this.$refs[currentModalId].hide()
             this.resetSettings(goToModalId)
 
-        },
-
-        ok(){
-            this.showHideModal('modal-page3', 'modal-page4')
-        },
-
-        cancel(){
-            this.showHideModal('modal-page3' , 'modal-page2-signatories')
         }
     }
 }

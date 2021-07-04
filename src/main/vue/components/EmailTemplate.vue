@@ -13,7 +13,7 @@
                     </div>
 
                     <select v-model="selected" @change="changedValue(selected)">
-                        <option v-for="(content, index) in contents" :key="index"
+                        <option v-for="(content, index) in emailTemplate" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
 
@@ -68,8 +68,6 @@
                                         <option value="serif"></option>
                                         <option value="monospace"></option>
                                     </select>
-
-                                    <button class="ql-link" style="padding-left: 2em; padding-right: 2em"></button>
 
                                     <!-- You can also add your own -->
                                     <button id="addUser-button" @click="addUserHtml"
@@ -148,11 +146,11 @@
                 <!--- Create new Template createNewEmailTemplate --->
                 <b-modal
                     title="Create new Template"
-                    hide-footer ok-only no-stacking centered
+                    hide-footer ok-only centered
                     ref="new-Template"
                 >
                     <b-container>
-                        <EmailTemplateEditor @getNewTemplate="saveNewTemplate"></EmailTemplateEditor>
+                        <EmailTemplateEditor @newTemp="saveNewTemplate"></EmailTemplateEditor>
                     </b-container>
                 </b-modal>
 
@@ -191,16 +189,6 @@ export default {
     },
     methods: {
 
-        getFirstTemplate() {
-            if (this.contents > 0) {
-                console.log("hallo")
-                return {}
-            } else {
-                console.log('#2')
-                return {}
-            }
-        },
-
         addUserHtml() {
             let quill = this.$refs.editor.quill;
             quill.focus();
@@ -235,10 +223,8 @@ export default {
 
         // observe changed value and emmit it
         changedValue(event) {
-            console.log(this.selected)
             this.selectedTemplateObject = event
 
-            console.log("NEW VALUE: ", this.selectedTemplateObject)
 
             // todo check the noticedChange boolean and if it is false then warn the user with modal
             //this.compareForEditedTemplates(this.selectedTemplateObject)
@@ -273,54 +259,34 @@ export default {
             this.$refs['modal-notice-unsaved-changes'].hide()
         },
 
+
+
         showNewCreateTemplate() {
             this.$refs['new-Template'].show()
 
         },
 
-        async saveNewTemplate(newTemplate) {
-            //todo save new template into databse and store
-            this.$refs['new-Template'].hide()
+         async saveNewTemplate(newTemplate) {
+             //todo save new template into databse and store
+             await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
+             await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
 
-            console.log(newTemplate)
+             this.$refs['new-Template'].hide()
 
-            await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
 
-           await this.updateContent()
 
-            this.contents = this.emailTemplate
 
-            console.log(this.contents)
-            this.$refs['new-Template'].hide()
-            this.$refs['new-Template'].show()
-
-        },
-
-        async updateContent() {
-            //await this.$store.dispatch('emailTemplate/resetEmailTemplate')
-            await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
-        }
-
+         },
     },
 
 
 
 
-    async mounted() {
-        /*let test = {
-            htmlTemplateBody: "<h1>TEST</h1>",
-            name: 'Test',
-            subject: "Test Object",
-            system: true,
-            templateID: 222
-
-        }*/
+    async beforeMount() {
         await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
         this.contents = this.emailTemplate
 
 
-        //this.contents.push(test)
-        console.log("selected: ", this.selected)
 
 
         //copy of templates
@@ -328,7 +294,6 @@ export default {
         this.selected = this.emailTemplate[0]
         this.selectedTemplateObject = this.emailTemplate[0]
     },
-
 
     computed: {
         ...mapGetters({
