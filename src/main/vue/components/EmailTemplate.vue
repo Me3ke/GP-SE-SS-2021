@@ -2,91 +2,103 @@
     <b-container>
 
                     <div style="padding-bottom: 1em">
+
+                        <b-button class="elsa-blue-btn"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
+                                  v-if="selectedTemplateObject !== {}"
+                        >
+                            Create Template
+                        </b-button>
+                    </div>
+
                     <select v-model="selected" @change="changedValue(selected)">
                         <option v-for="(content, index) in contents" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
 
 
-                    <b-button class="elsa-blue-btn"
-                              style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
-                    >
-                        Hochladen
-                    </b-button>
-                    </div>
+                    <button
+                        type="button"
+                        v-b-modal="'modal-editor'"
+                        class="mt-1 light-btn"
+                    ><span class="button-txt">
+                        Edit
+                    </span></button>
 
-                <b-container style="padding-right: 0; padding-left: 0">
-                <quill-editor
-                    ref="editor"
-                    v-model="selected.htmlTemplateBody"
-                    class="editor"
-                    :options="editorOption"
-                    style="width: auto"
-                >
-                    <div id="toolbar" slot="toolbar" style="width: auto">
-                        <!-- Add a bold button -->
-                        <button class="ql-bold">Bold</button>
-                        <button class="ql-italic">Italic</button>
-                        <button class="ql-underline">Underline</button>
-                        <!-- Add font size dropdown -->
-                        <select class="ql-size">
-                            <option value="small"></option>
-                            <!-- Note a missing, thus falsy value, is used to reset to default -->
-                            <option selected></option>
-                            <option value="large"></option>
-                            <option value="huge"></option>
-                        </select>
-                        <select class="ql-font">
-                            <option selected="selected"></option>
-                            <option value="serif"></option>
-                            <option value="monospace"></option>
-                        </select>
 
-                        <button class="ql-link" style="padding-left: 2em; padding-right: 2em"></button>
+                <b-container style="padding-top: 1em; overflow:scroll; overflow-x:hidden; height:300px;" v-html="selected.htmlTemplateBody"></b-container>
 
-                        <!-- You can also add your own -->
-                        <button id="addUser-button" @click="addUserHtml"
-                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
-
-                       <button id="addOwner-button" @click="addOwnerHtml"
-                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
-
-                        <button id="endDate-button" @click="addEndDateHtml"
-                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
-
-                        <button id="link-button" @click="addLink"
-                                style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Document Link</button>
-
-                    </div>
-
-                </quill-editor>
-
-                    <button type="button"
-                            class="mt-1 light-btn"
-                            v-b-modal="'modal-preview'"
-                    >
-                    <span class="button-txt">
-                        Preview
-                    </span>
-                    </button>
-
-                    <button @click="test2(selected.htmlTemplateBody)">klick</button>
-
-                    <!--- Preview --->
+                    <!--- Editor --->
                     <b-modal
-                        :id="'modal-preview'"
+                        id="modal-editor"
+                        ref="modal-editorRef"
                         centered
-                        :title="'Email Template Preview'"
-                        hide-footer ok-only
+                        hide-footer ok-only hide-header
                         v-if="selected.htmlTemplateBody"
-                        style="margin-top: 2em"
+                        style="margin-top: 2em;"
                     >
-                        <b-container v-html="selected.htmlTemplateBody"></b-container>
+
+                        <b-container style="padding-right: 0; padding-left: 0;">
+                            <p> <span> To edit the template, just write in the editor and it will be applied automatically </span></p>
+
+                            <quill-editor
+                                ref="editor"
+                                v-model="selectedTemplateObject.htmlTemplateBody"
+                                class="editor"
+                                :options="editorOption"
+                                style="width: auto"
+                            >
+                                <div id="toolbar" slot="toolbar" style="width: auto">
+                                    <!-- Add a bold button -->
+                                    <button class="ql-bold">Bold</button>
+                                    <button class="ql-italic">Italic</button>
+                                    <button class="ql-underline">Underline</button>
+                                    <!-- Add font size dropdown -->
+                                    <select class="ql-size">
+                                        <option value="small"></option>
+                                        <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                        <option selected></option>
+                                        <option value="large"></option>
+                                        <option value="huge"></option>
+                                    </select>
+                                    <select class="ql-font">
+                                        <option selected="selected"></option>
+                                        <option value="serif"></option>
+                                        <option value="monospace"></option>
+                                    </select>
+
+                                    <button class="ql-link" style="padding-left: 2em; padding-right: 2em"></button>
+
+                                    <!-- You can also add your own -->
+                                    <button id="addUser-button" @click="addUserHtml"
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
+
+                                    <button id="addOwner-button" @click="addOwnerHtml"
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
+
+                                    <button id="endDate-button" @click="addEndDateHtml"
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
+
+                                    <button id="link-button" @click="addLink"
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Document Link</button>
+
+                                </div>
+
+                            </quill-editor>
+
+                            <button
+                                type="button"
+                                class="mt-1 light-btn"
+                                @click="saveEditedTemplate"
+                            ><span class="button-txt">
+                        Save
+                    </span></button>
+                        </b-container>
+
                     </b-modal>
 
 
 
-                </b-container>
 
                 <!---<div class="output ql-snow" style="border: 1px solid black; margin-top: 1em">
                     <div class="title">Output</div>
@@ -114,9 +126,17 @@ export default {
 
             // todo api with saved templates
             contents: [],
-            selected: "test",
-            firstElement: {},
+            copyTemplates: [],
+            selected: "SignatureInvitationTemplate",
+
+
+            noticeUnsavedChanges: false,
+
+            // Object which is going to be emitted
             selectedTemplateObject: {},
+
+
+
             editorOption: {
                 modules: {
                     toolbar: '#toolbar'
@@ -126,8 +146,8 @@ export default {
     },
     methods: {
 
-         getFirstTemplate() {
-            if(this.contents > 0) {
+        getFirstTemplate() {
+            if (this.contents > 0) {
                 console.log("hallo")
                 return {}
             } else {
@@ -140,7 +160,7 @@ export default {
             let quill = this.$refs.editor.quill;
             quill.focus();
             const cursorPosition = quill.getSelection(true)
-            quill.insertText(cursorPosition,"[FirstNameSignatory] [LastNameSignatory]")
+            quill.insertText(cursorPosition, "[FirstNameSignatory] [LastNameSignatory]")
         },
 
         addOwnerHtml() {
@@ -167,22 +187,28 @@ export default {
             quill.insertText(cursorPosition, "[Link]")
         },
 
+
+        // observe changed value and emmit it
         changedValue(event) {
+            console.log(this.selected)
             this.selectedTemplateObject = event
+
             console.log("NEW VALUE: ", this.selectedTemplateObject)
-            this.$emit('saveEmailTemplate', this.selectedTemplateObject)
 
+            // todo check the noticedChange boolean and if it is false then warn the user with modal
+            //this.compareForEditedTemplates(this.selectedTemplateObject)
+            if (!this.noticeUnsavedChanges) {
+                this.$emit('saveEmailTemplate', this.selectedTemplateObject)
+            }
         },
 
-        uploadEmailTemplate() {
-            console.log(this.selectedTemplateObject)
-            this.$emit('saveEmailTemplate', this.selectedTemplateObject)
-        },
-
-        test2(print) {
-             console.log(print)
+        saveEditedTemplate() {
+            this.$refs['modal-editorRef'].hide()
         }
     },
+
+
+
 
     async mounted() {
         let test = {
@@ -196,9 +222,15 @@ export default {
         await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
         this.contents = this.emailTemplate
 
+
         this.contents.push(test)
         console.log("selected: ", this.selected)
+
+
+        //copy of templates
+        // setting the standard template as initial Value
         this.selected = this.emailTemplate[0]
+        this.selectedTemplateObject = this.emailTemplate[0]
     },
 
 
@@ -214,6 +246,10 @@ export default {
 
 .ql-editor {
     height: 10em !important; /* TODO */
+}
+
+#modal-1c__BV_modal_content_ {
+    max-height: inherit;
 }
 
 

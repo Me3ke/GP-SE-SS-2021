@@ -161,10 +161,11 @@
         class="modal-emailTemplate"
         centered
         :title= "document.title + ' Email Template' "
-        style="margin-top: 2em"
-        hide-footer ok-only
+
+        ok-only hide-footer
         >
             <b-container>
+
                 <b-row style="padding-bottom: 1em">
                     <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
                 </b-row>
@@ -175,19 +176,17 @@
                 <button type="button"
                         class="mt-1 light-btn"
                         @click="showHideModal('modal-page3' , 'modal-page2-signatories')">
-
-                    <span class="button-txt">
-                        {{ $t('UploadDoc.back') }}
-                    </span>
+                     <span class="button-txt">
+                         {{ $t('UploadDoc.back') }}
+                     </span>
                 </button>
-
                 <button type="button"
                         class="ml-1 elsa-blue-btn"
                         @click="showHideModal('modal-page3', 'modal-page4')"
                 >
-                    <span class="button-txt">
-                        {{ $t('UploadDoc.continue') }}
-                    </span>
+                     <span class="button-txt">
+                         {{ $t('UploadDoc.continue') }}
+                     </span>
                 </button>
             </div>
 
@@ -331,6 +330,7 @@ export default {
         setEmailTemplate(temp){
             // emailTemplates is an array instead of an object (in document)
             this.actualDoc.emailTemplateHtml = temp
+            console.log(this.actualDoc.emailTemplateHtml)
         },
 
         async tst() {
@@ -397,6 +397,14 @@ export default {
             this.$refs[currentModalId].hide()
             this.resetSettings(goToModalId)
 
+        },
+
+        ok(){
+            this.showHideModal('modal-page3', 'modal-page4')
+        },
+
+        cancel(){
+            this.showHideModal('modal-page3' , 'modal-page2-signatories')
         }
     }
 }
