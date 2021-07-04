@@ -1,5 +1,8 @@
 package gpse.example.domain.protocol;
 
+/**
+ * Class to count lines.
+ */
 public class LineCounter {
 
     /**
@@ -11,6 +14,7 @@ public class LineCounter {
      * distance between to regular lines.
      */
     private static final int LINE_DIST = 25;
+    private static final int MARGIN_BOTTOM = 100;
 
     private int count;
 
@@ -23,7 +27,7 @@ public class LineCounter {
     }
 
     public boolean isNewPage() {
-        return (count <= 100);
+        return (count <= MARGIN_BOTTOM);
     }
 
     public int getCount() {

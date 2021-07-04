@@ -2,6 +2,7 @@ package gpse.example.domain.protocol;
 
 import com.sun.istack.NotNull;
 import gpse.example.domain.documents.Document;
+import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.UserService;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -54,6 +55,7 @@ public class Protocol {
     private static final float SPACING_ONE_FIVE = 1.5f;
     private static final float SPACING_TWO = 2.0f;
     private static final String SIGNATURE_OF = "Signiert von: ";
+    private static final int LINE_LENGTH = 50;
 
     private final Document document;
 
@@ -112,6 +114,7 @@ public class Protocol {
                 }
 
                 lineCounter.addLines(1);
+                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                 addLine(SIGNATURE_OF, lineCounter.getCount(), contentStream);
 
                 for (final Signatory signatory : document.getSignatories()) {
@@ -133,6 +136,7 @@ public class Protocol {
                 }
 
                 lineCounter.addLines(1);
+                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                 addLine("Historie: ", lineCounter.getCount(), contentStream);
                 final List<Document> history = document.getHistory();
                 history.remove(0);
@@ -159,6 +163,25 @@ public class Protocol {
                     }
 
                 }
+
+                lineCounter.addLines(1);
+                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
+                addLine("Signatur-Hashes für erweiterte Signaturen", lineCounter.getCount(), contentStream);
+                for (AdvancedSignature signature : document.getAdvancedSignatures()) {
+                    lineCounter.addLines(1);
+                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
+                    addIndentedLine(signature.getUserEmail(), lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
+                    String hash = signature.getSignature().toString();
+                    System.out.println(hash);
+                    String[] hashLines = getSubStrings(hash);
+                    for (String hashline : hashLines) {
+                        lineCounter.addLines(1);
+                        contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
+                        addIndentedLine(hashline, lineCounter.getCount(), SPACING_TWO, contentStream);
+                    }
+
+                }
+
             } finally {
                 contentStream.close();
             }
@@ -210,5 +233,18 @@ public class Protocol {
             return new PDPageContentStream(protocol, protocol.getPage(pageCount));
         }
         return contentStream;
+    }
+
+    private String[] getSubStrings(String string) {
+        String[] subStrings = new String[string.length() / LINE_LENGTH + 1];
+        if (string.length() > LINE_LENGTH) {
+            for (int i = 0; i < subStrings.length - 1; i++) {
+                subStrings[i] = string.substring(i * LINE_LENGTH, (i + 1) * LINE_LENGTH);
+            }
+            subStrings[subStrings.length - 1] = string.substring((subStrings.length - 1) * LINE_LENGTH);
+        } else {
+            subStrings[0] = string;
+        }
+        return subStrings;
     }
 }
