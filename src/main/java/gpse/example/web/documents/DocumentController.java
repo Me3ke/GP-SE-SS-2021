@@ -1,6 +1,6 @@
 package gpse.example.web.documents;
 
-import gpse.example.domain.Protocol;
+import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;

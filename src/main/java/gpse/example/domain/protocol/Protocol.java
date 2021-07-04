@@ -1,4 +1,4 @@
-package gpse.example.domain;
+package gpse.example.domain.protocol;
 
 import com.sun.istack.NotNull;
 import gpse.example.domain.documents.Document;
@@ -57,6 +57,8 @@ public class Protocol {
 
     private final Document document;
 
+    private int pageCount;
+
     public Protocol(@NotNull final Document document) {
         this.document = document;
     }
@@ -72,87 +74,93 @@ public class Protocol {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         //TODO make linecount method so we can check if its <= 0 and create new page if needed
-        int lineCount = TOP_OF_PAGE;
+        LineCounter lineCounter = new LineCounter();
         final String title = document.getDocumentTitle();
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        pageCount = 0;
         try (PDDocument protocol = new PDDocument()) {
             final PDPage page = new PDPage();
             protocol.addPage(page);
-            try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(0))) {
+            PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount));
+            try {
                 // (x|y) = (0|0) bottom left; new line forbidden
                 contentStream.beginText();
                 contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-                contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
+                contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
                 if ((PROTOKOLL + title).length() <= MAX_LINE_LENGTH) {
                     contentStream.showText(PROTOKOLL + title);
                 } else {
                     contentStream.showText(PROTOKOLL);
-                    lineCount -= LINE_DIST;
+                    lineCounter.addLines(1);
                     contentStream.endText();
                     contentStream.beginText();
                     contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-                    contentStream.newLineAtOffset(MARGIN_LEFT, lineCount);
+                    contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
                     contentStream.showText(title);
                 }
                 contentStream.endText();
 
-                lineCount -= 2 * LINE_DIST;
-                addLine("DokumentenID:  " + document.getId(), lineCount, contentStream);
+                lineCounter.addLines(2);
+                addLine("DokumentenID:  " + document.getId(), lineCounter.getCount(), contentStream);
 
-                lineCount -= LINE_DIST;
-                addLine("Dokumenteneigentümer: " + document.getOwner(), lineCount, contentStream);
+                lineCounter.addLines(1);
+                addLine("Dokumenteneigentümer: " + document.getOwner(), lineCounter.getCount(), contentStream);
 
                 if (document.getEndDate() != null) {
-                    lineCount -= LINE_DIST;
-                    addLine("Offen bis: " + document.getEndDate(), lineCount, contentStream);
+                    lineCounter.addLines(1);
+                    addLine("Offen bis: " + document.getEndDate(), lineCounter.getCount(), contentStream);
                 }
 
-                lineCount -= LINE_DIST;
-                addLine(SIGNATURE_OF, lineCount, contentStream);
+                lineCounter.addLines(1);
+                addLine(SIGNATURE_OF, lineCounter.getCount(), contentStream);
 
                 for (final Signatory signatory : document.getSignatories()) {
-                    lineCount -= LINE_DIST;
+                    lineCounter.addLines(1);
+                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                     if (signatory.isStatus()) {
                         addIndentedLine(signatory.getEmail() + "    Am: "
                                 + formatter.format(signatory.getSignedOn()),
-                            lineCount, SPACING_ONE_FIVE, contentStream);
+                            lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                         if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
-                            lineCount -= 2 * LINE_DIST;
+                            lineCounter.addLines(2);
                             addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
-                                lineCount, contentStream);
+                                lineCounter.getCount(), contentStream);
                         }
                     } else {
                         addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
-                            lineCount, SPACING_ONE_FIVE, contentStream);
+                            lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                     }
                 }
 
-                lineCount = lineCount - LINE_DIST;
-                addLine("Historie: ", lineCount, contentStream);
+                lineCounter.addLines(1);
+                addLine("Historie: ", lineCounter.getCount(), contentStream);
                 final List<Document> history = document.getHistory();
                 history.remove(0);
                 for (final Document document : history) {
-
-                    lineCount = lineCount - LINE_DIST;
+                    lineCounter.addLines(1);
+                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                     addIndentedLine(document.getDocumentTitle() + " vom "
                             + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
-                        lineCount, SPACING_ONE_FIVE, contentStream);
+                        lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
 
-                    lineCount -= LINE_DIST;
-                    addIndentedLine(SIGNATURE_OF, lineCount, SPACING_TWO, contentStream);
+                    lineCounter.addLines(1);
+                    addIndentedLine(SIGNATURE_OF, lineCounter.getCount(), SPACING_TWO, contentStream);
 
                     for (final Signatory signatory : document.getSignatories()) {
-                        lineCount -= LINE_DIST;
+                        lineCounter.addLines(1);
+                        contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                         if (signatory.isStatus()) {
                             addIndentedLine(signatory.getEmail() + "    (ungültig) ",
-                                lineCount, SPACING_TWO_FIVE, contentStream);
+                                lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
                         } else {
                             addIndentedLine(signatory.getEmail() + "    nicht signiert",
-                                lineCount, SPACING_TWO_FIVE, contentStream);
+                                lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
                         }
                     }
 
                 }
+            } finally {
+                contentStream.close();
             }
             protocol.save(output);
         }
@@ -189,5 +197,18 @@ public class Protocol {
                               final PDPageContentStream contentStream) throws IOException {
         final PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, image, null);
         contentStream.drawImage(pdImage, MARGIN_LEFT * 2, offSet, IMAGE_WIDTH, IMAGE_HEIGHT);
+    }
+
+    private PDPageContentStream newPageIfNeeded(PDPageContentStream contentStream, LineCounter lineCounter,
+                                                PDDocument protocol) throws IOException {
+        if (lineCounter.isNewPage()) {
+            contentStream.close();
+            PDPage newPage = new PDPage();
+            protocol.addPage(newPage);
+            pageCount++;
+            lineCounter.setCount(TOP_OF_PAGE);
+            return new PDPageContentStream(protocol, protocol.getPage(pageCount));
+        }
+        return contentStream;
     }
 }
