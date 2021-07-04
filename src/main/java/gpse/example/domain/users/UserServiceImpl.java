@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
                 container.setFirstNameOwner(user.getFirstname());
                 container.setLastNameOwner(user.getLastname());
                 container.setRequestingEmail(user.getEmail());
-                container.setLink("http://localhost:8080/de/admin/settings");
+                container.setLink("http://localhost:8080/de/adminSettings/userManagement");
                 smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
                 return;
                 //optional, without return -> notify all admins.

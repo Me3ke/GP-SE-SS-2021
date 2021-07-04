@@ -121,6 +121,18 @@ public class UserManagementController {
         return response;
     }
 
+    @PutMapping("admin/userseen")
+    private JSONResponseObject changeUserToSeen(@RequestParam(USERID) final String userID,
+                                                @RequestHeader final String token) {
+        final JSONResponseObject response = checkUserAndRole(userID, token);
+        if (response.getStatus() == STATUS_CODE) {
+            final User user = userService.getUser(userID);
+            user.setToSeenByAdmin();
+            userService.saveUser(user);
+        }
+        return response;
+    }
+
     private JSONResponseObject checkUserAndRole(final String userID, final String token) {
         final JSONResponseObject response = new JSONResponseObject();
 

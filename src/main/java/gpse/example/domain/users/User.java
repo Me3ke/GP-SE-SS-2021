@@ -41,6 +41,9 @@ public class User implements UserDetails {
     private String lastname;
 
     @Column
+    private boolean seenByAdmin;
+
+    @Column
     // false: user has not had a first login yet; true: user has had a first login
     private boolean firstLogin;
 
@@ -401,5 +404,9 @@ public class User implements UserDetails {
 
     public void setImageSignatureType(final String imageSignatureType) {
         this.imageSignatureType = imageSignatureType;
+    }
+
+    public void setToSeenByAdmin() {
+        this.seenByAdmin = true;
     }
 }
