@@ -23,6 +23,14 @@ export const mutations = {
         state.template.push(progress)
     },
 
+    EDIT_TEMPLATE(state, progress) {
+        for(let i = 0; i < state.template.length; i++) {
+            if(state.template[i].templateID === progress.templateID) {
+                state.template[i] = progress
+            }
+        }
+    },
+
     SET_TEMPLATE_ERROR(state, error) {
         state.templateError = error
     }
@@ -51,6 +59,16 @@ export const actions = {
         }).catch(error => {
             commit('SET_TEMPLATE_ERROR', error)
         })
+    },
+
+    editEmailTemplate({commit}, {templateId,templateBody}) {
+        console.log(templateId)
+        console.log(templateBody)
+        emailTemplateAPI.editEmailTemplate(templateId, templateBody).then(response => {
+            commit('EDIT_TEMPLATE', response.data)
+        }).catch(error => {
+            console.error(error)
+        })
     }
 
 }
@@ -58,7 +76,6 @@ export const actions = {
 export const getters = {
 
     getEmailTemplates: (state) => {
-        console.log(state.template)
         return state.template
     }
 

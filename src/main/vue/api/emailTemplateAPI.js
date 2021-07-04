@@ -15,11 +15,22 @@ export default {
         return axios({
             method: "post",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates',
-            data: {
-                'htmlTemplateBody': emailTemp,
+            param: {
+                template: emailTemp,
             }
 
         })
+    },
+
+    async editEmailTemplate(templateId, templateBody) {
+        return axios({
+          method: 'put',
+          url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + templateId,
+         param: {
+             reworkedTemplate: templateBody
+         }
+        })
+
     }
 
 }

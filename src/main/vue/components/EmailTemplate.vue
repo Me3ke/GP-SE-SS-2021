@@ -45,6 +45,7 @@
                                 ref="editor"
                                 v-model="selectedTemplateObject.htmlTemplateBody"
                                 class="editor"
+                                @change="setNoticeChanges"
                                 :options="editorOption"
                                 style="width: auto"
                             >
@@ -99,20 +100,49 @@
 
 
 
+                <!--- Save edited template --->
+                <b-modal
+                    ref="modal-notice-unsaved-changes"
+                    hide-footer ok-only hide-header centered
+                    no-close-on-esc no-close-on-backdrop
+                >
+                    <b-container>
+                        <p>
+                            Noticed Unsaved Changes!
+                        </p>
+                        <p>
+                            If you want to save the Edited template click on the "Save Template" Button
+                        </p>
+                        <p>
+                            If it is for single use only click on "Single Use" Button
+                        </p>
+                    </b-container>
 
-                <!---<div class="output ql-snow" style="border: 1px solid black; margin-top: 1em">
-                    <div class="title">Output</div>
-                    <div class="ql-editor" v-html="selected.htmlTemplateBody"></div>
-                </div>
+                    <div>
+                        <button type="button"
+                                class="mt-1 light-btn"
+                                @click="singleUse"
+
+                        >
+
+                    <span class="button-txt">
+                        Single Use
+                    </span>
+                        </button>
+
+                        <button type="button"
+                                class="ml-1 elsa-blue-btn"
+                                style="width: auto"
+                                @click="saveTemplate"
 
 
-                    <b-button class="elsa-blue-btn"
-                              style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
-                              >
-                        {{ $t('Settings.MessageSettings.send') }}
-                    </b-button>-->
-
-
+                        >
+                    <span class="button-txt">
+                        Save Template
+                    </span>
+                        </button>
+                    </div>
+                </b-modal>
     </b-container>
 </template>
 
@@ -202,9 +232,32 @@ export default {
             }
         },
 
+        setNoticeChanges() {
+            this.noticeUnsavedChanges = true
+        },
+
         saveEditedTemplate() {
+            if(this.noticeUnsavedChanges === true) {
+                this.$refs['modal-notice-unsaved-changes'].show()
+            }
             this.$refs['modal-editorRef'].hide()
+        },
+
+        singleUse() {
+            this.$refs['modal-notice-unsaved-changes'].hide()
+        },
+
+        async saveTemplate() {
+            await this.$store.dispatch('emailTemplate/editEmailTemplate',
+                {
+                    templateId: this.selectedTemplateObject.templateID,
+                    templateBody: this.selectedTemplateObject.htmlTemplateBody
+                })
+            await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+            this.contents = this.emailTemplate
+            this.$refs['modal-notice-unsaved-changes'].hide()
         }
+
     },
 
 

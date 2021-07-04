@@ -59,8 +59,8 @@ public class EmailController {
     public void setEmailTemplate(@PathVariable(USER_ID) final String userId,
                                  @RequestParam("template") final String template) {
         final User user = userService.getUser(userId);
-        user.addEmailTemplate(new EmailTemplate(template, "ELSA - Signatureinladung/ELSA - signature invitation",
-            "name", false));
+        user.addEmailTemplate(new EmailTemplate(template, "ELSA2 - Signatureinladung/ELSA - signature invitation",
+            "name2", false));
         userService.saveUser(user);
     }
 
@@ -94,6 +94,8 @@ public class EmailController {
                                     @PathVariable("templateId") final long templateId,
                                     @RequestParam("reworkedTemplate") final String reworkedTemplate) {
 
+
+        System.out.println(templateId);
         final User user = userService.getUser(userId);
         for (final EmailTemplate temp : user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId) {
