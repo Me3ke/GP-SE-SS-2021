@@ -9,6 +9,14 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     },
+
+    async getHistory(envId, docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/history'
+        })
+    },
+
     // gives if user has already seen document with id docId
     async getDocumentSeen(docId) {
         return axios({

@@ -6,6 +6,8 @@ export const state = {
 
     documentInfo: {},
     errorGetDocumentInfo: {},
+    documentHistory: {},
+    errorGetDocumentHistory: {},
     documentSeen: {},
     errorDocumentSeen: {},
     errorGetDocument: {},
@@ -33,6 +35,10 @@ export const mutations = {
     // sets given document as state
     SET_DOCUMENT_INFO(state, doc) {
         state.documentInfo = doc
+    },
+
+    SET_DOCUMENT_HISTORY(state, his) {
+        state.documentHistory = his
     },
 
     // sets ids of new document
@@ -75,6 +81,11 @@ export const mutations = {
     SET_ERROR_GET_DOCUMENT_INFO(state, error) {
         state.errorGetDocumentInfo = error
     },
+
+    SET_ERROR_GET_DOCUMENT_HISTORY(state, error) {
+        state.errorGetDocumentHistory = error
+    },
+
     //sets error of getDocument request
     SET_ERROR_EDIT_DOCUMENT(state, error) {
         state.errorEditDocument = error
@@ -121,6 +132,18 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
     },
+
+    // fetches History of document, saves without byte arrays
+    fetchDocumentHistory({commit}, {envId, docId}) {
+        return documentAPI.getHistory(envId, docId).then(response => {
+            commit('SET_DOCUMENT_HISTORY', response.data)
+            commit('SET_ERROR_GET_DOCUMENT_HISTORY', {})
+        }).catch(error => {
+            commit('SET_ERROR_GET_DOCUMENT_HISTORY', error)
+        })
+
+    },
+
     // makes axios call to get information if user has already seen the document
     fetchSeen({commit}, docId) {
         return documentAPI.getDocumentSeen(docId).then(response => {
@@ -227,6 +250,9 @@ export const getters = {
     getDocumentInfo: (state) => {
         return state.documentInfo
     },
+    getDocumentHistory: (state) => {
+        return state.documentHistory
+    },
     getNewDocumentId: (state) => {
         return state.newVersionIds.newDocumentID
     },
@@ -283,6 +309,9 @@ export const getters = {
     },
     getErrorGetDocumentInfo: (state) => {
         return state.errorGetDocumentInfo
+    },
+    getErrorGetDocumentHistory: (state) => {
+        return state.errorGetDocumentHistory
     },
     getErrorEditDocument: (state) => {
         return state.errorEditDocument
