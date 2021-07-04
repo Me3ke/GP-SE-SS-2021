@@ -8,6 +8,7 @@
             <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 80vh">
                 <LogoExperimental @modalTrigger="toggleOverflow"></LogoExperimental>
                 <ColorExperimental></ColorExperimental>
+                <CompanyDetailsContainer></CompanyDetailsContainer>
             </div>
         </b-container>
 
@@ -21,10 +22,11 @@ import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import LogoExperimental from "@/main/vue/components/corporateDesign/LogoExperimental";
 import ColorExperimental from "@/main/vue/components/corporateDesign/ColorExperimental";
+import CompanyDetailsContainer from "@/main/vue/components/corporateDesign/CompanyDetailsContainer";
 
 export default {
     name: "CorporateDesignExperimentalPage",
-    components: {ColorExperimental, LogoExperimental, Header, Footer},
+    components: {CompanyDetailsContainer, ColorExperimental, LogoExperimental, Header, Footer},
     data() {
         return {
             showOverflow: true

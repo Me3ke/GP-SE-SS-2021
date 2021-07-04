@@ -1,9 +1,9 @@
 <template>
     <b-container style="margin-top: 5em">
         <quill-editor
-        ref="editor"
-        class="editor"
-        v-model="text"
+            ref="editor"
+            class="editor"
+            v-model="text"
         ></quill-editor>
 
 

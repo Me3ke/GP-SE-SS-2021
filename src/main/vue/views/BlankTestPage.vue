@@ -8,7 +8,7 @@
 
 
 import {mapGetters} from "vuex";
-import ImpressumEditor from "@/main/vue/components/ImpressumEditor";
+import ImpressumEditor from "@/main/vue/components/corporateDesign/ImpressumEditor";
 
 export default {
     name: "BlankTestPage",

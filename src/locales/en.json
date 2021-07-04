@@ -555,7 +555,8 @@
             "color12": "Dark warn color",
             "color13": "Setting color",
             "color14": "Pop-Up background",
-            "default": "Default"
+            "default": "Default",
+            "companyDetails": "Company details"
         }
     },
     "ProgressBar": {
