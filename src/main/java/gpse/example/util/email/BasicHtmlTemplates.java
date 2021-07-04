@@ -265,17 +265,15 @@ public final class BasicHtmlTemplates {
         + P_LINK_P
         + NEWLINE
         + "\t\t<p>Falls Sie gerade nicht versucht haben Ihr Passwort zur&#252ck zusetzen,</p>\n"
-        + "\t\t<p>ist Ihr ELSA-Account oder Ihr Email-Konto m&#246glicherweise gehackt.</p>\n"
-        + "\t\t<p>In diesem Fall kontaktieren sie Ihren Systemadministrator.</p>\n"
+        + "\t\t<p>können Sie diese Email ignorieren.</p>\n"
         + NEWLINE
         + NEWLINE
         + "\t\t<p>Hello [RecieverFirstName] [RecieverLastName],</p>\n"
         + "\t\t<p>you can reset your password with the follwing link.</p>\n"
         + P_LINK_P
         + NEWLINE
-        + "\t\t<p>If you did not try to reset your password, your ELSA-account or </p>\n"
-        + "\t\t<p>your email-account is possibly hacked.</p>\n"
-        + "\t\t<p>In this case contact your system administrator</p>\n"
+        + "\t\t<p>If you did not try to reset your password,</p>\n"
+        + "\t\t<p>ignore this email please.</p>\n"
         + NEWLINE
         + NEWLINE
         + CLOSE_BODY_TAG;
