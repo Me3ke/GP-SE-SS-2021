@@ -6,6 +6,7 @@
                         <b-button class="elsa-blue-btn"
                                   style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
                                   v-if="selectedTemplateObject !== {}"
+                                  @click="showNewCreateTemplate"
                         >
                             Create Template
                         </b-button>
@@ -25,9 +26,9 @@
                         Edit
                     </span></button>
 
-
-                <b-container style="padding-top: 1em; overflow:scroll; overflow-x:hidden; height:300px;" v-html="selected.htmlTemplateBody"></b-container>
-
+                <b-container style="padding-top: 1em;"> <h4><span>Preview</span></h4>
+                    <b-container style="overflow:scroll; overflow-x:hidden; height:300px;" v-html="selected.htmlTemplateBody"></b-container>
+                </b-container>
                     <!--- Editor --->
                     <b-modal
                         id="modal-editor"
@@ -143,14 +144,28 @@
                         </button>
                     </div>
                 </b-modal>
+
+                <!--- Create new Template createNewEmailTemplate --->
+                <b-modal
+                    title="Create new Template"
+                    hide-footer ok-only no-stacking centered
+                    ref="new-Template"
+                >
+                    <b-container>
+                        <EmailTemplateEditor @getNewTemplate="saveNewTemplate"></EmailTemplateEditor>
+                    </b-container>
+                </b-modal>
+
     </b-container>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
+import EmailTemplateEditor from "@/main/vue/components/EmailTemplateEditor";
 
 export default {
     name: "EmailTemplate",
+    components: {EmailTemplateEditor},
     data() {
         return {
 
@@ -256,6 +271,34 @@ export default {
             await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
             this.contents = this.emailTemplate
             this.$refs['modal-notice-unsaved-changes'].hide()
+        },
+
+        showNewCreateTemplate() {
+            this.$refs['new-Template'].show()
+
+        },
+
+        async saveNewTemplate(newTemplate) {
+            //todo save new template into databse and store
+            this.$refs['new-Template'].hide()
+
+            console.log(newTemplate)
+
+            await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
+
+           await this.updateContent()
+
+            this.contents = this.emailTemplate
+
+            console.log(this.contents)
+            this.$refs['new-Template'].hide()
+            this.$refs['new-Template'].show()
+
+        },
+
+        async updateContent() {
+            //await this.$store.dispatch('emailTemplate/resetEmailTemplate')
+            await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
         }
 
     },
@@ -264,19 +307,19 @@ export default {
 
 
     async mounted() {
-        let test = {
+        /*let test = {
             htmlTemplateBody: "<h1>TEST</h1>",
             name: 'Test',
             subject: "Test Object",
             system: true,
             templateID: 222
 
-        }
+        }*/
         await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
         this.contents = this.emailTemplate
 
 
-        this.contents.push(test)
+        //this.contents.push(test)
         console.log("selected: ", this.selected)
 
 
