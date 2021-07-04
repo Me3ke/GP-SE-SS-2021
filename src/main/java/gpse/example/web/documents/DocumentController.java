@@ -209,6 +209,16 @@ public class DocumentController {
             .body(document.getData());
     }
 
+    @GetMapping("/user/{userID}/archivedDocument/{documentID}")
+    public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
+                                @PathVariable("documentID") final long documentID) throws DocumentNotFoundException {
+        Document document = documentService.getDocument(documentID);
+        if(document.getState() == DocumentState.CLOSED) {
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
+        }
+        return null;
+    }
+
     /**
      * The uploadNewDocumentVersion method does a put request to update.
      *
