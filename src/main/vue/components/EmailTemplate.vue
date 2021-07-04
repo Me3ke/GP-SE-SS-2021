@@ -70,6 +70,8 @@
                     </span>
                     </button>
 
+                    <button @click="test2(selected.htmlTemplateBody)">klick</button>
+
                     <!--- Preview --->
                     <b-modal
                         :id="'modal-preview'"
@@ -112,9 +114,6 @@ export default {
 
             // todo api with saved templates
             contents: [],
-            beforeBody: "<!DOCTYPE html>\\n<html lang = \\de\\>\\n\\n\\t<head>\\n\\n\\t\\t<meta charset " +
-                "= \\utf8\\>\\n\\t\\t<meta name=\\viewport\\ content=\\width = device - width, initial - " +
-                "scale = 1.0\\ >\\n  </head>\\n\\n  <body>\\n\\t\\t",
             selected: "test",
             firstElement: {},
             selectedTemplateObject: {},
@@ -178,6 +177,10 @@ export default {
         uploadEmailTemplate() {
             console.log(this.selectedTemplateObject)
             this.$emit('saveEmailTemplate', this.selectedTemplateObject)
+        },
+
+        test2(print) {
+             console.log(print)
         }
     },
 

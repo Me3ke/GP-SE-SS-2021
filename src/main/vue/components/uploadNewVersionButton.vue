@@ -35,7 +35,6 @@
 
                 <button type="button"
                         class="mt-1 elsa-blue-btn"
-                        v-b-modal="'modal-' + docID + 'bb'"
                         :disabled="file == null"
                         @click="setActualDoc"
                 >
@@ -46,7 +45,7 @@
             </div>
         </b-modal>
 
-
+        <!--- Skip or Add Readers --->
         <b-modal
             :id="'modal-' + docID + 'bb'"
             ref="modal-page2"
@@ -81,7 +80,7 @@
         <!---Readers --->
         <b-modal
             :id="'modal-' + docID + 'bbb'"
-            ref="modal-page2"
+            ref="modal-page2-reader"
             centered
             :title="document.title"
             hide-footer ok-only no-stacking
@@ -93,8 +92,9 @@
             <div>
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetSettings('modal-page2')"
                         v-b-modal="'modal-' + docID + 'b'"
+                        @click="showHideModal('modal-page2-reader', 'modal-page2')"
+
                 >
                     <span class="button-txt">
                         {{ $t('UploadDoc.back') }}
@@ -117,7 +117,7 @@
         <!---EndDate + Signatories--->
         <b-modal
             :id="'modal-' + docID + 'bbbb'"
-            ref="modal-page2"
+            ref="modal-page2-signatories"
             centered
             :title="document.title"
             hide-footer ok-only no-stacking
@@ -131,11 +131,12 @@
                                @update-signatories="updateSignatories"></SignatoryMenu>
             </div>
             <div>
+
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetSettings('modal-page2')"
                         v-b-modal="this.actualDoc.review ? 'modal-' + docID + 'bbb' : 'modal-' + docID + 'bb' "
-                >
+                        @click="showHideModal('modal-page2-signatories',  'modal-page2' )">
+
                     <span class="button-txt">
                         {{ $t('UploadDoc.back') }}
                     </span>
@@ -173,8 +174,8 @@
             <div class="flex-box-2">
                 <button type="button"
                         class="mt-1 light-btn"
-                        v-b-modal="'modal-' + docID + 'bbbb'"
-                >
+                        @click="showHideModal('modal-page3' , 'modal-page2-signatories')">
+
                     <span class="button-txt">
                         {{ $t('UploadDoc.back') }}
                     </span>
@@ -182,7 +183,7 @@
 
                 <button type="button"
                         class="ml-1 elsa-blue-btn"
-                        v-b-modal="'modal-' + docID + 'd'"
+                        @click="showHideModal('modal-page3', 'modal-page4')"
                 >
                     <span class="button-txt">
                         {{ $t('UploadDoc.continue') }}
@@ -209,9 +210,9 @@
 
                 <button type="button"
                         class="mt-1 light-btn"
-                        @click="resetSettings('modal-page3')"
                         v-b-modal="'modal-' + docID + 'c'"
-                >
+                        @click="showHideModal('modal-page4', 'modal-page3')">
+
                     <span class="button-txt">
                         {{ $t('UploadDoc.back') }}
                     </span>
@@ -312,7 +313,6 @@ export default {
         setActualDoc() {
             this.actualDoc = this.document
 
-
             this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
 
@@ -321,6 +321,9 @@ export default {
                 this.actualDoc.endDate = year + '-' + month + '-' + day
             }
             this.actualDoc.dataType = this.fileString.split('.').pop()
+            console.log(this.actualDoc)
+
+            this.showHideModal('modal-page1', 'modal-page2')
         },
 
 
@@ -330,9 +333,13 @@ export default {
             this.actualDoc.emailTemplateHtml = temp
         },
 
+        async tst() {
+            console.log('test')
+        },
+
         /// getting emitted value
         async uploadNewFile() {
-
+            console.log("TEST")
             this.fileString = ""
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
 
@@ -362,6 +369,8 @@ export default {
                 console.log(newUrl)
 
                 console.log(this.actualDoc)
+                this.file = null
+
                 await this.$store.dispatch('envelopes/fetchEnvelopes')
                 /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
@@ -375,13 +384,19 @@ export default {
         },
 
         resetSettings(a) {
+            console.log(this.actualDoc)
             if (a === 'modal-page1') {
                 this.$refs[a].hide()
                 this.fileString = ""
                 this.actualDoc = {}
-            } else if (a === 'modal-page2') {
-                this.actualDoc = {}
             }
+        },
+
+        showHideModal(currentModalId, goToModalId) {
+            this.$refs[goToModalId].show()
+            this.$refs[currentModalId].hide()
+            this.resetSettings(goToModalId)
+
         }
     }
 }
