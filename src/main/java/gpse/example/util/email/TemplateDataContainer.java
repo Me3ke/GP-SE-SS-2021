@@ -89,7 +89,7 @@ public class TemplateDataContainer {
     }
 
     public void setLink(final String link) {
-        this.link = link;
+        this.link = "<a href=\"" + link + "\">" + link + "</a>";
     }
 
     public String getRequestingEmail() {
