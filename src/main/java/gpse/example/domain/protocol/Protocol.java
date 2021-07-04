@@ -83,8 +83,7 @@ public class Protocol {
         try (PDDocument protocol = new PDDocument()) {
             final PDPage page = new PDPage();
             protocol.addPage(page);
-            PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount));
-            try {
+            try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount))) {
                 // (x|y) = (0|0) bottom left; new line forbidden
                 contentStream.beginText();
                 contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
@@ -112,78 +111,80 @@ public class Protocol {
                     lineCounter.addLines(1);
                     addLine("Offen bis: " + document.getEndDate(), lineCounter.getCount(), contentStream);
                 }
+            }
 
+            try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                 lineCounter.addLines(1);
-                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                 addLine(SIGNATURE_OF, lineCounter.getCount(), contentStream);
-
+            }
                 for (final Signatory signatory : document.getSignatories()) {
-                    lineCounter.addLines(1);
-                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
-                    if (signatory.isStatus()) {
-                        addIndentedLine(signatory.getEmail() + "    Am: "
-                                + formatter.format(signatory.getSignedOn()),
-                            lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
-                        if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
-                            lineCounter.addLines(2);
-                            addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
-                                lineCounter.getCount(), contentStream);
+                    try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
+                        lineCounter.addLines(1);
+                        if (signatory.isStatus()) {
+                            addIndentedLine(signatory.getEmail() + "    Am: "
+                                    + formatter.format(signatory.getSignedOn()),
+                                lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
+                            if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
+                                lineCounter.addLines(2);
+                                addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
+                                    lineCounter.getCount(), contentStream);
+                            }
+                        } else {
+                            addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
+                                lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                         }
-                    } else {
-                        addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
-                            lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                     }
                 }
 
+            try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                 lineCounter.addLines(1);
-                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                 addLine("Historie: ", lineCounter.getCount(), contentStream);
+            }
                 final List<Document> history = document.getHistory();
                 history.remove(0);
                 for (final Document document : history) {
-                    lineCounter.addLines(1);
-                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
-                    addIndentedLine(document.getDocumentTitle() + " vom "
-                            + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
-                        lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
-
-                    lineCounter.addLines(1);
-                    addIndentedLine(SIGNATURE_OF, lineCounter.getCount(), SPACING_TWO, contentStream);
-
-                    for (final Signatory signatory : document.getSignatories()) {
+                    try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                         lineCounter.addLines(1);
-                        contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
-                        if (signatory.isStatus()) {
-                            addIndentedLine(signatory.getEmail() + "    (ungültig) ",
-                                lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
-                        } else {
-                            addIndentedLine(signatory.getEmail() + "    nicht signiert",
-                                lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
+                        addIndentedLine(document.getDocumentTitle() + " vom "
+                                + formatter.format(document.getDocumentMetaData().getMetaTimeStampUpload()),
+                            lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
+
+                        lineCounter.addLines(1);
+                        addIndentedLine(SIGNATURE_OF, lineCounter.getCount(), SPACING_TWO, contentStream);
+                    }
+                    for (final Signatory signatory : document.getSignatories()) {
+                        try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
+                            lineCounter.addLines(1);
+                            if (signatory.isStatus()) {
+                                addIndentedLine(signatory.getEmail() + "    (ungültig) ",
+                                    lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
+                            } else {
+                                addIndentedLine(signatory.getEmail() + "    nicht signiert",
+                                    lineCounter.getCount(), SPACING_TWO_FIVE, contentStream);
+                            }
                         }
                     }
 
                 }
 
+            try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                 lineCounter.addLines(1);
-                contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                 addLine("Signatur-Hashes für erweiterte Signaturen", lineCounter.getCount(), contentStream);
-                for (AdvancedSignature signature : document.getAdvancedSignatures()) {
+            }
+            for (AdvancedSignature signature : document.getAdvancedSignatures()) {
+                try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                     lineCounter.addLines(1);
-                    contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                     addIndentedLine(signature.getUserEmail(), lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
-                    String hash = signature.getSignature().toString();
-                    System.out.println(hash);
-                    String[] hashLines = getSubStrings(hash);
-                    for (String hashline : hashLines) {
+                }
+                String hash = signature.getSignature().toString();
+                System.out.println(hash);
+                String[] hashLines = getSubStrings(hash);
+                for (String hashline : hashLines) {
+                    try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                         lineCounter.addLines(1);
-                        contentStream = newPageIfNeeded(contentStream, lineCounter, protocol);
                         addIndentedLine(hashline, lineCounter.getCount(), SPACING_TWO, contentStream);
                     }
-
                 }
-
-            } finally {
-                contentStream.close();
             }
             protocol.save(output);
         }
@@ -222,17 +223,15 @@ public class Protocol {
         contentStream.drawImage(pdImage, MARGIN_LEFT * 2, offSet, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
-    private PDPageContentStream newPageIfNeeded(PDPageContentStream contentStream, LineCounter lineCounter,
+    private PDPageContentStream newPageIfNeeded(LineCounter lineCounter,
                                                 PDDocument protocol) throws IOException {
         if (lineCounter.isNewPage()) {
-            contentStream.close();
             PDPage newPage = new PDPage();
             protocol.addPage(newPage);
             pageCount++;
             lineCounter.setCount(TOP_OF_PAGE);
-            return new PDPageContentStream(protocol, protocol.getPage(pageCount));
         }
-        return contentStream;
+        return new PDPageContentStream(protocol, protocol.getPage(pageCount));
     }
 
     private String[] getSubStrings(String string) {
