@@ -13,6 +13,7 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -420,9 +421,16 @@ public class DocumentController {
      * @throws DocumentNotFoundException if the document was not found.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
-    public List<Document> getDocumentHistory(final @PathVariable(DOCUMENT_ID) long documentID)
+    public List<DocumentOverviewResponse> getDocumentHistory( @PathVariable final String userID,
+        final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        return documentService.getDocument(documentID).getHistory();
+        List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
+        for (Document document:documentHistory) {
+            responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
+                userID));
+        }
+        return responseHistory;
     }
 
     /**
