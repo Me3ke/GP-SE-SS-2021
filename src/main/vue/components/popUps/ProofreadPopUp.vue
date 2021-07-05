@@ -144,6 +144,10 @@ export default {
         documents: {
             type: Array,
             required: true
+        },
+        isGuest: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -155,15 +159,38 @@ export default {
     },
     async mounted() {
         // checks if user has already looked at the document or not
-        await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
-        if (!this.hasSeen) {
-            this.page = -1
+        if (!this.isGuest) {
+            await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+            if (!this.hasSeen) {
+                this.page = -1
+            }
         }
     },
     methods: {
         // TODO: make adaptions once it is possible to review multiple files at at time
         async proofread() {
-            await this.$store.dispatch('document/reviewDocument', {docId: this.docId})
+
+            if (this.isGuest) {
+                await this.$store.dispatch('reviewAsGuest', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    guestToken: this.$route.params.tokenId
+                })
+
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('requestGuestInfo', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    token: this.$route.params.tokenId
+                })
+                // goes to success page and toggles alert
+                this.page += 1
+                this.showAlert = false
+
+                return
+            }
+
+            await this.$store.dispatch('document/reviewDocument', {nvId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCode === 200) {

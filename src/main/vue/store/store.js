@@ -13,6 +13,7 @@ import * as theme from './modules/theme';
 import * as twoFakAuth from './modules/twoFakAuth'
 import authorization from "@/main/vue/store/modules/authorization";
 import * as documentUpload from './modules/documentUpload.js';
+import * as userManagement from './modules/userManage'
 import * as comments from "./modules/comments";
 import * as emailTemplate from "./modules/emailTemplate.js"
 import guestAuthorization from "@/main/vue/store/modules/guestAuthorization";
@@ -33,6 +34,7 @@ const store = new Vuex.Store({
         twoFakAuth,
         comments,
         emailTemplate,
+        userManagement,
         auth: authorization,
         guestAuth: guestAuthorization
     },

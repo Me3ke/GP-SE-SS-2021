@@ -558,6 +558,29 @@
             "color13": "Einstellungsfarbe",
             "color14": "Pop-Up Hintergrund",
             "default": "Standard"
+        },
+        "manage": {
+            "title": "Nutzerverwaltung",
+            "empty": "Keine Benutzer gefunden.",
+            "error": "Fehler!",
+            "filter": {
+                "active": "Aktiviert",
+                "inactive": "Deaktiviert",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Neuste zuerst",
+                "old": "Älteste zuerst",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-Mail A-Z",
+                "cbaE": "E-Mail Z-A"
+            },
+            "options": {
+                "active": "Aktivieren",
+                "inactive": "Deaktivieren",
+                "admin": "Adminrechte geben"
+            }
         }
     },
     "ProgressBar": {
@@ -611,6 +634,20 @@
             "addEndDate": "Enddatum hinzufügen",
             "documentLink": "Dokument Link hinzufügen"
         }
+    },
+
+    "ResetPasswordPage": {
+      "success" : "Erfolgreich zurückgesetzt. Sie Können sich jetzt einloggen.",
+      "fail" : "Das Token ist bereits abgelaufen. Bitte versuchen Sie es erneut.",
+      "send" : "Senden"
+    },
+    "Password": {
+      "change": "Passwort ändern"
+    },
+    "HistoryPage": {
+        "title": "Historie",
+        "abc": "Titel A-Z",
+        "cba" : "Titel Z-A"
     }
 }
 

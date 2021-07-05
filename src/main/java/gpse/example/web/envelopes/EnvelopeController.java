@@ -12,6 +12,7 @@ import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
+import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,11 +38,13 @@ public class EnvelopeController {
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
     private static final String NEW_LINE = "\n";
+    private static final String DOCUMENT_URL = "/document/";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final DocumentFilter documentFilter;
+    private final GuestTokenService guestTokenService;
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
@@ -59,14 +62,17 @@ public class EnvelopeController {
      * @param userService     the userService
      * @param documentService the documentService
      * @param documentFilter  the documentFilter
+     * @param guestTokenService the guestTokenService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter) {
+                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter,
+                              final GuestTokenService guestTokenService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.documentFilter = documentFilter;
+        this.guestTokenService = guestTokenService;
     }
 
     /**
@@ -150,8 +156,8 @@ public class EnvelopeController {
             container.setDocumentTitle(document.getDocumentTitle());
             container.setEnvelopeName(envelope.getName());
             container.setEndDate(document.getEndDate().toString());
-            //TODO Link to documentview
-            container.setLink("http://localhost:8080/de/link/to/document/view");
+            container.setLink("http://localhost:8080/de/envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId());
             Category category;
             if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
                 || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
@@ -171,8 +177,9 @@ public class EnvelopeController {
             container.setFirstNameOwner(owner.getFirstname());
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(document.getDocumentTitle());
-            GuestToken token = new GuestToken(userID, document.getId());
-            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + "/document/" + document.getId() + "/" + token.getToken());
+            GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {
                 smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
             } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {

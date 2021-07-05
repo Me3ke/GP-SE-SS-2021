@@ -1,5 +1,5 @@
 import envelopeAPI from "@/main/vue/api/envelopeAPI";
-import {filterEnvelopes} from "./filterMethods.js";
+import {filterEnvelopes} from "../../scripts/filterMethods.js";
 
 export const namespaced = true
 

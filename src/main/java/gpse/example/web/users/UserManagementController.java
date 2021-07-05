@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * The controller used for user management operations.
  */
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:8080/")
 @RequestMapping("/api")
 public class UserManagementController {
 

@@ -35,80 +35,81 @@ function filterEnvelopes(envelopes, filters) {
                 stateFilter = true
             }
             //Filter for documents that need to be signed
-            if(document.signatory && !document.signed){
+            if (document.signatory && !document.signed) {
                 signatory = true
             }
             //Filter for documents that need to be read
-            if(document.reader && !document.read){
+            if (document.reader && !document.read) {
                 reader = true
             }
             //Search in document title
-            if(document.title.toLowerCase().includes(filters.search.toLowerCase())) {
+            if (document.title.toLowerCase().includes(filters.search.toLowerCase())) {
                 search = true
             }
             //Filter data types
-            if(filters.dataType === "" || filters.dataType === document.dataType) {
+            if (filters.dataType === "" || filters.dataType === document.dataType) {
                 type = true;
             }
             //Filter CreationDate
-            if(filters.creationDateMin === "" || !(dateCompare(document.creationDate, filters.creationDateMin) === -1)) {
+            if (filters.creationDateMin === "" || !(dateCompare(document.creationDate, filters.creationDateMin) === -1)) {
                 creationDateMin = true
             }
-            if(filters.creationDateMax === "" || !(dateCompare(document.creationDate, filters.creationDateMax) === 1)) {
+            if (filters.creationDateMax === "" || !(dateCompare(document.creationDate, filters.creationDateMax) === 1)) {
                 creationDateMax = true
             }
             //Filter EndDate
-            if(filters.endDateMin === "" || !(dateCompare(document.endDate, filters.endDateMin) === -1)) {
+            if (filters.endDateMin === "" || !(dateCompare(document.endDate, filters.endDateMin) === -1)) {
                 endDateMin = true
             }
-            if(filters.endDateMax === "" || !(dateCompare(document.endDate, filters.endDateMax) === 1)) {
+            if (filters.endDateMax === "" || !(dateCompare(document.endDate, filters.endDateMax) === 1)) {
                 endDateMax = true
             }
         }
         //Search in Envelope name
-        if(envelope.name.toLowerCase().includes(filters.search.toLowerCase())) {
+        if (envelope.name.toLowerCase().includes(filters.search.toLowerCase())) {
             search = true
         }
         // Add matching results
         let matches = true
-        if(!(filters.state === "")){
-            if(!stateFilter) {
+        if (!(filters.state === "")) {
+            if (!stateFilter) {
                 matches = false
             }
         }
-        if(filters.owner){
-            if(!(store.state.auth.username === envelope.owner.email)) {
+        if (filters.owner) {
+            if (!(store.state.auth.username === envelope.owner.email)) {
                 matches = false
             }
         }
-        if(filters.signatory && filters.reader){
-            if(!signatory && !reader) {
+        if (filters.signatory && filters.reader) {
+            if (!signatory && !reader) {
                 matches = false
             }
         } else if (filters.signatory) {
-            if(!signatory) {
+            if (!signatory) {
                 matches = false
             }
-        } else if(filters.reader){
-            if(!reader) {
-                matches = false
-            }
-        }
-        if(!(filters.search === "")) {
-            if(!search) {
+        } else if (filters.reader) {
+            if (!reader) {
                 matches = false
             }
         }
-        if(!(type && creationDateMin && creationDateMax && endDateMin && endDateMax)) {
+        if (!(filters.search === "")) {
+            if (!search) {
+                matches = false
+            }
+        }
+        if (!(type && creationDateMin && creationDateMax && endDateMin && endDateMax)) {
             matches = false
         }
-        if(matches) {
+        if (matches) {
             result.push(envelope)
         }
     }
     return result
 }
-export{filterEnvelopes};
+
+export {filterEnvelopes};
 
 function dateToInts(date, divider) {
     let day;
@@ -132,19 +133,19 @@ function dateCompare(envelopeDate, filterDate) {
     let dateA = dateToInts(envelopeDate, ".");
     let dateB = dateToInts(filterDate, "-")
 
-    if(dateA.year > dateB.year) {
+    if (dateA.year > dateB.year) {
         return 1;
-    } else if(dateA.year < dateB.year) {
+    } else if (dateA.year < dateB.year) {
         return -1;
     } else {
-        if(dateA.month > dateB.month) {
+        if (dateA.month > dateB.month) {
             return 1;
-        } else if(dateA.month < dateB.month) {
+        } else if (dateA.month < dateB.month) {
             return -1;
         } else {
-            if(dateA.day > dateB.day) {
+            if (dateA.day > dateB.day) {
                 return 1;
-            } else if(dateA.day < dateB.day) {
+            } else if (dateA.day < dateB.day) {
                 return -1;
             } else {
                 return 0;
