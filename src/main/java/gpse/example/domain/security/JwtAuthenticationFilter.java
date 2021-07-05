@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * @param authenticationManager given from spring-boot
      * @param securityConstants instance of SecurityConstants class
      */
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
+    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager,
                                    final SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
@@ -42,28 +42,28 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        UsernamePasswordAuthenticationToken authenticationToken
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response) {
+        final String username = request.getParameter("username");
+        final String password = request.getParameter("password");
+        final UsernamePasswordAuthenticationToken authenticationToken
             = new UsernamePasswordAuthenticationToken(username, password);
 
         return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain filterChain, Authentication authentication) {
-        UserDetails user = (UserDetails) authentication.getPrincipal();
+    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+                                            final FilterChain filterChain, final Authentication authentication) {
+        final UserDetails user = (UserDetails) authentication.getPrincipal();
 
-        List<String> roles = user.getAuthorities()
+        final List<String> roles = user.getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
 
-        String token = Jwts.builder()
+        final String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityConstants.getTokenType())
             .setIssuer(securityConstants.getTokenIssuer())

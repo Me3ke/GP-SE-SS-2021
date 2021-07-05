@@ -16,6 +16,23 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page -1 (shows if user has not seen the document yet) -->
+                                    <div v-if="page === -1">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notSeen') }}
+                                        </div>
+
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="elsa-blue-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 0 -->
                                     <div v-if="page === 0">
                                         <div class="step">
@@ -23,13 +40,9 @@
                                         </div>
 
                                         <ul>
-                                            <li v-if="!hasSetUp">
-                                                <div class="content-div">
-                                                    {{ $t('TwoFakAuth.sign.tfa') }}
-                                                </div>
-                                            </li>
                                             <li v-if="!hasKey">
-                                                <div class="content-div">
+                                                <div class="content-div"
+                                                     style="justify-content: left; text-align: left">
                                                     {{ $t('TwoFakAuth.sign.keyPair') }}
                                                 </div>
                                             </li>
@@ -72,7 +85,7 @@
 
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
-                                                    @click="pageBefore = page; page = 5">
+                                                    @click="pageBefore = page; page = 4">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
@@ -128,7 +141,7 @@
                                         <!-- Buttons to switch pages -->
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
-                                                    @click="pageBefore = page; page = 5">
+                                                    @click="pageBefore = page; page = 4">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
@@ -141,58 +154,12 @@
                                         </div>
                                     </div>
 
-
-                                    <!-- Page 2 (two fac Auth) -->
-                                    <div v-if="page === 2">
-
-                                        <!-- Error Messages -->
-                                        <b-alert :show="showTries" dismissible
-                                                 @dismissed="showTries = false"
-                                                 style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.sign.leftTries') }} {{ triesLeft }}
-                                        </b-alert>
-
-                                        <!-- Auth Prompt -->
-                                        <div class="step" style="margin-top: 0">
-                                            {{ $t('TwoFakAuth.sign.code') }}
-                                        </div>
-
-                                        <div class="content-div">
-                                            <b-form-input id="input-code"
-                                                          v-model="code"
-                                                          placeholder="Code"
-                                                          trim>
-                                            </b-form-input>
-                                        </div>
-
-                                        <b-alert :show="showAlertCode" dismissible
-                                                 @dismissed="showAlertCode = false"
-                                                 style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.login.fail') }}
-                                        </b-alert>
-
-                                        <!-- Buttons to switch pages -->
-                                        <div style="text-align: right">
-                                            <button type="button" class="light-btn"
-                                                    @click="pageBefore = page; page = 5">
-                                                <span class="button-txt">
-                                                    {{ $t('TwoFakAuth.cancel') }}
-                                                </span>
-                                            </button>
-                                            <button type="button" class="elsa-blue-btn" @click="twoFac()">
-                                                <span class="button-txt">
-                                                    {{ $t('TwoFakAuth.continue') }}
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
                                     <!-- Page 3 (key stuff) -->
-                                    <div v-if="page === 3">
+                                    <div v-if="page === 2">
                                         <!-- Error Messages -->
                                         <b-alert :show="showAlertSign"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeAdvanced }}
+                                            {{ $t('TwoFakAuth.fail') }} <!---{{ statusCodeAdvanced }}--->
                                         </b-alert>
 
 
@@ -230,7 +197,7 @@
                                         <!-- Buttons to switch pages -->
                                         <div style="text-align: right">
                                             <button type="button" class="light-btn"
-                                                    @click="pageBefore = page; page = 5">
+                                                    @click="pageBefore = page; page = 4">
                                                 <span class="button-txt">
                                                     {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
@@ -244,7 +211,7 @@
                                     </div>
 
                                     <!-- Page 4 (success) -->
-                                    <div v-if="page === 4">
+                                    <div v-if="page === 3">
                                         <div class="step" style="margin-top: 0">
                                             {{ $t('TwoFakAuth.sign.success') }}
                                         </div>
@@ -261,7 +228,7 @@
                                     </div>
 
                                     <!-- Page 5 (leave?) -->
-                                    <div v-if="page === 5">
+                                    <div v-if="page === 4">
                                         <div class="step" style="margin-top: 0">
                                             {{ $t('TwoFakAuth.sign.sure') }}
                                         </div>
@@ -278,17 +245,6 @@
                                                     {{ $t('TwoFakAuth.cancel') }}
                                                 </span>
                                             </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Page 6 (shows if user put in too many wrong codes) -->
-                                    <div v-if="page === 6">
-                                        <div class="step" style="margin-top: 0">
-                                            {{ $t('TwoFakAuth.sign.logout') }}
-                                        </div>
-
-                                        <div class="step" style="margin-top: 0; text-align: center;">
-                                            {{ logoutCounter }}
                                         </div>
                                     </div>
                                 </div>
@@ -313,6 +269,10 @@ export default {
         documents: {
             type: Array,
             required: true
+        },
+        isGuest: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -320,43 +280,59 @@ export default {
             page: 1,
             pageBefore: 0,
 
-            code: '',
             key: null,
-
-            showAlertCode: false,
             showAlertSign: false,
-
-            //TODO: add somewhere in store so user cannot just refresh the page
-            triesLeft: 3,
-            showTries: false,
-
-            //TODO: add somewhere in store so user cannot just refresh the page
-            logoutCounter: 10,
-            startCountDown: false
         }
     },
-    async created() {
+    async mounted() {
         // checks if signature is advanced, if so checks if user has set up 2FakAuth and key
-        // TODO: connect to api to check for key
         if (this.advanced) {
-            await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
             await this.$store.dispatch('fetchHasKey')
-            if (!this.hasSetUp || !this.hasKey) {
+            if (!this.hasKey) {
                 this.page = 0
+            }
+        }
+
+        // checks if user has already looked at the document or not
+        if (!this.isGuest) {
+            await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+            if (!this.hasSeen) {
+                this.page = -1
             }
         }
     },
     methods: {
         // makes simple signature api call
         async signSimple() {
-            await this.$store.dispatch('document/simpleSignDocument', {docId: this.docId})
+
+            if (this.isGuest) {
+                await this.$store.dispatch('signAsGuest', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    guestToken: this.$route.params.tokenId
+                })
+
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('requestGuestInfo', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    token: this.$route.params.tokenId
+                })
+                // goes to success page and toggles alert
+                this.page = 3
+                this.showAlertSign = false
+
+                return
+            }
+
+            await this.$store.dispatch('document/simpleSignDocument', {envId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCodeSimple === 200) {
                 // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                 // goes to success page and toggles alert
-                this.page = 4
+                this.page = 3
                 this.showAlertSign = false
             } else {
                 // if api call got to server, but server did not response wit 'ok' shows errorCode to user
@@ -364,32 +340,6 @@ export default {
                 if (!this.showErrorSimple) {
                     this.showAlertSign = true
                 }
-            }
-        },
-        // makes 2FakAuth verification needed for advanced signature
-        async twoFac() {
-            //checking syntax of code
-            if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
-                this.showAlertCode = false
-
-                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
-                //checking correctness of code
-                if (!this.correctInput) {
-                    this.triesLeft--
-                    // user used all his tries -> will get logged out
-                    if (this.triesLeft < 1) {
-                        this.page = 6
-                        this.startCountDown = true
-                    }
-                    this.showTries = true
-                } else {
-                    // goes to key page
-                    this.page = 3
-                    this.showTries = false
-                    this.showAlertCode = false
-                }
-            } else {
-                this.showAlertCode = true
             }
         },
         // checks of user owns correct private-public-keypair
@@ -402,21 +352,22 @@ export default {
             // getting user so there is access public key
             reader.onload = async (keyData) => {
                 const privateKey = keyData.target.result
-
                 const docId = this.documents[0].identifier
 
                 // encrypting hashed docId with given private key
                 var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
+
                 sig.init(privateKey);
                 sig.updateString(docId);
-                const signature = sig.sign();
-                // decrypting hashed docId with registered public key
+                const signature = sig.sign();// decrypting hashed docId with registered public key
                 var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+                console.log(this.publicKey)
                 sig2.init(this.publicKey);
                 sig2.updateString(docId);
                 const isValid = sig2.verify(signature);
                 if (isValid) {
                     await this.$store.dispatch('document/advancedSignDocument', {
+                        envId: this.envId,
                         docId: this.docId,
                         signature: signature
                     })
@@ -425,9 +376,9 @@ export default {
                 // everything went fine
                 if (this.statusCodeAdvanced === 200) {
                     // reloading document in store, so information is coherent with server information
-                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                    await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                     // goes to success page and toggles alert
-                    this.page = 4
+                    this.page = 3
                     this.showAlertSign = false
                 } else {
                     // if api call got to server, but server did not response wit 'ok' shows errorCode to user
@@ -459,16 +410,14 @@ export default {
             statusCodeAdvanced: 'document/getAdvancedSignStatus',
             errorAdvanced: 'document/getErrorAdvancedSignDocument',
 
-            correctInput: 'twoFakAuth/getCorrectInput',
-            hasSetUp: 'twoFakAuth/getHasSetUp',
             hasKey: 'getHasKey',
+            hasSeen: 'document/getSeen',
 
             user: 'getUser'
         }),
         publicKey() {
             return this.user.publicKey
         },
-        // TODO
         // gives back if advanced signature is needed (if false -> simple signature is needed)
         advanced() {
             return this.documents[0].signatureType === 'ADVANCED_SIGNATURE'
@@ -490,31 +439,7 @@ export default {
             return this.$route.params.envId;
         }
     },
-    // watch methods taken from: https://stackoverflow.com/questions/55773602/how-do-i-create-a-simple-10-seconds-countdown-in-vue-js
     watch: {
-        startCountDown(value) {
-            if (value) {
-                setTimeout(() => {
-                    this.logoutCounter--;
-                }, 1000);
-            }
-        },
-        logoutCounter: {
-            handler(value) {
-                if (value > 0 && this.startCountDown) {
-                    setTimeout(() => {
-                        this.logoutCounter--;
-                    }, 1000);
-                }
-
-                if (value === 0) {
-                    localStorage.removeItem('store')
-                    localStorage.clear()
-                    this.$router.push('/' + this.$i18n.locale + '/login')
-                }
-
-            }
-        },
         // checks if input file has correct type
         key(newKey) {
             if (newKey && !newKey.type.startsWith("text/")) {

@@ -7,14 +7,13 @@ import java.io.IOException;
  */
 public class CreatingFileException extends Exception {
 
-    /* default */
-    static final long serialVersionUID = 7821966487856958574L;
 
-    /* default */
+    /* default */ static final long serialVersionUID = 7821966487856958574L;
+
     /**
      * This is the default message.
      */
-    static final String MESSAGE = "Could not create a new File with given Data";
+    /* default */ static final String MESSAGE = "Could not create a new File with given Data";
 
     public CreatingFileException() {
         super(); }

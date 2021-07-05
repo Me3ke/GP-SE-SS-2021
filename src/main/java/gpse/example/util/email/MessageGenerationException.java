@@ -14,7 +14,12 @@ public class MessageGenerationException extends Exception {
         thrownByMessageID = messageID;
     }
 
+    public MessageGenerationException(final long messageID, final Throwable throwable) {
+        super(throwable);
+        thrownByMessageID = messageID;
+    }
     public long getThrownByMessageID() {
         return this.thrownByMessageID;
     }
+
 }

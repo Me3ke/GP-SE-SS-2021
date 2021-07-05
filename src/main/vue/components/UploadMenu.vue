@@ -51,7 +51,7 @@
                                             <div class="form-group">
                                                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
                                                 <select class="form-control" id="selectEnvelope" v-model="selectedEnv.old">
-                                                    <option v-for="envelope in this.envelopes({state: null})" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
+                                                    <option v-for="envelope in this.envelopes" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -184,7 +184,7 @@
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/ReaderMenu";
 //import {mapActions} from "vuex";
-import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {convertUploadFileToBase64} from "@/main/vue/scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 export default {
     name: 'UploadButton',
@@ -243,7 +243,6 @@ export default {
             this.file.type = this.fileInput.name.split('.')[1];
             this.file.data = await this.asyncHandleFunction(this.fileInput);
             this.settings.endDate = this.settings.endDate + ' 12:00';
-            console.log(this.settings.signatories);
             if (!(this.selectedEnv.old === null)) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
                 this.close();
@@ -254,6 +253,9 @@ export default {
             } else {
                 //TODO: ERROR
             }
+
+            // TODO the env appears before the document is uploaded (reload necessary)
+            //await this.$store.dispatch('envelopes/fetchEnvelopes')
         },
         convertReaders() {
             //TODO

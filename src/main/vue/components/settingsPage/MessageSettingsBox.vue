@@ -9,7 +9,7 @@
                     </h4>
                 </div>
                 <b-list-group flush>
-                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                    <b-list-group-item v-if="isAdmin" class="d-flex justify-content-between align-items-center">
                           <span>
                              {{ $t('Settings.MessageSettings.toDo.text') }}
                                <b-icon id="tooltip" icon="info-circle" class="my-icon"></b-icon>
@@ -18,12 +18,11 @@
                               </b-tooltip>
                           </span>
 
-                        <!-- TODO: connect to api-->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
                             </span>
-                            <b-form-checkbox v-model="requests" switch
+                            <b-form-checkbox v-model="config.toDo" switch
                                              style="display: inline-block">
                             </b-form-checkbox>
                             <span style="display: inline-block; font-size: 1em;">
@@ -41,12 +40,11 @@
                               </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to api-->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
                             </span>
-                            <b-form-checkbox v-model="signReminder" switch
+                            <b-form-checkbox v-model="config.sign" switch
                                              style="display: inline-block">
                             </b-form-checkbox>
                             <span style="display: inline-block; font-size: 1em;">
@@ -64,12 +62,11 @@
                               </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to api-->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
                             </span>
-                            <b-form-checkbox v-model="readReminder" switch
+                            <b-form-checkbox v-model="config.read" switch
                                              style="display: inline-block">
                             </b-form-checkbox>
                             <span style="display: inline-block; font-size: 1em;">
@@ -87,12 +84,11 @@
                               </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to api-->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
                             </span>
-                            <b-form-checkbox v-model="progress" switch
+                            <b-form-checkbox v-model="config.progress" switch
                                              style="display: inline-block">
                             </b-form-checkbox>
                             <span style="display: inline-block; font-size: 1em;">
@@ -110,12 +106,11 @@
                               </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to api-->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
                             </span>
-                            <b-form-checkbox v-model="update" switch
+                            <b-form-checkbox v-model="config.newVersion" switch
                                              style="display: inline-block">
                             </b-form-checkbox>
                             <span style="display: inline-block; font-size: 1em;">
@@ -123,34 +118,18 @@
                             </span>
                         </div>
                     </b-list-group-item>
-
-                    <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <span>
-                             {{ $t('Settings.MessageSettings.protocol.text') }}
-                             <b-icon id="tooltip-target-6" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-6" triggers="hover">
-                                   {{ $t('Settings.MessageSettings.protocol.exp') }}
-                              </b-tooltip>
-                        </span>
-
-                        <!-- TODO: connect to api-->
-                        <div class="toggle-container">
-                            <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
-                                 {{ $t('Settings.off') }}
-                            </span>
-                            <b-form-checkbox v-model="protocol" switch
-                                             style="display: inline-block">
-                            </b-form-checkbox>
-                            <span style="display: inline-block; font-size: 1em;">
-                               {{ $t('Settings.on') }}
-                            </span>
-                        </div>
-                    </b-list-group-item>
-
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center"
                                        style=" padding-top: 0.1em; padding-bottom: 0.1em;">
-                        <b-button class="green-btn" style="margin-top: 0.2em; margin-bottom: 0.1em">
+
+                        <transition name="saved">
+                            <span v-if="showSave" class="content-div">
+                                {{ $t('Settings.saved') }}
+                            </span>
+                        </transition>
+
+                        <b-button class="elsa-blue-btn"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em" @click="save">
                             {{ $t('Settings.MessageSettings.send') }}
                         </b-button>
                     </b-list-group-item>
@@ -162,19 +141,37 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "MessageSettingsBox",
     data() {
         return {
+            showSave: false,
             clicked: false,
-            // TODO: connect with api
-            requests: true,
-            signReminder: false,
-            readReminder: true,
-            progress: false,
-            update: true,
-            protocol: true
         }
+    },
+    async mounted() {
+        await this.$store.dispatch('fetchUser')
+        await this.$store.dispatch('messages/fetchMessagesConfig')
+    },
+    methods: {
+        // sends config to backend
+        async save() {
+            await this.$store.dispatch('messages/patchChangeMessageSettings', this.config)
+
+            // show saved notification
+            this.showSave = true
+            setTimeout(() => {
+                this.showSave = false
+            }, 2000);
+        }
+    },
+    computed: {
+        ...mapGetters({
+            config: 'messages/getConfig',
+            isAdmin: 'isAdmin'
+        })
     }
 }
 </script>

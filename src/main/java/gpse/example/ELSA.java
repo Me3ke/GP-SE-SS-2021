@@ -3,6 +3,7 @@ package gpse.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -14,28 +15,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableTransactionManagement
+@EnableScheduling
 public class ELSA {
 
     /**
-     * The main method which starts a query to evaluate the command line inputs.
-     * Commands:
-     * exit
-     * import *path*
-     * sign *?*
-     * help
-     * server
+     * The main method which starts the application.
      * @param args The program arguments
      */
     public static void main(final String... args) {
         SpringApplication.run(ELSA.class, args);
-        /*
-        System.out.println("Welcome to ELSA! Type help to get help");
-        final QueryHandler queryHandler = new QueryHandler();
-        final int exitValue = queryHandler.query(args);
-        if (exitValue == DEFAULT_EXIT) {
-            System.exit(exitValue);
-        }
-         */
-
     }
 }

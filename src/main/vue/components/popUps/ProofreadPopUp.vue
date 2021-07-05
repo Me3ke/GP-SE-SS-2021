@@ -16,6 +16,23 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page 0 (shows if user has not seen the document yet) -->
+                                    <div v-if="page === 0">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notSeen') }}
+                                        </div>
+
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="elsa-blue-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 1 -->
                                     <div v-if="page === 1">
 
@@ -127,6 +144,10 @@ export default {
         documents: {
             type: Array,
             required: true
+        },
+        isGuest: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -136,15 +157,45 @@ export default {
             showAlert: false
         }
     },
+    async mounted() {
+        // checks if user has already looked at the document or not
+        if (!this.isGuest) {
+            await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+            if (!this.hasSeen) {
+                this.page = -1
+            }
+        }
+    },
     methods: {
         // TODO: make adaptions once it is possible to review multiple files at at time
         async proofread() {
-            await this.$store.dispatch('document/reviewDocument', {docId: this.docId})
+
+            if (this.isGuest) {
+                await this.$store.dispatch('reviewAsGuest', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    guestToken: this.$route.params.tokenId
+                })
+
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('requestGuestInfo', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    token: this.$route.params.tokenId
+                })
+                // goes to success page and toggles alert
+                this.page += 1
+                this.showAlert = false
+
+                return
+            }
+
+            await this.$store.dispatch('document/reviewDocument', {nvId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCode === 200) {
                 // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                 // goes to success page and toggles alert
                 this.page += 1
                 this.showAlert = false
@@ -164,7 +215,8 @@ export default {
     computed: {
         ...mapGetters({
             statusCode: 'document/getReviewStatus',
-            errorReview: 'document/getErrorReviewDocument'
+            errorReview: 'document/getErrorReviewDocument',
+            hasSeen: 'document/getSeen'
         }),
         docId() {
             return this.$route.params.docId;

@@ -2,6 +2,8 @@ package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gpse.example.domain.envelopes.Envelope;
+import gpse.example.util.email.EmailTemplate;
+import gpse.example.web.messages.MessageSettingsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,37 +41,66 @@ public class User implements UserDetails {
     private String lastname;
 
     @Column
+    private boolean seenByAdmin;
+
+    @Column
     // false: user has not had a first login yet; true: user has had a first login
     private boolean firstLogin;
 
-    //@OneToMany
-    //private List<Keys> keys = new ArrayList<>();
+    @ElementCollection
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private List<String> archivedPublicKeys = new ArrayList<>();
 
     @Lob
-    @Column
     private String publicKey;
 
     @Column
+    @JsonIgnore
     private String password;
 
     //@OneToOne
     //private Keys activePair;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private PersonalData personalData;
 
-    @OneToOne
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
     private SecuritySettings securitySettings;
 
     @Column
     private boolean enabled;
 
     @Column
-    private boolean adminValidated;
+    private boolean accountNonLocked;
+
+    @Lob
+    private byte[] imageSignature;
+
+    @Column
+    private String imageSignatureType;
+
+    @OneToMany(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private List<EmailTemplate> emailTemplates;
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private MessageSettingsContainer messageSettings;
 
     protected User() {
 
@@ -89,9 +121,18 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
-        this.adminValidated = false;
+        this.accountNonLocked = false;
         this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
+        this.imageSignature = new byte[0];
+        this.imageSignatureType = "";
+        this.emailTemplates = new ArrayList<>();
+        this.messageSettings = new MessageSettingsContainer();
+        this.messageSettings.setToDo(true);
+        this.messageSettings.setProgress(true);
+        this.messageSettings.setNewVersion(true);
+        this.messageSettings.setSign(true);
+        this.messageSettings.setRead(true);
     }
 
     public static long getSerialVersionUID() {
@@ -123,6 +164,14 @@ public class User implements UserDetails {
             activePair = keys.get(index);
         }
     }*/
+
+    public List<String> getArchivedPublicKeys() {
+        return archivedPublicKeys;
+    }
+
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
+        this.archivedPublicKeys = archivedPublicKeys;
+    }
 
     /**
      * the Method used to fill in information that is not necessarily needed.
@@ -227,7 +276,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @JsonIgnore
@@ -283,6 +332,10 @@ public class User implements UserDetails {
         return personalData;
     }
 
+    public boolean isSeenByAdmin() {
+        return seenByAdmin;
+    }
+
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
@@ -291,12 +344,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public boolean isAdminValidated() {
-        return adminValidated;
-    }
-
-    public void setAdminValidated(final boolean adminValidated) {
-        this.adminValidated = adminValidated;
+    public void setAccountNonLocked(final boolean adminValidated) {
+        this.accountNonLocked = adminValidated;
     }
 
     public List<String> getRoles() {
@@ -319,7 +368,49 @@ public class User implements UserDetails {
         return firstLogin;
     }
 
-    public void setFirstLogin(boolean firstLogin) {
+    public void setFirstLogin(final boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+
+    public List<EmailTemplate> getEmailTemplates() {
+        return emailTemplates;
+    }
+
+    public void setEmailTemplates(final List<EmailTemplate> emailTemplates) {
+        this.emailTemplates = emailTemplates;
+    }
+
+    public void addEmailTemplate(final EmailTemplate emailTemplate) {
+        this.emailTemplates.add(emailTemplate);
+    }
+
+    public MessageSettingsContainer getMessageSettings() {
+        return messageSettings;
+    }
+
+    public void setMessageSettings(final MessageSettingsContainer messageSettings) {
+        this.messageSettings = messageSettings;
+    }
+
+    public byte[] getImageSignature() {
+        return Arrays.copyOf(
+            imageSignature, imageSignature.length);
+    }
+
+    public void setImageSignature(final byte[] imageSignature) {
+        this.imageSignature = imageSignature.clone();
+    }
+
+    public String getImageSignatureType() {
+        return imageSignatureType;
+    }
+
+    public void setImageSignatureType(final String imageSignatureType) {
+        this.imageSignatureType = imageSignatureType;
+    }
+
+    public void setToSeenByAdmin() {
+        this.seenByAdmin = true;
     }
 }

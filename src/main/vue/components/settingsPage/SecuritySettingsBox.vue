@@ -12,8 +12,7 @@
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
                                 </span>
-
-                        <b-button class="elsa-blue-btn" @click="keySetUp">
+                        <b-button class="light-btn" @click="keySetUp">
                             {{ $t('Settings.SecuritySettings.newKeypair') }}
                         </b-button>
                     </b-list-group-item>
@@ -23,12 +22,11 @@
                         <span>
                              {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
                         </span>
-
-                        <b-button class="elsa-blue-btn" @click="setUp()">
-                            {{ $t('Settings.SecuritySettings.setUp') }}
+                        <b-button class="light-btn" @click="setUp()">
+                          {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
                     </b-list-group-item>
-                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp"></TwoFakAuthSetUp>
+                    <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp()"></TwoFakAuthSetUp>
 
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <span>
@@ -39,7 +37,6 @@
                             </b-tooltip>
                         </span>
 
-                        <!-- TODO: connect to API -->
                         <div class="toggle-container">
                             <span style="display: inline-block; margin-right: 0.6em; font-size: 1em;">
                                  {{ $t('Settings.off') }}
@@ -52,6 +49,37 @@
                             </span>
                         </div>
                     </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('Password.change') }}
+
+
+                        </span>
+
+
+                       <b-button class="light-btn" @click="changePassword">
+                         {{ $t('Password.change') }}
+                       </b-button>
+
+
+
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-end align-items-center">
+
+                        <transition name="saved">
+                            <span v-if="showSave" class="content-div">
+                                {{ $t('Settings.saved') }}
+                            </span>
+                        </transition>
+
+                        <b-button class="elsa-blue-btn"
+                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em"
+                                  @click="saveTwoFacLogin">
+                            {{ $t('Settings.MessageSettings.send') }}
+                        </b-button>
+                    </b-list-group-item>
                 </b-list-group>
             </div>
         </b-row>
@@ -61,6 +89,7 @@
 <script>
 import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
 import KeyPairSetUp from "@/main/vue/components/popUps/KeyPairSetUp";
+import {mapGetters} from "vuex";
 
 export default {
     name: "SecuritySettingsBox",
@@ -76,20 +105,51 @@ export default {
         return {
             showKey: false,
             showSetUp: false,
-
-            // TODO: use value from API
+            showSave: false,
+            showKeyChanged: false,
             loginActive: false
         }
     },
+    async created() {
+        await this.$store.dispatch('getTwoFactorLogin')
+        this.loginActive = this.twoFacLogin
+    },
+    async mounted() {
+        await this.$store.dispatch('getTwoFactorLogin')
+        this.loginActive = this.twoFacLogin
+    },
     methods: {
         keySetUp() {
-            this.showKey = !this.showKey
-            this.$emit('modalTrigger')
+          this.showKey = !this.showKey
+          this.$emit('modalTrigger')
         },
         setUp() {
             this.showSetUp = !this.showSetUp
             this.$emit('modalTrigger')
+        },
+        changePassword() {
+          this.$router.push('/' + this.$i18n.locale + '/login/resets');
+        },
+        // saves setting if two-factor authentication should always be shown at login
+        async saveTwoFacLogin() {
+            // checking if setting even changed
+            if (this.loginActive !== this.twoFacLogin) {
+                await this.$store.dispatch('putTwoFactorLogin', {setting: this.loginActive})
+                await this.$store.dispatch('getTwoFactorLogin')
+                this.loginActive = this.twoFacLogin
+
+                // show saved notification
+                this.showSave = true
+                setTimeout(() => {
+                    this.showSave = false
+                }, 2000);
+            }
         }
+    },
+    computed: {
+        ...mapGetters({
+            twoFacLogin: 'getTwoFactorLogin'
+        })
     }
 }
 </script>

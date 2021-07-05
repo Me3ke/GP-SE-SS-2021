@@ -1,12 +1,14 @@
 import axios from "axios";
 import api from "@/main/vue/api";
 
+
 const authorization = {
     state: () => ({
         authenticated: null,
         token: null,
         username: null,
-        role: null
+        role: null,
+        date: null
     }),
     mutations: {
         AUTHENTICATE(state, token) {
@@ -22,6 +24,7 @@ const authorization = {
                 console.log(jsonPayload);
                 let payload = JSON.parse(jsonPayload);
                 state.username = payload.sub;
+                state.exp = payload.exp;
                 state.role = payload.rol;
             } else {
                 state.authenticated = false
@@ -52,6 +55,9 @@ const authorization = {
         },
         isAdmin(state) {
             return state.role.includes('ROLE_ADMIN')
+        },
+        getUsername(state) {
+            return state.username
         }
     }
 

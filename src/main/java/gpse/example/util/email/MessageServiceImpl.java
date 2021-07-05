@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    private MessageRepository messageRepo;
+    private final MessageRepository messageRepo;
 
     public MessageServiceImpl(final MessageRepository messageRepo) {
         this.messageRepo = messageRepo;
@@ -24,7 +24,7 @@ public class MessageServiceImpl implements MessageService {
         final ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
 
         for (int i = 0; i < userMessages.size(); i++) {
-            if (!userMessages.get(i).getRecievingUser().equals(user)) {
+            if (!userMessages.get(i).getRecievingUserMail().equals(user.getEmail())) {
                 userMessages.remove(i);
                 i--;
             }

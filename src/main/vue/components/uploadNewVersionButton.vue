@@ -1,121 +1,264 @@
 <template>
     <div>
-        <b-button
-            size="sm"
-            style="margin-top: 7em; background-color: var(--elsa-blue)"
-            v-b-modal.modal-1
-        >
-            Update Document
-        </b-button>
-
+        <!-- Page 1 -->
         <b-modal
-            id="modal-1"
-            ref="my-modal1"
-            centered :title="'Replace Document: ' + document.title"
+            :id="'modal-' + docID + 'a'"
+            ref="modal-page1"
+            centered :title="$t('UploadDoc.UpdateDocument.replaceDoc') + document.title"
             hide-footer ok-only no-stacking
         >
             <div>
-                <h6>Select File to replace your Document</h6>
+                <h6>{{ $t('UploadDoc.UpdateDocument.selectDocument') }}</h6>
             </div>
             <div>
                 <div class="modal-body">
                     <div>
                         <div class="form-group files">
-                            <input
-                                type="file"
+                            <b-form-file
+                                v-model="file"
+                                :state="Boolean(file)"
                                 id="fileInput"
-                                class="form-control"
+                                v-bind:placeholder="$t('UploadDoc.UpdateDocument.chooseFile')"
+                                drop-placeholder="Drop file here..."
                                 @change="previewFile"
-                                style="height: 15vh"
-                            >
+                            ></b-form-file>
                         </div>
-                        <p> Selected File: {{fileString}}</p>
                     </div>
                 </div>
             </div>
             <div class="text-right">
-                <b-button @click="resetTest"> Cancel</b-button>
-                <b-button
-                    class="ml-1"
-                    v-b-modal.modal-2
-                    :disabled="fileString===''"
+                <button type="button" class="mt-1 light-btn" @click="resetSettings('modal-page1')">
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.close') }}
+                    </span>
+                </button>
 
-                    @click="setActualDoc"
+                <button type="button"
+                        class="mt-1 elsa-blue-btn"
+                        v-b-modal="'modal-' + docID + 'bb'"
+                        :disabled="file == null"
+                        @click="setActualDoc"
                 >
-                    Next
-                </b-button>
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.continue') }}
+                    </span>
+                </button>
             </div>
         </b-modal>
 
 
         <b-modal
-            id="modal-2"
+            :id="'modal-' + docID + 'bb'"
+            ref="modal-page2"
             centered
-
-            :title= "document.title + ' Documentsettings'"
+            :title="document.title + '  Documentsettings'"
             hide-footer ok-only no-stacking
         >
             <div>
-                <label>
-                    <input v-model="newTitle" :placeholder="this.document.title">
-                    {{newTitle}}
-                </label>
-            </div>
-            <div>
-                {{ $t('UploadDoc.configureDoc') }}
+                <button type="button"
+                        class="light-btn"
+                        @click="review = true;"
+                        v-b-modal="'modal-' + docID + 'bbb'"
+                >
+                    <h5>
+                        {{ $t('UploadDoc.addReaders') }}
+                    </h5>
+                </button>
+                <button type="button"
+                        class="light-btn"
+                        @click="review = false;"
+                        v-b-modal="'modal-' + docID + 'bbbb'"
 
-                <p>New File: {{ fileString }}</p>
-
-            </div>
-            <div class="text-right">
-                <b-button v-b-modal.modal-1 @click="resetTest"> Back</b-button>
-                <b-button class="ml-1" v-b-modal.modal-3> Next</b-button>
+                >
+                    <h5>
+                        {{ $t('UploadDoc.skipReview') }}
+                    </h5>
+                </button>
             </div>
         </b-modal>
 
+
+        <!---Readers --->
         <b-modal
-            id="modal-3"
-            ref="my-modal3"
+            :id="'modal-' + docID + 'bbb'"
+            ref="modal-page2"
+            centered
+            :title="document.title"
+            hide-footer ok-only no-stacking
+        >
+            <div>
+                <ReaderMenu :readers="actualDoc.readers"></ReaderMenu>
+            </div>
+
+            <div>
+                <button type="button"
+                        class="mt-1 light-btn"
+                        @click="resetSettings('modal-page2')"
+                        v-b-modal="'modal-' + docID + 'b'"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.back') }}
+                    </span>
+                </button>
+
+                <button type="button"
+                        class="ml-1 elsa-blue-btn"
+                        v-b-modal="'modal-' + docID + 'bbbb'"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.continue') }}
+                    </span>
+                </button>
+            </div>
+
+        </b-modal>
+
+
+        <!---EndDate + Signatories--->
+        <b-modal
+            :id="'modal-' + docID + 'bbbb'"
+            ref="modal-page2"
+            centered
+            :title="document.title"
+            hide-footer ok-only no-stacking
+        >
+            <div>
+                <div>
+                    <label for="endDatePicker">{{ $t('Settings.DocumentSettings.chooseDate') }}</label>
+                    <b-form-datepicker id="endDatePicker" v-model="actualDoc.endDate" class="mb-2"></b-form-datepicker>
+                </div>
+                <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant"
+                               @update-signatories="updateSignatories"></SignatoryMenu>
+            </div>
+            <div>
+                <button type="button"
+                        class="mt-1 light-btn"
+                        @click="resetSettings('modal-page2')"
+                        v-b-modal="this.actualDoc.review ? 'modal-' + docID + 'bbb' : 'modal-' + docID + 'bb' "
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.back') }}
+                    </span>
+                </button>
+
+                <button type="button"
+                        class="ml-1 elsa-blue-btn"
+                        v-b-modal="'modal-' + docID + 'c'"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.continue') }}
+                    </span>
+                </button>
+            </div>
+
+        </b-modal>
+
+
+        <!-- Last PAGE  -->
+        <b-modal
+            :id="'modal-' + docID + 'c'"
+            ref="modal-page3"
             centered
             hide-footer hide-header ok-only no-stacking
         >
             <div>
-                <h3>{{document.title}}</h3>
-                <h5>Are you Sure to replace the Document: {{document.title}}
-
-                    new: {{this.actualDoc.title}}
-                    ?</h5>
+                <h3>{{ document.title }}</h3>
+                <h5> {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</h5>
             </div>
-            <p class="my-4">All signed Documents will be reseted after you uploaded an newer version of an Document </p>
+            <p class="my-4"> {{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }} {{ showAlert }} </p>
             <div class="text-right">
-                <b-button
-                    @click="uploadNewFile"
+
+
+                <button type="button"
+                        class="mt-1 light-btn"
+                        @click="resetSettings('modal-page3')"
+                        v-b-modal="'modal-' + docID + 'bb'"
                 >
-                    Save</b-button>
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.back') }}
+                    </span>
+                </button>
+
+                <button type="button"
+                        class="ml-1 elsa-blue-btn"
+                        @click="uploadNewFile"
+                >
+                    <span class="button-txt">
+                        {{ $t('UploadDoc.continue') }}
+                    </span>
+                </button>
+
+
+                <!--<b-button
+                    @click="uploadNewFile"
+                    >
+                    {{ $t('UploadDoc.UpdateDocument.update1') }}
+                </b-button>-->
             </div>
+        </b-modal>
+
+
+        <!-- TODO Error Page  -->
+        <b-modal
+            :id="'modal-' + docID + 'error'"
+            centered
+            hide-footer hide-header ok-only no-stacking
+
+        >
+            <b-alert align="center">
+                ERROR TEST
+            </b-alert>
+
         </b-modal>
 
     </div>
 </template>
 
 <script>
+import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
+import {mapGetters} from "vuex";
+import _ from "lodash";
+import ReaderMenu from "@/main/vue/components/ReaderMenu";
+import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
+
 export default {
     name: "uploadNewVersionButton",
+    components: {SignatoryMenu, ReaderMenu},
     data() {
         return {
             // filename of uploaded file
             fileString: "",
-            file: File,
+            file: null,
+            showAlert: false,
+            review: true,
 
 
             // need document settings as variable
             newTitle: '',
 
             // TODO Actual Doc which is going to be replaced
-            actualDoc: {}
+            actualDoc: {},
         }
     },
-    props: ['document'],
+    props: ['document', 'docID', 'envID'],
+    computed: {
+        ...mapGetters({
+            newDocumentId: 'document/getNewDocumentId',
+            newDocumentError: 'document/getErrorEditDocument',
+            newDocumentStatus: 'document/getEditDocumentStatus'
+        }),
+        showErrorReview: {
+            get() {
+                return !_.isEmpty(this.newDocumentError)
+            }
+        },
+
+        isoDate(enDate) {
+            const [day, month, year] = enDate.split('.')
+            return year + '-' + month + '-' + day
+        }
+
+    },
 
     methods: {
         // save the selected File in the data
@@ -124,111 +267,79 @@ export default {
             this.file = event.target.files[0]
         },
 
+        updateSignatories(newSignatories) {
+            this.actualDoc.signatories = newSignatories
+        },
 
-        // get all necessary attributes of documents
-
-        /*
-
-        byte data <
-        title <
-        type <
-        list signatoriesID <
-        list readersId <
-        signatureType <
-        localDateTime endDate
-        orderRelevant <
-        document state <
-        lastModified <
-
-         */
         setActualDoc() {
             this.actualDoc = this.document
 
-            console.log('------------')
-            console.log(this.actualDoc)
-            console.log('------------')
-
             this.actualDoc.orderRelevant = false
             this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
-            this.actualDoc.signatoriesId = []
-            this.actualDoc.readersId = []
-            this.actualDoc.endDate = "2021-06-15-21:15:02.933Z"
+
+            if (this.actualDoc.endDate !== '' || this.actualDoc.endDate != null) {
+                const [day, month, year] = this.actualDoc.endDate.split('.')
+                this.actualDoc.endDate = year + '-' + month + '-' + day
+            }
             this.actualDoc.dataType = this.fileString.split('.').pop()
-            this.actualDoc.signed = false
-            this.actualDoc.read = false
-            this.actualDoc.reader = false
         },
 
-
-
-
-        // emit the newDocument to the parent component for handle the updateDoc method
+        /// getting emitted value
         async uploadNewFile() {
-            this.$refs['my-modal3'].hide()
+
             this.fileString = ""
+            this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
 
-            // TODO setting the documentSettings values
+            this.actualDoc.data = await this.asyncHandleFunction()
 
-            // if input field is empty then it will use the title from the actual document
-            if(this.newTitle !== '' || this.newTitle !== "") {
-                this.actualDoc.title = this.newTitle
+            // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
+            let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
+            await this.$store.dispatch('document/editDocument', payload)
+
+            // here show error
+            if (this.showAlert) {
+                this.$refs['modal-page3'].hide()
+                this.$bvModal.show('modal-' + this.docID + 'error')
+                this.actualDoc = {}
+                this.fileString = ''
+                this.file = null
+            } else {
+                this.$refs['modal-page3'].hide()
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
+                let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
+                this.showAlert = !this.showAlert
+
+                // will route the user to the newUploaded document page (with the new ID)
+                // for now it is working. But it will show before refreshing the new page an unable preview of the file
+
+                await this.$store.dispatch('envelopes/fetchEnvelopes')
+                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                    this.$router.go(0)
+                })
             }
-
-
-            this.actualDoc.data =  await this.asyncHandleFunction()
-
-
-            // emit the new doc to the parent
-            this.$emit('update-document', this.actualDoc)
         },
 
         // convert the file into an base64 string
         async asyncHandleFunction() {
             return await convertUploadFileToBase64(this.file)
         },
-        resetTest() {
-            this.$refs['my-modal1'].hide()
-            this.fileString = ""
-            this.actualDoc = {}
-        },
 
-        base64ToArrayBuffer(base64) {
-            const binary_string = window.atob(base64);
-            const len = binary_string.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binary_string.charCodeAt(i);
+        resetSettings(a) {
+            if (a === 'modal-page1') {
+                this.$refs[a].hide()
+                this.fileString = ""
+                this.actualDoc = {}
+            } else if (a === 'modal-page2') {
+                this.actualDoc = {}
             }
-            return bytes.buffer;
         }
     }
 }
 
 
-// converting the selected file into base64 (as promise)
-const convertUploadFileToBase64 = (file) => {
-    const reader = new FileReader()
-    return new Promise((resolve, reject) => {
-        reader.onerror = (error) => {
-            reader.abort()
-            reject(error)
-        }
-        reader.onload = () => {
-            resolve(reader.result.replace('data:', '').replace(/^.+,/, ''))
-        }
-        reader.readAsDataURL(file)
-    })
-}
-
-
-
-
-
-
-
 </script>
 
-<style scoped>
+<style scoped src="../assets/css/signModals.css">
 
 
 </style>

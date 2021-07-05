@@ -20,13 +20,13 @@
             </div>
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
-            <draggable v-model="signatories">
-                <div class="drag-drop-element" v-for="signatory in signatories" :key="signatory.email" style="padding:0.25em">
+            <draggable v-model="signatoriesNew">
+                <div class="drag-drop-element" v-for="signatory in signatoriesNew" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
                                 <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)"></b-icon>
-                                {{signatory.email}}
+                                {{signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email}}
                             </b-col>
                         </h6>
                         <b-col cols="auto">
@@ -53,12 +53,18 @@ import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
     props: {
-        signatories: Array,
+        signatories: {
+            type: [
+                Array,
+                Object
+            ]
+        },
         orderRelevant: Boolean
     },
     components: {draggable},
     data() {
         return{
+            signatoriesNew: [],
             signatoryInput: "",
             signatureTypes: [{
                 name: 'UploadDoc.simple',
@@ -71,16 +77,36 @@ export default {
     },
     methods: {
         addSignatory() {
-            if(this.signatories.includes(this.signatoryInput)) {
+
+            if(this.signatoriesNew.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatories.push({email: this.signatoryInput, type: ""});
+                this.signatoriesNew.push({email: this.signatoryInput, type: ""});
             }
             this.signatoryInput = "";
+
+            this.$emit('update-signatories', this.signatoriesNew)
         },
         deleteSignatory(signatory) {
-            this.signatories = this.signatories.filter(sig => !(sig === signatory))
+            this.signatoriesNew = this.signatoriesNew.filter(sig => !(sig === signatory))
+
+            this.$emit('update-signatories', this.signatoriesNew)
         }
+
+    },
+
+    mounted() {
+        this.signatoriesNew = this.signatories
+
+        for(let i = 0; i < this.signatoriesNew.length; i++) {
+            if(this.signatoriesNew[i].signatureType === "ADVANCED_SIGNATURE") {
+                this.signatoriesNew[i].type = 2
+            } else if(this.signatoriesNew[i].signatureType === "SIMPLE_SIGNATURE") {
+                this.signatoriesNew[i].type = 1
+            }
+        }
+        this.$emit('update-signatories', this.signatoriesNew)
+
     }
 }
 </script>

@@ -1,9 +1,17 @@
 package gpse.example.util.email;
 
 import gpse.example.domain.users.User;
+import gpse.example.util.email.trusteddomain.DomainSetter;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 /**
  * SMTPServerHelper generates connection to smtpserver and sends emails.
@@ -11,72 +19,76 @@ import org.springframework.stereotype.Component;
 @Component
 public class SMTPServerHelper {
 
-    /**
-     * Template for sending RegistrationEmail.
-     */
-    public static final String INITIAL_REGISTER_TEMPLATE = "Guten Tag Herr/Frau %s, %n"
-        + "um Ihre Emailadresse zu bestätigen klicken sie bitte auf den Bestätigungslink. %n"
-        + "Hier bestätigen: %s %n"
-        + "%n %n"
-        + "Bitte beachten Sie die eingeschränkte Gültigkeit Ihres Bestätigungslinks von 24 Stunden.";
 
-    /**
-     * The subject of Elsas registration emails.
-     */
-    public static final String REGISTRATION_SUBJECT = "ELSA Registrierung";
-
-
-    /**
-     * Basic template for sending validation requests to admin.
-     */
-    public static final String ADMIN_VALIDATION_INFO = "Guten Tag, %n"
-        + "ein neuer Nutzer möchte sich registrieren. %n"
-        + "Bitte bestätigen sie die Emailadresse %s ";
-
-    /**
-     * The subject of Elsas validation request emails.
-     */
-    public static final String VALIDATION_SUBJECT = "Registrierungsanfrage";
-
-    /**
-     * should be the from address, but because of whatever it doesnt work with thunderbird and K-9 emailclients.
-     */
-    public static final String NOREPLY_ADDRESS = "noreply@gmail.com";
+    private final JavaMailSenderImpl mailSender;
 
     @Autowired
-    private final JavaMailSender mailSender;
+    private final MessageServiceImpl messageService;
 
-    public SMTPServerHelper(final JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    @Autowired
+    private final DomainSetterService domainSetterService;
+
+    private Session session;
 
     /**
-     * sending an Registration email to the specified address.
+     * something else.
+     * @param messageService s
+     * @param domainSetterService t
+     */
+    public SMTPServerHelper(MessageServiceImpl messageService,
+                            DomainSetterService domainSetterService) {
+        this.mailSender = new JavaMailSenderImpl();
+        this.messageService = messageService;
+        this.domainSetterService = domainSetterService;
+    }
+    /**
+     * something.
+     */
+    public void changeDomainSettings() {
+        try {
+            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            mailSender.setHost(domainSetter.getHost());
+            mailSender.setPort(domainSetter.getPort());
+            mailSender.setUsername(domainSetter.getUsername());
+            mailSender.setPassword(domainSetter.getPassword());
+            Properties properties = mailSender.getJavaMailProperties();
+            properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
+            properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
+             /*session = Session.getInstance(properties, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(, domainSetter.getPassword());
+                }
+            });*/
+        } catch (NullPointerException e) {
+            throw e;
+        }
+    }
+    /**
+     * sending templated email.
      *
-     * @param recievingUser the recieving user.
-     * @param link validation link.
+     * @param recieverMail  reciever
+     * @param template      specified templateobject
+     * @param dataContainer specified data
+     * @param category      the category of the email
+     * @param sendingUser   the user that sends the mail
+     * @throws MessageGenerationException when text, reciever mail, or subject is null
      */
-    public void sendRegistrationEmail(final User recievingUser, final String link) throws MessageGenerationException {
-        final Message message = new Message();
-        message.setRecievingUser(recievingUser);
-        message.setSubject(REGISTRATION_SUBJECT);
-        message.setText(String.format(INITIAL_REGISTER_TEMPLATE, recievingUser.getLastname(), link));
-
-        mailSender.send(message.generateMessage());
+    public void sendTemplatedEmail(final String recieverMail, final EmailTemplate template,
+                                   final TemplateDataContainer dataContainer, final Category category,
+                                   final User sendingUser)
+        throws MessageGenerationException {
+        changeDomainSettings();
+        Message message = new Message();
+        try {
+            message.setCategory(category);
+            message.setRecievingUserMail(recieverMail);
+            message.setupByTemplate(template, dataContainer);
+            message.setSendingUser(sendingUser);
+            mailSender.send(message.generateHtmlMessage(new MimeMessage(session)));
+            messageService.saveMessage(message);
+        } catch (InvocationTargetException | MessagingException exc) {
+            throw new MessageGenerationException(message.getMessageID(), exc);
+        }
     }
-
-    /**
-     * sending an info mail to an admin containing the requested emailadress.
-     * @param admin admin who should get this validation information
-     * @param newUserEmail email adress of the user who needs to be validated
-     */
-    public void sendValidationInfo(final User admin, final String newUserEmail) throws MessageGenerationException {
-        final Message message = new Message();
-        message.setRecievingUser(admin);
-        message.setSubject(VALIDATION_SUBJECT);
-        message.setText(String.format(ADMIN_VALIDATION_INFO, newUserEmail));
-
-        mailSender.send(message.generateMessage());
-    }
-
 }

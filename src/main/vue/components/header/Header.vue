@@ -1,16 +1,24 @@
 <template>
-    <b-navbar toggleable="sm" id="background" sticky style="position: fixed; width: 100%; height: 5vh">
+    <b-navbar toggleable="sm" id="background" sticky :class="[mobile ? 'mobile' : 'normal']">
         <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="$router.push(`/`)">
-            <b-img v-if="theme === '' " :src="logoLightMode" class="responsive-img" :alt="$t('Header.logo')"></b-img>
-            <b-img v-else :src="logoDarkMode" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <b-img v-if="theme === '' " :src="elsaLight" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <b-img v-else :src="elsaDark" class="responsive-img" :alt="$t('Header.logo')"></b-img>
+            <img v-if="theme === '' && !lightEmpty"
+                 :src="getLightSource()" class="responsive-img"
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
+            <img v-if="theme === 'darkMode' && !darkEmpty"
+                 :src="getDarkSource()" class="responsive-img"
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
         </b-navbar-brand>
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target=" nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
                 <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
-                <Messages v-if="user.firstLogin"></Messages>
-                <Avatar v-if="user.firstLogin"></Avatar>
+                <Messages v-if="user.firstLogin && isNotGuest"></Messages>
+                <Avatar v-if="user.firstLogin && isNotGuest"></Avatar>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
@@ -21,21 +29,81 @@ import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 import Avatar from "@/main/vue/components/header/Avatar";
 import Messages from "@/main/vue/components/header/Messages";
 import {mapGetters} from "vuex";
+import {loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import _ from "lodash";
 
 export default {
     name: "Header",
     components: {Messages, Avatar, LanguageSwitcher},
     data() {
         return {
-            logoLightMode: require('../../assets/logos/ELSA_small.svg'),
-            logoDarkMode: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            elsaLight: require('../../assets/logos/ELSA_small.svg'),
+            elsaDark: require('../../assets/logos/ELSA_small_darkmode.svg'),
+            mobile: window.innerWidth < 576
         }
     },
+    async created() {
+        await loadSheet()
+        await this.$store.dispatch('theme/getLogos')
+        if (!this.$route.params.tokenId) {
+            await this.$store.dispatch('messages/fetchMessages')
+        }
+    },
+    mounted() {
+        // reacts when screen size changes
+        window.addEventListener("resize", this.updateMobile);
+    },
+    destroyed() {
+        // removes event listener
+        window.removeEventListener("resize", this.updateMobile);
+    },
+    methods: {
+        updateMobile() {
+            // sets mobile depending on screen width (if smaller than 576 dropdown menu is collapsed)
+            this.mobile = window.innerWidth < 576
+        }
+        ,
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        }
+        ,
+        getDarkSource() {
+            if (this.logoDarkType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoDark
+            } else {
+                return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
+            }
+        }
+    }
+    ,
     computed: {
-        ...mapGetters({
-            theme: 'theme/getTheme',
-            user: 'getUser'
-        })
+        ...
+            mapGetters({
+                theme: 'theme/getTheme',
+                user: 'getUser',
+
+                logoLight: 'theme/getLightLogo',
+                logoDark: 'theme/getDarkLogo',
+                logoLightType: 'theme/getLightLogoType',
+                logoDarkType: 'theme/getDarkLogoType',
+
+                guest: 'getGuestSignatory'
+            }),
+        lightEmpty() {
+            return this.logoLight === ""
+        }
+        ,
+        darkEmpty() {
+            return this.logoDark === ""
+        }
+        ,
+        isNotGuest() {
+            return _.isEmpty(this.getGuestSignatory);
+        }
     }
 }
 </script>
@@ -45,6 +113,18 @@ export default {
 .responsive-img {
     height: 2em;
     width: auto;
+}
+
+.normal {
+    position: fixed;
+    width: 100%;
+    min-height: fit-content;
+}
+
+.mobile {
+    position: fixed;
+    width: 100%;
+    height: fit-content;
 }
 
 #background {
