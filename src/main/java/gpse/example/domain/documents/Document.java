@@ -157,44 +157,6 @@ public class Document {
         }
     }
 
-    /*
-    /**
-     * the method used to verify a signature for a specific user, by checking all public keys a user has.
-     *
-     * @param user           the user who relates to the signature that needs to be checked
-     * @param givenSignature the signature that needs to be validated
-     * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
-     */
-    /*
-    public boolean verifySignature(final User user, final String givenSignature) {
-
-        boolean valid = false;
-        final byte[] signature = givenSignature.getBytes();
-        try {
-            StringToKeyConverter stringToKeyConverter = new StringToKeyConverter();
-            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
-            final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-            final String stringPublicKey = user.getPublicKey();
-            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);;
-            sign.initVerify(publicKey);
-            sign.update(id);
-            valid = sign.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException
-                | SignatureException | InvalidKeySpecException exception) {
-            exception.printStackTrace();
-        }
-        return valid;
-    } */
-
-    private AdvancedSignature getUsersSignature(final String user) {
-        for (final AdvancedSignature advancedSignature : advancedSignatures) {
-            if (advancedSignature.getUserEmail().equals(user)) {
-                return advancedSignature;
-            }
-        }
-        return null;
-    }
-
     /**
      * The getHistory method gets all previous versions of a document.
      *
