@@ -615,5 +615,9 @@
         "serverErrorOne": "Es gab Probleme beim Posten Ihres Kommentars.",
         "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
         "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
+    },
+    "ResetPasswordPage": {
+      "success" : "Erfolgreich zurückgesetzt. Sie Können sich jetzt einloggen.",
+      "fail" : "Das Token ist bereits abgelaufen. Bitte versuchen Sie es erneut."
     }
 }

@@ -404,31 +404,31 @@ public class UserController {
 
     /**
      * GetResponse Method to set a new password.
-     * call api/user?password={password}&token={token}
+     * call api/user/newpassword?password={password}&token={token}
      *
      * @param password new password
      * @param token    token which references the user who want to change password
      * @return jsonResponse with statuscode
      */
-    @GetMapping("/user/")
+    @GetMapping("/user/newpassword")
     public JSONResponseObject resetPassword(@RequestParam("password") final String password,
-                                            @RequestParam("token") final String token) {
-        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        final Optional<ResetPasswordToken> optionalResetPasswordToken
-            = resetPasswordTokenService.findResetPasswordTokenByToken(token);
+                @RequestParam("token") final String token) {
+                    final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+                    final Optional<ResetPasswordToken> optionalResetPasswordToken
+                            = resetPasswordTokenService.findResetPasswordTokenByToken(token);
 
-        try {
-            if (optionalResetPasswordToken.isEmpty()) {
-                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
-                return jsonResponseObject;
-            }
-            final User user = userService.getUser(optionalResetPasswordToken.get().getUserId());
+                    try {
+                        if (optionalResetPasswordToken.isEmpty()) {
+                            jsonResponseObject.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
+                            return jsonResponseObject;
+                        }
+                        final User user = userService.getUser(optionalResetPasswordToken.get().getUserId());
 
-            if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
-                jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
-                return jsonResponseObject;
-            } else {
-                user.setPassword(passwordEncoder.encode(password));
+                        if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
+                            jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
+                            return jsonResponseObject;
+                        } else {
+                            user.setPassword(passwordEncoder.encode(password));
                 userService.saveUser(user);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 return jsonResponseObject;

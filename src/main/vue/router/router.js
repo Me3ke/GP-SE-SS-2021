@@ -22,6 +22,7 @@ import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExp
 import CommentsPage from "@/main/vue/views/CommentsPage";
 import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
 import UserManagement from "@/main/vue/views/UserManagement";
+import PasswordResetPage from "@/main/vue/views/PasswordResetPage";
 
 
 Vue.use(VueRouter)
@@ -69,6 +70,15 @@ const router = new VueRouter({
                     path: 'login',
                     name: 'login',
                     component: LoginPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'login/reset/:resetId',
+                    name: 'login/reset',
+                    props: true,
+                    component: PasswordResetPage,
                     meta: {
                         guest: true
                     }

@@ -112,5 +112,19 @@ export default {
             method: "get",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/imageSignature'
         })
+    },
+    // resets password with token
+    async resetPasswordWithToken(token, password) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/newpassword?password=' + password + '&token=' + token ,
+        })
+    },
+    // resets password without token
+    async resetPasswordWithoutToken(password) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/password?password=' + password ,
+        })
     }
 }
