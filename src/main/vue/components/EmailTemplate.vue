@@ -1,15 +1,22 @@
 <template>
     <b-container>
 
-                    <div style="padding-bottom: 1em">
+                    <div style="padding-bottom: 1em" class="flex-box-2">
 
-                        <b-button class="elsa-blue-btn"
+                        <button class="elsa-blue-btn"
                                   style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
                                   v-if="selectedTemplateObject !== {}"
                                   @click="showNewCreateTemplate"
                         >
                             Create Template
-                        </b-button>
+                        </button>
+
+                        <button class="elsa-blue-btn"
+                                style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto;"
+                                @click="showDeleteTemplates"
+                        >
+                            Delete Template
+                        </button>
                     </div>
 
                     <select v-model="selected" @change="changedValue(selected)">
@@ -154,6 +161,26 @@
                     </b-container>
                 </b-modal>
 
+                <!--- Create new Template createNewEmailTemplate --->
+                <b-modal
+                    title="Delete Templates"
+                    hide-footer ok-only centered
+                    ref="delete-Template"
+                >
+                    <b-container style="overflow:scroll; overflow-x:hidden;">
+                        <b-container v-for="(template, index) in emailTemplate" :key="index"
+                                     style="margin-bottom: 1em">
+
+                            <b-row style="padding-bottom: 1px">
+                                <b-col>
+                                    <b-icon v-if="index >= 1" class="icon-hover" icon="trash" @click="deleteTemplate(template); fetchTemplate()"></b-icon>
+                                </b-col>
+                                <b-col cols="10">{{template.name}}</b-col>
+                            </b-row>
+                        </b-container>
+                    </b-container>
+                </b-modal>
+
     </b-container>
 </template>
 
@@ -272,11 +299,31 @@ export default {
              await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
 
              this.$refs['new-Template'].hide()
-
-
-
-
          },
+
+
+
+
+        // Delete Templates
+
+        showDeleteTemplates() {
+            this.$refs['delete-Template'].show()
+        },
+
+        async deleteTemplate(template) {
+            console.log(template)
+            await this.$store.dispatch('emailTemplate/deleteEmailTemplate', template.templateID)
+            //await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+            this.fetchTemplate()
+        },
+
+        async fetchTemplate() {
+            await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
+            this.$forceUpdate();
+        }
+
+
+
     },
 
 

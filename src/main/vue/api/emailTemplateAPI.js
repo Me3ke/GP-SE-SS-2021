@@ -30,7 +30,13 @@ export default {
              reworkedTemplate: templateBody
          }
         })
+    },
 
+    async deleteEmailTemplates(templateId) {
+        return axios({
+            method: 'delete',
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + templateId,
+        })
     }
 
 }

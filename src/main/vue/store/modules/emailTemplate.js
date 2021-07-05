@@ -31,6 +31,10 @@ export const mutations = {
         }
     },
 
+    DELETE_TEMPLATE(state, templateId) {
+        state.template = state.template.filter(temp => temp.templateID !== templateId)
+    },
+
     SET_TEMPLATE_ERROR(state, error) {
         state.templateError = error
     }
@@ -67,6 +71,18 @@ export const actions = {
     editEmailTemplate({commit}, {templateId,templateBody}) {
         emailTemplateAPI.editEmailTemplate(templateId, templateBody).then(response => {
             commit('EDIT_TEMPLATE', response.data)
+            commit('SET_TEMPLATE_ERROR', {})
+        }).catch(error => {
+            console.error(error)
+            commit('SET_TEMPLATE_ERROR', error)
+
+        })
+    },
+
+    deleteEmailTemplate({commit}, templateId) {
+        emailTemplateAPI.deleteEmailTemplates(templateId).then(response => {
+            commit('EDIT_TEMPLATE', response.data)
+            commit('SET_TEMPLATE_ERROR', {})
         }).catch(error => {
             console.error(error)
             commit('SET_TEMPLATE_ERROR', error)
