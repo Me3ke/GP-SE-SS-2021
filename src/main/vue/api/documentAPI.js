@@ -9,6 +9,23 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId
         })
     },
+
+    // gives back history of given document in given envelope (without byte arrays)
+    async getHistory(envId, docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/history'
+        })
+    },
+
+    // gives back byte array of archived document with documentID docId
+    async getArchivedDocumentData(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/archivedDocument/' + docId
+        })
+    },
+
     // gives if user has already seen document with id docId
     async getDocumentSeen(docId) {
         return axios({
@@ -24,24 +41,24 @@ export default {
         })
     },
     // reviews document with id docId
-    async reviewDocument(docId) {
+    async reviewDocument(envId, docId) {
         return axios({
             method: "put",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/review'
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/review'
         })
     },
     // signs (simple) document with id docId
-    async simpleSignDocument(docId) {
+    async simpleSignDocument(envId, docId) {
         return axios({
             method: "put",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/signSimple'
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/signSimple'
         })
     },
     // signs (advanced) document with id docId
-    async advancedSignDocument(docId, signature) {
+    async advancedSignDocument(envId, docId, signature) {
         return axios({
             method: "put",
-            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/documents/' + docId + '/signAdvanced',
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/signAdvanced',
             data: {
                 'signature': signature
             }

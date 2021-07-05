@@ -1,9 +1,10 @@
 <template>
     <div>
 
-        <SignPopUp v-if="showSign" :documents="[document]" @signTrigger="toggleSign()"></SignPopUp>
+        <SignPopUp v-if="showSign" :documents="[document]" :is-guest="isGuest" @signTrigger="toggleSign()"></SignPopUp>
 
-        <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
+        <ProofreadPopUp v-if="showProofread" :documents="[document]" :is-guest="isGuest"
+                        @readTrigger="toggleRead()"></ProofreadPopUp>
 
         <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
 
@@ -28,17 +29,18 @@
                 </b-list-group-item>
 
                 <!-- Comments -->
-                <b-list-group-item @click="goToComments" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click="goToComments" class="mini-list">
                     <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item @click="goToProtocol" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click=" goToProtocol
+                " class="mini-list">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item @click="showHistory" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click="showHistory" class="mini-list">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                 </b-list-group-item>
 
@@ -54,7 +56,7 @@
                 </b-list-group-item>
 
                 <!-- Metadata -->
-                <b-list-group-item @click="showMeta()" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click="showMeta()" class="mini-list">
                     <b-icon icon="info-circle" class="my-icon"></b-icon>
                 </b-list-group-item>
             </b-list-group>
@@ -90,19 +92,19 @@
                 </b-list-group-item>
 
                 <!-- Comments -->
-                <b-list-group-item @click="goToComments">
+                <b-list-group-item v-if="!isGuest" @click="goToComments">
                     <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
                     <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item @click="goToProtocol">
+                <b-list-group-item v-if="!isGuest" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item @click="showHistory">
+                <b-list-group-item v-if="!isGuest" @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
@@ -120,7 +122,7 @@
                 </b-list-group-item>
 
                 <!-- Metadata -->
-                <b-list-group-item @click="showMeta()">
+                <b-list-group-item v-if="!isGuest" @click="showMeta()">
                     <b-icon icon="info-circle" class="my-icon"></b-icon>
                     <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
                     <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
@@ -159,19 +161,19 @@
                 </b-list-group-item>
 
                 <!-- Comments -->
-                <b-list-group-item @click="goToComments">
+                <b-list-group-item v-if="!isGuest" @click="goToComments">
                     <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
                     <span> {{ $t('DocumentPage.comments') }} </span>
                 </b-list-group-item>
 
                 <!-- Protocol -->
-                <b-list-group-item @click="goToProtocol">
+                <b-list-group-item v-if="!isGuest" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item @click="showHistory">
+                <b-list-group-item v-if="!isGuest" @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
@@ -189,7 +191,7 @@
                 </b-list-group-item>
 
                 <!-- Metadata -->
-                <b-list-group-item @click="showMeta()">
+                <b-list-group-item v-if="!isGuest" @click="showMeta()">
                     <b-icon icon="info-circle" class="my-icon"></b-icon>
                     <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
                     <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
@@ -208,6 +210,12 @@ import _ from "lodash";
 export default {
     name: "Sidebar",
     components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp},
+    props: {
+        isGuest: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             showProofread: false,
@@ -252,8 +260,8 @@ export default {
         goToProtocol() {
             this.$router.push({name: 'protocol', params: {envId: this.envId, docId: this.docId}})
         },
-        //TODO: add possibility to look at history
         showHistory() {
+            this.$router.push({name: 'history', params: {envId: this.envId, docId: this.docId}})
         },
         toggleNewVersion() {
             this.showUploadNewVersion = !this.showUploadNewVersion
@@ -282,7 +290,10 @@ export default {
             } else {
                 return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
             }
-        }
+        },
+        tokenId() {
+            return this.$route.params.tokenId;
+        },
     },
     computed: {
         ...mapGetters({
@@ -295,7 +306,8 @@ export default {
             logoLightType: 'theme/getLightLogoType',
             logoDarkType: 'theme/getDarkLogoType',
 
-            document: 'document/getDocumentInfo'
+            document: 'document/getDocumentInfo',
+            guestSignatory: 'getGuestSignatory'
         }),
         isOwner() {
             if (this.document.owner) {
@@ -304,22 +316,46 @@ export default {
             return false
         },
         reader() {
-            return this.document.reader
+            if (this.isGuest) {
+                return this.guestSignatory.reader
+            } else {
+                return this.document.reader
+            }
         },
         read() {
-            return this.document.read
+            if (this.isGuest) {
+                return this.guestSignatory.read
+            } else {
+                return this.document.read
+            }
         },
         readTurn() {
-            return this.document.turnToReview
+            if (this.isGuest) {
+                return this.guestSignatory.turnToReview
+            } else {
+                return this.document.turnToReview
+            }
         },
         signatory() {
-            return this.document.signatory
+            if (this.isGuest) {
+                return this.guestSignatory.signatory
+            } else {
+                return this.document.signatory
+            }
         },
         signed() {
-            return this.document.signed
+            if (this.isGuest) {
+                return this.guestSignatory.signed
+            } else {
+                return this.document.signed
+            }
         },
         signTurn() {
-            return this.document.turnToSign
+            if (this.isGuest) {
+                return this.guestSignatory.turnToSign
+            } else {
+                return this.document.turnToSign
+            }
         },
         docId() {
             return this.$route.params.docId

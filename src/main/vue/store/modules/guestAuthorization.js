@@ -1,64 +1,64 @@
-//import axios from "axios";
 import guestAuthAPI from "../../api/guestAuthAPI";
 
 const guestAuthorization = {
     state: () => ({
-        guestAuthenticated: false,
-        guestToken: "none",
-        guestUsername: "none"
+        guestSignatory: {},
+        signSimpleResponse: {},
+        reviewResponse: {}
     }),
 
     mutations: {
+        SAVE_GUEST(state, res) {
+            state.guestSignatory = res
+        },
 
-        AUTHENTICATE(state, token, guestUsername) {
-            //TODO: Change handling of response token
-            if (token !== null) {
-                state.guestToken = token
-                //TODO: Request if Authenticated for the docID
-                state.guestAuthenticated = true
-                state.guestUsername = guestUsername;
-            } else {
-                state.guestAuthenticated = false
-                state.guestToke = "none"
-                state.guestUsername = "none"
-            }
+        PUT_SIGN_SIMPLE_RESPONSE(state, res) {
+            state.signSimpleResponse = res
+        },
+
+        PUT_REVIEW_RESPONSE(state, res) {
+            state.reviewResponse = res
         }
-    },
-    actions: {
 
+    },
+
+    actions: {
         requestGuestInfo({commit}, {envId, docId, guestToken}) {
-            return new Promise((resolve, reject) => {
-                //TODO: change request
-                guestAuthAPI.guestValidate(envId, docId, guestToken).then(res => {
-                    let guestUsername = 'testdulli'
-                    console.log(res.data)
-                    console.log("logged response")
-                    console.log("Status code: "+res.status)
-                    commit('AUTHENTICATE', guestToken, guestUsername)
-                    resolve()
-                }).catch(() => {
-                    commit('AUTHENTICATE', null)
-                    reject()
-                })
+            return guestAuthAPI.guestValidate(envId, docId, guestToken).then(res => {
+                commit('SAVE_GUEST', res.data)
+            }).catch(error => {
+                commit('SAVE_GUEST', error)
+            })
+        },
+
+        signAsGuest({commit}, {envId, docId, guestToken}) {
+            return guestAuthAPI.guestSimpleSign(envId, docId, guestToken).then(res => {
+                commit('PUT_SIGN_SIMPLE_RESPONSE', res.data)
+            }).catch(error => {
+                commit('PUT_SIGN_SIMPLE_RESPONSE', error)
+            })
+        },
+
+        reviewAsGuest({commit}, {envId, docId, guestToken}) {
+            return guestAuthAPI.guestReview(envId, docId, guestToken).then(res => {
+                commit('PUT_REVIEW_RESPONSE', res.data)
+            }).catch(error => {
+                commit('PUT_REVIEW_RESPONSE', error)
             })
         }
     },
 
     getters: {
-        isMyGuestAuthenticated(state) {
-            return state.authenticated;
+        getGuestSignatory: (state) => {
+            return state.guestSignatory
         },
-        getGuestToken(state) {
-            return state.token;
+        getSignSimpleResponse: (state) => {
+            return state.signSimpleResponse
         },
-        getGuestUsername(state) {
-            return state.username
-        },
-        getGuestRole(state) {
-            return state.role
+        getReviewResponse: (state) => {
+            return state.reviewResponse
         }
     }
-
 }
 
 export default guestAuthorization

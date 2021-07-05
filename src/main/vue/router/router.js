@@ -22,6 +22,9 @@ import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExp
 import CommentsPage from "@/main/vue/views/CommentsPage";
 import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
 import UserManagement from "@/main/vue/views/UserManagement";
+import PasswordResetPage from "@/main/vue/views/PasswordResetPage";
+import PasswordResetPageNoToken from "@/main/vue/views/PasswordResetPageNoToken";
+import HistoryPage from "@/main/vue/views/HistoryPage";
 
 
 Vue.use(VueRouter)
@@ -71,6 +74,23 @@ const router = new VueRouter({
                     component: LoginPage,
                     meta: {
                         guest: true
+                    }
+                },
+                {
+                    path: 'login/reset/:resetId',
+                    name: 'login/reset',
+                    props: true,
+                    component: PasswordResetPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'login/resets',
+                    name: 'login/resets',
+                    component: PasswordResetPageNoToken,
+                    meta: {
+                        requiresAuth: true
                     }
                 },
                 {
@@ -129,6 +149,15 @@ const router = new VueRouter({
                     path: 'envelope/:envId/document/:docId/comments',
                     name: 'comments',
                     component: CommentsPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/history',
+                    name: 'history',
+                    component: HistoryPage,
                     props: true,
                     meta: {
                         requiresAuth: true

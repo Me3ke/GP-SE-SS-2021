@@ -103,7 +103,8 @@
                              :admin="user.roles.includes('ROLE_ADMIN')"></UserBox>
                     <b-icon v-if="!selected.includes(index)" icon="circle" class="my-icon checker"
                             @click="changeSelected(index)"></b-icon>
-                    <b-icon v-else icon="check-circle" class="my-icon checker" @click="changeSelected(index)"></b-icon>
+                    <b-icon v-else icon="check-circle" class="my-icon checker"
+                            @click="changeSelected(index)"></b-icon>
                 </div>
             </div>
             <div v-if="allUsers(filter, pageLimit,page).length === 0"

@@ -1,6 +1,6 @@
 package gpse.example.web.documents;
 
-import gpse.example.domain.Protocol;
+import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
@@ -13,6 +13,7 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -49,6 +50,8 @@ public class DocumentController {
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final String TOKEN = "token";
+    private static final String ENVELOPE_URL = "http://localhost:8080/de/envelope/";
+    private static final String DOCUMENT_URL = "/document/";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -64,11 +67,11 @@ public class DocumentController {
     /**
      * The default constructor which initialises the services by autowiring.
      *
-     * @param envelopeService         the envelopeService
-     * @param userService             the userService
-     * @param documentService         the documentService
-     * @param guestTokenService       the guestTokenService
-     * @param signatureManagement     the signatureManagement
+     * @param envelopeService     the envelopeService
+     * @param userService         the userService
+     * @param documentService     the documentService
+     * @param guestTokenService   the guestTokenService
+     * @param signatureManagement the signatureManagement
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -128,9 +131,10 @@ public class DocumentController {
 
     /**
      * Getting the document with guestToken.
+     *
      * @param envelopeID id of envelope
      * @param documentID id of document
-     * @param token String Token to get the tokenobject (or not if its expired? or wrong)
+     * @param token      String Token to get the tokenobject (or not if its expired? or wrong)
      * @return the documentGetResponse
      * @throws DocumentNotFoundException is thrown if the document that the request relates to does not exist.
      */
@@ -138,7 +142,7 @@ public class DocumentController {
     public DocumentGetResponse getDocumentGuestAccess(@PathVariable(ENVELOPE_ID) final long envelopeID,
                                                       @PathVariable(DOCUMENT_ID) final long documentID,
                                                       @PathVariable(TOKEN) final String token)
-            throws DocumentNotFoundException {
+        throws DocumentNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
@@ -206,6 +210,25 @@ public class DocumentController {
     }
 
     /**
+     * Gives back archived document.
+     *
+     * @param userID     the id of the user doing the request.
+     * @param documentID the id of the document.
+     * @return a documentGetResponse of the archived document
+     * @throws DocumentNotFoundException s thrown if the document that the request relates to does not exist.
+     */
+    @GetMapping("/user/{userID}/archivedDocument/{documentID}")
+    public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
+                                                    @PathVariable("documentID") final long documentID)
+        throws DocumentNotFoundException {
+        Document document = documentService.getDocument(documentID);
+        if (document.getState() == DocumentState.CLOSED) {
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
+        }
+        return null;
+    }
+
+    /**
      * The uploadNewDocumentVersion method does a put request to update.
      *
      * @param documentPutRequest the request object containing all the necessary data.
@@ -238,7 +261,7 @@ public class DocumentController {
                 userService);
             newDocument.setPreviousVersion(savedDocument);
             envelopeService.updateEnvelope(envelope, newDocument);
-            informSignatories(newDocument);
+            informSignatories(newDocument, envelopeID);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
@@ -249,47 +272,71 @@ public class DocumentController {
      * The informSignatories method uses the smtpServerHelper to inform the
      * signatories of a document that their signature has been invalidated while
      * uploading a new version.
+     *
      * @param document the new document.
      * @throws TemplateNameNotFoundException if the template does not exist.
-     * @throws MessageGenerationException if the message could not be generated.
+     * @throws MessageGenerationException    if the message could not be generated.
      */
-    private void informSignatories(final Document document)
+    private void informSignatories(final Document document, final long envelopeID)
         throws TemplateNameNotFoundException, MessageGenerationException {
         final EmailTemplate emailTemplate = emailTemplateService.findSystemTemplateByName("NewVersionTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink("LinkToDocumentView");
         if (document.isOrderRelevant()) {
             for (final Signatory signatory : document.getSignatories()) {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
-                    smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                        container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+                    try {
+                        userService.getUser(signatory.getEmail());
+                        container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
+                            + document.getId());
+                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+                    } catch (UsernameNotFoundException exception) {
+                        GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                            document.getId()));
+                        container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
+                            + document.getId() + "/" + token.getToken());
+                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+                    }
                 }
             }
         } else {
             for (final Signatory signatory : document.getSignatories()) {
-                smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                    container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+                try {
+                    userService.getUser(signatory.getEmail());
+                    container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
+                        + document.getId());
+                    smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                        container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+                } catch (UsernameNotFoundException exception) {
+                    GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                        document.getId()));
+                    container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
+                        + document.getId() + "/" + token.getToken());
+                }
             }
         }
     }
 
-    @PutMapping("/token/{token}/documents/{documentID:\\d+}/signSimple")
-    public JSONResponseObject signSimpleAsGuest(@PathVariable(TOKEN) String token,
-                                                @PathVariable(DOCUMENT_ID) long documentID)
+    @PutMapping("/token/{token}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
+    public JSONResponseObject signSimpleAsGuest(final @PathVariable(TOKEN) String token,
+                                                final @PathVariable(DOCUMENT_ID) long documentID,
+                                                final @PathVariable(ENVELOPE_ID) long envelopeID)
         throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
-        return computeGuestSignatureRequest(token, documentID, SignatureType.SIMPLE_SIGNATURE);
+        return computeGuestSignatureRequest(token, documentID, SignatureType.SIMPLE_SIGNATURE, envelopeID);
     }
 
-    @PutMapping("/token/{token}/documents/{documentID:\\d+}/review")
+    @PutMapping("/token/{token}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public JSONResponseObject reviewAsGuest(final @PathVariable(TOKEN) String token,
-                                            final @PathVariable(DOCUMENT_ID) long documentID)
+                                            final @PathVariable(DOCUMENT_ID) long documentID,
+                                            final @PathVariable(ENVELOPE_ID) long envelopeID)
         throws DocumentNotFoundException, TemplateNameNotFoundException, MessageGenerationException {
-        return computeGuestSignatureRequest(token, documentID, SignatureType.REVIEW);
+        return computeGuestSignatureRequest(token, documentID, SignatureType.REVIEW, envelopeID);
     }
 
     private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
-                                                            final SignatureType signatureType)
+                                                            final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
@@ -301,7 +348,7 @@ public class DocumentController {
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             final GuestToken guestToken = guestTokenOptional.get();
             return computeSignatureRequest(guestToken.getUsername(), guestToken.getDocumentId(),
-                signatureType);
+                signatureType, envelopeID);
         } else {
             throw new DocumentNotFoundException();
         }
@@ -312,14 +359,16 @@ public class DocumentController {
      *
      * @param userID     the id of the user reading the document.
      * @param documentID the document to be reviewed.
+     * @param envelopeID the envelope the document refers to.
      * @return true if the review was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/review")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/review")
     public JSONResponseObject review(final @PathVariable(USER_ID) String userID,
-                                     final @PathVariable(DOCUMENT_ID) long documentID)
+                                     final @PathVariable(DOCUMENT_ID) long documentID,
+                                     final @PathVariable(ENVELOPE_ID) long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        return computeSignatureRequest(userID, documentID, SignatureType.REVIEW);
+        return computeSignatureRequest(userID, documentID, SignatureType.REVIEW, envelopeID);
     }
 
 
@@ -328,16 +377,17 @@ public class DocumentController {
      *
      * @param userID     the id of the user reading the document.
      * @param documentID the document to be reviewed.
+     * @param envelopeID the envelope the document refers to.
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
-
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signSimple")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimple(final @PathVariable(USER_ID) String userID,
-                                         final @PathVariable(DOCUMENT_ID) long documentID)
+                                         final @PathVariable(DOCUMENT_ID) long documentID,
+                                         final @PathVariable(ENVELOPE_ID) long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE);
+        return computeSignatureRequest(userID, documentID, SignatureType.SIMPLE_SIGNATURE, envelopeID);
     }
 
     /**
@@ -345,19 +395,21 @@ public class DocumentController {
      *
      * @param userID                   the id of the user reading the document.
      * @param documentID               the document to be reviewed.
+     * @param envelopeID               the envelope the document refers to.
      * @param advancedSignatureRequest the request Object containing the advanced signature
      * @return true if the signing was successful and false if not.
      * @throws DocumentNotFoundException if the document was not found.
      */
     //TODO if orderRelevant test if current user is next in line.
-    @PutMapping("/user/{userID}/documents/{documentID:\\d+}/signAdvanced")
+    @PutMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signAdvanced")
     public JSONResponseObject signAdvanced(final @PathVariable(USER_ID) String userID,
                                            final @PathVariable(DOCUMENT_ID) long documentID,
+                                           final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @RequestBody AdvancedSignatureRequest advancedSignatureRequest)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = computeSignatureRequest(userID,
-            documentID, SignatureType.ADVANCED_SIGNATURE);
+            documentID, SignatureType.ADVANCED_SIGNATURE, envelopeID);
         if (response.getStatus() == STATUS_CODE_OK) {
             document.advancedSignature(userID, advancedSignatureRequest.getSignature());
             documentService.addDocument(document);
@@ -366,7 +418,7 @@ public class DocumentController {
     }
 
     private JSONResponseObject computeSignatureRequest(final String userID, final long documentID,
-                                                       final SignatureType signatureType)
+                                                       final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
@@ -375,22 +427,30 @@ public class DocumentController {
             response.setMessage("This document is closed");
             return response;
         } else {
-            return signatureManagement.manageSignatureRequest(userID, document, signatureType);
+            return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
         }
     }
 
 
-    /*
+    /**
      * The getDocumentHistory method does a get request to get the document history.
      *
+     * @param userID  the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
-    public List<Document> getDocumentHistory(final @PathVariable(DOCUMENT_ID) long documentID)
+    public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
+                                                             final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        return documentService.getDocument(documentID).getHistory();
+        List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
+        for (Document document : documentHistory) {
+            responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
+                userID));
+        }
+        return responseHistory;
     }
 
     /**
@@ -435,7 +495,8 @@ public class DocumentController {
     /**
      * The getDocumentProgress method is used to track the progress of the signing process.
      * It uses DocumentProgress response to create an appropriate response.
-     * @param userID the id of the user currently wanting to see the progress.
+     *
+     * @param userID     the id of the user currently wanting to see the progress.
      * @param envelopeID the id of the envelope in which the document appears to be.
      * @param documentID the id of the document which's progress should be tracked.
      * @return the documentProgressResponse
