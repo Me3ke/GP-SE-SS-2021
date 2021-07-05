@@ -10,10 +10,19 @@ export default {
         })
     },
 
+    // gives back history of given document in given envelope (without byte arrays)
     async getHistory(envId, docId) {
         return axios({
             method: "get",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/envelopes/' + envId + '/documents/' + docId + '/history'
+        })
+    },
+
+    // gives back byte array of archived document with documentID docId
+    async getArchivedDocumentData(docId) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/archivedDocument/' + docId
         })
     },
 

@@ -1,4 +1,5 @@
 import documentAPI from "@/main/vue/api/documentAPI";
+import {filterHistory, sortHistory} from "@/main/vue/scripts/filterSortHistory";
 
 export const namespaced = true
 
@@ -144,6 +145,12 @@ export const actions = {
 
     },
 
+    // clears history
+    clearHistory({commit}) {
+        commit('SET_DOCUMENT_HISTORY', {})
+        commit('SET_ERROR_GET_DOCUMENT_HISTORY', {})
+    },
+
     // makes axios call to get information if user has already seen the document
     fetchSeen({commit}, docId) {
         return documentAPI.getDocumentSeen(docId).then(response => {
@@ -250,9 +257,17 @@ export const getters = {
     getDocumentInfo: (state) => {
         return state.documentInfo
     },
-    getDocumentHistory: (state) => {
-        return state.documentHistory
+    getDocumentHistorySorted: (state) => (filters, pageLimit, page) => {
+        //filter
+        let filteredHistory = filterHistory(state.documentHistory, filters);
+
+        //sorting
+        let sortedHistory = sortHistory(filteredHistory, filters);
+
+        //paging
+        return sortedHistory.slice((page - 1) * pageLimit, page * pageLimit)
     },
+
     getNewDocumentId: (state) => {
         return state.newVersionIds.newDocumentID
     },

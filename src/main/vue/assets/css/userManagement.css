@@ -85,6 +85,7 @@
 
 .user-box {
     border: solid 1px var(--dark-grey);
+    border-radius: 0.3vw;
     display: flex;
     margin-bottom: 0.75em;
     padding: 1em 0.5em;
@@ -95,10 +96,20 @@
     background-color: var(--light-grey);
 }
 
+.history:hover{
+    background-color: var(--light-grey);
+    cursor: pointer;
+}
+
+.history{
+    width: 100%;
+}
+
 /* Buttons */
 .filter-button {
     margin-right: 0.75em;
     cursor: pointer;
+    transition-duration: 0.4s;
 }
 
 .elsa-blue-btn {
@@ -170,6 +181,16 @@
     background-color: var(--sign-doc-hover);
     color: var(--red);
     border-color: var(--red);
+}
+
+/* Transition */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
 
 /* Settings for differently sized screens */

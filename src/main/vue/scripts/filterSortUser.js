@@ -1,5 +1,3 @@
-let oldSortValue = ''
-
 function filterUser(user, filter) {
     // Filter values
     const admin = filter.admin
@@ -7,13 +5,16 @@ function filterUser(user, filter) {
     const inactive = filter.inactive
     const search = filter.search
 
+
+    let hereUser = user.slice(0)
+
     let resUser
 
     // only admins?
     if (admin) {
-        resUser = user.filter(user => user.roles.includes('ROLE_ADMIN'))
+        resUser = hereUser.filter(user => user.roles.includes('ROLE_ADMIN'))
     } else {
-        resUser = user
+        resUser = hereUser
     }
 
     // only active?
@@ -38,41 +39,37 @@ function filterUser(user, filter) {
 
 function sortUser(user, filter) {
     const sortValue = filter.sort;
+    let hereUser = user.slice(0)
 
-    if (oldSortValue === sortValue) {
-        return user
-    } else {
-        oldSortValue = sortValue
-    }
 
     // sorting array depending on option user selected
     switch (sortValue) {
         case 'NEWEST':
-            user = user.reverse()
+            hereUser = hereUser.reverse()
             break
         case 'OLDEST':
             break
         case 'ABCN':
-            user = user.sort((a, b) => [a.firstname, a.lastname].join(' ').toLowerCase()
+            hereUser = hereUser.sort((a, b) => [a.firstname, a.lastname].join(' ').toLowerCase()
                 .localeCompare([b.firstname, b.lastname].join(' ').toLowerCase()))
             break
         case 'CBAN':
-            user = user.sort((a, b) => [a.firstname, a.lastname].join(' ').toLowerCase()
+            hereUser = hereUser.sort((a, b) => [a.firstname, a.lastname].join(' ').toLowerCase()
                 .localeCompare([b.firstname, b.lastname].join(' ').toLowerCase())).reverse()
             break
         case 'ABCE':
-            user = user.sort((a, b) => a.email.toLowerCase()
+            hereUser = hereUser.sort((a, b) => a.email.toLowerCase()
                 .localeCompare(b.email.toLowerCase()))
             break
         case 'CBAE':
-            user = user.sort((a, b) => a.email.toLowerCase()
+            hereUser = hereUser.sort((a, b) => a.email.toLowerCase()
                 .localeCompare(b.email.toLowerCase())).reverse()
             break
         default:
             break
     }
 
-    return user
+    return hereUser
 }
 
 

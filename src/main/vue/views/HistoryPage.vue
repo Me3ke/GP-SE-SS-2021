@@ -63,11 +63,21 @@
         <!-- Versions -->
         <div class="container-fluid">
             <div class="user-container">
+                <div v-for="(document,index) in history(filter, pageLimit, page)" :key="index">
+                    <transition-group name="fade" mode="out-in">
+                        <HistoryBox v-if="showPdf === -1 || showPdf === document.id" :document="document"
+                                    :current="showPdf === document.id"
+                                    @click.native="togglePdfViewer(document.id)" :key="document.id"></HistoryBox>
+                        <PDFViewer v-if="showPdf === document.id" :overflow="true" :pdf-src="getSrc()"
+                                   :key="document.id + history(filter, pageLimit, page).length "></PDFViewer>
+                    </transition-group>
+                </div>
             </div>
         </div>
 
         <!-- Pagination -->
-        <div style="display: flex; margin-top: 0.5em" class="justify-content-between container-fluid">
+        <div v-if="showPdf === -1" style="display: flex; margin-top: 0.5em"
+             class="justify-content-between container-fluid">
             <b-pagination
                 v-model="page"
                 :total-rows="5"
@@ -86,10 +96,15 @@
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
 import {mapGetters} from "vuex";
+import HistoryBox from "@/main/vue/components/history/HistoryBox";
+import PDFViewer from "@/main/vue/components/pdfViewer/PDFViewer";
+import documentAPI from "@/main/vue/api/documentAPI";
 
 export default {
     name: "HistoryPage",
     components: {
+        PDFViewer,
+        HistoryBox,
         Header,
         Footer
     },
@@ -100,20 +115,64 @@ export default {
                 sort: 'NEWEST',
             },
 
+            showPdf: -1,
+            src: null,
+            dataError: false,
+
             pageLimit: 10,
             page: 1
         }
     },
     async mounted() {
-        console.log('console')
-       await this.$store.dispatch('document/fetchDocumentHistory', {
+        await this.$store.dispatch('document/fetchDocumentHistory', {
             envId: this.$route.params.envId,
             docId: this.$route.params.docId
         })
     },
+    beforeDestroy() {
+        this.$store.dispatch('document/clearHistory')
+    },
+    methods: {
+        // gets source of document
+        getSrc() {
+            let chars = atob(this.src);
+            let array = new Uint8Array(chars.length);
+            for (let i = 0; i < chars.length; i++) {
+                array[i] = chars.charCodeAt(i)
+            }
+            return array
+        },
+
+        // toggles pdf viewer, sets viewer for one document wit id id; fetches document data
+        async togglePdfViewer(id) {
+            if (this.showPdf === id) {
+                this.showPdf = -1
+                this.src = null
+                this.dataError = false
+            } else {
+                if (parseInt(this.$route.params.docId) === id) {
+                    await documentAPI.getDocument(this.$route.params.envId, this.$route.params.docId).then(response => {
+                        this.src = response.data.data
+                        this.dataError = false
+                    }).catch(() => {
+                        this.dataError = true
+                    })
+                } else {
+                    await documentAPI.getArchivedDocumentData(id).then(response => {
+                        this.src = response.data.data
+                        this.dataError = false
+                    }).catch(() => {
+                        this.dataError = true
+                    })
+                }
+
+                this.showPdf = id
+            }
+        }
+    },
     computed: {
         ...mapGetters({
-            history: 'document/getDocumentHistory'
+            history: 'document/getDocumentHistorySorted'
         })
     }
 }
