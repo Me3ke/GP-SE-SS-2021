@@ -23,6 +23,7 @@ import CommentsPage from "@/main/vue/views/CommentsPage";
 import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
 import UserManagement from "@/main/vue/views/UserManagement";
 import PasswordResetPage from "@/main/vue/views/PasswordResetPage";
+import PasswordResetPageNoToken from "@/main/vue/views/PasswordResetPageNoToken";
 
 
 Vue.use(VueRouter)
@@ -81,6 +82,14 @@ const router = new VueRouter({
                     component: PasswordResetPage,
                     meta: {
                         guest: true
+                    }
+                },
+                {
+                    path: 'login/resets',
+                    name: 'login/resets',
+                    component: PasswordResetPageNoToken,
+                    meta: {
+                        requiresAuth: true
                     }
                 },
                 {

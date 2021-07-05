@@ -121,10 +121,10 @@ export default {
         })
     },
     // resets password without token
-    async resetPasswordWithoutToken(password) {
+    async resetPasswordWithoutToken(password, token) {
         return axios({
-            method: "get",
-            url: 'http://localhost:8088/api/user/password?password=' + password ,
+            method: "put",
+            url: 'http://localhost:8088/api/user/password/change?password=' + password + '&token=' + token,
         })
     }
 }

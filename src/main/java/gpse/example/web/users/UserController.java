@@ -339,7 +339,7 @@ public class UserController {
      */
     @PutMapping("/user/password/change")
     public JSONResponseObject changePassword(@RequestParam("password") final String password,
-                                             @RequestHeader final String token) {
+                                             @RequestParam("token") final String token) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
 
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();

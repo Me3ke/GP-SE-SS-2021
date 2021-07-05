@@ -618,6 +618,10 @@
     },
     "ResetPasswordPage": {
       "success" : "Erfolgreich zurückgesetzt. Sie Können sich jetzt einloggen.",
-      "fail" : "Das Token ist bereits abgelaufen. Bitte versuchen Sie es erneut."
+      "fail" : "Das Token ist bereits abgelaufen. Bitte versuchen Sie es erneut.",
+      "send" : "Senden"
+    },
+    "Password": {
+      "change": "Passwort ändern"
     }
 }

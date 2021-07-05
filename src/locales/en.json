@@ -616,7 +616,11 @@
     },
     "ResetPasswordPage": {
       "success" : "Success! Login now!",
-      "fail" : "Failure! Please try to reset again!"
+      "fail" : "Failure! Please try to reset again!",
+      "send" : "send"
+    },
+    "Password": {
+      "change": "Change Password"
     }
 
 }

@@ -1,8 +1,8 @@
 <template>
     <section>
         <div class="background" style="height: 100vh; overflow: hidden">
-
             <LandingPageHeader></LandingPageHeader>
+            <Header></Header>
             <div class=img-wrap>
                 <img v-if="theme === '' " :src="elsaLight" alt="logo" class="header-image"/>
                 <img v-else :src="elsaDark" alt="logo" class="header-image"/>
@@ -46,17 +46,18 @@
 
 <script>
 import Footer from "@/main/vue/components/Footer";
-import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
+import Header from "@/main/vue/components/header/Header";
 
 import {mapGetters} from "vuex";
 import {validationMixin} from "vuelidate";
 import {minLength, required, sameAs} from "vuelidate/lib/validators";
 import userAPI from "@/main/vue/api/userAPI";
+import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 
 export default {
     mixins: [validationMixin],
-    name: "PasswordResetPage",
-    components: { LandingPageHeader, Footer},
+    name: "PasswordResetPageNoToken",
+    components: {LandingPageHeader, Header, Footer},
     data() {
         return {
           elsaLight: require('../assets/logos/ELSA_big.svg'),
@@ -81,7 +82,7 @@ export default {
         this.sendPassword()
       },
       async sendPassword() {
-        await userAPI.resetPasswordWithToken(this.$route.params.resetId, this.register.password)
+        await userAPI.resetPasswordWithoutToken(this.register.password, this.$store.state.auth.token)
             .then((response) => {
               if (response.data.status === 200) {
                 alert(this.$t('ResetPasswordPage.success'))
