@@ -32,16 +32,17 @@
 
                 <!-- You can also add your own -->
                 <button id="addUser-button" @click="addUserHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addUser') }}</button>
 
                 <button id="addOwner-button" @click="addOwnerHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addOwner') }}</button>
 
                 <button id="endDate-button" @click="addEndDateHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
 
                 <button id="link-button" @click="addLink"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Document Link</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
+
 
             </div>
         </quill-editor>

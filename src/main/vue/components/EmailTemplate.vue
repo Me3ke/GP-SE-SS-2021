@@ -1,6 +1,5 @@
 <template>
     <b-container>
-
                     <div style="padding-bottom: 1em" class="flex-box-2">
 
                         <button class="elsa-blue-btn"
@@ -8,32 +7,41 @@
                                   v-if="selectedTemplateObject !== {}"
                                   @click="showNewCreateTemplate"
                         >
-                            Create Template
+                            {{ $t('EmailTemplate.createTemp') }}
                         </button>
 
                         <button class="elsa-blue-btn"
                                 style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto;"
                                 @click="showDeleteTemplates"
                         >
-                            Delete Template
+                            {{ $t('EmailTemplate.deleteTemp') }}
                         </button>
                     </div>
 
-                    <select v-model="selected" @change="changedValue(selected)">
+                    <b-container>
+                        <b-row>
+                        <b-col>
+
+                        <select v-model="selected" @change="changedValue(selected)">
                         <option v-for="(content, index) in emailTemplate" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
+                        </b-col>
 
+                        <b-col>
+                            <button
+                                type="button"
+                                v-b-modal="'modal-editor'"
+                                class="mt-1 light-btn"
+                                style="width: auto;"
+                            ><span class="button-txt">
+                                {{ $t('EmailTemplate.editTemp') }}
+                            </span></button>
+                        </b-col>
+                        </b-row>
+                    </b-container>
 
-                    <button
-                        type="button"
-                        v-b-modal="'modal-editor'"
-                        class="mt-1 light-btn"
-                    ><span class="button-txt">
-                        Edit
-                    </span></button>
-
-                <b-container style="padding-top: 1em;"> <h4><span>Preview</span></h4>
+                <b-container style="padding-top: 1em;"> <h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
                     <b-container style="overflow:scroll; overflow-x:hidden; height:300px;" v-html="selected.htmlTemplateBody"></b-container>
                 </b-container>
                     <!--- Editor --->
@@ -47,7 +55,7 @@
                     >
 
                         <b-container style="padding-right: 0; padding-left: 0;">
-                            <p> <span> To edit the template, just write in the editor and it will be applied automatically </span></p>
+                            <p> <span> {{ $t('EmailTemplate.editSentence') }} </span></p>
 
                             <quill-editor
                                 ref="editor"
@@ -78,16 +86,16 @@
 
                                     <!-- You can also add your own -->
                                     <button id="addUser-button" @click="addUserHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add User</button>
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addUser') }}</button>
 
                                     <button id="addOwner-button" @click="addOwnerHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Owner</button>
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addOwner') }}</button>
 
                                     <button id="endDate-button" @click="addEndDateHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add End Date</button>
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
 
                                     <button id="link-button" @click="addLink"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> Add Document Link</button>
+                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
 
                                 </div>
 
@@ -98,7 +106,7 @@
                                 class="mt-1 light-btn"
                                 @click="saveEditedTemplate"
                             ><span class="button-txt">
-                        Save
+                        {{ $t('EmailTemplate.saveTemp') }}
                     </span></button>
                         </b-container>
 
@@ -114,13 +122,13 @@
                 >
                     <b-container>
                         <p>
-                            Noticed Unsaved Changes!
+                            {{ $t('EmailTemplate.unsavedChanged') }}
                         </p>
                         <p>
-                            If you want to save the Edited template click on the "Save Template" Button
+                            {{ $t('EmailTemplate.unsavedChanged2') }}
                         </p>
                         <p>
-                            If it is for single use only click on "Single Use" Button
+                            {{ $t('EmailTemplate.unsavedChanged3') }}
                         </p>
                     </b-container>
 
@@ -132,7 +140,7 @@
                         >
 
                     <span class="button-txt">
-                        Single Use
+                        {{ $t('EmailTemplate.singleUse') }}
                     </span>
                         </button>
 
@@ -144,7 +152,7 @@
 
                         >
                     <span class="button-txt">
-                        Save Template
+                        {{ $t('EmailTemplate.saveTemp') }}
                     </span>
                         </button>
                     </div>

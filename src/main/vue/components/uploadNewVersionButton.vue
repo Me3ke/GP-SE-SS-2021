@@ -160,7 +160,7 @@
         ref="modal-page3"
         class="modal-emailTemplate"
         centered
-        :title= "document.title + ' Email Template' "
+        :title= "document.title + $t('EmailTemplate.emailTemp') "
 
         ok-only hide-footer
         >

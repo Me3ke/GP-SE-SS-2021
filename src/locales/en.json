@@ -590,5 +590,24 @@
         "serverErrorOne": "Your comment could not be posted.",
         "serverErrorTwo": "Please try again later or talk to an administrator.",
         "serverErrorThree": "The comments could not be loaded."
+    },
+    "EmailTemplate": {
+        "emailTemp": "Email template",
+        "createTemp": "Add template",
+        "deleteTemp": "Delete template",
+        "editTemp": "Edit template",
+        "previewTemp": "Preview",
+        "saveTemp": "Save template",
+        "editSentence": "To edit the template, just write in the editor and it will be applied automatically.",
+        "unsavedChanged": "Noticed unsaved changes",
+        "unsavedChanged2": "If you want to save the Edited template click on the \"Save template\" button.",
+        "unsavedChanged3": "If it is for single use only click on \"Single use\" button.",
+        "singleUse": "Single use",
+        "toolbar": {
+            "addUser": "Add user",
+            "addOwner": "Add owner",
+            "addEndDate": "Add end date",
+            "documentLink": "Add document link"
+        }
     }
 }
