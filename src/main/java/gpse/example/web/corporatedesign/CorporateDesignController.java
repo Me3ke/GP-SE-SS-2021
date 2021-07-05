@@ -3,8 +3,15 @@ package gpse.example.web.corporatedesign;
 import gpse.example.domain.corporatedesign.CorporateDesign;
 import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
+import gpse.example.domain.security.SecurityConstants;
+import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserService;
 import gpse.example.web.JSONResponseObject;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +26,9 @@ public class CorporateDesignController {
 
     private static final int STATUS_CODE_OK = 200;
     private static final long CHANGEABLE_DESIGN = 2L;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
+    private static final String SUCCESS_MESSAGE = "Success";
+    private static final String ADMIN_VALIDATION_REQUIRED = "You are not an admin";
     private static final long DEFAULT_DESIGN = 1L;
     private static final String SUCCESSFUL = "corporate design changed successfully";
     private final CorporateDesignService corporateDesignService;
@@ -27,6 +37,13 @@ public class CorporateDesignController {
     public CorporateDesignController(final CorporateDesignService corporateDesignService) {
         this.corporateDesignService = corporateDesignService;
     }
+
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * The getLogo method does a get request on the logo.
@@ -124,5 +141,52 @@ public class CorporateDesignController {
         return response;
     }
 
+    @GetMapping("impressum")
+    public JSONResponseObject getImpressumsText() throws CorporateDesignNotFoundException {
+        CorporateDesign corporateDesign;
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        try {
+            corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
+        } catch (CorporateDesignNotFoundException e) {
+            corporateDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
+        }
+        jsonResponseObject.setStatus(STATUS_CODE_OK);
+        jsonResponseObject.setMessage(corporateDesign.getImpressumsText());
+        return jsonResponseObject;
+    }
 
+    @PutMapping("impressum")
+    public JSONResponseObject setImpressumsText(@RequestHeader final String token,
+                                                @RequestBody final String impressumText)
+            throws CorporateDesignNotFoundException {
+        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        if (checkIfAdmin(token)) {
+            CorporateDesign corporateDesign;
+            final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
+            try {
+                corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
+            } catch (CorporateDesignNotFoundException e) {
+                corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
+                        defaultDesign.getLogo(), defaultDesign.getLogoDark());
+            }
+            corporateDesign.setImpressumsText(impressumText);
+            corporateDesignService.saveCorporateDesign(corporateDesign);
+            jsonResponseObject.setStatus(STATUS_CODE_OK);
+            jsonResponseObject.setMessage(SUCCESSFUL);
+        } else {
+            jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+            jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
+        }
+        return jsonResponseObject;
+    }
+
+    private boolean checkIfAdmin(final String token) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+                .setSigningKey(signingKey).build()
+                .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        final User user = userService.getUser(parsedToken.getBody().getSubject());
+        return user.getRoles().contains("ROLE_ADMIN");
+    }
 }
