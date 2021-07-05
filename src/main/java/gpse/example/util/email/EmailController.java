@@ -54,10 +54,10 @@ public class EmailController {
      */
     @PostMapping("/user/{userId}/templates")
     public void setEmailTemplate(@PathVariable(USER_ID) final String userId,
-                                 @RequestParam("template") final String template) {
+                                 @RequestBody final TemplatePutRequest template) {
         final User user = userService.getUser(userId);
-        user.addEmailTemplate(new EmailTemplate(template, "ELSA - Signatureinladung/ELSA - signature invitation",
-            "name", false));
+        user.addEmailTemplate(new EmailTemplate(template.getHtmlBody(), template.getSubject(), template.getName(),
+            false));
         userService.saveUser(user);
     }
 
@@ -84,17 +84,19 @@ public class EmailController {
      * PutMapping for reworked templates.
      * @param userId user who Owns Template
      * @param templateId id of the Template
-     * @param reworkedTemplate the reworked TemplateBody
+     * @param template the new template data
      */
     @PutMapping("/user/{userId}/templates/{templateId}")
     public void updateEmailTemplate(@PathVariable(EmailController.USER_ID) final String userId,
                                     @PathVariable("templateId") final long templateId,
-                                    @RequestParam("reworkedTemplate") final String reworkedTemplate) {
+                                    @RequestBody final TemplatePutRequest template) {
 
         final User user = userService.getUser(userId);
         for (final EmailTemplate temp : user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId) {
-                temp.setHtmlTemplateBody(reworkedTemplate);
+                temp.setHtmlTemplateBody(template.getHtmlBody());
+                temp.setSubject(template.getSubject());
+                temp.setName(template.getName());
                 break;
             }
         }
