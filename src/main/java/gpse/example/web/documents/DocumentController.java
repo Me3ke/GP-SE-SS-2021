@@ -209,11 +209,20 @@ public class DocumentController {
             .body(document.getData());
     }
 
+    /**
+     * Gives back archived document.
+     *
+     * @param userID     the id of the user doing the request.
+     * @param documentID the id of the document.
+     * @return a documentGetResponse of the archived document
+     * @throws DocumentNotFoundException s thrown if the document that the request relates to does not exist.
+     */
     @GetMapping("/user/{userID}/archivedDocument/{documentID}")
     public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
-                                @PathVariable("documentID") final long documentID) throws DocumentNotFoundException {
+                                                    @PathVariable("documentID") final long documentID)
+        throws DocumentNotFoundException {
         Document document = documentService.getDocument(documentID);
-        if(document.getState() == DocumentState.CLOSED) {
+        if (document.getState() == DocumentState.CLOSED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
         return null;
@@ -423,20 +432,21 @@ public class DocumentController {
     }
 
 
-    /*
+    /**
      * The getDocumentHistory method does a get request to get the document history.
      *
+     * @param userID  the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
-    public List<DocumentOverviewResponse> getDocumentHistory( @PathVariable final String userID,
-        final @PathVariable(DOCUMENT_ID) long documentID)
+    public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
+                                                             final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
         List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
         List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
-        for (Document document:documentHistory) {
+        for (Document document : documentHistory) {
             responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
                 userID));
         }
