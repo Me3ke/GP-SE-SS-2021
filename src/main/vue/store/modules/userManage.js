@@ -8,6 +8,7 @@ export const state = {
     userValidateStatus: {},
     userMakeAdminStatus: {},
     lockUserStatus: {},
+    seeUserStatus: {},
     userManagementError: {}
 }
 
@@ -29,6 +30,10 @@ export const mutations = {
         state.userMakeAdminStatus = progress
     },
 
+    SET_USER_SEE(state, progress) {
+        state.seeUserStatus = progress
+    },
+
     SET_USER_MANAGEMENT_ERROR(state, error) {
         state.userManagementError = error
     },
@@ -38,6 +43,7 @@ export const mutations = {
         state.userValidateStatus = {}
         state.userMakeAdminStatus = {}
         state.lockUserStatus = {}
+        state.seeUserStatus = {}
         state.userManagementError = {}
     }
 }
@@ -76,6 +82,14 @@ export const actions = {
     lockUser({commit}, userId) {
         return UserManagementAPI.lockUser(userId).then(response => {
             commit('SET_USER_LOCK', response.data)
+        }).catch(error => {
+            commit('SET_USER_MANAGEMENT_ERROR', error)
+        })
+    },
+
+    seeUser({commit}, userId) {
+        return UserManagementAPI.seeUser(userId).then(response => {
+            commit('SET_USER_SEE', response.data)
         }).catch(error => {
             commit('SET_USER_MANAGEMENT_ERROR', error)
         })

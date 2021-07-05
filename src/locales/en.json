@@ -578,7 +578,8 @@
                 "active": "Activate",
                 "inactive": "Deactivate",
                 "admin": "Make admin"
-            }
+            },
+            "new": "NEW"
         }
     },
     "ProgressBar": {

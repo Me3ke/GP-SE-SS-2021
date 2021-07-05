@@ -96,13 +96,27 @@
     background-color: var(--light-grey);
 }
 
-.history:hover{
+.history:hover {
     background-color: var(--light-grey);
     cursor: pointer;
 }
 
-.history{
+.history {
     width: 100%;
+}
+
+.unseen-user {
+    background-color: var(--elsa-blue-transparent);
+}
+
+/* New User Badge */
+.badge {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    font-size: inherit;
+    font-weight: 503;
+    margin-left: 0.75em;
+    text-align: center;
 }
 
 /* Buttons */
@@ -188,6 +202,7 @@
 .fade-leave-active {
     transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
     opacity: 0;

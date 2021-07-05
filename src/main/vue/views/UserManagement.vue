@@ -96,11 +96,11 @@
         </div>
 
         <!-- User -->
-        <div class="container-fluid">
+        <div class="container-fluid" v-if="loaded">
             <div class="user-container">
                 <div v-for="(user,index) in allUsers(filter, pageLimit,page)" :key="index" style="display: flex">
                     <UserBox :user="user" :deactivated="!user.adminValidated"
-                             :admin="user.roles.includes('ROLE_ADMIN')"></UserBox>
+                             :admin="user.roles.includes('ROLE_ADMIN')" :seen="user.seen"></UserBox>
                     <b-icon v-if="!selected.includes(index)" icon="circle" class="my-icon checker"
                             @click="changeSelected(index)"></b-icon>
                     <b-icon v-else icon="check-circle" class="my-icon checker"
@@ -186,14 +186,18 @@ export default {
             page: 1,
 
             showSave: false,
-            showError: false
+            showError: false,
+
+            loaded: false
         }
     },
     async mounted() {
         await this.$store.dispatch('userManagement/fetchAllUsers')
+        this.loaded = true
     },
-    beforeDestroy() {
-        this.$store.dispatch('userManagement/emptyStore')
+    async beforeDestroy() {
+        await this.seeAll()
+        await this.$store.dispatch('userManagement/emptyStore')
     },
     methods: {
         // Change filter and make sure active and inactive filter is not activated at the same time
@@ -241,6 +245,9 @@ export default {
             for (let i = 0; i < this.selected.length; i++) {
                 if (!user[this.selected[i]].roles.includes('ROLE_ADMIN')) {
                     await this.$store.dispatch('userManagement/makeUserAdmin', user[this.selected[i]].email)
+                    if (!user[this.selected[i]].seen) {
+                        await this.makeSeen(user[this.selected[i]].email)
+                    }
                     didSomething = true
                 }
             }
@@ -259,6 +266,9 @@ export default {
             for (let i = 0; i < this.selected.length; i++) {
                 if (user[this.selected[i]].adminValidated && !user[this.selected[i]].roles.includes('ROLE_ADMIN')) {
                     await this.$store.dispatch('userManagement/lockUser', user[this.selected[i]].email)
+                    if (!user[this.selected[i]].seen) {
+                        await this.makeSeen(user[this.selected[i]].email)
+                    }
                     didSomething = true
                 }
             }
@@ -277,6 +287,9 @@ export default {
             for (let i = 0; i < this.selected.length; i++) {
                 if (!user[this.selected[i]].adminValidated) {
                     await this.$store.dispatch('userManagement/validateUser', user[this.selected[i]].email)
+                    if (!user[this.selected[i]].seen) {
+                        await this.makeSeen(user[this.selected[i]].email)
+                    }
                     didSomething = true
                 }
             }
@@ -304,10 +317,26 @@ export default {
             }
         },
 
+        // marks user as seen
+        async makeSeen(userId) {
+            await this.$store.dispatch('userManagement/seeUser', userId)
+        },
+
+        // marks all users seen
+        async seeAll() {
+            let user = this.allUsers(this.filter, this.pageLimit, this.page)
+            for (let i = 0; i < user.length; i++) {
+                if (!user[i].seen) {
+                    await this.makeSeen(user[i].email)
+                }
+            }
+        },
+
         hasError() {
             return !_.isEmpty(this.error);
         }
-    },
+    }
+    ,
     computed: {
         ...mapGetters({
             allUsers: 'userManagement/getFilteredPagesUsers',

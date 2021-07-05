@@ -2,7 +2,6 @@ import axios from 'axios';
 import store from "@/main/vue/store/store";
 
 
-
 export default {
 
     async getAllUser() {
@@ -45,6 +44,19 @@ export default {
         return axios({
             method: 'put',
             url: 'http://localhost:8088/api/admin/lockUser',
+            params: {
+                userid: userID
+            },
+            headers: {
+                'token': store.state.auth.token
+            }
+        })
+    },
+
+    async seeUser(userID) {
+        return axios({
+            method: 'put',
+            url: 'http://localhost:8088/api/admin/userseen',
             params: {
                 userid: userID
             },
