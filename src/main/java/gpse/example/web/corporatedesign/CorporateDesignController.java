@@ -33,17 +33,17 @@ public class CorporateDesignController {
     private static final String SUCCESSFUL = "corporate design changed successfully";
     private final CorporateDesignService corporateDesignService;
 
-    @Autowired
-    public CorporateDesignController(final CorporateDesignService corporateDesignService) {
-        this.corporateDesignService = corporateDesignService;
-    }
-
     @Lazy
     @Autowired
     private SecurityConstants securityConstants;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    public CorporateDesignController(final CorporateDesignService corporateDesignService) {
+        this.corporateDesignService = corporateDesignService;
+    }
 
     /**
      * The getLogo method does a get request on the logo.
@@ -141,10 +141,16 @@ public class CorporateDesignController {
         return response;
     }
 
+    /**
+     * Request for getting the impressum text.
+     *
+     * @return a JSONResponseObject with the impressum text as message and a status code.
+     * @throws CorporateDesignNotFoundException if the default corporate Design was not found.
+     */
     @GetMapping("impressum")
     public JSONResponseObject getImpressumsText() throws CorporateDesignNotFoundException {
         CorporateDesign corporateDesign;
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
@@ -155,11 +161,19 @@ public class CorporateDesignController {
         return jsonResponseObject;
     }
 
+    /**
+     * * Request for getting the impressum text.
+     *
+     * @param token         the user token which is used for validation.
+     * @param impressumText the new impressum text.
+     * @return a JSONResponseObject with a message and a status code.
+     * @throws CorporateDesignNotFoundException if the default corporate Design was not found.
+     */
     @PutMapping("impressum")
-    public JSONResponseObject setImpressumsText(@RequestHeader final String token,
+    public JSONResponseObject updateImpressumsText(@RequestHeader final String token,
                                                 @RequestBody final String impressumText)
-            throws CorporateDesignNotFoundException {
-        JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        throws CorporateDesignNotFoundException {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (checkIfAdmin(token)) {
             CorporateDesign corporateDesign;
             final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
@@ -167,12 +181,12 @@ public class CorporateDesignController {
                 corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
             } catch (CorporateDesignNotFoundException e) {
                 corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                        defaultDesign.getLogo(), defaultDesign.getLogoDark());
+                    defaultDesign.getLogo(), defaultDesign.getLogoDark());
             }
             corporateDesign.setImpressumsText(impressumText);
             corporateDesignService.saveCorporateDesign(corporateDesign);
             jsonResponseObject.setStatus(STATUS_CODE_OK);
-            jsonResponseObject.setMessage(SUCCESSFUL);
+            jsonResponseObject.setMessage(SUCCESS_MESSAGE);
         } else {
             jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
             jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
@@ -183,8 +197,8 @@ public class CorporateDesignController {
     private boolean checkIfAdmin(final String token) {
         final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
         final Jws<Claims> parsedToken = Jwts.parserBuilder()
-                .setSigningKey(signingKey).build()
-                .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
 
         final User user = userService.getUser(parsedToken.getBody().getSubject());
         return user.getRoles().contains("ROLE_ADMIN");
