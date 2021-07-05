@@ -1,6 +1,5 @@
 package gpse.example.util.email;
 
-import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import gpse.example.util.email.trusteddomain.DomainSetter;
@@ -8,11 +7,7 @@ import gpse.example.util.email.trusteddomain.DomainSetterService;
 import gpse.example.util.email.trusteddomain.DomainSettingsGetResponse;
 import gpse.example.util.email.trusteddomain.DomainSettingsPutRequest;
 import gpse.example.web.JSONResponseObject;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +32,7 @@ public class EmailController {
     private UserService userService;
     @Autowired
     private DomainSetterService domainSetterService;
-    @Lazy
-    @Autowired
-    private SecurityConstants securityConstants;
+
 
     @GetMapping("/user/{userId}/templates")
     public List<EmailTemplate> getUserTemplates(@PathVariable(USER_ID) final String userId) {
@@ -111,7 +104,7 @@ public class EmailController {
     @GetMapping("email/settings/trustedDomain")
     public JSONResponseObject getTrustedDomainSettings(@RequestHeader final String token) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(token)) {
+        if (userService.checkIfAdmin(token)) {
             jsonResponseObject.setStatus(STATUS_CODE_OK);
             jsonResponseObject.setMessage(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
         } else {
@@ -132,7 +125,7 @@ public class EmailController {
                                                   @RequestParam("domain") final String domain) {
 
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(token)) {
+        if (userService.checkIfAdmin(token)) {
             final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setTrustedMailDomain(domain);
             domainSetterService.saveDomainSettings(domainSetter);
@@ -153,7 +146,7 @@ public class EmailController {
     @GetMapping("email/settings")
     public DomainSettingsGetResponse getDomainSettings(@RequestHeader final String token) {
 
-        if (checkIfAdmin(token)) {
+        if (userService.checkIfAdmin(token)) {
             final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             return new DomainSettingsGetResponse(domainSetter.getHost(), domainSetter.getPort(),
                     domainSetter.getUsername(), domainSetter.isMailSMTPAuth(),
@@ -173,7 +166,7 @@ public class EmailController {
     public JSONResponseObject updateSMTPSettings(@RequestHeader final String token,
                                                  @RequestBody final DomainSettingsPutRequest domainSettingsPutRequest) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(token)) {
+        if (userService.checkIfAdmin(token)) {
             final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             domainSetter.setHost(domainSettingsPutRequest.getHost());
             domainSetter.setPort(domainSettingsPutRequest.getPort());
@@ -188,16 +181,5 @@ public class EmailController {
             jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
         }
         return jsonResponseObject;
-    }
-
-    private boolean checkIfAdmin(final String token) {
-        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        final Jws<Claims> parsedToken = Jwts.parserBuilder()
-                .setSigningKey(signingKey).build()
-                .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
-
-
-        final User user = userService.getUser(parsedToken.getBody().getSubject());
-        return user.getRoles().contains("ROLE_ADMIN");
     }
 }

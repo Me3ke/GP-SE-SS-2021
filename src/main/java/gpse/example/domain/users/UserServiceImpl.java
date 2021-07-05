@@ -1,8 +1,12 @@
 package gpse.example.domain.users;
 
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.util.email.*;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailTemplateService emailTemplateService;
+
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
 
     /**
      * the smtpServerHelper Service for sending emails.
@@ -184,5 +192,15 @@ public class UserServiceImpl implements UserService {
     public User saveUser(final User user) {
         securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
+    }
+
+    @Override
+    public boolean checkIfAdmin(final String token) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+        final User user = getUser(parsedToken.getBody().getSubject());
+        return user.getRoles().contains("ROLE_ADMIN");
     }
 }

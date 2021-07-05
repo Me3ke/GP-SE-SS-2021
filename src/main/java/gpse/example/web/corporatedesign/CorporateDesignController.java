@@ -3,15 +3,9 @@ package gpse.example.web.corporatedesign;
 import gpse.example.domain.corporatedesign.CorporateDesign;
 import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
-import gpse.example.domain.security.SecurityConstants;
-import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import gpse.example.web.JSONResponseObject;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +26,6 @@ public class CorporateDesignController {
     private static final long DEFAULT_DESIGN = 1L;
     private static final String SUCCESSFUL = "corporate design changed successfully";
     private final CorporateDesignService corporateDesignService;
-
-    @Lazy
-    @Autowired
-    private SecurityConstants securityConstants;
 
     @Autowired
     private UserService userService;
@@ -174,7 +164,7 @@ public class CorporateDesignController {
                                                 @RequestBody final String impressumText)
         throws CorporateDesignNotFoundException {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        if (checkIfAdmin(token)) {
+        if (userService.checkIfAdmin(token)) {
             CorporateDesign corporateDesign;
             final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
             try {
@@ -192,15 +182,5 @@ public class CorporateDesignController {
             jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
         }
         return jsonResponseObject;
-    }
-
-    private boolean checkIfAdmin(final String token) {
-        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-        final Jws<Claims> parsedToken = Jwts.parserBuilder()
-            .setSigningKey(signingKey).build()
-            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
-
-        final User user = userService.getUser(parsedToken.getBody().getSubject());
-        return user.getRoles().contains("ROLE_ADMIN");
     }
 }
