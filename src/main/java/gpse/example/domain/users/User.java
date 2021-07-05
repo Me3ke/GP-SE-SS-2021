@@ -332,6 +332,10 @@ public class User implements UserDetails {
         return personalData;
     }
 
+    public boolean isSeenByAdmin() {
+        return seenByAdmin;
+    }
+
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }

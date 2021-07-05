@@ -12,6 +12,7 @@ public class UserManagementResponse extends UserResponseObject {
     private List<String> roles;
     private boolean adminValidated;
     private boolean emailConfirmed;
+    private boolean seen;
 
     /**
      * the standard constructor.
@@ -23,6 +24,7 @@ public class UserManagementResponse extends UserResponseObject {
         this.adminValidated = user.isAccountNonLocked();
         this.emailConfirmed = user.isEnabled();
         this.roles = user.getRoles();
+        this.seen = user.isSeenByAdmin();
     }
 
     public boolean isAdminValidated() {
@@ -47,5 +49,13 @@ public class UserManagementResponse extends UserResponseObject {
 
     public void setRoles(final List<String> roles) {
         this.roles = roles;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

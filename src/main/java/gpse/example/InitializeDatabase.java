@@ -148,6 +148,7 @@ public class InitializeDatabase implements InitializingBean {
             user.setAccountNonLocked(true);
             user.addEmailTemplate(new EmailTemplate(template.getHtmlTemplateBody(), template.getSubject(),
                 template.getName(), false));
+            user.setToSeenByAdmin();
             userService.saveUser(user);
         }
         try {
@@ -164,6 +165,7 @@ public class InitializeDatabase implements InitializingBean {
             user.setAccountNonLocked(true);
             user.setPersonalData(personalData);
             user.addEmailTemplate(template);
+            user.setToSeenByAdmin();
             userService.saveUser(user);
         }
         if (domainSetterService.isEmpty()) {
