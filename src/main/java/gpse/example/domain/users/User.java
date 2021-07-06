@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gpse.example.domain.adressbook.AddressBook;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.messages.MessageSettingsContainer;
@@ -101,6 +102,12 @@ public class User implements UserDetails {
         cascade = CascadeType.ALL
     )
     private MessageSettingsContainer messageSettings;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private AddressBook addressBook = new AddressBook();
 
     protected User() {
 
@@ -412,5 +419,13 @@ public class User implements UserDetails {
 
     public void setToSeenByAdmin() {
         this.seenByAdmin = true;
+    }
+
+    public AddressBook getAddressBook() {
+        return addressBook;
+    }
+
+    public void setAddressBook(final AddressBook addressBook) {
+        this.addressBook = addressBook;
     }
 }
