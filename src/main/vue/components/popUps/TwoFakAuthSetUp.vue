@@ -59,13 +59,16 @@
                                         <div class="step" style="margin-top: 0;">
                                             {{ $t('TwoFakAuth.login.secondStep') }}
                                         </div>
+
                                         <div class="content-div">
-                                            <b-form-input id="input-code"
-                                                          v-model="code"
-                                                          placeholder="Code"
-                                                          trim>
-                                            </b-form-input>
+                                            <PincodeInput
+                                                v-model="code"
+                                                placeholder="0"
+                                                :length="6"
+                                                style="margin-bottom: 1em"
+                                            />
                                         </div>
+
 
                                         <b-alert :show="showAlert" dismissible
                                                  @dismissed="showAlert = false"
@@ -139,13 +142,14 @@
                                             </div>
                                         </b-alert>
 
+
                                         <div class="content-div">
-                                            <b-form-input id="input-code"
-                                                          v-model="code"
-                                                          placeholder="Code"
-                                                          trim
-                                                          style="margin-bottom: 1em">
-                                            </b-form-input>
+                                            <PincodeInput
+                                                v-model="code"
+                                                placeholder="0"
+                                                :length="6"
+                                                style="margin-bottom: 1em"
+                                            />
                                         </div>
 
                                         <b-alert :show="showAlert" dismissible
@@ -210,6 +214,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import PincodeInput from 'vue-pincode-input';
 import _ from "lodash";
 
 export default {
@@ -222,6 +227,9 @@ export default {
             code: '',
             always: false
         }
+    },
+    components: {
+        PincodeInput
     },
     async created() {
         await this.$store.dispatch('twoFakAuth/fetchHasSetUp')

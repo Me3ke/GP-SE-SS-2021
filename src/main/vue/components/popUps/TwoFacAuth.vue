@@ -62,11 +62,12 @@
                                         </div>
 
                                         <div class="content-div">
-                                            <b-form-input id="input-code"
-                                                          v-model="code"
-                                                          placeholder="Code"
-                                                          trim>
-                                            </b-form-input>
+                                            <PincodeInput
+                                                v-model="code"
+                                                placeholder="0"
+                                                :length="6"
+                                                style="margin-bottom: 1em"
+                                            />
                                         </div>
 
                                         <b-alert :show="showAlertCode" dismissible
@@ -135,6 +136,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import PincodeInput from "vue-pincode-input";
 
 export default {
     name: "TwoFacAuth",
@@ -147,6 +149,9 @@ export default {
             type: Boolean,
             default: false
         }
+    },
+    components: {
+        PincodeInput
     },
     data() {
         return {
