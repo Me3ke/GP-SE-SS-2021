@@ -61,16 +61,14 @@
         </div>
 
         <!-- Versions -->
-        <div class="container-fluid">
+        <div class="container-fluid" v-if="loaded">
             <div class="user-container">
                 <div v-for="(document,index) in history(filter, pageLimit, page)" :key="index">
-                    <transition-group name="fade" mode="out-in">
-                        <HistoryBox v-if="showPdf === -1 || showPdf === document.id" :document="document"
-                                    :current="showPdf === document.id"
-                                    @click.native="togglePdfViewer(document.id)" :key="document.id"></HistoryBox>
-                        <PDFViewer v-if="showPdf === document.id" :overflow="true" :pdf-src="getSrc()"
-                                   :key="document.id + history(filter, pageLimit, page).length "></PDFViewer>
-                    </transition-group>
+                    <HistoryBox v-if="showPdf === -1 || showPdf === document.id" :document="document"
+                                :current="showPdf === document.id"
+                                @click.native="togglePdfViewer(document.id)" :key="document.id"></HistoryBox>
+                    <PDFViewer v-if="showPdf === document.id" :overflow="true" :pdf-src="getSrc()"
+                               :key="document.id + history(filter, pageLimit, page).length "></PDFViewer>
                 </div>
             </div>
         </div>
@@ -120,7 +118,9 @@ export default {
             dataError: false,
 
             pageLimit: 10,
-            page: 1
+            page: 1,
+
+            loaded: false
         }
     },
     async mounted() {
@@ -128,6 +128,7 @@ export default {
             envId: this.$route.params.envId,
             docId: this.$route.params.docId
         })
+        this.loaded = true
     },
     beforeDestroy() {
         this.$store.dispatch('document/clearHistory')
