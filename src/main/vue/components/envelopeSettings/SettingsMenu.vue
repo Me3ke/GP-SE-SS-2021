@@ -102,6 +102,7 @@
 import ReaderMenu from "@/main/vue/components/envelopeSettings/ReaderMenu";
 import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatoryMenu";
 import SignatoryListItem from "@/main/vue/components/SignatoryListItem";
+import {mapGetters} from "vuex";
 
 export default {
     name: "settingsMenu",
@@ -112,6 +113,7 @@ export default {
         signatories: Array,
         endDate: String,
         orderRelevant: Boolean,
+        editAll: Boolean
     },
     components: {
         ReaderMenu,
@@ -133,6 +135,14 @@ export default {
                 reminderTiming: null
             }
         }
+    },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
+    computed: {
+        ...mapGetters({
+            envelope: 'envelopes/getEnvelope'
+        })
     },
     methods: {
         initSignatories() {
@@ -175,7 +185,15 @@ export default {
                 newSettings.orderRelevant = this.orderRelevant
                 newSettings.signatories = this.makeSignatories(this.readers, this.signatories)
             }
-            await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings})
+            if(this.editAll) {
+                let envelope = this.envelope(this.envId)
+                let i;
+                for(i = 0; i < envelope.documents.length; i++){
+                    await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": envelope.documents[i].id, "envId": this.envId, "settings": newSettings})
+                }
+            } else {
+                await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings})
+            }
             this.editSignatories = false;
             this.editReaders = false;
             this.editDate = false;
@@ -254,5 +272,4 @@ export default {
     height: 2.5em;
     padding: 0.5em;
 }
-
 </style>

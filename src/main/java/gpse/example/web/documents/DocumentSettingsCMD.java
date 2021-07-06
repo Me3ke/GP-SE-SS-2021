@@ -2,6 +2,7 @@ package gpse.example.web.documents;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -22,7 +23,11 @@ public class DocumentSettingsCMD {
         if (endDate.equals("")) {
             return null;
         }
-        return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        try{
+            return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } catch (DateTimeParseException dtpe) {
+            return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
     }
 
     public List<SignatorySetting> getSignatories() {

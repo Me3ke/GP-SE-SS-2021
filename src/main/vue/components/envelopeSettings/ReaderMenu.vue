@@ -15,12 +15,12 @@
         <div >
         </div>
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
-            <div class="drag-drop-element" v-for="reader in readerArray" :key="reader" style="padding:0.25em">
+            <div class="drag-drop-element" v-for="reader in readerArray" :key="reader.email" style="padding:0.25em">
                 <b-row align-h="between">
                     <h6>
                         <b-col cols="auto">
                             <b-icon class="icon-hover" icon="trash" @click="deleteReader(reader)"></b-icon>
-                            {{reader}}
+                            {{reader.email}}
                         </b-col>
                     </h6>
                 </b-row>
@@ -46,7 +46,7 @@ export default {
             if(this.readerArray.includes(this.readerInput)) {
                 // TODO: Error
             } else {
-                this.readerArray.push(this.readerInput);
+                this.readerArray.push({email: this.readerInput});
             }
             this.readerInput = "";
         },

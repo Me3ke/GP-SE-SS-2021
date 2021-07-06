@@ -7,6 +7,7 @@ import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * The class used to send the current settings of a signatory to the frontend.
@@ -54,7 +55,11 @@ public class SignatorySetting {
         if (signedOn.equals("")) {
             return null;
         }
-        return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        try{
+            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } catch (DateTimeParseException dtpe) {
+            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
     }
 
     public String getEmail() {

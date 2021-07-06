@@ -39,7 +39,8 @@
                                           :signatories="getSignatories(getSettings(selectedId))"
                                           :readers="getReaders(getSettings(selectedId))"
                                           :endDate="getSettings(selectedId).endDate"
-                                          :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId">
+                                          :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId"
+                                          :editAll="false">
                             </SettingsMenu>
                         </div>
                     </b-col>
@@ -54,7 +55,8 @@
                               :signatories="getSignatories(getSettings(selectedId))"
                               :readers="getReaders(getSettings(selectedId))"
                               :endDate="getSettings(selectedId).endDate"
-                              :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId">
+                              :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId"
+                              :editAll="true">
                 </SettingsMenu>
             </div>
 
