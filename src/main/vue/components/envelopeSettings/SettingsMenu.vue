@@ -6,17 +6,21 @@
                 {{$t('Settings.DocumentSettings.endDate')}}
             </div>
             <div>
-                <b-list-group-item v-if="!this.editDate">{{ this.endDate }}</b-list-group-item>
-
+                <b-list-group-item v-if="!this.editDate">{{this.endDate}}</b-list-group-item>
                 <b-row align-h="end" v-if="!this.editDate">
                     <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editDate = true">
                         <b-icon icon="pencil-fill"></b-icon>
                         {{$t('Settings.DocumentSettings.edit')}}
                     </button>
                 </b-row>
-
-                <b-form-datepicker class="mb-2" v-if="this.editDate" v-model="settingsEdited.endDate"></b-form-datepicker>
-
+                <b-row v-if="this.editDate">
+                    <b-col cols="6">
+                        <b-form-datepicker class="mb-2" v-model="settingsEdited.endDate"></b-form-datepicker>
+                    </b-col>
+                    <b-col cols="6">
+                        <b-form-timepicker v-model="settingsEdited.endTime" locale="en"></b-form-timepicker>
+                    </b-col>
+                </b-row>
                 <b-row align-h="end" v-if="this.editDate">
                     <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em" class="light-btn" @click="editDate = false"> {{$t('DownloadDoc.cancel')}} </button>
                     <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn" @click="saveSettings()"> {{$t('Settings.DocumentSettings.save')}} </button>
@@ -132,7 +136,8 @@ export default {
                 endDate: "",
                 orderRelevant: null,
                 remind: null,
-                reminderTiming: null
+                reminderTiming: null,
+                endTime: ""
             }
         }
     },
@@ -164,9 +169,10 @@ export default {
         async saveSettings() {
             let newSettings = {signatories: null, orderRelevant: null, endDate: null}
             if (this.editDate) {
-                newSettings.endDate = this.settingsEdited.endDate + ' 12:00'
+                let time = this.settingsEdited.endTime.split(":")
+                newSettings.endDate = this.settingsEdited.endDate + ' ' + time[0] + ':' + time[1];
             } else {
-                newSettings.endDate = this.endDate + ' 12:00'
+                newSettings.endDate = this.endDate + ' 12:00' // TODO
             }
             if (this.editReaders && this.editSignatories) {
                 newSettings.orderRelevant = this.settingsEdited.orderRelevant

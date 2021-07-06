@@ -17,7 +17,7 @@
                 <b-row>
                     <b-col cols="2">
                         <b-row v-for="document in this.envelope(envId).documents" :key="document.id">
-                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id">
+                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id" style=" margin-bottom: 0.5em;">
                                 <h5>
                                     <b-row style="padding: 0.5em 1em 0;">
                                         <b-icon icon="file-earmark-text" style="margin-right: 0.5em; fill:var(--elsa-blue)"></b-icon>
@@ -31,7 +31,9 @@
                     </b-col>
                     <b-col cols="10">
                         <div v-if="selectedId === -1">
-                            {{$t('Settings.EnvelopeSettings.noDocumentSelected')}}
+                           <h3 >
+                               {{$t('Settings.DocumentSettings.noDocumentSelected')}}
+                           </h3>
                         </div>
                         <div v-if="!(selectedId === -1)">
                             <SettingsMenu
@@ -181,6 +183,9 @@ export default {
                 // TODO: Warning
                 this.editAll = !this.sameSettings(this.envelopeSettings)
             } else {
+                if(this.editAll === false && !this.sameSettings(this.envelopeSettings)) {
+                    // TODO: selectedID Pop Up!
+                }
                 this.editAll = !this.editAll
             }
         },

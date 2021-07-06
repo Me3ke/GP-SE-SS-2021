@@ -104,7 +104,15 @@
                                         </b-alert>
                                         <div>
                                             <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
-                                            <b-form-datepicker id="endDate" v-model="settings.endDate" class="mb-2"></b-form-datepicker>
+                                            <b-row>
+                                                <b-col cols="6">
+                                                    <b-form-datepicker class="mb-2" id="endDate" v-model="settings.endDate"></b-form-datepicker>
+                                                </b-col>
+                                                <b-col cols="6">
+                                                    <b-form-timepicker v-model="endTime" locale="en"></b-form-timepicker>
+                                                </b-col>
+                                                <div>{{settings.endTime}}</div>
+                                            </b-row>
                                         </div>
 
                                         <!-- Add readers -->
@@ -241,6 +249,7 @@ export default {
             reviewAddSignatory: false,
             signatories: [],
             readers: [],
+            endTime: null,
             selectedEnv: {
                 new: null,
                 old: null
@@ -251,7 +260,7 @@ export default {
                 endDate: null,
                 orderRelevant: true,
                 remind: false,
-                reminderTiming: null //TODO
+                reminderTiming: null,
             },
             file: {
                 data: null,
@@ -316,7 +325,7 @@ export default {
                 }
             } else if (this.page === 5) {
                 // checks endDate
-                this.errors.noEndDate = this.settings.endDate === null;
+                this.errors.noEndDate = this.settings.endDate === null || this.endTime === null;
                 if (this.review) {
                     // checks for readers
                     this.errors.noReaders = this.readers.length === 0;
@@ -350,8 +359,6 @@ export default {
             }
         },
         async upload() {
-            //TODO: Convert readers into signatories and concat arrays
-            //TODO: Error-handling
             await this.fillFile()
             this.fillSettings()
             if (!(this.selectedEnv.old === null)) {
@@ -364,10 +371,11 @@ export default {
             }
         },
         fillSettings() {
-            this.settings.endDate = this.settings.endDate + ' 12:00';
+            let time = this.endTime.split(":")
+            this.settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
             let i;
             for (i = 0; i < this.readers.length; i++) {
-                this.settings.signatories.push({email: this.readers[i], type: 0})
+                this.settings.signatories.push({email: this.readers[i].email, type: 0})
             }
             for (i = 0; i < this.signatories.length; i++) {
                 this.settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
