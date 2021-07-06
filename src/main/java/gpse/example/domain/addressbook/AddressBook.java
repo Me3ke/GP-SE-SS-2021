@@ -1,4 +1,4 @@
-package gpse.example.domain.adressbook;
+package gpse.example.domain.addressbook;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,16 +26,27 @@ public class AddressBook {
     @Column
     private boolean addDomainAutomatically;
 
+    /**
+     * Default constructor for an address book.
+     * Initially all contacts with the trustedDomain are saved into the address book.
+     */
     public AddressBook() {
         entries = new ArrayList<>();
-        //TODO initialValues
         addAllAutomatically = true;
         addDomainAutomatically = true;
     }
 
-    public Entry addEntry(final Entry entry) {
-        this.entries.add(entry);
-        return entry;
+    /**
+     * The addEntry method checks if the address book contains the email of the new entry.
+     * If this is not the case the new entry is added into the new address book.
+     * @param newEntry the new entry.
+     * @return the entry.
+     */
+    public Entry addEntry(final Entry newEntry) {
+        if (this.entries.stream().noneMatch(entry -> entry.getEmail().equals(newEntry.getEmail()))) {
+            this.entries.add(newEntry);
+        }
+        return newEntry;
     }
 
     public Entry removeEntry(final Entry entry) {

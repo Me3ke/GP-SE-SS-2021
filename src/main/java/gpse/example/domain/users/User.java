@@ -1,7 +1,8 @@
 package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import gpse.example.domain.adressbook.AddressBook;
+import gpse.example.domain.addressbook.AddressBook;
+import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.messages.MessageSettingsContainer;
@@ -140,6 +141,7 @@ public class User implements UserDetails {
         this.messageSettings.setNewVersion(true);
         this.messageSettings.setSign(true);
         this.messageSettings.setRead(true);
+        this.addressBook.addEntry(new Entry(this));
     }
 
     public static long getSerialVersionUID() {
