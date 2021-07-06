@@ -42,7 +42,8 @@ export default {
     computed: {
         ...mapGetters({
         documentProgress: 'document/getDocumentProgress',
-        documentProgressById: 'document/getDocumentProgressArrayById'
+        documentProgressById: 'document/getDocumentProgressArrayById',
+        auth : 'twoFakAuth/getAuthMust'
     }),
 
     },
@@ -58,8 +59,8 @@ export default {
         },
         // checks if doc needs advanced signature, if so 2FacAuth has to be done; otherwise go to doc directly
         checkDoc() {
-            // checking signatureType and is current user is not owner of document
-            if (this.advanced && (this.document.owner.email !== this.$store.state.auth.username)) {
+            // checking signatureType and if auth is necessary at the moment
+            if (this.advanced && this.auth) {
                 this.showAuth = true
             } else {
                 this.goToDoc()

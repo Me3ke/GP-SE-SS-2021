@@ -1,4 +1,5 @@
 import twoFakAuthAPI from "@/main/vue/api/twoFakAuthAPI";
+import _ from "lodash";
 
 export const namespaced = true
 
@@ -8,7 +9,8 @@ export const state = {
     qrCode: {},
     errorGetQrCode: {},
     correctInput: Boolean,
-    errorCorrectInput: {}
+    errorCorrectInput: {},
+    lastAuth: Date
 }
 
 export const mutations = {
@@ -88,5 +90,27 @@ export const getters = {
     },
     getErrorGetCorrectInput: (state) => {
         return state.errorCorrectInput
+    },
+
+    // gives back if new auth is required
+    getAuthMust: (state) => {
+        if(_.isEmpty(state.lastAuth)){
+            // setting current time as reference
+            state.lastAuth = new Date()
+            // auth is required
+            return true
+        } else {
+            let now = new Date()
+            // milliseconds
+            let diff = Math.abs(Date.parse(state.lastAuth) - now)
+
+            if(diff > 300000){
+                state.lastAuth = new Date()
+                // auth is required
+                return true
+            } else {
+                return false
+            }
+        }
     }
 }
