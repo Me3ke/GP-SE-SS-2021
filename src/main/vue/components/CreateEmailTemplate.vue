@@ -1,13 +1,23 @@
 <template>
     <b-container>
-        <input type="text">
+        <b-alert :show="subjectEmpty"> <!--- TODO COLOR--->
+             Subject is empty
+        </b-alert>
 
+        <b-container style="padding-bottom: .5em">
+            <span>Template name</span>
+            <b-form-input v-model="template.name" :placeholder="$t('EmailTemplate.enterName')"></b-form-input>
+        </b-container>
+        <b-container style="padding-bottom: .5em">
+            <span>Template subject</span>
+            <b-form-input v-model="template.subject" :placeholder="$t('EmailTemplate.enterSubject')"></b-form-input>
+        </b-container>
         <quill-editor
             ref="editor"
             v-model="template.htmlTemplateBody"
             class="editor"
             :options="editorOption"
-            style="width: auto"
+            style="width: auto; padding-bottom: .5em"
         >
             <div id="toolbar" slot="toolbar" style="width: auto">
                 <!-- Add a bold button -->
@@ -40,38 +50,39 @@
                 <button id="endDate-button" @click="addEndDateHtml"
                         style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
 
+                <button id="docTitle-button" @click="addDocTitle"
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentTitle') }}</button>
+
                 <button id="link-button" @click="addLink"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
+                        style="width: auto; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
 
 
             </div>
         </quill-editor>
-
-            <button type="button"
-                    class="ml-1 elsa-blue-btn"
-                    @click="saveTemp">
-                     <span class="button-txt">
-                         {{ $t('UploadDoc.continue') }}
-                     </span>
-            </button>
-
+            <div class="text-right">
+                <button type="button"
+                        class="ml-1 elsa-blue-btn"
+                        @click="saveTemp">
+                         <span class="button-txt">
+                             {{ $t('EmailTemplate.Save') }}
+                         </span>
+                </button>
+            </div>
 
     </b-container>
 </template>
 
 <script>
 export default {
-    name: "EmailTemplateEditor",
-   /* props: {
-        selectedTemplateObject: null
-    },*/
+    name: "CreateEmailTemplate",
     data() {
         return {
-            noticeUnsavedChanges: false,
-            template: {
-                name: '',
-                htmlTemplateBody: '',
+            subjectEmpty: false,
 
+            template: {
+                htmlTemplateBody: '',
+                subject: '',
+                name: ''
             },
             editorOption: {
                 modules: {
@@ -102,6 +113,13 @@ export default {
             quill.insertText(cursorPosition, "[EndDate]")
         },
 
+        addDocTitle() {
+            let quill = this.$refs.editor.quill;
+            quill.focus();
+            const cursorPosition = quill.getSelection(true);
+            quill.insertText(cursorPosition, "[DocumentTitle]")
+        },
+
         addLink() {
             let quill = this.$refs.editor.quill;
             quill.focus();
@@ -110,11 +128,20 @@ export default {
         },
 
         async saveTemp() {
-            this.noticeUnsavedChanges = true // @change for edit
-            this.$emit('newTemp', this.template.htmlTemplateBody)
+            if(this.template.name === '') {
+                this.template.name = 'Email Template'
+            }
+
+
+            if(this.template.subject !== '') {
+                this.$emit('newTemp', this.template)
+                this.subjectEmpty = false
+            } else {
+                this.subjectEmpty = true
+            }
         },
 
-    },
+    }
 }
 </script>
 

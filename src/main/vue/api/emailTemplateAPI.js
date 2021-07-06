@@ -15,20 +15,24 @@ export default {
         return axios({
             method: "post",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates',
-            params: {
-                template: template,
+            data: {
+                'htmlBody': template.htmlTemplateBody,
+                'subject': template.subject,
+                'name': template.name
             }
 
         })
     },
 
-    async editEmailTemplate(templateId, templateBody) {
+    async editEmailTemplate(template) {
         return axios({
-          method: 'put',
-          url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + templateId,
-         param: {
-             reworkedTemplate: templateBody
-         }
+            method: 'put',
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + template.templateID,
+            data: {
+                'htmlBody': template.htmlTemplateBody,
+                'subject': template.subject,
+                'name': template.name
+            }
         })
     },
 

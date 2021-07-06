@@ -251,6 +251,8 @@ export default {
         await this.$store.dispatch('document/resetState')
         await this.$store.dispatch('document/documentProgress', {envId: this.envId, docId: this.docId})
         await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
+        await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
+
         await documentAPI.getDocument(this.envId, this.docId).then(response => {
             this.pdfSrc = response.data.data
             this.dataError = false

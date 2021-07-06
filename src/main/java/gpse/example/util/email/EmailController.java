@@ -92,7 +92,6 @@ public class EmailController {
                                     @RequestBody final TemplatePutRequest template) {
 
 
-        System.out.println(templateId);
         final User user = userService.getUser(userId);
         for (final EmailTemplate temp : user.getEmailTemplates()) {
             if (temp.getTemplateID() == templateId) {

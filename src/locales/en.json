@@ -621,16 +621,22 @@
         "editTemp": "Edit template",
         "previewTemp": "Preview",
         "saveTemp": "Save template",
+        "enterName": "Type the name of the template",
+        "enterSubject": "Type the subject of the template",
+        "emptySubject": " signature invitation",
+        "Save": "Save",
         "editSentence": "To edit the template, just write in the editor and it will be applied automatically.",
         "unsavedChanged": "Noticed unsaved changes",
         "unsavedChanged2": "If you want to save the Edited template click on the \"Save template\" button.",
         "unsavedChanged3": "If it is for single use only click on \"Single use\" button.",
         "singleUse": "Single use",
         "toolbar": {
-            "addUser": "Add user",
-            "addOwner": "Add owner",
-            "addEndDate": "Add end date",
-            "documentLink": "Add document link"
+            "addUser": "User",
+            "addOwner": "Owner",
+            "addEndDate": "End date",
+            "documentLink": "Document link",
+            "documentTitle": "Document title"
+
         }
     },
     "ResetPasswordPage": {

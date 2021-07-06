@@ -22,7 +22,7 @@
                         <b-row>
                         <b-col>
 
-                        <select v-model="selected" @change="changedValue(selected)">
+                        <select style="margin-top: .5em" v-model="selected" @change="changedValue(selected)">
                         <option v-for="(content, index) in emailTemplate" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
@@ -33,6 +33,7 @@
                                 type="button"
                                 v-b-modal="'modal-editor'"
                                 class="mt-1 light-btn"
+                                v-if="selected.system === false"
                                 style="width: auto;"
                             ><span class="button-txt">
                                 {{ $t('EmailTemplate.editTemp') }}
@@ -42,121 +43,27 @@
                     </b-container>
 
                 <b-container style="padding-top: 1em;"> <h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
-                    <b-container style="overflow:scroll; overflow-x:hidden; height:300px;" v-html="selected.htmlTemplateBody"></b-container>
+                    <b-container> Subject: {{ selected.subject }}</b-container>
+                    <hr>
+                    <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
                 </b-container>
-                    <!--- Editor --->
+
+
+                    <!--- Edit Template --->
                     <b-modal
                         id="modal-editor"
                         ref="modal-editorRef"
+                        :title="'Edit ' + selected.name + ' Template' "
                         centered
-                        hide-footer ok-only hide-header
-                        v-if="selected.htmlTemplateBody"
+                        hide-footer ok-only
                         style="margin-top: 2em;"
                     >
-
-                        <b-container style="padding-right: 0; padding-left: 0;">
+                       <b-container style="padding-right: 0; padding-left: 0;">
                             <p> <span> {{ $t('EmailTemplate.editSentence') }} </span></p>
+                            <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"></EditEmailTemplate>
+                       </b-container>
 
-                            <quill-editor
-                                ref="editor"
-                                v-model="selectedTemplateObject.htmlTemplateBody"
-                                class="editor"
-                                @change="setNoticeChanges"
-                                :options="editorOption"
-                                style="width: auto"
-                            >
-                                <div id="toolbar" slot="toolbar" style="width: auto">
-                                    <!-- Add a bold button -->
-                                    <button class="ql-bold">Bold</button>
-                                    <button class="ql-italic">Italic</button>
-                                    <button class="ql-underline">Underline</button>
-                                    <!-- Add font size dropdown -->
-                                    <select class="ql-size">
-                                        <option value="small"></option>
-                                        <!-- Note a missing, thus falsy value, is used to reset to default -->
-                                        <option selected></option>
-                                        <option value="large"></option>
-                                        <option value="huge"></option>
-                                    </select>
-                                    <select class="ql-font">
-                                        <option selected="selected"></option>
-                                        <option value="serif"></option>
-                                        <option value="monospace"></option>
-                                    </select>
-
-                                    <!-- You can also add your own -->
-                                    <button id="addUser-button" @click="addUserHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addUser') }}</button>
-
-                                    <button id="addOwner-button" @click="addOwnerHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addOwner') }}</button>
-
-                                    <button id="endDate-button" @click="addEndDateHtml"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
-
-                                    <button id="link-button" @click="addLink"
-                                            style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
-
-                                </div>
-
-                            </quill-editor>
-
-                            <button
-                                type="button"
-                                class="mt-1 light-btn"
-                                @click="saveEditedTemplate"
-                            ><span class="button-txt">
-                        {{ $t('EmailTemplate.saveTemp') }}
-                    </span></button>
-                        </b-container>
-
-                    </b-modal>
-
-
-
-                <!--- Save edited template --->
-                <b-modal
-                    ref="modal-notice-unsaved-changes"
-                    hide-footer ok-only hide-header centered
-                    no-close-on-esc no-close-on-backdrop
-                >
-                    <b-container>
-                        <p>
-                            {{ $t('EmailTemplate.unsavedChanged') }}
-                        </p>
-                        <p>
-                            {{ $t('EmailTemplate.unsavedChanged2') }}
-                        </p>
-                        <p>
-                            {{ $t('EmailTemplate.unsavedChanged3') }}
-                        </p>
-                    </b-container>
-
-                    <div>
-                        <button type="button"
-                                class="mt-1 light-btn"
-                                @click="singleUse"
-
-                        >
-
-                    <span class="button-txt">
-                        {{ $t('EmailTemplate.singleUse') }}
-                    </span>
-                        </button>
-
-                        <button type="button"
-                                class="ml-1 elsa-blue-btn"
-                                style="width: auto"
-                                @click="saveTemplate"
-
-
-                        >
-                    <span class="button-txt">
-                        {{ $t('EmailTemplate.saveTemp') }}
-                    </span>
-                        </button>
-                    </div>
-                </b-modal>
+                   </b-modal>
 
                 <!--- Create new Template createNewEmailTemplate --->
                 <b-modal
@@ -165,11 +72,11 @@
                     ref="new-Template"
                 >
                     <b-container>
-                        <EmailTemplateEditor @newTemp="saveNewTemplate"></EmailTemplateEditor>
+                        <CreateEmailTemplate @newTemp="saveNewTemplate" :edit="false"></CreateEmailTemplate>
                     </b-container>
                 </b-modal>
 
-                <!--- Create new Template createNewEmailTemplate --->
+                <!--- Delete Template --->
                 <b-modal
                     title="Delete Templates"
                     hide-footer ok-only centered
@@ -194,21 +101,22 @@
 
 <script>
 import {mapGetters} from "vuex";
-import EmailTemplateEditor from "@/main/vue/components/EmailTemplateEditor";
+import EmailTemplatePreview from "@/main/vue/components/EmailTemplatePreview";
+import EditEmailTemplate from "@/main/vue/components/EditEmailTemplate";
+import CreateEmailTemplate from "@/main/vue/components/CreateEmailTemplate";
 
 export default {
     name: "EmailTemplate",
-    components: {EmailTemplateEditor},
+    components: {CreateEmailTemplate, EditEmailTemplate, EmailTemplatePreview},
     data() {
         return {
 
             // todo api with saved templates
             contents: [],
             copyTemplates: [],
-            selected: "SignatureInvitationTemplate",
+            selected: '',
 
 
-            noticeUnsavedChanges: false,
 
             // Object which is going to be emitted
             selectedTemplateObject: {},
@@ -224,78 +132,30 @@ export default {
     },
     methods: {
 
-        addUserHtml() {
-            let quill = this.$refs.editor.quill;
-            quill.focus();
-            const cursorPosition = quill.getSelection(true)
-            quill.insertText(cursorPosition, "[FirstNameSignatory] [LastNameSignatory]")
-        },
-
-        addOwnerHtml() {
-            let quill = this.$refs.editor.quill;
-            quill.focus();
-            const cursorPosition = quill.getSelection(true);
-            quill.insertText(cursorPosition, "[FirstNameOwner] [LastNameOwner]")
-        },
-
-        addEndDateHtml() {
-            let quill = this.$refs.editor.quill;
-            quill.focus();
-            const cursorPosition = quill.getSelection(true);
-            quill.insertText(cursorPosition, "[EndDate]")
-
-            console.log(this.selected)
-
-        },
-
-        addLink() {
-            let quill = this.$refs.editor.quill;
-            quill.focus();
-            const cursorPosition = quill.getSelection(true);
-            quill.insertText(cursorPosition, "[Link]")
-        },
-
-
         // observe changed value and emmit it
         changedValue(event) {
             this.selectedTemplateObject = event
+            console.log(event)
+            this.$emit('saveEmailTemplate', this.selectedTemplateObject)
+
+        },
 
 
-            // todo check the noticedChange boolean and if it is false then warn the user with modal
-            //this.compareForEditedTemplates(this.selectedTemplateObject)
-            if (!this.noticeUnsavedChanges) {
-                this.$emit('saveEmailTemplate', this.selectedTemplateObject)
+        // Edit Template
+        async saveEdit(emittedValue) {
+            await this.fetchTemplate()
+            this.$forceUpdate()
+
+            if(emittedValue.hideModal) {
+                this.$refs['modal-editorRef'].hide()
+                this.$forceUpdate()
+
+                this.selected = this.emailTemplate[0] // setting the initial value after closing the modal
             }
         },
 
-        setNoticeChanges() {
-            this.noticeUnsavedChanges = true
-        },
 
-        saveEditedTemplate() {
-            if(this.noticeUnsavedChanges === true) {
-                this.$refs['modal-notice-unsaved-changes'].show()
-            }
-            this.$refs['modal-editorRef'].hide()
-        },
-
-        singleUse() {
-            this.$refs['modal-notice-unsaved-changes'].hide()
-        },
-
-        async saveTemplate() {
-            await this.$store.dispatch('emailTemplate/editEmailTemplate',
-                {
-                    templateId: this.selectedTemplateObject.templateID,
-                    templateBody: this.selectedTemplateObject.htmlTemplateBody
-                })
-            await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
-            this.contents = this.emailTemplate
-            this.$refs['modal-notice-unsaved-changes'].hide()
-        },
-
-
-
+        // Create new Template
         showNewCreateTemplate() {
             this.$refs['new-Template'].show()
 
@@ -303,8 +163,13 @@ export default {
 
          async saveNewTemplate(newTemplate) {
              //todo save new template into databse and store
+
+             //checking if template name and subject is set
+
+
+
              await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
-             await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+             await this.fetchTemplate()
 
              this.$refs['new-Template'].hide()
          },
@@ -319,19 +184,19 @@ export default {
         },
 
         async deleteTemplate(template) {
-            console.log(template)
             await this.$store.dispatch('emailTemplate/deleteEmailTemplate', template.templateID)
-            //await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
-            this.fetchTemplate()
+            await this.fetchTemplate()
+            this.selected = this.emailTemplate[0]
+
+            this.$forceUpdate();
+
         },
 
         async fetchTemplate() {
             await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
             this.$forceUpdate();
+
         }
-
-
-
     },
 
 
@@ -341,11 +206,6 @@ export default {
         await this.$store.dispatch('emailTemplate/fetchEmailTemplate')
         this.contents = this.emailTemplate
 
-
-
-
-        //copy of templates
-        // setting the standard template as initial Value
         this.selected = this.emailTemplate[0]
         this.selectedTemplateObject = this.emailTemplate[0]
     },
@@ -359,14 +219,5 @@ export default {
 </script>
 
 <style scoped src="../assets/css/settingsPage.css">
-
-.ql-editor {
-    height: 10em !important; /* TODO */
-}
-
-#modal-1c__BV_modal_content_ {
-    max-height: inherit;
-}
-
 
 </style>

@@ -623,16 +623,21 @@
         "editTemp": "Vorlage bearbeiten",
         "previewTemp": "Vorschau",
         "saveTemp": "Vorlage speichern",
+        "Save": "Speichern",
+        "enterName": "Name",
+        "enterSubject": "Betreff",
+        "emptySubject": " Signatur Aufforderung",
         "editSentence": "Um ein Template zu bearbeiten, einfach in das entsprechende Feld die Änderungen vornehmen",
         "unsavedChanged": "Nicht gepeicherte Änderungen",
         "unsavedChanged2": "Wenn Sie die bearbeitete Vorlage speichern möchten, klicken Sie auf die Schaltfläche \"Vorlage speichern\"",
         "unsavedChanged3": "Wenn es nur für den einmaligen Gebrauch bestimmt ist, klicken Sie auf die Schaltfläche \"Einmal verwenden\".",
         "singleUse": "Einmal verwenden",
         "toolbar": {
-            "addUser": "User hinzufügen",
-            "addOwner": "Owner hinzufügen",
-            "addEndDate": "Enddatum hinzufügen",
-            "documentLink": "Dokument Link hinzufügen"
+            "addUser": "User",
+            "addOwner": "Owner",
+            "addEndDate": "Enddatum",
+            "documentLink": "Dokument Link",
+            "documentTitle": "Dokument Titel"
         }
     },
 

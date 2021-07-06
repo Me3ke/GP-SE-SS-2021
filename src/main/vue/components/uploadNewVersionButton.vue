@@ -130,8 +130,8 @@
                 <SignatoryMenu :signatories="actualDoc.signatories" :orderRelevant="actualDoc.orderRelevant"
                                @update-signatories="updateSignatories"></SignatoryMenu>
             </div>
-            <div>
 
+            <div class="text-right">
                 <button type="button"
                         class="mt-1 light-btn"
                         v-b-modal="this.actualDoc.review ? 'modal-' + docID + 'bbb' : 'modal-' + docID + 'bb' "
@@ -160,7 +160,8 @@
         ref="modal-page3"
         class="modal-emailTemplate"
         centered
-        :title= "document.title + $t('EmailTemplate.emailTemp') "
+        :title= "document.title + '  ' +
+        $t('EmailTemplate.emailTemp') "
 
         ok-only hide-footer
         >
@@ -172,7 +173,7 @@
             </b-container>
 
 
-            <div class="flex-box-2">
+            <div class="text-right">
                 <button type="button"
                         class="mt-1 light-btn"
                         @click="showHideModal('modal-page3' , 'modal-page2-signatories')">
@@ -361,10 +362,11 @@ export default {
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file
                 this.file = null
 
+                console.log(newUrl)
                 await this.$store.dispatch('envelopes/fetchEnvelopes')
-                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
-                })
+                })*/
             }
         },
 
@@ -386,6 +388,11 @@ export default {
             this.$refs[currentModalId].hide()
             this.resetSettings(goToModalId)
 
+        },
+
+        async fetchTemplate() {
+            await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
+            this.$forceUpdate();
         }
     }
 }

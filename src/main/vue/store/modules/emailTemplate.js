@@ -59,7 +59,6 @@ export const actions = {
     async setEmailTemplate({commit}, template) {
         await emailTemplateAPI.createEmailTemplate(template).then(response => {
             commit('SET_TEMPLATE', response.data)
-            console.log(response)
             commit('SET_TEMPLATE_ERROR', {})
         }).catch(error => {
             commit('SET_TEMPLATE_ERROR', error)
@@ -68,15 +67,15 @@ export const actions = {
         console.log("Success")
     },
 
-    editEmailTemplate({commit}, {templateId,templateBody}) {
-        emailTemplateAPI.editEmailTemplate(templateId, templateBody).then(response => {
-            commit('EDIT_TEMPLATE', response.data)
-            commit('SET_TEMPLATE_ERROR', {})
-        }).catch(error => {
-            console.error(error)
-            commit('SET_TEMPLATE_ERROR', error)
+    editEmailTemplate({commit}, template) {
+            emailTemplateAPI.editEmailTemplate(template).then(response => {
+                commit('EDIT_TEMPLATE', response.data)
+                commit('SET_TEMPLATE_ERROR', {})
+            }).catch(error => {
+                console.error(error)
+                commit('SET_TEMPLATE_ERROR', error)
 
-        })
+            })
     },
 
     deleteEmailTemplate({commit}, templateId) {
