@@ -284,7 +284,8 @@
             "edit": "Bearbeiten",
             "noSignatories": "Noch keine Unterzeichner hinzugefügt",
             "noReaders": "Noch keine Gegenleser hinzugefügt",
-            "saveAll": "Alles Speichern"
+            "saveAll": "Alles Speichern",
+            "noDocumentSelected": "Bitte wählen Sie ein Dokument aus"
         }
     },
     "UploadDoc": {

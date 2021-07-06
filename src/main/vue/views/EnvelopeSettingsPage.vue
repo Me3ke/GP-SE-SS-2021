@@ -14,103 +14,50 @@
 
             <!-- Individual Settings -->
             <div v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh">
-                <DocumentDropDown style="margin-top:0.5vh"
-                    v-for="document in this.envelope(envId).documents" :key="document.id" :document="document"
-                    :signatories="getSignatories(getSettings(document.id))"
-                    :readers="getReaders(getSettings(document.id))"
-                    :endDate="getSettings(document.id).endDate"
-                    :orderRelevant="getSettings(document.id).orderRelevant" :envId="envId">
-                </DocumentDropDown>
+                <b-row>
+                    <b-col cols="2">
+                        <b-row v-for="document in this.envelope(envId).documents" :key="document.id">
+                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id">
+                                <h5>
+                                    <b-row style="padding: 0.5em 1em 0;">
+                                        <b-icon icon="file-earmark-text" style="margin-right: 0.5em; fill:var(--elsa-blue)"></b-icon>
+                                        <div class="media-body">
+                                            {{document.title}}
+                                        </div>
+                                    </b-row>
+                                </h5>
+                            </button>
+                        </b-row>
+                    </b-col>
+                    <b-col cols="10">
+                        <div v-if="selectedId === -1">
+                            {{$t('Settings.EnvelopeSettings.noDocumentSelected')}}
+                        </div>
+                        <div v-if="!(selectedId === -1)">
+                            <SettingsMenu
+                                          :document="getDocument(selectedId)"
+                                          :signatories="getSignatories(getSettings(selectedId))"
+                                          :readers="getReaders(getSettings(selectedId))"
+                                          :endDate="getSettings(selectedId).endDate"
+                                          :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId">
+                            </SettingsMenu>
+                        </div>
+                    </b-col>
+                </b-row>
+
             </div>
 
            <!-- Global settings -->
             <div v-if="(sameSettings(this.envelopeSettings) && editAll === null) || editAll === true">
-                <!-- End Date -->
-                <div class="card" style="margin-top:3vh">
-                    <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
-                        {{$t('Settings.DocumentSettings.endDate')}}
-                    </div>
-                    <div>
-                        <b-list-group-item v-if="!this.editDate">{{this.envelopeSettings[this.selectedIndex].endDate}}</b-list-group-item>
-
-                        <b-row align-h="end" v-if="!this.editDate">
-                            <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editDate = true">
-                                <b-icon icon="pencil-fill"></b-icon>
-                                {{$t('Settings.DocumentSettings.edit')}}
-                            </button>
-                        </b-row>
-
-                        <b-form-datepicker class="mb-2" v-if="this.editDate"></b-form-datepicker>
-
-                        <b-row align-h="end" v-if="this.editDate">
-                            <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em" class="light-btn" @click="editDate = false"> {{$t('DownloadDoc.cancel')}} </button>
-                            <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
-                        </b-row>
-                    </div>
-                </div>
-
-                <!-- Reader -->
-                <div class="card" style="margin-top:3vh">
-                    <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
-                        {{$t('Settings.DocumentSettings.reader')}}
-                    </div>
-                    <div v-if="!this.editReaders">
-                        <SignatoryListItem v-for="reader in getReaders(this.envelopeSettings[this.selectedIndex])" :key="reader.email" :signatory="reader"></SignatoryListItem>
-                    </div>
-
-                    <b-list-group-item v-if="getReaders(this.envelopeSettings[this.selectedIndex]).length === 0 && !this.editReaders">
-                        {{$t('Settings.DocumentSettings.noReaders')}}
-                    </b-list-group-item>
-
-                    <b-row align-h="end" v-if="!this.editReaders">
-                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true; initReaders()">
-                            <b-icon icon="pencil-fill"></b-icon>
-                            {{$t('Settings.DocumentSettings.edit')}}
-                        </button>
-                    </b-row>
-
-                    <div style="padding:2em" v-if="this.editReaders">
-                        <ReaderMenu :readers="getReaders(this.envelopeSettings[this.selectedIndex])"></ReaderMenu>
-                    </div>
-
-                    <b-row align-h="end" v-if="this.editReaders">
-                        <button style="width:8em; margin:1em" class="light-btn" @click="editReaders = false"> {{$t('DownloadDoc.cancel')}} </button>
-                        <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
-                    </b-row>
-                </div>
-
-                <!-- Signatories -->
-                <div class="card" style="margin-top:3vh">
-                    <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
-                        {{$t('Settings.DocumentSettings.signatory')}}
-                    </div>
-
-                    <div v-if="!this.editSignatories">
-                        <SignatoryListItem v-for="signatory in getSignatories(this.envelopeSettings[this.selectedIndex])" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
-                    </div>
-
-                    <b-list-group-item v-if="getSignatories(this.envelopeSettings[this.selectedIndex]).length === 0 && !this.editSignatories">
-                        {{$t('Settings.DocumentSettings.noSignatories')}}
-                    </b-list-group-item>
-
-                    <b-row align-h="end" v-if="!this.editSignatories">
-                        <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editSignatories = true; initSignatories()">
-                                <b-icon icon="pencil-fill"></b-icon>
-                                {{$t('Settings.DocumentSettings.edit')}}
-                        </button>
-                    </b-row>
-
-
-                    <div style="padding:2em" v-if="this.editSignatories">
-                        <SignatoryMenu :inModal="false" :order-relevant="this.envelopeSettings[this.selectedIndex].orderRelevant" :signatories="getSignatories(this.envelopeSettings[this.selectedIndex])"></SignatoryMenu>
-                    </div>
-
-                    <b-row align-h="end" v-if="this.editSignatories">
-                        <button style="width:8em; margin:1em" class="light-btn" @click="editSignatories = false"> {{$t('DownloadDoc.cancel')}} </button>
-                        <button style="width:8em; margin:1em" class="elsa-blue-btn"> {{$t('Settings.DocumentSettings.save')}} </button>
-                    </b-row>
-                </div>
+                <SettingsMenu style="margin-top:3vh"
+                              :document="getDocument(selectedId)"
+                              :signatories="getSignatories(getSettings(selectedId))"
+                              :readers="getReaders(getSettings(selectedId))"
+                              :endDate="getSettings(selectedId).endDate"
+                              :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId">
+                </SettingsMenu>
             </div>
+
             </b-container>
 
         <div style="height:5vh"></div>
@@ -122,22 +69,20 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
-import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatoryMenu";
-import ReaderMenu from "@/main/vue/components/envelopeSettings/ReaderMenu";
 import {mapGetters} from "vuex";
-import DocumentDropDown from "@/main/vue/components/envelopeSettings/DocumentDropDown";
-import SignatoryListItem from "@/main/vue/components/SignatoryListItem";
+import SettingsMenu from "@/main/vue/components/envelopeSettings/SettingsMenu";
 
 export default {
     name: "envSettingsPage",
     props: {
         envId: [Number, String]
     },
-    components: {Footer, Header, SignatoryMenu, ReaderMenu, DocumentDropDown, SignatoryListItem},
+    components: {Footer, Header, SettingsMenu},
     data() {
         return {
             editAllInput: null,
             editAll: null,
+            selectedId: -1,
             selectedIndex: 0,
             editSignatories: false,
             editReaders: false,
@@ -187,6 +132,7 @@ export default {
             }
             if(this.editAllInput === null) {
                 this.editAllInput = true
+                this.selectedId = initial.documentID
             }
             return true;
         },
@@ -217,6 +163,14 @@ export default {
             for(i = 0; i < this.envelopeSettings.length; i++) {
                 if (this.envelopeSettings[i].documentID === docId) {
                     return this.envelopeSettings[i];
+                }
+            }
+        },
+        getDocument(docId) {
+            let i;
+            for(i = 0; i < this.envelope(this.envId).documents.length; i++) {
+                if (this.envelope(this.envId).documents[i].id === docId) {
+                    return this.envelope(this.envId).documents[i];
                 }
             }
         },
@@ -340,4 +294,26 @@ export default {
     height: 2.5em;
     padding: 0.5em;
 }
+
+.active {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+    box-shadow: 0 0 0 0.05em var(--elsa-blue);
+}
+
+.inactive {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    border: 0.13vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+.inactive:hover {
+    background-color: var(--dark-grey);
+    color: var(--light-grey);
+    transition-duration: 0.4s;
+}
+
 </style>

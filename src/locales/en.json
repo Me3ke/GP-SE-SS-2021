@@ -283,7 +283,8 @@
             "edit": "Edit",
             "noSignatories": "There are no signatories",
             "noReaders": "There are no proofreaders",
-            "saveAll": "Save all changes"
+            "saveAll": "Save all changes",
+            "noDocumentSelected": "Please select a document to edit"
         }
     },
     "UploadDoc": {
