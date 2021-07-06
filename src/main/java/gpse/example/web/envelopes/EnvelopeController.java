@@ -182,7 +182,12 @@ public class EnvelopeController {
                                      final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
         try {
-            final EmailTemplate template = document.getProcessEmailTemplate();
+            EmailTemplate template = owner.getEmailTemplates().get(0);
+            for (EmailTemplate temp : owner.getEmailTemplates()) {
+                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                    template = temp;
+                }
+            }
             final TemplateDataContainer container = new TemplateDataContainer();
             final User signatory = userService.getUser(userID);
             container.setFirstNameReciever(signatory.getFirstname());
