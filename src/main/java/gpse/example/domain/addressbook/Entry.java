@@ -68,14 +68,6 @@ public class Entry {
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
     public String getFirstname() {
         return firstname;
     }
@@ -84,16 +76,16 @@ public class Entry {
         this.firstname = firstname;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(final String lastname) {
-        this.lastname = lastname;
-    }
-
     public boolean isFavorite() {
         return favorite;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public void setFavorite(final boolean favorite) {
@@ -102,6 +94,14 @@ public class Entry {
 
     public String getNote() {
         return note;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(final String lastname) {
+        this.lastname = lastname;
     }
 
     public void setNote(final String note) {
