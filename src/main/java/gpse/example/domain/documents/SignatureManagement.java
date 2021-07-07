@@ -40,7 +40,7 @@ public class SignatureManagement {
      * @param givenDocumentService documentservice
      * @param givenUserService     userservice
      * @param emailTemplateService emailTemplateService
-     * @param guestTokenService guestTokenService
+     * @param guestTokenService    guestTokenService
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
@@ -59,7 +59,7 @@ public class SignatureManagement {
      * @param userID        the user who stated the request
      * @param document      the document that should be reviewed or signed
      * @param signatureType the type of the signature
-     * @param envelopeID the envelope the document refers to.
+     * @param envelopeID    the envelope the document refers to.
      * @return a fitting response.
      */
     public JSONResponseObject manageSignatureRequest(final String userID, final Document document,
@@ -197,6 +197,11 @@ public class SignatureManagement {
         final Signatory currentReader = document.getCurrentSignatory();
         if (matchesSignatory(userID, currentReader, signatureType)) {
             currentReader.setStatus(true);
+            if (document.getCurrentSignatory() != null && currentReader.getSignatureType().equals(SignatureType.REVIEW)
+                && (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
+                document.setState(DocumentState.SIGN);
+            }
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {

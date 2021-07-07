@@ -225,15 +225,18 @@ public class Document {
      * @return true if this document is in between these endDates.
      */
     public boolean hasEndDate(final LocalDateTime endDateFrom, final LocalDateTime endDateTo) {
-        if (endDateFrom == null && endDateTo == null) {
-            return true;
-        } else if (endDateFrom == null) {
-            return this.endDate.isBefore(endDateTo);
-        } else if (endDateTo == null) {
-            return this.endDate.isAfter(endDateFrom);
-        } else {
-            return this.endDate.isAfter(endDateFrom) && this.endDate.isBefore(endDateTo);
+        if (!draft) {
+            if (endDateFrom == null && endDateTo == null) {
+                return true;
+            } else if (endDateFrom == null) {
+                return this.endDate.isBefore(endDateTo);
+            } else if (endDateTo == null) {
+                return this.endDate.isAfter(endDateFrom);
+            } else {
+                return this.endDate.isAfter(endDateFrom) && this.endDate.isBefore(endDateTo);
+            }
         }
+        return false;
     }
 
     /**

@@ -47,11 +47,14 @@ public class DocumentController {
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
+    private static final int STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE = 424;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final String TOKEN = "token";
     private static final String ENVELOPE_URL = "http://localhost:8080/de/envelope/";
     private static final String DOCUMENT_URL = "/document/";
+    private static final String DRAFT_MESSAGE = "The document is still in draft state, it cannot be signed yet.";
+    private static final String THIS_DOCUMENT_IS_CLOSED = "This document is closed";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -338,10 +341,21 @@ public class DocumentController {
     private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
                                                             final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
+        final JSONResponseObject response = new JSONResponseObject();
+        Document document = documentService.getDocument(documentID);
+        if (document.isDraft()) {
+            response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
+            response.setMessage(DRAFT_MESSAGE);
+            return response;
+        }
+        if (document.getState().equals(DocumentState.CLOSED)) {
+            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
+            response.setMessage(THIS_DOCUMENT_IS_CLOSED);
+            return response;
+        }
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            final JSONResponseObject response = new JSONResponseObject();
             response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
             response.setMessage("The token that has benn send with the request is not valid for this server.");
             return response;
@@ -422,20 +436,24 @@ public class DocumentController {
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = new JSONResponseObject();
+        if (document.isDraft()) {
+            response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
+            response.setMessage(DRAFT_MESSAGE);
+            return response;
+        }
         if (document.getState().equals(DocumentState.CLOSED)) {
             response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
-            response.setMessage("This document is closed");
+            response.setMessage(THIS_DOCUMENT_IS_CLOSED);
             return response;
-        } else {
-            return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
         }
+        return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
     }
 
 
     /**
      * The getDocumentHistory method does a get request to get the document history.
      *
-     * @param userID  the id of the user getting the history.
+     * @param userID     the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
@@ -535,6 +553,7 @@ public class DocumentController {
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
             document.setShowHistory(documentSettingsCMD.isShowHistory());
+            document.setDraft(documentSettingsCMD.isDraft());
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
@@ -547,6 +566,9 @@ public class DocumentController {
                 signatories.add(signatory);
             }
             document.setSignatories(signatories);
+            if (!document.getState().equals(DocumentState.CLOSED)) {
+                setDocumentState(document);
+            }
             documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
@@ -556,6 +578,24 @@ public class DocumentController {
         }
         return response;
     }
+
+    /**
+     * The setDocumentState method evaluates the readers and signatories and creates an
+     * initial state of the document based on that.
+     *
+     * @param document the document itself.
+     */
+    private void setDocumentState(final Document document) {
+        if (document.getCurrentSignatory() == null) {
+            document.setState(DocumentState.CLOSED);
+        } else if (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+            || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+            document.setState(DocumentState.SIGN);
+        } else {
+            document.setState(DocumentState.REVIEW);
+        }
+    }
+
 
     /**
      * Request for get the info if user has seen specified document.

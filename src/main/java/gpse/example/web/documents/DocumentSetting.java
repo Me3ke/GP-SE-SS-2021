@@ -30,7 +30,9 @@ public class DocumentSetting {
         }
         this.orderRelevant = document.isOrderRelevant();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        this.endDate = document.getEndDate().format(formatter);
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        }
         this.showHistory = document.isShowHistory();
         this.draft = document.isDraft();
     }

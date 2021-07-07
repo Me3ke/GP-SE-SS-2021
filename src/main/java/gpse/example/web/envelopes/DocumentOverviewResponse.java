@@ -46,7 +46,11 @@ public class DocumentOverviewResponse {
         //Replaced with uploadDate
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.creationDate = document.getDocumentMetaData().getMetaTimeStampUpload().format(formatter);
-        this.endDate = document.getEndDate().format(formatter);
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        } else {
+            this.endDate = "";
+        }
         this.dataType = document.getDocumentType();
         this.state = document.getState();
         this.identifier = document.getDocumentMetaData().getIdentifier();

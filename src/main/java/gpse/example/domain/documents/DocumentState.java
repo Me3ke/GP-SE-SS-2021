@@ -7,7 +7,7 @@ public enum DocumentState {
 
     /**
      * If the there are unsigned signatories and readers left it has the review state,
-     * where reviews should be made
+     * where reviews should be made.
      */
     REVIEW(-1),
     /**

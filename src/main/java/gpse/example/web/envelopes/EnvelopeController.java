@@ -128,15 +128,18 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
-                setupUserInvitation(document.getCurrentSignatory().getEmail(),
-                    userService.getUser(document.getOwner()), document,
-                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
-            } else {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
+            if (!document.isDraft()) {
+                if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
+                    setupUserInvitation(document.getCurrentSignatory().getEmail(),
                         userService.getUser(document.getOwner()), document,
-                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                        envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
+                } else {
+                    for (int i = 0; i < document.getSignatories().size(); i++) {
+                        setupUserInvitation(document.getSignatories().get(i).getEmail(),
+                            userService.getUser(document.getOwner()), document,
+                            envelopeService.getEnvelope(envelopeID),
+                            document.getSignatories().get(i).getSignatureType());
+                    }
                 }
             }
             addIntoAddressBook(ownerID, document.getSignatories());
