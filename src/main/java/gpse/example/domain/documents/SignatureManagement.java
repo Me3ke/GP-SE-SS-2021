@@ -26,7 +26,7 @@ public class SignatureManagement {
     private static final int STATUS_CODE_INVALID_SIGNATURE_TYPE = 453;
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
-    public static final String DOCUMENT_URL = "/document/";
+    private static final String DOCUMENT_URL = "/document/";
     private final DocumentService documentService;
     private final UserService userService;
     private final SMTPServerHelper smtpServerHelper;

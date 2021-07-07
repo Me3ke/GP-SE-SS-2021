@@ -534,6 +534,7 @@ public class DocumentController {
             final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setShowHistory(documentSettingsCMD.isShowHistory());
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;

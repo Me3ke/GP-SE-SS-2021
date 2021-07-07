@@ -28,6 +28,7 @@ public class DocumentOverviewResponse {
     private boolean read;
     private boolean turnToReview;
     private boolean turnToSign;
+    private boolean showHistory;
     private final long id;
 
     /**
@@ -48,6 +49,7 @@ public class DocumentOverviewResponse {
         this.dataType = document.getDocumentType();
         this.state = document.getState();
         this.identifier = document.getDocumentMetaData().getIdentifier();
+        this.showHistory = document.isShowHistory();
         this.signatory = false;
         this.read = false;
         this.signed = false;
@@ -155,6 +157,14 @@ public class DocumentOverviewResponse {
 
     public void setTurnToSign(final boolean turnToSign) {
         this.turnToSign = turnToSign;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(final boolean showHistory) {
+        this.showHistory = showHistory;
     }
 
     public long getId() {

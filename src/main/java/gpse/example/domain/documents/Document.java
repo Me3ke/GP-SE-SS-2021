@@ -105,6 +105,9 @@ public class Document {
     @Column
     private long processEmailTemplateId;
 
+    @Column
+    private boolean showHistory;
+
     public Document() {
     }
 
@@ -129,6 +132,7 @@ public class Document {
             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
+        this.showHistory = documentPutRequest.isShowHistory();
     }
 
     /**
@@ -449,5 +453,13 @@ public class Document {
 
     public void setProcessEmailTemplateId(final long processEmailTemplateId) {
         this.processEmailTemplateId = processEmailTemplateId;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(final boolean showHistory) {
+        this.showHistory = showHistory;
     }
 }
