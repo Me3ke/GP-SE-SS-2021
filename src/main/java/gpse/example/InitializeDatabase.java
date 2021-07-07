@@ -135,6 +135,8 @@ public class InitializeDatabase implements InitializingBean {
             ELSA_SIGNATURE_INVITATION_SUBJECT, "AdvancedGuestInvitationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.NEW_COMMENT_TEMPLATE, "ELSA - neuer Kommentar/ELSA - new comment",
             "NewCommentTemplate");
+        saveEmailTemplate(BasicHtmlTemplates.ANSWER_COMMENT_TEMPLATE, "ELSA - Kommentar wurde Beantwortet/ELSA -"
+            + " comment answered", "AnswerCommentTemplate");
 
         try {
             userService.getUser(USERNAME);

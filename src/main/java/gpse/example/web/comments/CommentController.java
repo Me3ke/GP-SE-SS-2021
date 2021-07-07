@@ -99,7 +99,8 @@ public class CommentController {
     public JSONResponseObject answerOnComment(final @RequestBody CommentPostRequest commentPostRequest,
                                               final @PathVariable(USER_ID) String userID,
                                               final @PathVariable(DOCUMENT_ID) long documentID,
-                                              final @PathVariable("commentID") long commentID) {
+                                              final @PathVariable("commentID") long commentID)
+                throws TemplateNameNotFoundException, MessageGenerationException {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);
@@ -111,6 +112,7 @@ public class CommentController {
                 comment.addAnswer(new Answer(commentPostRequest.getContent(), userID,
                         user.getFirstname() + SPACE + user.getLastname()));
                 documentService.addDocument(document);
+                sendAnswerEmail(user, userService.getUser(comment.getAuthorID()), document);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 jsonResponseObject.setMessage(REQUEST_WAS_SUCCESSFUL);
 
@@ -154,7 +156,20 @@ public class CommentController {
         container.setLastNameOwner(author.getLastname());
         container.setFirstNameReciever(documentOwner.getFirstname());
         container.setLastNameReciever(documentOwner.getLastname());
-        container.setLink("LinkTo Document");
+        container.setLink("Link To Document");
         smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
+    }
+
+    private void sendAnswerEmail(User author, User reciever, Document document)
+        throws TemplateNameNotFoundException, MessageGenerationException {
+        EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameOwner(author.getFirstname());
+        container.setLastNameOwner(author.getLastname());
+        container.setFirstNameReciever(reciever.getFirstname());
+        container.setLastNameReciever(reciever.getLastname());
+        container.setLink("LinkTo Document");
+        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
+
     }
 }
