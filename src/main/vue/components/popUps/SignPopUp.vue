@@ -177,7 +177,7 @@
                                         <div class="step">
                                             {{ $t('TwoFakAuth.sign.uploadExp') }}
                                             <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-upl" triggers="hover">
+                                            <b-tooltip target="tooltip-upl" triggers="hover click">
                                                 {{ $t('TwoFakAuth.sign.accepted') }}
                                             </b-tooltip>
                                         </div>

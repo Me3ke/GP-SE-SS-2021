@@ -99,7 +99,7 @@
                                         <div class="step">
                                             {{ $t('Settings.SignatureSettings.upload.popUp.exp') }}
                                             <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-upl" triggers="hover">
+                                            <b-tooltip target="tooltip-upl" triggers="hover click">
                                                 {{ $t('Settings.SignatureSettings.upload.popUp.accepted') }}
                                             </b-tooltip>
                                         </div>

@@ -84,7 +84,7 @@
                                         <div class="step">
                                             {{ $t('KeypairAlert.uploadHere') }}
                                             <b-icon id="tooltip-pk" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-pk" triggers="hover">
+                                            <b-tooltip target="tooltip-pk" triggers="hover click">
                                                 {{ $t('KeypairAlert.uploadHereExp') }}
                                             </b-tooltip>
                                         </div>
