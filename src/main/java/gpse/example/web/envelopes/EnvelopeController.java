@@ -134,10 +134,11 @@ public class EnvelopeController {
                     envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    if(!document.getSignatories().get(i).getEmail().equals(document.getOwner())) {
+                    if (!document.getSignatories().get(i).getEmail().equals(document.getOwner())) {
                         setupUserInvitation(document.getSignatories().get(i).getEmail(),
                             userService.getUser(document.getOwner()), document,
-                            envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                            envelopeService.getEnvelope(envelopeID),
+                            document.getSignatories().get(i).getSignatureType());
                     }
                 }
             }

@@ -268,12 +268,38 @@ public final class BasicHtmlTemplates {
         + "\t\t<p>können Sie diese Email ignorieren.</p>\n"
         + NEWLINE
         + NEWLINE
-        + "\t\t<p>Hello [RecieverFirstName] [RecieverLastName],</p>\n"
+        + GREETINGS_PERSONAL_ENGLISH
         + "\t\t<p>you can reset your password with the follwing link.</p>\n"
         + P_LINK_P
         + NEWLINE
         + "\t\t<p>If you did not try to reset your password,</p>\n"
         + "\t\t<p>ignore this email please.</p>\n"
+        + NEWLINE
+        + NEWLINE
+        + CLOSE_BODY_TAG;
+
+    /**
+     * Template to inform about new Comment.
+     * needs FirstNameOwner, LastNameOwner, FirstNameReciever, LastNameReciever, DokumentTitle, Link
+     * Link to Document
+     * Owner = Author of Comment
+     * Reciever Owner of Document
+     */
+    public static final String NEW_COMMENT_TEMPLATE = HTML_HEAD
+        + P_I_ENGLISH_VERSION_BELOW_I_P
+        + NEWLINE
+        + GREETINGS_PERSONAL_GERMAN
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] hat einen Kommentar</p>"
+        + "\t\t<p>zu dem Dokument [DocumentTitle] hinterlassen.</p>"
+        + "\t\t<p>Sie finden den Kommentar hier:</p>"
+        + P_LINK_P
+        + NEWLINE
+        + NEWLINE
+        + GREETINGS_PERSONAL_ENGLISH
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] has left a comment</p>"
+        + "<p>on the document [DocumentTitle].</p>"
+        + "<p>You can find the comment here:</p>"
+        + P_LINK_P
         + NEWLINE
         + NEWLINE
         + CLOSE_BODY_TAG;
