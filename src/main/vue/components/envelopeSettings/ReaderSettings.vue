@@ -31,7 +31,7 @@
 
 <script>
 export default {
-    name: "ReaderMenu",
+    name: "ReaderSettings",
     props: {
         readers: Array
     },

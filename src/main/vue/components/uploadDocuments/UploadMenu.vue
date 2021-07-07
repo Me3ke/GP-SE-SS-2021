@@ -1,0 +1,185 @@
+<template>
+    <div>
+        <button class="elsa-blue-btn" @click="show = true">
+            <h4>
+                <b-icon icon="plus-circle"></b-icon>
+                {{$t('UploadDoc.upload')}}
+            </h4>
+        </button>
+        <div v-if="show">
+            <transition>
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5>
+                                        <b-icon type="button" icon="x-square" @click="show = false; close()">
+                                        </b-icon>
+                                    </h5>
+                                </div>
+                                <!-- Page 1 Choose Document -->
+                                <div v-if="page === 1">
+                                    <FileInput :file="file" @close="show = false" @nextPage="page = page + 1"></FileInput>
+                                </div>
+
+                                <!-- Page 2 New or old envelope? -->
+                                <div v-if="page === 2">
+                                    <SelectEnvelope :selectedEnvelope="selectedEnvelope" @nextPage="page = page + 1"></SelectEnvelope>
+                                </div>
+
+                                <!-- Page 3 Add signatories/readers-->
+                                <div v-if="page === 3">
+                                    <UploadSettings :settings="settings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
+                                </div>
+
+                                <!-- Page 4 Upload -->
+                                <div v-if="page === 4">
+                                    <div class="modal-body">
+                                        <!-- TODO: Are you sure page -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <b-row align-h="end">
+                                            <b-col cols="auto">
+                                                <button class="light-btn" @click="page = page - 1;">
+                                                    {{$t('DownloadDoc.back')}}
+                                                </button>
+                                            </b-col>
+                                            <b-col cols="auto">
+                                                <button class="elsa-blue-btn" @click="upload()">
+                                                    {{$t('UploadDoc.upload')}}
+                                                </button>
+                                            </b-col>
+                                        </b-row>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </div>
+    </div>
+</template>
+
+<script>
+import {mapGetters} from "vuex";
+import SelectEnvelope from "@/main/vue/components/envelopeSettings/SelectEnvelope";
+import FileInput from "@/main/vue/components/envelopeSettings/FileInput";
+import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
+export default {
+    name: 'UploadButton',
+    props: {
+        text: String
+    },
+    components: {SelectEnvelope, FileInput, UploadSettings},
+    data() {
+        return {
+            show: false,
+            page: 1,
+            selectedEnvelope: {
+                id: null,
+                name: null
+            },
+            settings: {
+                signatories: [],
+                endDate: null,
+                orderRelevant: true
+                // TODO: processStart: Boolean
+            },
+            file: {
+                data: null,
+                type: null,
+                title: null
+            }
+        };
+    },
+    methods: {
+        close() {
+            this.page = 1;
+            this.file = {data: null, type: null, title: null};
+            this.selectedEnv = {old: null, new: null};
+            this.settings = {signatories: [], endDate: null, orderRelevant: null};
+            this.show = false;
+        },
+        async upload() {
+            if (!(this.selectedEnvelope.id === null)) {
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
+                this.close();
+            } else {
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
+                this.close();
+            }
+        }
+    },
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
+    computed: {
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
+        })
+    }
+}
+</script>
+
+<style scoped>
+.modal-mask {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    max-height: 50em;
+    overflow-y: scroll;
+    background-color: var(--whitesmoke);
+}
+
+.bi-x-square {
+    fill: var(--dark-grey);
+}
+
+.bi-x-square:hover {
+    fill: var(--light-grey);
+    transition: 0.4s;
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
+.grey-btn {
+    background-color: var(--light-grey);
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
+</style>

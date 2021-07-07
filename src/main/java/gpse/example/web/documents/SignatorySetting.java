@@ -55,7 +55,7 @@ public class SignatorySetting {
         if (signedOn.equals("")) {
             return null;
         }
-        try{
+        try {
             return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         } catch (DateTimeParseException dtpe) {
             return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));

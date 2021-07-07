@@ -306,19 +306,20 @@
         "advanced": "Fortgeschritten",
         "signatureType": "Signaturtyp",
         "error": {
-            "noDocument": "Wählen Sie ein Dokument aus, um es hochzuladen.",
-            "noEnvelope": "Wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",
-            "noNewName": "Geben Sie einen Namen für den neuen Verbund ein.",
-            "noReaders": "Fügen Sie Gegenleser hinzu.",
-            "noSignatories": "Fügen Sie Unterzeichner hinzu.",
-            "noEndDate": "Wählen Sie ein End-Datum.",
-            "noSignatureType": "Wählen Sie für jeden Unterzeichner eine Unterschriftart aus."
+            "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
+            "noEnvelope": "Bitte wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",
+            "noNewName": "Bitte geben Sie einen Namen für den neuen Verbund ein.",
+            "noReadSig": "Bitte fügen Sie mindestens einen Gegenleser oder Unterzeichner hinzu.",
+            "noEndDate": "Bitter wählen Sie ein End-Datum.",
+            "noSignatureType": " Bitte wählen Sie für jeden Unterzeichner eine Unterschriftart aus."
         },
         "remindSignatories": "Unterzeichner erinnern",
         "remindDaysBefore": "Tage vor dem Enddatum",
         "reminder": "Erinnerung:",
         "reminderShort": "Tag(e) vor Ende",
-        "sendReminderEMails": "Erinnerungs-Emails verschicken"
+        "sendReminderEMails": "Erinnerungs-Emails verschicken",
+        "startProcess": "Prozess starten",
+        "startProcessLater": "Prozess später starten"
     },
     "DownloadDoc": {
         "download": "Herunterladen",

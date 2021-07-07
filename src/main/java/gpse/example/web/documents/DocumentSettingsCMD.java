@@ -23,7 +23,7 @@ public class DocumentSettingsCMD {
         if (endDate.equals("")) {
             return null;
         }
-        try{
+        try {
             return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         } catch (DateTimeParseException dtpe) {
             return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));

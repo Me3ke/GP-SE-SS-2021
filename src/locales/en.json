@@ -308,8 +308,7 @@
             "noDocument": "Please choose a document to upload.",
             "noEnvelope": "Please choose a envelope to upload your document into.",
             "noNewName": "Please choose a name for the new envelope.",
-            "noReaders": "Please add readers to review the document.",
-            "noSignatories": "Please add signatories to sign the document.",
+            "noReadSig": "Please add at least one proofreader or signatory",
             "noEndDate": "Please chose a deadline.",
             "noSignatureType": "Please choose a signature type for each signatory."
         },
@@ -317,7 +316,9 @@
         "remindDaysBefore": "days before the deadline",
         "reminder": "Reminder:",
         "reminderShort": "day(s) before deadline",
-        "sendReminderEMails": "Send reminder emails"
+        "sendReminderEMails": "Send reminder emails",
+        "startProcess": "Start process",
+        "startProcessLater": "Start process later"
     },
     "DownloadDoc": {
         "download": "Download",

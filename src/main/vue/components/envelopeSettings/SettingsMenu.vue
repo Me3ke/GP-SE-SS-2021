@@ -23,7 +23,7 @@
                 </b-row>
                 <b-row align-h="end" v-if="this.editDate">
                     <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em" class="light-btn" @click="editDate = false"> {{$t('DownloadDoc.cancel')}} </button>
-                    <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn" @click="saveSettings()"> {{$t('Settings.DocumentSettings.save')}} </button>
+                    <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn" @click="saveDate()"> {{$t('Settings.DocumentSettings.save')}} </button>
                 </b-row>
             </div>
         </div>
@@ -54,7 +54,7 @@
 
             <b-row align-h="end" v-if="this.editReaders">
                 <button style="width:8em; margin:1em" class="light-btn" @click="editReaders = false"> {{$t('DownloadDoc.cancel')}} </button>
-                <button style="width:8em; margin:1em" class="elsa-blue-btn" @click="saveSettings()"> {{$t('Settings.DocumentSettings.save')}} </button>
+                <button style="width:8em; margin:1em" class="elsa-blue-btn" @click="saveReaders()"> {{$t('Settings.DocumentSettings.save')}} </button>
             </b-row>
         </div>
 
@@ -79,22 +79,22 @@
                 </button>
             </b-row>
 
-            <div style="padding:2em" v-if="this.editSignatories">
+            <div style="padding:2em" v-if="editSignatories">
                 <SignatoryMenu
                     :inModal="false"
-                    :order-relevant="orderRelevant"
+                    :orderRelevant="settingsEdited.orderRelevant"
                     :signatories="settingsEdited.signatories"
-                    :remind="this.settingsEdited.remind"
-                    :reminderTiming="this.settingsEdited.reminderTiming"></SignatoryMenu>
+                    :remind="settingsEdited.remind"
+                    :reminderTiming="settingsEdited.reminderTiming"></SignatoryMenu>
             </div>
 
-            <b-row align-h="end" v-if="this.editSignatories">
+            <b-row align-h="end" v-if="editSignatories">
                 <button style="width:8em; margin:1em" class="light-btn" @click="editSignatories = false"> {{$t('DownloadDoc.cancel')}} </button>
-                <button style="width:8em; margin:1em" class="elsa-blue-btn" @click="saveSettings()"> {{$t('Settings.DocumentSettings.save')}} </button>
+                <button style="width:8em; margin:1em" class="elsa-blue-btn" @click="saveSignatories()"> {{$t('Settings.DocumentSettings.save')}} </button>
             </b-row>
         </div>
 
-        <b-row align-h="end" v-if="this.editSignatories || this.editDate || this.editReaders">
+        <b-row align-h="end" v-if="editSignatories || editDate || editReaders">
             <button style="width:8em; margin:1em" class="elsa-blue-btn" @click="saveSettings()"> {{$t('Settings.DocumentSettings.saveAll')}} </button>
         </b-row>
 
@@ -103,8 +103,8 @@
 </template>
 
 <script>
-import ReaderMenu from "@/main/vue/components/envelopeSettings/ReaderMenu";
-import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatoryMenu";
+import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
+import SignatoryMenu from "@/main/vue/components/envelopeSettings/SignatorySettings";
 import SignatoryListItem from "@/main/vue/components/SignatoryListItem";
 import {mapGetters} from "vuex";
 
@@ -152,45 +152,105 @@ export default {
     methods: {
         initSignatories() {
             this.settingsEdited.signatories = [];
+            this.settingsEdited.orderRelevant = this.orderRelevant;
             let i
             for(i = 0; i < this.signatories.length; i++) {
-                this.settingsEdited.signatories.push(this.signatories[i])
+                this.settingsEdited.signatories.push(this.signatories[i]);
             }
-            this.remind = this.signatories[0].remind
-            this.reminderTiming = this.signatories[0].reminderTiming
+            if(this.signatories.length > 0) {
+                this.settingsEdited.remind = this.signatories[0].remind;
+                this.settingsEdited.reminderTiming = this.signatories[0].reminderTiming;
+            } else {
+                this.remind = false;
+                this.reminderTiming = -1;
+            }
         },
         initReaders() {
             this.settingsEdited.readers = [];
             let i
             for(i = 0; i < this.readers.length; i++) {
-                this.settingsEdited.readers.push(this.readers[i])
+                this.settingsEdited.readers.push(this.readers[i]);
             }
         },
         async saveSettings() {
-            let newSettings = {signatories: null, orderRelevant: null, endDate: null}
+            let newSettings = {signatories: null, orderRelevant: null, endDate: null};
             if (this.editDate) {
-                let time = this.settingsEdited.endTime.split(":")
+                let time = this.settingsEdited.endTime.split(":");
                 newSettings.endDate = this.settingsEdited.endDate + ' ' + time[0] + ':' + time[1];
             } else {
-                newSettings.endDate = this.endDate + ' 12:00' // TODO
+                newSettings.endDate = this.endDate;
             }
             if (this.editReaders && this.editSignatories) {
-                newSettings.orderRelevant = this.settingsEdited.orderRelevant
+                newSettings.orderRelevant = this.settingsEdited.orderRelevant;
                 let newSignatories;
-                newSignatories = this.remindInSignatories(this.settingsEdited.signatories);
-                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, newSignatories)
+                newSignatories = this.remindInSignatories(this.settingsEdited.signatories, this.settingsEdited.remind, this.settingsEdited.reminderTiming);
+                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, newSignatories);
             } else if (this.editReaders) {
-                newSettings.orderRelevant = this.orderRelevant
-                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, this.signatories)
+                newSettings.orderRelevant = this.orderRelevant;
+                newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, this.signatories);
             } else if (this.editSignatories) {
-                newSettings.orderRelevant = this.settingsEdited.orderRelevant
+                newSettings.orderRelevant = this.settingsEdited.orderRelevant;
                 let newSignatories;
-                newSignatories = this.remindInSignatories(this.settingsEdited.signatories);
-                newSettings.signatories = this.makeSignatories(this.readers, newSignatories)
+                newSignatories = this.remindInSignatories(this.settingsEdited.signatories, this.settingsEdited.remind, this.settingsEdited.reminderTiming);
+                newSettings.signatories = this.makeSignatories(this.readers, newSignatories);
             } else {
-                newSettings.orderRelevant = this.orderRelevant
-                newSettings.signatories = this.makeSignatories(this.readers, this.signatories)
+                newSettings.orderRelevant = this.orderRelevant;
+                newSettings.signatories = this.makeSignatories(this.readers, this.signatories);
             }
+            console.log(newSettings);
+            if(this.editAll) {
+                let envelope = this.envelope(this.envId);
+                let i;
+                for(i = 0; i < envelope.documents.length; i++) {
+                    await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": envelope.documents[i].id, "envId": this.envId, "settings": newSettings});
+                }
+            } else {
+                await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings});
+            }
+            this.editSignatories = false;
+            this.editReaders = false;
+            this.editDate = false;
+        },
+        async saveDate() {
+            let newSettings = {signatories: null, orderRelevant: null, endDate: null}
+            let time = this.settingsEdited.endTime.split(":")
+            newSettings.endDate = this.settingsEdited.endDate + ' ' + time[0] + ':' + time[1];
+            newSettings.orderRelevant = this.orderRelevant
+            newSettings.signatories = this.makeSignatories(this.readers, this.signatories)
+            if(this.editAll) {
+                let envelope = this.envelope(this.envId)
+                let i;
+                for(i = 0; i < envelope.documents.length; i++){
+                    await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": envelope.documents[i].id, "envId": this.envId, "settings": newSettings})
+                }
+            } else {
+                await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings})
+            }
+            this.editDate = false;
+        },
+        async saveReaders() {
+            let newSettings = {signatories: null, orderRelevant: null, endDate: null}
+            newSettings.endDate = this.endDate
+            newSettings.orderRelevant = this.orderRelevant
+            newSettings.signatories = this.makeSignatories(this.settingsEdited.readers, this.signatories)
+            if(this.editAll) {
+                let envelope = this.envelope(this.envId)
+                let i;
+                for(i = 0; i < envelope.documents.length; i++){
+                    await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": envelope.documents[i].id, "envId": this.envId, "settings": newSettings})
+                }
+            } else {
+                await this.$store.dispatch('documentSettings/changeDocumentSettings', {"docId": this.document.id, "envId": this.envId, "settings": newSettings})
+            }
+            this.editReaders = false;
+        },
+        async saveSignatories() {
+            let newSettings = {signatories: null, orderRelevant: null, endDate: null}
+            newSettings.endDate = this.endDate
+            newSettings.orderRelevant = this.settingsEdited.orderRelevant
+            let newSignatories;
+            newSignatories = this.remindInSignatories(this.settingsEdited.signatories, this.settingsEdited.remind, this.settingsEdited.reminderTiming);
+            newSettings.signatories = this.makeSignatories(this.readers, newSignatories)
             if(this.editAll) {
                 let envelope = this.envelope(this.envId)
                 let i;

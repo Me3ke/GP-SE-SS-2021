@@ -17,7 +17,7 @@
         <!-- Options for order and reminder -->
         <b-row align-h="center" style="margin-bottom: 1em">
             <b-col class="custom-control custom-switch" style="margin-left:1em">
-                <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevant">
+                <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevantInput">
                 <label class="custom-control-label" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
             </b-col>
             <b-col v-if="!inModal">
@@ -26,14 +26,12 @@
                         {{$t('UploadDoc.remindSignatories')}}
                     </b-form-checkbox>
                 </b-row>
-                <b-row v-if="remind" style="margin-top: 1em">
+                <b-row v-if="remindInput" style="margin-top: 1em">
                     <b-form-input type="number" v-model="reminderTimingInput" min="0" style="width:5em;"> </b-form-input>
                     {{$t('UploadDoc.remindDaysBefore')}}
                 </b-row>
             </b-col>
         </b-row>
-
-
 
         <!-- List of Signatories -->
         <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
@@ -70,7 +68,7 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
-    name: "SignatoryMenu",
+    name: "SignatorySettings",
     props: {
         signatories: Array,
         orderRelevant: Boolean,
@@ -91,7 +89,8 @@ export default {
             }],
             signatoriesArray: this.signatories,
             remindInput: this.remind,
-            reminderTimingInput: this.reminderTiming
+            reminderTimingInput: this.reminderTiming,
+            orderRelevantInput: this.orderRelevant
         }
     },
     methods: {
@@ -99,7 +98,7 @@ export default {
             if(this.signatoriesArray.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatoriesArray.push({email: this.signatoryInput, signatureType: "", reminder: ""});
+                this.signatoriesArray.push({email: this.signatoryInput, signatureType: ""});
             }
             this.signatoryInput = "";
         },
