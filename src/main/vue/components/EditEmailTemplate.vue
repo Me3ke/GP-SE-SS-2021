@@ -31,13 +31,7 @@
                     <option value="large"></option>
                     <option value="huge"></option>
                 </select>
-                <select class="ql-font">
-                    <option selected="selected"></option>
-                    <option value="serif"></option>
-                    <option value="monospace"></option>
-                </select>
 
-                <button class="ql-link" style="padding-left: 2em; padding-right: 2em"></button>
 
                 <button id="addUser-button" @click="addUserHtml"
                         style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addUser') }}</button>
@@ -177,6 +171,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped src="../assets/css/settingsPage.css">
+
+
 
 </style>

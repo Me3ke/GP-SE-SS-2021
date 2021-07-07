@@ -27,18 +27,10 @@
                 <!-- Add font size dropdown -->
                 <select class="ql-size">
                     <option value="small"></option>
-                    <!-- Note a missing, thus falsy value, is used to reset to default -->
                     <option selected></option>
                     <option value="large"></option>
                     <option value="huge"></option>
                 </select>
-                <select class="ql-font">
-                    <option selected="selected"></option>
-                    <option value="serif"></option>
-                    <option value="monospace"></option>
-                </select>
-
-                <button class="ql-link" style="padding-left: 2em; padding-right: 2em"></button>
 
                 <!-- You can also add your own -->
                 <button id="addUser-button" @click="addUserHtml"
@@ -145,6 +137,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped src="../assets/css/settingsPage.css">
 
 </style>

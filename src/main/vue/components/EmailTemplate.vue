@@ -22,7 +22,7 @@
                         <b-row>
                         <b-col>
 
-                        <select style="margin-top: .5em" v-model="selected" @change="changedValue(selected)">
+                        <select style="margin-top: .5em;" v-model="selected" @change="changedValue(selected)">
                         <option v-for="(content, index) in emailTemplate" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
@@ -51,6 +51,7 @@
 
                     <!--- Edit Template --->
                     <b-modal
+                        class="model-class2"
                         id="modal-editor"
                         ref="modal-editorRef"
                         :title="'Edit ' + selected.name + ' Template' "
@@ -67,6 +68,7 @@
 
                 <!--- Create new Template createNewEmailTemplate --->
                 <b-modal
+                    class="model-class2"
                     title="Create new Template"
                     hide-footer ok-only centered
                     ref="new-Template"
@@ -78,6 +80,7 @@
 
                 <!--- Delete Template --->
                 <b-modal
+                    class="model-class2"
                     title="Delete Templates"
                     hide-footer ok-only centered
                     ref="delete-Template"
@@ -219,5 +222,7 @@ export default {
 </script>
 
 <style scoped src="../assets/css/settingsPage.css">
+
+
 
 </style>

@@ -78,10 +78,6 @@
     vertical-align: middle;
 }
 
-.modal-content {
-    background-color: var(--whitesmoke);
-}
-
 .modal-dialog {
     position: relative;
     display: table;
@@ -151,6 +147,14 @@
     border: 0.03vw solid var(--dark-grey);
 }
 
+/deep/ .model-class > .modal-dialog > .modal-content {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+/deep/ .model-class > .modal-dialog > .modal-content > .modal-header .close{
+    color: var(--dark-grey);
+}
 
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {

@@ -2,9 +2,11 @@
     <div>
         <!-- Page 1 -->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'a'"
             ref="modal-page1"
             centered :title="$t('UploadDoc.UpdateDocument.replaceDoc') + document.title"
+            style="background-color: var(--whitesmoke); color: var(--dark-grey)"
             hide-footer ok-only no-stacking
         >
             <div>
@@ -47,6 +49,7 @@
 
         <!--- Skip or Add Readers --->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'bb'"
             ref="modal-page2"
             centered
@@ -79,6 +82,7 @@
 
         <!---Readers --->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'bbb'"
             ref="modal-page2-reader"
             centered
@@ -116,6 +120,7 @@
 
         <!---EndDate + Signatories--->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'bbbb'"
             ref="modal-page2-signatories"
             centered
@@ -156,14 +161,14 @@
 
         <!--- Email Template --->
         <b-modal
-        :id="'modal-'+ docID + 'c'"
-        ref="modal-page3"
-        class="modal-emailTemplate"
-        centered
-        :title= "document.title + '  ' +
-        $t('EmailTemplate.emailTemp') "
-
-        ok-only hide-footer
+            modal-class="model-class"
+            :id="'modal-'+ docID + 'c'"
+            ref="modal-page3"
+            class="modal-emailTemplate"
+            centered
+            :title= "document.title + '  ' +
+            $t('EmailTemplate.emailTemp') "
+            ok-only hide-footer
         >
             <b-container>
 
@@ -195,6 +200,7 @@
         <!-- Modal Page for save written email template--->
         <!-- Last PAGE  -->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'd'"
             ref="modal-page4"
             centered
@@ -238,6 +244,7 @@
 
         <!-- TODO Error Page  -->
         <b-modal
+            modal-class="model-class"
             :id="'modal-' + docID + 'error'"
             centered
             hide-footer hide-header ok-only no-stacking
@@ -401,5 +408,6 @@ export default {
 </script>
 
 <style scoped src="../assets/css/signModals.css">
+
 
 </style>

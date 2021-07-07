@@ -19,7 +19,7 @@
                 <label class="custom-control-label" for="orderRelevantSwitch"> {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
             </div>
         </div>
-        <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
+        <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border: 1px solid var(--dark-grey)">
             <draggable v-model="signatoriesNew">
                 <div class="drag-drop-element" v-for="signatory in signatoriesNew" :key="signatory.email ==='' || signatory.email == null ? signatory.user.email : signatory.email" style="padding:0.25em">
                     <b-row align-h="between">
@@ -112,6 +112,17 @@ export default {
 </script>
 
 <style scoped>
+
+#exampleFormControlSelect1 {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
 .drag-drop-element {
     border-bottom: 0.015em solid var(--light-grey);
 }
