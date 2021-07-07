@@ -105,6 +105,9 @@ public class Document {
     @Column
     private long processEmailTemplateId;
 
+    @Column
+    private String linkToDocumentview;
+
     public Document() {
     }
 
@@ -449,5 +452,13 @@ public class Document {
 
     public void setProcessEmailTemplateId(final long processEmailTemplateId) {
         this.processEmailTemplateId = processEmailTemplateId;
+    }
+
+    public String getLinkToDocumentview() {
+        return linkToDocumentview;
+    }
+
+    public void setLinkToDocumentview(String linkToDocumentview) {
+        this.linkToDocumentview = linkToDocumentview;
     }
 }

@@ -118,7 +118,7 @@ public class SignatureManagement {
         EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
         TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink("link/to/protocol");
+        container.setLink(document.getLinkToDocumentview());
         smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
         for (Signatory signatory : document.getSignatories()) {
             smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS, null);
@@ -235,7 +235,7 @@ public class SignatureManagement {
                     // TODO find out envelope container.setEnvelopeName(envelope.getName());
                     container.setEndDate(document.getEndDate().toString());
                     //TODO Link to documentview
-                    container.setLink("http://localhost:8080/de/link/to/document/view");
+                    container.setLink(document.getLinkToDocumentview());
                     smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(), template,
                         container, Category.SIGN, owner);
                 } catch (UsernameNotFoundException exception) {

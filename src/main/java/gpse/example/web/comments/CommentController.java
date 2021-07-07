@@ -156,7 +156,7 @@ public class CommentController {
         container.setLastNameOwner(author.getLastname());
         container.setFirstNameReciever(documentOwner.getFirstname());
         container.setLastNameReciever(documentOwner.getLastname());
-        container.setLink("Link To Document");
+        container.setLink(document.getLinkToDocumentview());
         smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
     }
 
@@ -168,7 +168,7 @@ public class CommentController {
         container.setLastNameOwner(author.getLastname());
         container.setFirstNameReciever(reciever.getFirstname());
         container.setLastNameReciever(reciever.getLastname());
-        container.setLink("LinkTo Document");
+        container.setLink(document.getLinkToDocumentview());
         smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
 
     }

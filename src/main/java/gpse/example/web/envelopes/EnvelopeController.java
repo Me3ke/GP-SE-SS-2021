@@ -128,22 +128,33 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
-                setupUserInvitation(document.getCurrentSignatory().getEmail(),
-                    userService.getUser(document.getOwner()), document,
-                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
+            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
+            Document savedDocument = savedEnvelope.getDocumentList().get(0);
+            for (Document doc : savedEnvelope.getDocumentList()) {
+                if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
+                    savedDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
+                    savedDocument = doc;
+                }
+            }
+            savedDocument.setLinkToDocumentview("http://localhost:8080/de/envelope/" + savedEnvelope.getId()
+                + DOCUMENT_URL + savedDocument.getId());
+            if (savedDocument.isOrderRelevant() && savedDocument.getCurrentSignatory() != null) {
+                setupUserInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                    userService.getUser(savedDocument.getOwner()), savedDocument,
+                    envelopeService.getEnvelope(envelopeID), savedDocument.getCurrentSignatory().getSignatureType());
             } else {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    if (!document.getSignatories().get(i).getEmail().equals(document.getOwner())) {
-                        setupUserInvitation(document.getSignatories().get(i).getEmail(),
-                            userService.getUser(document.getOwner()), document,
+                for (int i = 0; i < savedDocument.getSignatories().size(); i++) {
+                    if (!savedDocument.getSignatories().get(i).getEmail().equals(savedDocument.getOwner())) {
+                        setupUserInvitation(savedDocument.getSignatories().get(i).getEmail(),
+                            userService.getUser(savedDocument.getOwner()), savedDocument,
                             envelopeService.getEnvelope(envelopeID),
-                            document.getSignatories().get(i).getSignatureType());
+                            savedDocument.getSignatories().get(i).getSignatureType());
                     }
                 }
             }
-            addIntoAddressBook(ownerID, document.getSignatories());
-            envelopeService.updateEnvelope(envelope, document);
+            addIntoAddressBook(ownerID, savedDocument.getSignatories());
+
+            envelopeService.updateEnvelope(savedEnvelope, savedDocument);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
@@ -200,8 +211,7 @@ public class EnvelopeController {
             container.setDocumentTitle(document.getDocumentTitle());
             container.setEnvelopeName(envelope.getName());
             container.setEndDate(document.getEndDate().toString());
-            container.setLink("http://localhost:8080/de/envelope/" + envelope.getId() + DOCUMENT_URL
-                + document.getId());
+            container.setLink(document.getLinkToDocumentview());
             Category category;
             if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
                 || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
