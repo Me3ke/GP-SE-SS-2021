@@ -72,7 +72,8 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject manageSignatureWithoutOrder(final String userID,
-                                                           final Document document, final SignatureType signatureType) {
+                                                           final Document document, final SignatureType signatureType)
+                throws TemplateNameNotFoundException, MessageGenerationException {
         List<Signatory> signatories;
         final JSONResponseObject response = new JSONResponseObject();
         switch (signatureType) {
@@ -91,10 +92,12 @@ public class SignatureManagement {
 
     private JSONResponseObject manageSignatoriesWithoutOrder(final String userID, final Document document,
                                                              final JSONResponseObject response,
-                                                             final SignatureType signatureType) {
+                                                             final SignatureType signatureType)
+                throws TemplateNameNotFoundException, MessageGenerationException {
         if (document.getState().equals(DocumentState.READ)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
+                    sendProcessFinishedTemplate(document);
                     return changeDocumentStateToClosed(document);
                 } else {
                     response.setStatus(STATUS_CODE_OK);
@@ -110,11 +113,25 @@ public class SignatureManagement {
         }
     }
 
+    private void sendProcessFinishedTemplate(Document document) throws TemplateNameNotFoundException,
+                MessageGenerationException {
+        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
+        TemplateDataContainer container = new TemplateDataContainer();
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setLink("link/to/protocol");
+        smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
+        for (Signatory signatory : document.getSignatories()) {
+            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS, null);
+        }
+    }
+
     private JSONResponseObject manageReadersWithoutOrder(final String userID, final Document document,
                                                          final List<Signatory> signatories,
-                                                         final JSONResponseObject response) {
+                                                         final JSONResponseObject response)
+                throws TemplateNameNotFoundException, MessageGenerationException {
         if (findSignatoryInList(document, userID, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
+                sendProcessFinishedTemplate(document);
                 return changeDocumentStateToClosed(document);
             } else {
                 if (areSignatoriesFinished(signatories)) {
@@ -242,6 +259,8 @@ public class SignatureManagement {
                             template, container, Category.TODO, owner);
                     }
                 }
+            } else {
+                sendProcessFinishedTemplate(document);
             }
 
             response.setStatus(STATUS_CODE_OK);

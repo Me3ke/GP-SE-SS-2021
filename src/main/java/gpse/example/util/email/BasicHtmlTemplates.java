@@ -210,19 +210,19 @@ public final class BasicHtmlTemplates {
 
     /**
      * Template for sending an Information to Owner when process is finished.
-     * needs: FirstNameReciever, LastNameReciever, DocumentTitle, Link
+     * needs: DocumentTitle, Link
      * Link to protcolView
      */
     public static final String PROCESS_FINISHED_TEMPLATE = HTML_HEAD
         + "    <p> <i>English version below</i> </p>\n"
         + "    <br>\n"
-        + "\t\t<p>Guten Tag [FirstNameReciever] [LastNameReciever],</p>\n"
+        + GREETINGS_GERMAN
         + "\t\t<p>der Signaturprozess des Dokuments [DocumentTitle] ist abgeschlossen.</p>\n"
         + "\t\t<p>Sie k&#246nnen das Protokoll unter folgendem Link herunterladen.</p>\n"
         + P_LINK_P
         + NEWLINE
         + NEWLINE
-        + GREETINGS_PERSONAL_ENGLISH
+        + GREETINGS_ENGLISH
         + "\t\t<p>the Signaturprozess of the document [DocumentTitle] is finished.</p>\n"
         + "\t\t<p>You can download the protocol with the follwing link.</p>\n"
         + P_LINK_P
