@@ -113,7 +113,7 @@ public class SignatureManagement {
         }
     }
 
-    private void sendProcessFinishedTemplate(Document document) throws TemplateNameNotFoundException,
+    private void sendProcessFinishedTemplate(final Document document) throws TemplateNameNotFoundException,
                 MessageGenerationException {
         EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
         TemplateDataContainer container = new TemplateDataContainer();

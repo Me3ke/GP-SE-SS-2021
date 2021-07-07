@@ -134,9 +134,11 @@ public class EnvelopeController {
                     envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
             } else {
                 for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
-                        userService.getUser(document.getOwner()), document,
-                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                    if(!document.getSignatories().get(i).getEmail().equals(document.getOwner())) {
+                        setupUserInvitation(document.getSignatories().get(i).getEmail(),
+                            userService.getUser(document.getOwner()), document,
+                            envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+                    }
                 }
             }
             addIntoAddressBook(ownerID, document.getSignatories());
