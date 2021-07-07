@@ -46,7 +46,7 @@ public class DocumentSettingsCMD {
         return showHistory;
     }
 
-    public void setShowHistory(boolean showHistory) {
+    public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
     }
 }

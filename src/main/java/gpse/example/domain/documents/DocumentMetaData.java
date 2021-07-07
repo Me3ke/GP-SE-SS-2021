@@ -4,7 +4,6 @@ import gpse.example.util.HashSHA;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * The model representing the meta data of a document.

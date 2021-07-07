@@ -3,8 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;

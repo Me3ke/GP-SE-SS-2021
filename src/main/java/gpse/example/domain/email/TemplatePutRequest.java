@@ -12,7 +12,7 @@ public class TemplatePutRequest {
         return htmlBody;
     }
 
-    public void setHtmlBody(String htmlBody) {
+    public void setHtmlBody(final String htmlBody) {
         this.htmlBody = htmlBody;
     }
 
@@ -20,7 +20,7 @@ public class TemplatePutRequest {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -28,7 +28,7 @@ public class TemplatePutRequest {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

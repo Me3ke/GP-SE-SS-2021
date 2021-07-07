@@ -102,7 +102,7 @@ public class DocumentPutRequest {
         return showHistory;
     }
 
-    public void setShowHistory(boolean showHistory) {
+    public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
     }
 }

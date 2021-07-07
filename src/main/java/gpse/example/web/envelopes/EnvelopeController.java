@@ -125,9 +125,9 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
+            final Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
             Document savedDocument = savedEnvelope.getDocumentList().get(0);
-            for (Document doc : savedEnvelope.getDocumentList()) {
+            for (final Document doc : savedEnvelope.getDocumentList()) {
                 if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
                     savedDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
                     savedDocument = doc;
@@ -194,7 +194,7 @@ public class EnvelopeController {
         throws MessageGenerationException {
         try {
             EmailTemplate template = owner.getEmailTemplates().get(0);
-            for (EmailTemplate temp : owner.getEmailTemplates()) {
+            for (final EmailTemplate temp : owner.getEmailTemplates()) {
                 if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
                     template = temp;
                 }

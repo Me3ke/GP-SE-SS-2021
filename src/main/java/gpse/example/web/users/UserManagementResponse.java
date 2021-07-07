@@ -55,7 +55,7 @@ public class UserManagementResponse extends UserResponseObject {
         return seen;
     }
 
-    public void setSeen(boolean seen) {
+    public void setSeen(final boolean seen) {
         this.seen = seen;
     }
 }

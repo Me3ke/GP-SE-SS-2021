@@ -217,7 +217,7 @@ public class DocumentController {
     public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
-        Document document = documentService.getDocument(documentID);
+        final Document document = documentService.getDocument(documentID);
         if (document.getState() == DocumentState.CLOSED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
@@ -253,9 +253,9 @@ public class DocumentController {
             final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
-            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
+            final Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
             Document savedNewDocument = savedEnvelope.getDocumentList().get(0);
-            for (Document doc : savedEnvelope.getDocumentList()) {
+            for (final Document doc : savedEnvelope.getDocumentList()) {
                 if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
                     savedNewDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
                     savedNewDocument = doc;
@@ -446,9 +446,9 @@ public class DocumentController {
     public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
                                                              final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
-        List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
-        for (Document document : documentHistory) {
+        final List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        final List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
+        for (final Document document : documentHistory) {
             responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
                 userID));
         }
@@ -517,7 +517,8 @@ public class DocumentController {
         signatories.clear();
         signatories.addAll(signatoryLinkedHashSet);
 
-        return new DocumentProgressResponse(signatoryManagement.getSignatories(), signatoryManagement.getReaders(), document.getEndDate());
+        return new DocumentProgressResponse(signatoryManagement.getSignatories(), signatoryManagement.getReaders(),
+            document.getEndDate());
     }
 
     /**

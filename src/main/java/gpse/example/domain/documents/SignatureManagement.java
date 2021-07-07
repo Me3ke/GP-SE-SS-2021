@@ -124,12 +124,12 @@ public class SignatureManagement {
 
     private void sendProcessFinishedTemplate(final Document document) throws TemplateNameNotFoundException,
                 MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink(document.getLinkToDocumentview() + "/protocol");
         smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
-        for (Signatory signatory : document.getSignatoryManagement().getSignatories()) {
+        for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
             if (!signatory.getEmail().equals(document.getOwner())) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS, null);
             }
@@ -227,10 +227,12 @@ public class SignatureManagement {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
-            if (savedDocument.getState() != DocumentState.CLOSED) {
+            if (savedDocument.getState() == DocumentState.CLOSED) {
+                sendProcessFinishedTemplate(document);
+            } else {
                 final User owner = userService.getUser(savedDocument.getOwner());
                 EmailTemplate template = owner.getEmailTemplates().get(0);
-                for (EmailTemplate temp : owner.getEmailTemplates()) {
+                for (final EmailTemplate temp : owner.getEmailTemplates()) {
                     if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
                         template = temp;
                     }
@@ -238,9 +240,11 @@ public class SignatureManagement {
                 final TemplateDataContainer container = new TemplateDataContainer();
                 try {
                     container.setFirstNameReciever(
-                        userService.getUser(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getFirstname());
+                        userService.getUser(
+                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getFirstname());
                     container.setLastNameReciever(
-                        userService.getUser(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getLastname());
+                        userService.getUser(
+                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getLastname());
                     container.setFirstNameOwner(owner.getFirstname());
                     container.setLastNameOwner(owner.getLastname());
                     container.setDocumentTitle(document.getDocumentTitle());
@@ -259,20 +263,21 @@ public class SignatureManagement {
                     container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
                         + document.getId() + "/" + token.getToken());
                     if (signatureType.equals(SignatureType.REVIEW)) {
-                        smtpServerHelper.sendTemplatedEmail(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(),
-                            template, container, Category.READ, owner);
+                        smtpServerHelper.sendTemplatedEmail(
+                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
+                            container, Category.READ, owner);
                     } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
-                        smtpServerHelper.sendTemplatedEmail(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(),
-                            template, container, Category.SIGN, owner);
+                        smtpServerHelper.sendTemplatedEmail(
+                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
+                            container, Category.SIGN, owner);
                     } else {
                         container.setLink("http://localhost:8080/de/landing");
                         template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
-                        smtpServerHelper.sendTemplatedEmail(savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(),
-                            template, container, Category.TODO, owner);
+                        smtpServerHelper.sendTemplatedEmail(
+                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
+                            container, Category.TODO, owner);
                     }
                 }
-            } else {
-                sendProcessFinishedTemplate(document);
             }
 
             response.setStatus(STATUS_CODE_OK);
