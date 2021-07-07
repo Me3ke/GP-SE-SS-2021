@@ -3,6 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
@@ -96,8 +97,14 @@ public class Document {
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne
-    private EmailTemplate processEmailTemplate;
+    @Column
+    private long processEmailTemplateId;
+
+    @Column
+    private boolean showHistory;
+
+    @Column
+    private String linkToDocumentview;
 
     public Document() {
     }
@@ -123,6 +130,7 @@ public class Document {
             this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
+        this.showHistory = documentPutRequest.isShowHistory();
     }
 
     /**
@@ -250,15 +258,31 @@ public class Document {
         this.previousVersion = previousVersion;
     }
 
-    public EmailTemplate getProcessEmailTemplate() {
-        return processEmailTemplate;
+    public long getProcessEmailTemplateId() {
+        return processEmailTemplateId;
+    }
+
+    public void setProcessEmailTemplateId(final long processEmailTemplateId) {
+        this.processEmailTemplateId = processEmailTemplateId;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(final boolean showHistory) {
+        this.showHistory = showHistory;
+    }
+
+    public String getLinkToDocumentview() {
+        return linkToDocumentview;
     }
 
     public SignatoryManagement getSignatoryManagement() {
         return signatoryManagement;
     }
 
-    public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {
-        this.processEmailTemplate = processEmailTemplate;
+    public void setLinkToDocumentview(final String linkToDocumentview) {
+        this.linkToDocumentview = linkToDocumentview;
     }
 }

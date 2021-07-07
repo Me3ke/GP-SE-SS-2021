@@ -344,8 +344,8 @@
         "cancel": "Cancel"
     },
     "DownloadKey": {
-      "download": "Download",
-      "clipBoard": "Copy"
+        "download": "Download",
+        "clipBoard": "Copy"
     },
     "DownloadProtocol": {
         "protocol": "Protocol",
@@ -556,6 +556,30 @@
             "color13": "Setting color",
             "color14": "Pop-Up background",
             "default": "Default"
+        },
+        "manage": {
+            "title": "User management",
+            "empty": "No users found.",
+            "error": "Error!",
+            "filter": {
+                "active": "Active",
+                "inactive": "Deactivated",
+                "admin": "Admin"
+            },
+            "sort": {
+                "new": "Newest first",
+                "old": "Oldest first",
+                "abcN": "Name A-Z",
+                "cbaN": "Name Z-A",
+                "abcE": "E-mail A-Z",
+                "cbaE": "E-mail Z-A"
+            },
+            "options": {
+                "active": "Activate",
+                "inactive": "Deactivate",
+                "admin": "Make admin"
+            },
+            "new": "NEW"
         }
     },
     "ProgressBar": {
@@ -590,5 +614,18 @@
         "serverErrorOne": "Your comment could not be posted.",
         "serverErrorTwo": "Please try again later or talk to an administrator.",
         "serverErrorThree": "The comments could not be loaded."
+    },
+    "ResetPasswordPage": {
+      "success" : "Success! Login now!",
+      "fail" : "Failure! Please try to reset again!",
+      "send" : "send"
+    },
+    "Password": {
+      "change": "Change Password"
+    },
+    "HistoryPage": {
+        "title": "History",
+        "abc": "Title A-Z",
+        "cba" : "Title Z-A"
     }
 }

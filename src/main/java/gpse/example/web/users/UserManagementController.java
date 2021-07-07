@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * The controller used for user management operations.
  */
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:8080/")
 @RequestMapping("/api")
 public class UserManagementController {
 
@@ -116,6 +116,18 @@ public class UserManagementController {
         if (response.getStatus() == STATUS_CODE) {
             final User user = userService.getUser(userID);
             user.setAccountNonLocked(false);
+            userService.saveUser(user);
+        }
+        return response;
+    }
+
+    @PutMapping("admin/userseen")
+    private JSONResponseObject changeUserToSeen(@RequestParam(USERID) final String userID,
+                                                @RequestHeader final String token) {
+        final JSONResponseObject response = checkUserAndRole(userID, token);
+        if (response.getStatus() == STATUS_CODE) {
+            final User user = userService.getUser(userID);
+            user.setToSeenByAdmin();
             userService.saveUser(user);
         }
         return response;

@@ -13,7 +13,7 @@
                           <span>
                              {{ $t('Settings.MessageSettings.toDo.text') }}
                                <b-icon id="tooltip" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip" triggers="hover">
+                              <b-tooltip target="tooltip" triggers="hover click">
                                    {{ $t('Settings.MessageSettings.toDo.exp') }}
                               </b-tooltip>
                           </span>
@@ -35,7 +35,7 @@
                         <span>
                               {{ $t('Settings.MessageSettings.sign.text') }}
                              <b-icon id="tooltip-target-2" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-2" triggers="hover">
+                              <b-tooltip target="tooltip-target-2" triggers="hover click">
                                    {{ $t('Settings.MessageSettings.sign.exp') }}
                               </b-tooltip>
                         </span>
@@ -57,7 +57,7 @@
                         <span>
                                    {{ $t('Settings.MessageSettings.read.text') }}
                              <b-icon id="tooltip-target-3" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-3" triggers="hover">
+                              <b-tooltip target="tooltip-target-3" triggers="hover click">
                                    {{ $t('Settings.MessageSettings.read.exp') }}
                               </b-tooltip>
                         </span>
@@ -79,7 +79,7 @@
                         <span>
                              {{ $t('Settings.MessageSettings.progress.text') }}
                              <b-icon id="tooltip-target-4" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-4" triggers="hover">
+                              <b-tooltip target="tooltip-target-4" triggers="hover click">
                                    {{ $t('Settings.MessageSettings.progress.exp') }}
                               </b-tooltip>
                         </span>
@@ -101,7 +101,7 @@
                         <span>
                             {{ $t('Settings.MessageSettings.newVersion.text') }}
                              <b-icon id="tooltip-target-5" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-target-5" triggers="hover">
+                              <b-tooltip target="tooltip-target-5" triggers="hover click">
                                    {{ $t('Settings.MessageSettings.newVersion.exp') }}
                               </b-tooltip>
                         </span>

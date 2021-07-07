@@ -32,7 +32,7 @@
                         <span>
                             {{ $t('TwoFakAuth.login.always') }}
                              <b-icon id="tooltip-security" icon="info-circle" class="my-icon"></b-icon>
-                             <b-tooltip target="tooltip-security" triggers="hover">
+                             <b-tooltip target="tooltip-security" triggers="hover click">
                                 {{ $t('TwoFakAuth.login.alwaysExp') }}
                             </b-tooltip>
                         </span>
@@ -48,6 +48,22 @@
                                {{ $t('Settings.on') }}
                             </span>
                         </div>
+                    </b-list-group-item>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('Password.change') }}
+
+
+                        </span>
+
+
+                       <b-button class="light-btn" @click="changePassword">
+                         {{ $t('Password.change') }}
+                       </b-button>
+
+
+
                     </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center">
@@ -110,6 +126,9 @@ export default {
         setUp() {
             this.showSetUp = !this.showSetUp
             this.$emit('modalTrigger')
+        },
+        changePassword() {
+          this.$router.push('/' + this.$i18n.locale + '/login/resets');
         },
         // saves setting if two-factor authentication should always be shown at login
         async saveTwoFacLogin() {

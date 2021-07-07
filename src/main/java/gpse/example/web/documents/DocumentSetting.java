@@ -16,6 +16,7 @@ public class DocumentSetting {
     private List<SignatorySetting> signatories;
     private boolean orderRelevant;
     private String endDate;
+    private boolean showHistory;
 
     /**
      * the standard constructor.
@@ -31,6 +32,7 @@ public class DocumentSetting {
         this.orderRelevant = document.isOrderRelevant();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.endDate = document.getEndDate().format(formatter);
+        this.showHistory = document.isShowHistory();
     }
 
     public long getDocumentID() {
@@ -63,5 +65,13 @@ public class DocumentSetting {
 
     public void setEndDate(final String endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(final boolean showHistory) {
+        this.showHistory = showHistory;
     }
 }

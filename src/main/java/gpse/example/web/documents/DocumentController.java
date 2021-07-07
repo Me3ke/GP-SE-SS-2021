@@ -1,6 +1,6 @@
 package gpse.example.web.documents;
 
-import gpse.example.util.Protocol;
+import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
@@ -10,6 +10,7 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
+import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -205,6 +206,25 @@ public class DocumentController {
     }
 
     /**
+     * Gives back archived document.
+     *
+     * @param userID     the id of the user doing the request.
+     * @param documentID the id of the document.
+     * @return a documentGetResponse of the archived document
+     * @throws DocumentNotFoundException s thrown if the document that the request relates to does not exist.
+     */
+    @GetMapping("/user/{userID}/archivedDocument/{documentID}")
+    public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
+                                                    @PathVariable("documentID") final long documentID)
+        throws DocumentNotFoundException {
+        Document document = documentService.getDocument(documentID);
+        if (document.getState() == DocumentState.CLOSED) {
+            return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
+        }
+        return null;
+    }
+
+    /**
      * The uploadNewDocumentVersion method does a put request to update.
      *
      * @param documentPutRequest the request object containing all the necessary data.
@@ -233,7 +253,19 @@ public class DocumentController {
             final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
-            envelopeService.updateEnvelope(envelope, newDocument);
+            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
+            Document savedNewDocument = savedEnvelope.getDocumentList().get(0);
+            for (Document doc : savedEnvelope.getDocumentList()) {
+                if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
+                    savedNewDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
+                    savedNewDocument = doc;
+                }
+            }
+            savedNewDocument.setLinkToDocumentview(ENVELOPE_URL + savedEnvelope.getId()
+                + DOCUMENT_URL + savedDocument.getId());
+
+            envelopeService.updateEnvelope(savedEnvelope, savedNewDocument);
+
             informSignatories(newDocument, envelopeID);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
@@ -261,8 +293,7 @@ public class DocumentController {
                 if (signatory.isStatus() || signatoryManagement.getCurrentSignatory().equals(signatory)) {
                     try {
                         userService.getUser(signatory.getEmail());
-                        container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                            + document.getId());
+                        container.setLink(document.getLinkToDocumentview());
                         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                             container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     } catch (UsernameNotFoundException exception) {
@@ -270,6 +301,8 @@ public class DocumentController {
                             document.getId()));
                         container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
                             + document.getId() + "/" + token.getToken());
+                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     }
                 }
             }
@@ -277,8 +310,7 @@ public class DocumentController {
             for (final Signatory signatory : signatoryManagement.getSignatories()) {
                 try {
                     userService.getUser(signatory.getEmail());
-                    container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                        + document.getId());
+                    container.setLink(document.getLinkToDocumentview());
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 } catch (UsernameNotFoundException exception) {
@@ -405,14 +437,22 @@ public class DocumentController {
     /**
      * The getDocumentHistory method does a get request to get the document history.
      *
+     * @param userID  the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
-    public List<Document> getDocumentHistory(final @PathVariable(DOCUMENT_ID) long documentID)
+    public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
+                                                             final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        return documentService.getDocument(documentID).getHistory();
+        List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
+        for (Document document : documentHistory) {
+            responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
+                userID));
+        }
+        return responseHistory;
     }
 
     /**
@@ -495,6 +535,7 @@ public class DocumentController {
             final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setShowHistory(documentSettingsCMD.isShowHistory());
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;

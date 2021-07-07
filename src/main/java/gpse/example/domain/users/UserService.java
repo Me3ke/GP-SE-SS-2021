@@ -38,4 +38,6 @@ public interface UserService extends UserDetailsService {
     void removeUser(final String username);
 
     User saveUser(User user);
+
+    boolean checkIfAdmin(final String token);
 }

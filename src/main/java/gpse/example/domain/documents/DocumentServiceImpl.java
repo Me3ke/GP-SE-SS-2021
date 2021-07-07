@@ -66,11 +66,11 @@ public class DocumentServiceImpl implements DocumentService {
             ownerID, signatoriesID,  this);
         for (final EmailTemplate temp:userService.getUser(ownerID).getEmailTemplates()) {
             if (temp.getTemplateID() == documentPutRequest.getEmailTemplateId()) {
-                newDocument.setProcessEmailTemplate(temp);
+                newDocument.setProcessEmailTemplateId(temp.getTemplateID());
                 return addDocument(newDocument);
             }
         }
-        newDocument.setProcessEmailTemplate(userService.getUser(ownerID).getEmailTemplates().get(0));
+        newDocument.setProcessEmailTemplateId(userService.getUser(ownerID).getEmailTemplates().get(0).getTemplateID());
         return addDocument(newDocument);
     }
 }
