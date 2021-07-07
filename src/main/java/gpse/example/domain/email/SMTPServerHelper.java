@@ -29,7 +29,6 @@ public class SMTPServerHelper {
     @Autowired
     private final DomainSetterService domainSetterService;
 
-    private Session session;
 
     /**
      * something else.
@@ -56,12 +55,6 @@ public class SMTPServerHelper {
         final Properties properties = mailSender.getJavaMailProperties();
         properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
         properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
-             /*session = Session.getInstance(properties, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(, domainSetter.getPassword());
-                }
-            });*/
     }
 
     /**
@@ -85,7 +78,7 @@ public class SMTPServerHelper {
             message.setRecievingUserMail(recieverMail);
             message.setupByTemplate(template, dataContainer);
             message.setSendingUser(sendingUser);
-            mailSender.send(message.generateHtmlMessage(new MimeMessage(session)));
+            mailSender.send(message.generateHtmlMessage(new MimeMessage(mailSender.getSession())));
             messageService.saveMessage(message);
         } catch (InvocationTargetException | MessagingException exc) {
             throw new MessageGenerationException(message.getMessageID(), exc);
