@@ -48,7 +48,8 @@ export default {
     computed: {
         ...mapGetters({
             envelopeProgress: 'document/getDocumentProgressArrayByEnvelope',
-            auth : 'twoFakAuth/getAuthMust'
+            auth: 'twoFakAuth/getAuthMust',
+            counter: 'twoFakAuth/getLogoutCounter'
         })
     },
 
@@ -70,6 +71,9 @@ export default {
         })
         this.showProgress = true
 
+        if (this.counter !== -1) {
+            this.showAuth = true
+        }
     },
 
     methods: {

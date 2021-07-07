@@ -10,7 +10,8 @@ export const state = {
     errorGetQrCode: {},
     correctInput: Boolean,
     errorCorrectInput: {},
-    lastAuth: Date
+    lastAuth: Date,
+    logoutCounter: -1
 }
 
 export const mutations = {
@@ -36,6 +37,10 @@ export const mutations = {
 
     SET_ERROR_CORRECT_INPUT(state, error) {
         state.errorCorrectInput = error
+    },
+
+    SET_LOGOUT_COUNTER(state, time) {
+        state.logoutCounter = time
     }
 }
 
@@ -69,6 +74,11 @@ export const actions = {
         }).catch(error => {
             commit('SET_ERROR_CORRECT_INPUT', error)
         })
+    },
+
+    // sets logout counter
+    setLogoutCounter({commit}, time) {
+        commit('SET_LOGOUT_COUNTER', time)
     }
 }
 
@@ -94,7 +104,7 @@ export const getters = {
 
     // gives back if new auth is required
     getAuthMust: (state) => {
-        if(_.isEmpty(state.lastAuth)){
+        if (_.isEmpty(state.lastAuth)) {
             // setting current time as reference
             state.lastAuth = new Date()
             // auth is required
@@ -104,7 +114,7 @@ export const getters = {
             // milliseconds
             let diff = Math.abs(Date.parse(state.lastAuth) - now)
 
-            if(diff > 300000){
+            if (diff > 300000) {
                 state.lastAuth = new Date()
                 // auth is required
                 return true
@@ -112,5 +122,9 @@ export const getters = {
                 return false
             }
         }
+    },
+
+    getLogoutCounter: (state) => {
+        return state.logoutCounter
     }
 }

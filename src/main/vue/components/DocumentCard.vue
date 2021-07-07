@@ -7,14 +7,14 @@
         <b-row no-gutters>
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
-                    <div  v-if="//documentProgressById(document.id) &&
+                <div v-if="//documentProgressById(document.id) &&
                      this.document.owner.email === this.$store.state.auth.username">
-                        <DocumentProgressBar
-                            :state="document.state"
-                            :docId="document.id"
-                            :getDocumentProgress="documentProgressById(document.id)"
-                        ></DocumentProgressBar>
-                    </div>
+                    <DocumentProgressBar
+                        :state="document.state"
+                        :docId="document.id"
+                        :getDocumentProgress="documentProgressById(document.id)"
+                    ></DocumentProgressBar>
+                </div>
             </b-col>
             <b-col cols="1">
                 <settingsButton
@@ -41,10 +41,12 @@ export default {
     },
     computed: {
         ...mapGetters({
-        documentProgress: 'document/getDocumentProgress',
-        documentProgressById: 'document/getDocumentProgressArrayById',
-        auth : 'twoFakAuth/getAuthMust'
-    }),
+            documentProgress: 'document/getDocumentProgress',
+            documentProgressById: 'document/getDocumentProgressArrayById',
+
+            auth: 'twoFakAuth/getAuthMust',
+            counter: 'twoFakAuth/getLogoutCounter'
+        }),
 
     },
     data() {
@@ -78,11 +80,14 @@ export default {
     },
 
     mounted() {
-
         this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,
             docId: this.document.id,
         })
+
+        if (this.counter !== -1) {
+            this.showAuth = true
+        }
     }
 }
 </script>

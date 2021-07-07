@@ -159,27 +159,35 @@ export default {
             pageBefore: 0,
             code: '',
             showAlertCode: false,
-            //TODO: add somewhere in store so user cannot just refresh the page
+
             triesLeft: 3,
             showTries: false,
-            //TODO: add somewhere in store so user cannot just refresh the page
+
             logoutCounter: 10,
             startCountDown: false
         }
     },
     async created() {
         await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
-        // checks if signature is advanced (if prompt appears in font of doc or envelope containing doc with advanced signature),
-        // if so checks if user has set up 2FakAuth
-        if (this.advanced && this.beforeDoc) {
-            if (!this.hasSetUp) {
-                this.page = 0
-            }
-        }
 
-        // if auth is not in front of doc and user has no set-up -> close modal
-        if (!this.beforeDoc && !this.hasSetUp) {
-            this.$emit('twoFacTrigger')
+        // checks if logout has to be done
+        if (this.counter !== -1) {
+            this.logoutCounter = this.counter
+            this.startCountDown = true
+            this.page = 2
+        } else {
+            // checks if signature is advanced (if prompt appears in font of doc or envelope containing doc with advanced signature),
+            // if so checks if user has set up 2FakAuth
+            if (this.advanced && this.beforeDoc) {
+                if (!this.hasSetUp) {
+                    this.page = 0
+                }
+            }
+
+            // if auth is not in front of doc and user has no set-up -> close modal
+            if (!this.beforeDoc && !this.hasSetUp) {
+                this.$emit('twoFacTrigger')
+            }
         }
     },
     methods: {
@@ -189,7 +197,7 @@ export default {
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
                 this.showAlertCode = false
 
-                await this.$store.dispatch('twoFakAuthAPI/postValidateCode', {code: this.code})
+                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
                 //checking correctness of code
                 if (!this.correctInput) {
                     this.triesLeft--
@@ -227,6 +235,7 @@ export default {
             correctInput: 'twoFakAuth/getCorrectInput',
             hasSetUp: 'twoFakAuth/getHasSetUp',
 
+            counter: 'twoFakAuth/getLogoutCounter'
         }),
     },
     // watch methods taken from: https://stackoverflow.com/questions/55773602/how-do-i-create-a-simple-10-seconds-countdown-in-vue-js
@@ -235,6 +244,7 @@ export default {
             if (value) {
                 setTimeout(() => {
                     this.logoutCounter--;
+                    this.$store.dispatch('twoFakAuth/setLogoutCounter', this.logoutCounter)
                 }, 1000);
             }
         },
