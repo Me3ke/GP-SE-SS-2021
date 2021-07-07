@@ -172,6 +172,7 @@ export default {
 
         // checks if logout has to be done
         if (this.counter !== -1) {
+            console.log(this.counter)
             this.logoutCounter = this.counter
             this.startCountDown = true
             this.page = 2
@@ -253,10 +254,12 @@ export default {
                 if (value > 0 && this.startCountDown) {
                     setTimeout(() => {
                         this.logoutCounter--;
+                        this.$store.dispatch('twoFakAuth/setLogoutCounter', this.logoutCounter)
                     }, 1000);
                 }
 
                 if (value === 0) {
+                    this.$store.dispatch('twoFakAuth/setLogoutCounter', -1)
                     localStorage.removeItem('store')
                     localStorage.clear()
                     this.$router.push('/' + this.$i18n.locale + '/landing')
