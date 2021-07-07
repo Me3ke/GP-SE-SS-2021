@@ -108,6 +108,9 @@ public class Document {
     @Column
     private boolean showHistory;
 
+    @Column
+    private String linkToDocumentview;
+
     public Document() {
     }
 
@@ -461,5 +464,13 @@ public class Document {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public String getLinkToDocumentview() {
+        return linkToDocumentview;
+    }
+
+    public void setLinkToDocumentview(final String linkToDocumentview) {
+        this.linkToDocumentview = linkToDocumentview;
     }
 }
