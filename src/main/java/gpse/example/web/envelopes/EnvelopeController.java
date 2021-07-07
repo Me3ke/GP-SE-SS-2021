@@ -154,7 +154,7 @@ public class EnvelopeController {
             }
             addIntoAddressBook(ownerID, savedDocument.getSignatories());
 
-            envelopeService.updateEnvelope(savedEnvelope, savedDocument);
+            envelopeService.saveEnvelope(savedEnvelope);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
