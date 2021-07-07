@@ -9,6 +9,7 @@ import gpse.example.web.documents.DocumentPutRequest;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -108,6 +109,9 @@ public class Document {
     @Column
     private boolean showHistory;
 
+    @Column
+    private boolean draft;
+
     public Document() {
     }
 
@@ -130,7 +134,20 @@ public class Document {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
-        this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+        this.draft = documentPutRequest.isDraft();
+        if (!this.draft) {
+            this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+        } else {
+            boolean isValidFormat = true;
+            try {
+                formatter.parse(documentPutRequest.getEndDate());
+            } catch (DateTimeParseException exception) {
+                isValidFormat = false;
+            }
+            if (isValidFormat) {
+                this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+            }
+        }
         this.orderRelevant = documentPutRequest.isOrderRelevant();
         this.showHistory = documentPutRequest.isShowHistory();
     }
@@ -461,5 +478,13 @@ public class Document {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(final boolean draft) {
+        this.draft = draft;
     }
 }

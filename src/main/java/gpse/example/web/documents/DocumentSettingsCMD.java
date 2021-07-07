@@ -13,6 +13,7 @@ public class DocumentSettingsCMD {
     private boolean orderRelevant;
     private String endDate;
     private boolean showHistory;
+    private boolean draft;
 
     public LocalDateTime convertEndDate() {
         return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
@@ -48,5 +49,13 @@ public class DocumentSettingsCMD {
 
     public void setShowHistory(boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 }

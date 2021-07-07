@@ -93,7 +93,7 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatoriesWithoutOrder(final String userID, final Document document,
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType) {
-        if (document.getState().equals(DocumentState.READ)) {
+        if (document.getState().equals(DocumentState.SIGN)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
                     return changeDocumentStateToClosed(document);
@@ -133,7 +133,7 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject changeDocumentStateToRead(final Document document) {
-        document.setState(DocumentState.READ);
+        document.setState(DocumentState.SIGN);
         documentService.addDocument(document);
         final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);

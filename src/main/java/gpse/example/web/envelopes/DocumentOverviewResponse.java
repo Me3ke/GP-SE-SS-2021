@@ -29,6 +29,7 @@ public class DocumentOverviewResponse {
     private boolean turnToReview;
     private boolean turnToSign;
     private boolean showHistory;
+    private boolean draft;
     private final long id;
 
     /**
@@ -50,6 +51,7 @@ public class DocumentOverviewResponse {
         this.state = document.getState();
         this.identifier = document.getDocumentMetaData().getIdentifier();
         this.showHistory = document.isShowHistory();
+        this.draft = document.isDraft();
         this.signatory = false;
         this.read = false;
         this.signed = false;
@@ -165,6 +167,14 @@ public class DocumentOverviewResponse {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 
     public long getId() {

@@ -264,7 +264,7 @@ public class InitializeDatabase implements InitializingBean {
                 try {
                     document.setState(documentState);
                 } catch (IllegalStateException stateException) {
-                    document.setState(DocumentState.OPEN);
+                    document.setState(DocumentState.REVIEW);
                 }
                 return documentService.addDocument(document);
             } catch (CreatingFileException | IOException e) {

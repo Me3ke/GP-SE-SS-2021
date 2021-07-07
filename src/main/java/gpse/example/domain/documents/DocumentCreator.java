@@ -98,9 +98,9 @@ public class DocumentCreator {
         if (signatories == null) {
             document.setState(DocumentState.CLOSED);
         } else if (document.getReaders().size() == 0 && !document.isOrderRelevant()) {
-            document.setState(DocumentState.READ);
+            document.setState(DocumentState.SIGN);
         } else {
-            document.setState(DocumentState.OPEN);
+            document.setState(DocumentState.REVIEW);
         }
     }
 
