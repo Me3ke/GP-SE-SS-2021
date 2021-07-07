@@ -4,7 +4,6 @@ import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -103,8 +102,8 @@ public class Document {
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne
-    private EmailTemplate processEmailTemplate;
+    @Column
+    private long processEmailTemplateId;
 
     public Document() {
     }
@@ -444,11 +443,11 @@ public class Document {
         this.previousVersion = previousVersion;
     }
 
-    public EmailTemplate getProcessEmailTemplate() {
-        return processEmailTemplate;
+    public long getProcessEmailTemplateId() {
+        return processEmailTemplateId;
     }
 
-    public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {
-        this.processEmailTemplate = processEmailTemplate;
+    public void setProcessEmailTemplateId(final long processEmailTemplateId) {
+        this.processEmailTemplateId = processEmailTemplateId;
     }
 }

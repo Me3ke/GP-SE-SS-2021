@@ -1,12 +1,16 @@
 package gpse.example.web.envelopes;
 
+import gpse.example.domain.addressbook.AddressBook;
+import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import gpse.example.web.DocumentFilter;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
@@ -45,6 +49,11 @@ public class EnvelopeController {
     private final DocumentServiceImpl documentService;
     private final DocumentFilter documentFilter;
     private final GuestTokenService guestTokenService;
+
+    @Lazy
+    @Autowired
+    private DomainSetterService domainSetterService;
+
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
@@ -130,6 +139,7 @@ public class EnvelopeController {
                         envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
                 }
             }
+            addIntoAddressBook(ownerID, document.getSignatories());
             envelopeService.updateEnvelope(envelope, document);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
@@ -142,11 +152,42 @@ public class EnvelopeController {
         }
     }
 
+    private void addIntoAddressBook(final String ownerID, final List<Signatory> signatories) {
+        final User currentUser = userService.getUser(ownerID);
+        final AddressBook addressBook = currentUser.getAddressBook();
+        List<Signatory> filteredSignatories;
+        if (addressBook.isAddAllAutomatically()) {
+            filteredSignatories = signatories;
+            if (addressBook.isAddDomainAutomatically()) {
+                filteredSignatories = signatories.stream().filter(signatory ->
+                    signatory.getEmail()
+                        .matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain()))
+                    .collect(Collectors.toList());
+            }
+            for (final Signatory signatory: filteredSignatories) {
+                try {
+                    final User user = userService.getUser(signatory.getEmail());
+                    addressBook.addEntry(new Entry(user));
+                } catch (UsernameNotFoundException e) {
+                    final Entry entry = new Entry();
+                    entry.setEmail(signatory.getEmail());
+                    addressBook.addEntry(entry);
+                }
+            }
+            userService.saveUser(currentUser);
+        }
+    }
+
     private void setupUserInvitation(final String userID, final User owner, final Document document,
                                      final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
         try {
-            final EmailTemplate template = document.getProcessEmailTemplate();
+            EmailTemplate template = owner.getEmailTemplates().get(0);
+            for (EmailTemplate temp : owner.getEmailTemplates()) {
+                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                    template = temp;
+                }
+            }
             final TemplateDataContainer container = new TemplateDataContainer();
             final User signatory = userService.getUser(userID);
             container.setFirstNameReciever(signatory.getFirstname());

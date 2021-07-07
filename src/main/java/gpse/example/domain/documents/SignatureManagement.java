@@ -200,8 +200,12 @@ public class SignatureManagement {
             final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
                 final User owner = userService.getUser(savedDocument.getOwner());
-
-                EmailTemplate template = document.getProcessEmailTemplate();
+                EmailTemplate template = owner.getEmailTemplates().get(0);
+                for (EmailTemplate temp : owner.getEmailTemplates()) {
+                    if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                        template = temp;
+                    }
+                }
                 final TemplateDataContainer container = new TemplateDataContainer();
                 try {
                     container.setFirstNameReciever(
