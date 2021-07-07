@@ -45,6 +45,7 @@ public class SignatureManagement {
      * @param givenUserService     userservice
      * @param emailTemplateService emailTemplateService
      * @param guestTokenService guestTokenService
+     * @param envelopeService envelopeService
      */
     @Autowired
     public SignatureManagement(final SMTPServerHelper smtpServerHelper, final DocumentService givenDocumentService,
