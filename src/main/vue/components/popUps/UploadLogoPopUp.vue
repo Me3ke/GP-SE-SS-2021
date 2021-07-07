@@ -34,7 +34,7 @@
                                         <div class="step">
                                             {{ $t('AdminSettings.corporate.logoUploadHere') }}
                                             <b-icon id="tooltip-logo" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-logo" triggers="hover">
+                                            <b-tooltip target="tooltip-logo" triggers="hover click">
                                                 {{ $t('AdminSettings.corporate.logoUploadHereExp') }}
                                             </b-tooltip>
                                         </div>

@@ -1,4 +1,5 @@
 import documentAPI from "@/main/vue/api/documentAPI";
+import {filterHistory, sortHistory} from "@/main/vue/scripts/filterSortHistory";
 
 export const namespaced = true
 
@@ -6,6 +7,8 @@ export const state = {
 
     documentInfo: {},
     errorGetDocumentInfo: {},
+    documentHistory: {},
+    errorGetDocumentHistory: {},
     documentSeen: {},
     errorDocumentSeen: {},
     errorGetDocument: {},
@@ -33,6 +36,10 @@ export const mutations = {
     // sets given document as state
     SET_DOCUMENT_INFO(state, doc) {
         state.documentInfo = doc
+    },
+
+    SET_DOCUMENT_HISTORY(state, his) {
+        state.documentHistory = his
     },
 
     // sets ids of new document
@@ -75,6 +82,11 @@ export const mutations = {
     SET_ERROR_GET_DOCUMENT_INFO(state, error) {
         state.errorGetDocumentInfo = error
     },
+
+    SET_ERROR_GET_DOCUMENT_HISTORY(state, error) {
+        state.errorGetDocumentHistory = error
+    },
+
     //sets error of getDocument request
     SET_ERROR_EDIT_DOCUMENT(state, error) {
         state.errorEditDocument = error
@@ -121,6 +133,24 @@ export const actions = {
             commit('SET_ERROR_GET_DOCUMENT_INFO', error)
         })
     },
+
+    // fetches History of document, saves without byte arrays
+    fetchDocumentHistory({commit}, {envId, docId}) {
+        return documentAPI.getHistory(envId, docId).then(response => {
+            commit('SET_DOCUMENT_HISTORY', response.data)
+            commit('SET_ERROR_GET_DOCUMENT_HISTORY', {})
+        }).catch(error => {
+            commit('SET_ERROR_GET_DOCUMENT_HISTORY', error)
+        })
+
+    },
+
+    // clears history
+    clearHistory({commit}) {
+        commit('SET_DOCUMENT_HISTORY', {})
+        commit('SET_ERROR_GET_DOCUMENT_HISTORY', {})
+    },
+
     // makes axios call to get information if user has already seen the document
     fetchSeen({commit}, docId) {
         return documentAPI.getDocumentSeen(docId).then(response => {
@@ -140,11 +170,12 @@ export const actions = {
         })
     },
     setSeenFalse({commit}) {
+
         commit('SET_DOCUMENT_SEEN', false);
     },
     // makes axios call to review document, either sets reviewResponse (success) or error (error)
-    reviewDocument({commit}, {docId}) {
-        return documentAPI.reviewDocument(docId).then(response => {
+    reviewDocument({commit}, {envId, docId}) {
+        return documentAPI.reviewDocument(envId, docId).then(response => {
             commit('SET_REVIEW_RESPONSE', response.data)
             commit('SET_ERROR_REVIEW_DOCUMENT', {})
         }).catch(error => {
@@ -152,8 +183,8 @@ export const actions = {
         })
     },
     // makes axios call to sign (simple) document, either sets simpleSignResponse (success) or error (error)
-    simpleSignDocument({commit}, {docId}) {
-        return documentAPI.simpleSignDocument(docId).then(response => {
+    simpleSignDocument({commit}, {envId, docId}) {
+        return documentAPI.simpleSignDocument(envId, docId).then(response => {
             commit('SET_SIMPLE_SIGN_RESPONSE', response.data)
             commit('SET_ERROR_SIMPLE_SIGN_DOCUMENT', {})
         }).catch(error => {
@@ -162,8 +193,8 @@ export const actions = {
 
     },
     // makes axios call to sign (advanced) document, either sets advancedSignResponse (success) or error (error)
-    advancedSignDocument({commit}, {docId, signature}) {
-        return documentAPI.advancedSignDocument(docId, signature).then(response => {
+    advancedSignDocument({commit}, {envId, docId, signature}) {
+        return documentAPI.advancedSignDocument(envId, docId, signature).then(response => {
             commit('SET_ADVANCED_SIGN_RESPONSE', response.data)
             commit('SET_ERROR_ADVANCED_SIGN_DOCUMENT', {})
         }).catch(error => {
@@ -173,13 +204,13 @@ export const actions = {
 
     async documentProgress({commit, state}, {envId, docId}) {
         let doBreak = false
-        for(let i = 0; state.documentProgressArray.length; i++ ){
+        for (let i = 0; state.documentProgressArray.length; i++) {
             if (state.documentProgressArray[i].docId === docId) {
                 doBreak = true
                 break
             }
         }
-        if(!doBreak) {
+        if (!doBreak) {
             await documentAPI.getDocumentProgress(envId, docId).then((response) => {
                 let data = response.data
                 let progress = {docId, data}
@@ -197,35 +228,46 @@ export const actions = {
         let promises = []
 
         for (let i = 0; i < envelope.documents.length; i++) {
-                for (let j = 0; j < state.documentProgressArray.length; j++) {
-                    if (state.documentProgressArray[j].docId === envelope.documents[i].id) {
-                        doBreak = true
-                        break
-                    }
+            for (let j = 0; j < state.documentProgressArray.length; j++) {
+                if (state.documentProgressArray[j].docId === envelope.documents[i].id) {
+                    doBreak = true
+                    break
                 }
-                if (!doBreak) {
-
-                   promises.push(documentAPI.getDocumentProgress(envelope.id, envelope.documents[i].id).then((response) => {
-                        let data = response.data
-                        let docId = envelope.documents[i].id
-                        let progress = {docId, data}
-                        commit('SET_DOCUMENT_PROGRESS', progress)
-
-                    }).catch(err => {
-                        console.error(err)
-                        commit('SET_ERROR_DOCUMENT_PROGRESS', err)
-                    }))
-                }
-                doBreak = false
             }
-            return Promise.all(promises)
+            if (!doBreak) {
+
+                promises.push(documentAPI.getDocumentProgress(envelope.id, envelope.documents[i].id).then((response) => {
+                    let data = response.data
+                    let docId = envelope.documents[i].id
+                    let progress = {docId, data}
+                    commit('SET_DOCUMENT_PROGRESS', progress)
+
+                }).catch(err => {
+                    console.error(err)
+                    commit('SET_ERROR_DOCUMENT_PROGRESS', err)
+                }))
+            }
+            doBreak = false
         }
+        return Promise.all(promises)
+    }
 }
 
 export const getters = {
     getDocumentInfo: (state) => {
         return state.documentInfo
     },
+    getDocumentHistorySorted: (state) => (filters, pageLimit, page) => {
+        //filter
+        let filteredHistory = filterHistory(state.documentHistory, filters);
+
+        //sorting
+        let sortedHistory = sortHistory(filteredHistory, filters);
+
+        //paging
+        return sortedHistory.slice((page - 1) * pageLimit, page * pageLimit)
+    },
+
     getNewDocumentId: (state) => {
         return state.newVersionIds.newDocumentID
     },
@@ -282,6 +324,9 @@ export const getters = {
     },
     getErrorGetDocumentInfo: (state) => {
         return state.errorGetDocumentInfo
+    },
+    getErrorGetDocumentHistory: (state) => {
+        return state.errorGetDocumentHistory
     },
     getErrorEditDocument: (state) => {
         return state.errorEditDocument

@@ -1,8 +1,12 @@
 package gpse.example.domain.users;
 
+import gpse.example.domain.security.SecurityConstants;
 import gpse.example.util.email.*;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +24,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
     /**
      * Standard ConfirmationTokenService.
      * autowired not commited not tested 18.05.21
@@ -36,6 +41,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailTemplateService emailTemplateService;
+
+    @Lazy
+    @Autowired
+    private SecurityConstants securityConstants;
 
     /**
      * the smtpServerHelper Service for sending emails.
@@ -156,7 +165,7 @@ public class UserServiceImpl implements UserService {
     public void infoNewExtUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
         final List<User> userList = getUsers();
         for (final User admin : userList) {
-            if (admin.getRoles().contains("ROLE_ADMIN")) {
+            if (admin.getRoles().contains(ROLE_ADMIN)) {
                 final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
                 final TemplateDataContainer container = new TemplateDataContainer();
                 container.setFirstNameReciever(admin.getFirstname());
@@ -164,7 +173,7 @@ public class UserServiceImpl implements UserService {
                 container.setFirstNameOwner(user.getFirstname());
                 container.setLastNameOwner(user.getLastname());
                 container.setRequestingEmail(user.getEmail());
-                container.setLink("http://localhost:8080/de/admin/settings");
+                container.setLink("http://localhost:8080/de/adminSettings/userManagement");
                 smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
                 return;
                 //optional, without return -> notify all admins.
@@ -184,5 +193,15 @@ public class UserServiceImpl implements UserService {
     public User saveUser(final User user) {
         securitySettingsRepository.save(user.getSecuritySettings());
         return userRepository.save(user);
+    }
+
+    @Override
+    public boolean checkIfAdmin(final String token) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+        final User user = getUser(parsedToken.getBody().getSubject());
+        return user.getRoles().contains(ROLE_ADMIN);
     }
 }

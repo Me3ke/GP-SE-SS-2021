@@ -1,17 +1,22 @@
 package gpse.example.web.envelopes;
 
+import gpse.example.domain.addressbook.AddressBook;
+import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
+import gpse.example.util.email.trusteddomain.DomainSetterService;
 import gpse.example.web.DocumentFilter;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
+import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,11 +42,18 @@ public class EnvelopeController {
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
     private static final String NEW_LINE = "\n";
+    private static final String DOCUMENT_URL = "/document/";
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final DocumentFilter documentFilter;
+    private final GuestTokenService guestTokenService;
+
+    @Lazy
+    @Autowired
+    private DomainSetterService domainSetterService;
+
     @Lazy
     @Autowired
     private DocumentCreator documentCreator;
@@ -59,14 +71,17 @@ public class EnvelopeController {
      * @param userService     the userService
      * @param documentService the documentService
      * @param documentFilter  the documentFilter
+     * @param guestTokenService the guestTokenService
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter) {
+                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter,
+                              final GuestTokenService guestTokenService) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.documentFilter = documentFilter;
+        this.guestTokenService = guestTokenService;
     }
 
     /**
@@ -113,18 +128,33 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            if (document.isOrderRelevant() && document.getCurrentSignatory() != null) {
-                setupUserInvitation(document.getCurrentSignatory().getEmail(),
-                    userService.getUser(document.getOwner()), document,
-                    envelopeService.getEnvelope(envelopeID), document.getCurrentSignatory().getSignatureType());
-            } else {
-                for (int i = 0; i < document.getSignatories().size(); i++) {
-                    setupUserInvitation(document.getSignatories().get(i).getEmail(),
-                        userService.getUser(document.getOwner()), document,
-                        envelopeService.getEnvelope(envelopeID), document.getSignatories().get(i).getSignatureType());
+            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
+            Document savedDocument = savedEnvelope.getDocumentList().get(0);
+            for (Document doc : savedEnvelope.getDocumentList()) {
+                if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
+                    savedDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
+                    savedDocument = doc;
                 }
             }
-            envelopeService.updateEnvelope(envelope, document);
+            savedDocument.setLinkToDocumentview("http://localhost:8080/de/envelope/" + savedEnvelope.getId()
+                + DOCUMENT_URL + savedDocument.getId());
+            if (savedDocument.isOrderRelevant() && savedDocument.getCurrentSignatory() != null) {
+                setupUserInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                    userService.getUser(savedDocument.getOwner()), savedDocument,
+                    envelopeService.getEnvelope(envelopeID), savedDocument.getCurrentSignatory().getSignatureType());
+            } else {
+                for (int i = 0; i < savedDocument.getSignatories().size(); i++) {
+                    if (!savedDocument.getSignatories().get(i).getEmail().equals(savedDocument.getOwner())) {
+                        setupUserInvitation(savedDocument.getSignatories().get(i).getEmail(),
+                            userService.getUser(savedDocument.getOwner()), savedDocument,
+                            envelopeService.getEnvelope(envelopeID),
+                            savedDocument.getSignatories().get(i).getSignatureType());
+                    }
+                }
+            }
+            addIntoAddressBook(ownerID, savedDocument.getSignatories());
+
+            envelopeService.saveEnvelope(savedEnvelope);
             response.setStatus(STATUS_CODE_OK);
             response.setMessage("Success");
             return response;
@@ -136,11 +166,42 @@ public class EnvelopeController {
         }
     }
 
+    private void addIntoAddressBook(final String ownerID, final List<Signatory> signatories) {
+        final User currentUser = userService.getUser(ownerID);
+        final AddressBook addressBook = currentUser.getAddressBook();
+        List<Signatory> filteredSignatories;
+        if (addressBook.isAddAllAutomatically()) {
+            filteredSignatories = signatories;
+            if (addressBook.isAddDomainAutomatically()) {
+                filteredSignatories = signatories.stream().filter(signatory ->
+                    signatory.getEmail()
+                        .matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain()))
+                    .collect(Collectors.toList());
+            }
+            for (final Signatory signatory: filteredSignatories) {
+                try {
+                    final User user = userService.getUser(signatory.getEmail());
+                    addressBook.addEntry(new Entry(user));
+                } catch (UsernameNotFoundException e) {
+                    final Entry entry = new Entry();
+                    entry.setEmail(signatory.getEmail());
+                    addressBook.addEntry(entry);
+                }
+            }
+            userService.saveUser(currentUser);
+        }
+    }
+
     private void setupUserInvitation(final String userID, final User owner, final Document document,
                                      final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
         try {
-            final EmailTemplate template = document.getProcessEmailTemplate();
+            EmailTemplate template = owner.getEmailTemplates().get(0);
+            for (EmailTemplate temp : owner.getEmailTemplates()) {
+                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                    template = temp;
+                }
+            }
             final TemplateDataContainer container = new TemplateDataContainer();
             final User signatory = userService.getUser(userID);
             container.setFirstNameReciever(signatory.getFirstname());
@@ -150,8 +211,7 @@ public class EnvelopeController {
             container.setDocumentTitle(document.getDocumentTitle());
             container.setEnvelopeName(envelope.getName());
             container.setEndDate(document.getEndDate().toString());
-            //TODO Link to documentview
-            container.setLink("http://localhost:8080/de/link/to/document/view");
+            container.setLink(document.getLinkToDocumentview());
             Category category;
             if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
                 || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
@@ -171,8 +231,9 @@ public class EnvelopeController {
             container.setFirstNameOwner(owner.getFirstname());
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(document.getDocumentTitle());
-            GuestToken token = new GuestToken(userID, document.getId());
-            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + "/document/" + document.getId() + "/" + token.getToken());
+            GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {
                 smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
             } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {

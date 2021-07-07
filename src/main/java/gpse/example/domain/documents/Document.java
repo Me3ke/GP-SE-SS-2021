@@ -4,7 +4,6 @@ import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -103,8 +102,14 @@ public class Document {
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne
-    private EmailTemplate processEmailTemplate;
+    @Column
+    private long processEmailTemplateId;
+
+    @Column
+    private boolean showHistory;
+
+    @Column
+    private String linkToDocumentview;
 
     public Document() {
     }
@@ -130,6 +135,7 @@ public class Document {
             /*LocalDateTime.parse(documentPutRequest.getLastModified(), formatter),*/ this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.orderRelevant = documentPutRequest.isOrderRelevant();
+        this.showHistory = documentPutRequest.isShowHistory();
     }
 
     /**
@@ -155,44 +161,6 @@ public class Document {
                 setSigned(i);
             }
         }
-    }
-
-    /*
-    /**
-     * the method used to verify a signature for a specific user, by checking all public keys a user has.
-     *
-     * @param user           the user who relates to the signature that needs to be checked
-     * @param givenSignature the signature that needs to be validated
-     * @return true, if one of the public keys matches with the signature.If that is not the case we return false.
-     */
-    /*
-    public boolean verifySignature(final User user, final String givenSignature) {
-
-        boolean valid = false;
-        final byte[] signature = givenSignature.getBytes();
-        try {
-            StringToKeyConverter stringToKeyConverter = new StringToKeyConverter();
-            final Signature sign = Signature.getInstance(SIGNING_ALGORITHM);
-            final byte[] id = this.documentMetaData.getIdentifier().getBytes();
-            final String stringPublicKey = user.getPublicKey();
-            PublicKey publicKey = stringToKeyConverter.convertString(stringPublicKey);;
-            sign.initVerify(publicKey);
-            sign.update(id);
-            valid = sign.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException
-                | SignatureException | InvalidKeySpecException exception) {
-            exception.printStackTrace();
-        }
-        return valid;
-    } */
-
-    private AdvancedSignature getUsersSignature(final String user) {
-        for (final AdvancedSignature advancedSignature : advancedSignatures) {
-            if (advancedSignature.getUserEmail().equals(user)) {
-                return advancedSignature;
-            }
-        }
-        return null;
     }
 
     /**
@@ -482,11 +450,27 @@ public class Document {
         this.previousVersion = previousVersion;
     }
 
-    public EmailTemplate getProcessEmailTemplate() {
-        return processEmailTemplate;
+    public long getProcessEmailTemplateId() {
+        return processEmailTemplateId;
     }
 
-    public void setProcessEmailTemplate(final EmailTemplate processEmailTemplate) {
-        this.processEmailTemplate = processEmailTemplate;
+    public void setProcessEmailTemplateId(final long processEmailTemplateId) {
+        this.processEmailTemplateId = processEmailTemplateId;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(final boolean showHistory) {
+        this.showHistory = showHistory;
+    }
+
+    public String getLinkToDocumentview() {
+        return linkToDocumentview;
+    }
+
+    public void setLinkToDocumentview(final String linkToDocumentview) {
+        this.linkToDocumentview = linkToDocumentview;
     }
 }

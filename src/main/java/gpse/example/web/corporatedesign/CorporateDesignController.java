@@ -3,6 +3,7 @@ package gpse.example.web.corporatedesign;
 import gpse.example.domain.corporatedesign.CorporateDesign;
 import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
+import gpse.example.domain.users.UserService;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,15 @@ public class CorporateDesignController {
 
     private static final int STATUS_CODE_OK = 200;
     private static final long CHANGEABLE_DESIGN = 2L;
+    private static final int STATUS_CODE_WRONG_ROLE = 227;
+    private static final String SUCCESS_MESSAGE = "Success";
+    private static final String ADMIN_VALIDATION_REQUIRED = "You are not an admin";
     private static final long DEFAULT_DESIGN = 1L;
     private static final String SUCCESSFUL = "corporate design changed successfully";
     private final CorporateDesignService corporateDesignService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public CorporateDesignController(final CorporateDesignService corporateDesignService) {
@@ -124,5 +131,56 @@ public class CorporateDesignController {
         return response;
     }
 
+    /**
+     * Request for getting the impressum text.
+     *
+     * @return a JSONResponseObject with the impressum text as message and a status code.
+     * @throws CorporateDesignNotFoundException if the default corporate Design was not found.
+     */
+    @GetMapping("impressum")
+    public JSONResponseObject getImpressumsText() throws CorporateDesignNotFoundException {
+        CorporateDesign corporateDesign;
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        try {
+            corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
+        } catch (CorporateDesignNotFoundException e) {
+            corporateDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
+        }
+        jsonResponseObject.setStatus(STATUS_CODE_OK);
+        jsonResponseObject.setMessage(corporateDesign.getImpressumsText());
+        return jsonResponseObject;
+    }
 
+    /**
+     * * Request for getting the impressum text.
+     *
+     * @param token         the user token which is used for validation.
+     * @param impressumText the new impressum text.
+     * @return a JSONResponseObject with a message and a status code.
+     * @throws CorporateDesignNotFoundException if the default corporate Design was not found.
+     */
+    @PutMapping("impressum")
+    public JSONResponseObject updateImpressumsText(@RequestHeader final String token,
+                                                @RequestBody final String impressumText)
+        throws CorporateDesignNotFoundException {
+        final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        if (userService.checkIfAdmin(token)) {
+            CorporateDesign corporateDesign;
+            final CorporateDesign defaultDesign = corporateDesignService.getCorporateDesign(DEFAULT_DESIGN);
+            try {
+                corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
+            } catch (CorporateDesignNotFoundException e) {
+                corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
+                    defaultDesign.getLogo(), defaultDesign.getLogoDark());
+            }
+            corporateDesign.setImpressumsText(impressumText);
+            corporateDesignService.saveCorporateDesign(corporateDesign);
+            jsonResponseObject.setStatus(STATUS_CODE_OK);
+            jsonResponseObject.setMessage(SUCCESS_MESSAGE);
+        } else {
+            jsonResponseObject.setStatus(STATUS_CODE_WRONG_ROLE);
+            jsonResponseObject.setMessage(ADMIN_VALIDATION_REQUIRED);
+        }
+        return jsonResponseObject;
+    }
 }

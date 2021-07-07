@@ -177,7 +177,7 @@
                                         <div class="step">
                                             {{ $t('TwoFakAuth.sign.uploadExp') }}
                                             <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-upl" triggers="hover">
+                                            <b-tooltip target="tooltip-upl" triggers="hover click">
                                                 {{ $t('TwoFakAuth.sign.accepted') }}
                                             </b-tooltip>
                                         </div>
@@ -269,6 +269,10 @@ export default {
         documents: {
             type: Array,
             required: true
+        },
+        isGuest: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -290,15 +294,38 @@ export default {
         }
 
         // checks if user has already looked at the document or not
-        await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
-        if (!this.hasSeen) {
-            this.page = -1
+        if (!this.isGuest) {
+            await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+            if (!this.hasSeen) {
+                this.page = -1
+            }
         }
     },
     methods: {
         // makes simple signature api call
         async signSimple() {
-            await this.$store.dispatch('document/simpleSignDocument', {docId: this.docId})
+
+            if (this.isGuest) {
+                await this.$store.dispatch('signAsGuest', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    guestToken: this.$route.params.tokenId
+                })
+
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('requestGuestInfo', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    token: this.$route.params.tokenId
+                })
+                // goes to success page and toggles alert
+                this.page = 3
+                this.showAlertSign = false
+
+                return
+            }
+
+            await this.$store.dispatch('document/simpleSignDocument', {envId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCodeSimple === 200) {
@@ -340,6 +367,7 @@ export default {
                 const isValid = sig2.verify(signature);
                 if (isValid) {
                     await this.$store.dispatch('document/advancedSignDocument', {
+                        envId: this.envId,
                         docId: this.docId,
                         signature: signature
                     })
