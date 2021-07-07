@@ -48,8 +48,9 @@ export default {
     computed: {
         ...mapGetters({
             envelopeProgress: 'document/getDocumentProgressArrayByEnvelope',
-
-})
+            auth: 'twoFakAuth/getAuthMust',
+            counter: 'twoFakAuth/getLogoutCounter'
+        })
     },
 
     beforeMount() {
@@ -70,14 +71,17 @@ export default {
         })
         this.showProgress = true
 
+        if (this.counter !== -1) {
+            this.showAuth = true
+        }
     },
 
     methods: {
 
         // checks if env needs advanced signature, if so 2FacAuth has to be done; otherwise go to env directly
         async checkEnv() {
-            // checking signatureType and is current user is not owner of document
-            if (this.advanced && (this.envelope.owner.email !== this.$store.state.auth.username)) {
+            // checking signatureType and if auth is necessary at the moment
+            if (this.advanced && this.auth) {
                 this.showAuth = true
             } else {
                 this.goToEnv()

@@ -412,3 +412,12 @@ body {
 .bs-popover-bottom  .arrow {
     visibility: hidden;
 }
+
+/* Code Input */
+input.vue-pincode-input {
+    box-shadow:  0 0 3px var(--elsa-blue);
+}
+
+input.vue-pincode-input:focus {
+    box-shadow:  0 0 9px var(--elsa-blue);
+}

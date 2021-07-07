@@ -580,7 +580,8 @@
                 "active": "Aktivieren",
                 "inactive": "Deaktivieren",
                 "admin": "Adminrechte geben"
-            }
+            },
+            "new": "NEU"
         }
     },
     "ProgressBar": {

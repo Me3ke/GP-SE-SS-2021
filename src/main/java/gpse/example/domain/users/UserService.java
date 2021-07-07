@@ -39,4 +39,6 @@ public interface UserService extends UserDetailsService {
     void removeUser(final String username) throws UsernameNotFoundException;
 
     User saveUser(User user);
+
+    boolean checkIfAdmin(final String token);
 }

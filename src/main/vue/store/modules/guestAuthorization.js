@@ -1,3 +1,4 @@
+
 import guestAuthAPI from "../../api/guestAuthAPI";
 
 const guestAuthorization = {
@@ -60,5 +61,4 @@ const guestAuthorization = {
         }
     }
 }
-
 export default guestAuthorization

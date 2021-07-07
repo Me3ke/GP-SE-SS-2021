@@ -24,7 +24,7 @@
                           <span>
                              {{ $t('Settings.SignatureSettings.upload.text') }}
                                <b-icon id="tooltip-sig" icon="info-circle" class="my-icon"></b-icon>
-                              <b-tooltip target="tooltip-sig" triggers="hover">
+                              <b-tooltip target="tooltip-sig" triggers="hover click">
                                    {{ $t('Settings.SignatureSettings.upload.exp') }}
                               </b-tooltip>
                           </span>

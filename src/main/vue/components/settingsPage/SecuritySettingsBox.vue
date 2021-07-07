@@ -32,7 +32,7 @@
                         <span>
                             {{ $t('TwoFakAuth.login.always') }}
                              <b-icon id="tooltip-security" icon="info-circle" class="my-icon"></b-icon>
-                             <b-tooltip target="tooltip-security" triggers="hover">
+                             <b-tooltip target="tooltip-security" triggers="hover click">
                                 {{ $t('TwoFakAuth.login.alwaysExp') }}
                             </b-tooltip>
                         </span>

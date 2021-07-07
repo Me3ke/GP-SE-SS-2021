@@ -1,6 +1,8 @@
 package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gpse.example.domain.addressbook.AddressBook;
+import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.messages.MessageSettingsContainer;
@@ -39,6 +41,9 @@ public class User implements UserDetails {
 
     @Column
     private String lastname;
+
+    @Column
+    private boolean seenByAdmin;
 
     @Column
     // false: user has not had a first login yet; true: user has had a first login
@@ -99,6 +104,12 @@ public class User implements UserDetails {
     )
     private MessageSettingsContainer messageSettings;
 
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    private AddressBook addressBook = new AddressBook();
+
     protected User() {
 
     }
@@ -130,6 +141,7 @@ public class User implements UserDetails {
         this.messageSettings.setNewVersion(true);
         this.messageSettings.setSign(true);
         this.messageSettings.setRead(true);
+        this.addressBook.addEntry(new Entry(this));
     }
 
     public static long getSerialVersionUID() {
@@ -329,6 +341,10 @@ public class User implements UserDetails {
         return personalData;
     }
 
+    public boolean isSeenByAdmin() {
+        return seenByAdmin;
+    }
+
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
@@ -401,5 +417,17 @@ public class User implements UserDetails {
 
     public void setImageSignatureType(final String imageSignatureType) {
         this.imageSignatureType = imageSignatureType;
+    }
+
+    public void setToSeenByAdmin() {
+        this.seenByAdmin = true;
+    }
+
+    public AddressBook getAddressBook() {
+        return addressBook;
+    }
+
+    public void setAddressBook(final AddressBook addressBook) {
+        this.addressBook = addressBook;
     }
 }
