@@ -64,9 +64,6 @@
 <script>
 export default {
     name: "ReaderMenu",
-    props: {
-        readers: Array
-    },
     data() {
         return{
             readerInput: "",
@@ -92,7 +89,7 @@ export default {
             this.readerInput = "";
         },
         save() {
-            this.readers = this.readerInputs;
+            this.$emit('updateReaders', this.readerInputs);
             this.addReaders = false;
         }
     }

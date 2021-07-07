@@ -41,10 +41,6 @@ import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
 
 export default {
     name: "FileInput",
-    props: {
-        file: Object,
-        show: Boolean
-    },
     data() {
         return {
             fileInput: null,
@@ -68,9 +64,11 @@ export default {
             }
         },
         async fillFile() {
-            this.file.title = this.fileInput.name.split('.')[0];
-            this.file.type = this.fileInput.name.split('.')[1];
-            this.file.data = await this.asyncHandleFunction(this.fileInput);
+            let file = {title: "", type: "", data: ""};
+            file.title = this.fileInput.name.split('.')[0];
+            file.type = this.fileInput.name.split('.')[1];
+            file.data = await this.asyncHandleFunction(this.fileInput);
+            this.$emit('updateFile', file);
         },
         // convert the file into an base64 string
         async asyncHandleFunction(file) {

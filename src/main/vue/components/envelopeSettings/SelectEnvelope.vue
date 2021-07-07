@@ -83,9 +83,6 @@ import {mapGetters} from "vuex";
 
 export default {
     name: "SelectEnvelope",
-    props: {
-        selectedEnvelope: Object
-    },
     data() {
         return {
             newEnv: null, //Boolean
@@ -112,7 +109,7 @@ export default {
                 }
             } else {
                 this.error = {noName: false, noID: false};
-                this.selectedEnvelope = this.envelope;
+                this.$emit('updateEnvelop', this.envelope);
                 this.$emit('nextPage')
             }
         }

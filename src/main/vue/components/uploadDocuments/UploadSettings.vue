@@ -32,7 +32,7 @@
         </b-alert>
 
         <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
-        <SignatoryMenu :inModal="true" :signatories="signatories" :orderRelevant="settings.orderRelevant"></SignatoryMenu>
+        <SignatoryMenu :inModal="true" :signatories="signatories" :orderRelevant="orderRelevant"></SignatoryMenu>
 
     </div>
     <div class="modal-footer">
@@ -71,9 +71,6 @@ import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
 
 export default {
     name: "UploadSettings",
-    props: {
-        settings: Object
-    },
     components: {
         SignatoryMenu,
         ReaderMenu
@@ -93,6 +90,15 @@ export default {
         }
     },
     methods: {
+        updateReaders(readers) {
+            this.readers = readers;
+        },
+        updateSignatories(signatories) {
+            this.signatories = signatories;
+        },
+        updateOrderRelevant(orderRelevant) {
+            this.orderRelevant = orderRelevant;
+        },
         back() {
             this.endDate = null;
             this.endTime = null;
@@ -107,43 +113,49 @@ export default {
             this.$emit('previousPage')
         },
         noProcess() {
+            let settings = {endDate: "", orderRelevant: false, signatories: []};
+
             // set end date
             if(!(this.endTime) && !(this.endDate === null)) {
                 let time = this.endTime.split(":")
-                this.settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
+                settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
             }
             // set signatories
             let i;
             for (i = 0; i < this.readers.length; i++) {
-                this.settings.signatories.push({email: this.readers[i].email, type: 0})
+                settings.signatories.push({email: this.readers[i].email, type: 0})
             }
             for (i = 0; i < this.signatories.length; i++) {
-                this.settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
+                settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
             }
 
             //set order relevant
-            this.settings.orderRelevant = this.orderRelevant;
+            settings.orderRelevant = this.orderRelevant;
 
+            this.$emit('updateSettings', settings)
             this.$emit('nextPage')
         },
         startProcess() {
             if(this.validate()) {
+                let settings = {endDate: "", orderRelevant: false, signatories: []};
+
                 // set end date
                 let time = this.endTime.split(":")
-                this.settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
+                settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
 
                 // set signatories
                 let i;
                 for (i = 0; i < this.readers.length; i++) {
-                    this.settings.signatories.push({email: this.readers[i].email, type: 0})
+                    settings.signatories.push({email: this.readers[i].email, type: 0})
                 }
                 for (i = 0; i < this.signatories.length; i++) {
-                    this.settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
+                    settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
                 }
 
                 //set order relevant
-                this.settings.orderRelevant = this.orderRelevant;
+                settings.orderRelevant = this.orderRelevant;
 
+                this.$emit('updateSettings', settings)
                 this.$emit('nextPage')
             }
         },

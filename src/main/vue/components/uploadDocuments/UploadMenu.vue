@@ -21,17 +21,17 @@
                                 </div>
                                 <!-- Page 1 Choose Document -->
                                 <div v-if="page === 1">
-                                    <FileInput :file="file" @close="show = false" @nextPage="page = page + 1"></FileInput>
+                                    <FileInput @updateFile="updateFile" @close="show = false" @nextPage="page = page + 1"></FileInput>
                                 </div>
 
                                 <!-- Page 2 New or old envelope? -->
                                 <div v-if="page === 2">
-                                    <SelectEnvelope :selectedEnvelope="selectedEnvelope" @nextPage="page = page + 1"></SelectEnvelope>
+                                    <SelectEnvelope @updateEnvelope="updateEnvelope" @nextPage="page = page + 1"></SelectEnvelope>
                                 </div>
 
                                 <!-- Page 3 Add signatories/readers-->
                                 <div v-if="page === 3">
-                                    <UploadSettings :settings="settings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
+                                    <UploadSettings @updateSettings="updateSettings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
                                 </div>
 
                                 <!-- Page 4 Upload -->
@@ -43,7 +43,7 @@
                                         <b-row align-h="end">
                                             <b-col cols="auto">
                                                 <button class="light-btn" @click="page = page - 1;">
-                                                    {{$t('DownloadDoc.back')}}
+                                                    {{$t('UploadDoc.back')}}
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
@@ -96,6 +96,15 @@ export default {
         };
     },
     methods: {
+        updateFile(file) {
+            this.file = file;
+        },
+        updateEnvelope(envelope) {
+            this.selectedEnvelope = envelope;
+        },
+        updateSettings(settings) {
+          this.settings = settings;
+        },
         close() {
             this.page = 1;
             this.file = {data: null, type: null, title: null};

@@ -92,10 +92,6 @@
 import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
-    props: {
-        signatories: Array,
-        orderRelevant: Boolean
-    },
     components: {draggable},
     data() {
         return {
@@ -131,8 +127,8 @@ export default {
             this.orderRelevantInput = false;
         },
         save() {
-            this.signatories = this.signatoryInputs;
-            this.orderRelevant = this.orderRelevantInput;
+            this.$emit('updateOrderRelevant', this.orderRelevantInput);
+            this.$emit('updateSignatories', this.signatoryInputs);
             this.addSignatories = false;
         }
     }
