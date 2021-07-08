@@ -151,9 +151,26 @@
     border: 0.03vw solid var(--dark-grey);
 }
 
+/* Progress bar */
+.bar{
+    background-color: var(--elsa-blue-transparent);
+    color: var(--whitesmoke);
+    width: 50%;
+}
+
+.bg-elsaBlue {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    font-size: 0.7em;
+}
+
 
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
+    .bg-elsaBlue {
+        font-size: 0.5em;
+    }
+
     h4 {
         font-size: 1.12em;
         text-overflow-mode: ellipse;
@@ -327,6 +344,10 @@
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
+    .bg-elsaBlue {
+        font-size: 0.8em;
+    }
+
     h4 {
         font-size: 1.5em;
         text-overflow-mode: ellipse;

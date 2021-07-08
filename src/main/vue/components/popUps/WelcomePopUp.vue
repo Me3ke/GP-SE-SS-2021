@@ -3,7 +3,8 @@
 
         <TwoFakAuthSetUp v-if="show2Fak" @modalTrigger="setUpSecond"></TwoFakAuthSetUp>
         <KeyPairSetUp v-if="showKey" @keyPairTrigger="setUpKey"></KeyPairSetUp>
-        <SignatureUploadPopUp v-if="showSignature" :has-signature="false" @uploadTrigger="setUpSignature"></SignatureUploadPopUp>
+        <SignatureUploadPopUp v-if="showSignature" :has-signature="false"
+                              @uploadTrigger="setUpSignature"></SignatureUploadPopUp>
 
         <transition v-if="showWelcome">
             <div class="modal-mask" v-if="showWelcome">
@@ -12,10 +13,18 @@
                          aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable" role="document">
                             <div class="modal-content">
-                                <div class="modal-header" style="justify-content: left">
+                                <div class="modal-header" style="justify-content: space-between">
                                     <b-img v-if="theme === '' " :src="logoLightMode" class="logo"
                                            :alt="$t('Header.logo')"></b-img>
                                     <b-img v-else :src="logoDarkMode" class="logo" :alt="$t('Header.logo')"></b-img>
+                                    <!-- Progress -->
+                                    <b-progress max="100" class="bar" show-progress show-value>
+                                        <b-progress-bar
+                                            :value="progress"
+                                            :label="progress + '%'"
+                                            variant="elsaBlue"
+                                        ></b-progress-bar>
+                                    </b-progress>
                                 </div>
 
                                 <!-- Menu -->
@@ -124,7 +133,7 @@
                                                 </span>
                                             </button>
                                             <button type="button" class="light-btn"
-                                                    @click="pageBefore = page; page = 5">
+                                                    @click="pageBefore = page; page = 5; progress = 100;">
                                                 <span class="button-txt">
                                                    {{ $t('wizard.welcome.skip') }}
                                                 </span>
@@ -213,7 +222,9 @@ export default {
             showWelcome: true,
             show2Fak: false,
             showKey: false,
-            showSignature: false
+            showSignature: false,
+
+            progress: 0
         }
     },
     methods: {
@@ -224,6 +235,7 @@ export default {
             this.showWelcome = !this.showWelcome
             // go to next step (keypair)
             this.page = 3
+            this.progress = 33
         },
         // shows keypair modal, toggles current modal
         setUpKey() {
@@ -232,6 +244,7 @@ export default {
             this.showWelcome = !this.showWelcome
             // go to next step (signature image)
             this.page = 4
+            this.progress = 66
         },
         // shows signature upload modal, toggles current modal
         setUpSignature() {
@@ -240,6 +253,7 @@ export default {
             this.showWelcome = !this.showWelcome
             // go to next step (done)
             this.page = 5
+            this.progress = 100
         },
         closeModal() {
             // resetting everything
