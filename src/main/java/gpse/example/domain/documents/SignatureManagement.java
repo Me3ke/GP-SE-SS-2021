@@ -237,47 +237,7 @@ public class SignatureManagement {
                         template = temp;
                     }
                 }
-                final TemplateDataContainer container = new TemplateDataContainer();
-                try {
-                    container.setFirstNameReciever(
-                        userService.getUser(
-                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getFirstname());
-                    container.setLastNameReciever(
-                        userService.getUser(
-                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getLastname());
-                    container.setFirstNameOwner(owner.getFirstname());
-                    container.setLastNameOwner(owner.getLastname());
-                    container.setDocumentTitle(document.getDocumentTitle());
-                    container.setEnvelopeName(envelope.getName());
-                    container.setEndDate(document.getEndDate().toString());
-                    container.setLink(document.getLinkToDocumentview());
-                    smtpServerHelper.sendTemplatedEmail(
-                        savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
-                        container, Category.SIGN, owner);
-                } catch (UsernameNotFoundException exception) {
-                    template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
-                    container.setFirstNameOwner(owner.getFirstname());
-                    container.setLastNameOwner(owner.getLastname());
-                    container.setDocumentTitle(document.getDocumentTitle());
-                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
-                    container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
-                        + document.getId() + "/" + token.getToken());
-                    if (signatureType.equals(SignatureType.REVIEW)) {
-                        smtpServerHelper.sendTemplatedEmail(
-                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
-                            container, Category.READ, owner);
-                    } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
-                        smtpServerHelper.sendTemplatedEmail(
-                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
-                            container, Category.SIGN, owner);
-                    } else {
-                        container.setLink("http://localhost:8080/de/landing");
-                        template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
-                        smtpServerHelper.sendTemplatedEmail(
-                            savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
-                            container, Category.TODO, owner);
-                    }
-                }
+                sendInvitation(userID, signatureType, envelope, savedDocument, owner, template);
             }
 
             response.setStatus(STATUS_CODE_OK);
@@ -287,6 +247,55 @@ public class SignatureManagement {
             response.setMessage("The user is either not a signatory for this document,"
                 + "or it is currently not his turn");
             return response;
+        }
+    }
+
+    private void sendInvitation(final String userID, final SignatureType signatureType, final Envelope envelope,
+                                final Document savedDocument, final User owner, final EmailTemplate template)
+        throws MessageGenerationException, TemplateNameNotFoundException {
+
+        final TemplateDataContainer container = new TemplateDataContainer();
+        try {
+            container.setFirstNameReciever(
+                userService.getUser(
+                    savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getFirstname());
+            container.setLastNameReciever(
+                userService.getUser(
+                    savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail()).getLastname());
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(savedDocument.getDocumentTitle());
+            container.setEnvelopeName(envelope.getName());
+            container.setEndDate(savedDocument.getEndDate().toString());
+            container.setLink(savedDocument.getLinkToDocumentview());
+            smtpServerHelper.sendTemplatedEmail(
+                savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
+                container, Category.SIGN, owner);
+        } catch (UsernameNotFoundException exception) {
+            final EmailTemplate guestTemplate = emailTemplateService.findSystemTemplateByName(
+                "GuestInvitationTemplate");
+            container.setFirstNameOwner(owner.getFirstname());
+            container.setLastNameOwner(owner.getLastname());
+            container.setDocumentTitle(savedDocument.getDocumentTitle());
+            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, savedDocument.getId()));
+            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+                + savedDocument.getId() + "/" + token.getToken());
+            if (signatureType.equals(SignatureType.REVIEW)) {
+                smtpServerHelper.sendTemplatedEmail(
+                    savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), guestTemplate,
+                    container, Category.READ, owner);
+            } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                smtpServerHelper.sendTemplatedEmail(
+                    savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), guestTemplate,
+                    container, Category.SIGN, owner);
+            } else {
+                container.setLink("http://localhost:8080/de/landing");
+                final EmailTemplate advancedGuestTemplate = emailTemplateService.findSystemTemplateByName(
+                    "AdvancedGuestInvitationTemplate");
+                smtpServerHelper.sendTemplatedEmail(
+                    savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), advancedGuestTemplate,
+                    container, Category.TODO, owner);
+            }
         }
     }
 

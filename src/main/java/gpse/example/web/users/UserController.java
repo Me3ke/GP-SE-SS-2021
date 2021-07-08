@@ -4,6 +4,7 @@ import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
+import gpse.example.domain.security.JwtAuthorizationFilter;
 import gpse.example.domain.security.SecurityConstants;
 import gpse.example.domain.users.*;
 import gpse.example.domain.email.*;
@@ -17,6 +18,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import gpse.example.web.AuthCodeValidationRequest;
 import gpse.example.web.JSONResponseObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +39,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_TOKEN_EXPIRED = 422;
     private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
@@ -56,6 +60,7 @@ public class UserController {
     private final EmailTemplateService emailTemplateService;
     private final SMTPServerHelper smtpServerHelper;
     private final DomainSetterService domainSetterService;
+
     @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -287,8 +292,8 @@ public class UserController {
             final byte[] temp = securitySettings.generateQRCode(username);
             userService.saveUser(userService.getUser(username));
             return new QrCodeGetResponse(temp);
-        } catch (QrGenerationException e) {
-            e.printStackTrace();
+        } catch (QrGenerationException exception) {
+            LOG.debug("QR Generation Failed", exception);
         }
         return new QrCodeGetResponse(new byte[0]);
     }

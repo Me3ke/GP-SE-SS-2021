@@ -6,6 +6,7 @@ import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
+import gpse.example.domain.security.JwtAuthorizationFilter;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -17,6 +18,8 @@ import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,6 +45,7 @@ public class EnvelopeController {
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
     private static final String DOCUMENT_URL = "/document/";
+    private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -309,7 +313,7 @@ public class EnvelopeController {
         try {
             return new EnvelopeSettingsResponse(envelopeService.getEnvelope(envelopeID));
         } catch (DocumentNotFoundException exception) {
-            exception.printStackTrace();
+            LOG.debug("Document not found", exception);
             return new EnvelopeSettingsResponse();
         }
     }
