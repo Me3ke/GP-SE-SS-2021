@@ -14,6 +14,7 @@ public class DocumentSettingsCMD {
     private String endDate;
     private boolean showHistory;
     private boolean draft;
+    private boolean archiveTask;
 
     public LocalDateTime convertEndDate() {
         return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
@@ -57,5 +58,13 @@ public class DocumentSettingsCMD {
 
     public void setDraft(boolean draft) {
         this.draft = draft;
+    }
+
+    public boolean isArchiveTask() {
+        return archiveTask;
+    }
+
+    public void setArchiveTask(boolean archiveTask) {
+        this.archiveTask = archiveTask;
     }
 }

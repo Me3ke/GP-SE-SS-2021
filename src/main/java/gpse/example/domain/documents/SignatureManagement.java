@@ -143,7 +143,7 @@ public class SignatureManagement {
 
     private JSONResponseObject changeDocumentStateToClosed(final Document document) {
         final JSONResponseObject response = new JSONResponseObject();
-        document.setState(DocumentState.CLOSED);
+        document.setState(DocumentState.ARCHIVED);
         documentService.addDocument(document);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage("The given document is now closed");
@@ -204,7 +204,7 @@ public class SignatureManagement {
             }
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
-            if (savedDocument.getState() != DocumentState.CLOSED) {
+            if (savedDocument.getState() != DocumentState.ARCHIVED) {
                 final User owner = userService.getUser(savedDocument.getOwner());
                 EmailTemplate template = owner.getEmailTemplates().get(0);
                 for (EmailTemplate temp : owner.getEmailTemplates()) {
@@ -265,7 +265,7 @@ public class SignatureManagement {
                                final JSONResponseObject response, final Signatory currentReader) {
 
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
-            document.setState(DocumentState.CLOSED);
+            document.setState(DocumentState.ARCHIVED);
             response.setMessage("Document is now closed.");
         }
     }

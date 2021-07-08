@@ -29,7 +29,6 @@ public class Envelope implements Iterable<Document> {
     private User owner;
 
     @OneToMany(
-        orphanRemoval = true,
         cascade = CascadeType.ALL
     )
     private final List<Document> documentList = new ArrayList<>();

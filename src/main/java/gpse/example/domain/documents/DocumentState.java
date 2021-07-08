@@ -17,7 +17,7 @@ public enum DocumentState {
     /**
      * Changes to closed state if all users have signed the document. All documents that are archived should be closed.
      */
-    CLOSED(1);
+    ARCHIVED(1);
 
     private final int intRepresentation;
 
@@ -39,7 +39,7 @@ public enum DocumentState {
             case 0:
                 return DocumentState.SIGN;
             case 1:
-                return DocumentState.CLOSED;
+                return DocumentState.ARCHIVED;
             default:
                 throw new IllegalStateException();
         }

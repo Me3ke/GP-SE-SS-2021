@@ -96,7 +96,7 @@ public class DocumentCreator {
      */
     private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
         if (signatories == null && !document.isDraft()) {
-            document.setState(DocumentState.CLOSED);
+            document.setState(DocumentState.ARCHIVED);
         } else if (document.getReaders().size() == 0) {
             document.setState(DocumentState.SIGN);
         } else {

@@ -149,7 +149,6 @@ public class DocumentController {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            System.out.println("Test1");
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             Document document;
@@ -175,7 +174,6 @@ public class DocumentController {
                 throw new DocumentNotFoundException();
             }
         }
-        System.out.println("Test2");
         return null;
     }
 
@@ -225,14 +223,16 @@ public class DocumentController {
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
         Document document = documentService.getDocument(documentID);
-        if (document.getState() == DocumentState.CLOSED) {
+        if (document.getState() == DocumentState.ARCHIVED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
         return null;
     }
 
     /**
-     * The uploadNewDocumentVersion method does a put request to update.
+     * The uploadNewDocumentVersion method does a put request to update. If the user that stated the request is not
+     * the owner of the envelope or the oldDocument is already archived, the oldDocument will be returned as the
+     * new one and nothing else happens.
      *
      * @param documentPutRequest the request object containing all the necessary data.
      * @param ownerID            the email of the user uploading the new document.
@@ -253,19 +253,20 @@ public class DocumentController {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            envelope.removeDocument(oldDocument);
-            documentService.remove(oldDocument);
-            //System.out.println("old document: " + oldDocument.getSignatories());
-            final Document archivedDocument = new ArchivedDocument(oldDocument);
-            final Document savedDocument = documentService.addDocument(archivedDocument);
-            //TODO archived document should not be saved in envelope!
-
-            final Document newDocument = documentService.creation(documentPutRequest, ownerID,
-                userService);
-            newDocument.setPreviousVersion(savedDocument);
-            envelopeService.updateEnvelope(envelope, newDocument);
-            informSignatories(newDocument, envelopeID);
-            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
+            if (envelope.getOwnerID().equals(ownerID) || oldDocument.getState().equals(DocumentState.ARCHIVED)) {
+                envelope.removeDocument(oldDocument);
+                oldDocument.setDraft(false);
+                oldDocument.setState(DocumentState.ARCHIVED);
+                final Document newDocument = documentService.creation(documentPutRequest, ownerID,
+                    userService);
+                envelopeService.updateEnvelope(envelope, newDocument);
+                newDocument.setPreviousVersion(oldDocument);
+                documentService.addDocument(newDocument);
+                informSignatories(newDocument, envelopeID);
+                return new DocumentPutResponse(oldDocument.getId(), newDocument.getId());
+            } else {
+                return new DocumentPutResponse(oldDocument.getId(), oldDocument.getId());
+            }
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -443,7 +444,7 @@ public class DocumentController {
             response.setMessage(DRAFT_MESSAGE);
             return response;
         }
-        if (document.getState().equals(DocumentState.CLOSED)) {
+        if (document.getState().equals(DocumentState.ARCHIVED)) {
             response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
             response.setMessage(THIS_DOCUMENT_IS_CLOSED);
             return response;
@@ -555,7 +556,12 @@ public class DocumentController {
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
             document.setShowHistory(documentSettingsCMD.isShowHistory());
-            document.setDraft(documentSettingsCMD.isDraft());
+            if (document.isDraft()) {
+                document.setDraft(documentSettingsCMD.isDraft());
+            }
+            if (documentSettingsCMD.isArchiveTask()) {
+                document.setState(DocumentState.ARCHIVED);
+            }
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
@@ -568,9 +574,7 @@ public class DocumentController {
                 signatories.add(signatory);
             }
             document.setSignatories(signatories);
-            if (!document.getState().equals(DocumentState.CLOSED)) {
-                setDocumentState(document);
-            }
+            setDocumentState(document);
             documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
@@ -592,7 +596,7 @@ public class DocumentController {
             if (document.isDraft()) {
                 document.setState(DocumentState.REVIEW);
             } else {
-                document.setState(DocumentState.CLOSED);
+                document.setState(DocumentState.ARCHIVED);
             }
         } else {
             if (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)

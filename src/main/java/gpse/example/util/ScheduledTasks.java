@@ -42,9 +42,9 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
         for (final Document doc : documentService.getDocuments()) {
-            if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            if (doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesInOrder(doc);
-            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesWithoutOrder(doc);
             }
         }
