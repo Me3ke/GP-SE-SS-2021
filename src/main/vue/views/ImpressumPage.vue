@@ -2,7 +2,10 @@
     <div style="background-color: var(--whitesmoke); height: 100vh;">
         <Header></Header>
         <b-container class="full-container">
-                <b-container class="head-with-arrow">
+            <BaseHeading></BaseHeading>
+            <b-container v-if="impressumMessage" v-html="impressumMessage.message" style="margin-top: 3em"></b-container>
+            <!----
+            <b-container class="head-with-arrow">
                     <b-row class="base-header-row">
                         <b-col>
                             <BaseHeading class="baseHeader" name="" ></BaseHeading>
@@ -43,6 +46,7 @@
                         </b-row>
                     </b-col>
                 </b-container>
+                ---->
         </b-container>
     </div>
 
@@ -50,6 +54,7 @@
 
 <script>
 import Header from "@/main/vue/components/header/Header";
+import {mapGetters} from "vuex";
 export default {
     name: "Impressum",
     components: {Header},
@@ -89,6 +94,15 @@ export default {
             ]
 
         }
+    },
+    computed: {
+        ...mapGetters({
+            impressumMessage: 'impressum/getImpressumResponse',
+        })
+    },
+
+    mounted() {
+        this.$store.dispatch('impressum/fetchImpressum')
     }
 }
 </script>

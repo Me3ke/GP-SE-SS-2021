@@ -1,5 +1,5 @@
 <template>
-    <b-container style="margin-top: 5em">
+    <b-container style="margin-top: 0em">
         <quill-editor
             ref="editor"
             class="editor"
@@ -52,5 +52,9 @@ export default {
 </script>
 
 <style scoped>
+
+#modal-preview p {
+    margin-bottom: 0;
+}
 
 </style>
