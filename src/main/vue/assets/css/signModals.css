@@ -152,6 +152,21 @@
 }
 
 
+/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content {
+    margin-top: 1em;
+    padding-left: 4em;
+    text-align: left;
+}
+
+/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content .preview  {
+    padding-bottom: 1em;
+}
+
+
+/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content .preview p  {
+    margin-bottom: 0;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {
