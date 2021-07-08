@@ -172,7 +172,6 @@ public class DocumentController {
                 throw new DocumentNotFoundException();
             }
         }
-        System.out.println("Test2");
         return null;
     }
 
@@ -260,7 +259,19 @@ public class DocumentController {
             final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
-            envelopeService.updateEnvelope(envelope, newDocument);
+            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
+            Document savedNewDocument = savedEnvelope.getDocumentList().get(0);
+            for (Document doc : savedEnvelope.getDocumentList()) {
+                if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
+                    savedNewDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
+                    savedNewDocument = doc;
+                }
+            }
+            savedNewDocument.setLinkToDocumentview(ENVELOPE_URL + savedEnvelope.getId()
+                + DOCUMENT_URL + savedDocument.getId());
+
+            envelopeService.updateEnvelope(savedEnvelope, savedNewDocument);
+
             informSignatories(newDocument, envelopeID);
             return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
@@ -287,8 +298,7 @@ public class DocumentController {
                 if (signatory.isStatus() || document.getCurrentSignatory().equals(signatory)) {
                     try {
                         userService.getUser(signatory.getEmail());
-                        container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                            + document.getId());
+                        container.setLink(document.getLinkToDocumentview());
                         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                             container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     } catch (UsernameNotFoundException exception) {
@@ -305,8 +315,7 @@ public class DocumentController {
             for (final Signatory signatory : document.getSignatories()) {
                 try {
                     userService.getUser(signatory.getEmail());
-                    container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                        + document.getId());
+                    container.setLink(document.getLinkToDocumentview());
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 } catch (UsernameNotFoundException exception) {
@@ -534,6 +543,7 @@ public class DocumentController {
             final Document document = documentService.getDocument(documentID);
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
+            document.setShowHistory(documentSettingsCMD.isShowHistory());
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
