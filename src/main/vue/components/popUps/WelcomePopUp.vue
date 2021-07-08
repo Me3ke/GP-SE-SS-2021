@@ -34,7 +34,7 @@
                                     <div v-if="page === 1">
 
                                         <!-- welcome prompt -->
-                                        <h4>
+                                        <h4 class="big-heading">
                                             {{ $t('wizard.welcome.welcome') }}
                                         </h4>
 
@@ -112,7 +112,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- TODO: add when Api is there for it -->
                                     <!-- Page 4 (picture) -->
                                     <div v-if="page === 4">
                                         <!-- Signature image set up prompt -->
@@ -149,7 +148,7 @@
                                     <!-- Page 5 (finished) -->
                                     <div v-if="page === 5">
                                         <!-- 2FakAuth set up prompt -->
-                                        <h4>
+                                        <h4 class="big-heading">
                                             {{ $t('wizard.welcome.done') }}
                                         </h4>
 
