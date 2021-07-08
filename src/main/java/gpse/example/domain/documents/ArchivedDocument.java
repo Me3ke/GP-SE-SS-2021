@@ -16,6 +16,7 @@ public class ArchivedDocument extends Document {
      * @param document the document from which it descends.
      */
     public ArchivedDocument(final Document document) {
+        super();
         this.id = document.getId();
         this.documentMetaData = new DocumentMetaData(document.getDocumentMetaData());
         this.signatoryManagement = document.getSignatoryManagement();
@@ -28,6 +29,7 @@ public class ArchivedDocument extends Document {
     }
 
     protected ArchivedDocument() {
+        super();
 
     }
 

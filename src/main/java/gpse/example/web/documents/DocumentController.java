@@ -99,14 +99,7 @@ public class DocumentController {
         throws DocumentNotFoundException {
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         final List<Document> documentList = envelope.getDocumentList();
-        boolean isInEnvelope = false;
-        for (final Document currentDocument : documentList) {
-            if (currentDocument.getId() == documentID) {
-                isInEnvelope = true;
-                break;
-            }
-        }
-        if (isInEnvelope) {
+        if (isInEnvelope(documentID, documentList)) {
             final Document document = documentService.getDocument(documentID);
             final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
             if (document.getDocumentType().equals("pdf")) {
@@ -147,14 +140,7 @@ public class DocumentController {
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final List<Document> documentList = envelope.getDocumentList();
-            boolean isInEnvelope = false;
-            for (final Document currentDocument : documentList) {
-                if (currentDocument.getId() == documentID) {
-                    isInEnvelope = true;
-                    break;
-                }
-            }
-            if (isInEnvelope) {
+            if (isInEnvelope(documentID, documentList)) {
                 final Document document = documentService.getDocument(documentID);
                 final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
                 final List<Signatory> signatories = signatoryManagement.getSignatories();
@@ -169,6 +155,17 @@ public class DocumentController {
             }
         }
         return null;
+    }
+
+    private boolean isInEnvelope(final long documentID, final List<Document> documentList) {
+        boolean isInEnvelope = false;
+        for (final Document currentDocument : documentList) {
+            if (currentDocument.getId() == documentID) {
+                isInEnvelope = true;
+                break;
+            }
+        }
+        return isInEnvelope;
     }
 
     /**
@@ -291,35 +288,31 @@ public class DocumentController {
         if (document.isOrderRelevant()) {
             for (final Signatory signatory : signatoryManagement.getSignatories()) {
                 if (signatory.isStatus() || signatoryManagement.getCurrentSignatory().equals(signatory)) {
-                    try {
-                        userService.getUser(signatory.getEmail());
-                        container.setLink(document.getLinkToDocumentview());
-                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
-                    } catch (UsernameNotFoundException exception) {
-                        final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
-                            document.getId()));
-                        container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                            + document.getId() + "/" + token.getToken());
-                        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                            container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
-                    }
+                    sendNewVersionMail(document, envelopeID, emailTemplate, container, signatory);
                 }
             }
         } else {
             for (final Signatory signatory : signatoryManagement.getSignatories()) {
-                try {
-                    userService.getUser(signatory.getEmail());
-                    container.setLink(document.getLinkToDocumentview());
-                    smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                        container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
-                } catch (UsernameNotFoundException exception) {
-                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
-                        document.getId()));
-                    container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
-                        + document.getId() + "/" + token.getToken());
-                }
+                sendNewVersionMail(document, envelopeID, emailTemplate, container, signatory);
             }
+        }
+    }
+
+    private void sendNewVersionMail(final Document document, final long envelopeID, final EmailTemplate emailTemplate,
+                                    final TemplateDataContainer container, final Signatory signatory)
+                throws MessageGenerationException {
+        try {
+            userService.getUser(signatory.getEmail());
+            container.setLink(document.getLinkToDocumentview());
+            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+        } catch (UsernameNotFoundException exception) {
+            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                document.getId()));
+            container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
+                + document.getId() + "/" + token.getToken());
+            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
+                container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
         }
     }
 

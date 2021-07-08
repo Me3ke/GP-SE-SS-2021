@@ -137,13 +137,13 @@ public class EnvelopeController {
                 + DOCUMENT_URL + savedDocument.getId());
             final SignatoryManagement signatoryManagement = savedDocument.getSignatoryManagement();
             if (savedDocument.isOrderRelevant() && signatoryManagement.getCurrentSignatory() != null) {
-                setupUserInvitation(signatoryManagement.getCurrentSignatory().getEmail(),
+                sendUserInvitation(signatoryManagement.getCurrentSignatory().getEmail(),
                     userService.getUser(savedDocument.getOwner()),
                         savedDocument, envelopeService.getEnvelope(envelopeID),
                         signatoryManagement.getCurrentSignatory().getSignatureType());
             } else {
                 for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
-                    setupUserInvitation(signatoryManagement.getSignatories().get(i).getEmail(),
+                    sendUserInvitation(signatoryManagement.getSignatories().get(i).getEmail(),
                         userService.getUser(savedDocument.getOwner()), savedDocument,
                         envelopeService.getEnvelope(envelopeID),
                             signatoryManagement.getSignatories().get(i).getSignatureType());
@@ -189,62 +189,74 @@ public class EnvelopeController {
         }
     }
 
-    private void setupUserInvitation(final String userID, final User owner, final Document document,
-                                     final Envelope envelope, final SignatureType signatureType)
+    private void sendUserInvitation(final String userID, final User owner, final Document document,
+                                    final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
         try {
-            EmailTemplate template = owner.getEmailTemplates().get(0);
-            for (final EmailTemplate temp : owner.getEmailTemplates()) {
-                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
-                    template = temp;
-                }
-            }
-            final TemplateDataContainer container = new TemplateDataContainer();
             final User signatory = userService.getUser(userID);
-            container.setFirstNameReciever(signatory.getFirstname());
-            container.setLastNameReciever(signatory.getLastname());
-            container.setFirstNameOwner(owner.getFirstname());
-            container.setLastNameOwner(owner.getLastname());
-            container.setDocumentTitle(document.getDocumentTitle());
-            container.setEnvelopeName(envelope.getName());
-            container.setEndDate(document.getEndDate().toString());
-            container.setLink(document.getLinkToDocumentview());
-            Category category;
-            if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
-                || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
-                category = Category.SIGN;
-            } else {
-                category = Category.READ;
-            }
-            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
+            sendRegisteredUserInvitation(owner, document, envelope, signatureType, signatory);
         } catch (UsernameNotFoundException exception) {
-            EmailTemplate template;
+            sendGuestUserInvitation(userID, owner, document, envelope, signatureType);
+        }
+    }
+
+    private void sendGuestUserInvitation(final String userID, final User owner, final Document document,
+                                         final Envelope envelope, final SignatureType signatureType)
+                throws MessageGenerationException {
+        EmailTemplate template;
+        try {
+            template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
+        } catch (TemplateNameNotFoundException e) {
+            return;
+        }
+        final TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameOwner(owner.getFirstname());
+        container.setLastNameOwner(owner.getLastname());
+        container.setDocumentTitle(document.getDocumentTitle());
+        final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+        container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+            + document.getId() + "/" + token.getToken());
+        if (signatureType.equals(SignatureType.REVIEW)) {
+            smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
+        } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+            smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.SIGN, owner);
+        } else {
+            container.setLink("http://localhost:8080/de/landing");
             try {
-                template = emailTemplateService.findSystemTemplateByName("GuestInvitationTemplate");
+                template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
             } catch (TemplateNameNotFoundException e) {
                 return;
             }
-            final TemplateDataContainer container = new TemplateDataContainer();
-            container.setFirstNameOwner(owner.getFirstname());
-            container.setLastNameOwner(owner.getLastname());
-            container.setDocumentTitle(document.getDocumentTitle());
-            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
-            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
-                + document.getId() + "/" + token.getToken());
-            if (signatureType.equals(SignatureType.REVIEW)) {
-                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
-            } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
-                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.SIGN, owner);
-            } else {
-                container.setLink("http://localhost:8080/de/landing");
-                try {
-                    template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
-                } catch (TemplateNameNotFoundException e) {
-                    return;
-                }
-                smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.TODO, owner);
+            smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.TODO, owner);
+        }
+    }
+
+    private void sendRegisteredUserInvitation(final User owner, final Document document, final Envelope envelope,
+                                              final SignatureType signatureType, final User signatory)
+                throws MessageGenerationException {
+        EmailTemplate template = owner.getEmailTemplates().get(0);
+        for (final EmailTemplate temp : owner.getEmailTemplates()) {
+            if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                template = temp;
             }
         }
+        final TemplateDataContainer container = new TemplateDataContainer();
+        container.setFirstNameReciever(signatory.getFirstname());
+        container.setLastNameReciever(signatory.getLastname());
+        container.setFirstNameOwner(owner.getFirstname());
+        container.setLastNameOwner(owner.getLastname());
+        container.setDocumentTitle(document.getDocumentTitle());
+        container.setEnvelopeName(envelope.getName());
+        container.setEndDate(document.getEndDate().toString());
+        container.setLink(document.getLinkToDocumentview());
+        Category category;
+        if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
+            || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+            category = Category.SIGN;
+        } else {
+            category = Category.READ;
+        }
+        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, category, owner);
     }
 
 
