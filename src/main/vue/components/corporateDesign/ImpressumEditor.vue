@@ -6,55 +6,101 @@
             v-model="text"
         ></quill-editor>
 
-
-        <button type="button"
+        <b-button type="button"
+                  size="sm"
                 class="mt-1 light-btn"
                 v-b-modal="'modal-preview'"
         >
                     <span class="button-txt">
                         Preview
                     </span>
-        </button>
+        </b-button>
+        <b-button type="button"
+                  size="sm"
+                class="mt-1 elsa-blue-btn"
+                @click="saveImpressum"
+        >
+                    <span class="button-txt">
+                        Save
+                    </span>
+        </b-button>
+
+
         <!--- Preview --->
         <b-modal
+            class="modal-class"
             :id="'modal-preview'"
-            centered
-            :title="'Email Template Preview'"
+            centered scrollable
+            :title="'Impressum Preview'"
             hide-footer ok-only
             v-if="text"
-            style="margin-top: 2em"
+            style="margin-top: 2em;"
         >
-            <div v-html="text"></div>
+
+            <b-container>
+                <b-container class="preview" v-html="text"></b-container>
+            </b-container>
+
+
         </b-modal>
     </b-container>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "ImpressumEditor",
 
     data() {
         return {
-            text: '<h2><strong>Impressum</strong></h2>' +
-                '<p>Anbieter:<br />Max Mustermann<br />Musterstraße 1 \n<br />80999 München</p>' +
-                '<p>Kontakt:<br />Telefon: 089/1234567-8<br />Telefax: 089/1234567-9<br />E-Mail: mail@mustermann.de<br />Website: www.mustermann.de</p>' +
-                '<p> </p>' +
-                '<p>Bei redaktionellen Inhalten:</p>' +
-                '<p>Verantwortlich nach § 55 Abs.2 RStV<br />Moritz Schreiberling<br />Musterstraße 2<br />80999 München</p>'
+            text: ''
         }
     },
     methods: {
-        test() {
+        async fetchImpressumMessage() {
+            await this.$store.dispatch('impressum/fetchImpressum')
+        },
+
+        async saveImpressum() {
             console.log(this.text)
+            await this.$store.dispatch('impressum/updateImpressum', this.text)
+            await this.fetchImpressumMessage()
+
+
+
         }
-    }
+    },
+        computed: {
+            ...mapGetters({
+                impressumMessage: 'impressum/getImpressumResponse',
+            })
+        },
+
+        async created() {
+            await this.fetchImpressumMessage()
+        },
+
+        async beforeMount() {
+            await this.fetchImpressumMessage()
+            this.$forceUpdate()
+        },
+
+     mounted() {
+            this.fetchImpressumMessage()
+            this.$forceUpdate()
+            this.text = this.impressumMessage
+            console.log(typeof this.impressumMessage)
+        }
 }
 </script>
 
-<style scoped>
+<style scoped src="../../assets/css/signModals.css">
 
-#modal-preview p {
-    margin-bottom: 0;
-}
+
+
+
+
+
 
 </style>

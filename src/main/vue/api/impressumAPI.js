@@ -19,8 +19,9 @@ export default {
                 'token': store.state.auth.token
             },
             data: {
-                'impressumText': impressumMessage
+                'impressum': impressumMessage
             }
+
         })
     }
 
