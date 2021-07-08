@@ -126,6 +126,7 @@ public class Document {
      * @param documentPutRequest the requestBody of the request stated to generate this document
      * @param signatories        The list of signatories for a document.
      */
+    @SuppressWarnings("PMD.ConfusingTernary")
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
         this.signatories = signatories;

@@ -341,20 +341,12 @@ public class DocumentController {
     private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
                                                             final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        final JSONResponseObject response = new JSONResponseObject();
         Document document = documentService.getDocument(documentID);
-        if (document.isDraft()) {
-            response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
-            response.setMessage(DRAFT_MESSAGE);
-            return response;
-        }
-        if (document.getState().equals(DocumentState.CLOSED)) {
-            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
-            response.setMessage(THIS_DOCUMENT_IS_CLOSED);
+        final JSONResponseObject response = documentIsClosedOrInDraft(document);
+        if (response.getStatus() != STATUS_CODE_OK) {
             return response;
         }
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
-
         if (guestTokenOptional.isEmpty()) {
             response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
             response.setMessage("The token that has benn send with the request is not valid for this server.");
@@ -435,7 +427,17 @@ public class DocumentController {
                                                        final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
-        final JSONResponseObject response = new JSONResponseObject();
+        final JSONResponseObject response = documentIsClosedOrInDraft(document);
+        if (response.getStatus() != STATUS_CODE_OK) {
+            return response;
+        }
+        return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
+    }
+
+
+    private JSONResponseObject documentIsClosedOrInDraft(Document document) {
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(STATUS_CODE_OK);
         if (document.isDraft()) {
             response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
             response.setMessage(DRAFT_MESSAGE);
@@ -446,7 +448,7 @@ public class DocumentController {
             response.setMessage(THIS_DOCUMENT_IS_CLOSED);
             return response;
         }
-        return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
+        return response;
     }
 
 
@@ -587,12 +589,18 @@ public class DocumentController {
      */
     private void setDocumentState(final Document document) {
         if (document.getCurrentSignatory() == null) {
-            document.setState(DocumentState.CLOSED);
-        } else if (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
-            || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
-            document.setState(DocumentState.SIGN);
+            if (document.isDraft()) {
+                document.setState(DocumentState.REVIEW);
+            } else {
+                document.setState(DocumentState.CLOSED);
+            }
         } else {
-            document.setState(DocumentState.REVIEW);
+            if (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                document.setState(DocumentState.SIGN);
+            } else {
+                document.setState(DocumentState.REVIEW);
+            }
         }
     }
 
