@@ -3,6 +3,7 @@
 
         <TwoFakAuthSetUp v-if="show2Fak" @modalTrigger="setUpSecond"></TwoFakAuthSetUp>
         <KeyPairSetUp v-if="showKey" @keyPairTrigger="setUpKey"></KeyPairSetUp>
+        <SignatureUploadPopUp v-if="showSignature" :has-signature="false" @uploadTrigger="setUpSignature"></SignatureUploadPopUp>
 
         <transition v-if="showWelcome">
             <div class="modal-mask" v-if="showWelcome">
@@ -105,6 +106,35 @@
                                     <!-- TODO: add when Api is there for it -->
                                     <!-- Page 4 (picture) -->
                                     <div v-if="page === 4">
+                                        <!-- Signature image set up prompt -->
+                                        <h4>
+                                            {{ $t('wizard.welcome.signature') }}
+                                        </h4>
+
+                                        <div class="step">
+                                            {{ $t('wizard.welcome.signatureExp') }}
+                                        </div>
+
+                                        <!-- Buttons to choose mode or close -->
+                                        <div style="text-align: right">
+                                            <button type="button" class="light-btn"
+                                                    @click="pageBefore = page; page = 6">
+                                                <span class="button-txt">
+                                                   {{ $t('wizard.cancel') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="light-btn"
+                                                    @click="pageBefore = page; page = 5">
+                                                <span class="button-txt">
+                                                   {{ $t('wizard.welcome.skip') }}
+                                                </span>
+                                            </button>
+                                            <button type="button" class="elsa-blue-btn" @click="setUpSignature">
+                                                <span class="button-txt">
+                                                 {{ $t('wizard.welcome.setUp') }}
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Page 5 (finished) -->
@@ -167,10 +197,11 @@
 import TwoFakAuthSetUp from "@/main/vue/components/popUps/TwoFakAuthSetUp";
 import KeyPairSetUp from "@/main/vue/components/popUps/KeyPairSetUp";
 import {mapGetters} from "vuex";
+import SignatureUploadPopUp from "@/main/vue/components/popUps/SignatureUploadPopUp";
 
 export default {
     name: "WelcomePopUp",
-    components: {KeyPairSetUp, TwoFakAuthSetUp},
+    components: {SignatureUploadPopUp, KeyPairSetUp, TwoFakAuthSetUp},
     data() {
         return {
             logoLightMode: require('../../assets/logos/ELSA_small.svg'),
@@ -181,7 +212,8 @@ export default {
 
             showWelcome: true,
             show2Fak: false,
-            showKey: false
+            showKey: false,
+            showSignature: false
         }
     },
     methods: {
@@ -198,12 +230,20 @@ export default {
             // toggle everything
             this.showKey = !this.showKey
             this.showWelcome = !this.showWelcome
-            //TODO: change next step to image
+            // go to next step (signature image)
+            this.page = 4
+        },
+        // shows signature upload modal, toggles current modal
+        setUpSignature() {
+            // toggle everything
+            this.showSignature = !this.showSignature
+            this.showWelcome = !this.showWelcome
             // go to next step (done)
             this.page = 5
         },
         closeModal() {
             // resetting everything
+            this.showSignature = false
             this.showKey = false
             this.show2Fak = false
             this.showWelcome = true
