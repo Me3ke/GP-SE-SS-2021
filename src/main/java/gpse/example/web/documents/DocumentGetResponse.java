@@ -21,7 +21,6 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     private final SignatureType signatureType;
     private final byte[] data;
     private final List<ProtoSignatory> signatories;
-    private final EmailTemplate emailTemplateHtml;
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -35,7 +34,6 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
         super(document, owner, currentUser);
         this.data = document.getData();
         final List<Signatory> givenSignatories = document.getSignatories();
-        this.emailTemplateHtml = document.getProcessEmailTemplate();
 
         this.signatories = new ArrayList<>();
 
@@ -64,9 +62,5 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
 
     public List<ProtoSignatory> getSignatories() {
         return signatories;
-    }
-
-    public EmailTemplate getEmailTemplateHtml() {
-        return emailTemplateHtml;
     }
 }

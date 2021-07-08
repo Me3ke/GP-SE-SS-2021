@@ -13,8 +13,7 @@ import java.util.List;
 @Entity
 public class CorporateDesign {
 
-    private static final String DEFAULT_TEXT = "<p><strong>Impressum</strong></p>\n"
-            + "<p>Anbieter:<br />Max Mustermann<br />Musterstraße 1<br />80999 München</p>\n"
+    private static final String DEFAULT_TEXT = "<p>Anbieter:<br />Max Mustermann<br />Musterstraße 1<br />80999 München</p>\n"
             + "<p>Kontakt:<br />Telefon: 089/1234567-8<br />Telefax: 089/1234567-9<br />E-Mail:"
             + " mail@mustermann.de<br />Website: www.mustermann.de</p>\n"
             + "<p> </p>\n"
