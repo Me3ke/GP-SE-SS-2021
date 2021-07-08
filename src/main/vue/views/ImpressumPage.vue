@@ -10,8 +10,10 @@
 
                     </b-col>
                     <b-col class="col2">
+                        <!--- Elsa Logo --->
                         <b-row align-h="center" align-v="center">
-                            <img src="../assets/logos/ELSA_medium.svg"  class="img-fluid" style="padding-bottom: 1em">
+                            <img v-if="theme === ''" :src="elsaLight"  class="img-fluid" style="padding-bottom: 1em">
+                            <img v-else :src="elsaDark"  class="img-fluid" style="padding-bottom: 1em">
 
                         </b-row>
                         <b-row align-h="center" align-v="center">
@@ -37,6 +39,12 @@ import {mapGetters} from "vuex";
 export default {
     name: "Impressum",
     components: {Header},
+    data() {
+        return {
+            elsaLight: require('../assets/logos/ELSA_medium.svg'),
+            elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
+        }
+    },
     computed: {
         ...mapGetters({
             impressumMessage: 'impressum/getImpressumResponse',
@@ -133,10 +141,10 @@ export default {
 
 }
 
-@media (max-width: 315px) and (min-width: 269px) {
+@media (max-width: 304px) and (min-width: 269px) {
     /deep/ .impressum-content p {
         text-align: center;
-        font-size: .7em;
+        font-size: .68em;
         margin-right: 3em;
 
     }
@@ -161,7 +169,91 @@ export default {
 }
 
 
-@media (max-width: 575.98px) and (min-width: 315px) {
+@media (max-width: 328px) and (min-width: 305px) {
+    /deep/ .impressum-content p {
+        text-align: center;
+        font-size: .72em;
+        margin-right: 3em;
+
+    }
+
+    .col1 {
+        max-width: 100%;
+        font-size: 1em;
+        align-self: center;
+        padding-bottom: 1em;
+
+    }
+
+    .col2 .img-fluid {
+        max-width: 40%;
+    }
+
+    .col2 .img-fluid-logo {
+        max-width: 14%;
+        margin-right: 2em;
+    }
+
+}
+
+
+
+@media (max-width: 348px) and (min-width: 328px) {
+    /deep/ .impressum-content p {
+        text-align: center;
+        font-size: .8em;
+        margin-right: 3em;
+
+    }
+
+    .col1 {
+        max-width: 100%;
+        font-size: 1em;
+        align-self: center;
+        padding-bottom: 1em;
+
+    }
+
+    .col2 .img-fluid {
+        max-width: 40%;
+    }
+
+    .col2 .img-fluid-logo {
+        max-width: 14%;
+        margin-right: 2em;
+    }
+
+}
+
+@media (max-width: 388px) and (min-width: 349px) {
+    /deep/ .impressum-content p {
+        text-align: center;
+        font-size: .87em;
+        margin-right: 3em;
+
+    }
+
+    .col1 {
+        max-width: 100%;
+        font-size: 1em;
+        align-self: center;
+        padding-bottom: 1em;
+
+    }
+
+    .col2 .img-fluid {
+        max-width: 40%;
+    }
+
+    .col2 .img-fluid-logo {
+        max-width: 14%;
+        margin-right: 2em;
+    }
+
+}
+
+
+@media (max-width: 575.98px) and (min-width: 388px) {
     /deep/ .impressum-content p {
         text-align: center;
         margin-right: 3em;
