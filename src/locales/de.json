@@ -286,6 +286,8 @@
             "noReaders": "Noch keine Gegenleser hinzugefügt",
             "saveAll": "Alles Speichern",
             "noDocumentSelected": "Bitte wählen Sie ein Dokument aus",
+            "confirm": "Bestätigen",
+            "editAllWarning": "Nicht alle Dokumente haben die selben Einstellungen. Bitte wählen Sie das Dokument aus dessen Einstellungen Sie als Basis nutzen wollen.",
             "error": {
                 "noDateTime": "Bitte wählen Sie ein Datum und eine Uhrzeit.",
                 "noDate": "Bitte wählen Sie ein Datum.",

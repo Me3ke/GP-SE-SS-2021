@@ -48,8 +48,42 @@
                     </b-col>
                 </b-row>
 
-            </div>
 
+                <div v-if="showWarning">
+                    <transition>
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <h5>
+                                                {{$t('Settings.DocumentSettings.editAllWarning')}}
+                                            </h5>
+                                            <select class="form-control" id="selectEnvelope" v-model="selectedIdInput">
+                                                <option v-for="document in this.envelope(this.envId).documents" :key="document.id" :value="document.id"> {{document.title}} </option>
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-row align-h="end">
+                                                <b-col cols="auto">
+                                                    <button class="light-btn" @click="selectedIdInput = null; showWarning = false;">
+                                                        {{$t('DownloadDoc.cancel')}}
+                                                    </button>
+                                                </b-col>
+                                                <b-col cols="auto">
+                                                    <button class="elsa-blue-btn" @click="confirmSelectedID()">
+                                                        {{$t('Settings.DocumentSettings.confirm')}}
+                                                    </button>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+            </div>
            <!-- Global settings -->
             <div v-if="(sameSettings(this.envelopeSettings) && editAll === null) || editAll === true">
                 <SettingsMenu
@@ -88,11 +122,12 @@ export default {
             editAllInput: null,
             editAll: null,
             selectedId: -1,
-            selectedIndex: 0,
-            updated: 0
+            selectedIdInput: null,
+            updated: 0,
+            showWarning: false
         }
     },
-    created() {
+    mounted() {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
         this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId})
     },
@@ -172,13 +207,24 @@ export default {
         },
         changeEditAll() {
             if(this.editAll === null) {
-                // TODO: Warning
-                this.editAll = !this.sameSettings(this.envelopeSettings)
+                if(!this.sameSettings(this.envelopeSettings)) {
+                    this.showWarning = true;
+                } else {
+                    this.editAll = !this.sameSettings(this.envelopeSettings);
+                }
             } else {
                 if(this.editAll === false && !this.sameSettings(this.envelopeSettings)) {
-                    // TODO: selectedID Pop Up!
+                    this.showWarning = true;
+                } else {
+                    this.editAll = !this.editAll;
                 }
-                this.editAll = !this.editAll
+            }
+        },
+        confirmSelectedID() {
+            if(!(this.selectedIdInput === null)) {
+                this.selectedId = this.selectedIdInput;
+                this.showWarning = false;
+                this.editAll = true;
             }
         }
     }
@@ -220,6 +266,28 @@ export default {
     background-color: var(--dark-grey);
     color: var(--light-grey);
     transition-duration: 0.4s;
+}
+
+.modal-mask {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    max-height: 50em;
+    overflow-y: scroll;
+    background-color: var(--whitesmoke);
 }
 
 </style>

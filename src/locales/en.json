@@ -285,6 +285,8 @@
             "noReaders": "There are no proofreaders",
             "saveAll": "Save all changes",
             "noDocumentSelected": "Please select a document to edit",
+            "confirm": "Confirm",
+            "editAllWarning": "Not all documents share the same settings, please choose the document which settings you want to use as basis.",
             "error": {
                 "noDateTime": "Please choose a date and a time.",
                 "noDate": "Please choose a date.",
