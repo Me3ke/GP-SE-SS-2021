@@ -258,6 +258,10 @@ export default {
         this.$store.dispatch('fetchUser')
     },
 
+    mounted() {
+        this.$store.dispatch('impressum/fetchImpressum')
+    },
+
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
     },
