@@ -6,7 +6,8 @@
 
             <LandingPageHeader></LandingPageHeader>
             <div class=img-wrap>
-                <img :src="image" alt="logo" class="header-image"/>
+                <img v-if="theme === '' " :src="elsaLight" alt="logo" class="header-image"/>
+                <img v-else :src="elsaDark" alt="logo" class="header-image"/>
             </div>
             <div class="login-division">
                 <login-component v-show="showLogin" @loginComponentTrigger="twoFacAuthCheck"></login-component>
@@ -23,7 +24,6 @@
 
 <script>
 import Footer from "@/main/vue/components/Footer";
-import image from "../assets/logos/ELSA_big.svg";
 import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import LoginComponent from "@/main/vue/components/LoginComponent";
 import ForgotPasswordComponent from "../components/settingsPage/ForgotPasswordComponent";
@@ -35,7 +35,8 @@ export default {
     components: {TwoFacAuth, ForgotPasswordComponent, LoginComponent, LandingPageHeader, Footer},
     data() {
         return {
-            image: image,
+            elsaLight: require('../assets/logos/ELSA_big.svg'),
+            elsaDark: require('../assets/logos/ELSA_big_darkmode.svg'),
             showLogin: true,
             showTwoFactorLogin: false
         }
@@ -59,7 +60,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            twoFactorLogin: 'getTwoFactorLogin'
+            twoFactorLogin: 'getTwoFactorLogin',
+            theme: 'theme/getTheme'
         })
     }
 }

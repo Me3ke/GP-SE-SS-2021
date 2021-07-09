@@ -3,7 +3,6 @@ package gpse.example.domain.documents;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.exceptions.CreatingFileException;
 import gpse.example.domain.signature.ProtoSignatory;
-import gpse.example.domain.users.UserService;
 import org.springframework.stereotype.Component;
 import gpse.example.web.documents.DocumentPutRequest;
 
@@ -50,7 +49,6 @@ public class DocumentCreator {
      * @param documentPutRequest the command object which keeps the information for the document.
      * @param ownerID            the email adress of the User who want to create the document.
      * @param signatories        the list of signatories for this document.
-     * @param userService        the service used to handle ProtoSignatories.
      * @param documentService    the documentService.
      * @return the created document.
      * @throws IOException           if the data is incorrect.
@@ -58,8 +56,8 @@ public class DocumentCreator {
      */
     //does not include directories.
     public Document createDocument(final DocumentPutRequest documentPutRequest, final String ownerID,
-                                   final List<ProtoSignatory> signatories, UserService userService,
-                                   DocumentService documentService)
+                                   final List<ProtoSignatory> signatories,
+                                   final DocumentService documentService)
         throws CreatingFileException, IOException {
         if (documentPutRequest.getData().length == 0) {
             throw new CreatingFileException(new IOException());
@@ -67,7 +65,7 @@ public class DocumentCreator {
         final Document document = new Document(documentPutRequest, new ArrayList<>(),
             ownerID);
         setDocumentState(signatories, document);
-        setSignatories(signatories, document, userService, documentService);
+        setSignatories(signatories, document, documentService);
         return document;
     }
 
@@ -79,10 +77,11 @@ public class DocumentCreator {
      * @param document    the document itself.
      */
     private void setSignatories(final List<ProtoSignatory> signatories,
-                                final Document document, UserService userService, DocumentService documentService) {
+                                final Document document,
+                                final DocumentService documentService) {
         if (signatories != null) {
             for (final ProtoSignatory signatory : signatories) {
-                document.addSignatory(userService.getUser(signatory.getEmail()), signatory.getType());
+                document.addSignatory(signatory.getEmail(), signatory.getSignatureType());
             }
             documentService.addDocument(document);
         }

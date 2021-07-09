@@ -1,9 +1,12 @@
 <template>
     <div>
 
-        <SignPopUp v-if="showSign" :documents="[document]" @signTrigger="toggleSign()"></SignPopUp>
+        <SignPopUp v-if="showSign" :documents="[document]" :is-guest="isGuest" @signTrigger="toggleSign()"></SignPopUp>
 
-        <ProofreadPopUp v-if="showProofread" :documents="[document]" @readTrigger="toggleRead()"></ProofreadPopUp>
+        <ProofreadPopUp v-if="showProofread" :documents="[document]" :is-guest="isGuest"
+                        @readTrigger="toggleRead()"></ProofreadPopUp>
+
+        <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
 
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>
@@ -25,24 +28,36 @@
                     <b-icon icon="pen" class="my-icon"></b-icon>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item v-if="!isGuest" @click="goToComments" class="mini-list">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                </b-list-group-item>
+
                 <!-- Protocol -->
-                <b-list-group-item v-if="protocol" @click="goToProtocol" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click=" goToProtocol
+                " class="mini-list">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory" class="mini-list">
+                <b-list-group-item v-if="!isGuest" @click="showHistory" class="mini-list">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion" class="mini-list">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion"
+                                   class="mini-list">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                 </b-list-group-item>
 
                 <!-- Settings -->
                 <b-list-group-item v-if="isOwner" @click="goToSettings()" class="mini-list">
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
+                </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item v-if="!isGuest" @click="showMeta()" class="mini-list">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
                 </b-list-group-item>
             </b-list-group>
         </b-sidebar>
@@ -53,7 +68,11 @@
 
                 <b-list-group-item id="sidebar-title-light"
                                    style="text-align: center; background-color: var(--elsa-blue); padding: 1em 1.25em;">
-                    <b-img :src="logoDarkMode" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <b-img v-if="darkEmpty" :src="elsaDark" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <img v-else
+                         :src="getDarkSource()" class="logo"
+                         :alt="$t('Header.logo')"
+                         style="margin-left: 2em">
                 </b-list-group-item>
 
                 <!-- Proofread -->
@@ -72,20 +91,26 @@
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
                 </b-list-group-item>
 
+                <!-- Comments -->
+                <b-list-group-item v-if="!isGuest" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
+                </b-list-group-item>
+
                 <!-- Protocol -->
-                <b-list-group-item v-if="protocol" @click="goToProtocol">
+                <b-list-group-item v-if="!isGuest" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory">
+                <b-list-group-item v-if="!isGuest" @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner && document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
@@ -95,6 +120,14 @@
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.settings') }} </span>
                 </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item v-if="!isGuest" @click="showMeta()">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
+                    <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
+                    <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
+                </b-list-group-item>
+
             </b-list-group>
         </b-sidebar>
 
@@ -103,7 +136,12 @@
             <b-list-group>
                 <b-list-group-item id="sidebar-title-dark"
                                    style="text-align: center; background-color: var(--elsa-blue); padding: 1em 1.25em;">
-                    <b-img :src="logoLightMode" class="logo" :alt="$t('Header.logo')"></b-img>
+                    <b-img v-if="lightEmpty" :src="elsaLight" class="logo"
+                           :alt="$t('Header.logo')"></b-img>
+                    <img v-else
+                         :src="getLightSource()" class="logo"
+                         :alt="$t('Header.logo')"
+                         style="margin-left: 2em">
                 </b-list-group-item>
 
                 <!-- Proofread -->
@@ -122,20 +160,26 @@
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
                 </b-list-group-item>
 
-                <!-- Protocol -->this.uploadingDocument = false;
-                <b-list-group-item v-if="protocol" @click="goToProtocol">
+                <!-- Comments -->
+                <b-list-group-item v-if="!isGuest" @click="goToComments">
+                    <b-icon class="my-icon" stacked icon="chat-right-dots"></b-icon>
+                    <span> {{ $t('DocumentPage.comments') }} </span>
+                </b-list-group-item>
+
+                <!-- Protocol -->
+                <b-list-group-item v-if="!isGuest" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>
                 </b-list-group-item>
 
                 <!-- History -->
-                <b-list-group-item v-if="history" @click="showHistory">
+                <b-list-group-item v-if="!isGuest" @click="showHistory">
                     <b-icon icon="clock-history" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.history') }} </span>
                 </b-list-group-item>
 
                 <!-- New Version -->
-                <b-list-group-item v-if="isOwner" @click="toggleNewVersion">
+                <b-list-group-item v-if="isOwner &&  document.state !== 'CLOSED'" @click="toggleNewVersion">
                     <b-icon icon="file-earmark-plus" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.newVersion') }} </span>
                 </b-list-group-item>
@@ -144,6 +188,13 @@
                 <b-list-group-item v-if="isOwner" @click="goToSettings()">
                     <b-icon icon="gear-fill" class="my-icon"></b-icon>
                     <span> {{ $t('DocumentPage.settings') }} </span>
+                </b-list-group-item>
+
+                <!-- Metadata -->
+                <b-list-group-item v-if="!isGuest" @click="showMeta()">
+                    <b-icon icon="info-circle" class="my-icon"></b-icon>
+                    <span v-if="!metaShown"> {{ $t('DocumentPage.meta.metaShow') }} </span>
+                    <span v-else> {{ $t('DocumentPage.meta.metaNo') }} </span>
                 </b-list-group-item>
             </b-list-group>
         </b-sidebar>
@@ -153,24 +204,30 @@
 import {mapGetters} from "vuex";
 import SignPopUp from "@/main/vue/components/popUps/SignPopUp";
 import ProofreadPopUp from "@/main/vue/components/popUps/ProofreadPopUp";
+import UploadNewVersionButton from "@/main/vue/components/uploadNewVersionButton";
+import _ from "lodash";
 
 export default {
     name: "Sidebar",
-    components: {ProofreadPopUp, SignPopUp},
+    components: {UploadNewVersionButton, ProofreadPopUp, SignPopUp},
+    props: {
+        isGuest: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
-            // TODO: get Info with api
-            protocol: true,
-            history: true,
-
             showProofread: false,
             showSign: false,
             showDownload: false,
+            showUploadNewVersion: false,
 
-            logoDarkMode: require('../assets/logos/ELSA_medium_darkmode.svg'),
-            logoLightMode: require('../assets/logos/ELSA_medium.svg'),
+            elsaLight: require('../assets/logos/ELSA_medium.svg'),
+            elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
 
-            isClosed: true
+            isClosed: true,
+            metaShown: false
         }
     },
     methods: {
@@ -181,6 +238,7 @@ export default {
             this.showProofread = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleSign(val) {
             if (this.signed) {
@@ -189,28 +247,67 @@ export default {
             this.showSign = val
             this.$emit('triggerOverflow')
             this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$store.dispatch('document/setSeenFalse')
         },
         toggleDownload() {
             this.showDownload = !this.showDownload
             this.$emit('triggerOverflow')
+            this.$store.dispatch('document/setSeenFalse')
+        },
+        goToComments() {
+            this.$router.push({name: 'comments', params: {envId: this.envId, docId: this.docId}})
         },
         goToProtocol() {
             this.$router.push({name: 'protocol', params: {envId: this.envId, docId: this.docId}})
         },
-        //TODO: add possibility to look at history
         showHistory() {
+            this.$router.push({name: 'history', params: {envId: this.envId, docId: this.docId}})
         },
-        //TODO: add uploading of new version here
         toggleNewVersion() {
+            this.showUploadNewVersion = !this.showUploadNewVersion
+            this.$root.$emit('bv::toggle::collapse', 'menu')
+            this.$emit('triggerOverflow')
+
+            this.$bvModal.show('modal-' + this.docId + 'a')
         },
         // TODO. add router push to settings site of document
         goToSettings() {
-        }
+        },
+        showMeta() {
+            this.metaShown = !this.metaShown
+            this.$emit('detailTrigger')
+        },
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        },
+        getDarkSource() {
+            if (this.logoDarkType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoDark
+            } else {
+                return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
+            }
+        },
+        tokenId() {
+            return this.$route.params.tokenId;
+        },
     },
     computed: {
         ...mapGetters({
             theme: 'theme/getTheme',
-            document: 'document/getDocument'
+            newDocumentId: 'document/getNewDocumentId',
+            newDocumentError: 'document/getNewDocumentError',
+            newDocumentStatus: 'document/getEditDocumentStatus',
+            logoLight: 'theme/getLightLogo',
+            logoDark: 'theme/getDarkLogo',
+            logoLightType: 'theme/getLightLogoType',
+            logoDarkType: 'theme/getDarkLogoType',
+
+            document: 'document/getDocumentInfo',
+            guestSignatory: 'getGuestSignatory'
         }),
         isOwner() {
             if (this.document.owner) {
@@ -219,28 +316,61 @@ export default {
             return false
         },
         reader() {
-            return this.document.reader
+            if (this.isGuest) {
+                return this.guestSignatory.reader
+            } else {
+                return this.document.reader
+            }
         },
         read() {
-            return this.document.read
+            if (this.isGuest) {
+                return this.guestSignatory.read
+            } else {
+                return this.document.read
+            }
         },
         readTurn() {
-            return this.document.turnToReview
+            if (this.isGuest) {
+                return this.guestSignatory.turnToReview
+            } else {
+                return this.document.turnToReview
+            }
         },
         signatory() {
-            return this.document.signatory
+            if (this.isGuest) {
+                return this.guestSignatory.signatory
+            } else {
+                return this.document.signatory
+            }
         },
         signed() {
-            return this.document.signed
+            if (this.isGuest) {
+                return this.guestSignatory.signed
+            } else {
+                return this.document.signed
+            }
         },
         signTurn() {
-            return this.document.turnToSign
+            if (this.isGuest) {
+                return this.guestSignatory.turnToSign
+            } else {
+                return this.document.turnToSign
+            }
         },
         docId() {
             return this.$route.params.docId
         },
         envId() {
-            return this.$route.params.envId
+            return this.$route.params.envId;
+        },
+        uploadNewDocumentError() {
+            return !_.isEmpty(this.newDocumentError)
+        },
+        lightEmpty() {
+            return this.logoLight === ""
+        },
+        darkEmpty() {
+            return this.logoDark === ""
         }
     }
 }
@@ -254,7 +384,7 @@ export default {
 .list-group-item {
     background-color: var(--whitesmoke);
     border-color: var(--light-grey);
-    padding: 2em 1.25em;
+    padding: 1.5em 1.25em;
 }
 
 .mini-list.list-group-item {

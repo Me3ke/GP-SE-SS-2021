@@ -13,6 +13,15 @@ import java.util.List;
 @Entity
 public class CorporateDesign {
 
+    private static final String DEFAULT_TEXT = "<p><strong>Impressum</strong></p>\n"
+            + "<p>Anbieter:<br />Max Mustermann<br />Musterstraße 1<br />80999 München</p>\n"
+            + "<p>Kontakt:<br />Telefon: 089/1234567-8<br />Telefax: 089/1234567-9<br />E-Mail:"
+            + " mail@mustermann.de<br />Website: www.mustermann.de</p>\n"
+            + "<p> </p>\n"
+            + "<p>Bei redaktionellen Inhalten:</p>\n"
+            + "<p>Verantwortlich nach § 55 Abs.2 RStV<br />Moritz Schreiberling<br />"
+            + "Musterstraße 2<br />80999 München</p>";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -33,6 +42,9 @@ public class CorporateDesign {
     @Column
     private String logoDarkType;
 
+    @Lob
+    private String impressumsText;
+
     /**
      * the default constructor for a corporate Design.
      *
@@ -45,16 +57,17 @@ public class CorporateDesign {
             this.colors = Lists.newArrayList(colors);
         }
 
-        if (logo.length != 0) {
-            this.logo = Arrays.copyOf(logo, logo.length);
-        } else {
+        if (logo.length == 0) {
             this.logo = new byte[0];
-        }
-        if (logoDark.length != 0) {
-            this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
         } else {
-            this.logoDark = new byte[0];
+            this.logo = Arrays.copyOf(logo, logo.length);
         }
+        if (logoDark.length == 0) {
+            this.logoDark = new byte[0];
+        } else {
+            this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
+        }
+        impressumsText = DEFAULT_TEXT;
     }
 
     protected CorporateDesign() {
@@ -112,5 +125,13 @@ public class CorporateDesign {
 
     public String getLogoDarkType() {
         return logoDarkType;
+    }
+
+    public String getImpressumsText() {
+        return impressumsText;
+    }
+
+    public void setImpressumsText(final String impressumsText) {
+        this.impressumsText = impressumsText;
     }
 }

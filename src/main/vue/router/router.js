@@ -15,12 +15,16 @@ import ImpressumPage from "@/main/vue/views/ImpressumPage";
 import EnvelopePage from "@/main/vue/views/EnvelopePage";
 import EnvelopeSettingsPage from "@/main/vue/views/EnvelopeSettingsPage";
 import store from "@/main/vue/store/store";
-import BlankTestPage from "@/main/vue/views/BlankTestPage";
-import ProgressbarTestPage from "@/main/vue/views/ProgressbarTestPage";
 import ProtocolPage from "@/main/vue/views/ProtocolPage";
 import RegisterConfirmPage from "@/main/vue/views/RegisterConfirmPage";
 import CorporateDesignNormalPage from "@/main/vue/views/CorporateDesignNormalPage";
 import CorporateDesignExperimentalPage from "@/main/vue/views/CorporateDesignExperimentalPage";
+import CommentsPage from "@/main/vue/views/CommentsPage";
+import GuestDocumentPage from "@/main/vue/views/GuestDocumentPage";
+import UserManagement from "@/main/vue/views/UserManagement";
+import PasswordResetPage from "@/main/vue/views/PasswordResetPage";
+import PasswordResetPageNoToken from "@/main/vue/views/PasswordResetPageNoToken";
+import HistoryPage from "@/main/vue/views/HistoryPage";
 
 
 Vue.use(VueRouter)
@@ -73,6 +77,23 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'login/reset/:resetId',
+                    name: 'login/reset',
+                    props: true,
+                    component: PasswordResetPage,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
+                    path: 'login/resets',
+                    name: 'login/resets',
+                    component: PasswordResetPageNoToken,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: 'register',
                     name: 'register',
                     component: RegisterPage,
@@ -107,9 +128,36 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: 'envelope/:envId/document/:docId/:tokenId',
+                    name: 'guestDocument',
+                    component: GuestDocumentPage,
+                    props: true,
+                    meta: {
+                        guest: true
+                    }
+                },
+                {
                     path: 'envelope/:envId/document/:docId/protocol',
                     name: 'protocol',
                     component: ProtocolPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/comments',
+                    name: 'comments',
+                    component: CommentsPage,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'envelope/:envId/document/:docId/history',
+                    name: 'history',
+                    component: HistoryPage,
                     props: true,
                     meta: {
                         requiresAuth: true
@@ -158,17 +206,6 @@ const router = new VueRouter({
                         requiresAuth: true
                     }
                 },
-
-                {
-                    path: 'progressbar',
-                    name: 'progressbar',
-                    component: ProgressbarTestPage
-                },
-                {
-                    path: 'test',
-                    name: 'test',
-                    component: BlankTestPage
-                },
                 {
                     path: 'settings/:envId',
                     name: 'settings',
@@ -190,6 +227,14 @@ const router = new VueRouter({
                     path: 'adminSettings/corporate/experimental',
                     name: 'corporateExp',
                     component: CorporateDesignExperimentalPage,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/userManagement',
+                    name: 'userManagement',
+                    component: UserManagement,
                     meta: {
                         requiresAuth: true
                     }

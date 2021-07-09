@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+
+import {convertUploadFileToBase64} from "@/main/vue/scripts/fileToBase64Converter";
 
 export default {
     name: "FileInput",

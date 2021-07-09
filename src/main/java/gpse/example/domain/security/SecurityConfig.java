@@ -29,16 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityConstants securityConstants;
 
     @Autowired
-    public SecurityConfig(SecurityConstants securityConstants) {
+    public SecurityConfig(final SecurityConstants securityConstants) {
         this.securityConstants = securityConstants;
     }
 
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/user/newpassword*").permitAll()
             .and()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
@@ -69,11 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
         corsConfiguration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
 
         corsConfiguration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin",
-            "Content-Type", "Accept", "Authorization"));
+            "Content-Type", "Accept", "Authorization", "token"));
 
         // This allow us to expose the headers
         corsConfiguration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers",

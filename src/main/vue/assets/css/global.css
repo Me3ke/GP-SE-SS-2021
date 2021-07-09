@@ -37,6 +37,18 @@
 
     /* Alert Dismiss */
     --darkRed: #a22c2c;
+
+    /* Progress Bar*/
+    --progress-background: var(--elsa-blue-transparent);
+    --done: green;
+    --not-done: red;
+
+
+    /* Draw - Pad*/
+    --pad-background: whitesmoke;
+
+    /* PopOver */
+    --popover-back: var(--elsa-blue-transparent)
 }
 
 [data-theme="darkMode"] {
@@ -71,6 +83,17 @@
     --modalBackground: rgba(0, 0, 0, .65);
 
     --darkRed: #501515;
+
+    /* ProgressBar*/
+    --progress-background: var(--user-info);
+    --done: #81c784;
+    --not-done: #e57373;
+
+    /* Draw- Pad Background */
+    --pad-background: whitesmoke;
+
+    /* PopOver */
+    --popover-back: var(--closed-doc-hover)
 }
 
 
@@ -310,29 +333,25 @@ body {
 
 .b-sidebar {
     width: 15em;
-    height: 95vh;
     font-size: 1.3em;
     text-align: left;
     bottom: 0;
-    top: auto;
+    top: 3em
 }
 
-.page-item .page-link
-{
-    color: var(--dark-grey)!important;
-    background-color: var(--whitesmoke)!important;
+.page-item .page-link {
+    color: var(--dark-grey) !important;
+    background-color: var(--whitesmoke) !important;
 }
 
-.page-item.active .page-link
-{
-    color: var(--whitesmoke)!important;
-    background-color: var(--elsa-blue)!important;
-    border-color: var(--elsa-blue)!important;
+.page-item.active .page-link {
+    color: var(--whitesmoke) !important;
+    background-color: var(--elsa-blue) !important;
+    border-color: var(--elsa-blue) !important;
 }
 
-.page-link:focus
-{
-    box-shadow: 0 0 0 0.2em var(--elsa-blue-transparent)!important;
+.page-link:focus {
+    box-shadow: 0 0 0 0.2em var(--elsa-blue-transparent) !important;
 }
 
 #mini-sidebar.b-sidebar {
@@ -343,29 +362,62 @@ body {
 @media (max-width: 575.98px) {
     .b-sidebar {
         font-size: 0.5em;
+        top: 5em
     }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
     .b-sidebar {
         font-size: 0.41em;
+        top: 6.5em
     }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
     .b-sidebar {
         font-size: 0.41em;
+        top: 9.51em
     }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
     .b-sidebar {
         font-size: 0.75em;
+        top: 5.2em
     }
 }
 
 @media (min-width: 992px) {
     .b-sidebar {
         font-size: 1.3em;
+        top: 3em
     }
+}
+
+/* Pop-Over */
+.popover-body {
+    color: var(--dark-grey);
+    background-color: var(--popover-back);
+    padding-bottom: 0;
+}
+
+.bs-popover-bottom, .bs-popover-auto[x-placement^="bottom"]{
+    margin-top: 0;
+}
+
+.popover.b-popover {
+    border-color: var(--dark-grey);
+}
+
+.bs-popover-bottom  .arrow {
+    visibility: hidden;
+}
+
+/* Code Input */
+input.vue-pincode-input {
+    box-shadow:  0 0 3px var(--elsa-blue);
+}
+
+input.vue-pincode-input:focus {
+    box-shadow:  0 0 9px var(--elsa-blue);
 }

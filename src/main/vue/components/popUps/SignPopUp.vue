@@ -16,6 +16,23 @@
                                 <!-- Menu -->
                                 <div class="modal-body">
 
+                                    <!-- Page -1 (shows if user has not seen the document yet) -->
+                                    <div v-if="page === -1">
+                                        <div class="step">
+                                            {{ $t('TwoFakAuth.sign.notSeen') }}
+                                        </div>
+
+
+                                        <div style="text-align: right">
+                                            <button type="button" class="elsa-blue-btn"
+                                                    @click="closeModal">
+                                                <span class="button-txt">
+                                                    {{ $t('TwoFakAuth.close') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Page 0 -->
                                     <div v-if="page === 0">
                                         <div class="step">
@@ -142,7 +159,7 @@
                                         <!-- Error Messages -->
                                         <b-alert :show="showAlertSign"
                                                  style="margin-bottom: 1em">
-                                            {{ $t('TwoFakAuth.fail') }} {{ statusCodeAdvanced }}
+                                            {{ $t('TwoFakAuth.fail') }} <!---{{ statusCodeAdvanced }}--->
                                         </b-alert>
 
 
@@ -160,7 +177,7 @@
                                         <div class="step">
                                             {{ $t('TwoFakAuth.sign.uploadExp') }}
                                             <b-icon id="tooltip-upl" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-upl" triggers="hover">
+                                            <b-tooltip target="tooltip-upl" triggers="hover click">
                                                 {{ $t('TwoFakAuth.sign.accepted') }}
                                             </b-tooltip>
                                         </div>
@@ -252,6 +269,10 @@ export default {
         documents: {
             type: Array,
             required: true
+        },
+        isGuest: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -271,16 +292,45 @@ export default {
                 this.page = 0
             }
         }
+
+        // checks if user has already looked at the document or not
+        if (!this.isGuest) {
+            await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
+            if (!this.hasSeen) {
+                this.page = -1
+            }
+        }
     },
     methods: {
         // makes simple signature api call
         async signSimple() {
-            await this.$store.dispatch('document/simpleSignDocument', {docId: this.docId})
+
+            if (this.isGuest) {
+                await this.$store.dispatch('signAsGuest', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    guestToken: this.$route.params.tokenId
+                })
+
+                // reloading document in store, so information is coherent with server information
+                await this.$store.dispatch('requestGuestInfo', {
+                    envId: this.envId,
+                    docId: this.docId,
+                    token: this.$route.params.tokenId
+                })
+                // goes to success page and toggles alert
+                this.page = 3
+                this.showAlertSign = false
+
+                return
+            }
+
+            await this.$store.dispatch('document/simpleSignDocument', {envId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCodeSimple === 200) {
                 // reloading document in store, so information is coherent with server information
-                await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                 // goes to success page and toggles alert
                 this.page = 3
                 this.showAlertSign = false
@@ -302,21 +352,22 @@ export default {
             // getting user so there is access public key
             reader.onload = async (keyData) => {
                 const privateKey = keyData.target.result
-
                 const docId = this.documents[0].identifier
 
                 // encrypting hashed docId with given private key
                 var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
+
                 sig.init(privateKey);
                 sig.updateString(docId);
-                const signature = sig.sign();
-                // decrypting hashed docId with registered public key
+                const signature = sig.sign();// decrypting hashed docId with registered public key
                 var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
+                console.log(this.publicKey)
                 sig2.init(this.publicKey);
                 sig2.updateString(docId);
                 const isValid = sig2.verify(signature);
                 if (isValid) {
                     await this.$store.dispatch('document/advancedSignDocument', {
+                        envId: this.envId,
                         docId: this.docId,
                         signature: signature
                     })
@@ -325,7 +376,7 @@ export default {
                 // everything went fine
                 if (this.statusCodeAdvanced === 200) {
                     // reloading document in store, so information is coherent with server information
-                    await this.$store.dispatch('document/fetchDocument', {envId: this.envId, docId: this.docId})
+                    await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
                     // goes to success page and toggles alert
                     this.page = 3
                     this.showAlertSign = false
@@ -360,6 +411,7 @@ export default {
             errorAdvanced: 'document/getErrorAdvancedSignDocument',
 
             hasKey: 'getHasKey',
+            hasSeen: 'document/getSeen',
 
             user: 'getUser'
         }),

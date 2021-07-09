@@ -34,7 +34,7 @@
                                         <div class="step">
                                             {{ $t('AdminSettings.corporate.logoUploadHere') }}
                                             <b-icon id="tooltip-logo" icon="info-circle" class="my-icon"></b-icon>
-                                            <b-tooltip target="tooltip-logo" triggers="hover">
+                                            <b-tooltip target="tooltip-logo" triggers="hover click">
                                                 {{ $t('AdminSettings.corporate.logoUploadHereExp') }}
                                             </b-tooltip>
                                         </div>
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import {convertUploadFileToBase64} from "@/main/vue/api/fileToBase64Converter";
+import {convertUploadFileToBase64} from "@/main/vue/scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 import _ from "lodash";
 

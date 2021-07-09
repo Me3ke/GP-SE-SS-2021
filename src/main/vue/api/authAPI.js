@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 export default {
-    async login(username, password) { //<1>
+    async login(username, password) {
         let bodyFormData = new FormData();
         bodyFormData.append('username', username);
         bodyFormData.append('password', password);

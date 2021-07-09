@@ -27,13 +27,13 @@ public class SignatorySetting {
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
-        this.email = signatory.getUser().getUsername();
+        this.email = signatory.getEmail();
         this.signatureType = signatory.getSignatureType().toInteger();
         this.status = signatory.isStatus();
         this.remind = !(signatory.getReminder() == -1);
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             this.signedOn = signatory.getSignedOn().format(formatter);
         } else {
             this.signedOn = "";

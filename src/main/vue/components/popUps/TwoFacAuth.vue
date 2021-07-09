@@ -62,11 +62,12 @@
                                         </div>
 
                                         <div class="content-div">
-                                            <b-form-input id="input-code"
-                                                          v-model="code"
-                                                          placeholder="Code"
-                                                          trim>
-                                            </b-form-input>
+                                            <PincodeInput
+                                                v-model="code"
+                                                placeholder="0"
+                                                :length="6"
+                                                style="margin-bottom: 1em"
+                                            />
                                         </div>
 
                                         <b-alert :show="showAlertCode" dismissible
@@ -135,6 +136,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import PincodeInput from "vue-pincode-input";
 
 export default {
     name: "TwoFacAuth",
@@ -148,33 +150,44 @@ export default {
             default: false
         }
     },
+    components: {
+        PincodeInput
+    },
     data() {
         return {
             page: 1,
             pageBefore: 0,
             code: '',
             showAlertCode: false,
-            //TODO: add somewhere in store so user cannot just refresh the page
+
             triesLeft: 3,
             showTries: false,
-            //TODO: add somewhere in store so user cannot just refresh the page
+
             logoutCounter: 10,
             startCountDown: false
         }
     },
     async created() {
         await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
-        // checks if signature is advanced (if prompt appears in font of doc or envelope containing doc with advanced signature),
-        // if so checks if user has set up 2FakAuth
-        if (this.advanced && this.beforeDoc) {
-            if (!this.hasSetUp) {
-                this.page = 0
-            }
-        }
 
-        // if auth is not in front of doc and user has no set-up -> close modal
-        if (!this.beforeDoc && !this.hasSetUp) {
-            this.$emit('twoFacTrigger')
+        // checks if logout has to be done
+        if (this.counter !== -1) {
+            this.logoutCounter = this.counter
+            this.startCountDown = true
+            this.page = 2
+        } else {
+            // checks if signature is advanced (if prompt appears in font of doc or envelope containing doc with advanced signature),
+            // if so checks if user has set up 2FakAuth
+            if (this.advanced && this.beforeDoc) {
+                if (!this.hasSetUp) {
+                    this.page = 0
+                }
+            }
+
+            // if auth is not in front of doc and user has no set-up -> close modal
+            if (!this.beforeDoc && !this.hasSetUp) {
+                this.$emit('twoFacTrigger')
+            }
         }
     },
     methods: {
@@ -182,14 +195,11 @@ export default {
         async twoFac() {
             //checking syntax of code
             if (this.code.length === 6 && Number.isInteger(Number(this.code))) {
-                console.log(1)
                 this.showAlertCode = false
 
-                await this.$store.dispatch('twoFakAuthAPI/postValidateCode', {code: this.code})
-                console.log(2)
+                await this.$store.dispatch('twoFakAuth/validateCode', {code: this.code})
                 //checking correctness of code
                 if (!this.correctInput) {
-                    console.log(3)
                     this.triesLeft--
                     // user used all his tries -> will get logged out
                     if (this.triesLeft < 1) {
@@ -198,12 +208,11 @@ export default {
                     }
                     this.showTries = true
                 } else {
-                    // emits event to close pop-up
-                    console.log(4)
+                    // emits event to close pop-up, resets everything, sets new time for last auth
                     this.showTries = false
                     this.showAlertCode = false
+                    await this.$store.dispatch('twoFakAuth/setLastAuth')
                     this.$emit('twoFacTrigger')
-                    console.log(5)
                 }
             } else {
                 this.showAlertCode = true
@@ -227,6 +236,7 @@ export default {
             correctInput: 'twoFakAuth/getCorrectInput',
             hasSetUp: 'twoFakAuth/getHasSetUp',
 
+            counter: 'twoFakAuth/getLogoutCounter'
         }),
     },
     // watch methods taken from: https://stackoverflow.com/questions/55773602/how-do-i-create-a-simple-10-seconds-countdown-in-vue-js
@@ -235,6 +245,7 @@ export default {
             if (value) {
                 setTimeout(() => {
                     this.logoutCounter--;
+                    this.$store.dispatch('twoFakAuth/setLogoutCounter', this.logoutCounter)
                 }, 1000);
             }
         },
@@ -243,10 +254,12 @@ export default {
                 if (value > 0 && this.startCountDown) {
                     setTimeout(() => {
                         this.logoutCounter--;
+                        this.$store.dispatch('twoFakAuth/setLogoutCounter', this.logoutCounter)
                     }, 1000);
                 }
 
                 if (value === 0) {
+                    this.$store.dispatch('twoFakAuth/setLogoutCounter', -1)
                     localStorage.removeItem('store')
                     localStorage.clear()
                     this.$router.push('/' + this.$i18n.locale + '/landing')

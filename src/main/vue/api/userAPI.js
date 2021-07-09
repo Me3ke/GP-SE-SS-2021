@@ -13,18 +13,19 @@ export default {
         return axios(
             {
                 method: "get",
-                url: 'http://localhost:8088/api/user/resetPassword/' + username
+                url: 'http://localhost:8088/api/user/' + username + '/password/reset'
             }
         )
     },
     async setNewPassword(username, token, password) {
         return axios(
             {
-                method: "post",
-                url: 'http://localhost:8088/api/user/' + username + '/resetPassword/' + token,
+                method: "get",
+                url: 'http://localhost:8088/api/user/newpassword',
                 headers: {"Content-Type": "application/json", "Accept": "*/*", "Connection": "keep-alive"},
                 data: {
-                    "password": password
+                    "password": password,
+                    "token": token
                 }
             }
         )
@@ -89,6 +90,41 @@ export default {
             data: {
                 'setting': setting
             }
+        })
+    },
+
+    // sets image of user signature on server
+    async putSignature(signature, signatureType) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/imageSignature',
+            headers: {"Content-Type": "application/json"},
+            data: {
+                'imageSignature': signature,
+                'imageSignatureType': signatureType
+            }
+        })
+    },
+
+    // gets image of user signature from server
+    async getSignature() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/settings/imageSignature'
+        })
+    },
+    // resets password with token
+    async resetPasswordWithToken(token, password) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/newpassword?password=' + password + '&token=' + token ,
+        })
+    },
+    // resets password without token
+    async resetPasswordWithoutToken(password, token) {
+        return axios({
+            method: "put",
+            url: 'http://localhost:8088/api/user/password/change?password=' + password + '&token=' + token,
         })
     }
 }
