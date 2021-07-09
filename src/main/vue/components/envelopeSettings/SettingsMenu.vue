@@ -17,11 +17,9 @@
                 {{$t('Settings.DocumentSettings.reader')}}
             </div>
 
-            <div>
-                <ReaderSettings
-                    @updateReader="updateReader"
-                    :readers="readers"></ReaderSettings>
-            </div>
+            <ReaderSettings
+                @updateReader="updateReader"
+                :readers="readers"></ReaderSettings>
         </div>
 
         <!-- Signatories -->
@@ -30,13 +28,11 @@
                 {{$t('Settings.DocumentSettings.signatory')}}
             </div>
 
-            <div>
-                <SignatorySettings
-                    @updateSignatories="updateSignatories"
-                    :orderRelevant="orderRelevant"
-                    :signatories="signatories"
-                    ></SignatorySettings>
-            </div>
+            <SignatorySettings
+                @updateSignatories="updateSignatories"
+                :orderRelevant="orderRelevant"
+                :signatories="signatories"
+                ></SignatorySettings>
         </div>
 
     </div>

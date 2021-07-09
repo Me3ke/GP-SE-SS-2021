@@ -284,7 +284,14 @@
             "noSignatories": "There are no signatories",
             "noReaders": "There are no proofreaders",
             "saveAll": "Save all changes",
-            "noDocumentSelected": "Please select a document to edit"
+            "noDocumentSelected": "Please select a document to edit",
+            "error": {
+                "noDateTime": "Please choose a date and a time.",
+                "noDate": "Please choose a date.",
+                "noTime": "Please choose a time.",
+                "alreadyInSignatories": "Signatory has been added already.",
+                "alreadyInReaders": "Proofreader has been added already."
+            }
         }
     },
     "UploadDoc": {
@@ -304,6 +311,9 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
+        "areYouSure": "Please check the document you want to upload and it's settings:",
+        "document": "Document",
+        "envelope": "Envelope",
         "error": {
             "noDocument": "Please choose a document to upload.",
             "noEnvelope": "Please choose a envelope to upload your document into.",

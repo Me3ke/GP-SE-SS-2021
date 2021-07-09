@@ -1,5 +1,9 @@
 <template>
     <div>
+        <b-alert :show="this.error.alreadyExists" style="margin:0.5em">
+            {{$t('Settings.DocumentSettings.error.alreadyInSignatories')}}
+        </b-alert>
+
         <div v-if="!this.editSignatories">
             <div>
                 <SignatoryListItem v-for="signatory in signatories" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
@@ -119,15 +123,25 @@ export default {
             signatoryInputs: this.signatories,
             remindInput: remind,
             reminderTimingInput: reminderTiming,
-            orderRelevantInput: this.orderRelevant
+            orderRelevantInput: this.orderRelevant,
+            error: {
+                alreadyExists: false
+            }
         }
     },
     methods: {
         addSignatory() {
-            if(this.signatoryInputs.includes(this.signatoryInput)) {
-                // TODO: Error
-            } else {
-                this.signatoryInputs.push({email: this.signatoryInput, signatureType: ""});
+            if(!(this.signatoryInput === "")) {
+                this.error.alreadyExists = false;
+                let i;
+                for(i = 0; i < this.signatoryInputs.length; i++) {
+                    if(this.signatoryInput === this.signatoryInputs[i].email) {
+                        this.error.alreadyExists = true;
+                    }
+                }
+                if(!this.error.alreadyExists) {
+                    this.signatoryInputs.push({email: this.signatoryInput, signatureType: 1})
+                }
             }
             this.signatoryInput = "";
         },
@@ -191,5 +205,11 @@ export default {
 .icon-hover:hover {
     fill: var(--light-grey);
     transition-duration: 0.4s;
+}
+
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
 }
 </style>

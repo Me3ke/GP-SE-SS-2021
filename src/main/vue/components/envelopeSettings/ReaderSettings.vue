@@ -67,15 +67,25 @@ export default {
         return{
             editReaders: false,
             readerInput: "",
-            readerInputs: this.readers
+            readerInputs: this.readers,
+            error: {
+                alreadyExists: false
+            }
         }
     },
     methods: {
         addReader() {
-            if(this.readerInputs.includes(this.readerInput)) {
-                // TODO: Error
-            } else {
-                this.readerInputs.push({email: this.readerInput, signatureType: 0});
+            if(!(this.readerInput === "")) {
+                this.error.alreadyExists = false;
+                let i;
+                for(i = 0; i < this.readerInputs.length; i++) {
+                    if(this.readerInput === this.readerInputs[i].email) {
+                        this.error.alreadyExists = true;
+                    }
+                }
+                if(!this.error.alreadyExists) {
+                    this.signatoryInputs.push({email: this.signatoryInput, signatureType: 0})
+                }
             }
             this.readerInput = "";
         },
@@ -133,5 +143,11 @@ export default {
 .icon-hover:hover {
     fill: var(--light-grey);
     transition-duration: 0.4s;
+}
+
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
 }
 </style>

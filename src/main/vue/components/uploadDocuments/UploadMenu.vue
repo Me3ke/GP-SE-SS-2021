@@ -13,7 +13,10 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5 v-if="page === 1" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5 v-if="page === 2" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5 v-if="page === 3" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5 v-if="page === 4" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
                                     <h5>
                                         <b-icon type="button" icon="x-square" @click="show = false; close()">
                                         </b-icon>
@@ -37,7 +40,14 @@
                                 <!-- Page 4 Upload -->
                                 <div v-if="page === 4">
                                     <div class="modal-body">
-                                        <!-- TODO: Are you sure page -->
+                                        <div v-if="!this.uploadingDocument">
+                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope" :file="file"></SettingsPreview>
+                                        </div>
+
+                                        <div v-if="this.uploadingDocument">
+                                            <b-spinner></b-spinner>
+                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <b-row align-h="end">
@@ -68,12 +78,13 @@ import {mapGetters} from "vuex";
 import SelectEnvelope from "@/main/vue/components/uploadDocuments/SelectEnvelope";
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
+import SettingsPreview from "@/main/vue/components/uploadDocuments/SettingsPreview";
 export default {
     name: 'UploadButton',
     props: {
         text: String
     },
-    components: {SelectEnvelope, FileInput, UploadSettings},
+    components: {SelectEnvelope, FileInput, UploadSettings, SettingsPreview},
     data() {
         return {
             show: false,
@@ -92,7 +103,8 @@ export default {
                 data: null,
                 type: null,
                 title: null
-            }
+            },
+            uploadingDocument: false
         };
     },
     methods: {
@@ -104,7 +116,6 @@ export default {
         },
         updateSettings: function (settings) {
           this.settings = settings;
-          console.log(this.settings);
         },
         close() {
             this.page = 1;
@@ -112,16 +123,16 @@ export default {
             this.selectedEnv = {old: null, new: null};
             this.settings = {signatories: [], endDate: null, orderRelevant: null};
             this.show = false;
+            this.uploadingDocument = false;
         },
         async upload() {
-            console.log(this.settings);
             if (!(this.selectedEnvelope.id === null)) {
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.file, "settings": this.settings});
-                this.close();
+                this.uploadingDocument = true;
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.file, "settings": this.settings}).then(() => this.close());
             } else {
+                this.uploadingDocument = true;
                 await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnvelope.name})
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
-                this.close();
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings}).then(() => this.close());
             }
         }
     },

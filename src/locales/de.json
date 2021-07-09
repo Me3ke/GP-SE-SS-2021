@@ -285,7 +285,14 @@
             "noSignatories": "Noch keine Unterzeichner hinzugefügt",
             "noReaders": "Noch keine Gegenleser hinzugefügt",
             "saveAll": "Alles Speichern",
-            "noDocumentSelected": "Bitte wählen Sie ein Dokument aus"
+            "noDocumentSelected": "Bitte wählen Sie ein Dokument aus",
+            "error": {
+                "noDateTime": "Bitte wählen Sie ein Datum und eine Uhrzeit.",
+                "noDate": "Bitte wählen Sie ein Datum.",
+                "noTime": "Bitte wählen Sie eine Uhrzeit",
+                "alreadyInSignatories": "Unterzeichner wurde bereits hinzugefügt.",
+                "alreadyInReaders": "Gegenleser wurde bereits hinzugfügt."
+            }
         }
     },
     "UploadDoc": {
@@ -305,6 +312,9 @@
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
         "signatureType": "Signaturtyp",
+        "areYouSure": "Bitte überprüfen Sie das hochzuladene Dokument und die dazugehörigen Einstellungen:",
+        "document": "Dokument",
+        "envelope": "Verbund",
         "error": {
             "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
             "noEnvelope": "Bitte wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",

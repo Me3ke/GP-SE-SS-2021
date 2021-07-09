@@ -122,7 +122,7 @@
                     <span v-else> {{ $t('DocumentPage.doSign') }} </span>
                 </b-list-group-item>
 
-                <!-- Protocol -->
+                <!-- Protocol -->this.uploadingDocument = false;
                 <b-list-group-item v-if="protocol" @click="goToProtocol">
                     <b-icon class="my-icon" stacked icon="journal-check"></b-icon>
                     <span> {{ $t('DocumentPage.protocol') }} </span>

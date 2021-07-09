@@ -6,10 +6,10 @@
             {{$t('UploadDoc.error.noEndDate')}}
         </b-alert>
         <div>
-            <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
+            <h6>{{$t('Settings.DocumentSettings.chooseDate')}}</h6>
             <b-row style="margin-bottom: 0.5em">
                 <b-col cols="6">
-                    <b-form-datepicker class="mb-2" id="endDate" v-model="endDate"></b-form-datepicker>
+                    <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
                 </b-col>
                 <b-col cols="6">
                     <b-form-timepicker v-model="endTime" :locale="this.$i18n.locale"></b-form-timepicker>
@@ -181,4 +181,5 @@ export default {
     color: var(--red);
     border-color: var(--red);
 }
+
 </style>

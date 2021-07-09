@@ -6,7 +6,7 @@
                     {{ this.signatory.email }}
                 </b-col>
                 <b-col cols="auto" v-if="this.signatory.status">
-                    bereits signiert [EN/DE!!]
+                    {{$t('DocumentPage.didSign')}}
                 </b-col>
                 <b-col cols="auto" v-if="!this.signatory.status & this.signatory.signatureType === 1">
                     {{$t('UploadDoc.signatureType')}}: {{$t('UploadDoc.simple')}}
