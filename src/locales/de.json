@@ -141,6 +141,7 @@
         },
         "Avatar": {
             "profile": "Kontoeinstellungen",
+            "addressBook": "Adressbuch",
             "adminSetting": {
                 "settings": "Admin-Einstellungen",
                 "unlock": "Nutzer freischalten",
@@ -632,5 +633,8 @@
         "title": "Historie",
         "abc": "Titel A-Z",
         "cba": "Titel Z-A"
+    },
+    "AddressBook": {
+        "title": "Adressbuch"
     }
 }

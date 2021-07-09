@@ -26,6 +26,7 @@
         },
         "Avatar": {
             "profile": "Account settings",
+            "addressBook": "Address book",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -630,5 +631,8 @@
         "title": "History",
         "abc": "Title A-Z",
         "cba" : "Title Z-A"
+    },
+    "AddressBook": {
+        "title": "Address book"
     }
 }
