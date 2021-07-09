@@ -52,6 +52,11 @@ export const getters = {
     getImpressumResponse(state) {
         return state.impressum.message
     },
+
+    getImpressumPutResponse(state) {
+        return state.impressumPutResponse
+    },
+
     getErrorImpressum(state) {
         return state.errorImpressum
     }

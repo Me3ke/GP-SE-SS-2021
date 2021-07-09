@@ -7,29 +7,35 @@
             :options="editorOption"
         >
         </quill-editor>
+        <b-list-group-item class="d-flex justify-content-end align-items-center"
+                           style=" padding-top: 0.1em; padding-bottom: 0.1em;">
 
-        <b-button type="button"
-                  size="sm"
+            <transition name="saved">
+                            <span v-if="showSave" style="margin-right: 1em;">
+                                {{ $t('Settings.saved') }}
+                            </span>
+            </transition>
+
+            <b-button
                 class="light-btn"
                 v-b-modal="'modal-preview'"
-        >
-                    <span class="button-txt">
-                        Preview
-                    </span>
-        </b-button>
-        <b-button type="button"
-                  size="sm"
-                class="mt-1 elsa-blue-btn"
-                @click="saveImpressum"
-        >
-                    <span class="button-txt">
-                        Save
-                    </span>
-        </b-button>
-        <b-button class="light-btn"
-                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;">
-            {{ $t('AdminSettings.corporate.default') }}
-        </b-button>
+                style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;"
+            >
+                <span class="button-txt">
+                    Preview
+                </span>
+            </b-button>
+
+            <b-button class="elsa-blue-btn"
+                      @click="saveImpressum"
+                      style="margin-top: 0.2em; margin-bottom: 0.1em;"
+
+            >
+                        <span class="button-txt">
+                            Save
+                        </span>
+            </b-button>
+        </b-list-group-item>
 
 
         <!--- Preview --->
@@ -61,6 +67,7 @@ export default {
     data() {
         return {
             text: '',
+            showSave: false,
 
 
             editorOption: {
@@ -84,9 +91,18 @@ export default {
         },
 
         async saveImpressum() {
-            console.log(this.text)
             await this.$store.dispatch('impressum/updateImpressum', this.text)
             await this.fetchImpressumMessage()
+
+            console.log(this.impressumPutResponse.status)
+            if (this.impressumPutResponse.status === 200) {
+                // show saved notification
+                console.log("test")
+                this.showSave = true
+                setTimeout(() => {
+                    this.showSave = false
+                }, 2000);
+            }
 
 
 
@@ -95,6 +111,7 @@ export default {
         computed: {
             ...mapGetters({
                 impressumMessage: 'impressum/getImpressumResponse',
+                impressumPutResponse: 'impressum/getImpressumPutResponse'
             })
         },
 
@@ -116,7 +133,7 @@ export default {
 }
 </script>
 
-<style scoped src="../../assets/css/signModals.css">
+<style scoped src="../../assets/css/settingsPage.css">
 
 
 
