@@ -1,14 +1,16 @@
 <template>
-    <b-container style="margin-top: 0em">
+    <b-container class="container" style="margin-top: 0">
         <quill-editor
             ref="editor"
             class="editor"
             v-model="text"
-        ></quill-editor>
+            :options="editorOption"
+        >
+        </quill-editor>
 
         <b-button type="button"
                   size="sm"
-                class="mt-1 light-btn"
+                class="light-btn"
                 v-b-modal="'modal-preview'"
         >
                     <span class="button-txt">
@@ -23,6 +25,10 @@
                     <span class="button-txt">
                         Save
                     </span>
+        </b-button>
+        <b-button class="light-btn"
+                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;">
+            {{ $t('AdminSettings.corporate.default') }}
         </b-button>
 
 
@@ -54,7 +60,22 @@ export default {
 
     data() {
         return {
-            text: ''
+            text: '',
+
+
+            editorOption: {
+                modules: {
+                    toolbar: [
+                        //[{'font': []}],
+                        ['bold', 'italic', 'underline'],
+                        ['blockquote'],
+                        //[{'header': 1}, {'header': 2}],
+                        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+                        [{'align': []}],
+                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                    ]
+                }
+            }
         }
     },
     methods: {
@@ -96,10 +117,6 @@ export default {
 </script>
 
 <style scoped src="../../assets/css/signModals.css">
-
-
-
-
 
 
 
