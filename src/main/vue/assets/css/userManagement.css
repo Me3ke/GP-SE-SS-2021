@@ -20,6 +20,15 @@
     margin-bottom: auto;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
+.bubble {
+    padding-right: 0;
+    padding-left: 0.3em;
+}
+
 /* Sort drop-down */
 .my-dropdown-menu >>> .dropdown-menu {
     padding-top: 0.1vw;
@@ -101,12 +110,32 @@
     cursor: pointer;
 }
 
-.history {
+.history, .entry {
     width: 100%;
+}
+
+.entry{
+    border-bottom-color: transparent;
+    margin-bottom: -0.5em;
 }
 
 .unseen-user {
     background-color: var(--elsa-blue-transparent);
+}
+
+/* Show more */
+.show-more{
+    text-align: center;
+    text-decoration: underline var(--elsa-blue);
+    border: solid 1px var(--dark-grey);
+    border-radius: 0.3vw;
+    border-top-color: transparent;
+    padding: 1em 0.5em;
+}
+
+.show-more:hover{
+    color: var(--elsa-blue);
+    transition: 0.4s;
 }
 
 /* New User Badge */
@@ -145,6 +174,17 @@
 .elsa-blue-btn:hover:enabled {
     background-color: var(--elsa-blue);
     color: var(--whitesmoke);
+}
+
+#upload{
+    fill: var(--dark-grey);
+    margin-right: 0.5em;
+}
+
+#upload-hover{
+    fill: var(--whitesmoke);
+    margin-right: 0.5em;
+    transition: 0.4s;
 }
 
 /* Search bar */

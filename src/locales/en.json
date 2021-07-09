@@ -633,6 +633,19 @@
         "cba" : "Title Z-A"
     },
     "AddressBook": {
-        "title": "Address book"
+        "title": "Address book",
+        "filter" : {
+            "favorite": "Favorite"
+        },
+        "new": "New Entry",
+        "more": "Show more",
+        "less": "Show less",
+        "name": "Name",
+        "mail": "E-mail-address",
+        "address": "Address",
+        "bday": "Birthday",
+        "note": "Note",
+        "noNote": "No note present",
+        "number": "Phone number"
     }
 }

@@ -635,6 +635,19 @@
         "cba": "Titel Z-A"
     },
     "AddressBook": {
-        "title": "Adressbuch"
+        "title": "Adressbuch",
+        "filter" : {
+            "favorite": "Favorit"
+        },
+        "new": "Neuer Eintrag",
+        "more": "Mehr anzeigen",
+        "less": "Weniger anzeigen",
+        "name": "Vor- und Nachname",
+        "mail": "E-Mail-Adresse",
+        "address": "Anschrift",
+        "bday": "Geburtstag",
+        "note": "Notiz",
+        "noNote": "Keine Notiz vorhanden",
+        "number": "Telefonnummer"
     }
 }
