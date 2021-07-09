@@ -5,11 +5,11 @@
         </b-alert>
 
         <b-container style="padding-bottom: .5em">
-            <span>Template name</span>
+            <span>{{$t('EmailTemplate.templateName')}}</span>
             <b-form-input v-model="copyTemplate.name" :placeholder="$t('EmailTemplate.enterName')"></b-form-input>
         </b-container>
         <b-container style="padding-bottom: .5em">
-            <span>Template subject</span>
+            <span>{{$t('EmailTemplate.templateSubject')}}</span>
             <b-form-input v-model="copyTemplate.subject" :placeholder="$t('EmailTemplate.enterSubject')"></b-form-input>
         </b-container>
         <quill-editor

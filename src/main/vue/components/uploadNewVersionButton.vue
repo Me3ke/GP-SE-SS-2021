@@ -82,6 +82,7 @@
 
         <!---Readers --->
         <b-modal
+            style="margin-top: 2em;"
             modal-class="model-class"
             :id="'modal-' + docID + 'bbb'"
             ref="modal-page2-reader"
@@ -125,6 +126,7 @@
             ref="modal-page2-signatories"
             centered
             :title="document.title"
+            style="margin-top: 2em; padding-top: 2em"
             hide-footer ok-only no-stacking
         >
             <div>
@@ -165,9 +167,10 @@
             :id="'modal-'+ docID + 'c'"
             ref="modal-page3"
             class="modal-emailTemplate"
-            centered
+            centered scrollable
             :title= "document.title + '  ' +
             $t('EmailTemplate.emailTemp') "
+            style="margin-top: 2em"
             ok-only hide-footer
         >
             <b-container>
@@ -178,7 +181,7 @@
             </b-container>
 
 
-            <div class="text-right">
+            <!----<div class="text-right">
                 <button type="button"
                         class="mt-1 light-btn"
                         @click="showHideModal('modal-page3' , 'modal-page2-signatories')">
@@ -194,7 +197,27 @@
                          {{ $t('UploadDoc.continue') }}
                      </span>
                 </button>
+            </div>---->
+            <div style="padding-bottom: 1em; text-align: right" class="flex-box-2">
+
+                <b-button
+                    class="mt-1 light-btn"
+                    @click="showHideModal('modal-page3' , 'modal-page2-signatories')"
+                    style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
+                >
+                    {{ $t('UploadDoc.back') }}
+                </b-button>
+
+                <b-button
+                      class="ml-1 elsa-blue-btn"
+                      @click="showHideModal('modal-page3', 'modal-page4')"
+                      style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto;"
+                >
+                    {{ $t('UploadDoc.continue') }}
+                </b-button>
             </div>
+
+
 
         </b-modal>
         <!-- Modal Page for save written email template--->
@@ -229,7 +252,7 @@
                         @click="uploadNewFile"
                 >
                     <span class="button-txt">
-                        {{ $t('UploadDoc.continue') }} <!--UPLOAD -->
+                        {{ $t('UploadDoc.upload') }} <!--UPLOAD -->
                     </span>
                 </button>
                 <!--<b-button

@@ -1,6 +1,6 @@
 <template>
     <b-container>
-                    <div style="padding-bottom: 1em" class="flex-box-2">
+                    <div style="padding-bottom: .2em" class="flex-box-2">
 
                         <button class="elsa-blue-btn"
                                   style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
@@ -22,7 +22,7 @@
                         <b-row>
                         <b-col>
 
-                        <select style="margin-top: .5em;" v-model="selected" @change="changedValue(selected)">
+                        <select style="margin-top: .5em; background-color: var(--whitesmoke); color: var(--dark-grey)" v-model="selected" @change="changedValue(selected)">
                         <option v-for="(content, index) in emailTemplate" :key="index"
                                 v-bind:value="content"> {{content.name}}</option>
                     </select>
@@ -42,8 +42,8 @@
                         </b-row>
                     </b-container>
 
-                <b-container style="padding-top: 1em;"> <h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
-                    <b-container> Subject: {{ selected.subject }}</b-container>
+                <b-container style="padding-top: .5em;"> <h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
+                    <b-container> {{ $t('EmailTemplate.subject') }}: {{ selected.subject }}</b-container>
                     <hr>
                     <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
                 </b-container>
@@ -54,13 +54,12 @@
                         class="model-class2"
                         id="modal-editor"
                         ref="modal-editorRef"
-                        :title="'Edit ' + selected.name + ' Template' "
-                        centered
+                        :title="$t('EmailTemplate.editTemplateTitle') + selected.name"
+                        centered scrollable
                         hide-footer ok-only
                         style="margin-top: 2em;"
                     >
                        <b-container style="padding-right: 0; padding-left: 0;">
-                            <p> <span> {{ $t('EmailTemplate.editSentence') }} </span></p>
                             <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"></EditEmailTemplate>
                        </b-container>
 
@@ -69,8 +68,8 @@
                 <!--- Create new Template createNewEmailTemplate --->
                 <b-modal
                     class="model-class2"
-                    title="Create new Template"
-                    hide-footer ok-only centered
+                    :title="$t('EmailTemplate.createNewTemplate')+''"
+                    hide-footer ok-only centered scrollable
                     ref="new-Template"
                 >
                     <b-container>
@@ -81,7 +80,7 @@
                 <!--- Delete Template --->
                 <b-modal
                     class="model-class2"
-                    title="Delete Templates"
+                    :title="$t('EmailTemplate.templateDelete')+''"
                     hide-footer ok-only centered
                     ref="delete-Template"
                 >
