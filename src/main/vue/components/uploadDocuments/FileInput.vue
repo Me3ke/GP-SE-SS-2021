@@ -79,5 +79,9 @@ export default {
 </script>
 
 <style scoped>
-
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
 </style>

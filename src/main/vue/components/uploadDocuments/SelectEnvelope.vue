@@ -7,7 +7,7 @@
                     {{$t('UploadDoc.selectEnv')}}
                 </h5>
             </button>
-            <button type="button" class="light-btn" @click="newEnv = true;">
+            <button type="button" class="light-btn" @click="newEnv = true;" style="margin-top: 0.5em">
                 <h5>
                     {{$t('UploadDoc.newEnv')}}
                 </h5>
@@ -59,7 +59,7 @@
                     </button>
                 </b-col>
                 <b-col cols="auto" v-if="!(newEnv === null)">
-                    <button type="button" class="light-btn" @click="newEnv = null; envelope = {id: null, name: null};">
+                    <button type="button" class="light-btn" @click="newEnv = null; envelope = {id: null, name: null}; error = {noName: false, noId: false};">
                         <h5>
                             {{$t('UploadDoc.back')}}
                         </h5>
@@ -101,17 +101,24 @@ export default {
             this.$emit('previousPage')
         },
         next() {
-            if(this.envelope === {id: null, name: null}) {
-                if(this.newEnv) {
-                    this.error.noName = true;
-                } else {
-                    this.error.noID = true;
-                }
-            } else {
-                this.error = {noName: false, noID: false};
-                this.$emit('updateEnvelop', this.envelope);
+            this.error.noName = !!(this.newEnv && (this.envelope.name === "" || this.envelope.name === null));
+            this.error.noID = !this.newEnv && this.envelope.id === null;
+            if(!this.error.noID && !this.error.noName){
+                this.$emit('updateEnvelope', this.envelope);
+                this.reset();
                 this.$emit('nextPage')
             }
+        },
+        reset() {
+            this.newEnv= null;
+            this.envelope= {
+                id: null,
+                    name: null
+            };
+            this.error = {
+                noName: false,
+                noID: false
+            };
         }
     },
     created() {
@@ -126,5 +133,9 @@ export default {
 </script>
 
 <style scoped>
-
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
 </style>

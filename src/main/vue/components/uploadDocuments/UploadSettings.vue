@@ -7,7 +7,7 @@
         </b-alert>
         <div>
             <label for="endDate">{{$t('Settings.DocumentSettings.chooseDate')}}</label>
-            <b-row>
+            <b-row style="margin-bottom: 0.5em">
                 <b-col cols="6">
                     <b-form-datepicker class="mb-2" id="endDate" v-model="endDate"></b-form-datepicker>
                 </b-col>
@@ -23,16 +23,16 @@
         </b-alert>
 
         <!-- Add readers -->
-        <h6>{{$t('Settings.DocumentSettings.addReader')}}</h6>
-        <ReaderMenu :readers="readers"></ReaderMenu>
+        <h6>{{$t('Settings.DocumentSettings.reader')}}</h6>
+        <ReaderMenu :readers="readers" @updateReaders="updateReaders"></ReaderMenu>
 
         <!-- Add signatories -->
         <b-alert :show="this.error.noSignatureType">
             {{$t('UploadDoc.error.noSignatureType')}}
         </b-alert>
 
-        <h6>{{$t('Settings.DocumentSettings.addSignatory')}}</h6>
-        <SignatoryMenu :inModal="true" :signatories="signatories" :orderRelevant="orderRelevant"></SignatoryMenu>
+        <h6>{{$t('Settings.DocumentSettings.signatory')}}</h6>
+        <SignatoryMenu :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
 
     </div>
     <div class="modal-footer">
@@ -141,7 +141,7 @@ export default {
 
                 // set end date
                 let time = this.endTime.split(":")
-                settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
+                settings.endDate = this.endDate + ' ' + time[0] + ':' + time[1];
 
                 // set signatories
                 let i;
@@ -149,7 +149,7 @@ export default {
                     settings.signatories.push({email: this.readers[i].email, type: 0})
                 }
                 for (i = 0; i < this.signatories.length; i++) {
-                    settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].signatureType})
+                    settings.signatories.push({email: this.signatories[i].email, type: this.signatories[i].type})
                 }
 
                 //set order relevant
@@ -165,7 +165,7 @@ export default {
             this.error.noSignatureType = false;
             let i;
             for(i = 0; i < this.signatories.length; i++) {
-                if(!(this.signatories.type === 1 || this.signatories.type === 2)) {
+                if(!(this.signatories[i].type === 1 || this.signatories[i].type === 2)) {
                     this.error.noSignatureType = true;
                 }
             }
@@ -176,5 +176,9 @@ export default {
 </script>
 
 <style scoped>
-
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
 </style>

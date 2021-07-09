@@ -26,7 +26,7 @@
 
                                 <!-- Page 2 New or old envelope? -->
                                 <div v-if="page === 2">
-                                    <SelectEnvelope @updateEnvelope="updateEnvelope" @nextPage="page = page + 1"></SelectEnvelope>
+                                    <SelectEnvelope @updateEnvelope="updateEnvelope" @nextPage="page = page + 1" @previousPage="page = page -1"></SelectEnvelope>
                                 </div>
 
                                 <!-- Page 3 Add signatories/readers-->
@@ -65,8 +65,8 @@
 
 <script>
 import {mapGetters} from "vuex";
-import SelectEnvelope from "@/main/vue/components/envelopeSettings/SelectEnvelope";
-import FileInput from "@/main/vue/components/envelopeSettings/FileInput";
+import SelectEnvelope from "@/main/vue/components/uploadDocuments/SelectEnvelope";
+import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
 export default {
     name: 'UploadButton',
@@ -96,14 +96,15 @@ export default {
         };
     },
     methods: {
-        updateFile(file) {
+        updateFile: function (file) {
             this.file = file;
         },
-        updateEnvelope(envelope) {
+        updateEnvelope: function (envelope) {
             this.selectedEnvelope = envelope;
         },
-        updateSettings(settings) {
+        updateSettings: function (settings) {
           this.settings = settings;
+          console.log(this.settings);
         },
         close() {
             this.page = 1;
@@ -113,11 +114,12 @@ export default {
             this.show = false;
         },
         async upload() {
+            console.log(this.settings);
             if (!(this.selectedEnvelope.id === null)) {
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnv.old, "file":this.file, "settings": this.settings});
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.file, "settings": this.settings});
                 this.close();
             } else {
-                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnv.new})
+                await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnvelope.name})
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings})
                 this.close();
             }
@@ -186,9 +188,5 @@ export default {
     border-radius: 0.33vw;
 }
 
-.alert {
-    background-color: var(--sign-doc-hover);
-    color: var(--red);
-    border-color: var(--red);
-}
+
 </style>

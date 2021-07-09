@@ -2,20 +2,23 @@
     <div>
         <div v-if="!addSignatories && signatoryInputs.length === 0">
             <button class="light-btn" @click="addSignatories = true">
-                <h4>
+                <h5>
                     <b-icon icon="plus-circle"></b-icon>
                     {{$t('Settings.DocumentSettings.addSignatory')}}
-                </h4>
+                </h5>
             </button>
         </div>
-        <div v-if="addSignatories && !(signatoryInputs.length === 0)">
-            <b-list-group-item v-for="signatory in signatoryInputs" :key="signatory.email"> {{signatory.email}}</b-list-group-item>
-
-            <button class="light-btn" @click="addSignatories = true">
-                <h4>
-                    {{$t('Settings.DocumentSettings.edit')}}
-                </h4>
-            </button>
+        <div v-if="!addSignatories && !(signatoryInputs.length === 0)">
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories" :key="signatory.email"> {{signatory.email}}</b-list-group-item>
+            <b-row align-h="end">
+                <b-col cols="auto">
+                    <button class="light-btn" @click="addSignatories = true" style="margin:0.5em 0">
+                        <h6>
+                            {{$t('Settings.DocumentSettings.edit')}}
+                        </h6>
+                    </button>
+                </b-col>
+            </b-row>
         </div>
 
         <div v-if="addSignatories">
@@ -72,7 +75,7 @@
                 </draggable>
             </div>
 
-            <b-row align-h="end">
+            <b-row align-h="end" style="margin-top:0.5em">
                 <b-col cols="auto">
                     <button class="light-btn" @click="cancel()">
                         {{$t('DownloadDoc.cancel')}}
@@ -92,6 +95,9 @@
 import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
+    props: {
+        signatories: Array
+    },
     components: {draggable},
     data() {
         return {
@@ -113,7 +119,7 @@ export default {
             if(this.signatoryInputs.includes(this.signatoryInput)) {
                 // TODO: Error
             } else {
-                this.signatoryInputs.push({email: this.signatoryInput, type: ""});
+                this.signatoryInputs.push({email: this.signatoryInput, type: 1});
             }
             this.signatoryInput = "";
         },
@@ -122,7 +128,7 @@ export default {
         },
         cancel() {
             this.addSignatories = false;
-            this.signatoryInputs = [];
+            this.signatoryInputs = this.signatories;
             this.signatoryInput = "";
             this.orderRelevantInput = false;
         },
@@ -136,5 +142,9 @@ export default {
 </script>
 
 <style scoped>
-
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
+}
 </style>

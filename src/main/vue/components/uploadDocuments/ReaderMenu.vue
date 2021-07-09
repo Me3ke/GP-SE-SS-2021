@@ -1,21 +1,25 @@
 <template>
     <div>
         <div v-if="!addReaders && readerInputs.length === 0">
-            <button class="light-btn" @click="addReaders = true">
-                <h4>
+            <button class="light-btn" @click="addReaders = true" style="margin-bottom: 1em">
+                <h5>
                     <b-icon icon="plus-circle"></b-icon>
                     {{$t('Settings.DocumentSettings.addReader')}}
-                </h4>
+                </h5>
             </button>
         </div>
-        <div v-if="addReaders && !(readerInputs.length === 0)">
-            <b-list-group-item v-for="reader in readerInputs" :key="reader.email"> {{reader.email}} </b-list-group-item>
+        <div v-if="!addReaders && !(readerInputs.length === 0)">
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="reader in readers" :key="reader.email"> {{reader.email}} </b-list-group-item>
 
-            <button class="light-btn" @click="addReaders = true">
-                <h4>
-                    {{$t('Settings.DocumentSettings.edit')}}
-                </h4>
-            </button>
+            <b-row align-h="end">
+                <b-col cols="auto">
+                    <button class="light-btn" @click="addReaders = true" style="margin:0.5em 0">
+                        <h6>
+                            {{$t('Settings.DocumentSettings.edit')}}
+                        </h6>
+                    </button>
+                </b-col>
+            </b-row>
         </div>
 
         <div v-if="addReaders">
@@ -45,7 +49,7 @@
                     </b-row>
                 </div>
             </div>
-            <b-row align-h="end">
+            <b-row align-h="end" style="margin-top: 0.5em">
                 <b-col cols="auto">
                     <button class="light-btn" @click="cancel()">
                         {{$t('DownloadDoc.cancel')}}
@@ -64,6 +68,9 @@
 <script>
 export default {
     name: "ReaderMenu",
+    props: {
+        readers: Array
+    },
     data() {
         return{
             readerInput: "",
@@ -85,7 +92,7 @@ export default {
         },
         cancel() {
             this.addReaders = false;
-            this.readerInputs = [];
+            this.readerInputs = this.readers;
             this.readerInput = "";
         },
         save() {
@@ -110,5 +117,11 @@ export default {
 .icon-hover:hover {
     fill: var(--light-grey);
     transition-duration: 0.4s;
+}
+
+.alert {
+    background-color: var(--sign-doc-hover);
+    color: var(--red);
+    border-color: var(--red);
 }
 </style>
