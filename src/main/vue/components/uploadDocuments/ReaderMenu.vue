@@ -15,6 +15,7 @@
                 <b-col cols="auto">
                     <button class="light-btn" @click="addReaders = true" style="margin:0.5em 0">
                         <h6>
+                            <b-icon icon="pencil-fill"></b-icon>
                             {{$t('Settings.DocumentSettings.edit')}}
                         </h6>
                     </button>
