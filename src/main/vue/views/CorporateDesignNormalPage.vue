@@ -4,7 +4,7 @@
 
         <BaseHeading name="AdminSettings.corporate.title"></BaseHeading>
 
-        <b-container fluid="xl" style="overflow: hidden">
+        <b-container fluid="xl" style="overflow: hidden; padding-bottom: 3em">
             <div :class="[showOverflow ? 'overflow-auto' : '']" style="height: 80vh">
                 <LogoNormal @modalTrigger="toggleOverflow"></LogoNormal>
                 <ColorNormal></ColorNormal>

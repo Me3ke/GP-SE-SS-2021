@@ -1,5 +1,5 @@
 <template>
-    <div style="background-color: var(--whitesmoke)">
+    <div style="background-color: var(--whitesmoke); padding-bottom: 2em">
         <Header></Header>
         <BaseHeading name="Impressum"></BaseHeading>
         <b-container class="full-container">
