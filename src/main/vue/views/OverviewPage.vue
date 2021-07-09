@@ -257,12 +257,11 @@ export default {
             await this.$store.dispatch('fetchUser')
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('fetchUser')
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('fetchUser')
         this.loaded = true
     },
-
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
         this.loaded = false
