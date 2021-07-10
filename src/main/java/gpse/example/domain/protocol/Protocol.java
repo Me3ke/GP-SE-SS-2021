@@ -49,8 +49,9 @@ public class Protocol {
 
     private static final int IMAGE_HEIGHT = 30;
 
-    private static final int LOGO_HEIGHT = 80;
+    private static final int NEW_LOGO_HEIGHT = 80;
 
+    private static final int LOGO_HEIGHT = 20;
 
     private static final String PROTOKOLL = "Protokoll: ";
 
@@ -221,14 +222,14 @@ public class Protocol {
             logo = corporateDesignService.getCorporateDesign(2L).getLogo();
             final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
             contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
-                IMAGE_WIDTH, LOGO_HEIGHT);
+                IMAGE_WIDTH, NEW_LOGO_HEIGHT);
             lineCounter.addLines(2);
         } catch (CorporateDesignNotFoundException e) {
             final File file = new File("src/main/vue/assets/logos/ELSA_medium.png");
             logo = Files.readAllBytes(file.toPath());
             final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
             contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
-                IMAGE_WIDTH, IMAGE_HEIGHT);
+                IMAGE_WIDTH, LOGO_HEIGHT);
             lineCounter.addLines(2);
         }
     }
