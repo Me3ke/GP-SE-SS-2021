@@ -183,7 +183,7 @@ public class EnvelopeController {
         throws MessageGenerationException {
         try {
             EmailTemplate template = owner.getEmailTemplates().get(0);
-            for (EmailTemplate temp : owner.getEmailTemplates()) {
+            for (final EmailTemplate temp : owner.getEmailTemplates()) {
                 if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
                     template = temp;
                 }
@@ -214,11 +214,11 @@ public class EnvelopeController {
             } catch (TemplateNameNotFoundException e) {
                 return;
             }
-            TemplateDataContainer container = new TemplateDataContainer();
+            final TemplateDataContainer container = new TemplateDataContainer();
             container.setFirstNameOwner(owner.getFirstname());
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(document.getDocumentTitle());
-            GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
+            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
             container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
                 + document.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {

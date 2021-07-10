@@ -76,7 +76,7 @@ public class Protocol {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         //TODO make linecount method so we can check if its <= 0 and create new page if needed
-        LineCounter lineCounter = new LineCounter();
+        final LineCounter lineCounter = new LineCounter();
         final String title = document.getDocumentTitle();
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         pageCount = 0;
@@ -171,14 +171,14 @@ public class Protocol {
                 lineCounter.addLines(1);
                 addLine("Signatur-Hashes für erweiterte Signaturen", lineCounter.getCount(), contentStream);
             }
-            for (AdvancedSignature signature : document.getAdvancedSignatures()) {
+            for (final AdvancedSignature signature : document.getAdvancedSignatures()) {
                 try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                     lineCounter.addLines(1);
                     addIndentedLine(signature.getUserEmail(), lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                 }
-                String hash = new String(signature.getSignature());
-                String[] hashLines = getSubStrings(hash);
-                for (String hashline : hashLines) {
+                final String hash = new String(signature.getSignature());
+                final String[] hashLines = getSubStrings(hash);
+                for (final String hashline : hashLines) {
                     try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                         lineCounter.addLines(1);
                         addIndentedLine(hashline, lineCounter.getCount(), SPACING_TWO, contentStream);
@@ -225,7 +225,7 @@ public class Protocol {
     private PDPageContentStream newPageIfNeeded(LineCounter lineCounter,
                                                 PDDocument protocol) throws IOException {
         if (lineCounter.isNewPage()) {
-            PDPage newPage = new PDPage();
+            final PDPage newPage = new PDPage();
             protocol.addPage(newPage);
             pageCount++;
             lineCounter.setCount(TOP_OF_PAGE);

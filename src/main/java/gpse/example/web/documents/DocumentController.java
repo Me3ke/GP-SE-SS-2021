@@ -221,7 +221,7 @@ public class DocumentController {
     public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
-        Document document = documentService.getDocument(documentID);
+        final Document document = documentService.getDocument(documentID);
         if (document.getState() == DocumentState.CLOSED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
@@ -292,7 +292,7 @@ public class DocumentController {
                         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                             container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                     } catch (UsernameNotFoundException exception) {
-                        GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                        final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                             document.getId()));
                         container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
                             + document.getId() + "/" + token.getToken());
@@ -310,7 +310,7 @@ public class DocumentController {
                     smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                         container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
                 } catch (UsernameNotFoundException exception) {
-                    GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
+                    final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                         document.getId()));
                     container.setLink("http://localhost:8080/de/" + "envelope/" + envelopeID + DOCUMENT_URL
                         + document.getId() + "/" + token.getToken());
@@ -444,9 +444,9 @@ public class DocumentController {
     public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
                                                              final @PathVariable(DOCUMENT_ID) long documentID)
         throws DocumentNotFoundException {
-        List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
-        List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
-        for (Document document : documentHistory) {
+        final List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        final List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
+        for (final Document document : documentHistory) {
             responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
                 userID));
         }

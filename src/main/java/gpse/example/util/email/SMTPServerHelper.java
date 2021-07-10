@@ -46,12 +46,12 @@ public class SMTPServerHelper {
      */
     public void changeDomainSettings() {
         try {
-            DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
+            final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
             mailSender.setHost(domainSetter.getHost());
             mailSender.setPort(domainSetter.getPort());
             mailSender.setUsername(domainSetter.getUsername());
             mailSender.setPassword(domainSetter.getPassword());
-            Properties properties = mailSender.getJavaMailProperties();
+            final Properties properties = mailSender.getJavaMailProperties();
             properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
             properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
              /*session = Session.getInstance(properties, new Authenticator() {
@@ -79,7 +79,7 @@ public class SMTPServerHelper {
                                    final User sendingUser)
         throws MessageGenerationException {
         changeDomainSettings();
-        Message message = new Message();
+        final Message message = new Message();
         try {
             message.setCategory(category);
             message.setRecievingUserMail(recieverMail);

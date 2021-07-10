@@ -201,7 +201,7 @@ public class SignatureManagement {
             if (savedDocument.getState() != DocumentState.CLOSED) {
                 final User owner = userService.getUser(savedDocument.getOwner());
                 EmailTemplate template = owner.getEmailTemplates().get(0);
-                for (EmailTemplate temp : owner.getEmailTemplates()) {
+                for (final EmailTemplate temp : owner.getEmailTemplates()) {
                     if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
                         template = temp;
                     }
