@@ -11,6 +11,9 @@
                 <div style="text-align: center">
                     <span> {{ $t('AddressBook.serverErrorTwo') }}  </span>
                 </div>
+                <div style="text-align: center">
+                    <span> Status Code : {{ errorChangeStatus }}</span>
+                </div>
             </b-alert>
 
             <div class="user-box entry" style="display: block">
@@ -48,9 +51,9 @@
                             <b-icon icon="trash" class="my-icon clickable" id="trash-popover"></b-icon>
                             <b-popover target="trash-popover" triggers="click" placement="bottomleft">
                                 <!-- Error Messages -->
-                                <b-alert show="false"
+                                <b-alert :show="showErrorDelete"
                                          style="margin-bottom: 1em">
-                                    {{ $t('MessagePage.deleteError') }}
+                                    {{ $t('MessagePage.deleteError') }} : {{ errorDeleteStatus }}
                                 </b-alert>
 
                                 <div style="text-align: center;">
@@ -64,9 +67,8 @@
                                         <span>{{ $t('MessagePage.cancel') }}</span>
                                     </button>
 
-                                    <button class="elsa-blue-btn dark-elsa-btn" @mouseover="hover = true"
-                                            @mouseleave="hover = false"
-                                            @click="newEntry = true" style="">
+                                    <button class="elsa-blue-btn dark-elsa-btn"
+                                            @click="deleteEntry()">
                                         <span>{{ $t('MessagePage.delete') }}</span>
                                     </button>
                                 </div>
@@ -88,6 +90,9 @@
                 </div>
                 <div style="text-align: center">
                     <span> {{ $t('AddressBook.serverErrorTwo') }}  </span>
+                </div>
+                <div style="text-align: center">
+                    <span> Status Code : {{ errorChangeStatus }}</span>
                 </div>
             </b-alert>
             <div class="user-box  entry" style="display: block">
@@ -238,9 +243,9 @@
                             <b-icon icon="trash" class="my-icon clickable" id="trash-popover2"></b-icon>
                             <b-popover target="trash-popover2" triggers="click" placement="bottomleft">
                                 <!-- Error Messages -->
-                                <b-alert show="false"
+                                <b-alert :show="showErrorDelete"
                                          style="margin-bottom: 1em">
-                                    {{ $t('MessagePage.deleteError') }}
+                                    {{ $t('MessagePage.deleteError') }} : {{ errorDeleteStatus }}
                                 </b-alert>
 
                                 <div style="text-align: center;">
@@ -254,9 +259,8 @@
                                         <span>{{ $t('MessagePage.cancel') }}</span>
                                     </button>
 
-                                    <button class="elsa-blue-btn dark-elsa-btn" @mouseover="hover = true"
-                                            @mouseleave="hover = false"
-                                            @click="newEntry = true" style="">
+                                    <button class="elsa-blue-btn dark-elsa-btn"
+                                            @click="deleteEntry()">
                                         <span>{{ $t('MessagePage.delete') }}</span>
                                     </button>
                                 </div>
@@ -299,7 +303,10 @@ export default {
             },
             showSaveError: false,
             showSaveName: false,
-            showSaveNote: false
+            showSaveNote: false,
+            showErrorDelete: false,
+            errorDeleteStatus: -1,
+            errorChangeStatus: -1
         }
     },
     methods: {
@@ -309,6 +316,12 @@ export default {
         },
         async deleteEntry() {
             await this.$store.dispatch('addressBook/deleteEntry', this.entry.id)
+            if (_.isEmpty(this.hasError) && this.resDelete.status === 200) {
+                this.showErrorDelete = false
+            } else {
+                this.showErrorDelete = true
+                this.errorDeleteStatus = this.resDelete.status
+            }
             await this.$store.dispatch('addressBook/fetchBook')
         },
         // saves changes
@@ -333,7 +346,7 @@ export default {
             newEntry.favorite = this.settings.favorite
             newEntry.email = this.settings.email
             await this.$store.dispatch('addressBook/changeEntry', {entryId: this.entry.id, newEntry: newEntry})
-            if (_.isEmpty(this.hasError)) {
+            if (_.isEmpty(this.hasError) && this.resChange.status === 200) {
                 if (kind === 1) {
                     // show saved notification
                     this.showSaveName = true
@@ -354,6 +367,7 @@ export default {
                 await this.$store.dispatch('addressBook/fetchBook')
             } else {
                 this.showSaveError = true
+                this.errorChangeStatus = this.resChange.status
             }
 
         },
@@ -415,7 +429,9 @@ export default {
     computed: {
         ...mapGetters({
             userById: 'getUserByID',
-            hasError: 'addressBook/getHasError'
+            hasError: 'addressBook/getHasError',
+            resChange: 'addressBook/getResChangeEntry',
+            resDelete: 'addressBook/getResDeleteEntry'
         })
     }
 }
