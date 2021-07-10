@@ -4,7 +4,8 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
-                <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
+                <LanguageSwitcher style="margin-top: 0.25em"
+                                  @languageSwitch="signalLanguageSwitch"></LanguageSwitcher>
                 <ModeSwitch></ModeSwitch>
             </b-navbar-nav>
         </b-collapse>
@@ -28,7 +29,10 @@ export default {
             this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
             document.documentElement.setAttribute('data-theme', this.theme);
             localStorage.setItem('theme', this.theme);
-        }
+        },
+      signalLanguageSwitch() {
+          this.$emit('languageSwitch')
+      }
     }
 }
 </script>

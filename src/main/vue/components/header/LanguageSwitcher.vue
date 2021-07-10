@@ -40,6 +40,7 @@ export default {
                     params: {lang: lang}
                 })
             }
+          this.$emit('languageSwitch')
         }
     }
 }

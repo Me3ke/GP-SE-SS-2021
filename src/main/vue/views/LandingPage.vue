@@ -1,7 +1,7 @@
 <template>
     <div class="background" style="background-color: var(--whitesmoke); height: 100vh; overflow: hidden">
         <div class=img-wrap>
-            <LandingPageHeader></LandingPageHeader>
+            <LandingPageHeader @languageSwitch="switchLanguage"></LandingPageHeader>
             <img v-if="theme === '' " :src="elsaLight" alt="logo" class="header-image"/>
             <img v-else :src="elsaDark" alt="logo" class="header-image"/>
         </div>
@@ -49,115 +49,211 @@ import LandingPageHeader from "@/main/vue/components/header/LandingPageHeader";
 import {mapGetters} from "vuex";
 
 export default {
-    name: "LandingPage",
-    components: {LandingPageHeader, Footer},
-    methods: {
-        routeToLogin() {
-            this.$router.push('/' + this.$i18n.locale + '/login')
-        },
-        routeToRegister() {
-            this.$router.push('/' + this.$i18n.locale + '/register')
-        }
+  name: "LandingPage",
+  components: {LandingPageHeader, Footer},
+  created() {
+    this.switchLanguage()
+  },
+  methods: {
+    routeToLogin() {
+      this.$router.push('/' + this.$i18n.locale + '/login')
     },
-    data: function () {
-        return {
-            elsaLight: require('../assets/logos/ELSA_big.svg'),
-            elsaDark: require('../assets/logos/ELSA_big_darkmode.svg'),
-            paragraphs: [
-                {
-                    id: 0,
-                    type: 0,
-                    content: "Das ist ELSA"
-                },
-                {
-                    id: 1,
-                    type: 1,
-                    content:
-                        "Laden Sie Ihre Dokumente hoch. Tragen Sie beliebige Personen zum Gegenlesen ein und bennenen Sie Ihre" +
-                        " Vertragspartner. ELSA wird sie Informieren." +
-                        "Legen Sie fest in welcher Reihenfolge Ihre Vertragspartner ein Dokument signieren sollen. " +
-                        "ELSA kümmert sich um die Einhaltung."
-                },
-                {
-                    id: 2,
-                    type: 1,
-                    content:
-                        "Ihnen sind Unstimmigkeiten in einem Ihrer Dokument aufgefallen? " +
-                        "Kein Problem - Laden Sie einfach eine neue Version hoch. " +
-                        "ELSA wird alle Beteiligten informieren - auch die schon erfolgten Signaturen wird ELSA für Sie erneut anfordern."
-                },
-                {
-                    id: 3,
-                    type: 1,
-                    content:
-                        "Erhalten Sie Benachrichtigungen direkt hier bei ELSA, oder per E-Mail, sobald Sie mit dem Signieren an der Reihe sind."
-                },
-                {
-                    id: 4,
-                    type: 1,
-                    content:
-                        "Hinterlassen Sie Kommentare, um etwaige Unstimmigkeiten aufzudecken und Eigentümer zu informieren."
-                },
-                {
-                    id: 5,
-                    type: 1,
-                    content:
-                        "Fordern Sie ein Protokoll an, um alle Informationen zu einem Dokument festzuhalten.\n" +
-                        "Ganz Bequem mit einem Klick."
-                },
-                {
-                    id: 6,
-                    type: 1,
-                    content:
-                        "ELSA - Einfach. Schnell. Sicher."
-                },
-                {
-                    id: 7,
-                    type: 1,
-                    content:
-                        "\"Digitales Signieren für alle.\""
-                },
-                {
-                    id: 8,
-                    type: 0,
-                    content: "Wie funktioniert das digitale Unterschreiben mit ELSA?"
-                },
-                {
-                    id: 9,
-                    type: 1,
-                    content:
-                        "Um die Sicherheit einer tatsächlichen Unterschrift zu gewährleisten, wird für die Unterschriften mit ELSA" +
-                        " das Public-Key-Verfahren genutzt." +
-                        "Im Detail bedeutet das, dass für jedes Dokument, nachdem es hochgeladen wurde, ein bestimmter Wert festgelegt " +
-                        "wird. Dieser wird durch eine sehr lange Zeichenkette dargestellt, den sogenannten Hash-Wert."
-                },
-                {
-                    id: 10,
-                    type: 1,
-                    content:
-                        "Dadurch wird jedes Dokument eindeutig repräsentiert. Wenn Samuel Ignatory, ein Nutzer von ELSA, eine Unterschrift" +
-                        " zu einem Dokument tätigen möchte, wird für seine Unterschrift der Hash-Wert verschlüsselt. Die Verschlüsselung wird" +
-                        " mit einen privaten Schlüssel, den nur Samuel kennt, durchgeführt. Da der Hash-Wert sich eindeutig auf das Dokument" +
-                        " bezieht und auch der Schlüssel der zur Verschlüsselung genutzt wurde nur Samuel bekannt ist, kann die Unterschrift," +
-                        " die durch den verschlüsselten " +
-                        "Hash-Wert dargestellt wird, nur schwer gefälscht werden."
-                },
-                {
-                    id: 11,
-                    type: 1,
-                    content: "Damit niemand seine Unterschrift fälschen kann, wird von ELSA ein sogenannter Public-Key verlangt;" +
-                        " Ein Schlüssel, der genau das Entschlüsseln kann, was mit dem privaten Schlüssel von Samuel verschlüsselt" +
-                        " wurde. Dank all dieser Faktoren folgen Unterschriften hier bei ELSA einem sicheren Standard und Samuel kann" +
-                        " beruhigt seine Geschäfte auch digital abschließen."
-                },
-            ]
-        }
+    routeToRegister() {
+      this.$router.push('/' + this.$i18n.locale + '/register')
     },
-    computed: {
-        ...mapGetters({
-            theme: 'theme/getTheme'
-        })
+    switchLanguage() {
+      if (this.$i18n.locale === 'de') {
+        this.paragraphs = [
+          {
+            id: 0,
+            type: 0,
+            content: "Das ist ELSA"
+          },
+          {
+            id: 1,
+            type: 1,
+            content:
+                "Laden Sie Ihre Dokumente hoch. Tragen Sie beliebige Personen zum Gegenlesen ein und bennenen Sie Ihre" +
+                " Vertragspartner. ELSA wird sie Informieren." +
+                "Legen Sie fest in welcher Reihenfolge Ihre Vertragspartner ein Dokument signieren sollen. " +
+                "ELSA kümmert sich um die Einhaltung."
+          },
+          {
+            id: 2,
+            type: 1,
+            content:
+                "Ihnen sind Unstimmigkeiten in einem Ihrer Dokument aufgefallen? " +
+                "Kein Problem - Laden Sie einfach eine neue Version hoch. " +
+                "ELSA wird alle Beteiligten informieren - auch die schon erfolgten Signaturen wird ELSA für Sie erneut anfordern."
+          },
+          {
+            id: 3,
+            type: 1,
+            content:
+                "Erhalten Sie Benachrichtigungen direkt hier bei ELSA, oder per E-Mail, sobald Sie mit dem Signieren an der Reihe sind."
+          },
+          {
+            id: 4,
+            type: 1,
+            content:
+                "Hinterlassen Sie Kommentare, um etwaige Unstimmigkeiten aufzudecken und Eigentümer zu informieren."
+          },
+          {
+            id: 5,
+            type: 1,
+            content:
+                "Fordern Sie ein Protokoll an, um alle Informationen zu einem Dokument festzuhalten.\n" +
+                "Ganz Bequem mit einem Klick."
+          },
+          {
+            id: 6,
+            type: 1,
+            content:
+                "ELSA - Einfach. Schnell. Sicher."
+          },
+          {
+            id: 7,
+            type: 1,
+            content:
+                "\"Digitales Signieren für alle.\""
+          },
+          {
+            id: 8,
+            type: 0,
+            content: "Wie funktioniert das digitale Unterschreiben mit ELSA?"
+          },
+          {
+            id: 9,
+            type: 1,
+            content:
+                "Um die Sicherheit einer tatsächlichen Unterschrift zu gewährleisten, wird für die Unterschriften mit ELSA" +
+                " das Public-Key-Verfahren genutzt." +
+                "Im Detail bedeutet das, dass für jedes Dokument, nachdem es hochgeladen wurde, ein bestimmter Wert festgelegt " +
+                "wird. Dieser wird durch eine sehr lange Zeichenkette dargestellt, den sogenannten Hash-Wert."
+          },
+          {
+            id: 10,
+            type: 1,
+            content:
+                "Dadurch wird jedes Dokument eindeutig repräsentiert. Wenn Samuel Ignatory, ein Nutzer von ELSA, eine Unterschrift" +
+                " zu einem Dokument tätigen möchte, wird für seine Unterschrift der Hash-Wert verschlüsselt. Die Verschlüsselung wird" +
+                " mit einen privaten Schlüssel, den nur Samuel kennt, durchgeführt. Da der Hash-Wert sich eindeutig auf das Dokument" +
+                " bezieht und auch der Schlüssel der zur Verschlüsselung genutzt wurde nur Samuel bekannt ist, kann die Unterschrift," +
+                " die durch den verschlüsselten " +
+                "Hash-Wert dargestellt wird, nur schwer gefälscht werden."
+          },
+          {
+            id: 11,
+            type: 1,
+            content: "Damit niemand seine Unterschrift fälschen kann, wird von ELSA ein sogenannter Public-Key verlangt;" +
+                " Ein Schlüssel, der genau das Entschlüsseln kann, was mit dem privaten Schlüssel von Samuel verschlüsselt" +
+                " wurde. Dank all dieser Faktoren folgen Unterschriften hier bei ELSA einem sicheren Standard und Samuel kann" +
+                " beruhigt seine Geschäfte auch digital abschließen."
+          },
+        ]
+      } else {
+        this.paragraphs = [
+          {
+            id: 0,
+            type: 0,
+            content: "This is ELSA"
+          },
+          {
+            id: 1,
+            type: 1,
+            content:
+                "Upload your documents, roster any person to counter-check and designate your affiliates. " +
+                "ELSA will inform you. " +
+                "Set the order which determines whose turn it is to sign; " +
+                "ELSA will surely take care of the adherence."
+          },
+          {
+            id: 2,
+            type: 1,
+            content:
+                "Noticed any issues in your documents? " +
+                "Do not worry; Just upload a new version. " +
+                "ELSA does inform every associate - even the received signatures will be requested anew by ELSA."
+          },
+          {
+            id: 3,
+            type: 1,
+            content:
+                "Receive your notifications, via ELSA or by email, as soon as it is your turn to sign."
+          },
+          {
+            id: 4,
+            type: 1,
+            content:
+                "Post comments to detect any discrepancies and notify the owner."
+          },
+          {
+            id: 5,
+            type: 1,
+            content:
+                "Request the protocol to access the information about a document.\n" +
+                "With just a simple click."
+          },
+          {
+            id: 6,
+            type: 1,
+            content:
+                "ELSA - Simple. Swift. Secure."
+          },
+          {
+            id: 7,
+            type: 1,
+            content:
+                "\"Digital signing for everyone.\""
+          },
+          {
+            id: 8,
+            type: 0,
+            content: "How does the digital signing with ELSA work?"
+          },
+          {
+            id: 9,
+            type: 1,
+            content:
+                "To guarantee the security of an actual signature for its digital counterpart, " +
+                "ELSA makes uses of the so called RSA-Keypair technique. "+
+                "In detail this means the following: Every document receives a unique value after the upload, a so called hash-value. " +
+                "This hash value is represented by a long character string."
+          },
+          {
+            id: 10,
+            type: 1,
+            content:
+                "This procedure guarantees the uniqueness of every document. If Samuel Ignatory, a fictional user of ELSA, wants " +
+                "to sign any document, then the hash value of his digital signature will be encrypted. The encryption is performed " +
+                "with a private key which is only known by Samuel. Since the hash value of the document is uniquely bound to the document " +
+                "and the key used to encrypt is only known by Samuel, the digital signature can hardly be replicated by an outsider."
+          },
+          {
+            id: 11,
+            type: 1,
+            content: "To ensure the correct kesy was used for the enryption, ELSA demands a so called public-key before the signing process. " +
+                "This key is the only one which can be used to decrypt the signature of Samuel. " +
+                "Thanks to those safety procedures ELSA can provide a high security standard and Samuel " +
+                "is able to do his signing business in the digital world."
+          },
+        ]
+      }
     }
+  },
+  data: function () {
+    return {
+      elsaLight: require('../assets/logos/ELSA_big.svg'),
+      elsaDark: require('../assets/logos/ELSA_big_darkmode.svg'),
+      paragraphs: null
+    }
+  },
+  computed: {
+    ...mapGetters({
+      theme: 'theme/getTheme'
+    }),
+  }
+
 }
 </script>
 
