@@ -128,15 +128,15 @@ export default {
                 for(i = 0; i < this.files.length; i++) {
                     await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.files[i], "settings": this.settings});
                 }
-                close();
+                this.close();
             } else {
                 this.uploadingDocument = true;
                 await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnvelope.name})
                 let i;
                 for(i = 0; i < this.files.length; i++) {
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings});
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.files[i], "settings": this.settings});
                 }
-                close();
+                this.close();
             }
         }
     },

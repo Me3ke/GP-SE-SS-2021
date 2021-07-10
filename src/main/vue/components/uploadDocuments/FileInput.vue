@@ -5,7 +5,6 @@
             {{$t('UploadDoc.error.noDocument')}}
         </b-alert>
 
-        <!-- TODO: Make placeholder dependend on lacale -->
         <div v-for="fileInput in fileInputs" :key="fileInput.index">
             <b-row v-if="fileInput.index > 0">
                 <b-col cols="1" >
@@ -18,7 +17,6 @@
                                  v-model="fileInput.file"
                                  :state="Boolean(fileInput.file)"
                                  v-bind:placeholder="$t('UploadDoc.chooseFile')"
-                                 drop-placeholder="Drop file here..."
                     ></b-form-file>
                 </b-col>
             </b-row>
@@ -86,7 +84,7 @@ export default {
             this.$emit('close')
         },
         async next() {
-            if(this.fileInputs === [null]) {
+            if(this.fileInputs[0].file === null) {
                 this.error.noDocument = true;
             } else {
                 this.error.noDocument = false;

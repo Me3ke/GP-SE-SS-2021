@@ -343,8 +343,10 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
-        "areYouSure": "Please check the document you want to upload and it's settings:",
+        "areYouSure": "Please check the document you want to upload and its settings:",
+        "areYouSureMult": "Please check the documents you want to upload and their settings:",
         "document": "Document",
+        "documents": "Documents",
         "envelope": "Envelope",
         "error": {
             "noDocument": "Please choose a document to upload.",
