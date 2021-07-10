@@ -24,7 +24,7 @@
                                 </div>
                                 <!-- Page 1 Choose Document -->
                                 <div v-if="page === 1">
-                                    <FileInput @updateFile="updateFile" @close="show = false" @nextPage="page = page + 1"></FileInput>
+                                    <FileInput @updateFiles="updateFiles" @close="show = false" @nextPage="page = page + 1"></FileInput>
                                 </div>
 
                                 <!-- Page 2 New or old envelope? -->
@@ -41,7 +41,7 @@
                                 <div v-if="page === 4">
                                     <div class="modal-body">
                                         <div v-if="!this.uploadingDocument">
-                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope" :file="file"></SettingsPreview>
+                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope" :files="files"></SettingsPreview>
                                         </div>
 
                                         <div v-if="this.uploadingDocument">
@@ -99,17 +99,13 @@ export default {
                 orderRelevant: true
                 // TODO: processStart: Boolean
             },
-            file: {
-                data: null,
-                type: null,
-                title: null
-            },
+            files: [],
             uploadingDocument: false
         };
     },
     methods: {
-        updateFile: function (file) {
-            this.file = file;
+        updateFiles: function (files) {
+            this.files = files;
         },
         updateEnvelope: function (envelope) {
             this.selectedEnvelope = envelope;
@@ -119,7 +115,7 @@ export default {
         },
         close() {
             this.page = 1;
-            this.file = {data: null, type: null, title: null};
+            this.files = [];
             this.selectedEnv = {old: null, new: null};
             this.settings = {signatories: [], endDate: null, orderRelevant: null};
             this.show = false;
@@ -128,11 +124,19 @@ export default {
         async upload() {
             if (!(this.selectedEnvelope.id === null)) {
                 this.uploadingDocument = true;
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.file, "settings": this.settings}).then(() => this.close());
+                let i;
+                for(i = 0; i < this.files.length; i++) {
+                    await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.files[i], "settings": this.settings});
+                }
+                close();
             } else {
                 this.uploadingDocument = true;
                 await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnvelope.name})
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings}).then(() => this.close());
+                let i;
+                for(i = 0; i < this.files.length; i++) {
+                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.file, "settings": this.settings});
+                }
+                close();
             }
         }
     },

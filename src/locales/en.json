@@ -361,6 +361,7 @@
         "sendReminderEMails": "Send reminder emails",
         "startProcess": "Start process",
         "startProcessLater": "Start process later",
+        "addMoreFiles": "Add another document",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",

@@ -363,6 +363,7 @@
         "sendReminderEMails": "Erinnerungs-Emails verschicken",
         "startProcess": "Prozess starten",
         "startProcessLater": "Prozess später starten",
+        "addMoreFiles": "Ein weiters Dokument hinzufügen",
         "UpdateDocument": {
             "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
             "update1": "aktualisieren",
