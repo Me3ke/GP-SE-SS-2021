@@ -6,7 +6,7 @@ package gpse.example.web.corporatedesign;
  */
 public class ImpressumRequestBody {
 
-    String impressum;
+    private String impressum;
 
     public String getImpressum() {
         return impressum;

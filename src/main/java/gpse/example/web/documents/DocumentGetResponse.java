@@ -5,7 +5,6 @@ import gpse.example.domain.signature.ProtoSignatory;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
-import gpse.example.util.email.EmailTemplate;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 
 import java.util.ArrayList;
