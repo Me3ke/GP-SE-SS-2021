@@ -20,18 +20,16 @@
                                     <div>
                                         {{$t('Sort.first')}}
                                         <select class="form-control" v-model="sortFirst">
-                                            <option v-for="option in options" :key="option.value" :value="option.value">
-                                                <b-icon :icon="option.icon"></b-icon>
-                                                {{ $t('Sort.' + option.value) }}
+                                            <option v-for="option in options" :key="option" :value="option">
+                                                {{ $t('Sort.' + option) }}
                                             </option>
                                         </select>
                                     </div>
                                     <div style="margin-top: 1em">
                                         {{$t('Sort.second')}}
                                         <select class="form-control" v-model="sortSecond">
-                                            <option v-for="option in secondOptions()" :key="option.value" :value="option.value">
-                                                <b-icon :icon="option.icon"></b-icon>
-                                                {{ $t('Sort.' + option.value) }}
+                                            <option v-for="option in secondOptions()" :key="option" :value="option">
+                                                {{ $t('Sort.' + option) }}
                                             </option>
                                         </select>
                                     </div>
@@ -77,44 +75,7 @@ export default {
             show: false,
             sortFirst: this.first,
             sortSecond: this.second,
-            options: [
-                {
-                    value: "creation",
-                    icon:"",
-                },
-                {
-                    value: "creation-rev",
-                    icon:"",
-                },
-                {
-                    value: "end",
-                    icon:"",
-                },
-                {
-                    value: "name",
-                    icon:"",
-                },
-                {
-                    value: "name-rev",
-                    icon:"",
-                },
-                {
-                    value: "state",
-                    icon:"",
-                },
-                {
-                    value: "state-rev",
-                    icon:"",
-                },
-                {
-                    value: "role",
-                    icon:"",
-                },
-                {
-                    value: "role-rev",
-                    icon:"",
-                }
-            ]
+            options: ["creation","creation-rev","end","name","name-rev","state","state-rev","role","role-rev"]
         }
     },
     methods: {
@@ -123,7 +84,7 @@ export default {
             let i;
             for(i = 0; i < this.options.length; i++) {
                 let option = this.options[i];
-                if(!(this.sortFirst.includes(option.value)) && !(option.value.includes(this.sortFirst))) {
+                if(!(this.sortFirst.includes(option)) && !(option.includes(this.sortFirst))) {
                     options.push(option);
                 }
             }
