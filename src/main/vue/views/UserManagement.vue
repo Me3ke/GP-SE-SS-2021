@@ -163,7 +163,7 @@
 import {mapGetters} from "vuex";
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
-import FilterButton from "@/main/vue/components/FilterButton";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
 import UserBox from "@/main/vue/components/userManagement/UserBox";
 import _ from "lodash";
 

@@ -548,8 +548,8 @@ public class DocumentController {
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
             for (final SignatorySetting signatorySetting : signatorySettings) {
-                signatory = new Signatory(signatorySetting.getUsername(),
-                    signatorySetting.getSignatureType());
+                signatory = new Signatory(signatorySetting.getEmail(),
+                    signatorySetting.getSignatureTypeAsEnum());
                 signatory.setStatus(signatorySetting.isStatus());
                 signatory.setReminder(signatorySetting.getReminderTiming());
                 signatory.setSignedOn(signatorySetting.convertSignedOn());

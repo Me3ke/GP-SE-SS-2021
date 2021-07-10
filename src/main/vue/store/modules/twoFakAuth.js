@@ -1,5 +1,4 @@
 import twoFakAuthAPI from "@/main/vue/api/twoFakAuthAPI";
-import _ from "lodash";
 
 export const namespaced = true
 
@@ -10,7 +9,7 @@ export const state = {
     errorGetQrCode: {},
     correctInput: Boolean,
     errorCorrectInput: {},
-    lastAuth: Date,
+    lastAuth: 0,
     logoutCounter: -1
 }
 
@@ -41,6 +40,10 @@ export const mutations = {
 
     SET_LOGOUT_COUNTER(state, time) {
         state.logoutCounter = time
+    },
+
+    SET_LAST_AUTH(state) {
+        state.lastAuth = new Date()
     }
 }
 
@@ -79,6 +82,10 @@ export const actions = {
     // sets logout counter
     setLogoutCounter({commit}, time) {
         commit('SET_LOGOUT_COUNTER', time)
+    },
+
+    setLastAuth({commit}) {
+        commit('SET_LAST_AUTH')
     }
 }
 
@@ -104,9 +111,7 @@ export const getters = {
 
     // gives back if new auth is required
     getAuthMust: (state) => {
-        if (_.isEmpty(state.lastAuth)) {
-            // setting current time as reference
-            state.lastAuth = new Date()
+        if (state.lastAuth === 0) {
             // auth is required
             return true
         } else {
@@ -114,13 +119,7 @@ export const getters = {
             // milliseconds
             let diff = Math.abs(Date.parse(state.lastAuth) - now)
 
-            if (diff > 300000) {
-                state.lastAuth = new Date()
-                // auth is required
-                return true
-            } else {
-                return false
-            }
+            return diff > 300000;
         }
     },
 

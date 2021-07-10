@@ -23,11 +23,11 @@ export const mutations = {
 export const actions = {
     // makes axios call to get envelopes, either sets envelopes (success) or error (error)
     fetchEnvelopes({commit}) {
-        envelopeAPI.getEnvelopes().then(response => {
-            commit('SET_ENVELOPES', response.data)
-            commit('SET_ERROR_GET_ENVELOPES', {})
-        }).catch(error => {
-            commit('SET_ERROR_GET_ENVELOPES', error)
+        envelopeAPI.getEnvelopes().then(async response => {
+            await commit('SET_ENVELOPES', response.data)
+            await commit('SET_ERROR_GET_ENVELOPES', {})
+        }).catch(async error => {
+            await commit('SET_ERROR_GET_ENVELOPES', error)
         })
     }
 }

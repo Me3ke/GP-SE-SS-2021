@@ -17,25 +17,26 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton
-                    @click.native="$router.push({name: 'settings', params: {envId: envelope.id}})"></settingsButton>
+                <settingsButton v-if="envelope.owner.email === user.email" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/envSettingsButton";
-import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
-import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
+import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
+import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
 import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
-
 export default {
     name: "EnvelopeCard",
     components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
     props: {
         envelope: Object
+    },
+    created() {
+        this.$store.dispatch('fetchUser')
     },
     data() {
         return {
@@ -48,8 +49,12 @@ export default {
     computed: {
         ...mapGetters({
             envelopeProgress: 'document/getDocumentProgressArrayByEnvelope',
+            documentInfo: 'document/getDocumentInfo',
+
             auth: 'twoFakAuth/getAuthMust',
-            counter: 'twoFakAuth/getLogoutCounter'
+            counter: 'twoFakAuth/getLogoutCounter',
+            setUp: 'twoFakAuth/getHasSetUp',
+            user: 'getUser'
         })
     },
 
@@ -61,8 +66,13 @@ export default {
     async mounted() {
         // gives back if advanced signature is needed for at least on document ind envelope (if false -> simple signature is needed)
         for (let i = 0; i < this.envelope.documents.length; i++) {
-            if (this.envelope.documents[i].signatureType === 'ADVANCED_SIGNATURE') {
+            await this.$store.dispatch('document/fetchDocumentInfo', {
+                envId: this.envelope.id,
+                docId: this.envelope.documents[i].id,
+            })
+            if (this.documentInfo.signatureType === 'ADVANCED_SIGNATURE') {
                 this.advanced = true
+                break
             }
         }
 
@@ -80,8 +90,16 @@ export default {
 
         // checks if env needs advanced signature, if so 2FacAuth has to be done; otherwise go to env directly
         async checkEnv() {
+            // checking if set-up is there
+            await this.$store.dispatch('twoFakAuth/fetchHasSetUp')
+            let auth
+            if (this.setUp) {
+                auth = this.auth
+            } else {
+                auth = true
+            }
             // checking signatureType and if auth is necessary at the moment
-            if (this.advanced && this.auth) {
+            if (this.advanced && auth) {
                 this.showAuth = true
             } else {
                 this.goToEnv()
@@ -95,6 +113,10 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
+        },
+        settings() {
+            let envelopeId = this.envelope.id;
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelope.id}}));
         }
     }
 }

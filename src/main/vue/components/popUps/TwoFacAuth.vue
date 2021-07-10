@@ -172,7 +172,6 @@ export default {
 
         // checks if logout has to be done
         if (this.counter !== -1) {
-            console.log(this.counter)
             this.logoutCounter = this.counter
             this.startCountDown = true
             this.page = 2
@@ -209,9 +208,10 @@ export default {
                     }
                     this.showTries = true
                 } else {
-                    // emits event to close pop-up
+                    // emits event to close pop-up, resets everything, sets new time for last auth
                     this.showTries = false
                     this.showAlertCode = false
+                    await this.$store.dispatch('twoFakAuth/setLastAuth')
                     this.$emit('twoFacTrigger')
                 }
             } else {
