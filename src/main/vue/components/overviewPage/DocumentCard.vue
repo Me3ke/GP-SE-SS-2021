@@ -17,7 +17,7 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="document.owner.email === user.email" @click.native="$router.push({name: 'settings', params: {envId: envelopeId}})"></settingsButton>
+                <settingsButton v-if="document.owner.email === user.email" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
@@ -85,6 +85,10 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
+        },
+        settings() {
+            let envelopeId = this.envelopeId;
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelopeId}}));
         }
     },
 

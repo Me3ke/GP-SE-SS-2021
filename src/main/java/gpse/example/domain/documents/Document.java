@@ -440,7 +440,8 @@ public class Document {
     }
 
     public void setSignatories(final List<Signatory> signatories) {
-        this.signatories = signatories;
+        this.signatories.clear();
+        this.signatories.addAll(signatories);
     }
 
     public Document getPreviousVersion() {

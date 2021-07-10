@@ -24,7 +24,7 @@ export const actions = {
     fetchEnvelopeSettings({commit}, {envId}) {
         return documentSettingsAPI.getEnvelopeSettings(envId).then(async response => {
             await commit('SET_ENVELOPE_SETTINGS', response.data.documentSettings)
-            commit('SET_ERROR_ENVELOPE_SETTINGS', {})
+            await commit('SET_ERROR_ENVELOPE_SETTINGS', {})
         }).catch(error => {
             console.log(error)
             commit('SET_ERROR_ENVELOPE_SETTINGS', error)

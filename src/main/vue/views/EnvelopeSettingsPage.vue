@@ -127,9 +127,9 @@ export default {
             showWarning: false
         }
     },
-    mounted() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId})
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId})
     },
     computed: {
         ...mapGetters({
