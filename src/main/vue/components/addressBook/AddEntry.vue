@@ -10,6 +10,9 @@
             <div style="text-align: center">
                 <span> {{ $t('AddressBook.serverErrorTwo') }}  </span>
             </div>
+            <div style="text-align: center">
+                <span> Status Code : {{ errorSaveStatus }}</span>
+            </div>
         </b-alert>
 
         <b-alert :show="showMailMissing" dismissible
@@ -44,7 +47,7 @@
                                     @click="resetLastname()" id="lastname" style="text-align: center"></b-icon>
                         </div>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col cols="3">
                         <span style="opacity: 70%">{{ $t('AddressBook.mail') }}</span>
                         <b-icon icon="asterisk" class="my-icon" scale="0.5"></b-icon>
 
@@ -71,7 +74,7 @@
                                     @click="resetNote()" id="note" style="text-align: center"></b-icon>
                         </div>
                     </b-col>
-                    <b-col cols="1" style="text-align: right">
+                    <b-col cols="2" style="text-align: right">
                         <b-icon v-if="settings.favorite" icon="bookmark-star-fill" class="my-icon clickable"
                                 scale="1.25"
                                 @click="setFavorite()"></b-icon>
@@ -105,6 +108,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import _ from "lodash";
 
 export default {
     name: "AddEntry",
@@ -119,7 +123,6 @@ export default {
             },
             showMailMissing: false,
             showSaveError: false,
-            showSave: false,
             errorSaveStatus: -1
         }
     },
@@ -129,6 +132,20 @@ export default {
         },
         // adds entry
         async addEntry() {
+            if(this.settings.email === ''){
+                this.showMailMissing = true
+                return
+            }
+
+            await this.$store.dispatch('addressBook/addEntry', this.settings)
+            if (_.isEmpty(this.hasError) && this.resAdd.status === 200) {
+                this.showSaveError = false
+                await this.$store.dispatch('addressBook/fetchBook')
+                this.closeEntry()
+            } else {
+                this.showSaveError = true
+                this.errorSaveStatus = this.resAdd.status
+            }
         },
         resetFirstname() {
             this.settings.firstname = ''
@@ -180,9 +197,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            userById: 'getUserByID',
             hasError: 'addressBook/getHasError',
-            resChange: 'addressBook/getResChangeEntry'
+            resAdd: 'addressBook/getResPutEntry'
         })
     }
 }
