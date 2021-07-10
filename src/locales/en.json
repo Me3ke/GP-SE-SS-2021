@@ -641,6 +641,8 @@
         "more": "Show more",
         "less": "Show less",
         "name": "Name",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
         "mail": "E-mail-address",
         "address": "Address",
         "bday": "Birthday",
@@ -648,6 +650,7 @@
         "noNote": "No note present",
         "number": "Phone number",
         "save": "Save",
-        "serverErrorTwo": "Your changes could not be processed. Try again later."
+        "serverErrorTwo": "Your changes could not be processed. Try again later.",
+        "mailMissing" : "You have to input an e-mail-address."
     }
 }

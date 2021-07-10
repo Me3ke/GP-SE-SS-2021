@@ -118,7 +118,7 @@
         <!-- Adding new entry -->
         <div v-else class="container-fluid">
             <div class="user-container">
-                <AddEntry></AddEntry>
+                <AddEntry @closeEntry="newEntry = false"></AddEntry>
             </div>
         </div>
 

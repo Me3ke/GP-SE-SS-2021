@@ -643,6 +643,8 @@
         "more": "Mehr anzeigen",
         "less": "Weniger anzeigen",
         "name": "Vor- und Nachname",
+        "firstname": "Vorname",
+        "lastname": "Nachname",
         "mail": "E-Mail-Adresse",
         "address": "Anschrift",
         "bday": "Geburtstag",
@@ -650,6 +652,7 @@
         "noNote": "Keine Notiz vorhanden",
         "number": "Telefonnummer",
         "save": "Speichern",
-        "serverErrorTwo": "Ihre Änderungen konnten nicht übernommen werden. Versuchen Sie es später erneut."
+        "serverErrorTwo": "Ihre Änderungen konnten nicht übernommen werden. Versuchen Sie es später erneut.",
+        "mailMissing" : "Sie müssen eine E-Mail-Adresse eingeben."
     }
 }
