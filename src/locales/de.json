@@ -636,7 +636,7 @@
     },
     "AddressBook": {
         "title": "Adressbuch",
-        "filter" : {
+        "filter": {
             "favorite": "Favorit"
         },
         "new": "Neuer Eintrag",
@@ -648,6 +648,7 @@
         "bday": "Geburtstag",
         "note": "Notiz",
         "noNote": "Keine Notiz vorhanden",
-        "number": "Telefonnummer"
+        "number": "Telefonnummer",
+        "save": "Speichern"
     }
 }

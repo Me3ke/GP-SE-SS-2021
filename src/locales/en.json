@@ -620,21 +620,21 @@
         "serverErrorThree": "The comments could not be loaded."
     },
     "ResetPasswordPage": {
-      "success" : "Success! Login now!",
-      "fail" : "Failure! Please try to reset again!",
-      "send" : "send"
+        "success": "Success! Login now!",
+        "fail": "Failure! Please try to reset again!",
+        "send": "send"
     },
     "Password": {
-      "change": "Change Password"
+        "change": "Change Password"
     },
     "HistoryPage": {
         "title": "History",
         "abc": "Title A-Z",
-        "cba" : "Title Z-A"
+        "cba": "Title Z-A"
     },
     "AddressBook": {
         "title": "Address book",
-        "filter" : {
+        "filter": {
             "favorite": "Favorite"
         },
         "new": "New Entry",
@@ -646,6 +646,7 @@
         "bday": "Birthday",
         "note": "Note",
         "noNote": "No note present",
-        "number": "Phone number"
+        "number": "Phone number",
+        "save": "Save"
     }
 }

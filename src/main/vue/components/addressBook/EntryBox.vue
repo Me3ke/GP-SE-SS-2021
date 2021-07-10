@@ -47,11 +47,45 @@
                     <b-row style="margin-bottom: 1rem">
                         <b-col cols="5">
                             <NameBubble :name="entry.firstname + ' ' + entry.lastname" class="bubble"></NameBubble>
-                            <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
-                            <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
-                                    @click="changeName()"></b-icon>
+                            <template v-if="!showEditName">
+                                <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                                <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
+                                        @click="changeName()"></b-icon>
 
-                            <span style="margin-left: 1em">{{ entry.firstname }}  {{ entry.lastname }}</span>
+                                <span style="margin-left: 1em">{{ entry.firstname }}  {{ entry.lastname }}</span>
+                            </template>
+
+                            <!-- Editing name -->
+                            <template v-else style="display: flex">
+                                <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                                <b-icon icon="pencil-fill" class="my-icon clickable" style="opacity: 70%" scale="0.75"
+                                        @click="changeName()"></b-icon>
+
+                                <!-- Firstname-->
+                                <div style="display: flex">
+                                    <b-form-input style="margin-left: 1em" v-model="settings.firstname"
+                                                  :placeholder="entry.firstname"
+                                                  class="change-entry"></b-form-input>
+                                    <b-icon icon="arrow-clockwise" class="my-icon clickable"
+                                            @click="resetFirstname()" id="firstname"></b-icon>
+                                </div>
+
+                                <!-- Lastname-->
+                                <div style="display: flex">
+                                    <b-form-input style="margin-left: 1em" v-model="settings.lastname"
+                                                  :placeholder="entry.lastname"
+                                                  class="change-entry"></b-form-input>
+                                    <b-icon icon="arrow-clockwise" class="my-icon clickable"
+                                            @click="resetLastname()" id="lastname" style="text-align: center"></b-icon>
+                                </div>
+
+                                <span class="clickable save-changes" @click="saveSettingsChange()"
+                                >{{
+                                        $t('AddressBook.save')
+                                    }}</span>
+
+                            </template>
+
                         </b-col>
                         <b-col cols="5">
                             <span style="opacity: 70%">{{ $t('AddressBook.mail') }}</span>
@@ -98,11 +132,36 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <span style="opacity: 70%;  margin-left: 3.5em">{{ $t('AddressBook.note') }}</span>
-                            <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
-                                    @click="changeNote()"></b-icon>
-                            <span v-if="entry.note !== null" style="margin-left: 1em">{{ entry.note }}</span>
-                            <span v-else style="margin-left: 1em">{{ $t('AddressBook.noNote') }}</span>
+                            <template v-if="!showEditNote">
+                                <span style="opacity: 70%;  margin-left: 3.5em">{{ $t('AddressBook.note') }}</span>
+                                <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
+                                        @click="changeNote()"></b-icon>
+                                <span v-if="entry.note !== null" style="margin-left: 1em">{{ entry.note }}</span>
+                                <span v-else style="margin-left: 1em">{{ $t('AddressBook.noNote') }}</span>
+                            </template>
+
+                            <!-- Edit Note -->
+                            <template v-else>
+                                <span style="opacity: 70%;  margin-left: 3.5em">{{ $t('AddressBook.note') }}</span>
+                                <b-icon icon="pencil-fill" class="my-icon clickable" style="opacity: 70%" scale="0.75"
+                                        @click="changeNote()"></b-icon>
+                                <div style="display: flex">
+                                    <b-form-textarea
+                                        v-model="settings.note"
+                                        :placeholder="entry.note === null ? '...' : entry.note"
+                                        rows="1"
+                                        class="change-entry"
+                                        style="margin-left: 1em; height: auto">
+                                    </b-form-textarea>
+                                    <b-icon icon="arrow-clockwise" class="my-icon clickable"
+                                            @click="resetNote()" id="note" style="text-align: center"></b-icon>
+                                </div>
+
+                                <span class="clickable save-changes" @click="saveSettingsChange()"
+                                >{{
+                                        $t('AddressBook.save')
+                                    }}</span>
+                            </template>
                         </b-col>
                     </b-row>
                 </b-container>
@@ -118,7 +177,32 @@
                             <span class="clickable" @click="less()">{{ $t('AddressBook.less') }}</span>
                         </b-col>
                         <b-col cols="2" style="text-align: right">
-                            <b-icon icon="trash" class="my-icon clickable" @click="deleteEntry()"></b-icon>
+                            <b-icon icon="trash" class="my-icon clickable" id="trash-popover2"></b-icon>
+                            <b-popover target="trash-popover2" triggers="click" placement="bottomleft">
+                                <!-- Error Messages -->
+                                <b-alert show="false"
+                                         style="margin-bottom: 1em">
+                                    {{ $t('MessagePage.deleteError') }}
+                                </b-alert>
+
+                                <div style="text-align: center;">
+                                    <span>{{ $t('MessagePage.sureDelete') }}</span>
+                                </div>
+
+
+                                <div style="text-align: center;">
+                                    <button class="elsa-blue-btn white-btn"
+                                            @click="$root.$emit('bv::hide::popover', 'trash-popover2')">
+                                        <span>{{ $t('MessagePage.cancel') }}</span>
+                                    </button>
+
+                                    <button class="elsa-blue-btn dark-elsa-btn" @mouseover="hover = true"
+                                            @mouseleave="hover = false"
+                                            @click="newEntry = true" style="">
+                                        <span>{{ $t('MessagePage.delete') }}</span>
+                                    </button>
+                                </div>
+                            </b-popover>
                         </b-col>
                     </b-row>
                 </b-container>
@@ -144,21 +228,44 @@ export default {
     data() {
         return {
             selected: false,
-            showMore: true
+            showMore: false,
+            showEditName: false,
+            showEditNote: false,
+            settings: {
+                firstname: '',
+                lastname: '',
+                note: '',
+                favorite: Boolean
+            }
         }
     },
     methods: {
         setFavorite() {
-            // TODO: API call to make favorite
+            this.settings.favorite = !this.favorite
         },
         deleteEntry() {
             // TODO: API call to delete
         },
+        saveSettingsChange() {
+            // TODO: API call to change stuff
+        },
         changeName() {
-            // TODO: make possible to edit name
+            this.showEditName = !this.showEditName
+        },
+        resetFirstname() {
+            this.settings.firstname = ''
+            this.resetAnimation('#firstname')
+        },
+        resetLastname() {
+            this.settings.lastname = ''
+            this.resetAnimation('#lastname')
         },
         changeNote() {
-            // TODO: make possible to edit note
+            this.showEditNote = !this.showEditNote
+        },
+        resetNote() {
+            this.settings.note = ''
+            this.resetAnimation('#note')
         },
         async more() {
             await this.$store.dispatch('fetchUserDataById', this.entry.email)
@@ -167,6 +274,34 @@ export default {
         less() {
             this.$store.dispatch('clearUserDataById')
             this.showMore = false
+        },
+        resetAnimation(obj) {
+            // rotate animation
+            document.querySelector(obj).style.transform = "rotate(45deg)";
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(90deg)";
+            }, 50);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(135deg)";
+            }, 100);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(180deg)";
+            }, 150);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(225deg)";
+            }, 200);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(225deg)";
+            }, 250);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(270deg)";
+            }, 300);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(315deg)";
+            }, 350);
+            setTimeout(() => {
+                document.querySelector(obj).style.transform = "rotate(360deg)";
+            }, 400);
         }
     },
     computed: {

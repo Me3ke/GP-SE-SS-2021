@@ -398,26 +398,26 @@ body {
 .popover-body {
     color: var(--dark-grey);
     background-color: var(--popover-back);
-    padding-bottom: 0;
+    padding-bottom: 0.5rem;
 }
 
-.bs-popover-bottom, .bs-popover-auto[x-placement^="bottom"]{
-    margin-top: 0;
+.bs-popover-bottom, .bs-popover-auto[x-placement^="bottom"] {
+    margin-top: 0.5rem;
 }
 
 .popover.b-popover {
     border-color: var(--dark-grey);
 }
 
-.bs-popover-bottom  .arrow {
+.bs-popover-bottom .arrow {
     visibility: hidden;
 }
 
 /* Code Input */
 input.vue-pincode-input {
-    box-shadow:  0 0 3px var(--elsa-blue);
+    box-shadow: 0 0 3px var(--elsa-blue);
 }
 
 input.vue-pincode-input:focus {
-    box-shadow:  0 0 9px var(--elsa-blue);
+    box-shadow: 0 0 9px var(--elsa-blue);
 }
