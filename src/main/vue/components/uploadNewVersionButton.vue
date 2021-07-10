@@ -176,28 +176,10 @@
             <b-container>
 
                 <b-row style="padding-bottom: 1em">
+                    <!---emit email templates with '@saveEmailTemplate' --->
                     <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
                 </b-row>
             </b-container>
-
-
-            <!----<div class="text-right">
-                <button type="button"
-                        class="mt-1 light-btn"
-                        @click="showHideModal('modal-page3' , 'modal-page2-signatories')">
-                     <span class="button-txt">
-                         {{ $t('UploadDoc.back') }}
-                     </span>
-                </button>
-                <button type="button"
-                        class="ml-1 elsa-blue-btn"
-                        @click="showHideModal('modal-page3', 'modal-page4')"
-                >
-                     <span class="button-txt">
-                         {{ $t('UploadDoc.continue') }}
-                     </span>
-                </button>
-            </div>---->
             <div style="padding-bottom: 1em; text-align: right" class="flex-box-2">
 
                 <b-button
@@ -255,12 +237,6 @@
                         {{ $t('UploadDoc.upload') }} <!--UPLOAD -->
                     </span>
                 </button>
-                <!--<b-button
-                    @click="uploadNewFile"
-                    >
-                    {{ $t('UploadDoc.UpdateDocument.update1') }}
-                </b-button>-->
-
             </div>
         </b-modal>
 
