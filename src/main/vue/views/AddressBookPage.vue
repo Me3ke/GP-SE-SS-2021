@@ -152,7 +152,7 @@ export default {
                 favorite: false
             },
 
-            pageLimit: 10,
+            pageLimit: 5,
             page: 1,
 
             // for changing hover color of plus icon on add entry button
@@ -169,11 +169,17 @@ export default {
     },
     async mounted() {
         await this.$store.dispatch('addressBook/fetchBook')
+        await this.$store.dispatch('userManagement/fetchAllUsers')
         this.loaded = true
+    },
+    beforeDestroy() {
+        this.$store.dispatch('userManagement/emptyStore')
+        this.$store.dispatch('addressBook/resetBookState')
+        this.$store.dispatch('clearUserDataById')
     },
     computed: {
         ...mapGetters({
-            book: 'addressBook/getFilteredPagedBook'
+            book: 'addressBook/getFilteredPagedBook',
         })
     }
 }

@@ -156,34 +156,36 @@
                                     @click="setFavorite()"></b-icon>
                         </b-col>
                     </b-row>
-                    <b-row style="margin-bottom: 1rem">
+                    <b-row style="margin-bottom: 1rem" v-if="isRegistered">
                         <b-col cols="5">
                             <div>
                                 <div>
                                     <span style="opacity: 70%; margin-left: 3.5em">{{
                                             $t('AddressBook.address')
                                         }}</span>
-                                    <span style="margin-left: 1em">{{ userById.street }}  {{
-                                            userById.houseNumber
+                                    <span style="margin-left: 1em">{{ userById(entry.email)[0].data.street }}  {{
+                                            userById(entry.email)[0].data.houseNumber
                                         }}</span>
                                 </div>
                                 <div>
-                                    <span style="margin-left: 8.3em">{{ userById.postCode }}  {{
-                                            userById.homeTown
+                                    <span style="margin-left: 8.3em">{{ userById(entry.email)[0].data.postCode }}  {{
+                                            userById(entry.email)[0].data.homeTown
                                         }}</span>
                                 </div>
-                                <span style="margin-left: 8.3em">{{ userById.country }}</span>
+                                <span style="margin-left: 8.3em">{{ userById(entry.email)[0].data.country }}</span>
                             </div>
                         </b-col>
                         <b-col cols="5">
                             <div>
                                 <div style="margin-bottom: 0.5rem">
                                     <span style="opacity: 70%;">{{ $t('AddressBook.bday') }}</span>
-                                    <span style="margin-left: 1em">{{ userById.birthday }} </span>
+                                    <span style="margin-left: 1em">{{ userById(entry.email)[0].data.birthday }} </span>
                                 </div>
                                 <div>
                                     <span style="opacity: 70%;">{{ $t('AddressBook.number') }}</span>
-                                    <span style="margin-left: 1em">{{ userById.phoneNumber }} </span>
+                                    <span style="margin-left: 1em">{{
+                                            userById(entry.email)[0].data.phoneNumber
+                                        }} </span>
                                 </div>
                             </div>
                         </b-col>
@@ -194,7 +196,8 @@
                                 <span style="opacity: 70%;  margin-left: 3.5em">{{ $t('AddressBook.note') }}</span>
                                 <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
                                         @click="changeNote()"></b-icon>
-                                <span v-if="entry.note !== null" style="margin-left: 1em">{{ entry.note }}</span>
+                                <span v-if="entry.note !== '' && entry.note !== null"
+                                      style="margin-left: 1em">{{ entry.note }}</span>
                                 <span v-else style="margin-left: 1em">{{ $t('AddressBook.noNote') }}</span>
                             </template>
 
@@ -211,7 +214,7 @@
                                 <div style="display: flex">
                                     <b-form-textarea
                                         v-model="settings.note"
-                                        :placeholder="entry.note === null ? '...' : entry.note"
+                                        :placeholder="entry.note === '' && entry.note === null ? '...' : entry.note"
                                         rows="1"
                                         class="change-entry"
                                         style="margin-left: 1em; height: auto">
@@ -286,7 +289,7 @@ export default {
     components: {NameBubble},
     props: {
         entry: Object,
-        favorite: Boolean,
+        favorite: Boolean
     },
     data() {
         return {
@@ -390,11 +393,12 @@ export default {
             this.resetAnimation('#note')
         },
         async more() {
-            await this.$store.dispatch('fetchUserDataById', this.entry.email)
+            if (this.isRegistered) {
+                await this.$store.dispatch('fetchUserDataById', this.entry.email)
+            }
             this.showMore = true
         },
         less() {
-            this.$store.dispatch('clearUserDataById')
             this.showMore = false
         },
         resetAnimation(obj) {
@@ -429,10 +433,21 @@ export default {
     computed: {
         ...mapGetters({
             userById: 'getUserByID',
+
             hasError: 'addressBook/getHasError',
             resChange: 'addressBook/getResChangeEntry',
-            resDelete: 'addressBook/getResDeleteEntry'
-        })
+            resDelete: 'addressBook/getResDeleteEntry',
+
+            allUser: 'userManagement/getFilteredPagesUsers'
+        }),
+        isRegistered() {
+            let filter = {}
+            filter.search = this.entry.email
+            filter.admin = false
+            filter.active = false
+            filter.inactive = false
+            return this.allUser(filter, 10, 1).length !== 0;
+        }
     }
 }
 </script>

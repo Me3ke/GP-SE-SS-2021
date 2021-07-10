@@ -1,5 +1,5 @@
 <template>
-    <span class="rounded-circle name-bubble"> {{ abbreviation }} </span>
+    <span v-if="showBubble" class="rounded-circle name-bubble"> {{ abbreviation }} </span>
 </template>
 
 <script>
@@ -8,11 +8,32 @@ export default {
     props: {
         name: String
     },
+    data() {
+        return {
+            showBubble: true
+        }
+    },
+    beforeMount() {
+        this.show()
+    },
+    methods: {
+        show() {
+            const first = this.name.split(' ')[0][0];
+            const second = this.name.split(' ')[1][0];
+            if (first === undefined && second === undefined) {
+                this.showBubble = false
+            }
+        }
+    },
     computed: {
         abbreviation() {
             const first = this.name.split(' ')[0][0];
             const second = this.name.split(' ')[1][0];
-            return first + second
+            if (second === undefined) {
+                return first + ' '
+            } else {
+                return first + second
+            }
         }
     }
 }
