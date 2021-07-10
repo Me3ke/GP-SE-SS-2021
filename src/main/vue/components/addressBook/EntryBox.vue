@@ -1,6 +1,18 @@
 <template>
     <div>
         <div v-if="!showMore">
+            <!-- Error Messages -->
+            <b-alert :show="showSaveError" dismissible
+                     @dismissed="showSaveError = false"
+                     style="margin-bottom: 1em">
+                <div style="text-align: center">
+                    <span> {{ $t('TwoFakAuth.serverErrorOne') }} </span>
+                </div>
+                <div style="text-align: center">
+                    <span> {{ $t('AddressBook.serverErrorTwo') }}  </span>
+                </div>
+            </b-alert>
+
             <div class="user-box entry" style="display: block">
                 <b-container fluid style="margin-left: 0; margin-right: 0">
                     <b-row style="margin-bottom: 1rem">
@@ -33,7 +45,32 @@
                             <span class="clickable" @click="more()">{{ $t('AddressBook.more') }}</span>
                         </b-col>
                         <b-col cols="2" style="text-align: right">
-                            <b-icon icon="trash" class="my-icon clickable" @click="deleteEntry()"></b-icon>
+                            <b-icon icon="trash" class="my-icon clickable" id="trash-popover"></b-icon>
+                            <b-popover target="trash-popover" triggers="click" placement="bottomleft">
+                                <!-- Error Messages -->
+                                <b-alert show="false"
+                                         style="margin-bottom: 1em">
+                                    {{ $t('MessagePage.deleteError') }}
+                                </b-alert>
+
+                                <div style="text-align: center;">
+                                    <span>{{ $t('MessagePage.sureDelete') }}</span>
+                                </div>
+
+
+                                <div style="text-align: center;">
+                                    <button class="elsa-blue-btn white-btn"
+                                            @click="$root.$emit('bv::hide::popover', 'trash-popover')">
+                                        <span>{{ $t('MessagePage.cancel') }}</span>
+                                    </button>
+
+                                    <button class="elsa-blue-btn dark-elsa-btn" @mouseover="hover = true"
+                                            @mouseleave="hover = false"
+                                            @click="newEntry = true" style="">
+                                        <span>{{ $t('MessagePage.delete') }}</span>
+                                    </button>
+                                </div>
+                            </b-popover>
                         </b-col>
                     </b-row>
                 </b-container>
@@ -42,6 +79,17 @@
         </div>
 
         <div v-else>
+            <!-- Error Messages -->
+            <b-alert :show="showSaveError" dismissible
+                     @dismissed="showSaveError = false"
+                     style="margin-bottom: 1em">
+                <div style="text-align: center">
+                    <span> {{ $t('TwoFakAuth.serverErrorOne') }} </span>
+                </div>
+                <div style="text-align: center">
+                    <span> {{ $t('AddressBook.serverErrorTwo') }}  </span>
+                </div>
+            </b-alert>
             <div class="user-box  entry" style="display: block">
                 <b-container fluid style="margin-left: 0; margin-right: 0">
                     <b-row style="margin-bottom: 1rem">
@@ -60,6 +108,11 @@
                                 <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                                 <b-icon icon="pencil-fill" class="my-icon clickable" style="opacity: 70%" scale="0.75"
                                         @click="changeName()"></b-icon>
+                                <transition name="saved">
+                                    <span v-if="showSaveName" style="margin-left: 0.5em; color: var(--elsa-blue)">{{
+                                            $t('Settings.saved')
+                                        }}</span>
+                                </transition>
 
                                 <!-- Firstname-->
                                 <div style="display: flex">
@@ -79,7 +132,7 @@
                                             @click="resetLastname()" id="lastname" style="text-align: center"></b-icon>
                                 </div>
 
-                                <span class="clickable save-changes" @click="saveSettingsChange()"
+                                <span class="clickable save-changes" @click="saveSettingsChange(1)"
                                 >{{
                                         $t('AddressBook.save')
                                     }}</span>
@@ -145,6 +198,11 @@
                                 <span style="opacity: 70%;  margin-left: 3.5em">{{ $t('AddressBook.note') }}</span>
                                 <b-icon icon="pencil-fill" class="my-icon clickable" style="opacity: 70%" scale="0.75"
                                         @click="changeNote()"></b-icon>
+                                <transition name="saved">
+                                    <span v-if="showSaveNote" style="margin-left: 0.5em; color: var(--elsa-blue)">{{
+                                            $t('Settings.saved')
+                                        }}</span>
+                                </transition>
                                 <div style="display: flex">
                                     <b-form-textarea
                                         v-model="settings.note"
@@ -157,7 +215,7 @@
                                             @click="resetNote()" id="note" style="text-align: center"></b-icon>
                                 </div>
 
-                                <span class="clickable save-changes" @click="saveSettingsChange()"
+                                <span class="clickable save-changes" @click="saveSettingsChange(2)"
                                 >{{
                                         $t('AddressBook.save')
                                     }}</span>
@@ -217,6 +275,7 @@
 <script>
 import NameBubble from "@/main/vue/components/commentsPage/NameBubble";
 import {mapGetters} from "vuex";
+import _ from 'lodash';
 
 export default {
     name: "EntryBox",
@@ -232,22 +291,71 @@ export default {
             showEditName: false,
             showEditNote: false,
             settings: {
+                email: this.entry.email,
                 firstname: '',
                 lastname: '',
                 note: '',
-                favorite: Boolean
-            }
+                favorite: this.favorite
+            },
+            showSaveError: false,
+            showSaveName: false,
+            showSaveNote: false
         }
     },
     methods: {
         setFavorite() {
             this.settings.favorite = !this.favorite
+            this.saveSettingsChange(0)
         },
-        deleteEntry() {
-            // TODO: API call to delete
+        async deleteEntry() {
+            await this.$store.dispatch('addressBook/deleteEntry', this.entry.id)
+            await this.$store.dispatch('addressBook/fetchBook')
         },
-        saveSettingsChange() {
-            // TODO: API call to change stuff
+        // saves changes
+        // kind: 0: favorite; 1: name; 2: note
+        async saveSettingsChange(kind) {
+            let newEntry = {}
+            if (this.settings.firstname === '') {
+                newEntry.firstname = this.entry.firstname
+            } else {
+                newEntry.firstname = this.settings.firstname
+            }
+            if (this.settings.lastname === '') {
+                newEntry.lastname = this.entry.lastname
+            } else {
+                newEntry.lastname = this.settings.lastname
+            }
+            if (this.settings.note === '') {
+                newEntry.note = this.entry.note
+            } else {
+                newEntry.note = this.settings.note
+            }
+            newEntry.favorite = this.settings.favorite
+            newEntry.email = this.settings.email
+            await this.$store.dispatch('addressBook/changeEntry', {entryId: this.entry.id, newEntry: newEntry})
+            if (_.isEmpty(this.hasError)) {
+                if (kind === 1) {
+                    // show saved notification
+                    this.showSaveName = true
+                    setTimeout(() => {
+                        this.showSaveName = false
+                    }, 2000);
+                } else if (kind === 2) {
+                    // show saved notification
+                    this.showSaveNote = true
+                    setTimeout(() => {
+                        this.showSaveNote = false
+                    }, 2000);
+                }
+                this.settings.firstname = ''
+                this.settings.lastname = ''
+                this.settings.note = ''
+                this.showSaveError = false
+                await this.$store.dispatch('addressBook/fetchBook')
+            } else {
+                this.showSaveError = true
+            }
+
         },
         changeName() {
             this.showEditName = !this.showEditName
@@ -306,7 +414,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            userById: 'getUserByID'
+            userById: 'getUserByID',
+            hasError: 'addressBook/getHasError'
         })
     }
 }

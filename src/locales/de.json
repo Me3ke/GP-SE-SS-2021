@@ -649,6 +649,7 @@
         "note": "Notiz",
         "noNote": "Keine Notiz vorhanden",
         "number": "Telefonnummer",
-        "save": "Speichern"
+        "save": "Speichern",
+        "serverErrorTwo": "Ihre Änderungen konnten nicht übernommen werden. Versuchen Sie es später erneut."
     }
 }

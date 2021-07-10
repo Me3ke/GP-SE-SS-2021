@@ -647,6 +647,7 @@
         "note": "Note",
         "noNote": "No note present",
         "number": "Phone number",
-        "save": "Save"
+        "save": "Save",
+        "serverErrorTwo": "Your changes could not be processed. Try again later."
     }
 }
