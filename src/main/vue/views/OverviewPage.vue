@@ -121,11 +121,11 @@
 <script>
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
-import FilterButton from "@/main/vue/components/FilterButton";
-import UploadButton from "@/main/vue/components/UploadMenu";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
+import UploadButton from "@/main/vue/components/uploadDocuments/UploadMenu";
 import {mapGetters} from "vuex";
-import DocumentCard from "@/main/vue/components/DocumentCard";
-import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
+import EnvelopeCard from "@/main/vue/components/overviewPage/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'

@@ -309,7 +309,23 @@
             "addReader": "Gegenleser hinzufügen",
             "reader": "Gegenleser",
             "chooseDate": "Zeitraum bestimmen",
-            "orderRelevant": "Reihenfolge berücksichtigen"
+            "orderRelevant": "Reihenfolge berücksichtigen",
+            "save": "Speichern",
+            "endDate": "Zeitraum",
+            "edit": "Bearbeiten",
+            "noSignatories": "Noch keine Unterzeichner hinzugefügt",
+            "noReaders": "Noch keine Gegenleser hinzugefügt",
+            "saveAll": "Alles Speichern",
+            "noDocumentSelected": "Bitte wählen Sie ein Dokument aus",
+            "confirm": "Bestätigen",
+            "editAllWarning": "Nicht alle Dokumente haben die selben Einstellungen. Bitte wählen Sie das Dokument aus dessen Einstellungen Sie als Basis nutzen wollen.",
+            "error": {
+                "noDateTime": "Bitte wählen Sie ein Datum und eine Uhrzeit.",
+                "noDate": "Bitte wählen Sie ein Datum.",
+                "noTime": "Bitte wählen Sie eine Uhrzeit",
+                "alreadyInSignatories": "Unterzeichner wurde bereits hinzugefügt.",
+                "alreadyInReaders": "Gegenleser wurde bereits hinzugfügt."
+            }
         }
     },
     "UploadDoc": {
@@ -329,6 +345,24 @@
         "simple": "Einfach",
         "advanced": "Fortgeschritten",
         "signatureType": "Signaturtyp",
+        "areYouSure": "Bitte überprüfen Sie das hochzuladene Dokument und die dazugehörigen Einstellungen:",
+        "document": "Dokument",
+        "envelope": "Verbund",
+        "error": {
+            "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
+            "noEnvelope": "Bitte wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",
+            "noNewName": "Bitte geben Sie einen Namen für den neuen Verbund ein.",
+            "noReadSig": "Bitte fügen Sie mindestens einen Gegenleser oder Unterzeichner hinzu.",
+            "noEndDate": "Bitter wählen Sie ein End-Datum.",
+            "noSignatureType": " Bitte wählen Sie für jeden Unterzeichner eine Unterschriftart aus."
+        },
+        "remindSignatories": "Unterzeichner erinnern",
+        "remindDaysBefore": "Tage vor dem Enddatum",
+        "reminder": "Erinnerung:",
+        "reminderShort": "Tag(e) vor Ende",
+        "sendReminderEMails": "Erinnerungs-Emails verschicken",
+        "startProcess": "Prozess starten",
+        "startProcessLater": "Prozess später starten",
         "UpdateDocument": {
             "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
             "update1": "aktualisieren",
