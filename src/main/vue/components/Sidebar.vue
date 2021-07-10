@@ -270,8 +270,8 @@ export default {
 
             this.$bvModal.show('modal-' + this.docId + 'a')
         },
-        // TODO. add router push to settings site of document
         goToSettings() {
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envId}}));
         },
         showMeta() {
             this.metaShown = !this.metaShown
