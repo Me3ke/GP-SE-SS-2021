@@ -92,7 +92,7 @@ public class CorporateDesignController {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
             corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                new byte[0], new byte[0]);
+                new byte[0], new byte[0], userService);
         }
         if (logosRequestBody.isDark()) {
             corporateDesign.setLogoDark(logosRequestBody.getLogo(), logosRequestBody.getLogoType());
@@ -122,7 +122,7 @@ public class CorporateDesignController {
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, new byte[0], new byte[0]);
+            corporateDesign = new CorporateDesign(null, new byte[0], new byte[0], userService);
         }
         corporateDesign.setColors(colorsRequestBody.getColors(), defaultDesign.getColors());
         corporateDesignService.saveCorporateDesign(corporateDesign);
@@ -171,7 +171,7 @@ public class CorporateDesignController {
                 corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
             } catch (CorporateDesignNotFoundException e) {
                 corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                    defaultDesign.getLogo(), defaultDesign.getLogoDark());
+                    defaultDesign.getLogo(), defaultDesign.getLogoDark(), userService);
             }
             corporateDesign.setImpressumsText(impressumRequestBody.getImpressum());
             corporateDesignService.saveCorporateDesign(corporateDesign);

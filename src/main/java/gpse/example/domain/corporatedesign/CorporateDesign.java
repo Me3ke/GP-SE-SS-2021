@@ -1,6 +1,9 @@
 package gpse.example.domain.corporatedesign;
 
 import com.beust.jcommander.internal.Lists;
+import gpse.example.domain.users.PersonalData;
+import gpse.example.domain.users.User;
+import gpse.example.domain.users.UserService;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -20,6 +23,9 @@ public class CorporateDesign {
             + "<p>Bei redaktionellen Inhalten:</p>\n"
             + "<p>Verantwortlich nach § 55 Abs.2 RStV<br />Moritz Schreiberling<br />"
             + "Musterstraße 2<br />80999 München</p>";
+
+    private static final String BR = "<br />";
+    private static final String SPACE = " ";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +56,10 @@ public class CorporateDesign {
      * @param colors   the colors of the corporate Design.
      * @param logo     the logo of the corporate Design.
      * @param logoDark the logo in darkmode.
+     * @param userService userService for the impressum.
      */
-    public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark) {
+    public CorporateDesign(final String[] colors, final byte[] logo, final byte[] logoDark,
+                           final UserService userService) {
         if (colors != null) {
             this.colors = Lists.newArrayList(colors);
         }
@@ -66,11 +74,39 @@ public class CorporateDesign {
         } else {
             this.logoDark = Arrays.copyOf(logoDark, logoDark.length);
         }
-        impressumsText = DEFAULT_TEXT;
+        User firstAdmin = null;
+        for (final User user : userService.getAllUsers()) {
+            final List<String> roles = user.getRoles();
+            for (final String role : roles) {
+                if (role.equals("ROLE_ADMIN")) {
+                    firstAdmin = user;
+                }
+            }
+        }
+        if (firstAdmin == null) {
+            impressumsText = DEFAULT_TEXT;
+        } else {
+            createImpressum(firstAdmin);
+        }
     }
 
     protected CorporateDesign() {
 
+    }
+
+    private void createImpressum(final User firstAdmin) {
+        final PersonalData data = firstAdmin.getPersonalData();
+        impressumsText =  "<p>Anbieter:<br />"
+            + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname() + BR
+            + data.getStreet() + SPACE + data.getHouseNumber() + BR
+            + data.getPostCode() + SPACE + data.getHomeTown() + "</p>\n"
+            + " <p> Kontakt:<br />Telefon: " + data.getPhoneNumber()
+            + "<br />E-Mail: " + firstAdmin.getUsername() + BR
+            + "</p>\n <p> </p>\n <p>Bei redaktionellen Inhalten:</p>\n"
+            + "<p>Verantwortlich nach § 55 Abs.2 RStV<br />"
+            + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname() + BR
+            + data.getStreet() + SPACE + data.getHouseNumber() + BR
+            + data.getPostCode() + SPACE + data.getHomeTown() + "</p>";
     }
 
     public long getId() {
