@@ -215,7 +215,8 @@
         "owner": "Owner",
         "date": "Created on",
         "open": "Open",
-        "closed": "Closed"
+        "closed": "Closed",
+        "envelope": "Envelope"
     },
     "MessagePage": {
         "heading": "Messages",

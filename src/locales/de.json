@@ -216,7 +216,8 @@
         "owner": "Besitzer",
         "date": "Erstellungsdatum",
         "open": "Offen",
-        "closed": "Abgeschlossen"
+        "closed": "Abgeschlossen",
+        "envelope": "Verbund"
     },
     "MessagePage": {
         "heading": "Benachrichtigungen",

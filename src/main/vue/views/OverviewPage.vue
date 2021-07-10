@@ -29,7 +29,7 @@
                             <FilterMenu :filter="filter"></FilterMenu>
                         </b-col>
                         <b-col>
-                            <SortMenu @updateSort="updateSort"></SortMenu>
+                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -162,8 +162,8 @@ export default {
                 endDateMin: "",
                 endDateMax: "",
                 dataType: "",
-                sortFirst: "default",
-                sortSecond: ""
+                sortFirst: "state",
+                sortSecond: "end"
             },
             searchInput: "",
             pageLimit: 10,
@@ -177,8 +177,8 @@ export default {
     },
     methods: {
         updateSort: function(sortFirst, sortSecond) {
-            this.sortFirst = sortFirst;
-            this.sortSecond = sortSecond;
+            this.filter.sortFirst = sortFirst;
+            this.filter.sortSecond = sortSecond;
         },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {

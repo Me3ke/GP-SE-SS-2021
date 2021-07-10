@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>
-            <b-icon class="sortIcon" icon="filter-left" @click="show = true;"></b-icon>
+            <b-icon class="sortIcon" icon="filter-left" @click="reset(); show = true;"></b-icon>
         </h3>
         <div v-if="show">
             <transition>
@@ -12,7 +12,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title">{{$t('Sort.title')}}</h5>
                                     <h5>
-                                        <b-icon type="button" icon="x-square" @click="show = false;">
+                                        <b-icon type="button" icon="x-square" @click="reset(); show = false;">
                                         </b-icon>
                                     </h5>
                                 </div>
@@ -40,7 +40,7 @@
                                     <b-container fluid>
                                         <b-row align-h="end">
                                             <b-col cols="auto">
-                                                <button type="button" class="light-btn" @click="reset()">
+                                                <button type="button" class="light-btn" @click="reset(); this.show = false;">
                                                     <h5>
                                                         {{$t('DownloadDoc.cancel')}}
                                                     </h5>
@@ -68,16 +68,16 @@
 <script>
 export default {
     name: "SortMenu",
+    props: {
+        first: String,
+        second: String
+    },
     data() {
         return {
             show: false,
-            sortFirst: "default",
-            sortSecond: "",
+            sortFirst: this.first,
+            sortSecond: this.second,
             options: [
-                {
-                    value: "default",
-                    icon:"",
-                },
                 {
                     value: "creation",
                     icon:"",
@@ -120,30 +120,23 @@ export default {
     methods: {
         secondOptions() {
             let options = [];
-            if(["state","state-rev","role","role-rev"].includes(this.sortFirst)){
-                let i;
-                for(i = 0; i < this.options.length; i++) {
-                    let option = this.options[i];
-                    if(!(this.sortFirst.includes(option.value)) && !(option.value.includes(this.sortFirst)) && !(option.value === "default")) {
-                        options.push(option);
-                    }
+            let i;
+            for(i = 0; i < this.options.length; i++) {
+                let option = this.options[i];
+                if(!(this.sortFirst.includes(option.value)) && !(option.value.includes(this.sortFirst))) {
+                    options.push(option);
                 }
-            }
-            if(options.length > 0 && this.sortSecond === "") {
-                this.sortSecond = "name";
-            } else if(options.length === 0) {
-                this.sortSecond = "";
             }
             return options;
         },
         reset() {
-           this.sortFirst = "default";
-           this.sortSecond = "";
-           this.show = false;
+           this.sortFirst = this.first;
+           this.sortSecond = this.second;
         },
         update() {
             this.$emit('updateSort', this.sortFirst, this.sortSecond);
             this.reset();
+            this.show = false;
         }
     }
 }
