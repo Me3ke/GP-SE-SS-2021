@@ -17,7 +17,7 @@
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
                 <LanguageSwitcher style="margin-top: 0.25em"></LanguageSwitcher>
-                <Messages v-if="user.firstLogin && isNotGuest"></Messages>
+                <Messages v-if="loaded && user.firstLogin && isNotGuest"></Messages>
                 <Avatar v-if="user.firstLogin && isNotGuest"></Avatar>
             </b-navbar-nav>
         </b-collapse>
@@ -39,7 +39,8 @@ export default {
         return {
             elsaLight: require('../../assets/logos/ELSA_small.svg'),
             elsaDark: require('../../assets/logos/ELSA_small_darkmode.svg'),
-            mobile: window.innerWidth < 576
+            mobile: window.innerWidth < 576,
+            loaded: false
         }
     },
     async created() {
@@ -47,6 +48,7 @@ export default {
         await this.$store.dispatch('theme/getLogos')
         if (!this.$route.params.tokenId) {
             await this.$store.dispatch('messages/fetchMessages')
+            this.loaded = true
         }
     },
     mounted() {

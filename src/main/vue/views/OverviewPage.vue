@@ -1,6 +1,6 @@
 <template>
     <div>
-        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+        <WelcomePopUp v-if="loaded && !user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
 
         <Header></Header>
 
@@ -161,7 +161,11 @@ export default {
             searchInput: "",
             pageLimit: 10,
             page: 1,
-            sort: null
+            sort: null,
+
+            // needed for WelcomePopUp, so it does not always appear and then instantly disappear
+            // because data has not been completely fetched yet
+            loaded: false
         }
     },
     methods: {
@@ -253,13 +257,14 @@ export default {
             await this.$store.dispatch('fetchUser')
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('fetchUser')
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('fetchUser')
+        this.loaded = true
     },
-
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
+        this.loaded = false
     },
 
     // TODO REMINDER:

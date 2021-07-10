@@ -12,6 +12,7 @@ public class DocumentSettingsCMD {
     private List<SignatorySetting> signatories;
     private boolean orderRelevant;
     private String endDate;
+    private boolean showHistory;
 
     public LocalDateTime convertEndDate() {
         return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
@@ -39,5 +40,13 @@ public class DocumentSettingsCMD {
 
     public void setEndDate(final String endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(boolean showHistory) {
+        this.showHistory = showHistory;
     }
 }

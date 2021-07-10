@@ -59,6 +59,9 @@ public final class BasicHtmlTemplates {
 
     private static final String P_LINK_P = "\t\t<p>[Link]</p>";
 
+    private static final String P_YOU_CAN_FIND_THE_COMMENT_HERE_P = "<p>You can find the comment here:</p>";
+    private static final String P_SIE_FINDEN_DEN_KOMMENTAR_HIER_P = "\t\t<p>Sie finden den Kommentar hier:</p>";
+
     /**
      * Template for sending invitationEmail to Guest Signatories.
      * needs: FirstNameOwner, LastNameOwner, DocumentTitle, Link
@@ -210,19 +213,19 @@ public final class BasicHtmlTemplates {
 
     /**
      * Template for sending an Information to Owner when process is finished.
-     * needs: FirstNameReciever, LastNameReciever, DocumentTitle, Link
+     * needs: DocumentTitle, Link
      * Link to protcolView
      */
     public static final String PROCESS_FINISHED_TEMPLATE = HTML_HEAD
         + "    <p> <i>English version below</i> </p>\n"
         + "    <br>\n"
-        + "\t\t<p>Guten Tag [FirstNameReciever] [LastNameReciever],</p>\n"
+        + GREETINGS_GERMAN
         + "\t\t<p>der Signaturprozess des Dokuments [DocumentTitle] ist abgeschlossen.</p>\n"
         + "\t\t<p>Sie k&#246nnen das Protokoll unter folgendem Link herunterladen.</p>\n"
         + P_LINK_P
         + NEWLINE
         + NEWLINE
-        + GREETINGS_PERSONAL_ENGLISH
+        + GREETINGS_ENGLISH
         + "\t\t<p>the Signaturprozess of the document [DocumentTitle] is finished.</p>\n"
         + "\t\t<p>You can download the protocol with the follwing link.</p>\n"
         + P_LINK_P
@@ -268,12 +271,61 @@ public final class BasicHtmlTemplates {
         + "\t\t<p>können Sie diese Email ignorieren.</p>\n"
         + NEWLINE
         + NEWLINE
-        + "\t\t<p>Hello [RecieverFirstName] [RecieverLastName],</p>\n"
+        + GREETINGS_PERSONAL_ENGLISH
         + "\t\t<p>you can reset your password with the follwing link.</p>\n"
         + P_LINK_P
         + NEWLINE
         + "\t\t<p>If you did not try to reset your password,</p>\n"
         + "\t\t<p>ignore this email please.</p>\n"
+        + NEWLINE
+        + NEWLINE
+        + CLOSE_BODY_TAG;
+
+
+    /**
+     * Template to inform about new Comment.
+     * needs FirstNameOwner, LastNameOwner, FirstNameReciever, LastNameReciever, DokumentTitle, Link
+     * Link to Document
+     * Owner = Author of Comment
+     * Reciever Owner of Document
+     */
+    public static final String NEW_COMMENT_TEMPLATE = HTML_HEAD
+        + P_I_ENGLISH_VERSION_BELOW_I_P
+        + NEWLINE
+        + GREETINGS_PERSONAL_GERMAN
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] hat einen Kommentar</p>"
+        + "\t\t<p>zu dem Dokument [DocumentTitle] hinterlassen.</p>"
+        + P_SIE_FINDEN_DEN_KOMMENTAR_HIER_P
+        + P_LINK_P
+        + NEWLINE
+        + NEWLINE
+        + GREETINGS_PERSONAL_ENGLISH
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] has left a comment</p>"
+        + "<p>on the document [DocumentTitle].</p>"
+        + P_YOU_CAN_FIND_THE_COMMENT_HERE_P
+        + P_LINK_P
+        + NEWLINE
+        + NEWLINE
+        + CLOSE_BODY_TAG;
+
+    /**
+     * Template to inform about answer on comment.
+     * needs: FirstNameOwner, LastNameOwner, FirstNameReciever, LastNameReciever, Link
+     * Link to Document.
+     */
+    public static final String ANSWER_COMMENT_TEMPLATE = HTML_HEAD
+        + P_I_ENGLISH_VERSION_BELOW_I_P
+        + NEWLINE
+        + GREETINGS_PERSONAL_GERMAN
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] hat auf Ihren Kommentar geantwortet</p>"
+        + P_SIE_FINDEN_DEN_KOMMENTAR_HIER_P
+        + P_LINK_P
+        + NEWLINE
+        + NEWLINE
+        + GREETINGS_PERSONAL_ENGLISH
+        + "\t\t<p>[FirstNameOwner] [LastNameOwner] has left an answer on your comment</p>"
+        + P_YOU_CAN_FIND_THE_COMMENT_HERE_P
+        + P_LINK_P
         + NEWLINE
         + NEWLINE
         + CLOSE_BODY_TAG;

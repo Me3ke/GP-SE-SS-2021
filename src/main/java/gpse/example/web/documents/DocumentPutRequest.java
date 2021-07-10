@@ -19,6 +19,7 @@ public class DocumentPutRequest {
     private boolean orderRelevant;
     private String lastModified;
     private long emailTemplateId;
+    private boolean showHistory;
 
     // for the case if the User do not want to edit the signatories
     // list on upload new Version (getter is going to be uses)
@@ -94,5 +95,13 @@ public class DocumentPutRequest {
 
     public void setEmailTemplateId(final long emailTemplateId) {
         this.emailTemplateId = emailTemplateId;
+    }
+
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(boolean showHistory) {
+        this.showHistory = showHistory;
     }
 }
