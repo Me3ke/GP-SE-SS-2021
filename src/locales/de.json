@@ -196,6 +196,22 @@
         "signatory": "Unterzeichner",
         "readerOrSignatory": "Gegenleser oder Unterzeichner"
     },
+    "Sort": {
+        "creation": "Neuste - Älteste",
+        "creation-rev": "Älteste - Neuste",
+        "end": "Endet bald",
+        "name": "A - Z",
+        "name-rev": "Z - A",
+        "state": "Offen - Geschlossen",
+        "state-rev": "Geschlossen - Offen",
+        "role": "Unterzeichner - Besitzer",
+        "role-rev": "Besitzer - Unterzeichner",
+        "default": "Wichtigste zuerst",
+        "title": "Dokumente und Verbünde sortieren",
+        "first": "1. Sortieroption",
+        "second": "2. Sortieroption",
+        "apply": "Übernehmen"
+    },
     "Document": {
         "owner": "Besitzer",
         "date": "Erstellungsdatum",
