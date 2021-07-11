@@ -270,10 +270,11 @@ public class DocumentController {
             savedNewDocument.setLinkToDocumentview(ENVELOPE_URL + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
 
-            envelopeService.updateEnvelope(savedEnvelope, savedNewDocument);
+            savedDocument.setProcessEmailTemplateId(documentPutRequest.getEmailTemplateId());
+            documentService.addDocument(savedNewDocument);
 
             informSignatories(newDocument, envelopeID);
-            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
+            return new DocumentPutResponse(savedDocument.getId(), savedNewDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
