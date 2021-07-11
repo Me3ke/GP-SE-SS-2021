@@ -116,6 +116,7 @@ export default {
         },
         updateSettings: function (settings) {
           this.settings = settings;
+          console.log(this.settings)
         },
         close() {
             this.page = 1;

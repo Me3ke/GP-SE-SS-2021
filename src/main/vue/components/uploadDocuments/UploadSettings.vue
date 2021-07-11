@@ -12,6 +12,7 @@
                     <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
                 </b-col>
                 <b-col cols="6">
+                    {{endTime}}
                     <b-form-timepicker v-model="endTime" :locale="this.$i18n.locale"></b-form-timepicker>
                 </b-col>
             </b-row>
@@ -32,7 +33,7 @@
         </b-alert>
 
         <h6>{{$t('Settings.DocumentSettings.signatory')}}</h6>
-        <SignatoryMenu :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
+        <SignatoryMenu v-if="alreadySetSettings.length !== 0" :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
 
     </div>
     <div class="modal-footer">
@@ -75,6 +76,7 @@ export default {
         SignatoryMenu,
         ReaderMenu
     },
+    props: ['alreadySetSettings'],
     data() {
         return {
             endDate: null,
@@ -86,7 +88,8 @@ export default {
                 noSignatories: false,
                 noSignatureType: false,
                 noEndDate: false,
-            }
+            },
+
         }
     },
     methods: {
@@ -171,7 +174,23 @@ export default {
             }
             return !this.error.noEndDate && !this.error.noSignatureType && !this.error.noSignatories;
         }
-    }
+    },
+    created() {
+        if(this.alreadySetSettings !== undefined) {
+            this.endDate = this.alreadySetSettings.endDate
+            const [day, month, year] = this.endDate.split('.')
+            this.endDate = year + '-' + month + '-' + day
+
+
+            this.orderRelevant = this.alreadySetSettings.orderRelevant
+            this.signatories = this.alreadySetSettings.signatories
+
+
+            console.log(this.signatories)
+        }
+    },
+
+
 }
 </script>
 

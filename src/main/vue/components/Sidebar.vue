@@ -6,7 +6,7 @@
         <ProofreadPopUp v-if="showProofread" :documents="[document]" :is-guest="isGuest"
                         @readTrigger="toggleRead()"></ProofreadPopUp>
 
-        <upload-new-version-button :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
+        <upload-new-version-button @close="updateShowVersionPopUp" @closePopUp="updateShowVersionPopUp" :clicked="showNewVersionPopup" :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
 
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>
@@ -222,6 +222,7 @@ export default {
             showSign: false,
             showDownload: false,
             showUploadNewVersion: false,
+            showNewVersionPopup: false,
 
             elsaLight: require('../assets/logos/ELSA_medium.svg'),
             elsaDark: require('../assets/logos/ELSA_medium_darkmode.svg'),
@@ -264,12 +265,20 @@ export default {
             this.$router.push({name: 'history', params: {envId: this.envId, docId: this.docId}})
         },
         toggleNewVersion() {
-            this.showUploadNewVersion = !this.showUploadNewVersion
+            this.showUploadNewVersion = true //!this.showUploadNewVersion
+            this.showNewVersionPopup = this.showUploadNewVersion;
+
+
             this.$root.$emit('bv::toggle::collapse', 'menu')
             this.$emit('triggerOverflow')
 
-            this.$bvModal.show('modal-' + this.docId + 'a')
+            //this.$bvModal.show('modal-' + this.docId + 'a')
         },
+        // todo sidebar menu collapse
+        updateShowVersionPopUp(value) {
+            this.showNewVersionPopup = value
+        },
+
         goToSettings() {
             this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: this.envId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envId}}));
         },

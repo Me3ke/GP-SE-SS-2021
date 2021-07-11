@@ -8,6 +8,7 @@
                 </h5>
             </button>
         </div>
+        add Signa: {{!addSignatories}}; signatory length: {{signatoryInput.length}} - {{signatoryInputs.length !== 0}};
         <div v-if="!addSignatories && !(signatoryInputs.length === 0)">
             <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories" :key="signatory.email"> {{signatory.email}}</b-list-group-item>
             <b-row align-h="end">
@@ -21,6 +22,8 @@
                 </b-col>
             </b-row>
         </div>
+
+        add signatory: {{addSignatories}};
 
         <div v-if="addSignatories">
 
@@ -96,9 +99,11 @@
 import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
-    props: {
+    /*props: {
         signatories: Array
-    },
+    },*/
+
+    props: ['signatories'],
     components: {draggable},
     data() {
         return {
@@ -138,6 +143,18 @@ export default {
             this.$emit('updateSignatories', this.signatoryInputs);
             this.addSignatories = false;
         }
+    },
+    beforeMount() {
+        if (this.signatories.length !== 0) {
+            console.log('input: ', this.signatoryInput)
+            this.addSignatories = false
+            this.signatoryInputs = this.signatories;
+            this.signatoryInput = "";        }
+    },
+
+    mounted() {
+        console.log("Signatory Menu ",this.signatories)
+
     }
 }
 </script>
