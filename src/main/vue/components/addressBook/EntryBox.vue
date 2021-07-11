@@ -20,7 +20,8 @@
                 <b-container fluid style="margin-left: 0; margin-right: 0">
                     <b-row style="margin-bottom: 1rem">
                         <b-col cols="5">
-                            <NameBubble :name="entry.firstname + ' ' + entry.lastname" class="bubble"></NameBubble>
+                            <NameBubble :name="entry.firstname + ' ' + entry.lastname" :show-bubble="showBubble"
+                                        class="bubble"></NameBubble>
                             <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                             <span style="margin-left: 1em">{{ entry.firstname }}  {{ entry.lastname }}</span>
                         </b-col>
@@ -99,7 +100,8 @@
                 <b-container fluid style="margin-left: 0; margin-right: 0">
                     <b-row style="margin-bottom: 1rem">
                         <b-col cols="5">
-                            <NameBubble :name="entry.firstname + ' ' + entry.lastname" class="bubble"></NameBubble>
+                            <NameBubble :name="entry.firstname + ' ' + entry.lastname" :show-bubble="showBubble"
+                                        class="bubble"></NameBubble>
                             <template v-if="!showEditName">
                                 <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                                 <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
@@ -122,7 +124,7 @@
                                 <!-- Firstname-->
                                 <div style="display: flex">
                                     <b-form-input style="margin-left: 1em" v-model="settings.firstname"
-                                                  :placeholder="entry.firstname"
+                                                  :placeholder="entry.firstname === '' ? $t('AddressBook.firstname') : entry.firstname"
                                                   class="change-entry"></b-form-input>
                                     <b-icon icon="arrow-clockwise" class="my-icon clickable"
                                             @click="resetFirstname()" id="firstname"></b-icon>
@@ -131,7 +133,7 @@
                                 <!-- Lastname-->
                                 <div style="display: flex">
                                     <b-form-input style="margin-left: 1em" v-model="settings.lastname"
-                                                  :placeholder="entry.lastname"
+                                                  :placeholder="entry.lastname === '' ? $t('AddressBook.lastname') : entry.lastname "
                                                   class="change-entry"></b-form-input>
                                     <b-icon icon="arrow-clockwise" class="my-icon clickable"
                                             @click="resetLastname()" id="lastname" style="text-align: center"></b-icon>
@@ -446,7 +448,16 @@ export default {
             filter.admin = false
             filter.active = false
             filter.inactive = false
+            filter.completeSearch = true
             return this.allUser(filter, 10, 1).length !== 0;
+        },
+        showBubble() {
+            let name = this.entry.firstname + ' ' + this.entry.lastname
+
+            const first = name.split(' ')[0][0];
+            const second = name.split(' ')[1][0];
+            return !(first === undefined && second === undefined);
+
         }
     }
 }

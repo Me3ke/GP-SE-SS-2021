@@ -6,23 +6,10 @@
 export default {
     name: "NameBubble",
     props: {
-        name: String
-    },
-    data() {
-        return {
-            showBubble: true
-        }
-    },
-    beforeMount() {
-        this.show()
-    },
-    methods: {
-        show() {
-            const first = this.name.split(' ')[0][0];
-            const second = this.name.split(' ')[1][0];
-            if (first === undefined && second === undefined) {
-                this.showBubble = false
-            }
+        name: String,
+        showBubble: {
+            type: Boolean,
+            default: true
         }
     },
     computed: {
