@@ -24,9 +24,8 @@ export const mutations = {
 export const actions = {
     // makes axios call to upload document
 
-    uploadDocument({commit}, {envID, file, settings}) {
-        documentUploadAPI.uploadDocumentApi(envID, file, settings).then(() => {
-            console.log("success")
+    async uploadDocument({commit}, {envID, file, settings}) {
+        await documentUploadAPI.uploadDocumentApi(envID, file, settings).then(() => {
             commit('SET_ERROR_GET_DOCUMENTS', {})
         }).catch(error => {
             commit('SET_ERROR_GET_DOCUMENTS', error)
@@ -34,7 +33,6 @@ export const actions = {
     },
     async createEnvelope({commit}, {name}) {
         await documentUploadAPI.createEnvelopeApi(name).then((response) => {
-            console.log("success")
             commit('SET_CREATED_ENVELOPE', response.data)
             commit('SET_ERROR_CREATE_ENVELOPE', {})
         }).catch(error => {
