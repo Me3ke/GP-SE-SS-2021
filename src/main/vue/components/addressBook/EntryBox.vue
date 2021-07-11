@@ -22,7 +22,10 @@
                         <b-col cols="5">
                             <NameBubble :name="entry.firstname + ' ' + entry.lastname" :show-bubble="showBubble"
                                         class="bubble"></NameBubble>
-                            <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                            <span v-if="showBubble" style="margin-left: 1em; opacity: 70%">{{
+                                    $t('AddressBook.name')
+                                }}</span>
+                            <span v-else style="margin-left: 3em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                             <span style="margin-left: 1em">{{ entry.firstname }}  {{ entry.lastname }}</span>
                         </b-col>
                         <b-col cols="5">
@@ -103,7 +106,10 @@
                             <NameBubble :name="entry.firstname + ' ' + entry.lastname" :show-bubble="showBubble"
                                         class="bubble"></NameBubble>
                             <template v-if="!showEditName">
-                                <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                                <span v-if="showBubble" style="margin-left: 1em; opacity: 70%">{{
+                                        $t('AddressBook.name')
+                                    }}</span>
+                                <span v-else style="margin-left: 3em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                                 <b-icon icon="pencil" class="my-icon clickable" style="opacity: 70%" scale="0.75"
                                         @click="changeName()"></b-icon>
 
@@ -112,7 +118,9 @@
 
                             <!-- Editing name -->
                             <template v-else style="display: flex">
-                                <span style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                                <span v-if="!showBubble"
+                                      style="margin-left: 3em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
+                                <span v-else style="margin-left: 1em; opacity: 70%">{{ $t('AddressBook.name') }}</span>
                                 <b-icon icon="pencil-fill" class="my-icon clickable" style="opacity: 70%" scale="0.75"
                                         @click="changeName()"></b-icon>
                                 <transition name="saved">
@@ -452,6 +460,10 @@ export default {
             return this.allUser(filter, 10, 1).length !== 0;
         },
         showBubble() {
+            if (this.entry.firstname === null && this.entry.lastname == null) {
+                return false
+            }
+
             let name = this.entry.firstname + ' ' + this.entry.lastname
 
             const first = name.split(' ')[0][0];

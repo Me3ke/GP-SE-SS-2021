@@ -22,12 +22,13 @@
                               class="filter-button" style="margin-left: 1em"></FilterButton>
 
                 <div>
+                    <!-- Searchbar -->
                     <b-input-group>
-                        <!-- Searchbar -->
+                        <b-input-group-prepend is-text>
+                            <b-icon icon="search" id="search" style="fill: var(--elsa-blue);"></b-icon>
+                        </b-input-group-prepend>
                         <b-form-input v-model="filter.search"
-                                      :placeholder="$t('OverviewPage.search')"></b-form-input>
-
-                        <b-icon class="my-icon" icon="search" id="search"></b-icon>
+                                      :placeholder="$t('OverviewPage.search')" type="search"></b-form-input>
                     </b-input-group>
                 </div>
 

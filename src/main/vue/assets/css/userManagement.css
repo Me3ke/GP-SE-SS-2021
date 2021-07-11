@@ -124,11 +124,10 @@
 }
 
 .small-entry-box {
-    margin: 0;
     width: 93%;
     border: 1px solid var(--elsa-blue);
     border-radius: 0.3vw;
-
+    margin: 0 0 0.2rem;
 }
 
 .unseen-user {
@@ -260,6 +259,12 @@
     margin-right: 0.75em;
 }
 
+.input-group > .input-group-prepend > .input-group-text{
+    height: 1.85em;
+    fill: var(--elsa-blue);
+    margin-top: 0;
+}
+
 .form-control:focus {
     color: var(--dark-grey);
     background-color: var(--whitesmoke);
@@ -317,7 +322,7 @@
         font-size: 0.6em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group-text {
         font-size: 0.5em;
     }
 
@@ -325,7 +330,7 @@
         font-size: 0.5em;
     }
 
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search, .input-group > .input-group-prepend > .input-group-text {
         margin-top: 0.5em;
     }
 
@@ -347,7 +352,7 @@
         font-size: 0.41em;
     }
 
-    span, .filter-button, .form-control, .user-container {
+    span, .filter-button, .form-control, .user-container, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.7em;
     }
 
@@ -378,7 +383,7 @@
         font-size: 0.7em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.8em;
     }
 
@@ -408,7 +413,7 @@
         font-size: 0.7em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.8em;
     }
 
