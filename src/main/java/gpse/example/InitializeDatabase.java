@@ -104,7 +104,7 @@ public class InitializeDatabase implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws IOException {
         try {
             corporateDesignService.getCorporateDesign(1L);
         } catch (CorporateDesignNotFoundException exception) {
