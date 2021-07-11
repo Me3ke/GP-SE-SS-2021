@@ -331,7 +331,7 @@
         "DocumentSettings": {
             "editAll": "Alle Dokumente im Verbund bearbeiten",
             "addSignatory": "Unterzeichner hinzufügen",
-            "placeholderMail": "MaxMustermann@mail.de",
+            "placeholderMail": "MaxMustermann@mail.de,...",
             "signatory": "Unterzeichner",
             "addReader": "Gegenleser hinzufügen",
             "reader": "Gegenleser",

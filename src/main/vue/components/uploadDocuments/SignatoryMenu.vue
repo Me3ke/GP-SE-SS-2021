@@ -4,18 +4,20 @@
             <button class="light-btn" @click="addSignatories = true">
                 <h5>
                     <b-icon icon="plus-circle"></b-icon>
-                    {{$t('Settings.DocumentSettings.addSignatory')}}
+                    {{ $t('Settings.DocumentSettings.addSignatory') }}
                 </h5>
             </button>
         </div>
         <div v-if="!addSignatories && !(signatoryInputs.length === 0)">
-            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories" :key="signatory.email"> {{signatory.email}}</b-list-group-item>
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories"
+                               :key="signatory.email"> {{ signatory.email }}
+            </b-list-group-item>
             <b-row align-h="end">
                 <b-col cols="auto">
                     <button class="light-btn" @click="addSignatories = true" style="margin:0.5em 0">
                         <h6>
                             <b-icon icon="pencil-fill"></b-icon>
-                            {{$t('Settings.DocumentSettings.edit')}}
+                            {{ $t('Settings.DocumentSettings.edit') }}
                         </h6>
                     </button>
                 </b-col>
@@ -27,13 +29,22 @@
             <!-- Add Signatory -->
             <div class="form-group">
                 <b-row no-gutters>
-                    <b-col cols="11">
-                        <input type="text" class="form-control" v-model="signatoryInput" id="signatoryInput" :placeholder="$t('Settings.DocumentSettings.placeholderMail')">
-                    </b-col>
-                    <b-col cols="1">
-                        <button class="elsa-blue-btn" @click="addSignatory()" style="padding: 0.2em 0.4em;">
-                            <b-icon icon="plus" style="width: 1.5em; height: 1.5em"></b-icon>
-                        </button>
+                    <b-col cols="12">
+                        <b-input-group class="mb-2">
+                            <b-input-group-prepend is-text>
+                                <b-icon icon="book" style="fill: var(--elsa-blue); cursor: pointer"></b-icon>
+                            </b-input-group-prepend>
+                            <b-form-tags
+                                class="form-control" v-model="signatoryInput" id="signatoryInput"
+                                separator=","
+                                :placeholder="$t('Settings.DocumentSettings.placeholderMail')"
+                            ></b-form-tags>
+                            <b-input-group-append>
+                                <button class="elsa-blue-btn add-button" @click="addSignatory()" style="padding: 0.2em 0.4em;">
+                                    <b-icon icon="plus" style="width: 1.5em; height: 1.5em"></b-icon>
+                                </button>
+                            </b-input-group-append>
+                        </b-input-group>
                     </b-col>
                 </b-row>
             </div>
@@ -41,29 +52,36 @@
             <!-- Set order relevant -->
             <b-row align-h="center" style="margin-bottom: 1em">
                 <b-col class="custom-control custom-switch" style="margin-left:1em">
-                    <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevantInput">
-                    <label class="custom-control-label" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+                    <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch"
+                           v-model="orderRelevantInput">
+                    <label class="custom-control-label" for="orderRelevantSwitch">
+                        {{ $t('Settings.DocumentSettings.orderRelevant') }} </label>
                 </b-col>
             </b-row>
 
             <!-- List of Signatories -->
             <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
                 <draggable v-model="signatoryInputs">
-                    <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email" style="padding:0.25em">
+                    <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email"
+                         style="padding:0.25em">
                         <b-row align-h="between">
                             <!-- Email Address -->
                             <h6>
                                 <b-col cols="auto">
-                                    <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)"></b-icon>
-                                    {{signatory.email}}
+                                    <b-icon class="icon-hover" icon="trash"
+                                            @click="deleteSignatory(signatory)"></b-icon>
+                                    {{ signatory.email }}
                                 </b-col>
                             </h6>
                             <b-col cols="auto">
                                 <b-row align-h="end">
                                     <!-- signature type -->
                                     <b-col cols="auto">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.type">
-                                            <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
+                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1"
+                                                v-model="signatory.type">
+                                            <option v-for="signatureType in signatureTypes" :key="signatureType.value"
+                                                    :value="signatureType.value"> {{ $t(signatureType.name) }}
+                                            </option>
                                         </select>
                                     </b-col>
                                     <b-col cols="auto">
@@ -79,12 +97,12 @@
             <b-row align-h="end" style="margin-top:0.5em">
                 <b-col cols="auto">
                     <button class="light-btn" @click="cancel()">
-                        {{$t('DownloadDoc.cancel')}}
+                        {{ $t('DownloadDoc.cancel') }}
                     </button>
                 </b-col>
                 <b-col cols="auto">
                     <button class="elsa-blue-btn" @click="save()">
-                        {{$t('Settings.DocumentSettings.save')}}
+                        {{ $t('Settings.DocumentSettings.save') }}
                     </button>
                 </b-col>
             </b-row>
@@ -94,6 +112,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+
 export default {
     name: "SignatoryMenu",
     props: {
@@ -102,7 +121,7 @@ export default {
     components: {draggable},
     data() {
         return {
-            signatoryInput: "",
+            signatoryInput: [],
             signatoryInputs: [],
             orderRelevantInput: false,
             addSignatories: false,
@@ -117,12 +136,14 @@ export default {
     },
     methods: {
         addSignatory() {
-            if(this.signatoryInputs.includes(this.signatoryInput)) {
-                // TODO: Error
-            } else {
-                this.signatoryInputs.push({email: this.signatoryInput, type: 1});
+            for (var i = 0; i < this.signatoryInput.length; i++) {
+                if (this.signatoryInputs.includes(this.signatoryInput[i])) {
+                    // TODO: Error
+                } else {
+                    this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
+                }
             }
-            this.signatoryInput = "";
+            this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
@@ -130,7 +151,7 @@ export default {
         cancel() {
             this.addSignatories = false;
             this.signatoryInputs = this.signatories;
-            this.signatoryInput = "";
+            this.signatoryInput = [];
             this.orderRelevantInput = false;
         },
         save() {
@@ -143,6 +164,10 @@ export default {
 </script>
 
 <style scoped>
+.btn-outline-secondary {
+    visibility: hidden !important;
+}
+
 .alert {
     background-color: var(--sign-doc-hover);
     color: var(--red);
@@ -158,4 +183,89 @@ export default {
 .elsa-blue-btn:focus, .light-btn:focus {
     border: 0.03vw solid var(--dark-grey);
 }
+
+.add-button{
+    margin: 0;
+    border-color: var(--elsa-blue);
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    border: solid 0.1em var(--elsa-blue);
+    border-radius: 0.2em;
+}
+
+.input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file {
+    height: 1.85em;
+    width: 23em;
+    max-width: 24em;
+}
+
+.form-control:focus, .form-control:active, .b-form-tags.focus, .b-form-tags.active {
+    color: var(--dark-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--elsa-blue);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.form-control::placeholder {
+    color: var(--shadow-grey);
+    opacity: 1; /* Firefox */
+}
+
+.form-control:-ms-input-placeholder {
+    color: var(--shadow-grey);
+}
+
+.form-control::-ms-input-placeholder {
+    color: var(--shadow-grey);
+}
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+        font-size: 0.5em;
+    }
+
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+        width: 32em;
+        max-width: 32em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+        font-size: 0.7em;
+    }
+
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+        width: 34em;
+        max-width: 34em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append{
+        font-size: 0.8em;
+    }
+
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+        width: 29.75em;
+        max-width: 29.75em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+        font-size: 0.8em;
+    }
+
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+        width: 29.75em;
+        max-width: 29.75em;
+    }
+}
+
 </style>

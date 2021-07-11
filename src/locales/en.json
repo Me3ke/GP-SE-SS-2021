@@ -329,7 +329,7 @@
         "DocumentSettings": {
             "editAll": "Edit all documents in the envelope",
             "addSignatory": "Add signatories",
-            "placeholderMail": "Signatory@mail.de",
+            "placeholderMail": "Signatory@mail.de,...",
             "signatory": "Signatories",
             "addReader": "Add proofreader",
             "reader": "Proofreaders",
