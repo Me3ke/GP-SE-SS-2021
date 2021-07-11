@@ -21,106 +21,29 @@
     "UserGuide": {
         "name": "Benutzerhandbuch",
         "section-1": "Allgemeine Information",
-        "section-2": "Signieren",
-        "section-3": "Dokumente",
-        "section-4": "Hilfreiche Bedienelemente",
-        "section-5": "Kontoverwaltung",
+        "section-2": "Kontoverwaltung",
+        "section-3": "Signatur",
+        "section-4": "Dokumente",
+        "section-5": "Filter und Sucheinstellungen",
+        "section-6": "Hilfe, ich bin Admin!",
         "section0": [
             {
                 "question": "Was ist ELSA?",
-                "answer": "ELSA ist eine ELektronische Signier Anwendung, die es ermöglicht beliebige Dokumente einfach, schnell und sicher elektronisch zu signieren"
+                "answer": "Auf der Webanwendung Elsa können sie Verträge oder andere Dokumente hochladen um diese von allen beteiligten Parteien unterschreiben zu lassen. Elsa kümmert sich um die Strukturierung und Sicherheit des Prozesses, so können sie sich darauf verlassen, dass alles glatt läuft."
             },
             {
                 "question": "Wie funktioniert ELSA?",
-                "answer": "Antwort 1.2"
+                "answer": "Die Kernfunktion von Elsa ist natürlich das signieren. Bei den Signaturen wird zwischen einer einfachen und einer erweiterten Signatur unterschieden und während für eine einfache Signatur lediglich der Name der Person und der Zeitpunkt der Signatur für das Dokument hinterlegt wird, beruht die fortgeschrittene Signatur auf kryptographischen Methoden. Bei der fortgeschrittenen Signatur an sich handelt es sich nämlich um einen Hash-wert der speziell für das Dokument erzeugt wurdewelcher mit dem privaten Schlüssel des Nutzers per RSA-verfahren unterschreiben wurde. Sollten Sie detailliertere Fragen haben, finden Sie diese vielleicht weiter unten auf dieser Seite wieder. Falls nicht, können sie sich vielleicht an einen Administrator wenden."
             }
         ],
         "section1": [
             {
-                "question": "Wie unterschreibe ich ein Dokument?",
-                "answer": "Durch das Klicken auf dem Signier Knopf, neben der Dokumentenvorschau, können Sie das Dokument unterschreiben."
-            },
-            {
-                "question": "Ist das digitale Unterschreiben überhaupt sicher?",
-                "answer": "Antwort 2.2"
-            },
-            {
-                "question": "Wie funktioniert die kryptographische Signatur?",
-                "answer": "Antwort 2.3"
-            }
-        ],
-        "section2": [
-            {
-                "question": "Wie lade ich ein Dokument hoch?",
-                "answer": "Antwort 3.1"
-            },
-            {
-                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
-                "answer": "Antwort 3.2"
-            },
-            {
-                "question": "Welche Dokumententypen werden unterstützt?",
-                "answer": "Antwort 3.3"
-            },
-            {
-                "question": "Wer hat alles Zugriff auf mein Dokument?",
-                "answer": "Antwort 3.4"
-            },
-            {
-                "question": "Wie füge ich jemanden hinzu mein Dokument zu unterschreiben?",
-                "answer": "Antwort 3.5"
-            },
-            {
-                "question": "Was ist der Unterschied zwischen einer einfachen und einer fortgeschrittenen Signatur?",
-                "answer": "Antwort 3.6"
-            },
-            {
-                "question": "Ich habe die falsche Signaturart gewählt, kann ich das im Nachhinein ändern?",
-                "answer": "Ja, die Signaturart kann im Nachhinein geändernt werden. Jedoch verfallen dann alle schon gegebenen Signaturen und müssen neu angefordert werden. Aber keine Sorge, ELSA kümmert sich hierum und informiert Ihre Vertragspartner."
-            },
-            {
-                "question": "Wo kann ich die Informationen zu meinem Dokument einsehen?",
-                "answer": "Antwort 3.8"
-            },
-            {
-                "question": "Wo sehe ich die Dokumentenhistorie ein?",
-                "answer": "Antwort 3.9"
-            }
-        ],
-        "section3": [
-            {
-                "question": "Wie suche ich nach einem Dokument?",
-                "answer": "Antwort 4.1"
-            },
-            {
-                "question": "Was bedeuten die Filter überhalb meiner Dokumente?",
-                "answer": "Antwort 4.2"
-            },
-            {
-                "question": "Wie filtere ich meine Dokumnete manuell?",
-                "answer": "Antwort 4.3"
-            },
-            {
-                "question": "Die Lupe neben manchen Dokumenten ist ausgegraut, was hat das zu bedeuten?",
-                "answer": "Antwort 4.4"
-            }
-        ],
-        "section4": [
-            {
                 "question": "Wo sehe ich meine Kontoinformationen?",
-                "answer": "Mit einem Klick oben rechts auf den Avatar öffnet sich ein Menü, klicken Sie auf \"Mein Konto\". Es öffnet sich eine Seite auf der Sie all' Ihre Konotoinformationen einsehen und zum Teil auch verändern können."
-            },
-            {
-                "question": "Wie stelle ich meine Mitteilungen ein?",
-                "answer": "Antwort 5.2"
-            },
-            {
-                "question": "Wie stelle ich die Sprache ein?",
-                "answer": "Mit einem Klick auf die Flagge oben rechts öffnet sich ein Menü zum Umstellen der Sprache. Im Moment ist ELSA auf deutsch und auf englisch bedienbar."
+                "answer": "Falls sie ihre Kontoinformationen einsehen möchten, oder ihre Nutzerspezifischen einstellungen ändern möchten, können sie dies tun indem sie oben rechts auf das Avatar-Icon klicken und in dem auftauchenden Menü \"Kontoeinstellungen\" wählen."
             },
             {
                 "question": "Wie stelle ich mein Passwort um?",
-                "answer": "Antwort 5.4"
+                "answer": "Sollten sie ihr Passwort vergessen haben, können sie sich eine E-mail zusenden lassen mit der sie ein neues erstellen können. Falls ihnen ihr altes Passwort bekannt ist und sie dennoch ein neues einstellen möchten, können sie dies in ihren Nutzereinstellungen tun."
             },
             {
                 "question": "Wie kann ich meine E-Mail Adresse ändern?",
@@ -128,7 +51,104 @@
             },
             {
                 "question": "Was bedeutet es, dass mein Konto noch nicht vom Admin freigeschaltet ist?",
-                "answer": "Um firmeninterne Dokumente gut schützen zu können, ist es notwendig, dass ein Admin firmenexterne E-Mail-Adressen händisch freischaltet. So wird die Sicherheit vertraulicher Informationen gewährt."
+                "answer": "Um firmeninterne Dokumente gut schützen zu können, ist es notwendig, dass ein Admin firmenexterne E-Mail-Adressen händisch freischaltet. So wird die Sicherheit vertraulicher Informationen gewährt. Um zu erfahren welche E-Mailadressen nicht explizit freigeschaltet werden müssen, sollten sie ihren Admin befragen."
+            },
+            {
+                "question": "Wie stelle ich meine Mitteilungen ein?",
+                "answer": "Sie können einstellen, welche Arten Benachrichtigungen Sie erhalten möchten, dazu müssen Sie zunächst auf den Avatar oben rechts klicken und in dem Menü, welches sich dadurch öffnet, \"Kontoeinstellungen\" wählen. Es öffnet sich eine Seite auf der Sie all' Ihre Konotoinformationen einsehen können. Scrollen sie zu \"Benachrichtigungseinstellungen\", hier können Sie mittels Schaltern die Benachrichtigungen auf der Website ein- und ausschalten. Hovern Sie in den Einstellungen mit Ihrer Maus über die kleinen, blauen 'i's', um mehr zu erfahren."
+            },
+            {
+                "question": "Wie stelle ich die Sprache ein?",
+                "answer": "Mit einem Klick auf die Flagge oben rechts öffnet sich ein Menü zum Umstellen der Sprache. Im Moment ist ELSA auf deutsch und auf englisch bedienbar."
+            }
+        ],
+
+        "section2": [
+            {
+                "question": "Wie unterschreibe ich ein Dokument?",
+                "answer": "Klicken Sie auf der Übersichtsseite auf das Dokument, welches Sie unterschreiben wollen. Rechts zeigt sich ihnen eine Leiste. Klicken Sie hier auf den Stift und folgen Sie den Anweisungen der Seite."
+            },
+            {
+                "question": "Welche Arten von Signaturen gibt es?",
+                "answer": "Bei ELSA wird zwischen zwei Formen der elektronischen Signatur unterschieden, welche beide in der sogenannten eIDAS Verordnung festgehalten sind. Es gibt die einfache Signatur, bei der lediglich eine E-mailadresse als ID hinterlegt wird um festzustellen, dass der zugehörige Nutzer das Dokument, das er signiert gesichtet hat. Die zweite Form, bezeichnet als fortgeschrittene Signatur, wird dargestellt durch einen verschlüsselten einzigartigen Wert, der sich unter normalen Umständen nur auf die Person zurückführen lässt, die signiert hat; diese From der elektronischen Signatur ist rechtlich bindend. Außerdem gibt es in ihren Nutzereinstellungen die Möglichkeit ein Bild ihrer Signatur hochzuladen oder zu erstellen, dieses wird dann zusätzlich zur digitalen Signatur im Protokoll jedes Dokuments, das sie signieren auftauchen. Neben den beiden Arten der Signatur gibt es noch das gegenlesen, welches technisch gesehen eine einfache Signatur ist; wird jedoch mindestens eine Person durch Elsa darum gebeten ein Dokument gegenzulesen, beginnt der Prozess der Signaturen erst, wenn vorher bereits alle Nutzer, die das Dokument gegenlesen sollen bestätigt haben, dass sie dies auch getan haben. Auf diese Weise wird der Prozess den ein Dokument bei Elsa durchläuft gegliedert in einen optionalen gegenlese-Prozess, einen Signaturprozess und die Archivierung des Dokuments. Welche Form der Signatur gewünscht ist, kann der Besitzer des Dokuments, auch genannt Owner, für jeden Beteiligten im einzelnen entscheiden."
+            },
+            {
+                "question": "Ich habe die falsche Signatur-Art gewählt, kann ich das im Nachhinein ändern?",
+                "answer": "Ja, die Signatur-Art kann im Nachhinein geändert werden. Jedoch verfallen dann alle schon gegebenen Signaturen und müssen neu angefordert werden. Aber keine Sorge, ELSA kümmert sich hierum und informiert Ihre Vertragspartner."
+            },
+            {
+                "question": "Wie kann ich den Zeitpunkt/-raum eintragen für ein zu signierendes Dokument?",
+                "answer": "Während Sie die Einstellungen für ein Dokument festlegen, haben sie die Möglichkeit eine Deadline für ihr Dokument festzulegen, indem sie ein Datum und eine Uhrzeit angeben. Zu dem gegebenen Zeitpunkt wird der Prozess, sofern er noch nicht abgeschlossen ist abgebrochen und das Dokument in dem Zustand in dem es sich befindet archiviert. Dies bietet den Vorteil, dass Nutzer, die ihr Dokument unterschreiben sollen, rechtzeitig, vor möglichen Deadlines erinnert werden und sollten das Dokument und zugehörige Informationen auch im Nachhinein noch relevant sein, bleiben alle Informationen hier bei Elsa für sie gesichert."
+            }
+        ],
+        "section3": [
+            {
+                "question": "Wie lade ich ein Dokument hoch?",
+                "answer": "Nachdem Sie sich bei Elsa eingeloggt haben, gelangen sie auf ihre Übersichtsseite. Hier sehen sie möglicherweise bereits einige Dokumentenverbünde denen sie zugewiesen wurden oder ggf. sogar solche die Sie selbst schon erstellt haben. Oberhalb dieser Verbünde, oder falls sie noch keine sehen, relativ weit oben links auf ihrer Übersichtsseite gibt es einen Knopf mit der Aufschrift \"Dokument hochladen\", wenn sie diesen anklicken führt Elsa sie schrittweise durch den Prozess der zum hochladen nötig ist."
+            },
+            {
+                "question": "Was ist ein Dokumentenverbund (engl.: Envelope)?",
+                "answer": "Bei Elsa ist jedes Dokument Teil eines Dokumenten Verbundes. Dies kann mit nur einem Dokument beginnen, ein Verbund kann aber beliebig viele Dokumente enthalten und ist dazu da, damit sie Dokumente die thematisch miteinander verwand sind bündeln können."
+            },
+            {
+                "question": "Wo kann ich die Informationen zu meinem Dokument einsehen?",
+                "answer": "Wenn sie auf ihrer Übersichtsseite auf ein Dokument klicken, oder zuerst auf einen passenden Dokumentenverbund und dann auf ein Dokument, können sie, sofern es sich um ein PDF-Dokument handelt das Dokument selbst betrachten. Andernfalls können sie das Dokument in jedem Fall auch runterladen. Falls sie nähere Informationen zu dem Dokument möchten, können sie diese in der Leiste auf der rechten Seite, im Protokoll oder in der Detailansicht finden. Sollten sie das Dokument hochgeladen haben, finden sie in besagter Leiste außerdem die Möglichkeit Einstellungen zu dem Dokument zu ändern."
+            },
+            {
+                "question": "Wo sehe ich die Dokumentenhistorie ein?",
+                "answer": "Klicken Sie auf der Übersichtsseite auf das Dokument, von welchem Sie die Historie einsehen wollen. Rechts zeigt sich Ihnen eine Leiste. Klicken Sie hier auf den Ordner. Es öffnet sich eine Seite, die Ihnen die Historie zeigt."
+            },
+            {
+                "question": "Welche Dokumententypen werden unterstützt?",
+                "answer": "Grundsätzlich werden alle Dateiformate unterstützt und können heruntergeladen werden. Auf dem derzeitigen Entwicklungsstand können in der integrierten Anzeige nur PDF-Datein angezeigt werden."
+            },
+            {
+                "question": "Wie füge ich jemanden hinzu mein Dokument zu unterschreiben?",
+                "answer": "Wenn Sie das Dokument noch nicht hochgeladen haben, haben sie die Möglichkeit dazu im Prozess des Hochladens. Sollten sie Nutzer*innen zu einem bestehenden Dokument hinzufügen wollen, müssen sie lediglich das entsprechende Dokument von der Übersichtsseite aus, oder dem entsprechenden Verbund aus aufrufen und in der Seitenleiste auf der rechten Seite der Ansicht die Option zum Einstellungen ändern auswählen. Sollte das Dokument ihnen nicht gehören, können sie die zugehörigen Einstellungen nicht anpassen."
+            },
+            {
+                "question": "Wie kann ich Dokumente aktualisieren? (Neue Version hochladen)",
+                "answer": "Um ein Dokument zu aktualisieren müssen Sie zur Dokumentansicht wechseln, indem Sie entweder auf der Übersichtsseite, oder in der Ansicht des zugehörigen Dokumentenverbunds auf das Dokument klicken. Sofern das Dokument ihnen gehört finden sie in der Leiste auf der rechten Seite die Option eine neue Version hochzuladen. Nachdem sie die Option mit einem Klick bestätigt haben, führt Elsa sie durch den Prozess des Hochladens."
+            },
+            {
+                "question": "Was passieren mit den alten Dokumenten, welche von den neueren (überarbeitenden) Versionen ersetzt werden?",
+                "answer": "Veraltete Dokumente werden archiviert und lassen sich jederzeit in der Dokumentenhistorie wiederfinden."
+            },
+            {
+                "question": "Wie kann ich Dokumente oder auch Dokumentverbunde entfernen/löschen?",
+                "answer": "Dokumente können nicht gelöscht werden, sollten sie einen Prozess jedoch vorzeitig abbrechen wollen, können sie das Dokument archivieren lassen."
+            },
+            {
+                "question": "Wer hat alles Zugriff auf mein Dokument?",
+                "answer": "Auf die Dokumente, die sie hochladen haben nur sie selbst und genau die Nutzer die sie explizit zum signieren oder gegenlesen eingetragen haben Zugriff."
+            }
+        ],
+        "section4": [
+            {
+                "question": "Wie suche ich nach einem Dokument?",
+                "answer": "Oben-rechts auf ihrer Übersichtsseite können sie ein kleines Textfeld sehen. Dort können sie Stichwörter eingeben, um nach Dokumenten oder Envelopes die ihnen gehören, oder denen sie zugewiesen wurden zu suchen."
+            },
+            {
+                "question": "Was bedeuten die Filter oberhalb meiner Dokumente?",
+                "answer": "Um ihnen das Leben etwas leichter zu machen, gibt es auf ihrer Übersichtsseite über der Liste von Dokumenten und Envelopes ein paar ovale Felder, auf die sie klicken können um die Dokument und Envelopes nach offenen, abgeschlossenen, eigenen oder solchen die jetzt unterschrieben werden können zu Filtern. Falls das nicht ausreichen sollte, können sie noch auf das kleine Trichersymbol in der Ecke oben rechts klicken, mit welchem sie die erweiterten Filteroptionen öffnen können. Dort können sie speziellere Filter konfigurieren und hinzufügen oder wieder entfernen, wenn sie sie nicht mehr brauchen."
+            },
+            {
+                "question": "Wie filtere ich meine Dokumente manuell?",
+                "answer": "Mit dem Trichtersymbol oben rechts auf der Übersichtsseite, gelangen sie zu den erweiterten Filteroptionen. Dort können sie Filter manuell anpassen."
+            }
+        ],
+        "section5": [
+            {
+                "question": "Wie werde ich Admin?",
+                "answer": "Sie können nur Admin werden, wenn ein anderer Admin sie als solcher auswählt. Sollte es in ihrer Firma noch keinen Admin geben, gibt es dafür ein initiales Admin Konto."
+            },
+            {
+                "question": "Meine Firma hat mich zum Admin gemacht, was bedeutet das?",
+                "answer": "Die Rolle des Admins bringt nur einige wenige administratorische Aufgaben mit. Neben kleineren Aufgaben, wie das festlegen des Erscheinungsbilds von Elsa, oder das festlegen von E-maildomänen deren Accounts automatisch freigeschaltet werden sollen, hat ein Admin zum Beispiel auch die Aufgabe neue Nutzerkonten freizuschalten, die nicht automatisch freigeschaltet werden. Die Möglichkeit dazu finden sie in der Nutzerverwaltung, zu welcher nur Nutzer mit der Rolle Admin haben. Dort finden sie zudem auch noch andere Werkzeuge zur Nutzerverwaltung, sowie die Möglichkeit falls nötig, andere Nutzer, die noch kein Admin sind, zum Admin zu machen."
+            },
+            {
+                "question": "Welche zusätzlichen Rechte und Aufgaben habe ich als Admin?",
+                "answer": "Als Admin können sie nicht nur Nutzer die Elsa benutzen wollen verwalten, also freischalten, sperren oder zu weitern Admins machen. Sondern auch E-mailtemplates erstellen die für die Benachrichtigungen von Elsa genutzt werden, oder das Corporate-Design, also das Erscheinungsbild von Elsa festlegen. Darüber hinaus, sind sie und die anderen Admins dafür verantwortlich zu entscheiden welche E-mailadresse ein Nutzerkonto haben muss, um ohne Freischaltung von einem Admin genutzt werden zu können."
             }
         ]
     },
