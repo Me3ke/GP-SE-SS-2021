@@ -62,7 +62,6 @@
                 "answer": "Mit einem Klick auf die Flagge oben rechts öffnet sich ein Menü zum Umstellen der Sprache. Im Moment ist ELSA auf deutsch und auf englisch bedienbar."
             }
         ],
-
         "section2": [
             {
                 "question": "Wie unterschreibe ich ein Dokument?",
@@ -297,6 +296,13 @@
                     "success": "Sie haben erfolgreich Ihre Signatur hochgeladen!"
                 }
             }
+        },
+        "AddressBookSettings": {
+            "settings": "Adressbuch-Einstellungen",
+            "all": "Alle E-Mail-Adressen automatisch hinzufügen",
+            "allExp": "Alle E-Mail-Adressen, die Sie zum gegenlesen/signieren einer Ihrer Dokumente hinzufügen, werden automatisch Ihrem Adressbuch hinzugefügt.",
+            "domain": "Alle domänenspezifischen E-Mail-Adressen automatisch hinzufügen",
+            "domainExp": "Alle E-Mail-Adressen, mit einer vom Admin eingestellten Domäne, die Sie zum gegenlesen/signieren einer Ihrer Dokumente hinzufügen, werden automatisch Ihrem Adressbuch hinzugefügt"
         },
         "MessageSettings": {
             "settings": "Benachrichtigungs-Einstellungen",
@@ -707,6 +713,6 @@
         "number": "Telefonnummer",
         "save": "Speichern",
         "serverErrorTwo": "Ihre Änderungen konnten nicht übernommen werden. Versuchen Sie es später erneut.",
-        "mailMissing" : "Sie müssen eine E-Mail-Adresse eingeben."
+        "mailMissing": "Sie müssen eine E-Mail-Adresse eingeben."
     }
 }

@@ -295,6 +295,13 @@
             "twoFacAuthSetUp": "Two-factor authentication set-up",
             "setUp": "Set up"
         },
+        "AddressBookSettings": {
+            "settings": "Address book settings",
+            "all": "Add all emails addresses automatically",
+            "allExp": "All e-mail addresses you add to proofread or sign your documents will be added to your address book.",
+            "domain": "Add domain specific email addresses automatically",
+            "domainExp": "All e-mail addresses, with a specific domain set up by your admin, you add to proofread or sign your documents will be added to your address book."
+        },
         "MessageSettings": {
             "settings": "Message settings",
             "send": "Save",
@@ -704,6 +711,6 @@
         "number": "Phone number",
         "save": "Save",
         "serverErrorTwo": "Your changes could not be processed. Try again later.",
-        "mailMissing" : "You have to input an e-mail-address."
+        "mailMissing": "You have to input an e-mail-address."
     }
 }

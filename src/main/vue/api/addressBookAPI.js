@@ -53,13 +53,13 @@ export default {
         })
     },
     // sets address book settings of logged in user
-    async putBookSettings(settings) {
+    async postBookSettings(settings) {
         return axios({
-            method: "put",
+            method: "post",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/directory/changeSettings',
             data: {
-                'addAllAutomatically': settings.all,
-                'addDomainAutomatically': settings.domain
+                'addAllAutomatically': settings.addAllAutomatically,
+                'addDomainAutomatically': settings.addDomainAutomatically
             }
         })
     }

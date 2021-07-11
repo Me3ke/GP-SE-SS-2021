@@ -130,7 +130,7 @@
 <script>
 import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
-import FilterButton from "@/main/vue/components/FilterButton";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
 import {mapGetters} from "vuex";
 import EntryBox from "@/main/vue/components/addressBook/EntryBox";
 import AddEntry from "@/main/vue/components/addressBook/AddEntry";

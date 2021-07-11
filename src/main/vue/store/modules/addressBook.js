@@ -132,7 +132,7 @@ export const actions = {
 
     // changes book settings
     changeSettings({commit}, settings) {
-        return addressBookAPI.putBookSettings(settings).then(response => {
+        return addressBookAPI.postBookSettings(settings).then(response => {
             commit('SET_RES_PUT_SETTINGS', response.data)
             commit('SET_ERROR_PUT_SETTINGS', {})
         }).catch(error => {
