@@ -9,6 +9,7 @@
             <h6>{{$t('Settings.DocumentSettings.chooseDate')}}</h6>
             <b-row style="margin-bottom: 0.5em">
                 <b-col cols="6">
+                    {{endDate}}
                     <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
                 </b-col>
                 <b-col cols="6">
@@ -33,7 +34,7 @@
         </b-alert>
 
         <h6>{{$t('Settings.DocumentSettings.signatory')}}</h6>
-        <SignatoryMenu v-if="alreadySetSettings.length !== 0" :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
+        <SignatoryMenu :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
 
     </div>
     <div class="modal-footer">
@@ -89,6 +90,8 @@ export default {
                 noSignatureType: false,
                 noEndDate: false,
             },
+
+            settingsCopy: {}
 
         }
     },
@@ -175,18 +178,59 @@ export default {
             return !this.error.noEndDate && !this.error.noSignatureType && !this.error.noSignatories;
         }
     },
+
     created() {
         if(this.alreadySetSettings !== undefined) {
-            this.endDate = this.alreadySetSettings.endDate
-            const [day, month, year] = this.endDate.split('.')
-            this.endDate = year + '-' + month + '-' + day
+            this.settingsCopy = Object.assign({}, this.alreadySetSettings)
+        }
+
+        if(this.alreadySetSettings !== undefined) {
+            this.endDate = this.settingsCopy.endDate
+            this.orderRelevant = this.settingsCopy.orderRelevant
+            this.signatories = this.settingsCopy.signatories
 
 
-            this.orderRelevant = this.alreadySetSettings.orderRelevant
-            this.signatories = this.alreadySetSettings.signatories
+            console.log("Date:: ", this.endDate)
+            if(this.endDate.includes(':')) {
+                const [date, time] = this.endDate.split(' ')
 
 
-            console.log(this.signatories)
+                if(date.includes('-')) {
+                    this.endDate = date
+                } else {
+                    const [year, month, day] = date.split('.')
+                    this.endDate = year + '-' + month + '-' + day
+                }
+
+
+
+                const [hours, seconds] = time.split(':')
+                this.endTime = hours + ':' + seconds
+
+
+            } else {
+                if(!this.endDate.includes('.')) {
+                    const [day, month, year] = this.endDate.split('.')
+                    this.endDate = year + '-' + month + '-' + day
+                }
+            }
+            console.log('-------')
+
+            console.log(this.endDate)
+            const [day, month, year] = this.endDate.split('-')
+            if(day.length === 4 && year.length > 3) {
+                this.endDate = day + '-' + month + '-' + year
+            } else if(year === 4 && day.length > 3) {
+                this.endDate = year + '-' + month + '-' + day
+            }
+
+            console.log(this.endDate)
+            console.log('-------')
+
+
+            console.log(this.endTime)
+
+
         }
     },
 

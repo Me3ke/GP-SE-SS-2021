@@ -8,7 +8,6 @@
                 </h5>
             </button>
         </div>
-        add Signa: {{!addSignatories}}; signatory length: {{signatoryInput.length}} - {{signatoryInputs.length !== 0}};
         <div v-if="!addSignatories && !(signatoryInputs.length === 0)">
             <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories" :key="signatory.email"> {{signatory.email}}</b-list-group-item>
             <b-row align-h="end">
@@ -22,8 +21,6 @@
                 </b-col>
             </b-row>
         </div>
-
-        add signatory: {{addSignatories}};
 
         <div v-if="addSignatories">
 

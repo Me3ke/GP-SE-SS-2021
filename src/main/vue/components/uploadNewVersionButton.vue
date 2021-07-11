@@ -239,14 +239,18 @@
 
                                 <!-- Page 3 Add signatories/readers-->
                                 <div v-if="page === 2">
-                                    <UploadSettings :alreadySetSettings="actualDoc" @updateSettings="updateSettings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
+                                    {{settings.endDate}}
+                                    <UploadSettings :alreadySetSettings="settings" @updateSettings="updateSettings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
                                 </div>
 
                                 <!-- Page 4 Upload -->
-                                <div v-if="page === 4">
+                                <div v-if="page === 3">
                                     <div class="modal-body">
                                         <div v-if="!this.uploadingDocument">
-                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope" :file="file"></SettingsPreview>
+                                            <div>
+                                                <h3>{{ document.title }}</h3>
+                                                <h5> {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</h5>
+                                            </div>
                                         </div>
 
                                         <div v-if="this.uploadingDocument">
@@ -262,7 +266,7 @@
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
-                                                <button class="elsa-blue-btn" @click="upload()">
+                                                <button class="elsa-blue-btn" @click="upload">
                                                     {{$t('UploadDoc.upload')}}
                                                 </button>
                                             </b-col>
@@ -304,11 +308,10 @@ import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
-import SettingsPreview from "@/main/vue/components/uploadDocuments/SettingsPreview";
 
 export default {
     name: "uploadNewVersionButton",
-    components: { FileInput, UploadSettings, SettingsPreview},
+    components: { FileInput, UploadSettings},
     data() {
         return {
 
@@ -376,7 +379,6 @@ export default {
         updateFile: function (file) {
             this.file = file;
             this.actualDoc = this.document
-            console.log(this.actualDoc)
             this.settings.endDate = this.actualDoc.endDate
             this.settings.signatories = this.actualDoc.signatories
             this.settings.orderRelevant = this.actualDoc.orderRelevant
@@ -385,6 +387,7 @@ export default {
 
         updateSettings: function (settings) {
             this.settings = settings;
+            console.log(this.actualDoc)
         },
         close() {
             this.page = 1;
@@ -395,6 +398,20 @@ export default {
             this.uploadingDocument = false;
 
             this.$emit('closePopUp', false)
+        },
+
+        upload() {
+            console.log(this.actualDoc)
+
+            this.actualDoc.endDate = this.settings.endDate
+            this.actualDoc.signatories = this.settings.signatories
+            this.actualDoc.orderRelevant = this.settings.orderRelevant
+            this.actualDoc.data = this.file.data
+            this.actualDoc.dataType = this.file.type
+            this.actualDoc.title = this.file.title
+
+            console.log('new: ', this.actualDoc)
+
         },
 
 
@@ -479,7 +496,6 @@ export default {
     },
 
     mounted() {
-        console.log(this.clicked)
     },
 
     updated() {
@@ -491,6 +507,8 @@ export default {
 </script>
 
 <style scoped src="../assets/css/signModals.css">
+
+
 
 
 </style>
