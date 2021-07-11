@@ -375,6 +375,8 @@
         "areYouSure": "Bitte überprüfen Sie das hochzuladene Dokument und die dazugehörigen Einstellungen:",
         "document": "Dokument",
         "envelope": "Verbund",
+        "showHistoryTitle": "Versionshistorie",
+        "showHistory": "Für alle einsehbar",
         "error": {
             "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
             "noEnvelope": "Bitte wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",

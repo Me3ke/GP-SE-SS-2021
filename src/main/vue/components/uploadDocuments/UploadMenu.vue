@@ -96,7 +96,8 @@ export default {
             settings: {
                 signatories: [],
                 endDate: null,
-                orderRelevant: true
+                orderRelevant: true,
+                showHistory: true,
                 // TODO: processStart: Boolean
             },
             file: {
