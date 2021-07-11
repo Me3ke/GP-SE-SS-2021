@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!addReaders && readerInputs.length === 0">
+        <div v-if="!addReaders && readerInputs.length === 0 && addressBookClosed">
             <button class="light-btn" @click="addReaders = true" style="margin-bottom: 1em">
                 <h5>
                     <b-icon icon="plus-circle"></b-icon>
@@ -8,7 +8,7 @@
                 </h5>
             </button>
         </div>
-        <div v-if="!addReaders && !(readerInputs.length === 0)">
+        <div v-if="!addReaders && !(readerInputs.length === 0) && addressBookClosed">
             <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="reader in readers"
                                :key="reader.email"> {{ reader.email }}
             </b-list-group-item>
@@ -25,13 +25,14 @@
             </b-row>
         </div>
 
-        <div v-if="addReaders">
+        <div v-if="addReaders && addressBookClosed">
             <div class="form-group">
                 <b-row no-gutters>
                     <b-col cols="12">
                         <b-input-group class="mb-2">
                             <b-input-group-prepend is-text>
-                                <b-icon icon="book" style="fill: var(--elsa-blue); cursor: pointer"></b-icon>
+                                <b-icon icon="book" style="fill: var(--elsa-blue); cursor: pointer"
+                                        @click="addressBook"></b-icon>
                             </b-input-group-prepend>
                             <b-form-tags
                                 class="form-control" v-model="readerInput" id="readerInput"
@@ -83,7 +84,8 @@
 export default {
     name: "ReaderMenu",
     props: {
-        readers: Array
+        readers: Array,
+        addressBookClosed: Boolean
     },
     data() {
         return {
@@ -91,6 +93,9 @@ export default {
             readerInputs: [],
             addReaders: false
         }
+    },
+    mounted() {
+        this.readerInputs = this.readers
     },
     methods: {
         addReader() {
@@ -114,6 +119,9 @@ export default {
         save() {
             this.$emit('updateReaders', this.readerInputs);
             this.addReaders = false;
+        },
+        addressBook() {
+            this.$emit('showAddressBook')
         }
     }
 }

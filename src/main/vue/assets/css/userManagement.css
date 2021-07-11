@@ -119,6 +119,18 @@
     margin-bottom: -1.5em;
 }
 
+.entry-small {
+    border: solid 1px var(--dark-grey);
+}
+
+.small-entry-box {
+    margin: 0;
+    width: 93%;
+    border: 1px solid var(--elsa-blue);
+    border-radius: 0.3vw;
+
+}
+
 .unseen-user {
     background-color: var(--elsa-blue-transparent);
 }

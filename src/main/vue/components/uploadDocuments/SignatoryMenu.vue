@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!addSignatories && signatoryInputs.length === 0">
+        <div v-if="!addSignatories && signatoryInputs.length === 0 && addressBookClosed">
             <button class="light-btn" @click="addSignatories = true">
                 <h5>
                     <b-icon icon="plus-circle"></b-icon>
@@ -8,7 +8,7 @@
                 </h5>
             </button>
         </div>
-        <div v-if="!addSignatories && !(signatoryInputs.length === 0)">
+        <div v-if="!addSignatories && !(signatoryInputs.length === 0) && addressBookClosed">
             <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories"
                                :key="signatory.email"> {{ signatory.email }}
             </b-list-group-item>
@@ -24,7 +24,7 @@
             </b-row>
         </div>
 
-        <div v-if="addSignatories">
+        <div v-if="addSignatories && addressBookClosed">
 
             <!-- Add Signatory -->
             <div class="form-group">
@@ -32,7 +32,8 @@
                     <b-col cols="12">
                         <b-input-group class="mb-2">
                             <b-input-group-prepend is-text>
-                                <b-icon icon="book" style="fill: var(--elsa-blue); cursor: pointer"></b-icon>
+                                <b-icon icon="book" style="fill: var(--elsa-blue); cursor: pointer"
+                                        @click="addressBook()"></b-icon>
                             </b-input-group-prepend>
                             <b-form-tags
                                 class="form-control" v-model="signatoryInput" id="signatoryInput"
@@ -40,7 +41,8 @@
                                 :placeholder="$t('Settings.DocumentSettings.placeholderMail')"
                             ></b-form-tags>
                             <b-input-group-append>
-                                <button class="elsa-blue-btn add-button" @click="addSignatory()" style="padding: 0.2em 0.4em;">
+                                <button class="elsa-blue-btn add-button" @click="addSignatory()"
+                                        style="padding: 0.2em 0.4em;">
                                     <b-icon icon="plus" style="width: 1.5em; height: 1.5em"></b-icon>
                                 </button>
                             </b-input-group-append>
@@ -116,7 +118,8 @@ import draggable from 'vuedraggable'
 export default {
     name: "SignatoryMenu",
     props: {
-        signatories: Array
+        signatories: Array,
+        addressBookClosed: Boolean
     },
     components: {draggable},
     data() {
@@ -133,6 +136,9 @@ export default {
                 value: 2
             }]
         }
+    },
+    mounted() {
+        this.signatoryInputs = this.signatories
     },
     methods: {
         addSignatory() {
@@ -158,6 +164,9 @@ export default {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
             this.addSignatories = false;
+        },
+        addressBook() {
+            this.$emit('showAddressBook')
         }
     }
 }
@@ -184,7 +193,7 @@ export default {
     border: 0.03vw solid var(--dark-grey);
 }
 
-.add-button{
+.add-button {
     margin: 0;
     border-color: var(--elsa-blue);
 }
@@ -225,7 +234,7 @@ export default {
 
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) {
-    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+    .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.5em;
     }
 
@@ -236,7 +245,7 @@ export default {
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
-    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+    .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.7em;
     }
 
@@ -247,7 +256,7 @@ export default {
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
-    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append{
+    .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
 
@@ -258,7 +267,7 @@ export default {
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
-    .form-control,  .input-group > .input-group-prepend > .input-group-text,.input-group-append {
+    .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
 

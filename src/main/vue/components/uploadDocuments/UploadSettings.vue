@@ -1,77 +1,101 @@
 <template>
-<div>
-    <div class="modal-body">
-        <!-- Pick Deadline -->
-        <b-alert :show="this.error.noEndDate">
-            {{$t('UploadDoc.error.noEndDate')}}
-        </b-alert>
-        <div>
-            <h6>{{$t('Settings.DocumentSettings.chooseDate')}}</h6>
-            <b-row style="margin-bottom: 0.5em">
-                <b-col cols="6">
-                    <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
-                </b-col>
-                <b-col cols="6">
-                    <b-form-timepicker v-model="endTime" :locale="this.$i18n.locale"></b-form-timepicker>
-                </b-col>
-            </b-row>
+    <div style="overflow-x: hidden">
+        <div class="modal-body">
+            <!-- Pick Deadline -->
+            <b-alert :show="this.error.noEndDate">
+                {{ $t('UploadDoc.error.noEndDate') }}
+            </b-alert>
+            <div>
+                <h6>{{ $t('Settings.DocumentSettings.chooseDate') }}</h6>
+                <b-row style="margin-bottom: 0.5em">
+                    <b-col cols="6">
+                        <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
+                    </b-col>
+                    <b-col cols="6">
+                        <b-form-timepicker v-model="endTime" :locale="this.$i18n.locale"></b-form-timepicker>
+                    </b-col>
+                </b-row>
+            </div>
+
+            <!-- Add Readers and Signatories -->
+            <b-alert :show="this.error.noSignatories">
+                {{ $t('UploadDoc.error.noReadSig') }}
+            </b-alert>
+
+            <!-- Add readers -->
+            <h6>{{ $t('Settings.DocumentSettings.reader') }}</h6>
+            <transition-group name="slide" mode="out-in">
+                <ReaderMenu :address-book-closed="showReaderMenu" :readers="readers" @updateReaders="updateReaders"
+                            @showAddressBook="addressBookToggle(false)" key="1"></ReaderMenu>
+
+                <!-- Select from AddressBook -->
+                <AddressBookSelection v-if="showAddressBook && !addressBookMode" :signatories="signatories"
+                                      :readers="readers"
+                                      :sign="addressBookMode" style="margin-bottom: 0.5rem;"
+                                      @showAddressBook="addressBookToggle(false)" key="2"></AddressBookSelection>
+            </transition-group>
+
+
+            <!-- Add signatories -->
+            <b-alert :show="this.error.noSignatureType">
+                {{ $t('UploadDoc.error.noSignatureType') }}
+            </b-alert>
+
+            <h6>{{ $t('Settings.DocumentSettings.signatory') }}</h6>
+            <transition-group name="slide" mode="out-in">
+                <SignatoryMenu :address-book-closed="showSignatoryMenu" :signatories="signatories"
+                               @updateSignatories="updateSignatories"
+                               @updateOrderRelevant="updateOrderRelevant"
+                               @showAddressBook="addressBookToggle(true)" key="3"></SignatoryMenu>
+
+                <!-- Select from AddressBook -->
+                <AddressBookSelection v-if="showAddressBook && addressBookMode" :signatories="signatories"
+                                      :readers="readers"
+                                      :sign="addressBookMode" style="margin-bottom: 0.5rem;"
+                                      @showAddressBook="addressBookToggle(true)" key="4"></AddressBookSelection>
+            </transition-group>
+
+
         </div>
-
-        <!-- Add Readers and Signatories -->
-        <b-alert :show="this.error.noSignatories">
-            {{$t('UploadDoc.error.noReadSig')}}
-        </b-alert>
-
-        <!-- Add readers -->
-        <h6>{{$t('Settings.DocumentSettings.reader')}}</h6>
-        <ReaderMenu :readers="readers" @updateReaders="updateReaders"></ReaderMenu>
-
-        <!-- Add signatories -->
-        <b-alert :show="this.error.noSignatureType">
-            {{$t('UploadDoc.error.noSignatureType')}}
-        </b-alert>
-
-        <h6>{{$t('Settings.DocumentSettings.signatory')}}</h6>
-        <SignatoryMenu :signatories="signatories" @updateSignatories="updateSignatories" @updateOrderRelevant="updateOrderRelevant"></SignatoryMenu>
-
+        <div class="modal-footer">
+            <b-container fluid>
+                <b-row align-h="end">
+                    <b-col cols="auto">
+                        <button type="button" class="light-btn" @click="back(); reviewAddSignatory = false">
+                            <h5>
+                                {{ $t('UploadDoc.back') }}
+                            </h5>
+                        </button>
+                    </b-col>
+                    <b-col cols="auto">
+                        <button type="button" class="elsa-blue-btn" @click="noProcess()">
+                            <h5>
+                                {{ $t('UploadDoc.startProcessLater') }}
+                            </h5>
+                        </button>
+                    </b-col>
+                    <b-col cols="auto">
+                        <button type="button" class="elsa-blue-btn" @click="startProcess()">
+                            <h5>
+                                {{ $t('UploadDoc.startProcess') }}
+                            </h5>
+                        </button>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
     </div>
-    <div class="modal-footer">
-        <b-container fluid>
-            <b-row align-h="end">
-                <b-col cols="auto">
-                    <button type="button" class="light-btn" @click="back(); reviewAddSignatory = false">
-                        <h5>
-                            {{$t('UploadDoc.back')}}
-                        </h5>
-                    </button>
-                </b-col>
-                <b-col cols="auto">
-                    <button type="button" class="elsa-blue-btn" @click="noProcess()">
-                        <h5>
-                            {{$t('UploadDoc.startProcessLater')}}
-                        </h5>
-                    </button>
-                </b-col>
-                <b-col cols="auto">
-                    <button type="button" class="elsa-blue-btn" @click="startProcess()">
-                        <h5>
-                            {{$t('UploadDoc.startProcess')}}
-                        </h5>
-                    </button>
-                </b-col>
-            </b-row>
-        </b-container>
-    </div>
-</div>
 </template>
 
 <script>
 import SignatoryMenu from "@/main/vue/components/uploadDocuments/SignatoryMenu";
 import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
+import AddressBookSelection from "@/main/vue/components/uploadDocuments/AddressBookSelection";
 
 export default {
     name: "UploadSettings",
     components: {
+        AddressBookSelection,
         SignatoryMenu,
         ReaderMenu
     },
@@ -86,10 +110,23 @@ export default {
                 noSignatories: false,
                 noSignatureType: false,
                 noEndDate: false,
-            }
+            },
+            addressBookMode: false,
+            showAddressBook: false,
+            showReaderMenu: true,
+            showSignatoryMenu: true
         }
     },
     methods: {
+        addressBookToggle(mode) {
+            this.addressBookMode = mode
+            if (mode) {
+                this.showSignatoryMenu = !this.showSignatoryMenu
+            } else {
+                this.showReaderMenu = !this.showReaderMenu
+            }
+            this.showAddressBook = !this.showAddressBook
+        },
         updateReaders(readers) {
             this.readers = readers;
         },
@@ -116,7 +153,7 @@ export default {
             let settings = {endDate: "", orderRelevant: false, signatories: []};
 
             // set end date
-            if(!(this.endTime) && !(this.endDate === null)) {
+            if (!(this.endTime) && !(this.endDate === null)) {
                 let time = this.endTime.split(":")
                 settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
             }
@@ -136,7 +173,7 @@ export default {
             this.$emit('nextPage')
         },
         startProcess() {
-            if(this.validate()) {
+            if (this.validate()) {
                 let settings = {endDate: "", orderRelevant: false, signatories: []};
 
                 // set end date
@@ -164,8 +201,8 @@ export default {
             this.error.noSignatories = this.readers.length === 0 && this.signatories.length === 0;
             this.error.noSignatureType = false;
             let i;
-            for(i = 0; i < this.signatories.length; i++) {
-                if(!(this.signatories[i].type === 1 || this.signatories[i].type === 2)) {
+            for (i = 0; i < this.signatories.length; i++) {
+                if (!(this.signatories[i].type === 1 || this.signatories[i].type === 2)) {
                     this.error.noSignatureType = true;
                 }
             }
@@ -182,4 +219,16 @@ export default {
     border-color: var(--red);
 }
 
+.slide-leave-active,
+.slide-enter-active {
+    transition: 0.5s;
+}
+
+.slide-enter {
+    transform: translate(100%, 0);
+}
+
+.slide-leave-to {
+    transform: translate(-100%, 0);
+}
 </style>
