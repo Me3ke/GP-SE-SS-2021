@@ -6,11 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
+/**
+ * who ever wrote this class pls write comments.
+ */
 @Controller
 @RequestMapping("/")
 public class RoutesController {
 
+    /**
+     * comment.
+     */
     public static final String FORWARD = "forward:/";
 
     @GetMapping(value = "{_:^(?!index\\.html|api).*$}")

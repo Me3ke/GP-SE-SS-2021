@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The class used to send the current settings of a document to the frontend.
  */
-public class DocumentSetting {
+public class DocumentSetting extends DocumentSettingsCMD {
 
     private long documentID;
     private List<SignatorySetting> signatories;
@@ -22,13 +22,14 @@ public class DocumentSetting {
      * @param document the relating document.
      */
     public DocumentSetting(final Document document) {
+        super();
         this.documentID = document.getId();
         signatories = new ArrayList<>();
         for (int i = 0; i < document.getSignatories().size(); i++) {
             signatories.add(new SignatorySetting(document.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         this.endDate = document.getEndDate().format(formatter);
         this.showHistory = document.isShowHistory();
     }
@@ -41,34 +42,35 @@ public class DocumentSetting {
         this.documentID = documentID;
     }
 
+    @Override
     public List<SignatorySetting> getSignatories() {
         return signatories;
     }
-
+    @Override
     public void setSignatories(final List<SignatorySetting> signatories) {
         this.signatories = signatories;
     }
-
+    @Override
     public boolean isOrderRelevant() {
         return orderRelevant;
     }
-
+    @Override
     public void setOrderRelevant(final boolean orderRelevant) {
         this.orderRelevant = orderRelevant;
     }
-
+    @Override
     public String getEndDate() {
         return endDate;
     }
-
+    @Override
     public void setEndDate(final String endDate) {
         this.endDate = endDate;
     }
-
+    @Override
     public boolean isShowHistory() {
         return showHistory;
     }
-
+    @Override
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
     }

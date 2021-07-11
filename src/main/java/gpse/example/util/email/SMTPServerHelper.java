@@ -54,12 +54,7 @@ public class SMTPServerHelper {
             Properties properties = mailSender.getJavaMailProperties();
             properties.put("mail.smtp.auth", domainSetter.isMailSMTPAuth());
             properties.put("mail.smtp.starttls.enable", domainSetter.isMailSMTPStartTLSEnable());
-             /*session = Session.getInstance(properties, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(, domainSetter.getPassword());
-                }
-            });*/
+            session = Session.getInstance(properties);
         } catch (NullPointerException e) {
             throw e;
         }
