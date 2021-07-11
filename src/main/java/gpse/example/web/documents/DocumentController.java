@@ -1,13 +1,11 @@
 package gpse.example.web.documents;
 
+import gpse.example.domain.corporatedesign.CorporateDesignService;
+import gpse.example.domain.exceptions.*;
 import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
-import gpse.example.domain.exceptions.CreatingFileException;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
-import gpse.example.domain.exceptions.DownloadFileException;
-import gpse.example.domain.exceptions.UploadFileException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
@@ -63,6 +61,8 @@ public class DocumentController {
     private SMTPServerHelper smtpServerHelper;
     @Autowired
     private EmailTemplateService emailTemplateService;
+    @Autowired
+    private CorporateDesignService corporateDesignService;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -470,10 +470,10 @@ public class DocumentController {
      */
     @GetMapping("/documents/{documentID:\\d+}/protocol")
     public byte[] showProtocol(final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, CreatingFileException {
+        throws DocumentNotFoundException, CreatingFileException, CorporateDesignNotFoundException {
         final Protocol protocol = new Protocol(documentService.getDocument(documentID));
         try {
-            return Base64.encodeBase64(protocol.writeProtocol(userService).toByteArray());
+            return Base64.encodeBase64(protocol.writeProtocol(userService, corporateDesignService).toByteArray());
         } catch (IOException e) {
             throw new CreatingFileException(e);
         }
@@ -487,12 +487,12 @@ public class DocumentController {
      */
     @GetMapping("/documents/{documentID:\\d+}/protocol/download")
     public ResponseEntity<byte[]> downloadProtocol(final @PathVariable(DOCUMENT_ID) long documentID)
-        throws DocumentNotFoundException, CreatingFileException {
+        throws DocumentNotFoundException, CreatingFileException, CorporateDesignNotFoundException {
         final Document document = documentService.getDocument(documentID);
         final Protocol protocol = new Protocol(document);
         try {
             // TODO Document Title is null after updated Document
-            final byte[] protocolBytes = protocol.writeProtocol(userService).toByteArray();
+            final byte[] protocolBytes = protocol.writeProtocol(userService, corporateDesignService).toByteArray();
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
                 .body(protocolBytes);
@@ -548,8 +548,8 @@ public class DocumentController {
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
             for (final SignatorySetting signatorySetting : signatorySettings) {
-                signatory = new Signatory(signatorySetting.getUsername(),
-                    signatorySetting.getSignatureType());
+                signatory = new Signatory(signatorySetting.getEmail(),
+                    signatorySetting.getSignatureTypeAsEnum());
                 signatory.setStatus(signatorySetting.isStatus());
                 signatory.setReminder(signatorySetting.getReminderTiming());
                 signatory.setSignedOn(signatorySetting.convertSignedOn());

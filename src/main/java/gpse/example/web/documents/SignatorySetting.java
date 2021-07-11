@@ -1,18 +1,21 @@
 package gpse.example.web.documents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import gpse.example.domain.exceptions.SignatureTypeFromIntegerException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * The class used to send the current settings of a signatory to the frontend.
  */
 public class SignatorySetting {
 
-    private String username;
-    private SignatureType signatureType;
+    private String email;
+    private int signatureType;
     private boolean status;
     private boolean remind;
     private int reminderTiming;
@@ -24,10 +27,10 @@ public class SignatorySetting {
      * @param signatory the relating signatory.
      */
     public SignatorySetting(final Signatory signatory) {
-        this.username = signatory.getEmail();
-        this.signatureType = signatory.getSignatureType();
+        this.email = signatory.getEmail();
+        this.signatureType = signatory.getSignatureType().toInteger();
         this.status = signatory.isStatus();
-        this.remind = signatory.getReminder() == -1;
+        this.remind = !(signatory.getReminder() == -1);
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
             final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -37,23 +40,55 @@ public class SignatorySetting {
         }
     }
 
+    /**
+     * Empty Constructor for objects created from JSON.
+     */
+    public SignatorySetting() {
+    }
+
+    /**
+     * the method used to convert the String, that we get from the frontend to LocalDateTime.
+     *
+     * @return the time the user signed on as LocalDateTime
+     */
     public LocalDateTime convertSignedOn() {
-        return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        if (signedOn.equals("")) {
+            return null;
+        }
+        try {
+            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } catch (DateTimeParseException dtpe) {
+            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(final String username) {
-        this.username = username;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
-    public SignatureType getSignatureType() {
+    public int getSignatureType() {
         return signatureType;
     }
 
-    public void setSignatureType(final SignatureType signatureType) {
+    /**
+     * The Method used to convert the int that represents the signature Type to the enum representation.
+     *
+     * @return the enum representation of the signaturetype.
+     */
+    @JsonIgnore
+    public SignatureType getSignatureTypeAsEnum() {
+        try {
+            return SignatureType.fromInteger(signatureType);
+        } catch (SignatureTypeFromIntegerException e) {
+            return SignatureType.NO_SIGNATURE;
+        }
+    }
+
+    public void setSignatureType(final int signatureType) {
         this.signatureType = signatureType;
     }
 

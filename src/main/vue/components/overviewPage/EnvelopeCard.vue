@@ -17,25 +17,26 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton
-                    @click.native="$router.push({name: 'settings', params: {envId: envelope.id}})"></settingsButton>
+                <settingsButton v-if="envelope.owner.email === user.email" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/envSettingsButton";
-import EnvelopeBox from "@/main/vue/components/EnvelopeBox";
-import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
+import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
+import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
 import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
-
 export default {
     name: "EnvelopeCard",
     components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
     props: {
         envelope: Object
+    },
+    created() {
+        this.$store.dispatch('fetchUser')
     },
     data() {
         return {
@@ -52,7 +53,8 @@ export default {
 
             auth: 'twoFakAuth/getAuthMust',
             counter: 'twoFakAuth/getLogoutCounter',
-            setUp: 'twoFakAuth/getHasSetUp'
+            setUp: 'twoFakAuth/getHasSetUp',
+            user: 'getUser'
         })
     },
 
@@ -111,6 +113,10 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
+        },
+        settings() {
+            let envelopeId = this.envelope.id;
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelope.id}}));
         }
     }
 }
