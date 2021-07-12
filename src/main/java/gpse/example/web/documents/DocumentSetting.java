@@ -31,7 +31,7 @@ public class DocumentSetting extends DocumentSettingsCMD {
             signatories.add(new SignatorySetting(signatoryManagement.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         this.endDate = document.getEndDate().format(formatter);
         this.showHistory = document.isShowHistory();
     }

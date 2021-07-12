@@ -163,7 +163,8 @@ public class CommentController {
 
     }
 
-    private TemplateDataContainer getTemplateDataContainer(User author, User reciever, Document document) {
+    private TemplateDataContainer getTemplateDataContainer(final User author, final User reciever,
+                                                           final Document document) {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameOwner(author.getFirstname());
         container.setLastNameOwner(author.getLastname());

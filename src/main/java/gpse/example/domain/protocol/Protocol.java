@@ -192,7 +192,7 @@ public class Protocol {
         try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount))) {
             // (x|y) = (0|0) bottom left; new line forbidden
             addLogo(corporateDesignService, lineCounter, protocol, contentStream);
-            addTitle(lineCounter,title,contentStream);
+            addTitle(lineCounter, title, contentStream);
 
             lineCounter.addLines(2);
             addLine("DokumentenID:  " + document.getId(), lineCounter.getCount(), contentStream);

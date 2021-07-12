@@ -146,7 +146,6 @@ public class Document {
         }
     }
 
-    //TODO
     private AdvancedSignature getUsersSignature(final String user) {
         for (final AdvancedSignature advancedSignature : advancedSignatures) {
             if (advancedSignature.getUserEmail().equals(user)) {

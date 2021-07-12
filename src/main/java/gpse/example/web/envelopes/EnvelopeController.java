@@ -4,7 +4,7 @@ import gpse.example.domain.addressbook.AddressBook;
 import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.email.*;
-import gpse.example.domain.email.trusteddomain.DomainSetterService;
+import gpse.example.domain.email.trusteddomain.*;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
