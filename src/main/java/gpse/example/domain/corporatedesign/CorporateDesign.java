@@ -96,17 +96,17 @@ public class CorporateDesign {
 
     private void createImpressum(final User firstAdmin) {
         final PersonalData data = firstAdmin.getPersonalData();
-        impressumsText =  "<p>Anbieter:<br />"
-            + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname() + BR
-            + data.getStreet() + SPACE + data.getHouseNumber() + BR
-            + data.getPostCode() + SPACE + data.getHomeTown() + "</p>\n"
-            + " <p> Kontakt:<br />Telefon: " + data.getPhoneNumber()
+        if (data.getPhoneNumber() == null) {
+            data.setPhoneNumber("");
+        }
+        impressumsText =  "<p>Das Impressum wurde noch nicht erstellt."
+            + " Wenden Sie sich an den Systemadministrator."
+            + "</p>\n"
+            + " <p> Kontakt: " + BR
+            + BR + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname()
+            + "<br />Telefon: " + data.getPhoneNumber()
             + "<br />E-Mail: " + firstAdmin.getUsername() + BR
-            + "</p>\n <p> </p>\n <p>Bei redaktionellen Inhalten:</p>\n"
-            + "<p>Verantwortlich nach § 55 Abs.2 RStV<br />"
-            + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname() + BR
-            + data.getStreet() + SPACE + data.getHouseNumber() + BR
-            + data.getPostCode() + SPACE + data.getHomeTown() + "</p>";
+            + "</p>";
     }
 
     public long getId() {
