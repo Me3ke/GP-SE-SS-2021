@@ -203,32 +203,54 @@ function getEarliestEndDate(envelope) {
 }
 
 function sortState(envelopes) {
+    let important = [];
+    let draft = [];
     let sign = [];
-    let open = [];
+    let read = [];
     let closed = [];
     let i;
     for (i = 0; i < envelopes.length; i++) {
-        if(getState(envelopes[i]) === "OPEN") {
+        if(!(getState(envelopes[i]) === "ARCHIVED")) {
             if(toSign(envelopes[i])) {
-                sign.push(envelopes[i]);
+                important.push(envelopes[i]);
             } else {
-                open.push(envelopes[i]);
+                if(containsDraft(envelopes[i])) {
+                    draft.push(envelopes[i]);
+                } else if(getState(envelopes[i]) === "SIGN") {
+                    sign.push(envelopes[i]);
+                } else {
+                    read.push(envelopes[i]);
+                }
             }
         } else {
             closed.push(envelopes[i]);
         }
     }
-    return sign.concat(open.concat(closed));
+    return important.concat(draft.concat(sign.concat(read.concat(closed))));
 }
 
 function getState(envelope) {
+    let status = "ARCHIVED";
     let i;
     for(i = 0; i < envelope.documents.length; i++) {
-        if(!(envelope.documents[i].state === "READ_AND_SIGN")) {
-            return "OPEN"
+        if(envelope.documents[i].state === "REVIEW") {
+            status = "REVIEW";
+        }
+        if(envelope.documents[i].state === "SIGN") {
+            return "SIGN";
         }
     }
-    return "CLOSED"
+    return status;
+}
+
+function containsDraft(envelope) {
+    let i;
+    for(i = 0; i < envelope.documents.length; i++) {
+        if(envelope.documents[i].draft) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function sortRole(envelopes) {
