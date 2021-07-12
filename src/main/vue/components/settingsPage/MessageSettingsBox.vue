@@ -147,8 +147,7 @@ export default {
     name: "MessageSettingsBox",
     data() {
         return {
-            showSave: false,
-            clicked: false,
+            showSave: false
         }
     },
     async mounted() {

@@ -18,6 +18,7 @@ export default {
                 signatories: settings.signatories,
                 endDate: settings.endDate,
                 orderRelevant: settings.orderRelevant,
+                showHistory: settings.showHistory
             }
         })
     }

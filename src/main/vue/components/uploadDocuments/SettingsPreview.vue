@@ -1,13 +1,17 @@
 <template>
 <div>
     <div>
-        <h5>{{$t('UploadDoc.areYouSure')}}</h5>
+        <h5 v-if="files.length === 1">{{$t('UploadDoc.areYouSure')}}</h5>
+        <h5 v-else>{{$t('UploadDoc.areYouSureMult')}}</h5>
     </div>
 
     <div style="margin:1em">
-        <h6 style="font-weight:bold;">{{$t('UploadDoc.document')}}</h6>
+        <h6 style="font-weight:bold;" v-if="files.length === 1">{{$t('UploadDoc.document')}}</h6>
+        <h6 style="font-weight:bold;" v-else>{{$t('UploadDoc.documents')}}</h6>
         <div class="card">
-            {{this.file.title}}.{{this.file.type}}
+            <div v-for="file in files" :key="file.name">
+                {{file.title}}.{{file.type}}
+            </div>
         </div>
     </div>
 
@@ -58,7 +62,7 @@ export default {
     props: {
         settings: Object,
         selectedEnvelope: Object,
-        file: Object
+        files: Array
     },
     methods: {
         getReaders() {
