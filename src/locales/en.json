@@ -236,7 +236,8 @@
         "date": "Created on",
         "open": "Open",
         "closed": "Closed",
-        "envelope": "Envelope"
+        "envelope": "Envelope",
+        "draft": "Draft"
     },
     "MessagePage": {
         "heading": "Messages",

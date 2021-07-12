@@ -237,7 +237,8 @@
         "date": "Erstellungsdatum",
         "open": "Offen",
         "closed": "Abgeschlossen",
-        "envelope": "Verbund"
+        "envelope": "Verbund",
+        "draft": "Entwurf"
     },
     "MessagePage": {
         "heading": "Benachrichtigungen",
