@@ -24,6 +24,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
     /**
      * Standard ConfirmationTokenService.
      * autowired not commited not tested 18.05.21
@@ -164,7 +165,7 @@ public class UserServiceImpl implements UserService {
     public void infoNewExtUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
         final List<User> userList = getUsers();
         for (final User admin : userList) {
-            if (admin.getRoles().contains("ROLE_ADMIN")) {
+            if (admin.getRoles().contains(ROLE_ADMIN)) {
                 final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
                 final TemplateDataContainer container = new TemplateDataContainer();
                 container.setFirstNameReciever(admin.getFirstname());
@@ -201,6 +202,6 @@ public class UserServiceImpl implements UserService {
             .setSigningKey(signingKey).build()
             .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
         final User user = getUser(parsedToken.getBody().getSubject());
-        return user.getRoles().contains("ROLE_ADMIN");
+        return user.getRoles().contains(ROLE_ADMIN);
     }
 }
