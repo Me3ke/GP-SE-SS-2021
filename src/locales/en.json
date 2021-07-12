@@ -374,7 +374,8 @@
         "document": "Document",
         "envelope": "Envelope",
         "showHistoryTitle": "Version history",
-        "showHistory": "Visible to erveryone",
+        "showHistory": "Visible to everyone",
+        "dontShowHistory": "Hidden from everyone",
         "error": {
             "noDocument": "Please choose a document to upload.",
             "noEnvelope": "Please choose a envelope to upload your document into.",

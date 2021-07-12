@@ -377,6 +377,7 @@
         "envelope": "Verbund",
         "showHistoryTitle": "Versionshistorie",
         "showHistory": "Für alle einsehbar",
+        "dontShowHistory": "Für Unterzeichner und Gegenleser nicht einsehbar",
         "error": {
             "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
             "noEnvelope": "Bitte wählen Sie einen Verbund aus, um Ihr Dokument hochzuladen.",
