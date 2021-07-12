@@ -390,7 +390,9 @@
         "advanced": "Fortgeschritten",
         "signatureType": "Signaturtyp",
         "areYouSure": "Bitte überprüfen Sie das hochzuladene Dokument und die dazugehörigen Einstellungen:",
+        "areYouSureMult": "Bitte überprüfen Sie die hochzuladenen Dokumente und die dazugehörigen Einstellungen:",
         "document": "Dokument",
+        "documents": "Dokumente",
         "envelope": "Verbund",
         "error": {
             "noDocument": "Bitte wählen Sie ein Dokument aus, um es hochzuladen.",
@@ -407,6 +409,7 @@
         "sendReminderEMails": "Erinnerungs-Emails verschicken",
         "startProcess": "Prozess starten",
         "startProcessLater": "Prozess später starten",
+        "addMoreFiles": "Ein weiters Dokument hinzufügen",
         "UpdateDocument": {
             "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
             "update1": "aktualisieren",

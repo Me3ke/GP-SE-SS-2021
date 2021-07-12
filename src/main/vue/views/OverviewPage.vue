@@ -132,8 +132,8 @@ import EnvelopeCard from "@/main/vue/components/overviewPage/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
-import FilterMenu from "@/main/vue/components/FilterMenu";
 import SortMenu from "@/main/vue/components/SortMenu";
+import FilterMenu from "@/main/vue/components/overviewPage/FilterMenu";
 
 Vue.use(VueConfetti)
 export default {
