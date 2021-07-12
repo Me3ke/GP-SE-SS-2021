@@ -1,5 +1,5 @@
 import envelopeAPI from "@/main/vue/api/envelopeAPI";
-import {filterEnvelopes} from "../../scripts/filterMethods.js";
+import {filterEnvelopes, sortEnvelopes} from "../../scripts/filterMethods.js";
 
 export const namespaced = true
 
@@ -36,12 +36,10 @@ export const getters = {
     getFilteredPagedEnvelopes: (state) => (filters, pageLimit, page) => {
         //filter
         let filteredEnvelopes = filterEnvelopes(state.envelopes, filters);
-
         //sorting
-
+        filteredEnvelopes = sortEnvelopes(filteredEnvelopes, filters);
         //paging
         filteredEnvelopes = filteredEnvelopes.slice((page-1)*pageLimit, page*pageLimit)
-
         return filteredEnvelopes
     },
     getFilteredEnvelopes: (state) => (filters) =>  {

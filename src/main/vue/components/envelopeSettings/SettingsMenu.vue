@@ -35,6 +35,15 @@
                 ></SignatorySettings>
         </div>
 
+        <!-- History -->
+        <div class="card" style="margin-top:3vh">
+            <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
+                {{$t('UploadDoc.showHistoryTitle')}}
+            </div>
+
+            <HistorySettings @updateHistory="updateHistory" :showHistory="showHistory"></HistorySettings>
+        </div>
+
     </div>
 </template>
 
@@ -43,6 +52,7 @@ import ReaderSettings from "@/main/vue/components/envelopeSettings/ReaderSetting
 import SignatorySettings from "@/main/vue/components/envelopeSettings/SignatorySettings";
 import {mapGetters} from "vuex";
 import EndDateSettings from "@/main/vue/components/envelopeSettings/EndDateSettings";
+import HistorySettings from "@/main/vue/components/envelopeSettings/HistorySettings";
 
 export default {
     name: "settingsMenu",
@@ -53,12 +63,14 @@ export default {
         signatories: Array,
         endDate: String,
         orderRelevant: Boolean,
-        editAll: Boolean
+        editAll: Boolean,
+        showHistory: Boolean
     },
     components: {
         ReaderSettings,
         SignatorySettings,
-        EndDateSettings
+        EndDateSettings,
+        HistorySettings,
     },
     created() {
         this.$store.dispatch('envelopes/fetchEnvelopes', {})
@@ -70,17 +82,21 @@ export default {
     },
     methods: {
         updateReader: function(readers) {
-            let newSettings = {signatories: this.makeSignatories(readers, this.signatories), orderRelevant: this.orderRelevant, endDate: this.endDate};
+            let newSettings = {signatories: this.makeSignatories(readers, this.signatories), orderRelevant: this.orderRelevant, endDate: this.endDate, showHistory: this.showHistory};
             console.log(newSettings);
             this.saveSettings(newSettings);
         },
         updateSignatories: function(signatories, orderRelevant) {
-            let newSettings = {signatories: this.makeSignatories(this.readers, signatories), orderRelevant: orderRelevant, endDate: this.endDate};
+            let newSettings = {signatories: this.makeSignatories(this.readers, signatories), orderRelevant: orderRelevant, endDate: this.endDate, showHistory: this.showHistory};
             console.log(newSettings);
             this.saveSettings(newSettings);
         },
         updateEndDate: function(endDate) {
-            let newSettings = {signatories: this.makeSignatories(this.readers, this.signatories), orderRelevant: this.orderRelevant, endDate: endDate};
+            let newSettings = {signatories: this.makeSignatories(this.readers, this.signatories), orderRelevant: this.orderRelevant, endDate: endDate, showHistory: this.showHistory};
+            this.saveSettings(newSettings);
+        },
+        updateHistory: function(showHistory) {
+            let newSettings = {signatories: this.makeSignatories(this.readers, this.signatories), orderRelevant: this.orderRelevant, endDate: this.endDate, showHistory: showHistory};
             this.saveSettings(newSettings);
         },
         makeSignatories(readers, signatories) {

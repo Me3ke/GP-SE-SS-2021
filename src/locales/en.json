@@ -82,6 +82,22 @@
         "signatory": "Signatory",
         "readerOrSignatory": "Proofreader or Signatory"
     },
+    "Sort": {
+        "creation": "New - Old",
+        "creation-rev": "Old - New",
+        "end": "Deadline soon",
+        "name": "A - Z",
+        "name-rev": "Z - A",
+        "state": "Open - Closed",
+        "state-rev": "Closed - Open",
+        "role": "Signatory - Owner",
+        "role-rev": "Owner - Signatory",
+        "default": "Importance",
+        "title": "Sort documents and envelopes",
+        "first": "1st sort option",
+        "second": "2nd sort option",
+        "apply": "Apply"
+    },
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General information",
@@ -219,7 +235,8 @@
         "owner": "Owner",
         "date": "Created on",
         "open": "Open",
-        "closed": "Closed"
+        "closed": "Closed",
+        "envelope": "Envelope"
     },
     "MessagePage": {
         "heading": "Messages",
@@ -370,9 +387,14 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
-        "areYouSure": "Please check the document you want to upload and it's settings:",
+        "areYouSure": "Please check the document you want to upload and its settings:",
+        "areYouSureMult": "Please check the documents you want to upload and their settings:",
         "document": "Document",
+        "documents": "Documents",
         "envelope": "Envelope",
+        "showHistoryTitle": "Version history",
+        "showHistory": "Visible to everyone",
+        "dontShowHistory": "Hidden from everyone",
         "error": {
             "noDocument": "Please choose a document to upload.",
             "noEnvelope": "Please choose a envelope to upload your document into.",
@@ -388,6 +410,7 @@
         "sendReminderEMails": "Send reminder emails",
         "startProcess": "Start process",
         "startProcessLater": "Start process later",
+        "addMoreFiles": "Add another document",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
