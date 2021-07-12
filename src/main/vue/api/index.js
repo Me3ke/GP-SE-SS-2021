@@ -6,6 +6,7 @@ import envelope from "./envelopeAPI";
 import publicKeyAPI from "@/main/vue/api/publicKeyAPI";
 import documentUploadAPI from "@/main/vue/api/documentUploadAPI";
 import documentSettingsAPI from "@/main/vue/api/documentSettingsAPI";
+import trustedDomainAPI from "@/main/vue/api/trustedDomainAPI";
 
 export default {
     auth,
@@ -15,5 +16,6 @@ export default {
     documentAPI,
     publicKeyAPI,
     documentUploadAPI,
-    documentSettingsAPI
+    documentSettingsAPI,
+    trustedDomainAPI
 }

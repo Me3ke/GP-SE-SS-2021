@@ -646,6 +646,15 @@
                 "admin": "Adminrechte geben"
             },
             "new": "NEU"
+        },
+        "trustedDomain": {
+            "title": "Vertrauenswürdige Domänen Einstellung",
+            "Domain": {
+                "header": "Vertrauenswürdige Domäne (z.B. 'elsa.de')",
+                "save" : "speichern",
+                "domain": "Vertrauenswürdige Domäne:  ",
+                "feedback": "Bitte mindestens 4 Zeichen und einen Punkt verwenden."
+            }
         }
     },
     "ProgressBar": {

@@ -26,6 +26,7 @@ import PasswordResetPage from "@/main/vue/views/PasswordResetPage";
 import PasswordResetPageNoToken from "@/main/vue/views/PasswordResetPageNoToken";
 import HistoryPage from "@/main/vue/views/HistoryPage";
 import AddressBookPage from "@/main/vue/views/AddressBookPage";
+import TrustedDomain from "@/main/vue/views/TrustedDomain";
 
 
 Vue.use(VueRouter)
@@ -244,6 +245,14 @@ const router = new VueRouter({
                     path: 'adminSettings/userManagement',
                     name: 'userManagement',
                     component: UserManagement,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'adminSettings/trustedDomain',
+                    name: 'trustedDomain',
+                    component: TrustedDomain,
                     meta: {
                         requiresAuth: true
                     }

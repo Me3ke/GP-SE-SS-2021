@@ -644,6 +644,15 @@
                 "admin": "Make admin"
             },
             "new": "NEW"
+        },
+        "trustedDomain": {
+            "title": "Trusted Domain Settings",
+            "Domain": {
+                "domain": "Trusted Domain:  ",
+                "header": "Trusted Domain (e.g. 'elsa.com')",
+                "save" : "save",
+                "feedback" : "min. 4 characters and a dot."
+            }
         }
     },
     "ProgressBar": {
