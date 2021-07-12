@@ -6,7 +6,7 @@
         <ProofreadPopUp v-if="showProofread" :documents="[document]" :is-guest="isGuest"
                         @readTrigger="toggleRead()"></ProofreadPopUp>
 
-        <upload-new-version-button @close="updateShowVersionPopUp" @closePopUp="updateShowVersionPopUp" :clicked="showNewVersionPopup" :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
+        <upload-new-version-button @closeModal="showNewVersionPopup = false" @close="updateShowVersionPopUp" @closePopUp="updateShowVersionPopUp" :clicked="showNewVersionPopup" :docID="docId" :envID="envId" :document="document"></upload-new-version-button>
 
         <!-- Closed -->
         <b-sidebar v-if="isClosed" visible id="mini-sidebar" aria-labelledby="sidebar-title-closed" no-header right>

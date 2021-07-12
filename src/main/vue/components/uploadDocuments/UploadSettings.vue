@@ -190,10 +190,8 @@ export default {
             this.signatories = this.settingsCopy.signatories
 
 
-            console.log("Date:: ", this.endDate)
             if(this.endDate.includes(':')) {
                 const [date, time] = this.endDate.split(' ')
-
 
                 if(date.includes('-')) {
                     this.endDate = date
@@ -202,11 +200,8 @@ export default {
                     this.endDate = year + '-' + month + '-' + day
                 }
 
-
-
                 const [hours, seconds] = time.split(':')
                 this.endTime = hours + ':' + seconds
-
 
             } else {
                 if(!this.endDate.includes('.')) {
@@ -214,23 +209,18 @@ export default {
                     this.endDate = year + '-' + month + '-' + day
                 }
             }
-            console.log('-------')
 
-            console.log(this.endDate)
+            if(this.endDate.includes('.')) {
+                const [day, month, year] = this.endDate.split('.')
+                this.endDate = year + '-' + month + '-' + day
+            }
+
             const [day, month, year] = this.endDate.split('-')
             if(day.length === 4 && year.length > 3) {
                 this.endDate = day + '-' + month + '-' + year
             } else if(year === 4 && day.length > 3) {
                 this.endDate = year + '-' + month + '-' + day
             }
-
-            console.log(this.endDate)
-            console.log('-------')
-
-
-            console.log(this.endTime)
-
-
         }
     },
 
