@@ -82,6 +82,22 @@
         "signatory": "Signatory",
         "readerOrSignatory": "Proofreader or Signatory"
     },
+    "Sort": {
+        "creation": "New - Old",
+        "creation-rev": "Old - New",
+        "end": "Deadline soon",
+        "name": "A - Z",
+        "name-rev": "Z - A",
+        "state": "Open - Closed",
+        "state-rev": "Closed - Open",
+        "role": "Signatory - Owner",
+        "role-rev": "Owner - Signatory",
+        "default": "Importance",
+        "title": "Sort documents and envelopes",
+        "first": "1st sort option",
+        "second": "2nd sort option",
+        "apply": "Apply"
+    },
     "UserGuide": {
         "name": "User Guide",
         "section-1": "General information",
@@ -219,7 +235,8 @@
         "owner": "Owner",
         "date": "Created on",
         "open": "Open",
-        "closed": "Closed"
+        "closed": "Closed",
+        "envelope": "Envelope"
     },
     "MessagePage": {
         "heading": "Messages",

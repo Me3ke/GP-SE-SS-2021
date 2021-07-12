@@ -28,6 +28,9 @@
                         <b-col>
                             <FilterMenu :filter="filter"></FilterMenu>
                         </b-col>
+                        <b-col>
+                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
+                        </b-col>
                     </b-row>
                 </b-col>
             </b-row>
@@ -130,6 +133,7 @@ import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
 import FilterMenu from "@/main/vue/components/FilterMenu";
+import SortMenu from "@/main/vue/components/SortMenu";
 
 Vue.use(VueConfetti)
 export default {
@@ -142,7 +146,8 @@ export default {
         UploadButton,
         EnvelopeCard,
         DocumentCard,
-        FilterMenu
+        FilterMenu,
+        SortMenu
     },
     data() {
         return {
@@ -156,7 +161,9 @@ export default {
                 creationDateMax: "",
                 endDateMin: "",
                 endDateMax: "",
-                dataType: ""
+                dataType: "",
+                sortFirst: "state",
+                sortSecond: "end"
             },
             searchInput: "",
             pageLimit: 10,
@@ -169,6 +176,10 @@ export default {
         }
     },
     methods: {
+        updateSort: function(sortFirst, sortSecond) {
+            this.filter.sortFirst = sortFirst;
+            this.filter.sortSecond = sortSecond;
+        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
             if (this.filter.state === "" || this.filter.state === "CLOSED") {
