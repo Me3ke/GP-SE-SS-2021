@@ -57,6 +57,11 @@
                                             {{$t('Document.date')}}: {{this.document.creationDate}}
                                         </h6>
                                     </b-col>
+                                    <b-col cols="auto">
+                                        <h6>
+                                            {{$t('Document.envelope')}}: {{this.envelope(this.envelopeId).name}}
+                                        </h6>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                         </b-row>
@@ -68,6 +73,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "DocumentBox",
     props: {
@@ -88,6 +95,14 @@ export default {
             toRead = true;
         }
         return {open: open, toSign: toSign, toRead: toRead};
+    },
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+    },
+    computed: {
+        ...mapGetters({
+            envelope: 'envelopes/getEnvelope'
+        })
     }
 }
 </script>
