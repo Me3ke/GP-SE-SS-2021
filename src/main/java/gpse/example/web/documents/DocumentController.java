@@ -1,6 +1,11 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.corporatedesign.CorporateDesignService;
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.email.SMTPServerHelper;
+import gpse.example.domain.email.TemplateDataContainer;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
@@ -9,7 +14,6 @@ import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;

@@ -30,7 +30,7 @@ public class SignatorySetting {
         this.email = signatory.getEmail();
         this.signatureType = signatory.getSignatureType().toInteger();
         this.status = signatory.isStatus();
-        this.remind = (signatory.getReminder() != -1);
+        this.remind = signatory.getReminder() != -1;
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
             final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

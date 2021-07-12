@@ -1,5 +1,10 @@
 package gpse.example.domain.documents;
 
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.email.SMTPServerHelper;
+import gpse.example.domain.email.TemplateDataContainer;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
@@ -9,7 +14,6 @@ import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.domain.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;
