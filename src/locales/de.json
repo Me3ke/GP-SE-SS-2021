@@ -408,7 +408,7 @@
         "reminderShort": "Tag(e) vor Ende",
         "sendReminderEMails": "Erinnerungs-Emails verschicken",
         "startProcess": "Prozess starten",
-        "startProcessLater": "Prozess später starten",
+        "startProcessLater": "Als Entwurf speichern",
         "addMoreFiles": "Ein weiters Dokument hinzufügen",
         "UpdateDocument": {
             "chooseFile": "Dokument auswählen oder ins Feld ziehen...",

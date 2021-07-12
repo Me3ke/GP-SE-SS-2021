@@ -406,7 +406,7 @@
         "reminderShort": "day(s) before deadline",
         "sendReminderEMails": "Send reminder emails",
         "startProcess": "Start process",
-        "startProcessLater": "Start process later",
+        "startProcessLater": "Save as draft",
         "addMoreFiles": "Add another document",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
