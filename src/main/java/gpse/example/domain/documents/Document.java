@@ -112,7 +112,11 @@ public class Document {
     @Column
     private boolean draft;
 
+    @Column
+    private String linkToDocumentview;
+
     public Document() {
+        this.signatories = new ArrayList<>();
     }
 
     /**
@@ -495,7 +499,8 @@ public class Document {
      */
     public void setSignatories(final List<Signatory> signatories) {
         if (!state.equals(DocumentState.ARCHIVED)) {
-            this.signatories = signatories;
+            this.signatories.clear();
+            this.signatories.addAll(signatories);
         }
     }
 
@@ -560,5 +565,13 @@ public class Document {
         if (!state.equals(DocumentState.ARCHIVED) && draft) {
             this.draft = draft;
         }
+    }
+
+    public String getLinkToDocumentview() {
+        return linkToDocumentview;
+    }
+
+    public void setLinkToDocumentview(final String linkToDocumentview) {
+        this.linkToDocumentview = linkToDocumentview;
     }
 }

@@ -92,7 +92,7 @@ public class ScheduledTasks {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setEndDate(document.getEndDate().toString());
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink("http://localhost:8080/link/to/document/view");
+        container.setLink(document.getLinkToDocumentview());
         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
             userService.getUser(document.getOwner()));
     }

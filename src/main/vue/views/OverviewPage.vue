@@ -1,6 +1,6 @@
 <template>
     <div>
-        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+        <WelcomePopUp v-if="loaded && !user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
 
         <Header></Header>
 
@@ -27,6 +27,9 @@
                         </b-col>
                         <b-col>
                             <FilterMenu :filter="filter"></FilterMenu>
+                        </b-col>
+                        <b-col>
+                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -121,15 +124,16 @@
 <script>
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
-import FilterButton from "@/main/vue/components/FilterButton";
-import UploadButton from "@/main/vue/components/UploadMenu";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
+import UploadButton from "@/main/vue/components/uploadDocuments/UploadMenu";
 import {mapGetters} from "vuex";
-import DocumentCard from "@/main/vue/components/DocumentCard";
-import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
+import EnvelopeCard from "@/main/vue/components/overviewPage/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
-import FilterMenu from "@/main/vue/components/FilterMenu";
+import SortMenu from "@/main/vue/components/SortMenu";
+import FilterMenu from "@/main/vue/components/overviewPage/FilterMenu";
 
 Vue.use(VueConfetti)
 export default {
@@ -142,7 +146,8 @@ export default {
         UploadButton,
         EnvelopeCard,
         DocumentCard,
-        FilterMenu
+        FilterMenu,
+        SortMenu
     },
     data() {
         return {
@@ -156,15 +161,25 @@ export default {
                 creationDateMax: "",
                 endDateMin: "",
                 endDateMax: "",
-                dataType: ""
+                dataType: "",
+                sortFirst: "state",
+                sortSecond: "end"
             },
             searchInput: "",
             pageLimit: 10,
             page: 1,
-            sort: null
+            sort: null,
+
+            // needed for WelcomePopUp, so it does not always appear and then instantly disappear
+            // because data has not been completely fetched yet
+            loaded: false
         }
     },
     methods: {
+        updateSort: function(sortFirst, sortSecond) {
+            this.filter.sortFirst = sortFirst;
+            this.filter.sortSecond = sortSecond;
+        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
             if (this.filter.state === "" || this.filter.state === "CLOSED") {
@@ -253,13 +268,14 @@ export default {
             await this.$store.dispatch('fetchUser')
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('fetchUser')
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('fetchUser')
+        this.loaded = true
     },
-
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
+        this.loaded = false
     },
 
     // TODO REMINDER:

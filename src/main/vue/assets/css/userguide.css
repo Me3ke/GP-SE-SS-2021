@@ -7,6 +7,10 @@ body {
     font-family: sans-serif;
 }
 
+.overflow {
+    overflow-x: hidden !important;
+}
+
 
 .base-header {
     margin-top: 2em;
@@ -136,7 +140,7 @@ body {
         margin-left: 0.5em;
     }
     .h2-user-guide {
-        margin-top: -0.9em;
+        margin-top: -2em;
     }
     .generalInfo .question {
         font-size: 1.5em;
@@ -248,13 +252,13 @@ body {
         margin-left: 1.7em !important;
     }
     .h2-user-guide {
-        font-size: 2.4em;
-        margin-top: -0.8em;
-        margin-left: 1em;
+        font-size: 2em;
+        margin-top: -1.3em;
+        margin-left: 1.2em;
     }
     .h2-general-info {
-        font-size: 2em;
-        margin-left: -4.2em;
+        font-size: 1.8em;
+        margin-left: -4.7em;
     }
 
     .generalInfo {
@@ -296,8 +300,9 @@ body {
 
 @media screen and (min-width: 281px) and (max-width: 361px){
     .h2-user-guide {
-        font-size: 2em;
+        font-size: 1.8em;
         margin-left: 1.2em;
+        margin-top: -1.5em;
     }
     .h2-general-info {
         font-size: 1.4em;
