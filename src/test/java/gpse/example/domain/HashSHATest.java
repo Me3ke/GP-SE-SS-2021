@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class HashSHATest {
     public static final String ALEX = "alex";
-    HashSHA hashSHA = new HashSHA();
+    private HashSHA hashSHA = new HashSHA();
 
     @Test
     public void testSameHash() {

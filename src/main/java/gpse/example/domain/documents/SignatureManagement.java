@@ -14,6 +14,7 @@ import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,9 @@ public class SignatureManagement {
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
     private static final String DOCUMENT_URL = "/document/";
+    private static final String HTTP_LOCALHOST = "http://localhost:";
+    @Value("${server.port}")
+    private int serverPort;
     private final DocumentService documentService;
     private final UserService userService;
     private final SMTPServerHelper smtpServerHelper;
@@ -278,7 +282,7 @@ public class SignatureManagement {
             container.setLastNameOwner(owner.getLastname());
             container.setDocumentTitle(savedDocument.getDocumentTitle());
             final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, savedDocument.getId()));
-            container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+            container.setLink(HTTP_LOCALHOST + serverPort + "/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
                 + savedDocument.getId() + "/" + token.getToken());
             if (signatureType.equals(SignatureType.REVIEW)) {
                 smtpServerHelper.sendTemplatedEmail(
@@ -289,7 +293,7 @@ public class SignatureManagement {
                     savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), guestTemplate,
                     container, Category.SIGN, owner);
             } else {
-                container.setLink("http://localhost:8080/de/landing");
+                container.setLink(HTTP_LOCALHOST + serverPort + "/de/landing");
                 final EmailTemplate advancedGuestTemplate = emailTemplateService.findSystemTemplateByName(
                     "AdvancedGuestInvitationTemplate");
                 smtpServerHelper.sendTemplatedEmail(

@@ -3,6 +3,8 @@ package gpse.example.web.envelopes;
 import gpse.example.domain.addressbook.AddressBook;
 import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.documents.*;
+import gpse.example.domain.email.*;
+import gpse.example.domain.email.trusteddomain.DomainSetterService;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
@@ -12,8 +14,6 @@ import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.DocumentFilter;
-import gpse.example.domain.email.*;
-import gpse.example.domain.email.trusteddomain.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
 import gpse.example.web.documents.GuestToken;
@@ -21,6 +21,7 @@ import gpse.example.web.documents.GuestTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,10 @@ public class EnvelopeController {
     private static final int STATUS_CODE_OK = 200;
     private static final String DOCUMENT_URL = "/document/";
     private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
+    private static final String HTTP_LOCALHOST = "http://localhost:";
+
+    @Value("${server.port}")
+    private int serverPort;
 
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
@@ -137,7 +142,7 @@ public class EnvelopeController {
                     savedDocument = doc;
                 }
             }
-            savedDocument.setLinkToDocumentview("http://localhost:8080/de/envelope/" + savedEnvelope.getId()
+            savedDocument.setLinkToDocumentview(HTTP_LOCALHOST + serverPort + "/de/envelope/" + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
             final SignatoryManagement signatoryManagement = savedDocument.getSignatoryManagement();
             if (savedDocument.isOrderRelevant() && signatoryManagement.getCurrentSignatory() != null) {
@@ -218,14 +223,14 @@ public class EnvelopeController {
         container.setLastNameOwner(owner.getLastname());
         container.setDocumentTitle(document.getDocumentTitle());
         final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(userID, document.getId()));
-        container.setLink("http://localhost:8080/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
-            + document.getId() + "/" + token.getToken());
+        container.setLink(HTTP_LOCALHOST + serverPort + "/de/" + "envelope/" + envelope.getId() + DOCUMENT_URL
+                + document.getId() + "/" + token.getToken());
         if (signatureType.equals(SignatureType.REVIEW)) {
             smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.READ, owner);
         } else if (signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
             smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.SIGN, owner);
         } else {
-            container.setLink("http://localhost:8080/de/landing");
+            container.setLink(HTTP_LOCALHOST + serverPort + "/de/landing");
             try {
                 template = emailTemplateService.findSystemTemplateByName("AdvancedGuestInvitationTemplate");
             } catch (TemplateNameNotFoundException e) {

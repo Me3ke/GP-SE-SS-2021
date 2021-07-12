@@ -21,6 +21,7 @@ import gpse.example.web.JSONResponseObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,6 +54,8 @@ public class UserController {
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String USER_NOT_FOUND = "User not Found";
+    @Value("${server.port}")
+    private int serverPort;
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
@@ -391,7 +394,7 @@ public class UserController {
                 final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
                 emailContainer.setFirstNameReciever(user.getFirstname());
                 emailContainer.setLastNameReciever(user.getLastname());
-                emailContainer.setLink("http://localhost:8080/de/login/reset/" + savedToken.getToken());
+                emailContainer.setLink("http://localhost:" + serverPort + "/de/login/reset/" + savedToken.getToken());
                 smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
                     emailContainer, Category.SYSTEM, null);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);

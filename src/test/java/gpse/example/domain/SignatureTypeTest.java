@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SignatureTypeTest {
 
-    SignatureType noSignature;
-    SignatureType review;
-    SignatureType simpleSignature;
-    SignatureType advancedSignature;
+    private SignatureType noSignature;
+    private SignatureType review;
+    private SignatureType simpleSignature;
+    private SignatureType advancedSignature;
 
     @Test
-    void testToInteger() {
+    private void testToInteger() {
         assertEquals(-1, (int) noSignature.toInteger());
         assertEquals((int) review.toInteger(), 0);
         assertEquals((int) simpleSignature.toInteger(), 1);
@@ -25,7 +25,7 @@ class SignatureTypeTest {
     }
 
     @Test
-    void testFromInteger() {
+    private void testFromInteger() {
         try {
             assertSame(SignatureType.fromInteger(-1), noSignature);
             assertNotSame(SignatureType.fromInteger(-1), simpleSignature);
@@ -41,14 +41,14 @@ class SignatureTypeTest {
     }
 
     @Test
-    void testValueOf() {
+    private void testValueOf() {
         assertSame(SignatureType.valueOf("NO_SIGNATURE"), noSignature);
         assertSame(SignatureType.valueOf("SIMPLE_SIGNATURE"), simpleSignature);
         assertSame(SignatureType.valueOf("ADVANCED_SIGNATURE"), advancedSignature);
     }
 
     @BeforeEach
-    void setUp() {
+    private void setUp() {
         noSignature = SignatureType.NO_SIGNATURE;
         review = SignatureType.REVIEW;
         simpleSignature = SignatureType.SIMPLE_SIGNATURE;
