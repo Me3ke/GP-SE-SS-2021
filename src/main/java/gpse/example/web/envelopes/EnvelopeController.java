@@ -73,10 +73,10 @@ public class EnvelopeController {
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService the envelopeService
-     * @param userService     the userService
-     * @param documentService the documentService
-     * @param documentFilter  the documentFilter
+     * @param envelopeService   the envelopeService
+     * @param userService       the userService
+     * @param documentService   the documentService
+     * @param documentFilter    the documentFilter
      * @param guestTokenService the guestTokenService
      */
     @Autowired
@@ -142,7 +142,7 @@ public class EnvelopeController {
                     savedDocument = doc;
                 }
             }
-            savedDocument.setLinkToDocumentview(HTTP_LOCALHOST + serverPort + "/de/envelope/" + savedEnvelope.getId()
+            savedDocument.setLinkToDocumentView(HTTP_LOCALHOST + serverPort + "/de/envelope/" + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
             final SignatoryManagement signatoryManagement = savedDocument.getSignatoryManagement();
             if (savedDocument.isOrderRelevant() && signatoryManagement.getCurrentSignatory() != null) {
@@ -175,16 +175,15 @@ public class EnvelopeController {
     private void addIntoAddressBook(final String ownerID, final List<Signatory> signatories) {
         final User currentUser = userService.getUser(ownerID);
         final AddressBook addressBook = currentUser.getAddressBook();
-        List<Signatory> filteredSignatories;
-        if (addressBook.isAddAllAutomatically()) {
-            filteredSignatories = signatories;
-            if (addressBook.isAddDomainAutomatically()) {
+        List<Signatory> filteredSignatories = signatories;
+        if (addressBook.isAddAllAutomatically() || addressBook.isAddDomainAutomatically()) {
+            if (!addressBook.isAddAllAutomatically() && addressBook.isAddDomainAutomatically()) {
                 filteredSignatories = signatories.stream().filter(signatory ->
                     signatory.getEmail()
                         .matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain()))
                     .collect(Collectors.toList());
             }
-            for (final Signatory signatory: filteredSignatories) {
+            for (final Signatory signatory : filteredSignatories) {
                 try {
                     final User user = userService.getUser(signatory.getEmail());
                     addressBook.addEntry(new Entry(user));
@@ -194,8 +193,8 @@ public class EnvelopeController {
                     addressBook.addEntry(entry);
                 }
             }
-            userService.saveUser(currentUser);
         }
+        userService.saveUser(currentUser);
     }
 
     private void sendUserInvitation(final String userID, final User owner, final Document document,
@@ -257,10 +256,10 @@ public class EnvelopeController {
         container.setDocumentTitle(document.getDocumentTitle());
         container.setEnvelopeName(envelope.getName());
         container.setEndDate(document.getEndDate().toString());
-        container.setLink(document.getLinkToDocumentview());
+        container.setLink(document.getLinkToDocumentView());
         Category category;
         if (signatureType.equals(SignatureType.ADVANCED_SIGNATURE)
-            || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
+                || signatureType.equals(SignatureType.SIMPLE_SIGNATURE)) {
             category = Category.SIGN;
         } else {
             category = Category.READ;

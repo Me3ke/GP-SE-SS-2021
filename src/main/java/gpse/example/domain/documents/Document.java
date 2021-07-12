@@ -102,7 +102,7 @@ public class Document {
     private boolean showHistory;
 
     @Column
-    private String linkToDocumentview;
+    private String linkToDocumentView;
 
     public Document() {
     }
@@ -272,15 +272,15 @@ public class Document {
         this.showHistory = showHistory;
     }
 
-    public String getLinkToDocumentview() {
-        return linkToDocumentview;
+    public String getLinkToDocumentView() {
+        return linkToDocumentView;
     }
 
     public SignatoryManagement getSignatoryManagement() {
         return signatoryManagement;
     }
 
-    public void setLinkToDocumentview(final String linkToDocumentview) {
-        this.linkToDocumentview = linkToDocumentview;
+    public void setLinkToDocumentView(final String linkToDocumentview) {
+        this.linkToDocumentView = linkToDocumentview;
     }
 }

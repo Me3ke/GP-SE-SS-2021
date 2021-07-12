@@ -1,7 +1,9 @@
 package gpse.example.domain.protocol;
 
 import com.sun.istack.NotNull;
+import gpse.example.domain.corporatedesign.CorporateDesignService;
 import gpse.example.domain.documents.Document;
+import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.UserService;
@@ -12,7 +14,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -27,7 +31,6 @@ public class Protocol {
      * vertical position of first line.
      */
     private static final int TOP_OF_PAGE = 700;
-
     /**
      * Text margin to left side.
      */
@@ -42,6 +45,9 @@ public class Protocol {
 
     private static final int IMAGE_HEIGHT = 30;
 
+    private static final int NEW_LOGO_HEIGHT = 80;
+
+    private static final int LOGO_HEIGHT = 20;
 
     private static final String PROTOKOLL = "Protokoll: ";
 
@@ -52,6 +58,8 @@ public class Protocol {
     private static final String SIGNATURE_OF = "Signiert von: ";
     private static final int LINE_LENGTH = 60;
     private static final int MARGIN_BOTTOM = 100;
+    private static final int LEFT_SIDE = 450;
+
 
     private final Document document;
 
@@ -65,10 +73,13 @@ public class Protocol {
      * printing the protocol with specified user data.
      *
      * @param userService the userService that is used to get the userObjects that signatories refer to.
+     * @param corporateDesignService the service is used to get the logo for the protocol.
      * @return a stream which contains the written pdf protocol.
      * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
      */
-    public ByteArrayOutputStream writeProtocol(final UserService userService) throws IOException {
+    public ByteArrayOutputStream writeProtocol(final UserService userService,
+                                               final CorporateDesignService corporateDesignService)
+        throws IOException, CorporateDesignNotFoundException {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         final LineCounter lineCounter = new LineCounter();
@@ -79,7 +90,7 @@ public class Protocol {
             final PDPage page = new PDPage();
             protocol.addPage(page);
 
-            writeProtocolHead(lineCounter, title, protocol);
+            writeProtocolHead(lineCounter, title, protocol, corporateDesignService);
 
             writeSignatures(userService, formatter, lineCounter, protocol);
 
@@ -174,26 +185,14 @@ public class Protocol {
         }
     }
 
-    private void writeProtocolHead(final LineCounter lineCounter, final String title, final PDDocument protocol)
+    private void writeProtocolHead(final LineCounter lineCounter, final String title,
+                                   final PDDocument protocol, final CorporateDesignService corporateDesignService)
                 throws IOException {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount))) {
             // (x|y) = (0|0) bottom left; new line forbidden
-            contentStream.beginText();
-            contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-            contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
-            if ((PROTOKOLL + title).length() <= MAX_LINE_LENGTH) {
-                contentStream.showText(PROTOKOLL + title);
-            } else {
-                contentStream.showText(PROTOKOLL);
-                lineCounter.addLines(1);
-                contentStream.endText();
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
-                contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
-                contentStream.showText(title);
-            }
-            contentStream.endText();
+            addLogo(corporateDesignService, lineCounter, protocol, contentStream);
+            addTitle(lineCounter,title,contentStream);
 
             lineCounter.addLines(2);
             addLine("DokumentenID:  " + document.getId(), lineCounter.getCount(), contentStream);
@@ -204,8 +203,47 @@ public class Protocol {
             if (document.getEndDate() != null) {
                 lineCounter.addLines(1);
                 addLine("Offen bis: " + formatter.format(document.getEndDate()), lineCounter.getCount(),
-                    contentStream);
+                        contentStream);
             }
+        }
+    }
+
+    private void addTitle(final LineCounter lineCounter, final String title,
+                          final PDPageContentStream contentStream) throws IOException {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
+        contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
+        if ((PROTOKOLL + title).length() <= MAX_LINE_LENGTH) {
+            contentStream.showText(PROTOKOLL + title);
+        } else {
+            contentStream.showText(PROTOKOLL);
+            lineCounter.addLines(1);
+            contentStream.endText();
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 2 * FONT_SIZE);
+            contentStream.newLineAtOffset(MARGIN_LEFT, lineCounter.getCount());
+            contentStream.showText(title);
+        }
+        contentStream.endText();
+    }
+
+    private void addLogo(final CorporateDesignService corporateDesignService,
+                         final LineCounter lineCounter, final PDDocument protocol,
+                         final PDPageContentStream contentStream) throws IOException {
+        byte[] logo;
+        try {
+            logo = corporateDesignService.getCorporateDesign(2L).getLogo();
+            final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
+            contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
+                IMAGE_WIDTH, NEW_LOGO_HEIGHT);
+            lineCounter.addLines(2);
+        } catch (CorporateDesignNotFoundException e) {
+            final File file = new File("src/main/vue/assets/logos/ELSA_medium.png");
+            logo = Files.readAllBytes(file.toPath());
+            final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
+            contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
+                IMAGE_WIDTH, LOGO_HEIGHT);
+            lineCounter.addLines(2);
         }
     }
 

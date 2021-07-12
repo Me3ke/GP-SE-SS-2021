@@ -1,6 +1,6 @@
 <template>
     <div>
-        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+        <WelcomePopUp v-if="loaded && !user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
 
         <Header></Header>
 
@@ -121,11 +121,11 @@
 <script>
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
-import FilterButton from "@/main/vue/components/FilterButton";
-import UploadButton from "@/main/vue/components/UploadMenu";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
+import UploadButton from "@/main/vue/components/uploadDocuments/UploadMenu";
 import {mapGetters} from "vuex";
-import DocumentCard from "@/main/vue/components/DocumentCard";
-import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
+import EnvelopeCard from "@/main/vue/components/overviewPage/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
@@ -161,7 +161,11 @@ export default {
             searchInput: "",
             pageLimit: 10,
             page: 1,
-            sort: null
+            sort: null,
+
+            // needed for WelcomePopUp, so it does not always appear and then instantly disappear
+            // because data has not been completely fetched yet
+            loaded: false
         }
     },
     methods: {
@@ -253,13 +257,14 @@ export default {
             await this.$store.dispatch('fetchUser')
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('fetchUser')
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('fetchUser')
+        this.loaded = true
     },
-
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
+        this.loaded = false
     },
 
     // TODO REMINDER:

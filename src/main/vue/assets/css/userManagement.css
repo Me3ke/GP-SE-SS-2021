@@ -20,6 +20,15 @@
     margin-bottom: auto;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
+.bubble {
+    padding-right: 0;
+    padding-left: 0.3em;
+}
+
 /* Sort drop-down */
 .my-dropdown-menu >>> .dropdown-menu {
     padding-top: 0.1vw;
@@ -101,12 +110,50 @@
     cursor: pointer;
 }
 
-.history {
+.history, .entry {
     width: 100%;
+}
+
+.entry {
+    border-bottom-color: transparent;
+    margin-bottom: -1.5em;
+}
+
+.entry-small {
+    border: solid 1px var(--dark-grey);
+}
+
+.small-entry-box {
+    width: 93%;
+    border: 1px solid var(--elsa-blue);
+    border-radius: 0.3vw;
+    margin: 0 0 0.2rem;
 }
 
 .unseen-user {
     background-color: var(--elsa-blue-transparent);
+}
+
+/* Text */
+.show-more {
+    text-align: center;
+    text-decoration: underline var(--elsa-blue);
+    border: solid 1px var(--dark-grey);
+    border-radius: 0.3vw;
+    border-top-color: transparent;
+    padding: 1em 0.5em;
+    margin-bottom: 0.5rem;
+}
+
+.show-more:hover, .save-changes:hover {
+    color: var(--elsa-blue);
+    transition: 0.4s;
+}
+
+.save-changes {
+    margin-left: 5.5em;
+    text-decoration: underline var(--elsa-blue);
+    opacity: 70%;
 }
 
 /* New User Badge */
@@ -147,6 +194,37 @@
     color: var(--whitesmoke);
 }
 
+.dark-elsa-btn {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+}
+
+.dark-elsa-btn:hover:enabled {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.white-btn {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.white-btn:hover:enabled {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+}
+
+#upload {
+    fill: var(--dark-grey);
+    margin-right: 0.5em;
+}
+
+#upload-hover {
+    fill: var(--whitesmoke);
+    margin-right: 0.5em;
+    transition: 0.4s;
+}
+
 /* Search bar */
 #search:hover {
     cursor: pointer;
@@ -154,11 +232,23 @@
     transition-duration: 0.4s;
 }
 
+/* Entry inputs */
+.change-entry {
+    width: 10em;
+    max-width: 10em;
+    margin-right: 0;
+    margin-left: 3.2em !important;
+    margin-bottom: 0.25em;
+    height: 1.5em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
 /* Add Comment Box */
 .form-control {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    border: solid 0.1em var(--dark-grey);
+    border: solid 0.1em var(--elsa-blue);
     border-radius: 0.2em;
 }
 
@@ -167,6 +257,12 @@
     width: 12em;
     max-width: 12em;
     margin-right: 0.75em;
+}
+
+.input-group > .input-group-prepend > .input-group-text{
+    height: 1.85em;
+    fill: var(--elsa-blue);
+    margin-top: 0;
 }
 
 .form-control:focus {
@@ -226,7 +322,7 @@
         font-size: 0.6em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group-text {
         font-size: 0.5em;
     }
 
@@ -234,7 +330,7 @@
         font-size: 0.5em;
     }
 
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
+    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search, .input-group > .input-group-prepend > .input-group-text {
         margin-top: 0.5em;
     }
 
@@ -256,7 +352,7 @@
         font-size: 0.41em;
     }
 
-    span, .filter-button, .form-control, .user-container {
+    span, .filter-button, .form-control, .user-container, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.7em;
     }
 
@@ -287,7 +383,7 @@
         font-size: 0.7em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.8em;
     }
 
@@ -317,7 +413,7 @@
         font-size: 0.7em;
     }
 
-    .filter-button, .form-control {
+    .filter-button, .form-control, .input-group > .input-group-prepend > .input-group-text {
         font-size: 0.8em;
     }
 

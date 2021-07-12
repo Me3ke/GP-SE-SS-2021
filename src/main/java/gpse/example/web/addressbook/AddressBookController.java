@@ -32,6 +32,7 @@ public class AddressBookController {
 
     /**
      * The getAddressBook method is used for a get request to get address book entries.
+     *
      * @param userID the user doing the request.
      * @return a list of entry objects which represent the entries in the address book.
      */
@@ -39,7 +40,7 @@ public class AddressBookController {
     public List<EntryObject> getAddressBook(@PathVariable final String userID) {
         final AddressBook addressBook = userService.getUser(userID).getAddressBook();
         final List<EntryObject> response = new ArrayList<>();
-        for (final Entry entry: addressBook.getEntries()) {
+        for (final Entry entry : addressBook.getEntries()) {
             response.add(new EntryObject(entry));
         }
         return response;
@@ -47,7 +48,8 @@ public class AddressBookController {
 
     /**
      * The addEntry method is used for a put request to create a new entry.
-     * @param userID the user doing the request.
+     *
+     * @param userID   the user doing the request.
      * @param newEntry an entry object representing a new entry.
      * @return a response object to display a status and a message.
      */
@@ -56,20 +58,20 @@ public class AddressBookController {
         final JSONResponseObject response = new JSONResponseObject();
         final User currentUser = userService.getUser(userID);
         final AddressBook addressBook = currentUser.getAddressBook();
-        if (newEntry.getFirstname() == null) {
+        if (newEntry.getFirstname().equals("")) {
             try {
                 final User user = userService.getUser(newEntry.getEmail());
                 newEntry.setFirstname(user.getFirstname());
             } catch (UsernameNotFoundException e) {
-                newEntry.setFirstname(null);
+                newEntry.setFirstname("");
             }
         }
-        if (newEntry.getLastname() == null) {
+        if (newEntry.getLastname().equals("")) {
             try {
                 final User user = userService.getUser(newEntry.getEmail());
                 newEntry.setLastname(user.getLastname());
             } catch (UsernameNotFoundException e) {
-                newEntry.setLastname(null);
+                newEntry.setLastname("");
             }
         }
         addressBook.addEntry(new Entry(newEntry));
@@ -81,6 +83,7 @@ public class AddressBookController {
 
     /**
      * The getSettings method is used for a get request to get the address book settings.
+     *
      * @param userID the user doing the request.
      * @return an object representing the settings.
      */
@@ -95,7 +98,8 @@ public class AddressBookController {
 
     /**
      * The updateSettings method is used for a post request to change address book settings.
-     * @param userID the user doing the request.
+     *
+     * @param userID      the user doing the request.
      * @param newSettings an object containing the new settings for the address book.
      * @return a response object to display a status and a message.
      */
@@ -115,8 +119,9 @@ public class AddressBookController {
 
     /**
      * The changeEntry method is used for a post request to change an entry.
-     * @param userID the user doing the request.
-     * @param entryID the id of the entry to be changed.
+     *
+     * @param userID   the user doing the request.
+     * @param entryID  the id of the entry to be changed.
      * @param newEntry the new entry data.
      * @return a response object to display a status and a message.
      */
@@ -146,7 +151,8 @@ public class AddressBookController {
 
     /**
      * The deleteEntry method is used for a delete request to delete an entry.
-     * @param userID the user doing the request.
+     *
+     * @param userID  the user doing the request.
      * @param entryID the id of the entry to be deleted.
      * @return a response object to display a status and a message.
      */

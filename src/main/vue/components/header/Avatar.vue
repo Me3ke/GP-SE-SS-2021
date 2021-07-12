@@ -12,6 +12,14 @@
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
+        <!-- Address book -->
+        <b-dropdown-item class="my-dropdown-item" @click="routeToAddressBook">
+            <b-icon icon="book" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.addressBook') }} </span>
+        </b-dropdown-item>
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
         <!-- Admin Settings -->
         <b-dropdown-item
             v-if="isAdmin"
@@ -112,6 +120,9 @@ export default {
         },
         routeToProfile() {
             this.$router.push('/' + this.$i18n.locale + '/user')
+        },
+        routeToAddressBook(){
+            this.$router.push('/' + this.$i18n.locale + '/addressBook')
         },
         routeToHelp() {
             this.$router.push('/' + this.$i18n.locale + '/help')

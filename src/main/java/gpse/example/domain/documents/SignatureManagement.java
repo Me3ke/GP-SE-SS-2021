@@ -131,7 +131,7 @@ public class SignatureManagement {
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink(document.getLinkToDocumentview() + "/protocol");
+        container.setLink(document.getLinkToDocumentView() + "/protocol");
         smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
         for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
             if (!signatory.getEmail().equals(document.getOwner())) {
@@ -271,7 +271,7 @@ public class SignatureManagement {
             container.setDocumentTitle(savedDocument.getDocumentTitle());
             container.setEnvelopeName(envelope.getName());
             container.setEndDate(savedDocument.getEndDate().toString());
-            container.setLink(savedDocument.getLinkToDocumentview());
+            container.setLink(savedDocument.getLinkToDocumentView());
             smtpServerHelper.sendTemplatedEmail(
                 savedDocument.getSignatoryManagement().getCurrentSignatory().getEmail(), template,
                 container, Category.SIGN, owner);
