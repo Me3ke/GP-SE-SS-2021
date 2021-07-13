@@ -9,7 +9,7 @@
             </button>
         </div>
         <div v-if="!addReaders && !(readerInputs.length === 0) && addressBookClosed">
-            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="reader in readers"
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)" v-for="reader in readers"
                                :key="reader.email"> {{ reader.email }}
             </b-list-group-item>
 
@@ -51,7 +51,7 @@
             </div>
             <div>
             </div>
-            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
+            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)">
                 <div class="drag-drop-element" v-for="reader in readerInputs" :key="reader.email"
                      style="padding:0.25em">
                     <b-row align-h="between">

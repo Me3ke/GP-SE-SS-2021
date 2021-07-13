@@ -2,11 +2,11 @@
     <div>
         <!-- Show History -->
         <div v-if="!editHistory">
-            <b-list-group-item v-if="showHistory" style="height: 2.5em; padding: 0.25em 1.5em; text-align: left">{{$t('UploadDoc.showHistory')}}</b-list-group-item>
-            <b-list-group-item v-if="!showHistory" style="height: 2.5em; padding: 0.25em 1.5em; text-align: left">{{$t('UploadDoc.dontShowHistory')}}</b-list-group-item>
+            <b-list-group-item v-if="showHistory" style="height: 2.5em; padding: 0.25em 1.5em; text-align: left; background-color: var(--whitesmoke); border-color: var(--dark-grey)">{{$t('UploadDoc.showHistory')}}</b-list-group-item>
+            <b-list-group-item v-if="!showHistory" style="height: 2.5em; padding: 0.25em 1.5em; text-align: left; background-color: var(--whitesmoke); border-color: var(--dark-grey)">{{$t('UploadDoc.dontShowHistory')}}</b-list-group-item>
         </div>
 
-        <b-list-group-item v-if="editHistory" style="height: 2.5em; padding: 0.25em 1.5em;">
+        <b-list-group-item v-if="editHistory" style="height: 2.5em; padding: 0.25em 1.5em; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <b-row align-h="start">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="showHistory" v-model="showHistoryInput">

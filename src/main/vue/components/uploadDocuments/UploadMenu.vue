@@ -53,12 +53,16 @@
                                         <b-row align-h="end">
                                             <b-col cols="auto">
                                                 <button class="light-btn" @click="page = page - 1;">
-                                                    {{$t('UploadDoc.back')}}
+                                                    <h5>
+                                                        {{$t('UploadDoc.back')}}
+                                                    </h5>
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
                                                 <button class="elsa-blue-btn" @click="upload()">
-                                                    {{$t('UploadDoc.upload')}}
+                                                    <h5>
+                                                        {{$t('UploadDoc.upload')}}
+                                                    </h5>
                                                 </button>
                                             </b-col>
                                         </b-row>

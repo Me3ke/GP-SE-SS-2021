@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- End Date -->
-        <div class="card">
+        <div class="card" style="background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.endDate')}}
             </div>
@@ -12,7 +12,7 @@
         </div>
 
         <!-- Reader -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.reader')}}
             </div>
@@ -23,7 +23,7 @@
         </div>
 
         <!-- Signatories -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.signatory')}}
             </div>
@@ -36,7 +36,7 @@
         </div>
 
         <!-- History -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('UploadDoc.showHistoryTitle')}}
             </div>
@@ -135,5 +135,15 @@ export default {
 .list-group-item {
     height: 2.5em;
     padding: 0.5em;
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.form-control:focus {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
 }
 </style>

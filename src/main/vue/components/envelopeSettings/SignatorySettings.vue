@@ -9,7 +9,7 @@
                 <SignatoryListItem v-for="signatory in signatories" :key="signatory.email" :signatory="signatory"></SignatoryListItem>
             </div>
 
-            <b-list-group-item v-if="signatories.length === 0">
+            <b-list-group-item v-if="signatories.length === 0" style="height: 2.5em; padding: 0.5em; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                 {{$t('Settings.DocumentSettings.noSignatories')}}
             </b-list-group-item>
 

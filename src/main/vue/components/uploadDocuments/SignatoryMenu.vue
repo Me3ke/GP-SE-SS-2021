@@ -9,7 +9,7 @@
             </button>
         </div>
         <div v-if="!addSignatories && !(signatoryInputs.length === 0) && addressBookClosed">
-            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories"
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)" v-for="signatory in signatories"
                                :key="signatory.email"> {{ signatory.email }}
             </b-list-group-item>
             <b-row align-h="end">
@@ -62,7 +62,7 @@
             </b-row>
 
             <!-- List of Signatories -->
-            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
+            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)">
                 <draggable v-model="signatoryInputs">
                     <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email"
                          style="padding:0.25em">

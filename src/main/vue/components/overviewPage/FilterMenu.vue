@@ -35,11 +35,11 @@
                                     <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetCreationDate()"></b-icon>
                                     <b-row>
                                         <b-col>
-                                            <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMin"></b-form-datepicker>
+                                            <b-form-datepicker class="my-date-picker" v-model="filterInput.creationDateMin"></b-form-datepicker>
                                         </b-col>
                                         -
                                         <b-col>
-                                            <b-form-datepicker class="mb-2" v-model="filterInput.creationDateMax"></b-form-datepicker>
+                                            <b-form-datepicker class="my-date-picker" v-model="filterInput.creationDateMax"></b-form-datepicker>
                                         </b-col>
                                     </b-row>
                                     <!-- End Date Span / Day -->
@@ -47,11 +47,11 @@
                                     <b-icon icon="arrow-counterclockwise" class="filterIcon" @click="resetEndDate()"></b-icon>
                                     <b-row>
                                         <b-col>
-                                            <b-form-datepicker class="mb-2" v-model="filterInput.endDateMin"></b-form-datepicker>
+                                            <b-form-datepicker class="my-date-picker" v-model="filterInput.endDateMin"></b-form-datepicker>
                                         </b-col>
                                         -
                                         <b-col>
-                                            <b-form-datepicker class="mb-2" v-model="filterInput.endDateMax"></b-form-datepicker>
+                                            <b-form-datepicker class="my-date-picker" v-model="filterInput.endDateMax"></b-form-datepicker>
                                         </b-col>
                                     </b-row>
                                     <!-- data type -->
@@ -288,5 +288,28 @@ export default {
 
 .elsa-blue-btn:focus, .light-btn:focus {
     border: 0.03vw solid var(--dark-grey);
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.form-control:focus {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.my-date-picker >>> .dropdown-menu {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.btn-outline-primary {
+    color: var(--elsa-blue);
+}
+
+.btn {
+    color: var(--dark-grey);
 }
 </style>

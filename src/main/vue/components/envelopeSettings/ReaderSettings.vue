@@ -5,7 +5,7 @@
                 <SignatoryListItem v-for="reader in readers" :key="reader.email" :signatory="reader"></SignatoryListItem>
             </div>
 
-            <b-list-group-item v-if="readers.length === 0">
+            <b-list-group-item v-if="readers.length === 0" style="height: 2.5em; padding: 0.5em; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                 {{$t('Settings.DocumentSettings.noReaders')}}
             </b-list-group-item>
 
