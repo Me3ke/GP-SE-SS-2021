@@ -1,7 +1,6 @@
 <template>
     <div>
         <div
-            style="padding-bottom: 1em;"
             @click="clicked"
         >
             <b-progress max="100" style="background-color: var(--progress-background); cursor: pointer">

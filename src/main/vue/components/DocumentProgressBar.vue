@@ -1,7 +1,6 @@
 <template>
 <div v-if="getDocumentProgress !== undefined && docPercentage < 100.00">
     <div
-        style="padding-bottom: 1em;"
         @click="clicked"
     >
 

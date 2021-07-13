@@ -17,7 +17,7 @@
                 <b-row>
                     <b-col cols="2">
                         <b-row v-for="document in this.envelope(envId).documents" :key="document.id">
-                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id" style=" margin-bottom: 0.5em;">
+                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id" style=" margin-bottom: 0.5em; max-width:25em; overflow:hidden">
                                 <h5>
                                     <b-row style="padding: 0.5em 1em 0;">
                                         <b-icon icon="file-earmark-text" style="margin-right: 0.5em; fill:var(--elsa-blue)"></b-icon>

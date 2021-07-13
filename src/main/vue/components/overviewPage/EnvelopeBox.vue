@@ -81,20 +81,21 @@ export default {
         let open = false;
         let toSign = false;
         let toRead = false;
-        let draft = true;
+        let draft = false;
         let i;
         for (i = 0; i < this.envelope.documents.length; i++) {
-            if (this.envelope.documents[i].state === "REVIEW" || this.envelope.documents[i].state === "SIGN") {
+            let document = this.envelope.documents[i];
+            if (document.state === "REVIEW" || document.state === "SIGN") {
                 open = true;
             }
-            if (this.envelope.documents[i].turnToSign === true) {
+            if (document.turnToSign && document.signatory && !document.signed) {
                 toSign = true;
             }
-            if (this.envelope.documents[i].turnToReview === true) {
+            if (document.turnToReview && document.reader && !document.read) {
                 toRead = true;
             }
-            if (this.envelope.documents[i].draft === false) {
-                draft = false;
+            if (document.draft) {
+                draft = true;
             }
         }
         return {open: open, toSign: toSign, toRead: toRead, draft: draft}
