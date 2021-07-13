@@ -125,7 +125,7 @@ export default {
     components: {draggable},
     computed: {
       ...mapGetters({
-          allUser: 'userManagement/getAllUsers' // for checking if new registered signatories are getting added for the email templates
+          allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
       })
     },
     data() {
@@ -155,8 +155,9 @@ export default {
 
             for(let i = 0; i < this.signatoryInput.length; i++) {
                 if(this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
-                    console.log(this.signatoryInput[i])
+                    console.log(this.signatoryInput[i]) // TODO Error
                 } else {
+                    // if cause for the search after new added signatories
                     if(this.allUser.some(user => user.email === this.signatoryInput[i])) {
                         this.noticeNewSignatories = true
                     }
@@ -198,17 +199,20 @@ export default {
 
         async fetchAllUser() {
             await this.$store.dispatch('userManagement/fetchAllUsers')
-
         }
     },
      beforeMount() {
         if (this.signatories.length !== 0) {
             this.fetchAllUser()
-            console.log('input: ', this.signatoryInput)
             this.addSignatories = false
             this.signatoryInputs = this.signatories;
             //this.signatoryInput = "";
-        }
+            console.log('test ',this.signatoryInputCopy)
+            console.log(this.signatoryInput)
+            }
+    },
+    beforeDestroy() {
+        console.log('destroy')
     }
 }
 </script>

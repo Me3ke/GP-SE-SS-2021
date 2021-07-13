@@ -42,6 +42,19 @@
     height: 10em !important;
 }
 
+
+#__BVID__105___BV_modal_outer_ {
+    z-index: 1000000 !important;
+}
+
+#__BVID__106___BV_modal_outer_ {
+    z-index: 1000000 !important;
+}
+
+#modal-editor___BV_modal_outer_ {
+    z-index: 1000000 !important;
+}
+
 /deep/ .modal-content {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);

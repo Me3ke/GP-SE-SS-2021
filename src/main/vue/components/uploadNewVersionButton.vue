@@ -344,28 +344,26 @@
                                     <div class="modal-body">
                                         <div>
                                             <div>
-                                                {{page}}
-
-                                                <h3>{{ document.title }}</h3>
+                                                <h3>Update document email </h3>
                                                 <h5> Due to an Update Request we are sending to all signatories an Update Document Email</h5>
                                             </div>
                                         </div>
 
-                                    </div> <!--
+                                    </div>
                                     <div class="modal-footer">
                                         <b-row align-h="end">
                                             <b-col cols="auto">
-                                                <button class="light-btn" @click="page = page - 1;">
+                                                <button class="light-btn" @click="page = page - 2;">
                                                     {{ $t('UploadDoc.back') }}
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
                                                 <button class="elsa-blue-btn" @click="upload">
-                                                    {{ $t('UploadDoc.upload') }}
+                                                    {{ $t('UploadDoc.continue') }}
                                                 </button>
                                             </b-col>
                                         </b-row>
-                                    </div>-->
+                                    </div>
                                 </div>
 
                                 <!-- Email Template (for new User) -->
@@ -380,7 +378,7 @@
                                             <b-spinner></b-spinner>
                                         </div>
 
-                                    </div> <!--
+                                    </div>
                                     <div class="modal-footer">
                                         <b-row align-h="end">
                                             <b-col cols="auto">
@@ -390,11 +388,11 @@
                                             </b-col>
                                             <b-col cols="auto">
                                                 <button class="elsa-blue-btn" @click="upload">
-                                                    {{ $t('UploadDoc.upload') }}
+                                                    {{ $t('UploadDoc.continue') }}
                                                 </button>
                                             </b-col>
                                         </b-row>
-                                    </div> --->
+                                    </div>
                                 </div>
 
 
