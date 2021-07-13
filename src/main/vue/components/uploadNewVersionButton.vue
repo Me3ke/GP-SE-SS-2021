@@ -382,15 +382,12 @@
 
 <script>
 import {mapGetters} from "vuex";
-import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
-import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
-import EmailTemplate from "@/main/vue/components/EmailTemplate";
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
 
 export default {
     name: "uploadNewVersionButton",
-    components: {FileInput, UploadSettings, EmailTemplate, SignatoryMenu, ReaderMenu},
+    components: {FileInput, UploadSettings},
     data() {
         return {
 
@@ -493,8 +490,6 @@ export default {
             this.actualDoc.data = this.file.data
             this.actualDoc.dataType = this.file.type
             this.actualDoc.title = this.newDocumentTitle
-            console.log(this.settings.endDate)
-            console.log(this.actualDoc)
 
 
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
@@ -506,15 +501,14 @@ export default {
             let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
 
 
-            console.log(newUrl)
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
             await this.$store.dispatch('envelopes/fetchEnvelopes')
-            /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                 this.$router.go(0)
-            })*/
+            })
 
-            //this.close()
+            this.close()
         },
 
 
@@ -530,53 +524,7 @@ export default {
             // emailTemplates is an array instead of an object (in document)
             this.actualDoc.emailTemplateHtml = temp
         },
-    },
-
-        /*/// getting emitted value
-        async uploadNewFile() {
-            this.fileString = ""
-            this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
-
-            this.actualDoc.data = await this.asyncHandleFunction()
-
-            // todo add error (but need status code on the response, for now only getting newDocId and replaced one which is getting an new id too)
-            let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
-            await this.$store.dispatch('document/editDocument', payload)
-
-            // here show error
-            if (this.showAlert) {
-                this.$refs['modal-page3'].hide()
-                this.$bvModal.show('modal-' + this.docID + 'error')
-                this.actualDoc = {}
-                this.fileString = ''
-                this.file = null
-<<<<<<< HEAD
-            }
-            else {
-                this.$refs['modal-page4'].hide()
-
-                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
-=======
-            } else {
-                this.$refs['modal-page3'].hide()
-                await this.$store.dispatch('document/fetchDocumentInfo', {
-                    envId: this.envID,
-                    docId: this.newDocumentId
-                })
->>>>>>> feature.30843.updateNewVersion
-                let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
-                this.showAlert = !this.showAlert
-
-                // will route the user to the newUploaded document page (with the new ID)
-                // for now it is working. But it will show before refreshing the new page an unable preview of the file
-                this.file = null
-
-                console.log(newUrl)
-                await this.$store.dispatch('envelopes/fetchEnvelopes')
-                /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
-                    this.$router.go(0)
-                })*/
-
+    }
 }
 
 

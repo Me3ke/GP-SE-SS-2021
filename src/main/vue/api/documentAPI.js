@@ -81,7 +81,7 @@ export default {
                 'orderRelevant': newDoc.orderRelevant,
                 //'state': newDoc.state,
                 'lastModified': newDoc.lastModified,
-                'emailTemplateId': newDoc.emailTemplateHtml.templateID
+                //'emailTemplateId': newDoc.emailTemplateHtml.templateID
             }
         })
     },
