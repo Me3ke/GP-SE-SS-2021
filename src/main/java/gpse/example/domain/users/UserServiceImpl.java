@@ -186,8 +186,6 @@ public class UserServiceImpl implements UserService {
                 container.setRequestingEmail(user.getEmail());
                 container.setLink(HTTP_LOCALHOST + serverPort + "/de/adminSettings/userManagement");
                 smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
-                return;
-                //optional, without return -> notify all admins.
             }
         }
 
