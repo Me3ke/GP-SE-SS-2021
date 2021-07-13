@@ -190,7 +190,7 @@ export default {
                 return
             }
 
-            await this.$store.dispatch('document/reviewDocument', {nvId: this.envId, docId: this.docId})
+            await this.$store.dispatch('document/reviewDocument', {envId: this.envId, docId: this.docId})
 
             // everything went fine
             if (this.statusCode === 200) {
