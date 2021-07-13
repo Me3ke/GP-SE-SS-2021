@@ -44,7 +44,6 @@ public class SignatureManagement {
      * @param givenDocumentService documentservice
      * @param givenUserService     userservice
      * @param emailTemplateService emailTemplateService
-     * @param guestTokenService guestTokenService
      * @param envelopeService envelopeService
      */
     @Autowired
@@ -65,7 +64,7 @@ public class SignatureManagement {
      * @param userID        the user who stated the request
      * @param document      the document that should be reviewed or signed
      * @param signatureType the type of the signature
-     * @param envelopeID the envelope the document refers to.
+     * @param envelopeID    the envelope the document refers to.
      * @return a fitting response.
      */
     public JSONResponseObject manageSignatureRequest(final String userID, final Document document,
@@ -100,8 +99,8 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatoriesWithoutOrder(final String userID, final Document document,
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType)
-                throws TemplateNameNotFoundException, MessageGenerationException {
-        if (document.getState().equals(DocumentState.READ)) {
+            throws TemplateNameNotFoundException, MessageGenerationException {
+            if (document.getState().equals(DocumentState.SIGN)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
                     sendProcessFinishedTemplate(document);
@@ -158,7 +157,7 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject changeDocumentStateToRead(final Document document) {
-        document.setState(DocumentState.READ);
+        document.setState(DocumentState.SIGN);
         documentService.addDocument(document);
         final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
@@ -168,7 +167,7 @@ public class SignatureManagement {
 
     private JSONResponseObject changeDocumentStateToClosed(final Document document) {
         final JSONResponseObject response = new JSONResponseObject();
-        document.setState(DocumentState.CLOSED);
+        document.setState(DocumentState.ARCHIVED);
         documentService.addDocument(document);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage("The given document is now closed");
@@ -223,9 +222,14 @@ public class SignatureManagement {
         final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         if (matchesSignatory(userID, currentReader, signatureType)) {
             currentReader.setStatus(true);
+            if (document.getCurrentSignatory() != null && currentReader.getSignatureType().equals(SignatureType.REVIEW)
+                && (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE))) {
+                document.setState(DocumentState.SIGN);
+            }
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
-            if (savedDocument.getState() != DocumentState.CLOSED) {
+            if (savedDocument.getState() != DocumentState.ARCHIVED) {
                 final User owner = userService.getUser(savedDocument.getOwner());
                 EmailTemplate template = owner.getEmailTemplates().get(0);
                 for (EmailTemplate temp : owner.getEmailTemplates()) {
@@ -286,7 +290,7 @@ public class SignatureManagement {
                                final JSONResponseObject response, final Signatory currentReader) {
 
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
-            document.setState(DocumentState.CLOSED);
+            document.setState(DocumentState.ARCHIVED);
             response.setMessage("Document is now closed.");
         }
     }

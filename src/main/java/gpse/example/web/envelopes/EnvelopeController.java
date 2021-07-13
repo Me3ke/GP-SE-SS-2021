@@ -137,13 +137,13 @@ public class EnvelopeController {
             }
             savedDocument.setLinkToDocumentview("http://localhost:8080/de/envelope/" + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
-            if (savedDocument.isOrderRelevant() && savedDocument.getCurrentSignatory() != null) {
-                setupUserInvitation(savedDocument.getCurrentSignatory().getEmail(),
-                    userService.getUser(savedDocument.getOwner()), savedDocument,
-                    envelopeService.getEnvelope(envelopeID), savedDocument.getCurrentSignatory().getSignatureType());
-            } else {
-                for (int i = 0; i < savedDocument.getSignatories().size(); i++) {
-                    if (!savedDocument.getSignatories().get(i).getEmail().equals(savedDocument.getOwner())) {
+            if (!savedDocument.isDraft()) {
+                if (savedDocument.isOrderRelevant() && savedDocument.getCurrentSignatory() != null) {
+                    setupUserInvitation(savedDocument.getCurrentSignatory().getEmail(),
+                        userService.getUser(savedDocument.getOwner()), savedDocument,
+                        envelopeService.getEnvelope(envelopeID), savedDocument.getCurrentSignatory().getSignatureType());
+                } else {
+                    for (int i = 0; i < savedDocument.getSignatories().size(); i++) {
                         setupUserInvitation(savedDocument.getSignatories().get(i).getEmail(),
                             userService.getUser(savedDocument.getOwner()), savedDocument,
                             envelopeService.getEnvelope(envelopeID),

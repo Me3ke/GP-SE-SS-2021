@@ -95,12 +95,12 @@ public class DocumentCreator {
      * @param document    the document itself.
      */
     private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
-        if (signatories == null) {
-            document.setState(DocumentState.CLOSED);
-        } else if (document.getReaders().size() == 0 && !document.isOrderRelevant()) {
-            document.setState(DocumentState.READ);
+        if (signatories == null && !document.isDraft()) {
+            document.setState(DocumentState.ARCHIVED);
+        } else if (document.getReaders().size() == 0) {
+            document.setState(DocumentState.SIGN);
         } else {
-            document.setState(DocumentState.OPEN);
+            document.setState(DocumentState.REVIEW);
         }
     }
 

@@ -16,6 +16,7 @@ public class DocumentSetting {
     private boolean orderRelevant;
     private String endDate;
     private boolean showHistory;
+    private boolean draft;
 
     /**
      * the standard constructor.
@@ -29,8 +30,11 @@ public class DocumentSetting {
         }
         this.orderRelevant = document.isOrderRelevant();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        this.endDate = document.getEndDate().format(formatter);
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        }
         this.showHistory = document.isShowHistory();
+        this.draft = document.isDraft();
     }
 
     public long getDocumentID() {
@@ -71,5 +75,13 @@ public class DocumentSetting {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 }

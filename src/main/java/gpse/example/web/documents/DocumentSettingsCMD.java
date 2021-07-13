@@ -14,6 +14,8 @@ public class DocumentSettingsCMD {
     private boolean orderRelevant;
     private String endDate;
     private boolean showHistory;
+    private boolean draft;
+    private boolean archiveTask;
 
     /**
      * the method used to convert the String, that we get from the frontend to LocalDateTime.
@@ -61,5 +63,21 @@ public class DocumentSettingsCMD {
 
     public void setShowHistory(boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
+    }
+
+    public boolean isArchiveTask() {
+        return archiveTask;
+    }
+
+    public void setArchiveTask(boolean archiveTask) {
+        this.archiveTask = archiveTask;
     }
 }

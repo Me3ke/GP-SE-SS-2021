@@ -45,11 +45,14 @@ public class DocumentController {
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_DOCUMENT_CLOSED = 452;
     private static final int STATUS_CODE_TOKEN_DOESNT_EXIST = 423;
+    private static final int STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE = 424;
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final String TOKEN = "token";
     private static final String ENVELOPE_URL = "http://localhost:8080/de/envelope/";
     private static final String DOCUMENT_URL = "/document/";
+    private static final String DRAFT_MESSAGE = "The document is still in draft state, it cannot be signed yet.";
+    private static final String THIS_DOCUMENT_IS_CLOSED = "This document is closed";
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -146,7 +149,6 @@ public class DocumentController {
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
 
         if (guestTokenOptional.isEmpty()) {
-            System.out.println("Test1");
             return null;
         } else if (guestTokenOptional.get().getDocumentId() == documentID) {
             Document document;
@@ -221,14 +223,16 @@ public class DocumentController {
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
         Document document = documentService.getDocument(documentID);
-        if (document.getState() == DocumentState.CLOSED) {
+        if (document.getState() == DocumentState.ARCHIVED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
         return null;
     }
 
     /**
-     * The uploadNewDocumentVersion method does a put request to update.
+     * The uploadNewDocumentVersion method does a put request to update. If the user that stated the request is not
+     * the owner of the envelope or the oldDocument is already archived, the oldDocument will be returned as the
+     * new one and nothing else happens.
      *
      * @param documentPutRequest the request object containing all the necessary data.
      * @param ownerID            the email of the user uploading the new document.
@@ -249,31 +253,20 @@ public class DocumentController {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            envelope.removeDocument(oldDocument);
-            documentService.remove(oldDocument);
-            //System.out.println("old document: " + oldDocument.getSignatories());
-            final Document archivedDocument = new ArchivedDocument(oldDocument);
-            final Document savedDocument = documentService.addDocument(archivedDocument);
-            //TODO archived document should not be saved in envelope!
-
-            final Document newDocument = documentService.creation(documentPutRequest, ownerID,
-                userService);
-            newDocument.setPreviousVersion(savedDocument);
-            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
-            Document savedNewDocument = savedEnvelope.getDocumentList().get(0);
-            for (Document doc : savedEnvelope.getDocumentList()) {
-                if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
-                    savedNewDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
-                    savedNewDocument = doc;
-                }
+            if (envelope.getOwnerID().equals(ownerID) || oldDocument.getState().equals(DocumentState.ARCHIVED)) {
+                envelope.removeDocument(oldDocument);
+                oldDocument.setDraft(false);
+                oldDocument.setState(DocumentState.ARCHIVED);
+                final Document newDocument = documentService.creation(documentPutRequest, ownerID,
+                    userService);
+                envelopeService.updateEnvelope(envelope, newDocument);
+                newDocument.setPreviousVersion(oldDocument);
+                documentService.addDocument(newDocument);
+                informSignatories(newDocument, envelopeID);
+                return new DocumentPutResponse(oldDocument.getId(), newDocument.getId());
+            } else {
+                return new DocumentPutResponse(oldDocument.getId(), oldDocument.getId());
             }
-            savedNewDocument.setLinkToDocumentview(ENVELOPE_URL + savedEnvelope.getId()
-                + DOCUMENT_URL + savedDocument.getId());
-
-            envelopeService.updateEnvelope(savedEnvelope, savedNewDocument);
-
-            informSignatories(newDocument, envelopeID);
-            return new DocumentPutResponse(savedDocument.getId(), newDocument.getId());
         } catch (CreatingFileException | DocumentNotFoundException | IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -347,10 +340,13 @@ public class DocumentController {
     private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
                                                             final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
+        Document document = documentService.getDocument(documentID);
+        final JSONResponseObject response = documentIsClosedOrInDraft(document);
+        if (response.getStatus() != STATUS_CODE_OK) {
+            return response;
+        }
         final Optional<GuestToken> guestTokenOptional = guestTokenService.findGuestTokenByToken(token);
-
         if (guestTokenOptional.isEmpty()) {
-            final JSONResponseObject response = new JSONResponseObject();
             response.setStatus(STATUS_CODE_TOKEN_DOESNT_EXIST);
             response.setMessage("The token that has benn send with the request is not valid for this server.");
             return response;
@@ -430,21 +426,35 @@ public class DocumentController {
                                                        final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
         final Document document = documentService.getDocument(documentID);
-        final JSONResponseObject response = new JSONResponseObject();
-        if (document.getState().equals(DocumentState.CLOSED)) {
-            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
-            response.setMessage("This document is closed");
+        final JSONResponseObject response = documentIsClosedOrInDraft(document);
+        if (response.getStatus() != STATUS_CODE_OK) {
             return response;
-        } else {
-            return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
         }
+        return signatureManagement.manageSignatureRequest(userID, document, signatureType, envelopeID);
+    }
+
+
+    private JSONResponseObject documentIsClosedOrInDraft(Document document) {
+        JSONResponseObject response = new JSONResponseObject();
+        response.setStatus(STATUS_CODE_OK);
+        if (document.isDraft()) {
+            response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
+            response.setMessage(DRAFT_MESSAGE);
+            return response;
+        }
+        if (document.getState().equals(DocumentState.ARCHIVED)) {
+            response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
+            response.setMessage(THIS_DOCUMENT_IS_CLOSED);
+            return response;
+        }
+        return response;
     }
 
 
     /**
      * The getDocumentHistory method does a get request to get the document history.
      *
-     * @param userID  the id of the user getting the history.
+     * @param userID     the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
@@ -544,6 +554,12 @@ public class DocumentController {
             document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
             document.setEndDate(documentSettingsCMD.convertEndDate());
             document.setShowHistory(documentSettingsCMD.isShowHistory());
+            if (document.isDraft()) {
+                document.setDraft(documentSettingsCMD.isDraft());
+            }
+            if (documentSettingsCMD.isArchiveTask()) {
+                document.setState(DocumentState.ARCHIVED);
+            }
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
             Signatory signatory;
@@ -556,6 +572,7 @@ public class DocumentController {
                 signatories.add(signatory);
             }
             document.setSignatories(signatories);
+            setDocumentState(document);
             documentService.addDocument(document);
 
             response.setStatus(STATUS_CODE_OK);
@@ -565,6 +582,30 @@ public class DocumentController {
         }
         return response;
     }
+
+    /**
+     * The setDocumentState method evaluates the readers and signatories and creates an
+     * initial state of the document based on that.
+     *
+     * @param document the document itself.
+     */
+    private void setDocumentState(final Document document) {
+        if (document.getCurrentSignatory() == null) {
+            if (document.isDraft()) {
+                document.setState(DocumentState.REVIEW);
+            } else {
+                document.setState(DocumentState.ARCHIVED);
+            }
+        } else {
+            if (document.getCurrentSignatory().getSignatureType().equals(SignatureType.SIMPLE_SIGNATURE)
+                || document.getCurrentSignatory().getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                document.setState(DocumentState.SIGN);
+            } else {
+                document.setState(DocumentState.REVIEW);
+            }
+        }
+    }
+
 
     /**
      * Request for get the info if user has seen specified document.

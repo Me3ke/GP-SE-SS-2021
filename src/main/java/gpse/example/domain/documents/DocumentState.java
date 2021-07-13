@@ -6,17 +6,18 @@ package gpse.example.domain.documents;
 public enum DocumentState {
 
     /**
-     * If the there are unsigned signatories and readers left it has open state.
+     * If the there are unsigned signatories and readers left it has the review state,
+     * where reviews should be made.
      */
-    OPEN(-1),
+    REVIEW(-1),
     /**
-     * Changes to read state if all users have read the document.
+     * Changes to sign state if all users have read the document. This is when the signatures are made.
      */
-    READ(0),
+    SIGN(0),
     /**
-     * Changes to closed state if all users have signed the document.
+     * Changes to closed state if all users have signed the document. All documents that are archived should be closed.
      */
-    CLOSED(1);
+    ARCHIVED(1);
 
     private final int intRepresentation;
 
@@ -34,11 +35,11 @@ public enum DocumentState {
     public static DocumentState fromInteger(final int intRepresentation) {
         switch (intRepresentation) {
             case -1:
-                return DocumentState.OPEN;
+                return DocumentState.REVIEW;
             case 0:
-                return DocumentState.READ;
+                return DocumentState.SIGN;
             case 1:
-                return DocumentState.CLOSED;
+                return DocumentState.ARCHIVED;
             default:
                 throw new IllegalStateException();
         }

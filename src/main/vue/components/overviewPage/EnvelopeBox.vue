@@ -1,8 +1,11 @@
 <template>
     <b-container fluid style="padding: 0">
-        <div :class="{envelopeOpen: !toSign && !toRead && open, envelopeClosed: !open, envelopeSignRead: (toSign || toRead) && open}">
+        <div
+            :class="{envelopeOpen: (!toSign && !toRead && open) && !draft, envelopeClosed: !open, envelopeSignRead: ((toSign || toRead) && open) && !draft, envelopeDraft: open && draft}">
             <div class="media">
-                <b-icon icon="envelope" :class="{iconRed: (toSign || toRead) && open, iconBlue: (!toSign && !toRead) || !open}" style="margin:0.5em"></b-icon>
+                <b-icon icon="envelope"
+                        :class="{iconRed: (toSign || toRead) && open && !draft, iconBlue: (!toSign && !toRead && !draft) || !open, icon: draft && open}"
+                        style="margin:0.5em"></b-icon>
                 <div class="media-body">
                     <b-container fluid>
                         <b-row align-h="start">
@@ -10,21 +13,21 @@
                                 <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h4>
-                                            {{this.envelope.name}}
+                                            {{ this.envelope.name }}
                                         </h4>
                                     </b-col>
                                     <b-col cols="auto">
                                         <div v-if="!open">
                                             <h6>
-                                                {{$t('Document.closed')}}
+                                                {{ $t('Document.closed') }}
                                             </h6>
                                         </div>
-                                        <div v-if="open && !toSign && !toRead">
+                                        <div v-if="open && !toSign && !toRead && !draft">
                                             <h6>
-                                                {{$t('Document.open')}}
+                                                {{ $t('Document.open') }}
                                             </h6>
                                         </div>
-                                        <div v-if="open" style="color: var(--red)">
+                                        <div v-if="open && !draft" style="color: var(--red)">
                                             <div v-if="toSign && toRead">
                                                 <h6>
                                                     {{ $t('OverviewPage.envReadSign') }}
@@ -41,17 +44,21 @@
                                                 </h6>
                                             </div>
                                         </div>
+                                        <div v-if="open && draft">
+                                            {{ $t('Document.draft') }}
+                                        </div>
                                     </b-col>
                                 </b-row>
                                 <b-row align-h="start">
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.owner')}}: {{this.envelope.owner.firstname}} {{this.envelope.owner.lastname}}
+                                            {{ $t('Document.owner') }}: {{ this.envelope.owner.firstname }}
+                                            {{ this.envelope.owner.lastname }}
                                         </h6>
                                     </b-col>
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.date')}}: {{this.envelope.creationDate}}
+                                            {{ $t('Document.date') }}: {{ this.envelope.creationDate }}
                                         </h6>
                                     </b-col>
                                 </b-row>
@@ -74,9 +81,10 @@ export default {
         let open = false;
         let toSign = false;
         let toRead = false;
+        let draft = true;
         let i;
-        for(i = 0; i < this.envelope.documents.length; i++) {
-            if (this.envelope.documents[i].state === "OPEN" || this.envelope.documents[i].state === "READ") {
+        for (i = 0; i < this.envelope.documents.length; i++) {
+            if (this.envelope.documents[i].state === "REVIEW" || this.envelope.documents[i].state === "SIGN") {
                 open = true;
             }
             if (this.envelope.documents[i].turnToSign === true) {
@@ -85,8 +93,11 @@ export default {
             if (this.envelope.documents[i].turnToReview === true) {
                 toRead = true;
             }
+            if (this.envelope.documents[i].draft === false) {
+                draft = false;
+            }
         }
-        return {open: open, toSign: toSign, toRead: toRead}
+        return {open: open, toSign: toSign, toRead: toRead, draft: draft}
     }
 }
 </script>
@@ -101,6 +112,7 @@ export default {
 
 .envelopeOpen:hover {
     background-color: var(--closed-doc-hover);
+    color: var(--dark-grey);
     transition-duration: 0.4s;
     box-shadow: var(--light-grey);
 }
@@ -114,13 +126,27 @@ export default {
 
 .envelopeClosed:hover {
     background-color: var(--closed-doc-hover);
+    color: var(--dark-grey);
     transition-duration: 0.4s;
     box-shadow: var(--light-grey);
 }
 
+.envelopeDraft {
+    background-color: var(--draft-doc);
+    color: var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+.envelopeDraft:hover {
+    background-color: var(--draft-doc-hover);
+    border: 0.03vw solid var(--dark-grey);
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
 .envelopeSignRead {
     background-color: var(--sign-doc);
-    color: var(--dark-grey);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
@@ -139,6 +165,11 @@ export default {
 
 .iconBlue {
     fill: var(--elsa-blue);
+    height: 2em;
+    width: auto;
+}
+
+.icon {
     height: 2em;
     width: auto;
 }
