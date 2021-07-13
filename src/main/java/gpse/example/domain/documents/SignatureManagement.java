@@ -1,18 +1,14 @@
 package gpse.example.domain.documents;
 
-import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeService;
 import gpse.example.domain.exceptions.DocumentNotFoundException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
-import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
-import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -101,10 +97,11 @@ public class SignatureManagement {
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType)
                 throws TemplateNameNotFoundException, MessageGenerationException {
+        EmailManagement emailManagement = new EmailManagement();
         if (document.getState().equals(DocumentState.READ)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatories())) {
-                    sendProcessFinishedTemplate(document);
+                    emailManagement.sendProcessFinishedTemplate(document);
                     return changeDocumentStateToClosed(document);
                 } else {
                     response.setStatus(STATUS_CODE_OK);
@@ -120,27 +117,14 @@ public class SignatureManagement {
         }
     }
 
-    private void sendProcessFinishedTemplate(final Document document) throws TemplateNameNotFoundException,
-                MessageGenerationException {
-        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink(document.getLinkToDocumentview() + "/protocol");
-        smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
-        for (final Signatory signatory : document.getSignatories()) {
-            if (!signatory.getEmail().equals(document.getOwner())) {
-                smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS, null);
-            }
-        }
-    }
-
     private JSONResponseObject manageReadersWithoutOrder(final String userID, final Document document,
                                                          final List<Signatory> signatories,
                                                          final JSONResponseObject response)
                 throws TemplateNameNotFoundException, MessageGenerationException {
+        EmailManagement emailManagement = new EmailManagement();
         if (findSignatoryInList(document, userID, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatories())) {
-                sendProcessFinishedTemplate(document);
+                emailManagement.sendProcessFinishedTemplate(document);
                 return changeDocumentStateToClosed(document);
             } else {
                 if (areSignatoriesFinished(signatories)) {
@@ -217,16 +201,17 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatureInOrder(final String userID, final Document document,
                                                       final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException, DocumentNotFoundException {
+        final EmailManagement emailManagement = new EmailManagement();
         final List<Signatory> signatories = document.getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getCurrentSignatory();
-        final Envelope envelope = envelopeService.getEnvelope(envelopeID);
         if (matchesSignatory(userID, currentReader, signatureType)) {
             currentReader.setStatus(true);
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
             if (savedDocument.getState() != DocumentState.CLOSED) {
-                final User owner = userService.getUser(savedDocument.getOwner());
+                emailManagement.sendInvitation(savedDocument, envelopeID, currentReader);
+                /*final User owner = userService.getUser(savedDocument.getOwner());
                 EmailTemplate template = owner.getEmailTemplates().get(0);
                 for (final EmailTemplate temp : owner.getEmailTemplates()) {
                     if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
@@ -267,9 +252,9 @@ public class SignatureManagement {
                         smtpServerHelper.sendTemplatedEmail(savedDocument.getCurrentSignatory().getEmail(),
                             template, container, Category.TODO, owner);
                     }
-                }
+                }*/
             } else {
-                sendProcessFinishedTemplate(document);
+                emailManagement.sendProcessFinishedTemplate(document);
             }
 
             response.setStatus(STATUS_CODE_OK);

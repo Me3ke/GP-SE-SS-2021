@@ -149,6 +149,7 @@ public class UserController {
     @GetMapping("/newUser/register")
     public JSONResponseObject confirmMail(final @RequestParam("token") String token) {
 
+        EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject response = new JSONResponseObject();
 
         final Optional<ConfirmationToken> optionalConfirmationToken
@@ -171,7 +172,7 @@ public class UserController {
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
                 try {
-                    userService.infoNewExtUser(user);
+                    emailManagement.sendAdminInformation(user);
                     response.setMessage(ADMINVALIDATION_REQUIRED + true);
                 } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
@@ -376,18 +377,13 @@ public class UserController {
     @GetMapping("/user/{userId}/password/reset")
     public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        EmailManagement emailManagement = new EmailManagement();
         try {
             final User user = userService.getUser(userId);
             final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
             final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
             try {
-                final TemplateDataContainer emailContainer = new TemplateDataContainer();
-                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
-                emailContainer.setFirstNameReciever(user.getFirstname());
-                emailContainer.setLastNameReciever(user.getLastname());
-                emailContainer.setLink("http://localhost:8080/de/login/reset/" + savedToken.getToken());
-                smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
-                    emailContainer, Category.SYSTEM, null);
+                emailManagement.sendResetPassword(user, savedToken);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 return jsonResponseObject;
             } catch (MessageGenerationException | TemplateNameNotFoundException mge) {

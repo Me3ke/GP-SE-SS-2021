@@ -68,13 +68,14 @@ public class CommentController {
                                                 final @PathVariable(USER_ID) String userID,
                                                 final @PathVariable(DOCUMENT_ID) long documentID)
                 throws TemplateNameNotFoundException, MessageGenerationException {
+        EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);
             final User user = userService.getUser(userID);
             document.addComment(new Comment(commentPostRequest.getContent(), userID,
                     user.getFirstname() + SPACE + user.getLastname()));
-            sendNewCommentEmail(user, userService.getUser(document.getOwner()), document);
+            emailManagement.sendNewCommentEmail(user, userService.getUser(document.getOwner()), document);
             documentService.addDocument(document);
 
         } catch (DocumentNotFoundException e) {
@@ -101,6 +102,7 @@ public class CommentController {
                                               final @PathVariable(DOCUMENT_ID) long documentID,
                                               final @PathVariable("commentID") long commentID)
                 throws TemplateNameNotFoundException, MessageGenerationException {
+        EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);
@@ -112,7 +114,7 @@ public class CommentController {
                 comment.addAnswer(new Answer(commentPostRequest.getContent(), userID,
                         user.getFirstname() + SPACE + user.getLastname()));
                 documentService.addDocument(document);
-                sendAnswerEmail(user, userService.getUser(comment.getAuthorID()), document);
+                emailManagement.sendAnswerEmail(user, userService.getUser(comment.getAuthorID()), document);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 jsonResponseObject.setMessage(REQUEST_WAS_SUCCESSFUL);
 
@@ -147,29 +149,5 @@ public class CommentController {
         }
     }
 
-    private void sendNewCommentEmail(User author, User documentOwner, Document document)
-        throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setFirstNameOwner(author.getFirstname());
-        container.setLastNameOwner(author.getLastname());
-        container.setFirstNameReciever(documentOwner.getFirstname());
-        container.setLastNameReciever(documentOwner.getLastname());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
-    }
 
-    private void sendAnswerEmail(User author, User reciever, Document document)
-        throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setFirstNameOwner(author.getFirstname());
-        container.setLastNameOwner(author.getLastname());
-        container.setFirstNameReciever(reciever.getFirstname());
-        container.setLastNameReciever(reciever.getLastname());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
-
-    }
 }

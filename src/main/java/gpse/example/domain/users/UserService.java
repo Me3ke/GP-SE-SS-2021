@@ -34,8 +34,6 @@ public interface UserService extends UserDetailsService {
 
     void validateUser(User user);
 
-    void infoNewExtUser(User user) throws MessageGenerationException, TemplateNameNotFoundException;
-
     void removeUser(final String username) throws UsernameNotFoundException;
 
     User saveUser(User user);

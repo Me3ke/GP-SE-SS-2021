@@ -52,45 +52,25 @@ public class ScheduledTasks {
 
     private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-
-       /* for (final Signatory signatory : doc.getSignatories()) {
-            if (!signatory.isStatus()) {
-                Signatory currentSignatory = signatory;
-                break;
-            }
-        }*/
+        EmailManagement emailManagement = new EmailManagement();
         final Signatory currentSignatory = doc.getCurrentSignatory();
         if (currentSignatory != null && currentSignatory.getReminder() > -1
             && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-            /*smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
-                currentSignatory.getUser().getLastname(), doc);*/
-            setupUserReminder(doc, currentSignatory);
+            emailManagement.sendReminder(doc, currentSignatory);
         }
     }
 
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
+        EmailManagement emailManagement = new EmailManagement();
         for (final Signatory signatory : doc.getSignatories()) {
             if (signatory.getReminder() > -1
                 && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
-                /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
-                    signatory.getUser().getLastname(), doc);*/
-                setupUserReminder(doc, signatory);
+
+                emailManagement.sendReminder(doc, signatory);
             }
         }
-    }
-
-    private void setupUserReminder(final Document document, final Signatory signatory)
-                throws TemplateNameNotFoundException,
-        MessageGenerationException {
-        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setEndDate(document.getEndDate().toString());
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
-            userService.getUser(document.getOwner()));
     }
 
 }

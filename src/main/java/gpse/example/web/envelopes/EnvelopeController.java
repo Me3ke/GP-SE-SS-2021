@@ -7,7 +7,6 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.signature.Signatory;
-import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.util.email.trusteddomain.DomainSetterService;
@@ -15,7 +14,6 @@ import gpse.example.web.DocumentFilter;
 import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import gpse.example.web.documents.DocumentPutRequest;
-import gpse.example.web.documents.GuestToken;
 import gpse.example.web.documents.GuestTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -117,6 +115,7 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
+        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
@@ -138,16 +137,12 @@ public class EnvelopeController {
             savedDocument.setLinkToDocumentview("http://localhost:8080/de/envelope/" + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
             if (savedDocument.isOrderRelevant() && savedDocument.getCurrentSignatory() != null) {
-                setupUserInvitation(savedDocument.getCurrentSignatory().getEmail(),
-                    userService.getUser(savedDocument.getOwner()), savedDocument,
-                    envelopeService.getEnvelope(envelopeID), savedDocument.getCurrentSignatory().getSignatureType());
+                emailManagement.sendInvitation(savedDocument, envelopeID, savedDocument.getCurrentSignatory());
             } else {
                 for (int i = 0; i < savedDocument.getSignatories().size(); i++) {
                     if (!savedDocument.getSignatories().get(i).getEmail().equals(savedDocument.getOwner())) {
-                        setupUserInvitation(savedDocument.getSignatories().get(i).getEmail(),
-                            userService.getUser(savedDocument.getOwner()), savedDocument,
-                            envelopeService.getEnvelope(envelopeID),
-                            savedDocument.getSignatories().get(i).getSignatureType());
+                        emailManagement.sendInvitation(savedDocument, envelopeID,
+                            savedDocument.getSignatories().get(i));
                     }
                 }
             }
@@ -190,7 +185,7 @@ public class EnvelopeController {
         userService.saveUser(currentUser);
     }
 
-    private void setupUserInvitation(final String userID, final User owner, final Document document,
+    /*private void setupUserInvitation(final String userID, final User owner, final Document document,
                                      final Envelope envelope, final SignatureType signatureType)
         throws MessageGenerationException {
         try {
@@ -246,7 +241,7 @@ public class EnvelopeController {
                 smtpServerHelper.sendTemplatedEmail(userID, template, container, Category.TODO, owner);
             }
         }
-    }
+    }*/
 
 
     /**
