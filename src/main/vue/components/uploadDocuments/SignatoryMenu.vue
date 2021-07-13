@@ -62,7 +62,7 @@
             </b-row>
 
             <!-- List of Signatories -->
-            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden">
+            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden" v-if="signatories">
                 <draggable v-model="signatoryInputs">
                     <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email"
                          style="padding:0.25em">
@@ -114,6 +114,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import {mapGetters} from "vuex";
 
 export default {
     name: "SignatoryMenu",
@@ -122,12 +123,18 @@ export default {
         addressBookClosed: Boolean
     },
     components: {draggable},
+    computed: {
+      ...mapGetters({
+          allUser: 'userManagement/getAllUsers' // for checking if new registered signatories are getting added for the email templates
+      })
+    },
     data() {
         return {
             signatoryInput: [],
             signatoryInputs: [],
             orderRelevantInput: false,
             addSignatories: false,
+            noticeNewSignatories: false,
             signatureTypes: [{
                 name: 'UploadDoc.simple',
                 value: 1
@@ -137,22 +144,41 @@ export default {
             }]
         }
     },
+
     mounted() {
         this.signatoryInputs = this.signatories
     },
     methods: {
         addSignatory() {
-            for (var i = 0; i < this.signatoryInput.length; i++) {
+            console.log(this.signatoryInput)
+            console.log(this.signatoryInputs)
+
+            for(let i = 0; i < this.signatoryInput.length; i++) {
+                if(this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
+                    console.log(this.signatoryInput[i])
+                } else {
+                    if(this.allUser.some(user => user.email === this.signatoryInput[i])) {
+                        this.noticeNewSignatories = true
+                    }
+                    this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
+                }
+            }
+
+
+
+            /*for (var i = 0; i < this.signatoryInput.length; i++) {
+                console.log(this.signatoryInputs.includes(this.signatoryInput[i]))
                 if (this.signatoryInputs.includes(this.signatoryInput[i])) {
                     // TODO: Error
                 } else {
                     this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
                 }
-            }
+            }*/
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
+
         },
         cancel() {
             this.addSignatories = false;
@@ -163,18 +189,26 @@ export default {
         save() {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
             this.addSignatories = false;
         },
         addressBook() {
             this.$emit('showAddressBook')
+        },
+
+        async fetchAllUser() {
+            await this.$store.dispatch('userManagement/fetchAllUsers')
+
         }
     },
-    beforeMount() {
+     beforeMount() {
         if (this.signatories.length !== 0) {
+            this.fetchAllUser()
             console.log('input: ', this.signatoryInput)
             this.addSignatories = false
             this.signatoryInputs = this.signatories;
-            this.signatoryInput = "";        }
+            //this.signatoryInput = "";
+        }
     }
 }
 </script>

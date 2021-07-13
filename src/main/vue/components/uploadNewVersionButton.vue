@@ -332,13 +332,74 @@
 
                                 <!-- Page 3 Add signatories/readers-->
                                 <div v-if="page === 3">
-                                    <UploadSettings :alreadySetSettings="settings" @updateSettings="updateSettings"
-                                                    @nextPage="page = page + 1"
+                                    <UploadSettings :alreadySetSettings="settings"
+                                                    @updateSettings="updateSettings"
+                                                    @showEmailTemplate="showEmailTemplate"
                                                     @previousPage="page = page - 1"></UploadSettings>
                                 </div>
 
-                                <!-- Page 4 Upload -->
+
+                                <!-- Email Template (Replaced Document Email template) -->
+                                <div v-if="page === 5">
+                                    <div class="modal-body">
+                                        <div>
+                                            <div>
+                                                {{page}}
+
+                                                <h3>{{ document.title }}</h3>
+                                                <h5> Due to an Update Request we are sending to all signatories an Update Document Email</h5>
+                                            </div>
+                                        </div>
+
+                                    </div> <!--
+                                    <div class="modal-footer">
+                                        <b-row align-h="end">
+                                            <b-col cols="auto">
+                                                <button class="light-btn" @click="page = page - 1;">
+                                                    {{ $t('UploadDoc.back') }}
+                                                </button>
+                                            </b-col>
+                                            <b-col cols="auto">
+                                                <button class="elsa-blue-btn" @click="upload">
+                                                    {{ $t('UploadDoc.upload') }}
+                                                </button>
+                                            </b-col>
+                                        </b-row>
+                                    </div>-->
+                                </div>
+
+                                <!-- Email Template (for new User) -->
                                 <div v-if="page === 4">
+                                    <div class="modal-body">
+                                        <div>
+                                            {{page}}
+                                            <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
+                                        </div>
+
+                                        <div v-if="this.uploadingDocument">
+                                            <b-spinner></b-spinner>
+                                        </div>
+
+                                    </div> <!--
+                                    <div class="modal-footer">
+                                        <b-row align-h="end">
+                                            <b-col cols="auto">
+                                                <button class="light-btn" @click="page = page - 1;">
+                                                    {{ $t('UploadDoc.back') }}
+                                                </button>
+                                            </b-col>
+                                            <b-col cols="auto">
+                                                <button class="elsa-blue-btn" @click="upload">
+                                                    {{ $t('UploadDoc.upload') }}
+                                                </button>
+                                            </b-col>
+                                        </b-row>
+                                    </div> --->
+                                </div>
+
+
+                                <!-- Page 4 Upload -->
+                                <div v-if="page === 6">
                                     <div class="modal-body">
                                         <div v-if="!this.uploadingDocument">
                                             <div>
@@ -384,15 +445,18 @@
 import {mapGetters} from "vuex";
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
+import EmailTemplate from "@/main/vue/components/EmailTemplate";
 
 export default {
     name: "uploadNewVersionButton",
-    components: {FileInput, UploadSettings},
+    components: {EmailTemplate, FileInput, UploadSettings},
     data() {
         return {
 
 
             show: true,
+
+            showTemplateBoolean: false,
 
 
             page: 1,
@@ -499,31 +563,37 @@ export default {
 
             await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
             let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
-
+            console.log(newUrl)
+            console.log(this.actualDoc)
 
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
             await this.$store.dispatch('envelopes/fetchEnvelopes')
-            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+            /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                 this.$router.go(0)
-            })
+            })*/
 
-            this.close()
+            //this.close()
         },
-
-
-        // save the selected File in the data
-        previewFile(event) {
-            this.fileString = event.target.files[0].name
-            this.file = event.target.files[0]
-        },
-
 
         // temp is the selected template
         setEmailTemplate(temp) {
             // emailTemplates is an array instead of an object (in document)
             this.actualDoc.emailTemplateHtml = temp
         },
+
+        showEmailTemplate(showTemp) {
+            console.log(showTemp)
+            if(showTemp === true) {
+                // new registered signatory is noticed
+                this.showTemplateBoolean = true
+                this.page = 4
+            } else {
+                // no new registered signatory is noticed
+                this.showTemplateBoolean = true
+                this.page = 5
+            }
+        }
     }
 }
 

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding: 0.5em">
             <!-- Pick Deadline -->
                 <div style="overflow-x: hidden">
-                    <div class="modal-body">
+                    <div class="modal-body"  style="padding-right: .5em">
                         <!-- Pick Deadline -->
                         <b-alert :show="this.error.noEndDate">
                             {{ $t('UploadDoc.error.noEndDate') }}
@@ -52,6 +52,7 @@
                             <SignatoryMenu :address-book-closed="showSignatoryMenu" :signatories="signatories"
                                            @updateSignatories="updateSignatories"
                                            @updateOrderRelevant="updateOrderRelevant"
+                                           @noticeNewSignatories = updateNoticeNewSignatories
                                            @showAddressBook="addressBookToggle(true)" key="3"></SignatoryMenu>
 
                             <!-- Select from AddressBook -->
@@ -135,6 +136,8 @@ export default {
             showReaderMenu: true,
             showSignatoryMenu: true,
             showHistory: true,
+            showEmailTemplate: false,
+
         }
     },
     methods: {
@@ -194,6 +197,8 @@ export default {
 
             this.$emit('updateSettings', settings)
             this.$emit('nextPage')
+            this.$emit('showEmailTemplate', this.showEmailTemplate)
+
         },
         startProcess() {
             if (this.validate()) {
@@ -220,6 +225,7 @@ export default {
 
                 this.$emit('updateSettings', settings)
                 this.$emit('nextPage')
+                this.$emit('showEmailTemplate', this.showEmailTemplate)
             }
         },
         validate() {
@@ -233,7 +239,12 @@ export default {
                 }
             }
             return !this.error.noEndDate && !this.error.noSignatureType && !this.error.noSignatories;
-        }
+        },
+
+      updateNoticeNewSignatories(noticeNewSignatory) {
+          this.showEmailTemplate = noticeNewSignatory
+          //this.$emit('showEmailTemplate', noticeNewSignatory)
+      }
     },
 
     created() {
