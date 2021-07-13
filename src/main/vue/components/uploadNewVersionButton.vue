@@ -239,8 +239,11 @@
                                             <b-input v-if="file" v-model="file.title"
                                                      style="width: 80%; margin-left: 1em"></b-input>
                                         </div>
-                                        <FileInput @updateFile="updateFile" @close="show = false; close()"
-                                                   @nextPage="page = page + 1"></FileInput>
+                                        <FileInput @updateFiles="updateFile"
+                                                   @close="show = false; close()"
+                                                   @nextPage="page = page + 1"
+                                                   :moreFiles="false"
+                                        ></FileInput>
                                     </div>
                                 </div>
 
@@ -257,17 +260,17 @@
                                                     <b-col cols="auto">
                                                         <button type="button" class="light-btn"
                                                                 @click="page = page - 1">
-                                                            <h5>
+                                                            <span>
                                                                 {{ $t('UploadDoc.close') }}
-                                                            </h5>
+                                                            </span>
                                                         </button>
                                                     </b-col>
                                                     <b-col cols="auto">
                                                         <button type="button" class="elsa-blue-btn"
                                                                 @click="page = page + 1">
-                                                            <h5>
+                                                            <span>
                                                                 {{ $t('UploadDoc.continue') }}
-                                                            </h5>
+                                                            </span>
                                                         </button>
                                                     </b-col>
                                                 </b-row>
@@ -327,7 +330,6 @@
 </template>
 
 <script>
-import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
@@ -400,8 +402,7 @@ export default {
     methods: {
         // setting the new file into file variable and also the documents information into the actualDoc variable
         updateFile: function (file) {
-            console.log('test')
-            this.file = file;
+            this.file = file[0];
             this.actualDoc = this.document
             this.settings.endDate = this.actualDoc.endDate
             this.settings.signatories = this.actualDoc.signatories
@@ -412,7 +413,7 @@ export default {
 
         updateSettings: function (settings) {
             this.settings = settings;
-            console.log(this.actualDoc)
+            console.log(this.settings)
         },
         updateSignatories(newSignatories) {
             this.actualDoc.signatories = newSignatories
@@ -430,7 +431,6 @@ export default {
         },
         /* NEWWW */
         async upload() {
-            console.log(this.actualDoc)
             this.uploadingDocument = true
 
             this.actualDoc.endDate = this.settings.endDate
@@ -439,6 +439,8 @@ export default {
             this.actualDoc.data = this.file.data
             this.actualDoc.dataType = this.file.type
             this.actualDoc.title = this.newDocumentTitle
+            console.log(this.settings.endDate)
+            console.log(this.actualDoc)
 
 
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
@@ -449,14 +451,16 @@ export default {
             await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
             let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
 
+
+            console.log(newUrl)
             // will route the user to the newUploaded document page (with the new ID)
             // for now it is working. But it will show before refreshing the new page an unable preview of the file
             await this.$store.dispatch('envelopes/fetchEnvelopes')
-            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+            /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                 this.$router.go(0)
-            })
+            })*/
 
-            this.close()
+            //this.close()
         },
 
 

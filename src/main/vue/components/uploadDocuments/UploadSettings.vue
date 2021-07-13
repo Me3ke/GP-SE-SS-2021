@@ -2,21 +2,6 @@
     <div>
         <div class="modal-body">
             <!-- Pick Deadline -->
-            <b-alert :show="this.error.noEndDate">
-                {{ $t('UploadDoc.error.noEndDate') }}
-            </b-alert>
-            <div>
-                <h6>{{ $t('Settings.DocumentSettings.chooseDate') }}</h6>
-                <b-row style="margin-bottom: 0.5em">
-                    <b-col cols="6">
-                        {{ endDate }}
-                        <b-form-datepicker class="mb-2" v-model="endDate"></b-form-datepicker>
-                    </b-col>
-                    <b-col cols="6">
-                        {{ endTime }}
-                        <b-form-timepicker v-model="endTime" :locale="this.$i18n.locale"></b-form-timepicker>
-                    </b-col>
-                </b-row>
                 <div style="overflow-x: hidden">
                     <div class="modal-body">
                         <!-- Pick Deadline -->
@@ -114,7 +99,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </template>
 
@@ -296,6 +280,11 @@ export default {
             }
         }
     },
+
+    beforeDestroy() {
+        console.log(this.endDate)
+        console.log(this.endTime)
+    }
 
 
 }
