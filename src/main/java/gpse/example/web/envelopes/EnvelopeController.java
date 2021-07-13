@@ -41,7 +41,6 @@ public class EnvelopeController {
     private static final int FORBIDDEN = 403;
     private static final int INTERNAL_ERROR = 500;
     private static final int STATUS_CODE_OK = 200;
-    private static final String NEW_LINE = "\n";
     private static final String DOCUMENT_URL = "/document/";
 
     private final EnvelopeServiceImpl envelopeService;
@@ -67,10 +66,10 @@ public class EnvelopeController {
     /**
      * The default constructor for an envelope Controller.
      *
-     * @param envelopeService the envelopeService
-     * @param userService     the userService
-     * @param documentService the documentService
-     * @param documentFilter  the documentFilter
+     * @param envelopeService   the envelopeService
+     * @param userService       the userService
+     * @param documentService   the documentService
+     * @param documentFilter    the documentFilter
      * @param guestTokenService the guestTokenService
      */
     @Autowired
@@ -128,9 +127,9 @@ public class EnvelopeController {
             }
             final Document document = documentService.creation(documentPutRequest, ownerID,
                 userService);
-            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
+            final Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, document);
             Document savedDocument = savedEnvelope.getDocumentList().get(0);
-            for (Document doc : savedEnvelope.getDocumentList()) {
+            for (final Document doc : savedEnvelope.getDocumentList()) {
                 if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
                     savedDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
                     savedDocument = doc;
@@ -169,16 +168,15 @@ public class EnvelopeController {
     private void addIntoAddressBook(final String ownerID, final List<Signatory> signatories) {
         final User currentUser = userService.getUser(ownerID);
         final AddressBook addressBook = currentUser.getAddressBook();
-        List<Signatory> filteredSignatories;
-        if (addressBook.isAddAllAutomatically()) {
-            filteredSignatories = signatories;
-            if (addressBook.isAddDomainAutomatically()) {
+        List<Signatory> filteredSignatories = signatories;
+        if (addressBook.isAddAllAutomatically() || addressBook.isAddDomainAutomatically()) {
+            if (!addressBook.isAddAllAutomatically() && addressBook.isAddDomainAutomatically()) {
                 filteredSignatories = signatories.stream().filter(signatory ->
                     signatory.getEmail()
                         .matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain()))
                     .collect(Collectors.toList());
             }
-            for (final Signatory signatory: filteredSignatories) {
+            for (final Signatory signatory : filteredSignatories) {
                 try {
                     final User user = userService.getUser(signatory.getEmail());
                     addressBook.addEntry(new Entry(user));
@@ -188,8 +186,8 @@ public class EnvelopeController {
                     addressBook.addEntry(entry);
                 }
             }
-            userService.saveUser(currentUser);
         }
+        userService.saveUser(currentUser);
     }
 
     private void setupUserInvitation(final String userID, final User owner, final Document document,

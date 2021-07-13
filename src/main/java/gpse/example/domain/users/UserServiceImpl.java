@@ -25,6 +25,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
     /**
      * Standard ConfirmationTokenService.
      * autowired not commited not tested 18.05.21

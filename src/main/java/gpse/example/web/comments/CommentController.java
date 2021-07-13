@@ -149,8 +149,8 @@ public class CommentController {
 
     private void sendNewCommentEmail(User author, User documentOwner, Document document)
         throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         container.setFirstNameOwner(author.getFirstname());
         container.setLastNameOwner(author.getLastname());
@@ -162,8 +162,8 @@ public class CommentController {
 
     private void sendAnswerEmail(User author, User reciever, Document document)
         throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameOwner(author.getFirstname());
         container.setLastNameOwner(author.getLastname());
         container.setFirstNameReciever(reciever.getFirstname());

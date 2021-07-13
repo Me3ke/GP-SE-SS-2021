@@ -18,6 +18,7 @@ import * as userManagement from './modules/userManage'
 import * as comments from "./modules/comments";
 import * as emailTemplate from "./modules/emailTemplate.js"
 import guestAuthorization from "@/main/vue/store/modules/guestAuthorization";
+import * as addressBook from './modules/addressBook'
 
 
 Vue.use(Vuex)
@@ -33,11 +34,12 @@ const store = new Vuex.Store({
         keypair,
         theme,
         twoFakAuth,
-        auth: authorization,
         documentSettings,
         comments,
         emailTemplate,
         userManagement,
+        addressBook,
+        auth: authorization,
         guestAuth: guestAuthorization
     },
     mutations: {

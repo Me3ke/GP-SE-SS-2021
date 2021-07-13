@@ -1,6 +1,7 @@
 <template>
     <div>
         <!-- Page 1 -->
+        <!---
         <b-modal
             modal-class="model-class"
             :id="'modal-' + docID + 'a'"
@@ -24,6 +25,7 @@
                                 drop-placeholder="Drop file here..."
                                 @change="previewFile"
                             ></b-form-file>
+
                         </div>
                     </div>
                 </div>
@@ -47,7 +49,7 @@
             </div>
         </b-modal>
 
-        <!--- Skip or Add Readers --->
+        <--- Skip or Add Readers ---
         <b-modal
             modal-class="model-class"
             :id="'modal-' + docID + 'bb'"
@@ -79,8 +81,7 @@
             </div>
         </b-modal>
 
-
-        <!---Readers --->
+            Readers
         <b-modal
             style="margin-top: 2em;"
             modal-class="model-class"
@@ -119,7 +120,7 @@
         </b-modal>
 
 
-        <!---EndDate + Signatories--->
+        <---EndDate + Signatories---
         <b-modal
             modal-class="model-class"
             :id="'modal-' + docID + 'bbbb'"
@@ -161,7 +162,7 @@
 
         </b-modal>
 
-        <!--- Email Template --->
+        <--- Email Template --
         <b-modal
             modal-class="model-class"
             :id="'modal-'+ docID + 'c'"
@@ -176,7 +177,7 @@
             <b-container>
 
                 <b-row style="padding-bottom: 1em">
-                    <!---emit email templates with '@saveEmailTemplate' --->
+                    <---emit email templates with '@saveEmailTemplate' ---
                     <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
                 </b-row>
             </b-container>
@@ -199,11 +200,10 @@
                 </b-button>
             </div>
 
-
-
         </b-modal>
-        <!-- Modal Page for save written email template--->
-        <!-- Last PAGE  -->
+        <-- Modal Page for save written email template---
+        <-- Last PAGE  --
+        <-- Last PAGE  --
         <b-modal
             modal-class="model-class"
             :id="'modal-' + docID + 'd'"
@@ -234,14 +234,22 @@
                         @click="uploadNewFile"
                 >
                     <span class="button-txt">
-                        {{ $t('UploadDoc.upload') }} <!--UPLOAD -->
+                        {{ $t('UploadDoc.upload') }} <--UPLOAD --
                     </span>
                 </button>
+
+
+
+                <--<b-button
+                    @click="uploadNewFile"
+                    >
+                    {{ $t('UploadDoc.UpdateDocument.update1') }}
+                </b-button>--
             </div>
         </b-modal>
 
 
-        <!-- TODO Error Page  -->
+        <-- TODO Error Page  --
         <b-modal
             modal-class="model-class"
             :id="'modal-' + docID + 'error'"
@@ -255,25 +263,170 @@
 
         </b-modal>
 
+        --->
+
+
+        <div v-if="clicked && !uploadingDocument">
+            <transition>
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 v-if="page === 1" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 2" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 3" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 4" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5>
+                                        <b-icon type="button" icon="x-square" @click="show = false; close()">
+                                        </b-icon>
+                                    </h5>
+                                </div>
+                                <!-- Page 1 Choose Document -->
+                                <div v-if="page === 1">
+                                    <div style="padding-top: 1em; text-align: left">
+                                        <div v-if="file.title !== null">
+                                            <span style="margin-left: 1em">Document Title</span>
+                                            <b-input v-if="file" v-model="file.title"
+                                                     style="width: 80%; margin-left: 1em"></b-input>
+                                        </div>
+                                        <FileInput @updateFiles="updateFile"
+                                                   @close="show = false; close()"
+                                                   @nextPage="page = page + 1"
+                                                   :moreFiles="false"
+                                        ></FileInput>
+                                    </div>
+                                </div>
+
+                                <div v-if="page === 2">
+                                    <div style="padding-top: 1em; text-align: left">
+                                        <div v-if="file.title !== null">
+                                            <span style="margin-left: 1em">Document Title</span>
+                                            <b-input v-if="file" v-model="newDocumentTitle"
+                                                     style="width: 80%; margin-left: 1em"></b-input>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-container>
+                                                <b-row align-h="end">
+                                                    <b-col cols="auto">
+                                                        <button type="button" class="light-btn"
+                                                                @click="page = page - 1">
+                                                            <span>
+                                                                {{ $t('UploadDoc.close') }}
+                                                            </span>
+                                                        </button>
+                                                    </b-col>
+                                                    <b-col cols="auto">
+                                                        <button type="button" class="elsa-blue-btn"
+                                                                @click="page = page + 1">
+                                                            <span>
+                                                                {{ $t('UploadDoc.continue') }}
+                                                            </span>
+                                                        </button>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-container>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Page 3 Add signatories/readers-->
+                                <div v-if="page === 3">
+                                    <UploadSettings :alreadySetSettings="settings" @updateSettings="updateSettings"
+                                                    @nextPage="page = page + 1"
+                                                    @previousPage="page = page - 1"></UploadSettings>
+                                </div>
+
+                                <!-- Page 4 Upload -->
+                                <div v-if="page === 4">
+                                    <div class="modal-body">
+                                        <div v-if="!this.uploadingDocument">
+                                            <div>
+                                                <h3>{{ document.title }}</h3>
+                                                <h5> {{
+                                                        $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title})
+                                                    }}</h5>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="this.uploadingDocument">
+                                            <b-spinner></b-spinner>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <b-row align-h="end">
+                                            <b-col cols="auto">
+                                                <button class="light-btn" @click="page = page - 1;">
+                                                    {{ $t('UploadDoc.back') }}
+                                                </button>
+                                            </b-col>
+                                            <b-col cols="auto">
+                                                <button class="elsa-blue-btn" @click="upload">
+                                                    {{ $t('UploadDoc.upload') }}
+                                                </button>
+                                            </b-col>
+                                        </b-row>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </div>
+
+
     </div>
 </template>
 
 <script>
-import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
-import _ from "lodash";
 import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 import EmailTemplate from "@/main/vue/components/EmailTemplate";
+import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
+import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
 
 export default {
     name: "uploadNewVersionButton",
-    components: {EmailTemplate, SignatoryMenu, ReaderMenu},
+    components: {FileInput, UploadSettings, EmailTemplate, SignatoryMenu, ReaderMenu},
     data() {
         return {
+
+
+            show: true,
+
+
+            page: 1,
+            selectedEnvelope: {
+                id: null,
+                name: null
+            },
+            settings: {
+                signatories: [],
+                endDate: null,
+                orderRelevant: true
+                // TODO: processStart: Boolean
+            },
+            settings2: {
+                signatories: [],
+                endDate: null,
+                orderRelevant: true,
+                readers: []
+                // TODO: processStart: Boolean
+            },
+            file: {
+                data: null,
+                type: null,
+                title: null
+            },
+            uploadingDocument: false,
+            newDocumentTitle: '',
+
             // filename of uploaded file
             fileString: "",
-            file: null,
+            file2: null,
             showAlert: false,
             review: true,
 
@@ -285,18 +438,13 @@ export default {
             actualDoc: {},
         }
     },
-    props: ['document', 'docID', 'envID'],
+    props: ['document', 'docID', 'envID', 'clicked'],
     computed: {
         ...mapGetters({
             newDocumentId: 'document/getNewDocumentId',
             newDocumentError: 'document/getErrorEditDocument',
             newDocumentStatus: 'document/getEditDocumentStatus'
         }),
-        showErrorReview: {
-            get() {
-                return !_.isEmpty(this.newDocumentError)
-            }
-        },
 
         isoDate(enDate) {
             const [day, month, year] = enDate.split('.')
@@ -306,39 +454,85 @@ export default {
     },
 
     methods: {
+        // setting the new file into file variable and also the documents information into the actualDoc variable
+        updateFile: function (file) {
+            this.file = file[0];
+            this.actualDoc = this.document
+            this.settings.endDate = this.actualDoc.endDate
+            this.settings.signatories = this.actualDoc.signatories
+            this.settings.orderRelevant = this.actualDoc.orderRelevant
+            this.newDocumentTitle = this.file.title
+        },
+
+
+        updateSettings: function (settings) {
+            this.settings = settings;
+            console.log(this.settings)
+        },
+        updateSignatories(newSignatories) {
+            this.actualDoc.signatories = newSignatories
+        },
+
+        close() {
+            this.page = 1;
+            this.file = {data: null, type: null, title: null};
+            this.selectedEnv = {old: null, new: null};
+            this.settings = {signatories: [], endDate: null, orderRelevant: null};
+            this.show = false;
+            this.uploadingDocument = false;
+
+            this.$emit('closePopUp', false)
+        },
+        /* NEWWW */
+        async upload() {
+            this.uploadingDocument = true
+
+            this.actualDoc.endDate = this.settings.endDate
+            this.actualDoc.signatories = this.settings.signatories
+            this.actualDoc.orderRelevant = this.settings.orderRelevant
+            this.actualDoc.data = this.file.data
+            this.actualDoc.dataType = this.file.type
+            this.actualDoc.title = this.newDocumentTitle
+            console.log(this.settings.endDate)
+            console.log(this.actualDoc)
+
+
+            let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
+            await this.$store.dispatch('document/editDocument', payload)
+
+            // here show error
+
+            await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
+            let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
+
+
+            console.log(newUrl)
+            // will route the user to the newUploaded document page (with the new ID)
+            // for now it is working. But it will show before refreshing the new page an unable preview of the file
+            await this.$store.dispatch('envelopes/fetchEnvelopes')
+            /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                this.$router.go(0)
+            })*/
+
+            //this.close()
+        },
+
+
         // save the selected File in the data
         previewFile(event) {
             this.fileString = event.target.files[0].name
             this.file = event.target.files[0]
         },
 
-        updateSignatories(newSignatories) {
-            this.actualDoc.signatories = newSignatories
-        },
-
-        setActualDoc() {
-            this.actualDoc = this.document
-
-            this.actualDoc.orderRelevant = false
-            this.actualDoc.lastModified = new Date(this.file.lastModified).toISOString()
-
-            if (this.actualDoc.endDate !== '' || this.actualDoc.endDate != null) {
-                const [day, month, year] = this.actualDoc.endDate.split('.')
-                this.actualDoc.endDate = year + '-' + month + '-' + day
-            }
-            this.actualDoc.dataType = this.fileString.split('.').pop()
-
-            this.showHideModal('modal-page1', 'modal-page2')
-        },
-
 
         // temp is the selected template
-        setEmailTemplate(temp){
+        setEmailTemplate(temp) {
             // emailTemplates is an array instead of an object (in document)
             this.actualDoc.emailTemplateHtml = temp
         },
+    },
 
-        /// getting emitted value
+        /*/// getting emitted value
         async uploadNewFile() {
             this.fileString = ""
             this.actualDoc.endDate = this.actualDoc.endDate + ' 12:00'
@@ -356,11 +550,20 @@ export default {
                 this.actualDoc = {}
                 this.fileString = ''
                 this.file = null
+<<<<<<< HEAD
             }
             else {
                 this.$refs['modal-page4'].hide()
 
                 await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
+=======
+            } else {
+                this.$refs['modal-page3'].hide()
+                await this.$store.dispatch('document/fetchDocumentInfo', {
+                    envId: this.envID,
+                    docId: this.newDocumentId
+                })
+>>>>>>> feature.30843.updateNewVersion
                 let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
                 this.showAlert = !this.showAlert
 
@@ -373,34 +576,7 @@ export default {
                 /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
                 })*/
-            }
-        },
 
-        // convert the file into an base64 string
-        async asyncHandleFunction() {
-            return await convertUploadFileToBase64(this.file)
-        },
-
-        resetSettings(a) {
-            if (a === 'modal-page1') {
-                this.$refs[a].hide()
-                this.fileString = ""
-                this.actualDoc = {}
-            }
-        },
-
-        showHideModal(currentModalId, goToModalId) {
-            this.$refs[goToModalId].show()
-            this.$refs[currentModalId].hide()
-            this.resetSettings(goToModalId)
-
-        },
-
-        async fetchTemplate() {
-            await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
-            this.$forceUpdate();
-        }
-    }
 }
 
 

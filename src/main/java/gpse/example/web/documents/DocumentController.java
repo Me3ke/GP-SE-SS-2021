@@ -260,9 +260,9 @@ public class DocumentController {
             final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                 userService);
             newDocument.setPreviousVersion(savedDocument);
-            Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
+            final Envelope savedEnvelope = envelopeService.updateEnvelope(envelope, newDocument);
             Document savedNewDocument = savedEnvelope.getDocumentList().get(0);
-            for (Document doc : savedEnvelope.getDocumentList()) {
+            for (final Document doc : savedEnvelope.getDocumentList()) {
                 if (doc.getDocumentMetaData().getMetaTimeStampUpload().isAfter(
                     savedNewDocument.getDocumentMetaData().getMetaTimeStampUpload())) {
                     savedNewDocument = doc;
@@ -299,35 +299,35 @@ public class DocumentController {
         throws TemplateNameNotFoundException, MessageGenerationException, DocumentNotFoundException {
         if (document.isOrderRelevant()) {
             if (document.getPreviousVersion().isOrderRelevant()) {
-                for (Signatory signatory : document.getPreviousVersion().getSignatories()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatories()) {
                     if (signatory.isStatus()) {
                         sendNewVersion(document, envelopeID, signatory);
                     }
                 }
                 sendNewVersion(document, envelopeID, document.getPreviousVersion().getCurrentSignatory());
             } else {
-                for (Signatory signatory : document.getPreviousVersion().getSignatories()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatories()) {
                     sendNewVersion(document, envelopeID, signatory);
                 }
             }
             sendInvitation(document, envelopeID, document.getCurrentSignatory());
         } else {
             if (document.getPreviousVersion().isOrderRelevant()) {
-                for (Signatory signatory : document.getPreviousVersion().getSignatories()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatories()) {
                     if (signatory.isStatus()) {
                         sendNewVersion(document, envelopeID, signatory);
                     } else if (containsSignatory(document, signatory)) {
                         sendInvitation(document, envelopeID, signatory);
                     }
-                } for (Signatory signatory : document.getSignatories()) {
+                } for (final Signatory signatory : document.getSignatories()) {
                     if (!containsSignatory(document.getPreviousVersion(), signatory)) {
                         sendInvitation(document, envelopeID, signatory);
                     }
                 }
             } else {
-                for (Signatory signatory : document.getPreviousVersion().getSignatories()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatories()) {
                     sendNewVersion(document, envelopeID, signatory);
-                } for (Signatory signatory : document.getSignatories()) {
+                } for (final Signatory signatory : document.getSignatories()) {
                     if (!containsSignatory(document.getPreviousVersion(), signatory)) {
                         sendInvitation(document, envelopeID, signatory);
                     }
@@ -369,8 +369,8 @@ public class DocumentController {
 
     private void sendInvitation(final Document document, final long envelopeID, final Signatory signatory)
         throws MessageGenerationException, DocumentNotFoundException {
-        Envelope envelope = envelopeService.getEnvelope(envelopeID);
-        User owner = userService.getUser(document.getOwner());
+        final Envelope envelope = envelopeService.getEnvelope(envelopeID);
+        final User owner = userService.getUser(document.getOwner());
         try {
             EmailTemplate template = owner.getEmailTemplates().get(0);
             for (final EmailTemplate temp : owner.getEmailTemplates()) {

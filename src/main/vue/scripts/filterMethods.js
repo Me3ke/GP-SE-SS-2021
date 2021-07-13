@@ -58,7 +58,7 @@ function filterEnvelopes(envelopes, filters) {
                 creationDateMax = true
             }
             //Filter EndDate
-            if (filters.endDateMin === "" || !(dateCompare(document.endDate, filters.endDateMin) === -1)) {
+            if (!(dateCompare(document.endDate, filters.endDateMin) === -1) || filters.endDateMin === "") {
                 endDateMin = true
             }
             if (filters.endDateMax === "" || !(dateCompare(document.endDate, filters.endDateMax) === 1)) {
@@ -110,6 +110,172 @@ function filterEnvelopes(envelopes, filters) {
 }
 
 export {filterEnvelopes};
+
+function sortEnvelopes(envelopes, filters) {
+    let sortFirst = filters.sortFirst;
+    let sortSecond = filters.sortSecond;
+    let result = envelopes;
+
+    switch(sortSecond) {
+        case "creation":
+            result = sortCreationDate(result);
+            break;
+        case "creation-rev":
+            result = sortCreationDate(result).reverse();
+            break;
+        case "name":
+            result = sortName(result);
+            break;
+        case "name-rev":
+            result = sortName(result).reverse();
+            break;
+        case "state":
+            result = sortState(result);
+            break;
+        case "state-rev":
+            result = sortState(result).reverse();
+            break;
+        case "role":
+            result = sortRole(result);
+            break;
+        case "role-rev":
+            result = sortRole(result).reverse();
+            break;
+        default: //end
+            result = sortEndDate(result);
+    }
+    switch(sortFirst) {
+        case "creation":
+            result = sortCreationDate(result);
+            break;
+        case "creation-rev":
+            result = sortCreationDate(result).reverse();
+            break;
+        case "end":
+            result = sortEndDate(result);
+            break;
+        case "name":
+            result = sortName(result);
+            break;
+        case "name-rev":
+            result = sortName(result).reverse();
+            break;
+        case "state-rev":
+            result = sortState(result).reverse();
+            break;
+        case "role":
+            result = sortRole(result);
+            break;
+        case "role-rev":
+            result = sortRole(result).reverse();
+            break;
+        default: //state
+            result = sortState(result);
+    }
+    return result;
+}
+
+export {sortEnvelopes};
+
+function sortName(envelopes) {
+    return envelopes.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+}
+
+function sortCreationDate(envelopes) {
+    return envelopes.sort((a,b) => dateCompare(a.creationDate, b.creationDate))
+}
+
+function sortEndDate(envelopes) {
+    return envelopes.sort((a,b) => dateCompare(getEarliestEndDate(a), getEarliestEndDate(b)))
+}
+
+function getEarliestEndDate(envelope) {
+    let result = envelope.documents[0].endDate;
+    let i;
+    for (i = 1; i < envelope.documents.length; i++) {
+        if(dateCompare(result, envelope.documents[i].endDate) < 0) {
+            result = envelope.documents[i].endDate;
+        }
+    }
+    return result;
+}
+
+function sortState(envelopes) {
+    let sign = [];
+    let open = [];
+    let closed = [];
+    let i;
+    for (i = 0; i < envelopes.length; i++) {
+        if(getState(envelopes[i]) === "OPEN") {
+            if(toSign(envelopes[i])) {
+                sign.push(envelopes[i]);
+            } else {
+                open.push(envelopes[i]);
+            }
+        } else {
+            closed.push(envelopes[i]);
+        }
+    }
+    return sign.concat(open.concat(closed));
+}
+
+function getState(envelope) {
+    let i;
+    for(i = 0; i < envelope.documents.length; i++) {
+        if(!(envelope.documents[i].state === "READ_AND_SIGN")) {
+            return "OPEN"
+        }
+    }
+    return "CLOSED"
+}
+
+function sortRole(envelopes) {
+    let signatory = [];
+    let reader = [];
+    let owner = [];
+
+    let i;
+    for(i = 0; i < envelopes.length; i++) {
+        switch(getRole(envelopes[i])) {
+            case "OWNER":
+                owner.push(envelopes[i]);
+                break;
+            case "READER":
+                reader.push(envelopes[i]);
+                break;
+            default:
+                signatory.push(envelopes[i]);
+                break;
+        }
+    }
+    return signatory.concat(reader.concat(owner));
+}
+
+function getRole(envelope) {
+    if(envelope.owner === store.state.auth.username) {
+        return "OWNER";
+    }
+    let i;
+    for(i = 0; i < envelope.documents.length; i++) {
+        if(envelope.documents[i].signatory) {
+            return "SIGNATORY";
+        }
+    }
+    return "READER"
+}
+
+function toSign(envelope) {
+    let i;
+    for(i = 0; i < envelope.documents.length; i++) {
+        if(envelope.documents[i].signatory && !envelope.documents[i].signed && envelope.documents[i].turnToSign){
+            return true;
+        }
+        if(envelope.documents[i].reader && !envelope.documents[i].read && envelope.documents[i].turnToReview){
+            return true;
+        }
+    }
+    return false;
+}
 
 function dateToInts(date, divider) {
     let day;

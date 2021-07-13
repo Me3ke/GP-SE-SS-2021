@@ -26,6 +26,7 @@
         },
         "Avatar": {
             "profile": "Account settings",
+            "addressBook": "Address book",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -80,6 +81,22 @@
         "reader": "Proofreader",
         "signatory": "Signatory",
         "readerOrSignatory": "Proofreader or Signatory"
+    },
+    "Sort": {
+        "creation": "New - Old",
+        "creation-rev": "Old - New",
+        "end": "Deadline soon",
+        "name": "A - Z",
+        "name-rev": "Z - A",
+        "state": "Open - Closed",
+        "state-rev": "Closed - Open",
+        "role": "Signatory - Owner",
+        "role-rev": "Owner - Signatory",
+        "default": "Importance",
+        "title": "Sort documents and envelopes",
+        "first": "1st sort option",
+        "second": "2nd sort option",
+        "apply": "Apply"
     },
     "UserGuide": {
         "name": "User Guide",
@@ -218,7 +235,8 @@
         "owner": "Owner",
         "date": "Created on",
         "open": "Open",
-        "closed": "Closed"
+        "closed": "Closed",
+        "envelope": "Envelope"
     },
     "MessagePage": {
         "heading": "Messages",
@@ -294,6 +312,13 @@
             "twoFacAuthSetUp": "Two-factor authentication set-up",
             "setUp": "Set up"
         },
+        "AddressBookSettings": {
+            "settings": "Address book settings",
+            "all": "Add all emails addresses automatically",
+            "allExp": "All e-mail addresses you add to proofread or sign your documents will be added to your address book.",
+            "domain": "Add domain specific email addresses automatically",
+            "domainExp": "All e-mail addresses, with a specific domain set up by your admin, you add to proofread or sign your documents will be added to your address book."
+        },
         "MessageSettings": {
             "settings": "Message settings",
             "send": "Save",
@@ -321,7 +346,7 @@
         "DocumentSettings": {
             "editAll": "Edit all documents in the envelope",
             "addSignatory": "Add signatories",
-            "placeholderMail": "Signatory@mail.de",
+            "placeholderMail": "Signatory@mail.de,...",
             "signatory": "Signatories",
             "addReader": "Add proofreader",
             "reader": "Proofreaders",
@@ -362,9 +387,14 @@
         "simple": "Simple",
         "advanced": "Advanced",
         "signatureType": "Signaturetype",
-        "areYouSure": "Please check the document you want to upload and it's settings:",
+        "areYouSure": "Please check the document you want to upload and its settings:",
+        "areYouSureMult": "Please check the documents you want to upload and their settings:",
         "document": "Document",
+        "documents": "Documents",
         "envelope": "Envelope",
+        "showHistoryTitle": "Version history",
+        "showHistory": "Visible to everyone",
+        "dontShowHistory": "Hidden from everyone",
         "error": {
             "noDocument": "Please choose a document to upload.",
             "noEnvelope": "Please choose a envelope to upload your document into.",
@@ -380,6 +410,7 @@
         "sendReminderEMails": "Send reminder emails",
         "startProcess": "Start process",
         "startProcessLater": "Start process later",
+        "addMoreFiles": "Add another document",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
@@ -636,6 +667,15 @@
                 "admin": "Make admin"
             },
             "new": "NEW"
+        },
+        "trustedDomain": {
+            "title": "Trusted Domain Settings",
+            "Domain": {
+                "domain": "Trusted Domain:  ",
+                "header": "Trusted Domain (e.g. 'elsa.com')",
+                "save" : "save",
+                "feedback" : "min. 4 characters and a dot."
+            }
         }
     },
     "ProgressBar": {
@@ -705,16 +745,37 @@
         }
     },
     "ResetPasswordPage": {
-      "success" : "Success! Login now!",
-      "fail" : "Failure! Please try to reset again!",
-      "send" : "send"
+        "success": "Success! Login now!",
+        "fail": "Failure! Please try to reset again!",
+        "send": "send"
     },
     "Password": {
-      "change": "Change Password"
+        "change": "Change Password"
     },
     "HistoryPage": {
         "title": "History",
         "abc": "Title A-Z",
-        "cba" : "Title Z-A"
+        "cba": "Title Z-A"
+    },
+    "AddressBook": {
+        "title": "Address book",
+        "filter": {
+            "favorite": "Favorite"
+        },
+        "new": "New Entry",
+        "more": "Show more",
+        "less": "Show less",
+        "name": "Name",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "mail": "E-mail-address",
+        "address": "Address",
+        "bday": "Birthday",
+        "note": "Note",
+        "noNote": "No note present",
+        "number": "Phone number",
+        "save": "Save",
+        "serverErrorTwo": "Your changes could not be processed. Try again later.",
+        "mailMissing": "You have to input an e-mail-address."
     }
 }

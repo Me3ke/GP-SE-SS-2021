@@ -8,6 +8,17 @@
                     </h4>
                 </div>
                 <b-list-group>
+
+                    <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t('Password.change') }}
+                        </span>
+                        <b-button class="light-btn" @click="changePassword">
+                            {{ $t('Password.change') }}
+                        </b-button>
+
+                    </b-list-group-item>
+
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                                 <span>
                                     {{ $t('Settings.SecuritySettings.publicKey') }} {{ this.userData.publicKey }}
@@ -23,7 +34,7 @@
                              {{ $t('Settings.SecuritySettings.twoFacAuthSetUp') }}
                         </span>
                         <b-button class="light-btn" @click="setUp()">
-                          {{ $t('Settings.SecuritySettings.setUp') }}
+                            {{ $t('Settings.SecuritySettings.setUp') }}
                         </b-button>
                     </b-list-group-item>
                     <TwoFakAuthSetUp v-if="showSetUp" @modalTrigger="setUp()"></TwoFakAuthSetUp>
@@ -50,21 +61,6 @@
                         </div>
                     </b-list-group-item>
 
-                    <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <span>
-                            {{ $t('Password.change') }}
-
-
-                        </span>
-
-
-                       <b-button class="light-btn" @click="changePassword">
-                         {{ $t('Password.change') }}
-                       </b-button>
-
-
-
-                    </b-list-group-item>
 
                     <b-list-group-item class="d-flex justify-content-end align-items-center">
 
@@ -120,15 +116,15 @@ export default {
     },
     methods: {
         keySetUp() {
-          this.showKey = !this.showKey
-          this.$emit('modalTrigger')
+            this.showKey = !this.showKey
+            this.$emit('modalTrigger')
         },
         setUp() {
             this.showSetUp = !this.showSetUp
             this.$emit('modalTrigger')
         },
         changePassword() {
-          this.$router.push('/' + this.$i18n.locale + '/login/resets');
+            this.$router.push('/' + this.$i18n.locale + '/login/resets');
         },
         // saves setting if two-factor authentication should always be shown at login
         async saveTwoFacLogin() {

@@ -12,6 +12,7 @@
                 <SecuritySettingsBox :user="user" :userData="userData"
                                      @modalTrigger="toggleOverflow"></SecuritySettingsBox>
                 <SignatureSettingsBox @uploadTrigger="toggleOverflow"></SignatureSettingsBox>
+                <AddressBookSettingsBox></AddressBookSettingsBox>
                 <MessageSettingsBox></MessageSettingsBox>
                 <EmailTemplate></EmailTemplate>
             </div>
@@ -27,10 +28,15 @@ import MessageSettingsBox from "@/main/vue/components/settingsPage/MessageSettin
 import SecuritySettingsBox from "@/main/vue/components/settingsPage/SecuritySettingsBox";
 import SignatureSettingsBox from "@/main/vue/components/settingsPage/SignatureSettingsBox";
 import EmailTemplate from "@/main/vue/components/EmailTemplate";
+import AddressBookSettingsBox from "@/main/vue/components/settingsPage/AddressBookSettingsBox";
+
 
 export default {
     name: "UserPage",
-    components: {EmailTemplate, SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox},
+    components: {
+        AddressBookSettingsBox, EmailTemplate,
+        SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox
+    },
     data() {
         return {
             showOverflow: true
@@ -47,10 +53,10 @@ export default {
             userData: 'getUserData'
         })
     },
-    created() {
+    mounted() {
         this.$store.dispatch('fetchUserData')
         this.$store.dispatch('fetchUser')
-    },
+    }
 }
 </script>
 

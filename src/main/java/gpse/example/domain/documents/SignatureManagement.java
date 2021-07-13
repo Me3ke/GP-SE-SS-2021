@@ -122,12 +122,12 @@ public class SignatureManagement {
 
     private void sendProcessFinishedTemplate(final Document document) throws TemplateNameNotFoundException,
                 MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ProcessFinishedTemplate");
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink(document.getLinkToDocumentview() + "/protocol");
         smtpServerHelper.sendTemplatedEmail(document.getOwner(), template, container, Category.PROGRESS, null);
-        for (Signatory signatory : document.getSignatories()) {
+        for (final Signatory signatory : document.getSignatories()) {
             if (!signatory.getEmail().equals(document.getOwner())) {
                 smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS, null);
             }

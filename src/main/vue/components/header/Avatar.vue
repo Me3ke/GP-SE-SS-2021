@@ -12,6 +12,14 @@
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
+        <!-- Address book -->
+        <b-dropdown-item class="my-dropdown-item" @click="routeToAddressBook">
+            <b-icon icon="book" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.addressBook') }} </span>
+        </b-dropdown-item>
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
         <!-- Admin Settings -->
         <b-dropdown-item
             v-if="isAdmin"
@@ -43,7 +51,7 @@
 
                 <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-                <b-dropdown-item class="my-inner-dropdown-item">
+                <b-dropdown-item class="my-inner-dropdown-item" @click="routeToTrustedDomain">
                     <b-icon icon="at" class="my-icon"></b-icon>
                     <span class="letters"> {{ $t('Header.Avatar.adminSetting.filter') }} </span>
                 </b-dropdown-item>
@@ -113,6 +121,9 @@ export default {
         routeToProfile() {
             this.$router.push('/' + this.$i18n.locale + '/user')
         },
+        routeToAddressBook(){
+            this.$router.push('/' + this.$i18n.locale + '/addressBook')
+        },
         routeToHelp() {
             this.$router.push('/' + this.$i18n.locale + '/help')
         },
@@ -121,6 +132,9 @@ export default {
         },
         routeToUserManage() {
             this.$router.push('/' + this.$i18n.locale + '/adminSettings/userManagement')
+        },
+        routeToTrustedDomain() {
+          this.$router.push('/' + this.$i18n.locale + '/adminSettings/trustedDomain')
         },
         toggleTheme(mode) {
             //changes mode

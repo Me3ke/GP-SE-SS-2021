@@ -7,6 +7,7 @@ import publicKeyAPI from "@/main/vue/api/publicKeyAPI";
 import documentUploadAPI from "@/main/vue/api/documentUploadAPI";
 import emailTemplateAPI from "@/main/vue/api/emailTemplateAPI"
 import documentSettingsAPI from "@/main/vue/api/documentSettingsAPI";
+import trustedDomainAPI from "@/main/vue/api/trustedDomainAPI";
 
 export default {
     auth,
@@ -17,5 +18,6 @@ export default {
     publicKeyAPI,
     documentUploadAPI,
     emailTemplateAPI,
-    documentSettingsAPI
+    documentSettingsAPI,
+    trustedDomainAPI
 }

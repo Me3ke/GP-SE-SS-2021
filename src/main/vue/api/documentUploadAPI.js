@@ -15,7 +15,8 @@ export default {
                 'dataType': file.type,
                 'signatories': settings.signatories,
                 'endDate': settings.endDate,
-                'orderRelevant': settings.orderRelevant
+                'orderRelevant': settings.orderRelevant,
+                'showHistory': settings.showHistory,
             }
         })
     },

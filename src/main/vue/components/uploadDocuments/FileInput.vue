@@ -5,13 +5,40 @@
             {{$t('UploadDoc.error.noDocument')}}
         </b-alert>
 
-        <!-- TODO: Make placeholder dependend on lacale -->
-        <b-form-file
-            v-model="fileInput"
-            :state="Boolean(fileInput)"
-            v-bind:placeholder="$t('UploadDoc.chooseFile')"
-            drop-placeholder="Drop file here..."
-        ></b-form-file>
+        <div v-for="fileInput in fileInputs" :key="fileInput.index">
+            <b-row v-if="fileInput.index > 0">
+                <b-col cols="1" >
+                    <button class="iconRed" style="padding:0.5em" @click="removeFile(fileInput)">
+                        <b-icon icon="x-circle" style="height:1.25em; width: auto"></b-icon>
+                    </button>
+                </b-col>
+                <b-col cols="11">
+                    <b-form-file style="margin-bottom: 1em"
+                                 v-model="fileInput.file"
+                                 :state="Boolean(fileInput.file)"
+                                 v-bind:placeholder="$t('UploadDoc.chooseFile')"
+                    ></b-form-file>
+                </b-col>
+            </b-row>
+            <div v-else>
+                <b-form-file style="margin-bottom: 1em"
+                             v-model="fileInput.file"
+                             :state="Boolean(fileInput.file)"
+                             v-bind:placeholder="$t('UploadDoc.chooseFile')"
+                             drop-placeholder="Drop file here..."
+                ></b-form-file>
+            </div>
+        </div>
+
+        <b-row align-h="center" v-if="moreFiles === undefined">
+            <button class="light-btn" @click="addFile()" v-if="!(fileInputs[fileInputs.length - 1].file === null)">
+                <h5>
+                    <b-icon icon="plus-circle"></b-icon>
+                    {{$t('UploadDoc.addMoreFiles')}}
+                </h5>
+            </button>
+        </b-row>
+
     </div>
     <div class="modal-footer">
         <b-container fluid>
@@ -44,19 +71,21 @@ export default {
     name: "FileInput",
     data() {
         return {
-            fileInput: null,
+            fileInputs: [{file: null, index: 0}],
+            files: [],
             error: {
                 noDocument: false
             }
         }
     },
+    props: ['moreFiles'],
     methods: {
         close() {
-            this.fileInput = null;
+            this.fileInputs = [null];
             this.$emit('close')
         },
         async next() {
-            if(this.fileInput === null) {
+            if(this.fileInputs[0].file === null) {
                 this.error.noDocument = true;
             } else {
                 this.error.noDocument = false;
@@ -65,15 +94,34 @@ export default {
             }
         },
         async fillFile() {
-            let file = {title: "", type: "", data: ""};
-            file.title = this.fileInput.name.split('.')[0];
-            file.type = this.fileInput.name.split('.')[1];
-            file.data = await this.asyncHandleFunction(this.fileInput);
-            this.$emit('updateFile', file);
+            let files = [];
+            let i;
+            for (i = 0; i < this.fileInputs.length; i++) {
+                let fileInput = this.fileInputs[i].file;
+                let file = {title: "", type: "", data: ""};
+                file.title = fileInput.name.split('.')[0];
+                file.type = fileInput.name.split('.')[1];
+                file.data = await this.asyncHandleFunction(fileInput);
+                files.push(file);
+            }
+            this.$emit('updateFiles', files);
         },
         // convert the file into an base64 string
         async asyncHandleFunction(file) {
             return await convertUploadFileToBase64(file)
+        },
+        addFile() {
+            this.fileInputs.push({file: null, index: this.fileInputs[this.fileInputs.length - 1].index + 1});
+        },
+        removeFile(fileInput) {
+            let result = [];
+            let i;
+            for (i = 0; i < this.fileInputs.length; i++) {
+                if(!(fileInput.index === this.fileInputs[i].index)) {
+                    result.push(this.fileInputs[i]);
+                }
+            }
+            this.fileInputs = result;
         }
     }
 }
@@ -94,5 +142,17 @@ export default {
 
 .elsa-blue-btn:focus, .light-btn:focus {
     border: 0.03vw solid var(--dark-grey);
+}
+
+.iconRed {
+    color: var(--red);
+    border: 0;
+    background-color: var(--whitesmoke);
+}
+
+.iconRed:hover {
+    color: var(--sign-doc);
+    border: 0;
+    background-color: var(--whitesmoke);
 }
 </style>

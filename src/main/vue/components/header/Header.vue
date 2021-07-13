@@ -130,8 +130,10 @@ export default {
 }
 
 #background {
-    background-image: linear-gradient(to right, var(--headerFadeOne), var(--headerFadeTwo), var(--headerFadeThree), var(--headerFadeTwo), var(--headerFadeOne)),
-    url(../../assets/header_background.png);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--dark-grey);
+    background-color: var(--elsa-blue-transparent);
     background-size: cover;
     align-content: center;
     z-index: 1000000000;
