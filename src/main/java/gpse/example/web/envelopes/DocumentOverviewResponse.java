@@ -30,6 +30,7 @@ public class DocumentOverviewResponse {
     private boolean turnToReview;
     private boolean turnToSign;
     private boolean showHistory;
+    private boolean draft;
     private final long id;
 
     /**
@@ -46,11 +47,16 @@ public class DocumentOverviewResponse {
         //Replaced with uploadDate
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.creationDate = document.getDocumentMetaData().getMetaTimeStampUpload().format(formatter);
-        this.endDate = document.getEndDate().format(formatter);
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        } else {
+            this.endDate = "";
+        }
         this.dataType = document.getDocumentType();
         this.state = document.getState();
         this.identifier = document.getDocumentMetaData().getIdentifier();
         this.showHistory = document.isShowHistory();
+        this.draft = document.isDraft();
         this.signatory = false;
         this.read = false;
         this.signed = false;
@@ -167,6 +173,14 @@ public class DocumentOverviewResponse {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 
     public long getId() {

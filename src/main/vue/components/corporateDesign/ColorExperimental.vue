@@ -41,7 +41,7 @@
                     <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <b-container fluid="sm">
                             <b-row align-h="center" align-v="center" cols="3"
-                                   v-for="index in Array.from(Array(14).keys())"
+                                   v-for="index in Array.from(Array(16).keys())"
                                    :key="index">
                                 <b-col style="text-align: left; padding: 0; margin: 0">
                                     <span style="text-align: left">
@@ -61,10 +61,10 @@
                                 <b-col style="text-align: right; padding: 0; margin: 0">
                                     <!-- Color picker -->
                                     <div>
-                                        <b-icon icon="arrow-clockwise" class="reset-icon" :id="'r' + (index+14)"
-                                                @click="resetColor(index + 14)"></b-icon>
+                                        <b-icon icon="arrow-clockwise" class="reset-icon" :id="'r' + (index+16)"
+                                                @click="resetColor(index + 16)"></b-icon>
                                         <span>
-                                             <input class="color-picker" type="color" v-model="colors[index+14]">
+                                             <input class="color-picker" type="color" v-model="colors[index+16]">
                                         </span>
                                     </div>
                                 </b-col>
@@ -113,9 +113,9 @@ export default {
             colors: [],
             defaultColors:
                 ["#47525E", "#436495", "#f5f5f5", "#D8D8D9", "#ACACAC", "#ababab",
-                    "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", "#f5f5f5", "#000000",
-                    "#D8D8D9", "#f5f5f5", "#23292f", "#ACACAC", "#D8D8D9", "#ababab", "#070809",
-                    "#788796", "#d25959", "#b02f2f", "#651b1b", "#501515", "#363f48", "#000000"]
+                    "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#DCEEFC", "#B7D8F1", "#C93A3A", "#a22c2c", "#f5f5f5",
+                    "#000000", "#D8D8D9", "#f5f5f5", "#23292f", "#ACACAC", "#D8D8D9", "#ababab", "#070809",
+                    "#788796", "#d25959", "#b02f2f", "#09416c", "#113958", "#651b1b", "#501515", "#363f48", "#000000"]
         }
     },
     async mounted() {

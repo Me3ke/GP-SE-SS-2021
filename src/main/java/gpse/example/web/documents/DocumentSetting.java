@@ -17,6 +17,7 @@ public class DocumentSetting extends DocumentSettingsCMD {
     private boolean orderRelevant;
     private String endDate;
     private boolean showHistory;
+    private boolean draft;
 
     /**
      * the standard constructor.
@@ -31,9 +32,17 @@ public class DocumentSetting extends DocumentSettingsCMD {
             signatories.add(new SignatorySetting(signatoryManagement.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
+<<<<<<< HEAD
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         this.endDate = document.getEndDate().format(formatter);
+=======
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        }
+>>>>>>> develop
         this.showHistory = document.isShowHistory();
+        this.draft = document.isDraft();
     }
 
     public long getDocumentID() {
@@ -82,5 +91,13 @@ public class DocumentSetting extends DocumentSettingsCMD {
     @Override
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 }

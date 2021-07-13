@@ -48,9 +48,9 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
         for (final Document doc : documentService.getDocuments()) {
-            if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            if (doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesInOrder(doc);
-            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesWithoutOrder(doc);
             }
         }
@@ -65,24 +65,40 @@ public class ScheduledTasks {
                 break;
             }
         }*/
+<<<<<<< HEAD
         final Signatory currentSignatory = doc.getSignatoryManagement().getCurrentSignatory();
         if (currentSignatory != null && currentSignatory.getReminder() > -1
             && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+=======
+        if (doc.getEndDate() != null) {
+            final Signatory currentSignatory = doc.getCurrentSignatory();
+            if (currentSignatory != null && currentSignatory.getReminder() > -1
+                && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+>>>>>>> develop
             /*smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
                 currentSignatory.getUser().getLastname(), doc);*/
-            setupUserReminder(doc, currentSignatory);
+                setupUserReminder(doc, currentSignatory);
+            }
         }
     }
 
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
+<<<<<<< HEAD
         for (final Signatory signatory : doc.getSignatoryManagement().getSignatories()) {
             if (signatory.getReminder() > -1
                 && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+=======
+        if (doc.getEndDate() != null) {
+            for (final Signatory signatory : doc.getSignatories()) {
+                if (signatory.getReminder() > -1
+                    && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+>>>>>>> develop
                 /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
                     signatory.getUser().getLastname(), doc);*/
-                setupUserReminder(doc, signatory);
+                    setupUserReminder(doc, signatory);
+                }
             }
         }
     }

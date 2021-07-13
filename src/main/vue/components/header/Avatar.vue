@@ -51,7 +51,7 @@
 
                 <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-                <b-dropdown-item class="my-inner-dropdown-item">
+                <b-dropdown-item class="my-inner-dropdown-item" @click="routeToTrustedDomain">
                     <b-icon icon="at" class="my-icon"></b-icon>
                     <span class="letters"> {{ $t('Header.Avatar.adminSetting.filter') }} </span>
                 </b-dropdown-item>
@@ -132,6 +132,9 @@ export default {
         },
         routeToUserManage() {
             this.$router.push('/' + this.$i18n.locale + '/adminSettings/userManagement')
+        },
+        routeToTrustedDomain() {
+          this.$router.push('/' + this.$i18n.locale + '/adminSettings/trustedDomain')
         },
         toggleTheme(mode) {
             //changes mode

@@ -1,8 +1,11 @@
 <template>
     <b-container fluid style="padding: 0">
-        <div :class="{envelopeOpen: !toSign && !toRead && open, envelopeClosed: !open, envelopeSignRead: (toSign || toRead) && open}">
+        <div
+            :class="{envelopeOpen: (!toSign && !toRead && open) && !draft, envelopeClosed: !open, envelopeSignRead: ((toSign || toRead) && open) && !draft, envelopeDraft: open && draft}">
             <div class="media">
-                <b-icon icon="file-earmark-text" :class="{iconRed: (toSign || toRead) && open, iconBlue: (!toSign && !toRead) || !open}" style="margin:0.5em"></b-icon>
+                <b-icon icon="file-earmark-text"
+                        :class="{iconRed: (toSign || toRead) && open && !draft, iconBlue: (!toSign && !toRead && !draft) || !open, icon: draft && open}"
+                        style="margin:0.5em"></b-icon>
                 <div class="media-body">
                     <b-container fluid>
                         <b-row align-h="start">
@@ -10,21 +13,21 @@
                                 <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h4>
-                                            {{this.document.title}}
+                                            {{ this.document.title }}
                                         </h4>
                                     </b-col>
                                     <b-col cols="auto">
                                         <div v-if="!open">
                                             <h6>
-                                                {{$t('Document.closed')}}
+                                                {{ $t('Document.closed') }}
                                             </h6>
                                         </div>
-                                        <div v-if="open && !toSign && !toRead">
+                                        <div v-if="open && !toSign && !toRead && !draft">
                                             <h6>
-                                                {{$t('Document.open')}}
+                                                {{ $t('Document.open') }}
                                             </h6>
                                         </div>
-                                        <div v-if="open" style="color: var(--red)">
+                                        <div v-if="open && !draft" style="color: var(--red)">
                                             <div v-if="toSign && toRead">
                                                 <h6>
                                                     {{ $t('OverviewPage.toSignRead1') }} {{ this.document.endDate }}
@@ -44,22 +47,26 @@
                                                 </h6>
                                             </div>
                                         </div>
+                                        <div v-if="open && draft">
+                                            {{ $t('Document.draft') }}
+                                        </div>
                                     </b-col>
                                 </b-row>
                                 <b-row align-h="start">
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.owner')}}: {{this.document.owner.firstname}} {{this.document.owner.lastname}}
+                                            {{ $t('Document.owner') }}: {{ this.document.owner.firstname }}
+                                            {{ this.document.owner.lastname }}
                                         </h6>
                                     </b-col>
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.date')}}: {{this.document.creationDate}}
+                                            {{ $t('Document.date') }}: {{ this.document.creationDate }}
                                         </h6>
                                     </b-col>
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.envelope')}}: {{this.envelope(this.envelopeId).name}}
+                                            {{ $t('Document.envelope') }}: {{ this.envelope(this.envelopeId).name }}
                                         </h6>
                                     </b-col>
                                 </b-row>
@@ -85,7 +92,7 @@ export default {
         let open = false;
         let toSign = false;
         let toRead = false;
-        if (this.document.state === "OPEN" || this.document.state === "READ") {
+        if (this.document.state === "REVIEW" || this.document.state === "SIGN") {
             open = true;
         }
         if (this.document.turnToSign === true) {
@@ -94,7 +101,7 @@ export default {
         if (this.document.turnToReview === true) {
             toRead = true;
         }
-        return {open: open, toSign: toSign, toRead: toRead};
+        return {open: open, toSign: toSign, toRead: toRead, draft: this.document.draft};
     },
     async mounted() {
         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
@@ -134,6 +141,20 @@ export default {
     box-shadow: var(--light-grey);
 }
 
+.envelopeDraft {
+    background-color: var(--draft-doc);
+    color: var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+.envelopeDraft:hover {
+    background-color: var(--draft-doc-hover);
+    border: 0.03vw solid var(--dark-grey);
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
 .envelopeSignRead {
     background-color: var(--sign-doc);
     color: var(--dark-grey);
@@ -155,6 +176,11 @@ export default {
 
 .iconBlue {
     fill: var(--elsa-blue);
+    height: 2em;
+    width: auto;
+}
+
+.icon {
     height: 2em;
     width: auto;
 }

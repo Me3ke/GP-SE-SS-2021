@@ -55,7 +55,12 @@
                                       @showAddressBook="addressBookToggle(true)" key="4"></AddressBookSelection>
             </transition-group>
 
-
+            <!-- Show History -->
+            <h6 style="margin-top: 1em">{{$t('UploadDoc.showHistoryTitle')}}</h6>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="showHistory" v-model="showHistory">
+                <label class="custom-control-label" for="showHistory"> {{$t('UploadDoc.showHistory')}} </label>
+            </div>
         </div>
         <div class="modal-footer">
             <b-container fluid>
@@ -114,7 +119,8 @@ export default {
             addressBookMode: false,
             showAddressBook: false,
             showReaderMenu: true,
-            showSignatoryMenu: true
+            showSignatoryMenu: true,
+            showHistory: true,
         }
     },
     methods: {
@@ -150,7 +156,7 @@ export default {
             this.$emit('previousPage')
         },
         noProcess() {
-            let settings = {endDate: "", orderRelevant: false, signatories: []};
+            let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true, draft: true};
 
             // set end date
             if (!(this.endTime) && !(this.endDate === null)) {
@@ -169,12 +175,15 @@ export default {
             //set order relevant
             settings.orderRelevant = this.orderRelevant;
 
+            //set show History
+            settings.showHistory = this.showHistory;
+
             this.$emit('updateSettings', settings)
             this.$emit('nextPage')
         },
         startProcess() {
             if (this.validate()) {
-                let settings = {endDate: "", orderRelevant: false, signatories: []};
+                let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true, draft: false};
 
                 // set end date
                 let time = this.endTime.split(":")
@@ -191,6 +200,9 @@ export default {
 
                 //set order relevant
                 settings.orderRelevant = this.orderRelevant;
+
+                //set show History
+                settings.showHistory = this.showHistory;
 
                 this.$emit('updateSettings', settings)
                 this.$emit('nextPage')

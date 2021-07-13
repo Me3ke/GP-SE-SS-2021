@@ -42,6 +42,7 @@
                                           :readers="getReaders(getSettings(selectedId))"
                                           :endDate="getSettings(selectedId).endDate"
                                           :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId"
+                                          :showHistory="getSettings(selectedId).showHistory"
                                           :editAll="false">
                             </SettingsMenu>
                         </div>
@@ -93,6 +94,7 @@
                               :readers="getReaders(getSettings(selectedId))"
                               :endDate="getSettings(selectedId).endDate"
                               :orderRelevant="getSettings(selectedId).orderRelevant" :envId="envId"
+                              :showHistory="getSettings(selectedId).showHistory"
                               :editAll="true">
                 </SettingsMenu>
             </div>
@@ -155,6 +157,12 @@ export default {
                     return false;
                 }
                 if(!(initial.endDate === settings[i].endDate)) {
+                    if(this.editAllInput === null) {
+                        this.editAllInput = false
+                    }
+                    return false;
+                }
+                if(!(initial.showHistory === settings[i].showHistory)) {
                     if(this.editAllInput === null) {
                         this.editAllInput = false
                     }

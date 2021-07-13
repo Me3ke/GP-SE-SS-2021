@@ -39,9 +39,9 @@ public class InitializeDatabase implements InitializingBean {
     private static final String COLOR_FOUR = "#ababab";
     private static final String COLOR_FIVE = "#000000";
     private static final String[] DEFAULT_COLORS = {"#47525E", "#436495", COLOR_ONE, COLOR_TWO, COLOR_THREE, COLOR_FOUR,
-        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#C93A3A", "#a22c2c", COLOR_ONE, COLOR_FIVE, COLOR_TWO, COLOR_ONE,
-        "#23292f", COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f", "#651b1b",
-        "#501515", "#363f48", COLOR_FIVE};
+        "#E5E5E5", "#C9C9C9", "#FFE3E3", "#FFBABA", "#DCEEFC", "#B7D8F1", "#C93A3A", "#a22c2c", COLOR_ONE, COLOR_FIVE,
+        COLOR_TWO, COLOR_ONE, "#23292f", COLOR_THREE, COLOR_TWO, COLOR_FOUR, "#070809", "#788796", "#d25959", "#b02f2f",
+        "#09416c", "#113958", "#651b1b", "#501515", "#363f48", COLOR_FIVE};
     private static final String ELSA_SIGNATURE_INVITATION_SUBJECT =
         "ELSA - Signatureinladung/ELSA - signature invitation";
     private static final int STANDARD_PORT = 587;
@@ -126,10 +126,10 @@ public class InitializeDatabase implements InitializingBean {
             userService.getUser(ADMINNAME);
         } catch (UsernameNotFoundException ex) {
             final PersonalData personalData = new PersonalData(BERLINER_STRASSE, 3, 12_312,
-                    LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
+                LIEBEFELD, DEUTSCHLAND, LocalDate.now(), "3217145");
             final User user = new User(ADMINNAME,
-                    "Ruediger",
-                    "Spieler", PASSWORD);
+                "Ruediger",
+                "Spieler", PASSWORD);
             user.addRole(ROLE_USER);
             user.addRole("ROLE_ADMIN");
             user.setEnabled(true);
@@ -162,10 +162,11 @@ public class InitializeDatabase implements InitializingBean {
         }
     }
 
+
     private void setDomainSettings() {
-        final DomainSetter domainSetter = new DomainSetter("smtp.gmail.com", STANDARD_PORT,
-                "elsabeispiel@gmail.com", "1234elsaSuper", true,
-                true, ".*@techfak\\.de");
+        DomainSetter domainSetter = new DomainSetter("smtp.gmail.com", STANDARD_PORT,
+            "elsabeispiel@gmail.com", "1234elsaSuper", true,
+            true, ".*@techfak\\.de");
         domainSetterService.saveDomainSettings(domainSetter);
     }
 

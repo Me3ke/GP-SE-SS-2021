@@ -33,12 +33,12 @@ public class OrderManager {
             case REVIEW:
                 signatories = document.getSignatoryManagement().getReaders();
                 return findSignatoryInList(signatories, reader, signatureType)
-                        && document.getState().equals(DocumentState.OPEN);
+                        && document.getState().equals(DocumentState.REVIEW);
             case SIMPLE_SIGNATURE:
             case ADVANCED_SIGNATURE:
                 signatories = document.getSignatoryManagement().getSignatories();
                 return findSignatoryInList(signatories, reader, signatureType)
-                        && document.getState().equals(DocumentState.READ);
+                        && document.getState().equals(DocumentState.SIGN);
             default:
                 return false;
         }

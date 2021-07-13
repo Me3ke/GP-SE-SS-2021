@@ -8,6 +8,7 @@ import gpse.example.web.documents.DocumentPutRequest;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,6 +105,10 @@ public class Document {
     @Column
     private String linkToDocumentView;
 
+    @Column
+    private boolean draft;
+
+
     public Document() {
     }
 
@@ -127,9 +132,24 @@ public class Document {
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
             this.data.length, ownerID);
         this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+        this.draft = documentPutRequest.isDraft();
+        if (this.draft) {
+            boolean isValidFormat = true;
+            try {
+                formatter.parse(documentPutRequest.getEndDate());
+            } catch (DateTimeParseException exception) {
+                isValidFormat = false;
+            }
+            if (isValidFormat) {
+                this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+            }
+        } else {
+            this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
+        }
         this.orderRelevant = documentPutRequest.isOrderRelevant();
         this.showHistory = documentPutRequest.isShowHistory();
     }
+
 
     /**
      * the Method to add an advanced signature for a specific user to the document.
@@ -138,21 +158,14 @@ public class Document {
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
-            if (signatoryManagement.getSignatories().get(i).getEmail().equals(user)) {
-                advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
-                signatoryManagement.setSigned(i);
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
+                if (signatoryManagement.getSignatories().get(i).getEmail().equals(user)) {
+                    advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
+                    signatoryManagement.setSigned(i);
+                }
             }
         }
-    }
-
-    private AdvancedSignature getUsersSignature(final String user) {
-        for (final AdvancedSignature advancedSignature : advancedSignatures) {
-            if (advancedSignature.getUserEmail().equals(user)) {
-                return advancedSignature;
-            }
-        }
-        return null;
     }
 
     /**
@@ -169,7 +182,6 @@ public class Document {
         }
         return history;
     }
-
     //--------- Getter and Setter --------
 
     public long getId() {
@@ -231,44 +243,117 @@ public class Document {
         return endDate;
     }
 
+    /**
+     * The method used to change whether the order the signatures and reviews should matter or not.
+     * If the document is archived, nothing happens.
+     *
+     * @param orderRelevant the new boolean for orderRelevant.
+     */
     public void setOrderRelevant(final boolean orderRelevant) {
-        this.orderRelevant = orderRelevant;
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.orderRelevant = orderRelevant;
+        }
     }
 
+    /**
+     * The method used to change the deadline. If the document is archived, nothing happens.
+     *
+     * @param endDate the new deadline.
+     */
     public void setEndDate(final LocalDateTime endDate) {
-        this.endDate = endDate;
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.endDate = endDate;
+        }
     }
 
     public DocumentState getState() {
         return state;
     }
 
+    /**
+     * the method used to change the current state of the document.  If the document is archived, nothing happens.
+     *
+     * @param documentState the new documentState
+     */
     public void setState(final DocumentState documentState) {
-        this.state = documentState;
+        if (state == null || !state.equals(DocumentState.ARCHIVED)) {
+            this.state = documentState;
+        }
+    }
+
+    /**
+     * The method used to change the signatories of this document.
+     *
+     * @param signatories the list with the new signatories.
+     */
+    public void setSignatories(final List<Signatory> signatories) {
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.signatoryManagement.signatories.clear();
+            this.signatoryManagement.signatories.addAll(signatories);
+        }
     }
 
     public Document getPreviousVersion() {
         return previousVersion;
     }
 
+    /**
+     * The method used for new versions that are uploaded, to save the last version as the previous one for the new
+     * document.  If the document is archived, nothing happens.
+     *
+     * @param previousVersion the last version of this document.
+     */
     public void setPreviousVersion(final Document previousVersion) {
-        this.previousVersion = previousVersion;
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.previousVersion = previousVersion;
+        }
     }
 
     public long getProcessEmailTemplateId() {
         return processEmailTemplateId;
     }
 
+    /**
+     * The method used to change the emailTemplate for this document. If the document is archived, nothing happens.
+     *
+     * @param processEmailTemplateId the id of the template that should be used.
+     */
     public void setProcessEmailTemplateId(final long processEmailTemplateId) {
-        this.processEmailTemplateId = processEmailTemplateId;
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.processEmailTemplateId = processEmailTemplateId;
+        }
     }
 
     public boolean isShowHistory() {
         return showHistory;
     }
 
+    /**
+     * The method used to change whether the history of the document
+     * should be shown to signatories who are not the owner. If the document is archived, nothing happens.
+     *
+     * @param showHistory the boolean that showHistory should be set to.
+     */
     public void setShowHistory(final boolean showHistory) {
-        this.showHistory = showHistory;
+        if (!state.equals(DocumentState.ARCHIVED)) {
+            this.showHistory = showHistory;
+        }
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    /**
+     * The Method used to change the draft state. It can only be changed if the document is
+     * currently in the draft state and is not archived yet.
+     *
+     * @param draft the parameter to which the state should be set.
+     */
+    public void setDraft(final boolean draft) {
+        if (!state.equals(DocumentState.ARCHIVED) && draft) {
+            this.draft = draft;
+        }
     }
 
     public String getLinkToDocumentView() {
