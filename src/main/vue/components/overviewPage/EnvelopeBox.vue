@@ -1,8 +1,11 @@
 <template>
     <b-container fluid style="padding: 0">
-        <div :class="{envelopeOpen: (!toSign && !toRead && open) && !draft, envelopeClosed: !open, envelopeSignRead: ((toSign || toRead) && open) && !draft, envelopeDraft: open && draft}">
+        <div
+            :class="{envelopeOpen: (!toSign && !toRead && open) && !draft, envelopeClosed: !open, envelopeSignRead: ((toSign || toRead) && open) && !draft, envelopeDraft: open && draft}">
             <div class="media">
-                <b-icon icon="envelope" :class="{iconRed: (toSign || toRead) && open && !draft, iconBlue: (!toSign && !toRead && !draft) || !open, icon: draft && open}" style="margin:0.5em"></b-icon>
+                <b-icon icon="envelope"
+                        :class="{iconRed: (toSign || toRead) && open && !draft, iconBlue: (!toSign && !toRead && !draft) || !open, icon: draft && open}"
+                        style="margin:0.5em"></b-icon>
                 <div class="media-body">
                     <b-container fluid>
                         <b-row align-h="start">
@@ -10,18 +13,18 @@
                                 <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h4>
-                                            {{this.envelope.name}}
+                                            {{ this.envelope.name }}
                                         </h4>
                                     </b-col>
                                     <b-col cols="auto">
                                         <div v-if="!open">
                                             <h6>
-                                                {{$t('Document.closed')}}
+                                                {{ $t('Document.closed') }}
                                             </h6>
                                         </div>
                                         <div v-if="open && !toSign && !toRead && !draft">
                                             <h6>
-                                                {{$t('Document.open')}}
+                                                {{ $t('Document.open') }}
                                             </h6>
                                         </div>
                                         <div v-if="open && !draft" style="color: var(--red)">
@@ -42,19 +45,20 @@
                                             </div>
                                         </div>
                                         <div v-if="open && draft">
-                                            {{$t('Document.draft')}}
+                                            {{ $t('Document.draft') }}
                                         </div>
                                     </b-col>
                                 </b-row>
                                 <b-row align-h="start">
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.owner')}}: {{this.envelope.owner.firstname}} {{this.envelope.owner.lastname}}
+                                            {{ $t('Document.owner') }}: {{ this.envelope.owner.firstname }}
+                                            {{ this.envelope.owner.lastname }}
                                         </h6>
                                     </b-col>
                                     <b-col cols="auto">
                                         <h6>
-                                            {{$t('Document.date')}}: {{this.envelope.creationDate}}
+                                            {{ $t('Document.date') }}: {{ this.envelope.creationDate }}
                                         </h6>
                                     </b-col>
                                 </b-row>
@@ -79,7 +83,7 @@ export default {
         let toRead = false;
         let draft = true;
         let i;
-        for(i = 0; i < this.envelope.documents.length; i++) {
+        for (i = 0; i < this.envelope.documents.length; i++) {
             if (this.envelope.documents[i].state === "REVIEW" || this.envelope.documents[i].state === "SIGN") {
                 open = true;
             }
@@ -128,14 +132,14 @@ export default {
 }
 
 .envelopeDraft {
-    background-color: var(--elsa-blue);
-    color: var(--whitesmoke);
+    background-color: var(--draft-doc);
+    color: var(--dark-grey);
     border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
 .envelopeDraft:hover {
-    background-color: var(--elsa-blue-transparent);
+    background-color: var(--draft-doc-hover);
     border: 0.03vw solid var(--dark-grey);
     color: var(--dark-grey);
     border-radius: 0.33vw;
