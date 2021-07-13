@@ -32,15 +32,10 @@ public class DocumentSetting extends DocumentSettingsCMD {
             signatories.add(new SignatorySetting(signatoryManagement.getSignatories().get(i)));
         }
         this.orderRelevant = document.isOrderRelevant();
-<<<<<<< HEAD
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        this.endDate = document.getEndDate().format(formatter);
-=======
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         if (document.getEndDate() != null) {
             this.endDate = document.getEndDate().format(formatter);
         }
->>>>>>> develop
         this.showHistory = document.isShowHistory();
         this.draft = document.isDraft();
     }
