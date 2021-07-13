@@ -14,10 +14,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -225,8 +224,7 @@ public class Protocol {
                 IMAGE_WIDTH, NEW_LOGO_HEIGHT);
             lineCounter.addLines(2);
         } catch (CorporateDesignNotFoundException e) {
-            final File file = new File("src/main/vue/assets/logos/ELSA_medium.png");
-            logo = Files.readAllBytes(file.toPath());
+            logo = Base64.getUrlDecoder().decode(StandardLogos.getBaseLogo());
             final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
             contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
                 IMAGE_WIDTH, LOGO_HEIGHT);
