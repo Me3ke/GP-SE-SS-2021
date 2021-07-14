@@ -237,7 +237,8 @@
         "date": "Erstellungsdatum",
         "open": "Offen",
         "closed": "Abgeschlossen",
-        "envelope": "Verbund"
+        "envelope": "Verbund",
+        "draft": "Entwurf"
     },
     "MessagePage": {
         "heading": "Benachrichtigungen",
@@ -411,7 +412,7 @@
         "reminderShort": "Tag(e) vor Ende",
         "sendReminderEMails": "Erinnerungs-Emails verschicken",
         "startProcess": "Prozess starten",
-        "startProcessLater": "Prozess später starten",
+        "startProcessLater": "Als Entwurf speichern",
         "addMoreFiles": "Ein weiters Dokument hinzufügen",
         "UpdateDocument": {
             "chooseFile": "Dokument auswählen oder ins Feld ziehen...",
@@ -458,9 +459,9 @@
             "title": "Titel",
             "docType": "Datei-Typ",
             "state": "Prozess-Status",
-            "open": "Offen",
-            "read": "Gegenlesen",
-            "closed": "Geschlossen",
+            "review": "Gegenlesen",
+            "sign": "Signieren",
+            "archived": "Archiviert",
             "error": "Fehler: Kein bekannter Satus",
             "owner": "Besitzer",
             "created": "Erstellungsdatum",
@@ -638,12 +639,14 @@
             "color6": "Offenes Dokument - Hover",
             "color7": "Geschlossenes Dokument",
             "color8": "Geschlossenes Dokument - Hover",
-            "color9": "Dokument Aktion benötigt",
-            "color10": "Dokument Aktion benötigt - Hover",
-            "color11": "Helle Warnfarbe",
-            "color12": "Dunkle Warnfarbe",
-            "color13": "Einstellungsfarbe",
-            "color14": "Pop-Up Hintergrund",
+            "color9": "Dokumenten-Entwurf",
+            "color10": "Dokumenten-Entwurf - Hover",
+            "color11": "Dokument Aktion benötigt",
+            "color12": "Dokument Aktion benötigt - Hover",
+            "color13": "Helle Warnfarbe",
+            "color14": "Dunkle Warnfarbe",
+            "color15": "Einstellungsfarbe",
+            "color16": "Pop-Up Hintergrund",
             "default": "Standard"
         },
         "manage": {

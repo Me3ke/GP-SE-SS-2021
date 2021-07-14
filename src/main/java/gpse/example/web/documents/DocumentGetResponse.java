@@ -33,8 +33,8 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
-        final List<Signatory> givenSignatories = document.getSignatories();
         this.orderRelevant = document.isOrderRelevant();
+        final List<Signatory> givenSignatories = document.getSignatoryManagement().getSignatories();
 
         this.signatories = new ArrayList<>();
 

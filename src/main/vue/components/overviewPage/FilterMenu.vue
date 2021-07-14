@@ -23,10 +23,11 @@
                                     <div class="form-group">
                                         <select class="form-control" v-model="filterInput.state">
                                             <option value="">{{$t('Filter.all')}}</option>
-                                            <option value="OPENREAD">{{$t('Filter.open')}}</option>
-                                            <option value="READ">{{$t('Filter.signProcess')}}</option>
-                                            <option value="OPEN">{{$t('Filter.readProcess')}}</option>
-                                            <option value="CLOSED">{{$t('Filter.closed')}}</option>
+                                            <option value="DRAFT">{{$t('Document.draft')}}</option>
+                                            <option value="REVIEWSIGN">{{$t('Filter.open')}}</option>
+                                            <option value="SIGN">{{$t('Filter.signProcess')}}</option>
+                                            <option value="REVIEW">{{$t('Filter.readProcess')}}</option>
+                                            <option value="ARCHIVED">{{$t('Filter.closed')}}</option>
                                         </select>
                                     </div>
                                     <!-- Creation Date Span / Day -->

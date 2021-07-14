@@ -173,7 +173,7 @@ export default {
             this.$emit('previousPage')
         },
         noProcess() {
-            let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true};
+            let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true, draft: true};
 
             // set end date
             if (!(this.endTime) && !(this.endDate === null)) {
@@ -202,7 +202,7 @@ export default {
         },
         startProcess() {
             if (this.validate()) {
-                let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true};
+                let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true, draft: false};
 
                 // set end date
                 let time = this.endTime.split(":")

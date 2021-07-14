@@ -3,9 +3,15 @@ package gpse.example.util;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentService;
 import gpse.example.domain.documents.DocumentState;
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.email.SMTPServerHelper;
+import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -42,9 +48,9 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
         for (final Document doc : documentService.getDocuments()) {
-            if (doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            if (doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesInOrder(doc);
-            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.CLOSED) {
+            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
                 informSignatoriesWithoutOrder(doc);
             }
         }
@@ -53,30 +59,24 @@ public class ScheduledTasks {
     private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
 
-       /* for (final Signatory signatory : doc.getSignatories()) {
-            if (!signatory.isStatus()) {
-                Signatory currentSignatory = signatory;
-                break;
+        if (doc.getEndDate() != null) {
+            final Signatory currentSignatory = doc.getSignatoryManagement().getCurrentSignatory();
+            if (currentSignatory != null && currentSignatory.getReminder() > -1
+                    && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+                setupUserReminder(doc, currentSignatory);
             }
-        }*/
-        final Signatory currentSignatory = doc.getCurrentSignatory();
-        if (currentSignatory != null && currentSignatory.getReminder() > -1
-            && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
-            /*smtpServerHelper.sendReminder(currentSignatory.getUser().getEmail(), currentSignatory.getReminder(),
-                currentSignatory.getUser().getLastname(), doc);*/
-            setupUserReminder(doc, currentSignatory);
         }
     }
 
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        for (final Signatory signatory : doc.getSignatories()) {
-            if (signatory.getReminder() > -1
-                && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
-                /*smtpServerHelper.sendReminder(signatory.getUser().getEmail(), signatory.getReminder(),
-                    signatory.getUser().getLastname(), doc);*/
-                setupUserReminder(doc, signatory);
+        if (doc.getEndDate() != null) {
+            for (final Signatory signatory : doc.getSignatoryManagement().getSignatories()) {
+                if (signatory.getReminder() > -1
+                        && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+                    setupUserReminder(doc, signatory);
+                }
             }
         }
     }
@@ -88,7 +88,7 @@ public class ScheduledTasks {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setEndDate(document.getEndDate().toString());
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setLink(document.getLinkToDocumentview());
+        container.setLink(document.getLinkToDocumentView());
         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
             userService.getUser(document.getOwner()));
     }

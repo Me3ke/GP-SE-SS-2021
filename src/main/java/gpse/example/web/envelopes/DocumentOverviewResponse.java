@@ -3,6 +3,7 @@ package gpse.example.web.envelopes;
 import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.documents.OrderManager;
+import gpse.example.domain.documents.SignatoryManagement;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
@@ -29,6 +30,7 @@ public class DocumentOverviewResponse {
     private boolean turnToReview;
     private boolean turnToSign;
     private boolean showHistory;
+    private boolean draft;
     private final long id;
 
     /**
@@ -45,16 +47,22 @@ public class DocumentOverviewResponse {
         //Replaced with uploadDate
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         this.creationDate = document.getDocumentMetaData().getMetaTimeStampUpload().format(formatter);
-        this.endDate = document.getEndDate().format(formatter);
+        if (document.getEndDate() != null) {
+            this.endDate = document.getEndDate().format(formatter);
+        } else {
+            this.endDate = "";
+        }
         this.dataType = document.getDocumentType();
         this.state = document.getState();
         this.identifier = document.getDocumentMetaData().getIdentifier();
         this.showHistory = document.isShowHistory();
+        this.draft = document.isDraft();
         this.signatory = false;
         this.read = false;
         this.signed = false;
         this.id = document.getId();
-        final List<Signatory> signatories = document.getSignatories();
+        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+        final List<Signatory> signatories = signatoryManagement.getSignatories();
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getEmail().equals(currentUser)
@@ -68,7 +76,7 @@ public class DocumentOverviewResponse {
                 }
             }
         }
-        final List<Signatory> readers = document.getReaders();
+        final List<Signatory> readers = signatoryManagement.getReaders();
         for (final Signatory currentReader : readers) {
             if (currentReader.getEmail().equals(currentUser)) {
                 this.reader = true;
@@ -165,6 +173,14 @@ public class DocumentOverviewResponse {
 
     public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 
     public long getId() {
