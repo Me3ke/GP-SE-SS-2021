@@ -2,7 +2,6 @@ package gpse.example.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.samstevens.totp.code.*;
-import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -14,7 +13,6 @@ import dev.samstevens.totp.time.TimeProvider;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +89,7 @@ public class SecuritySettings implements Serializable {
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(final String code) throws CodeGenerationException {
+    public boolean verifyCode(final String code) {
         final TimeProvider timeProvider = new SystemTimeProvider();
         final CodeGenerator codeGenerator = new DefaultCodeGenerator();
         final DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
