@@ -22,13 +22,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getMessages(final User user) {
         final ArrayList<Message> userMessages = (ArrayList<Message>) messageRepo.findAll();
-        userMessages.removeIf(message -> !message.getRecievingUserMail().equals(user.getEmail()));
-        /*for (int i = 0; i < userMessages.size(); i++) {
-            if (!userMessages.get(i).getRecievingUserMail().equals(user.getEmail())) {
-                userMessages.remove(i);
-                i--;
-            }
-        }*/
+        userMessages.removeIf(message -> !message.getRecievingUserMail().equals(user.getUsername()));
         return userMessages;
     }
 

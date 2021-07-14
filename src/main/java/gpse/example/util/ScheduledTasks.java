@@ -37,9 +37,9 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = MILLISECONDS_PER_DAY, initialDelay = 60_000)
     public void checkForOpenReminder() throws MessageGenerationException, TemplateNameNotFoundException {
         for (final Document doc : documentService.getDocuments()) {
-            if (doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
+            if (doc.getSignatureProcessData().isOrderRelevant() && doc.getSignatureProcessData().getState() != DocumentState.ARCHIVED) {
                 informSignatoriesInOrder(doc);
-            } else if (!doc.isOrderRelevant() && doc.getState() != DocumentState.ARCHIVED) {
+            } else if (!doc.getSignatureProcessData().isOrderRelevant() && doc.getSignatureProcessData().getState() != DocumentState.ARCHIVED) {
                 informSignatoriesWithoutOrder(doc);
             }
         }
@@ -47,10 +47,10 @@ public class ScheduledTasks {
 
     private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        if (doc.getEndDate() != null) {
+        if (doc.getSignatureProcessData().getEndDate() != null) {
             final Signatory currentSignatory = doc.getSignatoryManagement().getCurrentSignatory();
             if (currentSignatory != null && currentSignatory.getReminder() > -1
-                && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
+                && LocalDateTime.now().isAfter(doc.getSignatureProcessData().getEndDate().minusDays(currentSignatory.getReminder()))) {
                 emailManagement.sendReminder(doc, currentSignatory);
             }
         }
@@ -59,10 +59,10 @@ public class ScheduledTasks {
 
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
-        if (doc.getEndDate() != null) {
+        if (doc.getSignatureProcessData().getEndDate() != null) {
             for (final Signatory signatory : doc.getSignatoryManagement().getSignatories()) {
                 if (signatory.getReminder() > -1
-                    && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {
+                    && LocalDateTime.now().isAfter(doc.getSignatureProcessData().getEndDate().minusDays(signatory.getReminder()))) {
 
                     emailManagement.sendReminder(doc, signatory);
                 }

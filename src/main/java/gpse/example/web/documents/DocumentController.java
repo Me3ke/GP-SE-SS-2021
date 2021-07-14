@@ -215,7 +215,7 @@ public class DocumentController {
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
         final Document document = documentService.getDocument(documentID);
-        if (document.getState() == DocumentState.ARCHIVED) {
+        if (document.getSignatureProcessData().getState() == DocumentState.ARCHIVED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
         return null;
@@ -245,10 +245,10 @@ public class DocumentController {
             userService.getUser(ownerID);
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);
             final Document oldDocument = documentService.getDocument(documentID);
-            if (envelope.getOwnerID().equals(ownerID) || oldDocument.getState().equals(DocumentState.ARCHIVED)) {
+            if (envelope.getOwnerID().equals(ownerID) || oldDocument.getSignatureProcessData().getState().equals(DocumentState.ARCHIVED)) {
                 envelope.removeDocument(oldDocument);
-                oldDocument.setDraft(false);
-                oldDocument.setState(DocumentState.ARCHIVED);
+                oldDocument.getSignatureProcessData().setDraft(false);
+                oldDocument.getSignatureProcessData().setState(DocumentState.ARCHIVED);
                 final Document newDocument = documentService.creation(documentPutRequest, ownerID,
                     userService);
                 envelopeService.updateEnvelope(envelope, newDocument);
@@ -276,8 +276,8 @@ public class DocumentController {
     private void informSignatories(final Document document, final long envelopeID)
         throws TemplateNameNotFoundException, MessageGenerationException, DocumentNotFoundException {
 
-        if (document.isOrderRelevant()) {
-            if (document.getPreviousVersion().isOrderRelevant()) {
+        if (document.getSignatureProcessData().isOrderRelevant()) {
+            if (document.getPreviousVersion().getSignatureProcessData().isOrderRelevant()) {
                 for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
                     .getSignatories()) {
                     if (signatory.isStatus()) {
@@ -295,7 +295,7 @@ public class DocumentController {
             emailManagement.sendInvitation(document, envelopeID, document.getSignatoryManagement()
                 .getCurrentSignatory());
         } else {
-            if (document.getPreviousVersion().isOrderRelevant()) {
+            if (document.getPreviousVersion().getSignatureProcessData().isOrderRelevant()) {
                 for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
                     .getSignatories()) {
                     if (signatory.isStatus()) {
@@ -448,12 +448,12 @@ public class DocumentController {
     private JSONResponseObject documentIsClosedOrInDraft(final Document document) {
         final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
-        if (document.isDraft()) {
+        if (document.getSignatureProcessData().isDraft()) {
             response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);
             response.setMessage(DRAFT_MESSAGE);
             return response;
         }
-        if (document.getState().equals(DocumentState.ARCHIVED)) {
+        if (document.getSignatureProcessData().getState().equals(DocumentState.ARCHIVED)) {
             response.setStatus(STATUS_CODE_DOCUMENT_CLOSED);
             response.setMessage(THIS_DOCUMENT_IS_CLOSED);
             return response;
@@ -547,7 +547,7 @@ public class DocumentController {
         signatories.addAll(signatoryLinkedHashSet);
 
         return new DocumentProgressResponse(signatoryManagement.getSignatories(), signatoryManagement.getReaders(),
-            document.getEndDate());
+            document.getSignatureProcessData().getEndDate());
     }
 
     /**
@@ -563,14 +563,14 @@ public class DocumentController {
         final JSONResponseObject response = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);
-            document.setOrderRelevant(documentSettingsCMD.isOrderRelevant());
-            document.setEndDate(documentSettingsCMD.convertEndDate());
-            document.setShowHistory(documentSettingsCMD.isShowHistory());
-            if (document.isDraft()) {
-                document.setDraft(documentSettingsCMD.isDraft());
+            document.getSignatureProcessData().setOrderRelevant(documentSettingsCMD.isOrderRelevant());
+            document.getSignatureProcessData().setEndDate(documentSettingsCMD.convertEndDate());
+            document.getSignatureProcessData().setShowHistory(documentSettingsCMD.isShowHistory());
+            if (document.getSignatureProcessData().isDraft()) {
+                document.getSignatureProcessData().setDraft(documentSettingsCMD.isDraft());
             }
             if (documentSettingsCMD.isArchiveTask()) {
-                document.setState(DocumentState.ARCHIVED);
+                document.getSignatureProcessData().setState(DocumentState.ARCHIVED);
             }
             final List<Signatory> signatories = new ArrayList<>();
             final List<SignatorySetting> signatorySettings = documentSettingsCMD.getSignatories();
@@ -603,19 +603,19 @@ public class DocumentController {
      */
     private void setDocumentState(final Document document) {
         if (document.getSignatoryManagement().getCurrentSignatory() == null) {
-            if (document.isDraft()) {
-                document.setState(DocumentState.REVIEW);
+            if (document.getSignatureProcessData().isDraft()) {
+                document.getSignatureProcessData().setState(DocumentState.REVIEW);
             } else {
-                document.setState(DocumentState.ARCHIVED);
+                document.getSignatureProcessData().setState(DocumentState.ARCHIVED);
             }
         } else {
             if (document.getSignatoryManagement().getCurrentSignatory().getSignatureType()
                 .equals(SignatureType.SIMPLE_SIGNATURE)
                 || document.getSignatoryManagement().getCurrentSignatory().getSignatureType()
                 .equals(SignatureType.ADVANCED_SIGNATURE)) {
-                document.setState(DocumentState.SIGN);
+                document.getSignatureProcessData().setState(DocumentState.SIGN);
             } else {
-                document.setState(DocumentState.REVIEW);
+                document.getSignatureProcessData().setState(DocumentState.REVIEW);
             }
         }
     }

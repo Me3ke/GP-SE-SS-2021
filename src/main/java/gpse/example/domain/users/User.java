@@ -33,28 +33,10 @@ public class User implements UserDetails {
     private String username;
 
     @Column
-    private String email;
-
-    @Column
     private String firstname;
 
     @Column
     private String lastname;
-
-    @Column
-    private boolean seenByAdmin;
-
-    @Column
-    // false: user has not had a first login yet; true: user has had a first login
-    private boolean firstLogin;
-
-    @ElementCollection
-    @Column(columnDefinition = "LONGTEXT")
-    @JsonIgnore
-    private List<String> archivedPublicKeys = new ArrayList<>();
-
-    @Lob
-    private String publicKey;
 
     @Column
     @JsonIgnore
@@ -119,14 +101,12 @@ public class User implements UserDetails {
      * @param password  the password that is used for actions that need security.
      */
     public User(final String username, final String firstname, final String lastname, final String password) {
-        this.email = username;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
         this.enabled = false;
         this.accountNonLocked = false;
-        this.firstLogin = false;
         this.securitySettings = new SecuritySettings();
         this.imageSignature = new byte[0];
         this.imageSignatureType = "";
@@ -142,14 +122,6 @@ public class User implements UserDetails {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public List<String> getArchivedPublicKeys() {
-        return archivedPublicKeys;
-    }
-
-    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
-        this.archivedPublicKeys = archivedPublicKeys;
     }
 
     public void setPersonalData(final PersonalData personalData) {
@@ -226,15 +198,6 @@ public class User implements UserDetails {
         return enabled;
     }
 
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
     public String getFirstname() {
         return firstname;
     }
@@ -255,20 +218,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(final String publicKey) {
-        this.publicKey = publicKey;
-    }
-
     public PersonalData getPersonalData() {
         return personalData;
-    }
-
-    public boolean isSeenByAdmin() {
-        return seenByAdmin;
     }
 
     public void setEnabled(final boolean enabled) {
@@ -298,15 +249,6 @@ public class User implements UserDetails {
     public void setSecuritySettings(final SecuritySettings securitySettings) {
         this.securitySettings = securitySettings;
     }
-
-    public boolean isFirstLogin() {
-        return firstLogin;
-    }
-
-    public void setFirstLogin(final boolean firstLogin) {
-        this.firstLogin = firstLogin;
-    }
-
 
     public List<EmailTemplate> getEmailTemplates() {
         return emailTemplates;
@@ -343,10 +285,6 @@ public class User implements UserDetails {
 
     public void setImageSignatureType(final String imageSignatureType) {
         this.imageSignatureType = imageSignatureType;
-    }
-
-    public void setToSeenByAdmin() {
-        this.seenByAdmin = true;
     }
 
     public AddressBook getAddressBook() {

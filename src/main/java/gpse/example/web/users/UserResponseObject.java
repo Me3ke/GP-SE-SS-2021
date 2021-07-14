@@ -18,11 +18,11 @@ public class UserResponseObject {
      * @param user the user the object should be based on.
      */
     public UserResponseObject(final User user) {
-        this.email = user.getEmail();
+        this.email = user.getUsername();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
-        this.firstLogin = user.isFirstLogin();
-        this.publicKey = user.getPublicKey();
+        this.firstLogin = user.getSecuritySettings().isFirstLogin();
+        this.publicKey = user.getSecuritySettings().getPublicKey();
     }
 
     public String getEmail() {

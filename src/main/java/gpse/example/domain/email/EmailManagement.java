@@ -65,7 +65,7 @@ public class EmailManagement {
         try {
             EmailTemplate template = owner.getEmailTemplates().get(0);
             for (final EmailTemplate temp : owner.getEmailTemplates()) {
-                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                if (temp.getTemplateID() == document.getSignatureProcessData().getProcessEmailTemplateId()) {
                     template = temp;
                 }
             }
@@ -140,7 +140,7 @@ public class EmailManagement {
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
         container.setLink(HTTP_LOCALHOST + this.serverPort + "/de/register/confirm/" + token);
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.SYSTEM, null);
+        smtpServerHelper.sendTemplatedEmail(user.getUsername(), template, container, Category.SYSTEM, null);
 
     }
 
@@ -161,9 +161,9 @@ public class EmailManagement {
                 container.setLastNameReciever(admin.getLastname());
                 container.setFirstNameOwner(user.getFirstname());
                 container.setLastNameOwner(user.getLastname());
-                container.setRequestingEmail(user.getEmail());
+                container.setRequestingEmail(user.getUsername());
                 container.setLink(HTTP_LOCALHOST + this.serverPort + "/de/adminSettings/userManagement");
-                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
+                smtpServerHelper.sendTemplatedEmail(admin.getUsername(), template, container, Category.TODO, null);
 
             }
         }
@@ -182,7 +182,7 @@ public class EmailManagement {
 
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
-        container.setEndDate(document.getEndDate().toString());
+        container.setEndDate(document.getSignatureProcessData().getEndDate().toString());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink(document.getLinkToDocumentView());
         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
@@ -204,7 +204,7 @@ public class EmailManagement {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         setupCommentContainer(author, documentOwner, document, container);
-        smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(documentOwner.getUsername(), template, container, Category.SYSTEM, author);
     }
 
     /**
@@ -220,7 +220,7 @@ public class EmailManagement {
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         setupCommentContainer(author, reciever, document, container);
-        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(reciever.getUsername(), template, container, Category.SYSTEM, author);
     }
 
     /**
@@ -237,7 +237,7 @@ public class EmailManagement {
         emailContainer.setFirstNameReciever(user.getFirstname());
         emailContainer.setLastNameReciever(user.getLastname());
         emailContainer.setLink(HTTP_LOCALHOST + this.serverPort + "/de/login/reset/" + savedToken.getToken());
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
+        smtpServerHelper.sendTemplatedEmail(user.getUsername(), template,
             emailContainer, Category.SYSTEM, null);
     }
 
@@ -253,7 +253,7 @@ public class EmailManagement {
         container.setLastNameOwner(owner.getLastname());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setEnvelopeName(envelope.getName());
-        container.setEndDate(document.getEndDate().toString());
+        container.setEndDate(document.getSignatureProcessData().getEndDate().toString());
         container.setLink(document.getLinkToDocumentView());
         Category category;
         if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)

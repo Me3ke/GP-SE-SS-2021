@@ -49,7 +49,7 @@ public class SignatureManagement {
     public JSONResponseObject manageSignatureRequest(final String userID, final Document document,
                                                      final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException, DocumentNotFoundException {
-        if (document.isOrderRelevant()) {
+        if (document.getSignatureProcessData().isOrderRelevant()) {
             return manageSignatureInOrder(userID, document, signatureType, envelopeID);
         } else {
             return manageSignatureWithoutOrder(userID, document, signatureType);
@@ -79,7 +79,7 @@ public class SignatureManagement {
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType)
             throws TemplateNameNotFoundException, MessageGenerationException {
-            if (document.getState().equals(DocumentState.SIGN)) {
+            if (document.getSignatureProcessData().getState().equals(DocumentState.SIGN)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatoryManagement().getSignatories())) {
                     emailManagement.sendProcessFinishedTemplate(document);
@@ -121,7 +121,7 @@ public class SignatureManagement {
     }
 
     private JSONResponseObject changeDocumentStateToRead(final Document document) {
-        document.setState(DocumentState.SIGN);
+        document.getSignatureProcessData().setState(DocumentState.SIGN);
         documentService.addDocument(document);
         final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
@@ -131,7 +131,7 @@ public class SignatureManagement {
 
     private JSONResponseObject changeDocumentStateToClosed(final Document document) {
         final JSONResponseObject response = new JSONResponseObject();
-        document.setState(DocumentState.ARCHIVED);
+        document.getSignatureProcessData().setState(DocumentState.ARCHIVED);
         documentService.addDocument(document);
         response.setStatus(STATUS_CODE_OK);
         response.setMessage("The given document is now closed");
@@ -192,11 +192,11 @@ public class SignatureManagement {
                 .equals(SignatureType.SIMPLE_SIGNATURE)
                 || document.getSignatoryManagement().getCurrentSignatory().getSignatureType()
                 .equals(SignatureType.ADVANCED_SIGNATURE))) {
-                document.setState(DocumentState.SIGN);
+                document.getSignatureProcessData().setState(DocumentState.SIGN);
             }
             checkIfClosed(document, signatories, response, currentReader);
             final Document savedDocument = documentService.addDocument(document);
-            if (savedDocument.getState() == DocumentState.ARCHIVED) {
+            if (savedDocument.getSignatureProcessData().getState() == DocumentState.ARCHIVED) {
                 emailManagement.sendProcessFinishedTemplate(document);
             } else {
                 emailManagement.sendInvitation(savedDocument, envelopeID, currentReader);
@@ -217,7 +217,7 @@ public class SignatureManagement {
                                final JSONResponseObject response, final Signatory currentReader) {
 
         if (signatories.get(signatories.size() - 1).equals(currentReader)) {
-            document.setState(DocumentState.ARCHIVED);
+            document.getSignatureProcessData().setState(DocumentState.ARCHIVED);
             response.setMessage("Document is now closed.");
         }
     }

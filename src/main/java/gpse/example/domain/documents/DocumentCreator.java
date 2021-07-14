@@ -68,12 +68,12 @@ public class DocumentCreator {
      */
     private void setDocumentState(final List<ProtoSignatory> signatories, final Document document) {
 
-        if (signatories == null && !document.isDraft()) {
-            document.setState(DocumentState.ARCHIVED);
+        if (signatories == null && !document.getSignatureProcessData().isDraft()) {
+            document.getSignatureProcessData().setState(DocumentState.ARCHIVED);
         } else if (document.getSignatoryManagement().getReaders().size() == 0) {
-            document.setState(DocumentState.SIGN);
+            document.getSignatureProcessData().setState(DocumentState.SIGN);
         } else {
-            document.setState(DocumentState.REVIEW);
+            document.getSignatureProcessData().setState(DocumentState.REVIEW);
         }
     }
 }
