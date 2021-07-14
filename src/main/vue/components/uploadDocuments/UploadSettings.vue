@@ -71,7 +71,7 @@
                                 {{ $t('UploadDoc.showHistory') }} </label>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="!showReplaceButton">
                         <b-container fluid>
                             <b-row align-h="end">
                                 <b-col cols="auto">
@@ -93,6 +93,34 @@
                                         <h5>
                                             {{ $t('UploadDoc.startProcess') }}
                                         </h5>
+                                    </button>
+                                </b-col>
+                            </b-row>
+                        </b-container>
+                    </div>
+
+                    <!--- For the case if user will replace an document --->
+
+                    <div class="modal-footer">
+                        <b-container>
+                            <b-row align-h="end">
+                                <b-col cols="auto">
+                                    <button
+                                        type="button"
+                                        class="light-btn"
+                                        @click="back"
+                                    >
+                                        <span>
+                                            {{ $t('UploadDoc.back') }}
+                                        </span>
+                                    </button>
+                                </b-col>
+                                <b-col cols="auto">
+                                    <button type="button" class="elsa-blue-btn"
+                                            @click="startProcess">
+                                            <span>
+                                                {{ $t('UploadDoc.continue') }}
+                                            </span>
                                     </button>
                                 </b-col>
                             </b-row>
@@ -130,6 +158,7 @@ export default {
             },
 
             settingsCopy: {},
+            showReplaceButton: false,
 
             addressBookMode: false,
             showAddressBook: false,
@@ -253,42 +282,18 @@ export default {
         }
 
         if (this.alreadySetSettings !== undefined) {
+            this.showReplaceButton = true
             this.endDate = this.settingsCopy.endDate
             this.orderRelevant = this.settingsCopy.orderRelevant
             this.signatories = this.settingsCopy.signatories
 
+            console.log(this.endDate)
+            const [date, time] = this.endDate.split(' ')
 
-            if (this.endDate.includes(':')) {
-                const [date, time] = this.endDate.split(' ')
+            const [day, month, year] = date.split('.')
+            this.endDate = year + '-' + month + '-' + day
 
-                if (date.includes('-')) {
-                    this.endDate = date
-                } else {
-                    const [year, month, day] = date.split('.')
-                    this.endDate = year + '-' + month + '-' + day
-                }
-
-                const [hours, seconds] = time.split(':')
-                this.endTime = hours + ':' + seconds
-
-            } else {
-                if (!this.endDate.includes('.')) {
-                    const [day, month, year] = this.endDate.split('.')
-                    this.endDate = year + '-' + month + '-' + day
-                }
-            }
-
-            if (this.endDate.includes('.')) {
-                const [day, month, year] = this.endDate.split('.')
-                this.endDate = year + '-' + month + '-' + day
-            }
-
-            const [day, month, year] = this.endDate.split('-')
-            if (day.length === 4 && year.length > 3) {
-                this.endDate = day + '-' + month + '-' + year
-            } else if (year === 4 && day.length > 3) {
-                this.endDate = year + '-' + month + '-' + day
-            }
+            this.endTime = time
         }
     },
 

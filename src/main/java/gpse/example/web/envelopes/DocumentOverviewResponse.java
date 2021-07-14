@@ -45,7 +45,7 @@ public class DocumentOverviewResponse {
         this.title = document.getDocumentTitle();
         this.owner = owner;
         //Replaced with uploadDate
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         this.creationDate = document.getDocumentMetaData().getMetaTimeStampUpload().format(formatter);
         if (document.getEndDate() != null) {
             this.endDate = document.getEndDate().format(formatter);

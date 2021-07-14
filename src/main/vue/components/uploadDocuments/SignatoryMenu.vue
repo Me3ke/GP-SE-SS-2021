@@ -166,10 +166,16 @@ export default {
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
-            this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
+            let progressBeforeDelete = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+            const resultBeforeDelete = this.signatoryInputs.filter(({ email: id1 }) => !progressBeforeDelete.data.signatories.some(({ email: id2 }) => id2 === id1));
+
+            if(resultBeforeDelete.some(user => user.email === signatory.email)){
+                this.noticeNewSignatories = false
+            }
+
+            this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1) // delete selected signatory
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
-
             for(let i = 0; i < results.length; i++) {
                 if(this.allUser.some(user => user.email === results[i].email)) {
                     this.noticeNewSignatories = true
@@ -189,6 +195,7 @@ export default {
         save() {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
+            console.log("After Save: ", this.noticeNewSignatories)
             this.$emit('noticeNewSignatories', this.noticeNewSignatories)
             this.addSignatories = false;
         },
@@ -201,13 +208,16 @@ export default {
         }
     },
      beforeMount() {
-        if (this.signatories.length !== 0) {
-            this.fetchAllUser()
+         this.fetchAllUser()
+
+         if (this.signatories.length !== 0) {
             this.addSignatories = false
             this.signatoryInputs = this.signatories;
 
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
+            console.log(progress)
+             console.log(results)
             for(let i = 0; i < results.length; i++) {
                 if(this.allUser.some(user => user.email === results[i].email)) {
                     this.noticeNewSignatories = true

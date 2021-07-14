@@ -53,6 +53,13 @@
         </quill-editor>
         <div class="text-right">
             <button type="button"
+                    class="ml-1 light-btn"
+                    @click="cancel">
+                         <span class="button-txt">
+                             {{ $t('EmailTemplate.Save') }} Cancel
+                         </span>
+            </button>
+            <button type="button"
                     class="ml-1 elsa-blue-btn"
                     @click="saveEditedTemp">
                          <span class="button-txt">
@@ -129,14 +136,7 @@ export default {
 
         async saveEditedTemp() {
 
-
             if(this.copyTemplate.subject !== '') {
-                console.log('not empty')
-
-                console.log(this.copyTemplate)
-                console.log('------------------')
-
-
                 await this.$store.dispatch('emailTemplate/editEmailTemplate', this.copyTemplate)
                 await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
                 this.$forceUpdate();
@@ -149,11 +149,15 @@ export default {
                 }
 
                 this.$emit('saveEditTemplate', emittedValue)
+                this.$emit('cancelPage')
+
             } else {
                 this.subjectEmpty = true
             }
+        },
 
-
+        cancel() {
+            this.$emit('cancelPage')
         },
 
         onEditorChange(edited) {

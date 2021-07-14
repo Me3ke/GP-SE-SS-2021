@@ -1,102 +1,172 @@
 <template>
     <b-container>
-                    <div style="padding-bottom: .2em" class="flex-box-2">
+        <div v-if="page === 0">
+            <div style="padding-bottom: .2em" class="flex-box-2">
 
-                        <button class="elsa-blue-btn"
-                                  style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
-                                  v-if="selectedTemplateObject !== {}"
-                                  @click="showNewCreateTemplate"
-                        >
-                            {{ $t('EmailTemplate.createTemp') }}
-                        </button>
+                <button class="elsa-blue-btn"
+                        style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
+                        v-if="selectedTemplateObject !== {}"
+                        @click="showNewCreateTemplate"
+                >
+                    {{ $t('EmailTemplate.createTemp') }}
+                </button>
 
-                        <button class="elsa-blue-btn"
-                                style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto;"
-                                @click="showDeleteTemplates"
-                        >
-                            {{ $t('EmailTemplate.deleteTemp') }}
-                        </button>
-                    </div>
+                <button class="elsa-blue-btn"
+                        style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto;"
+                        @click="showDeleteTemplates"
+                >
+                    {{ $t('EmailTemplate.deleteTemp') }}
+                </button>
+            </div>
 
-                    <b-container>
-                        <b-row>
-                        <b-col>
+            <b-container>
+                <b-row>
+                    <b-col>
 
-                        <select style="margin-top: .5em; background-color: var(--whitesmoke); color: var(--dark-grey)" v-model="selected" @change="changedValue(selected)">
-                        <option v-for="(content, index) in emailTemplate" :key="index"
-                                v-bind:value="content"> {{content.name}}</option>
-                    </select>
-                        </b-col>
+                        <select style="margin-top: .5em; background-color: var(--whitesmoke); color: var(--dark-grey)"
+                                v-model="selected" @change="changedValue(selected)">
+                            <option v-for="(content, index) in emailTemplate" :key="index"
+                                    v-bind:value="content"> {{ content.name }}
+                            </option>
+                        </select>
+                    </b-col>
 
-                        <b-col>
-                            <button
-                                type="button"
-                                v-b-modal="'modal-editor'"
-                                class="mt-1 light-btn"
-                                v-if="selected.system === false"
-                                style="width: auto;"
-                            ><span class="button-txt">
+                    <b-col>
+                        <button
+                            type="button"
+                            v-b-modal="'modal-editor'"
+                            class="mt-1 light-btn"
+                            v-if="selected.system === false"
+                            @click="showEditTemplate"
+                            style="width: auto;"
+                        ><span class="button-txt">
                                 {{ $t('EmailTemplate.editTemp') }}
                             </span></button>
-                        </b-col>
-                        </b-row>
-                    </b-container>
+                    </b-col>
+                </b-row>
+            </b-container>
 
-                <b-container style="padding-top: .5em;"> <h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
-                    <b-container> {{ $t('EmailTemplate.subject') }}: {{ selected.subject }}</b-container>
-                    <hr>
-                    <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
+            <b-container style="padding-top: .5em;"><h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
+                <b-container> {{ $t('EmailTemplate.subject') }}: {{ selected.subject }}</b-container>
+                <hr>
+                <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
+            </b-container>
+
+            <!--- Edit Template --->
+            <b-modal
+                class="model-class2"
+                id="modal-editor"
+                ref="modal-editorRef"
+                :title="$t('EmailTemplate.editTemplateTitle') + selected.name"
+                centered scrollable
+                hide-footer ok-only
+                style="margin-top: 2em;"
+            >
+                <b-container style="padding-right: 0; padding-left: 0;">
+                    <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"></EditEmailTemplate>
                 </b-container>
 
+            </b-modal>
 
-                    <!--- Edit Template --->
-                    <b-modal
-                        class="model-class2"
-                        id="modal-editor"
-                        ref="modal-editorRef"
-                        :title="$t('EmailTemplate.editTemplateTitle') + selected.name"
-                        centered scrollable
-                        hide-footer ok-only
-                        style="margin-top: 2em;"
-                    >
-                       <b-container style="padding-right: 0; padding-left: 0;">
-                            <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"></EditEmailTemplate>
-                       </b-container>
 
-                   </b-modal>
+            <!--- Create new Template createNewEmailTemplate --->
+            <b-modal
+                class="model-class2"
+                :title="$t('EmailTemplate.createNewTemplate')+''"
+                hide-footer ok-only centered scrollable
+                ref="new-Template"
+            >
+                <b-container>
+                    <CreateEmailTemplate @newTemp="saveNewTemplate" :edit="false"></CreateEmailTemplate>
+                </b-container>
+            </b-modal>
 
-                <!--- Create new Template createNewEmailTemplate --->
-                <b-modal
-                    class="model-class2"
-                    :title="$t('EmailTemplate.createNewTemplate')+''"
-                    hide-footer ok-only centered scrollable
-                    ref="new-Template"
-                >
-                    <b-container>
-                        <CreateEmailTemplate @newTemp="saveNewTemplate" :edit="false"></CreateEmailTemplate>
+            <!--- Delete Template --->
+            <b-modal
+                class="model-class2"
+                :title="$t('EmailTemplate.templateDelete')+''"
+                hide-footer ok-only centered
+                ref="delete-Template"
+            >
+                <b-container style="overflow:scroll; overflow-x:hidden;">
+                    <b-container v-for="(template, index) in emailTemplate" :key="index"
+                                 style="margin-bottom: 1em">
+
+                        <b-row style="padding-bottom: 1px">
+                            <b-col>
+                                <b-icon v-if="index >= 1" class="icon-hover" icon="trash"
+                                        @click="deleteTemplate(template); fetchTemplate()"></b-icon>
+                            </b-col>
+                            <b-col cols="10">{{ template.name }}</b-col>
+                        </b-row>
                     </b-container>
-                </b-modal>
+                </b-container>
+            </b-modal>
+        </div>
 
-                <!--- Delete Template --->
-                <b-modal
-                    class="model-class2"
-                    :title="$t('EmailTemplate.templateDelete')+''"
-                    hide-footer ok-only centered
-                    ref="delete-Template"
-                >
-                    <b-container style="overflow:scroll; overflow-x:hidden;">
-                        <b-container v-for="(template, index) in emailTemplate" :key="index"
-                                     style="margin-bottom: 1em">
 
-                            <b-row style="padding-bottom: 1px">
-                                <b-col>
-                                    <b-icon v-if="index >= 1" class="icon-hover" icon="trash" @click="deleteTemplate(template); fetchTemplate()"></b-icon>
-                                </b-col>
-                                <b-col cols="10">{{template.name}}</b-col>
-                            </b-row>
-                        </b-container>
+        <div v-else-if="page !== 0">
+
+            <!-- Page 1 Create New Template -->
+            <div v-if="page === 1">
+                <b-container>
+                    <CreateEmailTemplate @newTemp="saveNewTemplate" @startPage="goToStartPage"
+                                         :edit="false"></CreateEmailTemplate>
+                </b-container>
+            </div>
+
+            <!-- Page 2 Delete Templates --->
+
+            <div v-if="page === 2">
+                <b-container style="overflow:scroll; overflow-x:hidden;">
+                    <b-container v-for="(template, index) in emailTemplate" :key="index"
+                                 style="margin-bottom: 1em">
+
+                        <b-row style="padding-bottom: 1px">
+                            <b-col>
+                                <b-icon v-if="index >= 1" class="icon-hover" icon="trash"
+                                        @click="deleteTemplate(template); fetchTemplate()"></b-icon>
+                            </b-col>
+                            <b-col cols="10">{{ template.name }}</b-col>
+                        </b-row>
                     </b-container>
-                </b-modal>
+                </b-container>
+                <div class="modal-footer">
+                    <b-row align-h="end">
+                        <b-col cols="auto">
+                            <button class="light-btn" @click="goToStartPage">
+                                {{ $t('UploadDoc.back') }} 22
+                            </button>
+                        </b-col>
+                    </b-row>
+                </div>
+            </div>
+
+
+            <!-- Page 2 Edit Templates --->
+            <div v-if="page === 3">
+                <b-container>
+                    <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"
+                                       @cancelPage="goToStartPage"></EditEmailTemplate>
+                </b-container>
+                <div class="modal-footer" v-if="page !== 3">
+                    <b-row align-h="end">
+                        <b-col cols="auto">
+                            <button class="light-btn" @click="goToStartPage">
+                                {{ $t('UploadDoc.back') }}
+                            </button>
+                        </b-col>
+                        <b-col cols="auto">
+                            <button class="elsa-blue-btn" @click="page = page -1">
+                                {{ $t('UploadDoc.continue') }} 2
+                            </button>
+                        </b-col>
+                    </b-row>
+                </div>
+            </div>
+
+
+        </div>
 
 
     </b-container>
@@ -118,12 +188,11 @@ export default {
             contents: [],
             copyTemplates: [],
             selected: '',
-
+            page: 0,
 
 
             // Object which is going to be emitted
             selectedTemplateObject: {},
-
 
 
             editorOption: {
@@ -143,14 +212,20 @@ export default {
 
         },
 
+        showEditTemplate() {
+            this.page = 3
+            this.$emit('pages', this.page)
+
+        },
+
 
         // Edit Template
         async saveEdit(emittedValue) {
             await this.fetchTemplate()
             this.$forceUpdate()
 
-            if(emittedValue.hideModal) {
-                this.$refs['modal-editorRef'].hide()
+            if (emittedValue.hideModal) {
+                this.page = 0
                 this.$forceUpdate()
 
                 this.selected = this.emailTemplate[0] // setting the initial value after closing the modal
@@ -160,30 +235,35 @@ export default {
 
         // Create new Template
         showNewCreateTemplate() {
-            this.$refs['new-Template'].show()
+            //this.$refs['new-Template'].show()
+            this.page = 1
+            this.$emit('pages', this.page)
+
 
         },
 
-         async saveNewTemplate(newTemplate) {
-             //todo save new template into databse and store
+        async saveNewTemplate(newTemplate) {
+            //todo save new template into databse and store
 
-             //checking if template name and subject is set
-
-
-
-             await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
-             await this.fetchTemplate()
-
-             this.$refs['new-Template'].hide()
-         },
+            //checking if template name and subject is set
 
 
+            await this.$store.dispatch('emailTemplate/setEmailTemplate', newTemplate)
+            await this.fetchTemplate()
+
+            //this.$refs['new-Template'].hide()
+            this.page = 0
+            this.$emit('pages', this.page)
+        },
 
 
         // Delete Templates
 
         showDeleteTemplates() {
-            this.$refs['delete-Template'].show()
+            //this.$refs['delete-Template'].show()
+            this.page = 2
+            this.$emit('pages', this.page)
+
         },
 
         async deleteTemplate(template) {
@@ -199,10 +279,23 @@ export default {
             await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
             this.$forceUpdate();
 
+        },
+
+        showModal() {
+            this.$refs['my-modal2'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal2'].hide()
+        },
+
+        goToStartPage() {
+            this.page = 0
+            this.$emit('pages', this.page)
+
+            //this.$emit('pages', this.page)
+
         }
     },
-
-
 
 
     async beforeMount() {
@@ -211,6 +304,9 @@ export default {
 
         this.selected = this.emailTemplate[0]
         this.selectedTemplateObject = this.emailTemplate[0]
+
+        this.page = 0
+
     },
 
     computed: {
@@ -222,7 +318,6 @@ export default {
 </script>
 
 <style scoped src="../assets/css/settingsPage.css">
-
 
 
 </style>

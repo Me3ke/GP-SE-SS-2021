@@ -1,15 +1,15 @@
 <template>
     <b-container>
         <b-alert :show="subjectEmpty"> <!--- TODO COLOR--->
-             Subject is empty
+            Subject is empty
         </b-alert>
 
         <b-container style="padding-bottom: .5em">
-            <span>{{$t('EmailTemplate.templateName')}}</span>
+            <span>{{ $t('EmailTemplate.templateName') }}</span>
             <b-form-input v-model="template.name" :placeholder="$t('EmailTemplate.enterName')"></b-form-input>
         </b-container>
         <b-container style="padding-bottom: .5em">
-            <span>{{$t('EmailTemplate.templateSubject')}}</span>
+            <span>{{ $t('EmailTemplate.templateSubject') }}</span>
             <b-form-input v-model="template.subject" :placeholder="$t('EmailTemplate.enterSubject')"></b-form-input>
         </b-container>
         <quill-editor
@@ -34,32 +34,49 @@
 
                 <!-- You can also add your own -->
                 <button id="addUser-button" @click="addUserHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addUser') }}</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.addUser') }}
+                </button>
 
                 <button id="addOwner-button" @click="addOwnerHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addOwner') }}</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.addOwner') }}
+                </button>
 
                 <button id="endDate-button" @click="addEndDateHtml"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.addEndDate') }}
+                </button>
 
                 <button id="docTitle-button" @click="addDocTitle"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentTitle') }}</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.documentTitle') }}
+                </button>
 
                 <button id="link-button" @click="addLink"
-                        style="width: auto; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
+                        style="width: auto; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.documentLink') }}
+                </button>
 
 
             </div>
         </quill-editor>
-            <div class="text-right">
-                <button type="button"
-                        class="ml-1 elsa-blue-btn"
-                        @click="saveTemp">
+        <div class="text-right">
+            <button type="button"
+                    class="ml-1 light-btn"
+                    @click="cancel">
                          <span class="button-txt">
-                             {{ $t('EmailTemplate.Save') }}
+                             {{ $t('UploadDoc.back') }}
                          </span>
-                </button>
-            </div>
+            </button>
+            <button type="button"
+                    class="ml-1 elsa-blue-btn"
+                    @click="saveTemp">
+                         <span class="button-txt">
+                            {{ $t('EmailTemplate.Save') }}
+                         </span>
+            </button>
+        </div>
 
     </b-container>
 </template>
@@ -121,19 +138,29 @@ export default {
             quill.insertText(cursorPosition, "[Link]")
         },
 
-        async saveTemp() {
-            if(this.template.name === '') {
+        saveTemp() {
+            if (this.template.name === '') {
                 this.template.name = 'Email Template'
             }
 
 
-            if(this.template.subject !== '') {
+            if (this.template.subject !== '') {
                 this.$emit('newTemp', this.template)
+                this.$emit('startPage')
                 this.subjectEmpty = false
             } else {
                 this.subjectEmpty = true
             }
         },
+
+        cancel() {
+            this.subjectEmpty = false
+            this.template.name = ''
+            this.template.htmlTemplateBody = ''
+            this.template.subject = ''
+            this.$emit('startPage')
+
+        }
 
     }
 }

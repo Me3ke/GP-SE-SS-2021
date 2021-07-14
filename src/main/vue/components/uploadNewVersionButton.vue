@@ -270,13 +270,17 @@
             <transition>
                 <div class="modal-mask">
                     <div class="modal-wrapper">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog h-100 d-flex flex-column justify-content-center my-0">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 v-if="page === 1" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
-                                    <h5 v-if="page === 2" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
-                                    <h5 v-if="page === 3" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
-                                    <h5 v-if="page === 4" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                <div class="modal-header" style="justify-content: space-between">
+                                    <h5 v-if="page === 1" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                    <h5 v-if="page === 2" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                    <h5 v-if="page === 3" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                    <h5 v-if="page === 4" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                    <h5 v-if="page === 5" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                    <h5 v-if="page === 6" class="modal-title">{{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
+
+
                                     <h5>
                                         <b-icon type="button" icon="x-square" @click="show = false; close()">
                                         </b-icon>
@@ -285,11 +289,6 @@
                                 <!-- Page 1 Choose Document -->
                                 <div v-if="page === 1">
                                     <div style="padding-top: 1em; text-align: left">
-                                        <div v-if="file.title !== null">
-                                            <span style="margin-left: 1em">Document Title</span>
-                                            <b-input v-if="file" v-model="file.title"
-                                                     style="width: 80%; margin-left: 1em"></b-input>
-                                        </div>
                                         <FileInput @updateFiles="updateFile"
                                                    @close="show = false; close()"
                                                    @nextPage="page = page + 1"
@@ -300,10 +299,10 @@
 
                                 <div v-if="page === 2">
                                     <div style="padding-top: 1em; text-align: left">
-                                        <div v-if="file.title !== null">
+                                        <div v-if="file.title !== null" style="padding: 1rem;">
                                             <span style="margin-left: 1em">Document Title</span>
                                             <b-input v-if="file" v-model="newDocumentTitle"
-                                                     style="width: 80%; margin-left: 1em"></b-input>
+                                                     style="width: 90%; margin-left: 1em"></b-input>
                                         </div>
                                         <div class="modal-footer">
                                             <b-container>
@@ -312,7 +311,7 @@
                                                         <button type="button" class="light-btn"
                                                                 @click="page = page - 1">
                                                             <span>
-                                                                {{ $t('UploadDoc.close') }}
+                                                                {{ $t('UploadDoc.back') }}
                                                             </span>
                                                         </button>
                                                     </b-col>
@@ -341,28 +340,32 @@
 
                                 <!-- Email Template (Replaced Document Email template) -->
                                 <div v-if="page === 5">
-                                    <div class="modal-body">
-                                        <div>
+                                    <div>
+                                        <div class="modal-body">
                                             <div>
-                                                <h3>Update document email </h3>
-                                                <h5> Due to an Update Request we are sending to all signatories an Update Document Email</h5>
+                                                <div>
+                                                    <h3>Update document email </h3>
+                                                    <h5> Due to an Update Request we are sending to all signatories an
+                                                        Update Document Email and to all Guest Signatories an guest
+                                                        signature invitation email</h5>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <b-row align-h="end">
-                                            <b-col cols="auto">
-                                                <button class="light-btn" @click="page = page - 2;">
-                                                    {{ $t('UploadDoc.back') }}
-                                                </button>
-                                            </b-col>
-                                            <b-col cols="auto">
-                                                <button class="elsa-blue-btn" @click="upload">
-                                                    {{ $t('UploadDoc.continue') }}
-                                                </button>
-                                            </b-col>
-                                        </b-row>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-row align-h="end">
+                                                <b-col cols="auto">
+                                                    <button class="light-btn" @click="page = page - 2;">
+                                                        {{ $t('UploadDoc.back') }}
+                                                    </button>
+                                                </b-col>
+                                                <b-col cols="auto">
+                                                    <button class="elsa-blue-btn" @click="setDefaultTemplate">
+                                                        {{ $t('UploadDoc.continue') }}
+                                                    </button>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -370,16 +373,14 @@
                                 <div v-if="page === 4">
                                     <div class="modal-body">
                                         <div>
-                                            {{page}}
-                                            <EmailTemplate @saveEmailTemplate="setEmailTemplate"></EmailTemplate>
+                                            <p>Hier können Sie sich ein Email Template aussuchen, welches an die
+                                                kürzlich neu eingefügten Signatories verschickt werden.
+                                            </p>
+                                            <EmailTemplate @saveEmailTemplate="setEmailTemplate"
+                                                           @pages="checkInnerPages"></EmailTemplate>
                                         </div>
-
-                                        <div v-if="this.uploadingDocument">
-                                            <b-spinner></b-spinner>
-                                        </div>
-
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer" v-if="showFooter">
                                         <b-row align-h="end">
                                             <b-col cols="auto">
                                                 <button class="light-btn" @click="page = page - 1;">
@@ -387,8 +388,8 @@
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
-                                                <button class="elsa-blue-btn" @click="upload">
-                                                    {{ $t('UploadDoc.continue') }}
+                                                <button class="elsa-blue-btn" @click="page = page + 2">
+                                                    {{ $t('UploadDoc.upload') }}
                                                 </button>
                                             </b-col>
                                         </b-row>
@@ -398,36 +399,39 @@
 
                                 <!-- Page 4 Upload -->
                                 <div v-if="page === 6">
-                                    <div class="modal-body">
-                                        <div v-if="!this.uploadingDocument">
-                                            <div>
-                                                <h3>{{ document.title }}</h3>
-                                                <h5> {{
-                                                        $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title})
-                                                    }}</h5>
+                                    <div>
+                                        <div class="modal-body">
+                                            <div v-if="!this.uploadingDocument">
+                                                <div>
+                                                    <p> {{$t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title})}}</p>
+                                                    <p>{{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }}</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div v-if="this.uploadingDocument">
-                                            <b-spinner></b-spinner>
-                                        </div>
+                                            <div v-if="this.uploadingDocument">
+                                                <b-spinner></b-spinner>
+                                            </div>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <b-row align-h="end">
-                                            <b-col cols="auto">
-                                                <button class="light-btn" @click="page = page - 1;">
-                                                    {{ $t('UploadDoc.back') }}
-                                                </button>
-                                            </b-col>
-                                            <b-col cols="auto">
-                                                <button class="elsa-blue-btn" @click="upload">
-                                                    {{ $t('UploadDoc.upload') }}
-                                                </button>
-                                            </b-col>
-                                        </b-row>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-row align-h="end">
+                                                <b-col cols="auto">
+                                                    <button class="light-btn" @click="page = page - 1;">
+                                                        {{ $t('UploadDoc.back') }}
+                                                    </button>
+                                                </b-col>
+                                                <b-col cols="auto">
+
+                                                    <b-button class="elsa-blue-btn" @click="upload">
+                                                        {{ $t('UploadDoc.upload') }}
+                                                    </b-button>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -456,7 +460,7 @@ export default {
 
             showTemplateBoolean: false,
 
-
+            showFooter: true,
             page: 1,
             selectedEnvelope: {
                 id: null,
@@ -493,6 +497,7 @@ export default {
             // need document settings as variable
             newTitle: '',
 
+
             // TODO Actual Doc which is going to be replaced
             actualDoc: {},
         }
@@ -521,6 +526,7 @@ export default {
             this.settings.signatories = this.actualDoc.signatories
             this.settings.orderRelevant = this.actualDoc.orderRelevant
             this.newDocumentTitle = this.file.title
+            console.log(this.actualDoc)
         },
 
 
@@ -580,9 +586,19 @@ export default {
             this.actualDoc.emailTemplateHtml = temp
         },
 
+        setDefaultTemplate() {
+            this.actualDoc.emailTemplateHtml = this.actualDoc.owner.emailTemplates[0]
+            console.log('-----')
+            console.log(this.actualDoc.emailTemplateHtml)
+            console.log('-----')
+            console.log(this.page)
+            this.page = this.page + 1
+
+        },
+
         showEmailTemplate(showTemp) {
             console.log(showTemp)
-            if(showTemp === true) {
+            if (showTemp === true) {
                 // new registered signatory is noticed
                 this.showTemplateBoolean = true
                 this.page = 4
@@ -591,6 +607,13 @@ export default {
                 this.showTemplateBoolean = true
                 this.page = 5
             }
+        },
+        checkInnerPages(innerPage) {
+            console.log('--------------')
+            console.log(innerPage)
+            console.log('--------------')
+
+            this.showFooter = innerPage === 0;
         }
     }
 }

@@ -43,16 +43,26 @@
 }
 
 
-#__BVID__105___BV_modal_outer_ {
-    z-index: 1000000 !important;
+#__BVID__167___BV_modal_outer_ {
+    z-index: 10000000 !important;
 }
 
-#__BVID__106___BV_modal_outer_ {
-    z-index: 1000000 !important;
+#__BVID__168___BV_modal_outer_ {
+    z-index: 10000000 !important;
 }
 
+#__BVID__126___BV_modal_outer_ {
+    z-index: 10000000 !important;
+}
 #modal-editor___BV_modal_outer_ {
-    z-index: 1000000 !important;
+    z-index: 10000000 !important;;
+}
+
+#__BVID__127___BV_modal_outer_ {
+    z-index: 10000000 !important;
+}
+#__BVID__264___BV_modal_outer_ {
+    z-index: 10000000 !important;
 }
 
 /deep/ .modal-content {

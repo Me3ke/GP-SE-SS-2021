@@ -155,23 +155,71 @@ h4 {
 
 /* Modal  */
 
-/deep/ .modal-class .modal.show .modal-dialog {
-    margin-top: 3em;
-    padding-top: 2em;
+
+
+
+
+.modal-mask {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
 }
 
-/deep/ .modal.show .modal-dialog {
-    padding-top: 3em;
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
 }
 
-/deep/ .model-class > .modal-dialog > .modal-content {
+.modal-content {
+    max-height: 50em;
+    overflow-y: scroll;
     background-color: var(--whitesmoke);
-    color: var(--dark-grey);
 }
 
-/deep/ .model-class > .modal-dialog > .modal-content > .modal-header .close {
-    color: var(--dark-grey);
+.bi-x-square {
+    fill: var(--dark-grey);
 }
+
+.bi-x-square:hover {
+    fill: var(--light-grey);
+    transition: 0.4s;
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
+.grey-btn {
+    background-color: var(--light-grey);
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Progress bar */
