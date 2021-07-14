@@ -126,6 +126,8 @@ export default {
     computed: {
       ...mapGetters({
           allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
+          documentProgress: 'document/getDocumentProgressArray',
+          document: 'document/getDocumentInfo'
       })
     },
     data() {
@@ -180,6 +182,19 @@ export default {
         deleteSignatory(signatory) {
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
 
+            let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+            const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
+            console.log(results)
+
+            for(let i = 0; i < results.length; i++) {
+                if(this.allUser.some(user => user.email === results[i].email)) {
+                    this.noticeNewSignatories = true
+                    break
+                } else {
+                    this.noticeNewSignatories = false
+                }
+            }
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
         },
         cancel() {
             this.addSignatories = false;
@@ -199,6 +214,10 @@ export default {
 
         async fetchAllUser() {
             await this.$store.dispatch('userManagement/fetchAllUsers')
+        },
+
+        getNewRegisteredUser(){
+
         }
     },
      beforeMount() {
@@ -206,9 +225,22 @@ export default {
             this.fetchAllUser()
             this.addSignatories = false
             this.signatoryInputs = this.signatories;
-            //this.signatoryInput = "";
-            console.log('test ',this.signatoryInputCopy)
-            console.log(this.signatoryInput)
+
+            let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+
+
+            const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
+            console.log(results)
+
+            for(let i = 0; i < results.length; i++) {
+                if(this.allUser.some(user => user.email === results[i].email)) {
+                    this.noticeNewSignatories = true
+                    break
+                } else {
+                    this.noticeNewSignatories = false
+                }
+            }
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
             }
     },
     beforeDestroy() {
