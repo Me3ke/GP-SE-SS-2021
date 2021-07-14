@@ -32,21 +32,22 @@ public class EmailManagement {
     private final String envelopeUrl = HTTP_LOCALHOST + this.serverPort + "/de/envelope/";
     @Value("${server.port}")
     private int serverPort;
+    private final EnvelopeService envelopeService;
+    private final UserService userService;
+    private final SMTPServerHelper smtpServerHelper;
+    private final EmailTemplateService emailTemplateService;
+    private final GuestTokenService guestTokenService;
 
     @Autowired
-    private EnvelopeService envelopeService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
-
-    @Autowired
-    private EmailTemplateService emailTemplateService;
-
-    @Autowired
-    private GuestTokenService guestTokenService;
+    public EmailManagement(final EnvelopeService envelopeService, final UserService userService,
+                           final SMTPServerHelper smtpServerHelper, final EmailTemplateService emailTemplateService,
+                           final GuestTokenService guestTokenService) {
+        this.envelopeService = envelopeService;
+        this.userService = userService;
+        this.smtpServerHelper = smtpServerHelper;
+        this.emailTemplateService = emailTemplateService;
+        this.guestTokenService = guestTokenService;
+    }
 
 
     /**

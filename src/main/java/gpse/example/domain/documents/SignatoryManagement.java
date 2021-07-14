@@ -31,7 +31,7 @@ public class SignatoryManagement {
     )
     protected List<Signatory> signatories;
 
-    public SignatoryManagement( final List<Signatory> signatories) {
+    public SignatoryManagement(final List<Signatory> signatories) {
         this.signatories = signatories;
     }
 

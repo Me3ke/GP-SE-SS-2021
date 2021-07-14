@@ -14,6 +14,7 @@ import java.time.format.DateTimeParseException;
  */
 public class SignatorySetting {
 
+    private static final String DD_MM_YYYY_HH_MM = "dd.MM.yyyy HH:mm";
     private String email;
     private int signatureType;
     private boolean status;
@@ -33,7 +34,7 @@ public class SignatorySetting {
         this.remind = signatory.getReminder() != -1;
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM);
             this.signedOn = signatory.getSignedOn().format(formatter);
         } else {
             this.signedOn = "";
@@ -58,7 +59,7 @@ public class SignatorySetting {
         try {
             return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         } catch (DateTimeParseException dtpe) {
-            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+            return LocalDateTime.parse(signedOn, DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM));
         }
     }
 

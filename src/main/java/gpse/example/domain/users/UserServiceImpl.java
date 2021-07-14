@@ -103,9 +103,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUpUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
+    public void signUpUser(final User user, final EmailManagement emailManagement)
+        throws MessageGenerationException, TemplateNameNotFoundException {
 
-        final EmailManagement emailManagement = new EmailManagement();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         securitySettingsRepository.save(user.getSecuritySettings());

@@ -59,6 +59,7 @@ public class UserController {
     private final MessageService messageService;
     private final EmailTemplateService emailTemplateService;
     private final DomainSetterService domainSetterService;
+    private final EmailManagement emailManagement;
 
     @Lazy
     @Autowired
@@ -83,13 +84,14 @@ public class UserController {
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final MessageService messageService, final EmailTemplateService emailTemplateService,
                           final ResetPasswordTokenService resetPasswordTokenService,
-                          final DomainSetterService domainSetterService) {
+                          final DomainSetterService domainSetterService, final EmailManagement emailManagement) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
         this.emailTemplateService = emailTemplateService;
         this.resetPasswordTokenService = resetPasswordTokenService;
         this.domainSetterService = domainSetterService;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -125,7 +127,7 @@ public class UserController {
                 user.addEmailTemplate(newTemplate);
                 user.setPersonalData(personalData);
                 try {
-                    userService.signUpUser(user);
+                    userService.signUpUser(user, emailManagement);
                     response.setStatus(STATUS_CODE_OK);
                 } catch (MessageGenerationException exc) {
                     userService.removeUser(user.getUsername());
@@ -151,7 +153,6 @@ public class UserController {
     @GetMapping("/newUser/register")
     public JSONResponseObject confirmMail(final @RequestParam("token") String token) {
 
-        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject response = new JSONResponseObject();
 
         final Optional<ConfirmationToken> optionalConfirmationToken
@@ -379,7 +380,6 @@ public class UserController {
     @GetMapping("/user/{userId}/password/reset")
     public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
-        final EmailManagement emailManagement = new EmailManagement();
         try {
             final User user = userService.getUser(userId);
             final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());

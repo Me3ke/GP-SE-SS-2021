@@ -55,6 +55,7 @@ public class DocumentController {
     private final DocumentServiceImpl documentService;
     private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
+    private final EmailManagement emailManagement;
 
     @Autowired
     private CorporateDesignService corporateDesignService;
@@ -71,13 +72,14 @@ public class DocumentController {
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
                               final DocumentServiceImpl documentService, final GuestTokenService guestTokenService,
-                              final SignatureManagement signatureManagement) {
+                              final SignatureManagement signatureManagement, final EmailManagement emailManagement) {
 
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.guestTokenService = guestTokenService;
         this.signatureManagement = signatureManagement;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -273,7 +275,6 @@ public class DocumentController {
      */
     private void informSignatories(final Document document, final long envelopeID)
         throws TemplateNameNotFoundException, MessageGenerationException, DocumentNotFoundException {
-        final EmailManagement emailManagement = new EmailManagement();
 
         if (document.isOrderRelevant()) {
             if (document.getPreviousVersion().isOrderRelevant()) {

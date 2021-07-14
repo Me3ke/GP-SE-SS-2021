@@ -23,6 +23,9 @@ public class ScheduledTasks {
     private static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
     @Autowired
+    private EmailManagement emailManagement;
+
+    @Autowired
     private DocumentService documentService;
 
 
@@ -45,7 +48,6 @@ public class ScheduledTasks {
     private void informSignatoriesInOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
         if (doc.getEndDate() != null) {
-            final EmailManagement emailManagement = new EmailManagement();
             final Signatory currentSignatory = doc.getSignatoryManagement().getCurrentSignatory();
             if (currentSignatory != null && currentSignatory.getReminder() > -1
                 && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(currentSignatory.getReminder()))) {
@@ -58,7 +60,6 @@ public class ScheduledTasks {
     private void informSignatoriesWithoutOrder(final Document doc) throws MessageGenerationException,
         TemplateNameNotFoundException {
         if (doc.getEndDate() != null) {
-            final EmailManagement emailManagement = new EmailManagement();
             for (final Signatory signatory : doc.getSignatoryManagement().getSignatories()) {
                 if (signatory.getReminder() > -1
                     && LocalDateTime.now().isAfter(doc.getEndDate().minusDays(signatory.getReminder()))) {

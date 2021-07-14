@@ -37,6 +37,7 @@ public class CommentController {
 
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
+    private final EmailManagement emailManagement;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -45,9 +46,11 @@ public class CommentController {
      */
     @Autowired
     public CommentController(final UserServiceImpl userService,
-                             final DocumentServiceImpl documentService) {
+                             final DocumentServiceImpl documentService,
+                             final EmailManagement emailManagement) {
         this.userService = userService;
         this.documentService = documentService;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -62,7 +65,6 @@ public class CommentController {
                                                 final @PathVariable(USER_ID) String userID,
                                                 final @PathVariable(DOCUMENT_ID) long documentID)
                 throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);
@@ -96,7 +98,6 @@ public class CommentController {
                                               final @PathVariable(DOCUMENT_ID) long documentID,
                                               final @PathVariable("commentID") long commentID)
                 throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final Document document = documentService.getDocument(documentID);

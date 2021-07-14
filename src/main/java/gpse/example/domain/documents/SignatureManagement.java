@@ -24,6 +24,7 @@ public class SignatureManagement {
     private static final int STATUS_CODE_NOT_READ_YET = 454;
     private static final int STATUS_CODE_NOT_SIGNATORY = 455;
     private final DocumentService documentService;
+    private final EmailManagement emailManagement;
 
     /**
      * constructor of Signature management.
@@ -31,8 +32,9 @@ public class SignatureManagement {
      * @param givenDocumentService documentservice
      */
     @Autowired
-    public SignatureManagement(final DocumentService givenDocumentService) {
+    public SignatureManagement(final DocumentService givenDocumentService, final EmailManagement emailManagement) {
         documentService = givenDocumentService;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -77,8 +79,6 @@ public class SignatureManagement {
                                                              final JSONResponseObject response,
                                                              final SignatureType signatureType)
             throws TemplateNameNotFoundException, MessageGenerationException {
-            final EmailManagement emailManagement = new EmailManagement();
-
             if (document.getState().equals(DocumentState.SIGN)) {
             if (findSignatoryInList(document, userID, signatureType)) {
                 if (areSignatoriesFinished(document.getSignatoryManagement().getSignatories())) {
@@ -101,7 +101,6 @@ public class SignatureManagement {
                                                          final List<Signatory> signatories,
                                                          final JSONResponseObject response)
                 throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailManagement emailManagement = new EmailManagement();
         if (findSignatoryInList(document, userID, SignatureType.REVIEW)) {
             if (areSignatoriesFinished(document.getSignatoryManagement().getSignatories())) {
                 emailManagement.sendProcessFinishedTemplate(document);
@@ -181,7 +180,6 @@ public class SignatureManagement {
     private JSONResponseObject manageSignatureInOrder(final String userID, final Document document,
                                                       final SignatureType signatureType, final long envelopeID)
         throws MessageGenerationException, TemplateNameNotFoundException, DocumentNotFoundException {
-        final EmailManagement emailManagement = new EmailManagement();
         final List<Signatory> signatories = document.getSignatoryManagement().getSignatories();
         final JSONResponseObject response = new JSONResponseObject();
         final Signatory currentReader = document.getSignatoryManagement().getCurrentSignatory();

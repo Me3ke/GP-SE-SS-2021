@@ -101,7 +101,7 @@
 
                     <!--- For the case if user will replace an document --->
 
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-else>
                         <b-container>
                             <b-row align-h="end">
                                 <b-col cols="auto">
@@ -289,9 +289,17 @@ export default {
 
             console.log(this.endDate)
             const [date, time] = this.endDate.split(' ')
+            console.log('---------')
+            console.log(date)
+            console.log(time)
+            console.log('---------')
 
-            const [day, month, year] = date.split('.')
-            this.endDate = year + '-' + month + '-' + day
+            this.endDate = date
+
+            if(date.includes('.')) {
+                const [day, month, year] = date.split('.')
+                this.endDate = year + '-' + month + '-' + day
+            }
 
             this.endTime = time
         }

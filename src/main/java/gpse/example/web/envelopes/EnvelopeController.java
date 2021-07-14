@@ -52,6 +52,7 @@ public class EnvelopeController {
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
     private final DocumentFilter documentFilter;
+    private final EmailManagement emailManagement;
 
     @Lazy
     @Autowired
@@ -67,11 +68,13 @@ public class EnvelopeController {
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
-                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter) {
+                              final DocumentServiceImpl documentService, final DocumentFilter documentFilter,
+                              final EmailManagement emailManagement) {
         this.envelopeService = envelopeService;
         this.userService = userService;
         this.documentService = documentService;
         this.documentFilter = documentFilter;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -108,7 +111,6 @@ public class EnvelopeController {
     public JSONResponseObject fillEnvelope(final @PathVariable(ENVELOPE_ID) long envelopeID,
                                            final @PathVariable(USER_ID) String ownerID,
                                            final @RequestBody DocumentPutRequest documentPutRequest) {
-        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject response = new JSONResponseObject();
         try {
             final Envelope envelope = envelopeService.getEnvelope(envelopeID);

@@ -1,6 +1,7 @@
 package gpse.example.domain.users;
 
 
+import gpse.example.domain.email.EmailManagement;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.web.tokens.ConfirmationToken;
@@ -26,7 +27,7 @@ public interface UserService extends UserDetailsService {
 
     List<User> getAllUsers();
 
-    void signUpUser(User user) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException,
+    void signUpUser(User user, EmailManagement emailManagement) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException,
         InvocationTargetException;
 
     void confirmUser(ConfirmationToken confirmationToken);
