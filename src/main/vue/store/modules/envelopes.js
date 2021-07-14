@@ -1,5 +1,5 @@
 import envelopeAPI from "@/main/vue/api/envelopeAPI";
-import {filterEnvelopes} from "../../scripts/filterMethods.js";
+import {filterEnvelopes, sortEnvelopes} from "../../scripts/filterMethods.js";
 
 export const namespaced = true
 
@@ -23,11 +23,11 @@ export const mutations = {
 export const actions = {
     // makes axios call to get envelopes, either sets envelopes (success) or error (error)
     fetchEnvelopes({commit}) {
-        envelopeAPI.getEnvelopes().then(response => {
-            commit('SET_ENVELOPES', response.data)
-            commit('SET_ERROR_GET_ENVELOPES', {})
-        }).catch(error => {
-            commit('SET_ERROR_GET_ENVELOPES', error)
+        envelopeAPI.getEnvelopes().then(async response => {
+            await commit('SET_ENVELOPES', response.data)
+            await commit('SET_ERROR_GET_ENVELOPES', {})
+        }).catch(async error => {
+            await commit('SET_ERROR_GET_ENVELOPES', error)
         })
     }
 }
@@ -36,12 +36,10 @@ export const getters = {
     getFilteredPagedEnvelopes: (state) => (filters, pageLimit, page) => {
         //filter
         let filteredEnvelopes = filterEnvelopes(state.envelopes, filters);
-
         //sorting
-
+        filteredEnvelopes = sortEnvelopes(filteredEnvelopes, filters);
         //paging
         filteredEnvelopes = filteredEnvelopes.slice((page-1)*pageLimit, page*pageLimit)
-
         return filteredEnvelopes
     },
     getFilteredEnvelopes: (state) => (filters) =>  {

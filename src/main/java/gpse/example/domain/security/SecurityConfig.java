@@ -1,5 +1,6 @@
 package gpse.example.domain.security;
 
+import gpse.example.domain.exceptions.SecurityConfigException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,31 +31,48 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfig(final SecurityConstants securityConstants) {
+        super();
         this.securityConstants = securityConstants;
     }
 
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/user/newpassword*").permitAll()
-            .and()
-            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    protected void configure(final HttpSecurity http) throws SecurityConfigException {
+        try {
+            http.cors().and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/authenticate").permitAll()
+                    .antMatchers("/api/user/newpassword*").permitAll()
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        } catch (Exception exception) {
+            throw new SecurityConfigException(exception);
+
+        }
 
     }
 
-
+    /**
+     * configure global mathod.
+     * @param userDetailsService userDetailsservice
+     * @param passwordEncoder passwordEncoder
+     * @param auth authenticationmanager
+     * @throws SecurityConfigException Exception Thrown if authentication failed.
+     */
     @Autowired
     public void configureGlobal(final UserDetailsService userDetailsService,
                                 final PasswordEncoder passwordEncoder,
-                                final AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder);
+                                final AuthenticationManagerBuilder auth) throws SecurityConfigException {
+
+        try {
+            auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
+        } catch (Exception exception) {
+            throw new SecurityConfigException(exception);
+        }
     }
 
     @Bean

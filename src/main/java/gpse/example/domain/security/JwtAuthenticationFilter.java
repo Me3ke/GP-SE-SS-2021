@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     public JwtAuthenticationFilter(final AuthenticationManager authenticationManager,
                                    final SecurityConstants securityConstants) {
+        super();
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
 

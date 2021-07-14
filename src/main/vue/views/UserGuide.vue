@@ -4,7 +4,7 @@
         <BaseHeading class="base-header" name=""></BaseHeading>
         <h2 class="h2-user-guide"> {{ $t('UserGuide.name') }} </h2>
 
-        <div class="overflow-auto" style="background-color: var(--whitesmoke); height: 78.5vh;">
+        <div class="overflow" style="background-color: var(--whitesmoke); height: 78.5vh;">
             <div class="generalInfo">
                 <h2 class="h2-general-info">{{ $t('UserGuide.section-1') }}</h2>
                 <b-col class="col-for-mobile">
@@ -64,7 +64,7 @@
                 </b-col>
             </div>
 
-            <div class="generalInfo" style="margin-bottom: 10em">
+            <div class="generalInfo">
                 <h2 class="h2-general-info"> {{ $t('UserGuide.section-5') }} </h2>
                 <b-col class="col-for-mobile">
                     <Accordion
@@ -78,6 +78,22 @@
                     />
                 </b-col>
             </div>
+
+            <div class="generalInfo" style="margin-bottom: 10em">
+                <h2 class="h2-general-info"> {{ $t('UserGuide.section-6') }} </h2>
+                <b-col class="col-for-mobile">
+                    <Accordion
+                        v-for="(generalInfo, key) in sectionData6"
+                        :general-info="generalInfo"
+                        :index="key"
+                        :key="key"
+                        :section="5"
+                        :open="generalInfo.open"
+                        @toggleOpen="toggleOpen6"
+                    />
+                </b-col>
+            </div>
+
         </div>
         <Footer></Footer>
     </div>
@@ -93,7 +109,7 @@ export default {
     components: {Footer, Header, Accordion},
     data: function () {
         return {
-
+            // General Information
             sectionData: [
                 {
                     key: 0,
@@ -106,6 +122,7 @@ export default {
                     img: null,
                 }
             ],
+            // Account Management
             sectionData2: [
                 {
                     key: 0,
@@ -121,9 +138,48 @@ export default {
                     key: 2,
                     open: false,
                     img: null,
+                },
+                {
+                    key: 3,
+                    open: false,
+                    img: null,
+                },
+                {
+                    key: 4,
+                    open: false,
+                    img: null,
+                },
+                {
+                    key: 5,
+                    open: false,
+                    img: null,
                 }
             ],
+            // Signature
             sectionData3: [
+                {
+                    key: 0,
+                    open: false,
+                    img: null,
+                },
+                {
+                    key: 1,
+                    open: false,
+                    img: null,
+                },
+                {
+                    key: 2,
+                    open: false,
+                    img: null,
+                },
+                {
+                    key: 3,
+                    open: false,
+                    img: null,
+                },
+            ],
+            // Documents
+            sectionData4: [
                 {
                     key: 0,
                     open: false,
@@ -169,34 +225,18 @@ export default {
                     open: false,
                     img: null,
                 },
-            ],
-            sectionData4: [
                 {
-                    key: 0,
-                    open: false,
-                    img: null,
-                },
-                {
-                    key: 1,
-                    open: false,
-                    img: null,
-                },
-                {
-                    key: 2,
-                    open: false,
-                    img: null,
-                },
-                {
-                    key: 3,
+                    key: 9,
                     open: false,
                     img: null,
                 }
             ],
+            // filter and search settings
             sectionData5: [
                 {
                     key: 0,
                     open: false,
-                    img: "example-image-faq.png",
+                    img: null,
                 },
                 {
                     key: 1,
@@ -208,22 +248,28 @@ export default {
                     open: false,
                     img: null,
                 },
+                // Sort my documents todo
+
+
+            ],
+            // admin
+            sectionData6: [
                 {
-                    key: 3,
+                    key: 0,
                     open: false,
                     img: null,
                 },
                 {
-                    key: 4,
+                    key: 1,
                     open: false,
                     img: null,
                 },
                 {
-                    key: 5,
+                    key: 2,
                     open: false,
                     img: null,
                 }
-            ]
+                ]
         }
     },
     methods: {
@@ -273,6 +319,16 @@ export default {
         toggleOpen5: function (index) {
             // iterate through list and set the open boolean to true or false by considering the clicked index
             this.sectionData5 = this.sectionData5.map((generalInfo, i) => {
+                if (index === i) {
+                    generalInfo.open = !generalInfo.open;
+                }
+                return generalInfo;
+            });
+        },
+
+        toggleOpen6: function (index) {
+            // iterate through list and set the open boolean to true or false by considering the clicked index
+            this.sectionData6 = this.sectionData6.map((generalInfo, i) => {
                 if (index === i) {
                     generalInfo.open = !generalInfo.open;
                 }

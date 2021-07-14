@@ -1,7 +1,7 @@
 <template>
     <b-navbar toggleable="sm" id="background" sticky :class="[mobile ? 'mobile' : 'normal']">
         <!-- To-Do: Add  real Route to Home -->
-        <b-navbar-brand @click="$router.push(`/`)">
+        <b-navbar-brand @click="goToOverView()" style="cursor:pointer;">
             <b-img v-if="theme === '' " :src="elsaLight" class="responsive-img" :alt="$t('Header.logo')"></b-img>
             <b-img v-else :src="elsaDark" class="responsive-img" :alt="$t('Header.logo')"></b-img>
             <img v-if="theme === '' && !lightEmpty"
@@ -79,6 +79,20 @@ export default {
             } else {
                 return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
             }
+        },
+        goToOverView() {
+            // navigates to overview page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'overview'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         }
     }
     ,
@@ -130,8 +144,10 @@ export default {
 }
 
 #background {
-    background-image: linear-gradient(to right, var(--headerFadeOne), var(--headerFadeTwo), var(--headerFadeThree), var(--headerFadeTwo), var(--headerFadeOne)),
-    url(../../assets/header_background.png);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--dark-grey);
+    background-color: var(--elsa-blue-transparent);
     background-size: cover;
     align-content: center;
     z-index: 1000000000;

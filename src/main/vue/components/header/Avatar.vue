@@ -12,6 +12,14 @@
 
         <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
+        <!-- Address book -->
+        <b-dropdown-item class="my-dropdown-item" @click="routeToAddressBook">
+            <b-icon icon="book" class="my-icon"></b-icon>
+            <span class="letters"> {{ $t('Header.Avatar.addressBook') }} </span>
+        </b-dropdown-item>
+
+        <b-dropdown-divider class="my-divider"></b-dropdown-divider>
+
         <!-- Admin Settings -->
         <b-dropdown-item
             v-if="isAdmin"
@@ -43,7 +51,7 @@
 
                 <b-dropdown-divider class="my-divider"></b-dropdown-divider>
 
-                <b-dropdown-item class="my-inner-dropdown-item">
+                <b-dropdown-item class="my-inner-dropdown-item" @click="routeToTrustedDomain">
                     <b-icon icon="at" class="my-icon"></b-icon>
                     <span class="letters"> {{ $t('Header.Avatar.adminSetting.filter') }} </span>
                 </b-dropdown-item>
@@ -111,16 +119,88 @@ export default {
             }
         },
         routeToProfile() {
-            this.$router.push('/' + this.$i18n.locale + '/user')
+            // navigates to settings/user page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'user'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
+        },
+        routeToAddressBook() {
+            // navigates to adressbook page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'addressBook'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToHelp() {
-            this.$router.push('/' + this.$i18n.locale + '/help')
+            // navigates to help page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'help'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToCorporate() {
-            this.$router.push('/' + this.$i18n.locale + '/adminSettings/corporate')
+            // navigates to corporate design page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'corporate'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToUserManage() {
-            this.$router.push('/' + this.$i18n.locale + '/adminSettings/userManagement')
+            // navigates to user management page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'userManagement'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
+        },
+        routeToTrustedDomain() {
+            // navigates to trustedDomain page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'trustedDomain'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         toggleTheme(mode) {
             //changes mode

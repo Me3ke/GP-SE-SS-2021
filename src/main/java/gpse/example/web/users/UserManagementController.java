@@ -121,8 +121,14 @@ public class UserManagementController {
         return response;
     }
 
+    /**
+     * makes user seen.
+     * @param userID userid
+     * @param token jwt Token
+     * @return jsonResponseObject
+     */
     @PutMapping("admin/userseen")
-    private JSONResponseObject changeUserToSeen(@RequestParam(USERID) final String userID,
+    public JSONResponseObject changeUserToSeen(@RequestParam(USERID) final String userID,
                                                 @RequestHeader final String token) {
         final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {

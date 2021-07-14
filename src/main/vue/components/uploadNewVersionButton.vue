@@ -218,7 +218,7 @@
 import {convertUploadFileToBase64} from "../scripts/fileToBase64Converter";
 import {mapGetters} from "vuex";
 import _ from "lodash";
-import ReaderMenu from "@/main/vue/components/ReaderMenu";
+import ReaderMenu from "@/main/vue/components/uploadDocuments/ReaderMenu";
 import SignatoryMenu from "@/main/vue/components/SignatoryMenu";
 
 export default {

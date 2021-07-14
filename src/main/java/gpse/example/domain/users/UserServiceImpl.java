@@ -1,13 +1,20 @@
 package gpse.example.domain.users;
 
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.email.SMTPServerHelper;
+import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.exceptions.MessageGenerationException;
+import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.security.SecurityConstants;
-import gpse.example.util.email.*;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +32,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String HTTP_LOCALHOST = "http://localhost:";
+    @Value("${server.port}")
+    private int serverPort;
+
     /**
      * Standard ConfirmationTokenService.
      * autowired not commited not tested 18.05.21
@@ -61,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(final String username) throws UsernameNotFoundException {
+    public User getUser(final String username) {
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found."));
     }
@@ -72,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) {
         return userRepository.findById(username)
             .orElseThrow(() -> new UsernameNotFoundException("User name " + username + " not found."));
     }
@@ -148,7 +159,7 @@ public class UserServiceImpl implements UserService {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
-        container.setLink("http://localhost:8080/de/register/confirm/" + token);
+        container.setLink(HTTP_LOCALHOST + serverPort + "/de/register/confirm/" + token);
         smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.SYSTEM, null);
 
     }
@@ -173,10 +184,8 @@ public class UserServiceImpl implements UserService {
                 container.setFirstNameOwner(user.getFirstname());
                 container.setLastNameOwner(user.getLastname());
                 container.setRequestingEmail(user.getEmail());
-                container.setLink("http://localhost:8080/de/adminSettings/userManagement");
+                container.setLink(HTTP_LOCALHOST + serverPort + "/de/adminSettings/userManagement");
                 smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
-                return;
-                //optional, without return -> notify all admins.
             }
         }
 
