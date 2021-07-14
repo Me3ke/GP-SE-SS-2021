@@ -51,35 +51,62 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         final String token = request.getHeader(securityConstants.getTokenHeader());
         if (token != null && !token.equals("") && token.startsWith(securityConstants.getTokenPrefix())) {
             try {
-                final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
-
-                final Jws<Claims> parsedToken = Jwts.parserBuilder()
-                    .setSigningKey(signingKey).build()
-                    .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
-
-                final String username = parsedToken.getBody().getSubject();
-
-                final List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody()
-                    .get("rol")).stream()
-                    .map(authority -> new SimpleGrantedAuthority((String) authority))
-                    .collect(Collectors.toList());
-
-                if (username != null && !username.equals("")) {
-                    return new UsernamePasswordAuthenticationToken(username, null, authorities);
+                final UsernamePasswordAuthenticationToken username = getUsernamePasswordAuthenticationToken(token);
+                if (username != null) {
+                    return username;
                 }
-            } catch (ExpiredJwtException exception) {
-                LOG.warn("Request to parse expired JWT : {} failed : {}", token, exception.getMessage());
-            } catch (UnsupportedJwtException exception) {
-                LOG.warn("Request to parse unsupported JWT : {} failed : {}", token, exception.getMessage());
-            } catch (MalformedJwtException exception) {
-                LOG.warn("Request to parse invalid JWT : {} failed : {}", token, exception.getMessage());
-            } catch (SignatureException exception) {
-                LOG.warn("Request to parse JWT with invalid signature : {} failed : {}", token, exception.getMessage());
-            } catch (IllegalArgumentException exception) {
-                LOG.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
+            } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+                | IllegalArgumentException exception) {
+                logException(exception, token);
             }
         }
 
+        return null;
+    }
+
+    private void logException(final Exception exception, final String token) {
+        final String className =
+            (String) exception.getClass().getName().subSequence(exception.getClass().getName().lastIndexOf(".") + 1,
+                exception.getClass().getName().length());
+        switch (className) {
+            case "ExpiredJwtException":
+                LOG.warn("Request to parse expired JWT : {} failed : {}", token, exception.getMessage());
+                break;
+            case "UnsupportedJwtException":
+                LOG.warn("Request to parse unsupported JWT : {} failed : {}", token, exception.getMessage());
+                break;
+            case "MalformedJwtException":
+                LOG.warn("Request to parse invalid JWT : {} failed : {}", token, exception.getMessage());
+                break;
+            case "SignatureException":
+                LOG.warn("Request to parse JWT with invalid signature : {} failed : {}", token, exception.getMessage());
+                break;
+            case "IllegalArgumentException":
+                LOG.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
+                break;
+            default:
+                LOG.warn("something else JWT : {} failed : {}", token, exception.getMessage());
+                break;
+        }
+    }
+
+    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String token) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        final String username = parsedToken.getBody().getSubject();
+
+        final List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody()
+            .get("rol")).stream()
+            .map(authority -> new SimpleGrantedAuthority((String) authority))
+            .collect(Collectors.toList());
+
+        if (username != null && !username.equals("")) {
+            return new UsernamePasswordAuthenticationToken(username, null, authorities);
+        }
         return null;
     }
 }

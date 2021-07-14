@@ -4,10 +4,14 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentServiceImpl;
 import gpse.example.domain.documents.comments.Answer;
 import gpse.example.domain.documents.comments.Comment;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.EmailTemplate;
+import gpse.example.domain.email.EmailTemplateService;
+import gpse.example.domain.email.SMTPServerHelper;
+import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.exceptions.*;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -147,29 +151,30 @@ public class CommentController {
         }
     }
 
-    private void sendNewCommentEmail(User author, User documentOwner, Document document)
+    private void sendNewCommentEmail(final User author, final User documentOwner, final Document document)
         throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
+        final TemplateDataContainer container = getTemplateDataContainer(author, documentOwner, document);
         container.setDocumentTitle(document.getDocumentTitle());
-        container.setFirstNameOwner(author.getFirstname());
-        container.setLastNameOwner(author.getLastname());
-        container.setFirstNameReciever(documentOwner.getFirstname());
-        container.setLastNameReciever(documentOwner.getLastname());
-        container.setLink(document.getLinkToDocumentview());
         smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
     }
 
-    private void sendAnswerEmail(User author, User reciever, Document document)
+    private void sendAnswerEmail(final User author, final User reciever, final Document document)
         throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
+        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
+        final TemplateDataContainer container = getTemplateDataContainer(author, reciever, document);
+        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
+
+    }
+
+    private TemplateDataContainer getTemplateDataContainer(final User author, final User reciever,
+                                                           final Document document) {
+        final TemplateDataContainer container = new TemplateDataContainer();
         container.setFirstNameOwner(author.getFirstname());
         container.setLastNameOwner(author.getLastname());
         container.setFirstNameReciever(reciever.getFirstname());
         container.setLastNameReciever(reciever.getLastname());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
-
+        container.setLink(document.getLinkToDocumentView());
+        return container;
     }
 }

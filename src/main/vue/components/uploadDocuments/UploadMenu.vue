@@ -129,6 +129,7 @@ export default {
                 for(i = 0; i < this.files.length; i++) {
                     await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.files[i], "settings": this.settings});
                 }
+                this.$emit("refreshOverview")
                 this.close();
             } else {
                 this.uploadingDocument = true;
@@ -137,6 +138,7 @@ export default {
                 for(i = 0; i < this.files.length; i++) {
                 await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.files[i], "settings": this.settings});
                 }
+                this.$emit("refreshOverview")
                 this.close();
             }
         }

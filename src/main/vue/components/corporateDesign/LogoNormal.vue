@@ -11,7 +11,9 @@
                     <b-list-group-item class="d-flex justify-content-center align-items-center">
                         <div>
                             <div class="logo-border">
-                                <img :src="getLightSource()" class="responsive-img"
+                                <b-img v-if="lightEmpty" :src="elsaLight" class="responsive-img"
+                                       :alt="$t('Header.logo')"></b-img>
+                                <img v-else :src="getLightSource()" class="responsive-img"
                                      :alt="$t('Header.logo')">
                             </div>
 
@@ -37,7 +39,8 @@ export default {
     components: {UploadLogoPopUp},
     data() {
         return {
-            showLogoUpload: false
+            showLogoUpload: false,
+            elsaLight: require('../../assets/logos/ELSA_small.svg')
         }
     },
     methods: {
@@ -58,7 +61,10 @@ export default {
         ...mapGetters({
             logoLight: 'theme/getLightLogo',
             logoLightType: 'theme/getLightLogoType'
-        })
+        }),
+        lightEmpty() {
+            return this.logoLight === ""
+        }
     }
 }
 </script>

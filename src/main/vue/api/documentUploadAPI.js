@@ -17,6 +17,7 @@ export default {
                 'endDate': settings.endDate,
                 'orderRelevant': settings.orderRelevant,
                 'showHistory': settings.showHistory,
+                'draft': settings.draft,
             }
         })
     },
