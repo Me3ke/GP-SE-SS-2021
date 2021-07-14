@@ -125,7 +125,7 @@ public class Document {
      */
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
-        this.signatoryManagement = new SignatoryManagement(this.id, signatories);
+        this.signatoryManagement = new SignatoryManagement(signatories);
         this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
