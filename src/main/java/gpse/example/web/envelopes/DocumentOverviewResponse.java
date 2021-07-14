@@ -7,7 +7,6 @@ import gpse.example.domain.documents.SignatoryManagement;
 import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.signature.SignatureType;
 import gpse.example.domain.users.User;
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -47,10 +46,10 @@ public class DocumentOverviewResponse {
         //Replaced with uploadDate
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         this.creationDate = document.getDocumentMetaData().getMetaTimeStampUpload().format(formatter);
-        if (document.getEndDate() != null) {
-            this.endDate = document.getEndDate().format(formatter);
-        } else {
+        if (document.getEndDate() == null) {
             this.endDate = "";
+        } else {
+            this.endDate = document.getEndDate().format(formatter);
         }
         this.dataType = document.getDocumentType();
         this.state = document.getState();
@@ -63,6 +62,27 @@ public class DocumentOverviewResponse {
         this.id = document.getId();
         final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
         final List<Signatory> signatories = signatoryManagement.getSignatories();
+        final SignatureType signatureType = checkSignatories(currentUser, signatories);
+        final List<Signatory> readers = signatoryManagement.getReaders();
+        checkReaders(currentUser, readers);
+        final OrderManager orderManager = new OrderManager();
+        turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
+        turnToSign = orderManager.manageSignatoryTurn(currentUser, document, signatureType);
+    }
+
+    private void checkReaders(final String currentUser, final List<Signatory> readers) {
+        for (final Signatory currentReader : readers) {
+            if (currentReader.getEmail().equals(currentUser)) {
+                this.reader = true;
+                if (currentReader.isStatus()) {
+                    this.read = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    private SignatureType checkSignatories(final String currentUser, final List<Signatory> signatories) {
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
         for (final Signatory currentSignatory : signatories) {
             if (currentSignatory.getEmail().equals(currentUser)
@@ -76,19 +96,7 @@ public class DocumentOverviewResponse {
                 }
             }
         }
-        final List<Signatory> readers = signatoryManagement.getReaders();
-        for (final Signatory currentReader : readers) {
-            if (currentReader.getEmail().equals(currentUser)) {
-                this.reader = true;
-                if (currentReader.isStatus()) {
-                    this.read = true;
-                    break;
-                }
-            }
-        }
-        final OrderManager orderManager = new OrderManager();
-        turnToReview = orderManager.manageSignatoryTurn(currentUser, document, SignatureType.REVIEW);
-        turnToSign = orderManager.manageSignatoryTurn(currentUser, document, signatureType);
+        return signatureType;
     }
 
     public String getTitle() {
@@ -179,7 +187,7 @@ public class DocumentOverviewResponse {
         return draft;
     }
 
-    public void setDraft(boolean draft) {
+    public void setDraft(final boolean draft) {
         this.draft = draft;
     }
 

@@ -88,11 +88,13 @@ public class DocumentSetting extends DocumentSettingsCMD {
         this.showHistory = showHistory;
     }
 
+    @Override
     public boolean isDraft() {
         return draft;
     }
 
-    public void setDraft(boolean draft) {
+    @Override
+    public void setDraft(final boolean draft) {
         this.draft = draft;
     }
 }

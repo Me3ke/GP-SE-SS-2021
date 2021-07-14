@@ -17,7 +17,7 @@ class SignatureTypeTest {
     private SignatureType advancedSignature;
 
     @Test
-    private void testToInteger() {
+    public void testToInteger() {
         assertEquals(-1, (int) noSignature.toInteger());
         assertEquals((int) review.toInteger(), 0);
         assertEquals((int) simpleSignature.toInteger(), 1);
@@ -25,7 +25,7 @@ class SignatureTypeTest {
     }
 
     @Test
-    private void testFromInteger() {
+    public void testFromInteger() {
         try {
             assertSame(SignatureType.fromInteger(-1), noSignature);
             assertNotSame(SignatureType.fromInteger(-1), simpleSignature);
@@ -41,14 +41,14 @@ class SignatureTypeTest {
     }
 
     @Test
-    private void testValueOf() {
+    public void testValueOf() {
         assertSame(SignatureType.valueOf("NO_SIGNATURE"), noSignature);
         assertSame(SignatureType.valueOf("SIMPLE_SIGNATURE"), simpleSignature);
         assertSame(SignatureType.valueOf("ADVANCED_SIGNATURE"), advancedSignature);
     }
 
     @BeforeEach
-    private void setUp() {
+    public void setUp() {
         noSignature = SignatureType.NO_SIGNATURE;
         review = SignatureType.REVIEW;
         simpleSignature = SignatureType.SIMPLE_SIGNATURE;

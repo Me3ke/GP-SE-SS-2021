@@ -1,11 +1,7 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.corporatedesign.CorporateDesignService;
-import gpse.example.domain.email.Category;
-import gpse.example.domain.email.EmailTemplate;
-import gpse.example.domain.email.EmailTemplateService;
-import gpse.example.domain.email.SMTPServerHelper;
-import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.email.*;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.protocol.Protocol;
 import gpse.example.domain.documents.*;
@@ -18,7 +14,6 @@ import gpse.example.web.JSONResponseObject;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +48,6 @@ public class DocumentController {
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final String TOKEN = "token";
-    private static final String ENVELOPE_URL = "http://localhost:8080/de/envelope/";
-    private static final String DOCUMENT_URL = "/document/";
     private static final String DRAFT_MESSAGE = "The document is still in draft state, it cannot be signed yet.";
     private static final String THIS_DOCUMENT_IS_CLOSED = "This document is closed";
     private final EnvelopeServiceImpl envelopeService;
@@ -63,11 +56,6 @@ public class DocumentController {
     private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
 
-    @Lazy
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
-    @Autowired
-    private EmailTemplateService emailTemplateService;
     @Autowired
     private CorporateDesignService corporateDesignService;
 
@@ -224,7 +212,7 @@ public class DocumentController {
     public DocumentGetResponse getArchivedDocuments(@PathVariable("userID") final String userID,
                                                     @PathVariable("documentID") final long documentID)
         throws DocumentNotFoundException {
-        Document document = documentService.getDocument(documentID);
+        final Document document = documentService.getDocument(documentID);
         if (document.getState() == DocumentState.ARCHIVED) {
             return new DocumentGetResponse(document, userService.getUser(document.getOwner()), userID);
         }
@@ -284,41 +272,66 @@ public class DocumentController {
      * @throws MessageGenerationException    if the message could not be generated.
      */
     private void informSignatories(final Document document, final long envelopeID)
-        throws TemplateNameNotFoundException, MessageGenerationException {
-        final EmailTemplate emailTemplate = emailTemplateService.findSystemTemplateByName("NewVersionTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setDocumentTitle(document.getDocumentTitle());
-        final SignatoryManagement signatoryManagement = document.getSignatoryManagement();
+        throws TemplateNameNotFoundException, MessageGenerationException, DocumentNotFoundException {
+        final EmailManagement emailManagement = new EmailManagement();
+
         if (document.isOrderRelevant()) {
-            for (final Signatory signatory : signatoryManagement.getSignatories()) {
-                if (signatory.isStatus() || signatoryManagement.getCurrentSignatory().equals(signatory)) {
-                    sendNewVersionMail(document, envelopeID, emailTemplate, container, signatory);
+            if (document.getPreviousVersion().isOrderRelevant()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
+                    .getSignatories()) {
+                    if (signatory.isStatus()) {
+                        emailManagement.sendNewVersion(document, envelopeID, signatory);
+                    }
+                }
+                emailManagement.sendNewVersion(document, envelopeID,
+                    document.getPreviousVersion().getSignatoryManagement().getCurrentSignatory());
+            } else {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
+                    .getSignatories()) {
+                    emailManagement.sendNewVersion(document, envelopeID, signatory);
                 }
             }
+            emailManagement.sendInvitation(document, envelopeID, document.getSignatoryManagement()
+                .getCurrentSignatory());
         } else {
-            for (final Signatory signatory : signatoryManagement.getSignatories()) {
-                sendNewVersionMail(document, envelopeID, emailTemplate, container, signatory);
+            if (document.getPreviousVersion().isOrderRelevant()) {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
+                    .getSignatories()) {
+                    if (signatory.isStatus()) {
+                        emailManagement.sendNewVersion(document, envelopeID, signatory);
+                    } else if (containsSignatory(document, signatory)) {
+                        emailManagement.sendInvitation(document, envelopeID, signatory);
+                    }
+                }
+                for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
+                    if (!containsSignatory(document.getPreviousVersion(), signatory)) {
+                        emailManagement.sendInvitation(document, envelopeID, signatory);
+                    }
+                }
+            } else {
+                for (final Signatory signatory : document.getPreviousVersion().getSignatoryManagement()
+                    .getSignatories()) {
+                    emailManagement.sendNewVersion(document, envelopeID, signatory);
+                }
+                for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
+                    if (!containsSignatory(document.getPreviousVersion(), signatory)) {
+                        emailManagement.sendInvitation(document, envelopeID, signatory);
+                    }
+                }
             }
         }
     }
 
-    private void sendNewVersionMail(final Document document, final long envelopeID, final EmailTemplate emailTemplate,
-                                    final TemplateDataContainer container, final Signatory signatory)
-        throws MessageGenerationException {
-        try {
-            userService.getUser(signatory.getEmail());
-            container.setLink(document.getLinkToDocumentView());
-            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
-        } catch (UsernameNotFoundException exception) {
-            final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
-                document.getId()));
-            container.setLink(ENVELOPE_URL + envelopeID + DOCUMENT_URL
-                + document.getId() + "/" + token.getToken());
-            smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
-                container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
+
+    private boolean containsSignatory(final Document document, final Signatory signatory) {
+        for (final Signatory prevSignatory : document.getSignatoryManagement().getSignatories()) {
+            if (prevSignatory.getEmail().equals(signatory.getEmail())) {
+                return true;
+            }
         }
+        return false;
     }
+
 
     @PutMapping("/token/{token}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/signSimple")
     public JSONResponseObject signSimpleAsGuest(final @PathVariable(TOKEN) String token,
@@ -339,7 +352,7 @@ public class DocumentController {
     private JSONResponseObject computeGuestSignatureRequest(final String token, final long documentID,
                                                             final SignatureType signatureType, final long envelopeID)
         throws DocumentNotFoundException, MessageGenerationException, TemplateNameNotFoundException {
-        Document document = documentService.getDocument(documentID);
+        final Document document = documentService.getDocument(documentID);
         final JSONResponseObject response = documentIsClosedOrInDraft(document);
         if (response.getStatus() != STATUS_CODE_OK) {
             return response;
@@ -431,8 +444,8 @@ public class DocumentController {
     }
 
 
-    private JSONResponseObject documentIsClosedOrInDraft(Document document) {
-        JSONResponseObject response = new JSONResponseObject();
+    private JSONResponseObject documentIsClosedOrInDraft(final Document document) {
+        final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
         if (document.isDraft()) {
             response.setStatus(STATUS_CODE_DOCUMENT_IS_IN_DRAFT_STATE);

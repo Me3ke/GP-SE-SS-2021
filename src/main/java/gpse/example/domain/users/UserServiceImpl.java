@@ -1,10 +1,6 @@
 package gpse.example.domain.users;
 
-import gpse.example.domain.email.Category;
-import gpse.example.domain.email.EmailTemplate;
-import gpse.example.domain.email.EmailTemplateService;
-import gpse.example.domain.email.SMTPServerHelper;
-import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.email.*;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.security.SecurityConstants;
@@ -14,7 +10,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,9 +27,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String HTTP_LOCALHOST = "http://localhost:";
-    @Value("${server.port}")
-    private int serverPort;
 
     /**
      * Standard ConfirmationTokenService.
@@ -50,19 +42,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailTemplateService emailTemplateService;
-
     @Lazy
     @Autowired
     private SecurityConstants securityConstants;
-
-    /**
-     * the smtpServerHelper Service for sending emails.
-     */
-    @Lazy
-    @Autowired
-    private SMTPServerHelper smtpServerHelper;
 
     @Autowired
     public UserServiceImpl(final UserRepository userRepository,
@@ -123,13 +105,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signUpUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
 
+        final EmailManagement emailManagement = new EmailManagement();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         securitySettingsRepository.save(user.getSecuritySettings());
         final User createdUser = userRepository.save(user);
         final ConfirmationToken token = new ConfirmationToken(user);
         final ConfirmationToken savedToken = confirmationTokenService.saveConfirmationToken(token);
-        sendConfirmationMail(createdUser, savedToken.getToken());
+        emailManagement.sendConfirmationMail(createdUser, savedToken.getToken());
     }
 
     @Override
@@ -144,51 +127,12 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * Sending and configurate the confirmation template.
-     *
-     * @param user  user to register
-     * @param token the confirmation token to verify email
-     * @throws MessageGenerationException    thrown if the email message could not be generated
-     * @throws TemplateNameNotFoundException thrown if the email template dont exist.
-     */
-    public void sendConfirmationMail(final User user, final String token) throws MessageGenerationException,
-        TemplateNameNotFoundException {
-
-        final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ConfirmationTemplate");
-        final TemplateDataContainer container = new TemplateDataContainer();
-        container.setFirstNameReciever(user.getFirstname());
-        container.setLastNameReciever(user.getLastname());
-        container.setLink(HTTP_LOCALHOST + serverPort + "/de/register/confirm/" + token);
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.SYSTEM, null);
-
-    }
-
     @Override
     public void validateUser(final User user) {
         user.setAccountNonLocked(true);
 
         securitySettingsRepository.save(user.getSecuritySettings());
         userRepository.save(user);
-    }
-
-    @Override
-    public void infoNewExtUser(final User user) throws MessageGenerationException, TemplateNameNotFoundException {
-        final List<User> userList = getUsers();
-        for (final User admin : userList) {
-            if (admin.getRoles().contains(ROLE_ADMIN)) {
-                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AdminValidationTemplate");
-                final TemplateDataContainer container = new TemplateDataContainer();
-                container.setFirstNameReciever(admin.getFirstname());
-                container.setLastNameReciever(admin.getLastname());
-                container.setFirstNameOwner(user.getFirstname());
-                container.setLastNameOwner(user.getLastname());
-                container.setRequestingEmail(user.getEmail());
-                container.setLink(HTTP_LOCALHOST + serverPort + "/de/adminSettings/userManagement");
-                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
-            }
-        }
-
     }
 
     @Override

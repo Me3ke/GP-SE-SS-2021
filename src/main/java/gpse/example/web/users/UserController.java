@@ -2,12 +2,7 @@ package gpse.example.web.users;
 
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import gpse.example.domain.email.Category;
-import gpse.example.domain.email.EmailTemplate;
-import gpse.example.domain.email.EmailTemplateService;
-import gpse.example.domain.email.MessageService;
-import gpse.example.domain.email.SMTPServerHelper;
-import gpse.example.domain.email.TemplateDataContainer;
+import gpse.example.domain.email.*;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.security.JwtAuthorizationFilter;
@@ -26,7 +21,6 @@ import gpse.example.web.JSONResponseObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,14 +53,11 @@ public class UserController {
     private static final String USERID = "userID";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String USER_NOT_FOUND = "User not Found";
-    @Value("${server.port}")
-    private int serverPort;
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
     private final MessageService messageService;
     private final EmailTemplateService emailTemplateService;
-    private final SMTPServerHelper smtpServerHelper;
     private final DomainSetterService domainSetterService;
 
     @Lazy
@@ -86,21 +77,18 @@ public class UserController {
      * @param messageService            the messageService to access the message table
      * @param emailTemplateService      used to find the basic template by name
      * @param resetPasswordTokenService Service for the resetPasswordToken
-     * @param smtpServerHelper          smtpserverhelper to send emails
      * @param domainSetterService       Service to store the domain settings
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
                           final MessageService messageService, final EmailTemplateService emailTemplateService,
                           final ResetPasswordTokenService resetPasswordTokenService,
-                          final SMTPServerHelper smtpServerHelper,
                           final DomainSetterService domainSetterService) {
         userService = service;
         confirmationTokenService = confService;
         this.messageService = messageService;
         this.emailTemplateService = emailTemplateService;
         this.resetPasswordTokenService = resetPasswordTokenService;
-        this.smtpServerHelper = smtpServerHelper;
         this.domainSetterService = domainSetterService;
     }
 
@@ -163,6 +151,7 @@ public class UserController {
     @GetMapping("/newUser/register")
     public JSONResponseObject confirmMail(final @RequestParam("token") String token) {
 
+        final EmailManagement emailManagement = new EmailManagement();
         final JSONResponseObject response = new JSONResponseObject();
 
         final Optional<ConfirmationToken> optionalConfirmationToken
@@ -185,7 +174,7 @@ public class UserController {
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
                 try {
-                    userService.infoNewExtUser(user);
+                    emailManagement.sendAdminInformation(user);
                     response.setMessage(ADMINVALIDATION_REQUIRED + true);
                 } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
                     response.setMessage(ADMINVALIDATION_REQUIRED + true + "\n"
@@ -390,18 +379,13 @@ public class UserController {
     @GetMapping("/user/{userId}/password/reset")
     public JSONResponseObject sendResetPasswordEmail(@PathVariable("userId") final String userId) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
+        final EmailManagement emailManagement = new EmailManagement();
         try {
             final User user = userService.getUser(userId);
             final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
             final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
             try {
-                final TemplateDataContainer emailContainer = new TemplateDataContainer();
-                final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ResetPasswordTemplate");
-                emailContainer.setFirstNameReciever(user.getFirstname());
-                emailContainer.setLastNameReciever(user.getLastname());
-                emailContainer.setLink("http://localhost:" + serverPort + "/de/login/reset/" + savedToken.getToken());
-                smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
-                    emailContainer, Category.SYSTEM, null);
+                emailManagement.sendResetPassword(user, savedToken);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 return jsonResponseObject;
             } catch (MessageGenerationException | TemplateNameNotFoundException mge) {
@@ -440,15 +424,14 @@ public class UserController {
 
                         if (resetPasswordTokenService.isExpired(optionalResetPasswordToken.get())) {
                             jsonResponseObject.setStatus(STATUS_CODE_TOKEN_EXPIRED);
-                            return jsonResponseObject;
                         } else {
                             user.setPassword(passwordEncoder.encode(password));
                 userService.saveUser(user);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
-                return jsonResponseObject;
-            }
+                        }
+                        return jsonResponseObject;
 
-        } catch (UsernameNotFoundException unfe) {
+                    } catch (UsernameNotFoundException unfe) {
             jsonResponseObject.setStatus(STATUS_CODE_USER_DOESNT_EXIST);
             return jsonResponseObject;
         }

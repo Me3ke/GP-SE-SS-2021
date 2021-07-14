@@ -24,8 +24,8 @@ public class EmailController {
     private static final int TOKEN_SUBSTRING = 6;
     private static final String SUCCESS_MESSAGE = "Success";
     private static final String ADMIN_VALIDATION_REQUIRED = "You are not an admin";
-
     private static final String USER_ID = "userId";
+    private static final String TOKEN = "token";
 
     @Autowired
     private EmailTemplateService emailTemplateService;
@@ -105,7 +105,7 @@ public class EmailController {
      */
 
     @GetMapping("/email/settings/trustedDomain")
-    public JSONResponseObject getTrustedDomainSettings(@RequestParam("token") final String token) {
+    public JSONResponseObject getTrustedDomainSettings(@RequestParam(TOKEN) final String token) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (userService.checkIfAdmin(token.substring(TOKEN_SUBSTRING))) {
             jsonResponseObject.setStatus(STATUS_CODE_OK);
@@ -124,7 +124,7 @@ public class EmailController {
      * @return if the request was successful
      */
     @PutMapping("/email/settings/trustedDomain")
-    public JSONResponseObject updateTrustedDomain(@RequestParam("token") final String token,
+    public JSONResponseObject updateTrustedDomain(@RequestParam(TOKEN) final String token,
                                                   @RequestParam("domain") final String domain) {
 
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
@@ -147,7 +147,7 @@ public class EmailController {
      * @return the domain settings
      */
     @GetMapping("email/settings")
-    public DomainSettingsGetResponse getDomainSettings(@RequestParam("token") final String token) {
+    public DomainSettingsGetResponse getDomainSettings(@RequestParam(TOKEN) final String token) {
 
         if (userService.checkIfAdmin(token.substring(TOKEN_SUBSTRING))) {
             final DomainSetter domainSetter = domainSetterService.getDomainSettings().get(0);
@@ -166,7 +166,7 @@ public class EmailController {
      * @return if the request was successful or not
      */
     @PutMapping("email/settings")
-    public JSONResponseObject updateSMTPSettings(@RequestParam("token") final String token,
+    public JSONResponseObject updateSMTPSettings(@RequestParam(TOKEN) final String token,
                                                  @RequestBody final DomainSettingsPutRequest domainSettingsPutRequest) {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (userService.checkIfAdmin(token.substring(TOKEN_SUBSTRING))) {
