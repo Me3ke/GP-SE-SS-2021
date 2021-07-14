@@ -15,7 +15,7 @@
             </b-row>
         </b-list-group-item>
 
-        <b-row align-h="end" v-if="!editHistory">
+        <b-row align-h="end" v-if="!editHistory&& !(this.state === 'ARCHIVED')">
             <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editHistory = true">
                 <b-icon icon="pencil-fill"></b-icon>
                 {{$t('Settings.DocumentSettings.edit')}}
@@ -33,7 +33,8 @@
 export default {
     name: "HistorySettings",
     props: {
-        showHistory: Boolean
+        showHistory: Boolean,
+        state: String,
     },
     data() {
         return {

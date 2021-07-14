@@ -33,7 +33,7 @@ public class SignatorySetting {
         this.remind = !(signatory.getReminder() == -1);
         this.reminderTiming = signatory.getReminder();
         if (signatory.isStatus()) {
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             this.signedOn = signatory.getSignedOn().format(formatter);
         } else {
             this.signedOn = "";

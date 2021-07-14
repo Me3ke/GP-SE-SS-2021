@@ -9,7 +9,7 @@
                 {{$t('Settings.DocumentSettings.noReaders')}}
             </b-list-group-item>
 
-            <b-row align-h="end" >
+            <b-row align-h="end" v-if="!(this.state === 'ARCHIVED')">
                 <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true;">
                     <b-icon icon="pencil-fill"></b-icon>
                     {{$t('Settings.DocumentSettings.edit')}}
@@ -58,7 +58,8 @@ import SignatoryListItem from "@/main/vue/components/envelopeSettings/SignatoryL
 export default {
     name: "ReaderSettings",
     props: {
-        readers: Array
+        readers: Array,
+        state: String
     },
     components: {
         SignatoryListItem

@@ -8,7 +8,7 @@
 
             <EndDateSettings
                 @updateEndDate="updateEndDate"
-                :endDate="this.endDate"></EndDateSettings>
+                :endDate="this.endDate" :state="this.document.state"></EndDateSettings>
         </div>
 
         <!-- Reader -->
@@ -19,7 +19,7 @@
 
             <ReaderSettings
                 @updateReader="updateReader"
-                :readers="readers"></ReaderSettings>
+                :readers="readers" :state="this.document.state"></ReaderSettings>
         </div>
 
         <!-- Signatories -->
@@ -31,7 +31,7 @@
             <SignatorySettings
                 @updateSignatories="updateSignatories"
                 :orderRelevant="orderRelevant"
-                :signatories="signatories"
+                :signatories="signatories" :state="this.document.state"
                 ></SignatorySettings>
         </div>
 
@@ -41,7 +41,7 @@
                 {{$t('UploadDoc.showHistoryTitle')}}
             </div>
 
-            <HistorySettings @updateHistory="updateHistory" :showHistory="showHistory"></HistorySettings>
+            <HistorySettings @updateHistory="updateHistory" :state="this.document.state" :showHistory="showHistory"></HistorySettings>
         </div>
 
     </div>

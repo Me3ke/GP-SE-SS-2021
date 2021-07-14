@@ -13,7 +13,7 @@
                 {{$t('Settings.DocumentSettings.noSignatories')}}
             </b-list-group-item>
 
-            <b-row align-h="end">
+            <b-row align-h="end" v-if="!(this.state === 'ARCHIVED')">
                 <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editSignatories = true;">
                     <b-icon icon="pencil-fill"></b-icon>
                     {{$t('Settings.DocumentSettings.edit')}}
@@ -101,6 +101,7 @@ export default {
     props: {
         signatories: Array,
         orderRelevant: Boolean,
+        state: String,
     },
     components: {draggable, SignatoryListItem},
     data() {
