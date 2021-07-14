@@ -27,8 +27,8 @@ public interface UserService extends UserDetailsService {
 
     List<User> getAllUsers();
 
-    void signUpUser(User user, EmailManagement emailManagement) throws MessageGenerationException, TemplateNameNotFoundException, MessagingException,
-        InvocationTargetException;
+    void signUpUser(User user, EmailManagement emailManagement) throws MessageGenerationException,
+        TemplateNameNotFoundException, MessagingException, InvocationTargetException;
 
     void confirmUser(ConfirmationToken confirmationToken);
 

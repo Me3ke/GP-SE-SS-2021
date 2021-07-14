@@ -23,10 +23,17 @@
                 <b-row>
                     <b-col>
 
-                        <select style="margin-top: .5em; background-color: var(--whitesmoke); color: var(--dark-grey)"
-                                v-model="selected" @change="changedValue(selected)">
-                            <option v-for="(content, index) in emailTemplate" :key="index"
-                                    v-bind:value="content"> {{ content.name }}
+                        <select
+                            style="margin-top: .5em; background-color: var(--whitesmoke); color: var(--dark-grey)"
+                            v-model="selected"
+                            @change="changedValue(selected)"
+                        >
+                            <option
+                                v-for="(content, index) in emailTemplate"
+                                :key="index"
+                                v-bind:value="content"
+                            >
+                                {{ content.name }}
                             </option>
                         </select>
                     </b-col>
@@ -34,7 +41,6 @@
                     <b-col>
                         <button
                             type="button"
-                            v-b-modal="'modal-editor'"
                             class="mt-1 light-btn"
                             v-if="selected.system === false"
                             @click="showEditTemplate"
@@ -51,59 +57,7 @@
                 <hr>
                 <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
             </b-container>
-
-            <!--- Edit Template --->
-            <b-modal
-                class="model-class2"
-                id="modal-editor"
-                ref="modal-editorRef"
-                :title="$t('EmailTemplate.editTemplateTitle') + selected.name"
-                centered scrollable
-                hide-footer ok-only
-                style="margin-top: 2em;"
-            >
-                <b-container style="padding-right: 0; padding-left: 0;">
-                    <EditEmailTemplate :temp="selected" @saveEditTemplate="saveEdit"></EditEmailTemplate>
-                </b-container>
-
-            </b-modal>
-
-
-            <!--- Create new Template createNewEmailTemplate --->
-            <b-modal
-                class="model-class2"
-                :title="$t('EmailTemplate.createNewTemplate')+''"
-                hide-footer ok-only centered scrollable
-                ref="new-Template"
-            >
-                <b-container>
-                    <CreateEmailTemplate @newTemp="saveNewTemplate" :edit="false"></CreateEmailTemplate>
-                </b-container>
-            </b-modal>
-
-            <!--- Delete Template --->
-            <b-modal
-                class="model-class2"
-                :title="$t('EmailTemplate.templateDelete')+''"
-                hide-footer ok-only centered
-                ref="delete-Template"
-            >
-                <b-container style="overflow:scroll; overflow-x:hidden;">
-                    <b-container v-for="(template, index) in emailTemplate" :key="index"
-                                 style="margin-bottom: 1em">
-
-                        <b-row style="padding-bottom: 1px">
-                            <b-col>
-                                <b-icon v-if="index >= 1" class="icon-hover" icon="trash"
-                                        @click="deleteTemplate(template); fetchTemplate()"></b-icon>
-                            </b-col>
-                            <b-col cols="10">{{ template.name }}</b-col>
-                        </b-row>
-                    </b-container>
-                </b-container>
-            </b-modal>
         </div>
-
 
         <div v-else-if="page !== 0">
 
@@ -227,7 +181,6 @@ export default {
             if (emittedValue.hideModal) {
                 this.page = 0
                 this.$forceUpdate()
-
                 this.selected = this.emailTemplate[0] // setting the initial value after closing the modal
             }
         },
@@ -235,11 +188,8 @@ export default {
 
         // Create new Template
         showNewCreateTemplate() {
-            //this.$refs['new-Template'].show()
             this.page = 1
             this.$emit('pages', this.page)
-
-
         },
 
         async saveNewTemplate(newTemplate) {
@@ -281,19 +231,9 @@ export default {
 
         },
 
-        showModal() {
-            this.$refs['my-modal2'].show()
-        },
-        hideModal() {
-            this.$refs['my-modal2'].hide()
-        },
-
         goToStartPage() {
             this.page = 0
             this.$emit('pages', this.page)
-
-            //this.$emit('pages', this.page)
-
         }
     },
 
@@ -306,6 +246,8 @@ export default {
         this.selectedTemplateObject = this.emailTemplate[0]
 
         this.page = 0
+        this.$emit('saveEmailTemplate', this.selectedTemplateObject)
+
 
     },
 

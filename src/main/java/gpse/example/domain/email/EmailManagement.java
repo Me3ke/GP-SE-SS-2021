@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -29,6 +29,7 @@ public class EmailManagement {
     private static final String DOCUMENT_URL = "/document/";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String HTTP_LOCALHOST = "http://localhost:";
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final String envelopeUrl = HTTP_LOCALHOST + this.serverPort + "/de/envelope/";
     @Value("${server.port}")
     private int serverPort;
@@ -182,7 +183,7 @@ public class EmailManagement {
 
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
-        container.setEndDate(document.getEndDate().toString());
+        container.setEndDate(document.getEndDate().format(formatter));
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink(document.getLinkToDocumentView());
         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
@@ -253,7 +254,7 @@ public class EmailManagement {
         container.setLastNameOwner(owner.getLastname());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setEnvelopeName(envelope.getName());
-        container.setEndDate(document.getEndDate().toString());
+        container.setEndDate(document.getEndDate().format(formatter));
         container.setLink(document.getLinkToDocumentView());
         Category category;
         if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)
