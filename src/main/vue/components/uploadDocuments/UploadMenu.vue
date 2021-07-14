@@ -175,7 +175,7 @@ export default {
 }
 
 .modal-content {
-    max-height: 50em;
+    max-height: 75vh;
     overflow-y: scroll;
     background-color: var(--whitesmoke);
 }
