@@ -119,22 +119,88 @@ export default {
             }
         },
         routeToProfile() {
-            this.$router.push('/' + this.$i18n.locale + '/user')
+            // navigates to settings/user page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'user'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
-        routeToAddressBook(){
-            this.$router.push('/' + this.$i18n.locale + '/addressBook')
+        routeToAddressBook() {
+            // navigates to adressbook page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'addressBook'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToHelp() {
-            this.$router.push('/' + this.$i18n.locale + '/help')
+            // navigates to help page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'help'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToCorporate() {
-            this.$router.push('/' + this.$i18n.locale + '/adminSettings/corporate')
+            // navigates to corporate design page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'corporate'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToUserManage() {
-            this.$router.push('/' + this.$i18n.locale + '/adminSettings/userManagement')
+            // navigates to user management page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'userManagement'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         routeToTrustedDomain() {
-          this.$router.push('/' + this.$i18n.locale + '/adminSettings/trustedDomain')
+            // navigates to trustedDomain page, passes msg as selectedMsg as prop to MessagePage
+            this.$router.push({
+                name: 'trustedDomain'
+            }).catch(e => {
+                // Avoids displaying of navigation duplicate error that arises due to the :lang
+                if (
+                    e.name !== 'NavigationDuplicated' &&
+                    !e.message.includes('Avoided redundant navigation to current location')
+                ) {
+                    console.log(e);
+                }
+            })
         },
         toggleTheme(mode) {
             //changes mode

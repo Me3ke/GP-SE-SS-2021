@@ -361,7 +361,6 @@ export default {
                 sig.updateString(docId);
                 const signature = sig.sign();// decrypting hashed docId with registered public key
                 var sig2 = new KJUR.crypto.Signature({'alg': 'SHA256withRSA'});
-                console.log(this.publicKey)
                 sig2.init(this.publicKey);
                 sig2.updateString(docId);
                 const isValid = sig2.verify(signature);

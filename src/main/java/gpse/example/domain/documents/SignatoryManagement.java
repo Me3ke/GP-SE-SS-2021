@@ -17,6 +17,7 @@ public class SignatoryManagement {
      * The id to identify the signatoryManagement; Is the same as the document id.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     protected long id;
 
@@ -30,8 +31,7 @@ public class SignatoryManagement {
     )
     protected List<Signatory> signatories;
 
-    public SignatoryManagement(final long id, final List<Signatory> signatories) {
-        this.id = id;
+    public SignatoryManagement( final List<Signatory> signatories) {
         this.signatories = signatories;
     }
 

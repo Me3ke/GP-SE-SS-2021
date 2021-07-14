@@ -42,7 +42,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col>
-                            <UploadButton></UploadButton>
+                            <UploadButton @refreshOverview="refreshPage"></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -94,7 +94,7 @@
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeCard :envelope=envelope></EnvelopeCard>
+                            <EnvelopeCard :envelope=envelope ></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
                             <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"
@@ -172,10 +172,14 @@ export default {
 
             // needed for WelcomePopUp, so it does not always appear and then instantly disappear
             // because data has not been completely fetched yet
-            loaded: false
+            loaded: false,
         }
     },
     methods: {
+        // Refreshing after a document was uploaded
+        async refreshPage() {
+          await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        },
         updateSort: function(sortFirst, sortSecond) {
             this.filter.sortFirst = sortFirst;
             this.filter.sortSecond = sortSecond;
