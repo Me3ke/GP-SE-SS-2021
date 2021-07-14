@@ -152,9 +152,6 @@ export default {
     },
     methods: {
         addSignatory() {
-            console.log(this.signatoryInput)
-            console.log(this.signatoryInputs)
-
             for(let i = 0; i < this.signatoryInput.length; i++) {
                 if(this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
                     console.log(this.signatoryInput[i]) // TODO Error
@@ -166,25 +163,12 @@ export default {
                     this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
                 }
             }
-
-
-
-            /*for (var i = 0; i < this.signatoryInput.length; i++) {
-                console.log(this.signatoryInputs.includes(this.signatoryInput[i]))
-                if (this.signatoryInputs.includes(this.signatoryInput[i])) {
-                    // TODO: Error
-                } else {
-                    this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
-                }
-            }*/
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
-
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
-            console.log(results)
 
             for(let i = 0; i < results.length; i++) {
                 if(this.allUser.some(user => user.email === results[i].email)) {
@@ -214,10 +198,6 @@ export default {
 
         async fetchAllUser() {
             await this.$store.dispatch('userManagement/fetchAllUsers')
-        },
-
-        getNewRegisteredUser(){
-
         }
     },
      beforeMount() {
@@ -227,11 +207,7 @@ export default {
             this.signatoryInputs = this.signatories;
 
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
-
-
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
-            console.log(results)
-
             for(let i = 0; i < results.length; i++) {
                 if(this.allUser.some(user => user.email === results[i].email)) {
                     this.noticeNewSignatories = true
@@ -242,9 +218,6 @@ export default {
             }
             this.$emit('noticeNewSignatories', this.noticeNewSignatories)
             }
-    },
-    beforeDestroy() {
-        console.log('destroy')
     }
 }
 </script>
