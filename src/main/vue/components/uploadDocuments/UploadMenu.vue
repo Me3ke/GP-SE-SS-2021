@@ -3,7 +3,7 @@
         <button class="elsa-blue-btn" @click="show = true">
             <h4>
                 <b-icon icon="plus-circle"></b-icon>
-                {{$t('UploadDoc.upload')}}
+                {{ $t('UploadDoc.upload') }}
             </h4>
         </button>
         <div v-if="show">
@@ -13,10 +13,12 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 v-if="page === 1" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
-                                    <h5 v-if="page === 2" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
-                                    <h5 v-if="page === 3" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
-                                    <h5 v-if="page === 4" class="modal-title">{{$t('UploadDoc.menuTitle')}}</h5>
+                                    <h5 v-if="page === 1" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 2" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 3" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 4" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+                                    <h5 v-if="page === 5" class="modal-title">{{ $t('UploadDoc.menuTitle') }}</h5>
+
                                     <h5>
                                         <b-icon type="button" icon="x-square" @click="show = false; close()">
                                         </b-icon>
@@ -24,24 +26,55 @@
                                 </div>
                                 <!-- Page 1 Choose Document -->
                                 <div v-if="page === 1">
-                                    <FileInput @updateFiles="updateFiles" @close="show = false" @nextPage="page = page + 1"></FileInput>
+                                    <FileInput @updateFiles="updateFiles" @close="show = false"
+                                               @nextPage="page = page + 1"></FileInput>
                                 </div>
 
                                 <!-- Page 2 New or old envelope? -->
                                 <div v-if="page === 2">
-                                    <SelectEnvelope @updateEnvelope="updateEnvelope" @nextPage="page = page + 1" @previousPage="page = page -1"></SelectEnvelope>
+                                    <SelectEnvelope @updateEnvelope="updateEnvelope" @nextPage="page = page + 1"
+                                                    @previousPage="page = page -1"></SelectEnvelope>
                                 </div>
 
                                 <!-- Page 3 Add signatories/readers-->
                                 <div v-if="page === 3">
-                                    <UploadSettings @updateSettings="updateSettings" @nextPage="page = page + 1" @previousPage="page = page - 1"></UploadSettings>
+                                    <UploadSettings @updateSettings="updateSettings" @nextPage="page = page + 1"
+                                                    @previousPage="page = page - 1"></UploadSettings>
                                 </div>
 
-                                <!-- Page 4 Upload -->
+                                <!-- Page 4 Email Templates-->
                                 <div v-if="page === 4">
                                     <div class="modal-body">
+                                        <div>
+                                            <p>Hier können Sie sich ein Email Template aussuchen, welches an die
+                                                kürzlich neu eingefügten (registrierten) Signatories verschickt werden.
+                                            </p>
+                                            <EmailTemplate @saveEmailTemplate="setEmailTemplate"
+                                                           @pages="checkInnerPages"></EmailTemplate>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" v-if="showFooter">
+                                        <b-row align-h="end">
+                                            <b-col cols="auto">
+                                                <button class="light-btn" @click="page = page - 1;">
+                                                    {{ $t('UploadDoc.back') }}
+                                                </button>
+                                            </b-col>
+                                            <b-col cols="auto">
+                                                <button class="elsa-blue-btn" @click="page = page + 1">
+                                                    {{ $t('UploadDoc.upload') }}
+                                                </button>
+                                            </b-col>
+                                        </b-row>
+                                    </div>
+                                </div>
+
+                                <!-- Page 5 Upload -->
+                                <div v-if="page === 5">
+                                    <div class="modal-body">
                                         <div v-if="!this.uploadingDocument">
-                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope" :files="files"></SettingsPreview>
+                                            <SettingsPreview :settings="settings" :selectedEnvelope="selectedEnvelope"
+                                                             :files="files"></SettingsPreview>
                                         </div>
 
                                         <div v-if="this.uploadingDocument">
@@ -53,12 +86,12 @@
                                         <b-row align-h="end">
                                             <b-col cols="auto">
                                                 <button class="light-btn" @click="page = page - 1;">
-                                                    {{$t('UploadDoc.back')}}
+                                                    {{ $t('UploadDoc.back') }}
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
                                                 <button class="elsa-blue-btn" @click="upload()">
-                                                    {{$t('UploadDoc.upload')}}
+                                                    {{ $t('UploadDoc.upload') }}
                                                 </button>
                                             </b-col>
                                         </b-row>
@@ -79,12 +112,14 @@ import SelectEnvelope from "@/main/vue/components/uploadDocuments/SelectEnvelope
 import FileInput from "@/main/vue/components/uploadDocuments/FileInput";
 import UploadSettings from "@/main/vue/components/uploadDocuments/UploadSettings";
 import SettingsPreview from "@/main/vue/components/uploadDocuments/SettingsPreview";
+import EmailTemplate from "@/main/vue/components/EmailTemplate";
+
 export default {
     name: 'UploadButton',
     props: {
         text: String
     },
-    components: {SelectEnvelope, FileInput, UploadSettings, SettingsPreview},
+    components: {EmailTemplate, SelectEnvelope, FileInput, UploadSettings, SettingsPreview},
     data() {
         return {
             show: false,
@@ -98,10 +133,12 @@ export default {
                 endDate: null,
                 orderRelevant: true,
                 showHistory: true,
+                emailTemplateHtml: null // for selecting the email template
                 // TODO: processStart: Boolean
             },
             files: [],
-            uploadingDocument: false
+            uploadingDocument: false,
+            showFooter: true
         };
     },
     methods: {
@@ -112,8 +149,8 @@ export default {
             this.selectedEnvelope = envelope;
         },
         updateSettings: function (settings) {
-          this.settings = settings;
-          console.log(this.settings)
+            this.settings = settings;
+            console.log(this.settings)
         },
         close() {
             this.page = 1;
@@ -127,8 +164,12 @@ export default {
             if (!(this.selectedEnvelope.id === null)) {
                 this.uploadingDocument = true;
                 let i;
-                for(i = 0; i < this.files.length; i++) {
-                    await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.selectedEnvelope.id, "file":this.files[i], "settings": this.settings});
+                for (i = 0; i < this.files.length; i++) {
+                    await this.$store.dispatch('documentUpload/uploadDocument', {
+                        "envID": this.selectedEnvelope.id,
+                        "file": this.files[i],
+                        "settings": this.settings
+                    });
                 }
                 this.$emit("refreshOverview")
                 this.close();
@@ -136,23 +177,41 @@ export default {
                 this.uploadingDocument = true;
                 await this.$store.dispatch('documentUpload/createEnvelope', {"name": this.selectedEnvelope.name})
                 let i;
-                for(i = 0; i < this.files.length; i++) {
-                await this.$store.dispatch('documentUpload/uploadDocument', {"envID": this.getCreatedEnvelope.id, "file":this.files[i], "settings": this.settings});
+                for (i = 0; i < this.files.length; i++) {
+                    await this.$store.dispatch('documentUpload/uploadDocument', {
+                        "envID": this.getCreatedEnvelope.id,
+                        "file": this.files[i],
+                        "settings": this.settings
+                    });
                 }
                 this.$emit("refreshOverview")
                 this.close();
             }
+        },
+
+        checkInnerPages(innerPage) {
+            console.log('--------------')
+            console.log(innerPage)
+            console.log('--------------')
+
+            this.showFooter = innerPage === 0;
+        },
+
+        setEmailTemplate(temp) {
+            this.settings.emailTemplateHtml = temp
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-    },
-    computed: {
-        ...mapGetters({
-            envelopes: 'envelopes/getEnvelopes',
-            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
-        })
-    }
+        created() {
+            this.$store.dispatch('envelopes/fetchEnvelopes', {})
+            this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+
+        },
+        computed: {
+            ...mapGetters({
+                envelopes: 'envelopes/getEnvelopes',
+                getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
+            })
+        }
 }
 </script>
 
