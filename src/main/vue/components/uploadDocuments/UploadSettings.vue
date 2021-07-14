@@ -59,7 +59,7 @@
             <h6 style="margin-top: 1em">{{$t('UploadDoc.showHistoryTitle')}}</h6>
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="showHistory" v-model="showHistory">
-                <label class="custom-control-label" for="showHistory"> {{$t('UploadDoc.showHistory')}} </label>
+                <label class="custom-control-label" style="cursor: pointer" for="showHistory"> {{$t('UploadDoc.showHistory')}} </label>
             </div>
         </div>
         <div class="modal-footer">
@@ -243,4 +243,15 @@ export default {
 .slide-leave-to {
     transform: translate(-100%, 0);
 }
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
 </style>

@@ -40,11 +40,11 @@
             <b-row align-h="center" style="margin-bottom: 1em">
                 <b-col class="custom-control custom-switch" style="margin-left:1em">
                     <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch" v-model="orderRelevantInput">
-                    <label class="custom-control-label" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
+                    <label class="custom-control-label" style="cursor:pointer;" for="orderRelevantSwitch" > {{$t('Settings.DocumentSettings.orderRelevant')}} </label>
                 </b-col>
                 <b-col>
                     <b-row>
-                        <b-form-checkbox v-model="remindInput" name="some-radios">
+                        <b-form-checkbox v-model="remindInput" style="cursor: pointer;" name="some-radios">
                             {{$t('UploadDoc.remindSignatories')}}
                         </b-form-checkbox>
                     </b-row>
@@ -63,7 +63,7 @@
                             <!-- Email Address -->
                             <h6>
                                 <b-col cols="auto">
-                                    <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)"></b-icon>
+                                    <b-icon class="icon-hover" icon="trash" @click="deleteSignatory(signatory)" style="cursor:pointer;"></b-icon>
                                     {{signatory.email}}
                                 </b-col>
                             </h6>
@@ -71,12 +71,12 @@
                                 <b-row align-h="end">
                                     <!-- signature type -->
                                     <b-col cols="auto">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.signatureType">
+                                        <select style="cursor:pointer;" class="form-control form-control-sm" id="exampleFormControlSelect1" v-model="signatory.signatureType">
                                             <option v-for="signatureType in signatureTypes" :key="signatureType.value" :value="signatureType.value"> {{$t(signatureType.name)}} </option>
                                         </select>
                                     </b-col>
                                     <b-col cols="auto">
-                                        <b-icon icon="list" class="icon"></b-icon>
+                                        <b-icon style="cursor:pointer;" icon="list" class="icon"></b-icon>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -211,5 +211,14 @@ export default {
     background-color: var(--sign-doc-hover);
     color: var(--red);
     border-color: var(--red);
+}
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }
 </style>

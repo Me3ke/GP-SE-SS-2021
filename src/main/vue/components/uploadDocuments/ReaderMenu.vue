@@ -57,7 +57,7 @@
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
-                                <b-icon class="icon-hover" icon="trash" @click="deleteReader(reader)"></b-icon>
+                                <b-icon class="icon-hover" style="cursor: pointer;" icon="trash" @click="deleteReader(reader)"></b-icon>
                                 {{ reader.email }}
                             </b-col>
                         </h6>

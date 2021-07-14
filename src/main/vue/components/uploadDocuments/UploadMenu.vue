@@ -207,6 +207,15 @@ export default {
     color: var(--dark-grey);
     border-radius: 0.33vw;
 }
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
 
 
 </style>

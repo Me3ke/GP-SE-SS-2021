@@ -56,7 +56,7 @@
                 <b-col class="custom-control custom-switch" style="margin-left:1em">
                     <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch"
                            v-model="orderRelevantInput">
-                    <label class="custom-control-label" for="orderRelevantSwitch">
+                    <label class="custom-control-label" style="cursor: pointer;" for="orderRelevantSwitch">
                         {{ $t('Settings.DocumentSettings.orderRelevant') }} </label>
                 </b-col>
             </b-row>
@@ -71,7 +71,7 @@
                             <h6>
                                 <b-col cols="auto">
                                     <b-icon class="icon-hover" icon="trash"
-                                            @click="deleteSignatory(signatory)"></b-icon>
+                                            @click="deleteSignatory(signatory)" style="cursor: pointer;"></b-icon>
                                     {{ signatory.email }}
                                 </b-col>
                             </h6>
@@ -79,7 +79,7 @@
                                 <b-row align-h="end">
                                     <!-- signature type -->
                                     <b-col cols="auto">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1"
+                                        <select style="cursor:pointer;" class="form-control form-control-sm" id="exampleFormControlSelect1"
                                                 v-model="signatory.type">
                                             <option v-for="signatureType in signatureTypes" :key="signatureType.value"
                                                     :value="signatureType.value"> {{ $t(signatureType.name) }}
@@ -87,7 +87,7 @@
                                         </select>
                                     </b-col>
                                     <b-col cols="auto">
-                                        <b-icon icon="list" class="icon"></b-icon>
+                                        <b-icon icon="list" style="cursor: pointer;" class="icon"></b-icon>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -142,7 +142,7 @@ export default {
     },
     methods: {
         addSignatory() {
-            for (var i = 0; i < this.signatoryInput.length; i++) {
+            for (let i = 0; i < this.signatoryInput.length; i++) {
                 if (this.signatoryInputs.includes(this.signatoryInput[i])) {
                     // TODO: Error
                 } else {
@@ -230,6 +230,16 @@ export default {
 
 .form-control::-ms-input-placeholder {
     color: var(--shadow-grey);
+}
+
+.icon-hover:hover {
+    fill: var(--light-grey);
+    transition-duration: 0.4s;
+}
+.icon, .icon-hover {
+    fill: var(--dark-grey);
+    margin-left: 0.2em;
+    margin-right: 0.2em;
 }
 
 /* Settings for differently sized screens */

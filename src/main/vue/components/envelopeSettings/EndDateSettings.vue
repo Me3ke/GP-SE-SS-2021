@@ -31,8 +31,8 @@
         </b-row>
 
         <b-row align-h="end" v-if="this.editDate">
-            <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em" class="light-btn" @click="cancel()"> {{$t('DownloadDoc.cancel')}} </button>
-            <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em" class="elsa-blue-btn" @click="saveDate()"> {{$t('Settings.DocumentSettings.save')}} </button>
+            <button style="width:8em; margin-right:0.5em; margin-bottom: 0.5em; cursor: pointer;" class="light-btn" @click="cancel()"> {{$t('DownloadDoc.cancel')}} </button>
+            <button style="width:8em; margin-right:1.5em; margin-bottom: 0.5em; cursor: pointer;" class="elsa-blue-btn" @click="saveDate()"> {{$t('Settings.DocumentSettings.save')}} </button>
         </b-row>
     </div>
 </template>
@@ -104,5 +104,15 @@ export default {
 
 .btn {
     color: var(--dark-grey);
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }
 </style>

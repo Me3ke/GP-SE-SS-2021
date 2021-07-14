@@ -6,7 +6,7 @@
 
         <b-row no-gutters>
             <b-col cols="11">
-                <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
+                <EnvelopeBox style="cursor: pointer;" :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
                     <div v-if="this.envelope.owner.email === this.$store.state.auth.username && showProgress">
                         <EnvelopeProgressBar

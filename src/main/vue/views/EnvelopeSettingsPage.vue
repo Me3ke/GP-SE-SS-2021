@@ -8,7 +8,7 @@
             <div style="margin-top:15vh">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="allEditAllSwitch" v-model="editAllInput" @click="changeEditAll()">
-                    <label class="custom-control-label" for="allEditAllSwitch"> {{$t('Settings.DocumentSettings.editAll')}} </label>
+                    <label class="custom-control-label" for="allEditAllSwitch" style="cursor:pointer;"> {{$t('Settings.DocumentSettings.editAll')}} </label>
                 </div>
             </div>
 
@@ -67,13 +67,17 @@
                                         <div class="modal-footer">
                                             <b-row align-h="end">
                                                 <b-col cols="auto">
-                                                    <button class="light-btn" @click="selectedIdInput = null; showWarning = false;">
-                                                        {{$t('DownloadDoc.cancel')}}
+                                                    <button class="light-btn" @click="selectedIdInput = null; showWarning = false; editAllInput = false">
+                                                        <h5>
+                                                            {{$t('DownloadDoc.cancel')}}
+                                                        </h5>
                                                     </button>
                                                 </b-col>
                                                 <b-col cols="auto">
                                                     <button class="elsa-blue-btn" @click="confirmSelectedID()">
-                                                        {{$t('Settings.DocumentSettings.confirm')}}
+                                                        <h5>
+                                                            {{$t('Settings.DocumentSettings.confirm')}}
+                                                        </h5>
                                                     </button>
                                                 </b-col>
                                             </b-row>
@@ -258,7 +262,7 @@ export default {
 .active {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
     box-shadow: 0 0 0 0.05em var(--elsa-blue);
 }
@@ -266,7 +270,7 @@ export default {
 .inactive {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
