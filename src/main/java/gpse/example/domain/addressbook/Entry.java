@@ -54,7 +54,7 @@ public class Entry {
      * @param user the user which will be the contact.
      */
     public Entry(final User user) {
-        this.email = user.getEmail();
+        this.email = user.getUsername();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
         this.favorite = false;

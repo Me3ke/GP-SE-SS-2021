@@ -8,7 +8,7 @@
             <b-col cols="11">
                 <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
-                    <div v-if="this.envelope.owner.email === this.$store.state.auth.username && showProgress">
+                    <div v-if="this.envelope.owner.username === this.$store.state.auth.username && showProgress">
                         <EnvelopeProgressBar
                             :envelope="envelopeProgress(envelope.documents)"
                             :env="envelope"
@@ -17,7 +17,7 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="envelope.owner.email === user.email" @click.native="settings()"></settingsButton>
+                <settingsButton v-if="envelope.owner.username === user.username" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>

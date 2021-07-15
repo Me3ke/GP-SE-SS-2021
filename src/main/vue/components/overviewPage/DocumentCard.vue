@@ -8,7 +8,7 @@
             <b-col cols="11">
                 <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
                 <div v-if="//documentProgressById(document.id) &&
-                     this.document.owner.email === this.$store.state.auth.username">
+                     this.document.owner.username === this.$store.state.auth.username">
                     <DocumentProgressBar
                         :state="document.state"
                         :docId="document.id"
@@ -17,7 +17,7 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="document.owner.email === user.email" @click.native="settings()"></settingsButton>
+                <settingsButton v-if="document.owner.username === this.$store.state.auth.username" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>

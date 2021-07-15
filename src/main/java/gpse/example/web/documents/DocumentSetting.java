@@ -31,13 +31,13 @@ public class DocumentSetting extends DocumentSettingsCMD {
         for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
             signatories.add(new SignatorySetting(signatoryManagement.getSignatories().get(i)));
         }
-        this.orderRelevant = document.isOrderRelevant();
+        this.orderRelevant = document.getSignatureProcessData().isOrderRelevant();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        if (document.getEndDate() != null) {
-            this.endDate = document.getEndDate().format(formatter);
+        if (document.getSignatureProcessData().getEndDate() != null) {
+            this.endDate = document.getSignatureProcessData().getEndDate().format(formatter);
         }
-        this.showHistory = document.isShowHistory();
-        this.draft = document.isDraft();
+        this.showHistory = document.getSignatureProcessData().isShowHistory();
+        this.draft = document.getSignatureProcessData().isDraft();
     }
 
     public long getDocumentID() {

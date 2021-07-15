@@ -29,8 +29,8 @@ public class EmailManagement {
     private static final String DOCUMENT_URL = "/document/";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String HTTP_LOCALHOST = "http://localhost:";
+    private static final String ENVELOPE_URL = "/de/envelope/";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private final String envelopeUrl = HTTP_LOCALHOST + this.serverPort + "/de/envelope/";
     @Value("${server.port}")
     private int serverPort;
     private final EnvelopeService envelopeService;
@@ -39,6 +39,14 @@ public class EmailManagement {
     private final EmailTemplateService emailTemplateService;
     private final GuestTokenService guestTokenService;
 
+    /**
+     * Autowired constructor of Email Management.
+     * @param envelopeService the envelopeService
+     * @param userService the UserService
+     * @param smtpServerHelper  the smtpServerHelper
+     * @param emailTemplateService the emailTemplate service
+     * @param guestTokenService the guesttokenservice
+     */
     @Autowired
     public EmailManagement(final EnvelopeService envelopeService, final UserService userService,
                            final SMTPServerHelper smtpServerHelper, final EmailTemplateService emailTemplateService,
@@ -66,7 +74,7 @@ public class EmailManagement {
         try {
             EmailTemplate template = owner.getEmailTemplates().get(0);
             for (final EmailTemplate temp : owner.getEmailTemplates()) {
-                if (temp.getTemplateID() == document.getProcessEmailTemplateId()) {
+                if (temp.getTemplateID() == document.getSignatureProcessData().getProcessEmailTemplateId()) {
                     template = temp;
                 }
             }
@@ -99,7 +107,7 @@ public class EmailManagement {
         } catch (UsernameNotFoundException exception) {
             final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                 document.getId()));
-            container.setLink(envelopeUrl + envelopeID + DOCUMENT_URL
+            container.setLink(HTTP_LOCALHOST + this.serverPort + ENVELOPE_URL + envelopeID + DOCUMENT_URL
                 + document.getId() + "/" + token.getToken());
             smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                 container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
@@ -141,7 +149,7 @@ public class EmailManagement {
         container.setFirstNameReciever(user.getFirstname());
         container.setLastNameReciever(user.getLastname());
         container.setLink(HTTP_LOCALHOST + this.serverPort + "/de/register/confirm/" + token);
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template, container, Category.SYSTEM, null);
+        smtpServerHelper.sendTemplatedEmail(user.getUsername(), template, container, Category.SYSTEM, null);
 
     }
 
@@ -162,9 +170,9 @@ public class EmailManagement {
                 container.setLastNameReciever(admin.getLastname());
                 container.setFirstNameOwner(user.getFirstname());
                 container.setLastNameOwner(user.getLastname());
-                container.setRequestingEmail(user.getEmail());
+                container.setRequestingEmail(user.getUsername());
                 container.setLink(HTTP_LOCALHOST + this.serverPort + "/de/adminSettings/userManagement");
-                smtpServerHelper.sendTemplatedEmail(admin.getEmail(), template, container, Category.TODO, null);
+                smtpServerHelper.sendTemplatedEmail(admin.getUsername(), template, container, Category.TODO, null);
 
             }
         }
@@ -183,7 +191,7 @@ public class EmailManagement {
 
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("ReminderTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
-        container.setEndDate(document.getEndDate().format(formatter));
+        container.setEndDate(document.getSignatureProcessData().getEndDate().format(formatter));
         container.setDocumentTitle(document.getDocumentTitle());
         container.setLink(document.getLinkToDocumentView());
         smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.PROGRESS,
@@ -205,7 +213,7 @@ public class EmailManagement {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         setupCommentContainer(author, documentOwner, document, container);
-        smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(documentOwner.getUsername(), template, container, Category.SYSTEM, author);
     }
 
     /**
@@ -221,7 +229,7 @@ public class EmailManagement {
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         setupCommentContainer(author, reciever, document, container);
-        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(reciever.getUsername(), template, container, Category.SYSTEM, author);
     }
 
     /**
@@ -238,7 +246,7 @@ public class EmailManagement {
         emailContainer.setFirstNameReciever(user.getFirstname());
         emailContainer.setLastNameReciever(user.getLastname());
         emailContainer.setLink(HTTP_LOCALHOST + this.serverPort + "/de/login/reset/" + savedToken.getToken());
-        smtpServerHelper.sendTemplatedEmail(user.getEmail(), template,
+        smtpServerHelper.sendTemplatedEmail(user.getUsername(), template,
             emailContainer, Category.SYSTEM, null);
     }
 
@@ -254,7 +262,7 @@ public class EmailManagement {
         container.setLastNameOwner(owner.getLastname());
         container.setDocumentTitle(document.getDocumentTitle());
         container.setEnvelopeName(envelope.getName());
-        container.setEndDate(document.getEndDate().format(formatter));
+        container.setEndDate(document.getSignatureProcessData().getEndDate().format(formatter));
         container.setLink(document.getLinkToDocumentView());
         Category category;
         if (signatory.getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)
@@ -281,7 +289,7 @@ public class EmailManagement {
         container.setDocumentTitle(document.getDocumentTitle());
         final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
             document.getId()));
-        container.setLink(envelopeUrl + envelopeID + DOCUMENT_URL
+        container.setLink(HTTP_LOCALHOST + this.serverPort + ENVELOPE_URL + envelopeID + DOCUMENT_URL
             + document.getId() + "/" + token.getToken());
         if (signatory.getSignatureType().equals(SignatureType.REVIEW)) {
             smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.READ, owner);

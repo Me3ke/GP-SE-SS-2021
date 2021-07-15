@@ -79,7 +79,7 @@ function filterEnvelopes(envelopes, filters) {
             }
         }
         if (filters.owner) {
-            if (!(store.state.auth.username === envelope.owner.email)) {
+            if (!(store.state.auth.username === envelope.owner.username)) {
                 matches = false;
             }
         }

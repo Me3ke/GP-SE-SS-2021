@@ -67,7 +67,7 @@ public class Message {
         if (sendingUser == null) {
             helper.setFrom(SYSTEM);
         } else {
-            helper.setFrom(sendingUser.getEmail());
+            helper.setFrom(sendingUser.getUsername());
         }
 
         if (recievingUserMail == null || subject == null || text == null) {

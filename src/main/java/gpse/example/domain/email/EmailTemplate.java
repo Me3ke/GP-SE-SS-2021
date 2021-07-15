@@ -103,6 +103,14 @@ public class EmailTemplate implements Serializable {
                 filledTemplate = filledTemplate.replace(OPEN + placeholder + CLOSE, "");
             }
         }
+        filledTemplate = cleanupUmlaut("ä", "&#228", filledTemplate);
+        filledTemplate = cleanupUmlaut("Ä", "&#196", filledTemplate);
+        filledTemplate = cleanupUmlaut("ö", "&#246", filledTemplate);
+        filledTemplate = cleanupUmlaut("Ö", "&#214", filledTemplate);
+        filledTemplate = cleanupUmlaut("ü", "&#252", filledTemplate);
+        filledTemplate = cleanupUmlaut("Ü", "&#220", filledTemplate);
+        filledTemplate = cleanupUmlaut("ß", "&#223", filledTemplate);
+
         return filledTemplate;
     }
 
@@ -112,6 +120,10 @@ public class EmailTemplate implements Serializable {
         final Method method = dataContainer.getClass().getDeclaredMethod("get" + searchedData);
 
         return (String) method.invoke(dataContainer);
+    }
+
+    private String cleanupUmlaut(final String umlaut, final String unicode, final String text) {
+        return text.replace(umlaut, unicode);
     }
 
     public long getTemplateID() {

@@ -133,7 +133,7 @@ public class UserManagementController {
         final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {
             final User user = userService.getUser(userID);
-            user.setToSeenByAdmin();
+            user.getSecuritySettings().setToSeenByAdmin();
             userService.saveUser(user);
         }
         return response;

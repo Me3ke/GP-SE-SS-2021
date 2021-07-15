@@ -199,10 +199,10 @@ public class Protocol {
             lineCounter.addLines(1);
             addLine("Dokumenteneigentümer: " + document.getOwner(), lineCounter.getCount(), contentStream);
 
-            if (document.getEndDate() != null) {
+            if (document.getSignatureProcessData().getEndDate() != null) {
                 lineCounter.addLines(1);
-                addLine("Offen bis: " + formatter.format(document.getEndDate()), lineCounter.getCount(),
-                        contentStream);
+                addLine("Offen bis: " + formatter.format(document.getSignatureProcessData().getEndDate()),
+                    lineCounter.getCount(), contentStream);
             }
         }
     }

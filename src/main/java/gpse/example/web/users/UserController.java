@@ -79,6 +79,7 @@ public class UserController {
      * @param emailTemplateService      used to find the basic template by name
      * @param resetPasswordTokenService Service for the resetPasswordToken
      * @param domainSetterService       Service to store the domain settings
+     * @param emailManagement the emailManagementClass
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,
@@ -170,7 +171,7 @@ public class UserController {
             optionalConfirmationToken.ifPresent(userService::confirmUser);
             response.setStatus(STATUS_CODE_OK);
 
-            if (user.getEmail().matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain())) {
+            if (user.getUsername().matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain())) {
                 response.setMessage(ADMINVALIDATION_REQUIRED + false);
                 userService.validateUser(optionalConfirmationToken.get().getUser());
             } else {
@@ -243,7 +244,7 @@ public class UserController {
     @PutMapping("/user/{userID}/firstLogin")
     public JSONResponseObject firstLogin(@PathVariable(USERID) final String username) {
         final User user = userService.getUser(username);
-        user.setFirstLogin(true);
+        user.getSecuritySettings().setFirstLogin(true);
         userService.saveUser(user);
         final JSONResponseObject response = new JSONResponseObject();
         response.setStatus(STATUS_CODE_OK);
@@ -262,10 +263,10 @@ public class UserController {
                                               @RequestBody final PublicKeyCmd publicKeyCmd) {
         final JSONResponseObject response = new JSONResponseObject();
         final User user = userService.getUser(username);
-        if (user.getPublicKey() != null) {
-            user.getArchivedPublicKeys().add(user.getPublicKey());
+        if (user.getSecuritySettings().getPublicKey() != null) {
+            user.getSecuritySettings().getArchivedPublicKeys().add(user.getSecuritySettings().getPublicKey());
         }
-        user.setPublicKey(publicKeyCmd.getPublicKey());
+        user.getSecuritySettings().setPublicKey(publicKeyCmd.getPublicKey());
         userService.saveUser(user);
         response.setStatus(STATUS_CODE_OK);
         return response;
@@ -311,7 +312,7 @@ public class UserController {
 
     @GetMapping("/user/{userID}/settings/PKconfigurated")
     public Boolean checkIfKeyIsConfigurated(@PathVariable(USERID) final String username) {
-        return userService.getUser(username).getPublicKey() != null;
+        return userService.getUser(username).getSecuritySettings().getPublicKey() != null;
     }
 
     /**
@@ -382,7 +383,7 @@ public class UserController {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         try {
             final User user = userService.getUser(userId);
-            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getEmail());
+            final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user.getUsername());
             final ResetPasswordToken savedToken = resetPasswordTokenService.saveResetPasswordToken(resetPasswordToken);
             try {
                 emailManagement.sendResetPassword(user, savedToken);

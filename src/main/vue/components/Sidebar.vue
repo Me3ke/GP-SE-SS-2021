@@ -320,7 +320,9 @@ export default {
         }),
         isOwner() {
             if (this.document.owner) {
-                return this.document.owner.email === this.$store.state.auth.username
+                console.log(this.document)
+                console.log(this.$store.state.auth.username)
+                return this.document.owner.username === this.$store.state.auth.username
             }
             return false
         },

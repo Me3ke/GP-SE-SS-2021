@@ -14,6 +14,12 @@ import java.time.LocalDateTime;
 @Entity
 public class DocumentMetaData {
 
+    /**
+     * The datatype of the document.
+     */
+    @Column
+    protected String documentType;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -33,6 +39,9 @@ public class DocumentMetaData {
 
     @Column
     private long size;
+
+    @Column
+    private String linkToDocumentView;
 
     /**
      * The constructor responsible for instancing meta data with an existing identifier.
@@ -95,5 +104,21 @@ public class DocumentMetaData {
 
     public long getId() {
         return id;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(final String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getLinkToDocumentView() {
+        return linkToDocumentView;
+    }
+
+    public void setLinkToDocumentView(final String linkToDocumentView) {
+        this.linkToDocumentView = linkToDocumentView;
     }
 }

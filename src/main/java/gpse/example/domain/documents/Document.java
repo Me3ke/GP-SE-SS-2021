@@ -7,8 +7,6 @@ import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,53 +59,24 @@ public class Document {
     protected Document previousVersion;
 
     /**
-     * The datatype of the document.
-     */
-    @Column
-    protected String documentType;
-
-    /**
      * The byte-array representing the data of the document.
      */
     @Lob
     protected byte[] data;
 
     /**
-     * order Relevant indicates whether the order in which the signatories sign is important or not.
+     * the process data of the documents signature process.
      */
-    @Column
-    protected boolean orderRelevant;
-
-    /**
-     * The endDate describes the deadline for the process of this document.
-     */
-    @Column
-    protected LocalDateTime endDate;
-
-    /**
-     * The document state, describes in which phase of the process the document currently is.
-     * It can be either OPEN, READ or CLOSED.
-     */
-    @Column
-    protected DocumentState state;
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    protected SignatureProcessData signatureProcessData;
 
     @OneToMany(
         orphanRemoval = true,
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
-
-    @Column
-    private long processEmailTemplateId;
-
-    @Column
-    private boolean showHistory;
-
-    @Column
-    private String linkToDocumentView;
-
-    @Column
-    private boolean draft;
-
 
     public Document() {
     }
@@ -126,28 +95,11 @@ public class Document {
     public Document(final DocumentPutRequest documentPutRequest, final List<Signatory> signatories,
                     final String ownerID) {
         this.signatoryManagement = new SignatoryManagement(signatories);
-        this.documentType = documentPutRequest.getDataType();
         this.data = documentPutRequest.getData();
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.documentMetaData = new DocumentMetaData(LocalDateTime.now(), documentPutRequest.getTitle(),
             this.data.length, ownerID);
-        this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
-        this.draft = documentPutRequest.isDraft();
-        if (this.draft) {
-            boolean isValidFormat = true;
-            try {
-                formatter.parse(documentPutRequest.getEndDate());
-            } catch (DateTimeParseException exception) {
-                isValidFormat = false;
-            }
-            if (isValidFormat) {
-                this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
-            }
-        } else {
-            this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
-        }
-        this.orderRelevant = documentPutRequest.isOrderRelevant();
-        this.showHistory = documentPutRequest.isShowHistory();
+        this.documentMetaData.setDocumentType(documentPutRequest.getDataType());
+        this.signatureProcessData = new SignatureProcessData(documentPutRequest);
     }
 
 
@@ -158,7 +110,7 @@ public class Document {
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
+        if (!signatureProcessData.getState().equals(DocumentState.ARCHIVED)) {
             for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
                 if (signatoryManagement.getSignatories().get(i).getEmail().equals(user)) {
                     advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
@@ -205,7 +157,7 @@ public class Document {
     }
 
     public String getDocumentType() {
-        return documentType;
+        return documentMetaData.getDocumentType();
     }
 
     public List<AdvancedSignature> getAdvancedSignatures() {
@@ -235,59 +187,13 @@ public class Document {
         return Optional.empty();
     }
 
-    public boolean isOrderRelevant() {
-        return orderRelevant;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    /**
-     * The method used to change whether the order the signatures and reviews should matter or not.
-     * If the document is archived, nothing happens.
-     *
-     * @param orderRelevant the new boolean for orderRelevant.
-     */
-    public void setOrderRelevant(final boolean orderRelevant) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
-            this.orderRelevant = orderRelevant;
-        }
-    }
-
-    /**
-     * The method used to change the deadline. If the document is archived, nothing happens.
-     *
-     * @param endDate the new deadline.
-     */
-    public void setEndDate(final LocalDateTime endDate) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
-            this.endDate = endDate;
-        }
-    }
-
-    public DocumentState getState() {
-        return state;
-    }
-
-    /**
-     * the method used to change the current state of the document.  If the document is archived, nothing happens.
-     *
-     * @param documentState the new documentState
-     */
-    public void setState(final DocumentState documentState) {
-        if (state == null || !state.equals(DocumentState.ARCHIVED)) {
-            this.state = documentState;
-        }
-    }
-
     /**
      * The method used to change the signatories of this document.
      *
      * @param signatories the list with the new signatories.
      */
     public void setSignatories(final List<Signatory> signatories) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
+        if (!signatureProcessData.getState().equals(DocumentState.ARCHIVED)) {
             this.signatoryManagement.signatories.clear();
             this.signatoryManagement.signatories.addAll(signatories);
         }
@@ -304,67 +210,25 @@ public class Document {
      * @param previousVersion the last version of this document.
      */
     public void setPreviousVersion(final Document previousVersion) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
+        if (!signatureProcessData.getState().equals(DocumentState.ARCHIVED)) {
             this.previousVersion = previousVersion;
         }
     }
 
-    public long getProcessEmailTemplateId() {
-        return processEmailTemplateId;
-    }
-
-    /**
-     * The method used to change the emailTemplate for this document. If the document is archived, nothing happens.
-     *
-     * @param processEmailTemplateId the id of the template that should be used.
-     */
-    public void setProcessEmailTemplateId(final long processEmailTemplateId) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
-            this.processEmailTemplateId = processEmailTemplateId;
-        }
-    }
-
-    public boolean isShowHistory() {
-        return showHistory;
-    }
-
-    /**
-     * The method used to change whether the history of the document
-     * should be shown to signatories who are not the owner. If the document is archived, nothing happens.
-     *
-     * @param showHistory the boolean that showHistory should be set to.
-     */
-    public void setShowHistory(final boolean showHistory) {
-        if (!state.equals(DocumentState.ARCHIVED)) {
-            this.showHistory = showHistory;
-        }
-    }
-
-    public boolean isDraft() {
-        return draft;
-    }
-
-    /**
-     * The Method used to change the draft state. It can only be changed if the document is
-     * currently in the draft state and is not archived yet.
-     *
-     * @param draft the parameter to which the state should be set.
-     */
-    public void setDraft(final boolean draft) {
-        if (!state.equals(DocumentState.ARCHIVED) && draft) {
-            this.draft = draft;
-        }
-    }
 
     public String getLinkToDocumentView() {
-        return linkToDocumentView;
+        return documentMetaData.getLinkToDocumentView();
     }
 
     public SignatoryManagement getSignatoryManagement() {
         return signatoryManagement;
     }
 
-    public void setLinkToDocumentView(final String linkToDocumentview) {
-        this.linkToDocumentView = linkToDocumentview;
+    public void setLinkToDocumentView(final String linkToDocumentView) {
+        documentMetaData.setLinkToDocumentView(linkToDocumentView);
+    }
+
+    public SignatureProcessData getSignatureProcessData() {
+        return signatureProcessData;
     }
 }

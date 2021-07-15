@@ -65,6 +65,7 @@ public class EnvelopeController {
      * @param userService       the userService
      * @param documentService   the documentService
      * @param documentFilter    the documentFilter
+     * @param emailManagement   the emailManagement
      */
     @Autowired
     public EnvelopeController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -92,7 +93,7 @@ public class EnvelopeController {
         try {
             final User owner = userService.getUser(ownerID);
             final Envelope envelope = envelopeService.addEnvelope(name, owner);
-            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner().getEmail());
+            return new EnvelopeGetResponse(envelope, envelope.getOwner(), envelope.getOwner().getUsername());
         } catch (IOException | UsernameNotFoundException e) {
             throw new UploadFileException(e);
         }
@@ -132,7 +133,8 @@ public class EnvelopeController {
             savedDocument.setLinkToDocumentView(HTTP_LOCALHOST + serverPort + "/de/envelope/" + savedEnvelope.getId()
                 + DOCUMENT_URL + savedDocument.getId());
             final SignatoryManagement signatoryManagement = savedDocument.getSignatoryManagement();
-            if (savedDocument.isOrderRelevant() && signatoryManagement.getCurrentSignatory() != null) {
+            if (savedDocument.getSignatureProcessData().isOrderRelevant()
+                && signatoryManagement.getCurrentSignatory() != null) {
                 emailManagement.sendInvitation(savedDocument, envelopeID, signatoryManagement.getCurrentSignatory());
             } else {
                 for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
