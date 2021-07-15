@@ -73,10 +73,8 @@ export default {
             editorOption: {
                 modules: {
                     toolbar: [
-                        //[{'font': []}],
                         ['bold', 'italic', 'underline'],
                         ['blockquote'],
-                        //[{'header': 1}, {'header': 2}],
                         [{'header': [1, 2, 3, 4, 5, 6, false]}],
                         [{'align': []}],
                         [{'list': 'ordered'}, {'list': 'bullet'}],
@@ -94,18 +92,13 @@ export default {
             await this.$store.dispatch('impressum/updateImpressum', this.text)
             await this.fetchImpressumMessage()
 
-            console.log(this.impressumPutResponse.status)
             if (this.impressumPutResponse.status === 200) {
                 // show saved notification
-                console.log("test")
                 this.showSave = true
                 setTimeout(() => {
                     this.showSave = false
                 }, 2000);
             }
-
-
-
         }
     },
         computed: {
@@ -128,7 +121,6 @@ export default {
             this.fetchImpressumMessage()
             this.$forceUpdate()
             this.text = this.impressumMessage
-            console.log(typeof this.impressumMessage)
         }
 }
 </script>

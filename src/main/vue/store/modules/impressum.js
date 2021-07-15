@@ -37,7 +37,6 @@ export const actions = {
     },
 
     updateImpressum({commit}, impressumText) {
-        console.log('-- ' , impressumText)
         impressumAPI.updateImpressum(impressumText).then(response => {
             commit('UPDATE_IMPRESSUM', response.data)
             commit('SET_ERROR_GET_IMPRESSUM', {})
