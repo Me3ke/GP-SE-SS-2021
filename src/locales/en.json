@@ -419,7 +419,10 @@
             "selectDocument": "Select the File to replace/update the Document ",
             "replaceDoc": "Update of: ",
             "confirmation": "Are you sure to update {documentTitle}",
-            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+            "signatureResetReminder": "All signatures of the Document will be reset after you uploaded an newer Version of the Document",
+            "errorWhileUpload": "An error occurred. Please contact an admin",
+            "errorUpload": "Error while update document"
+
         }
     },
     "DownloadDoc": {

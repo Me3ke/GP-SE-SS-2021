@@ -421,7 +421,9 @@
             "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
             "replaceDoc": "Das Aktualisieren des Dokumentes: ",
             "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
-            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt",
+            "errorWhileUpload": "Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Admin",
+            "errorUpload": "Fehler beim aktualisieren des Dokumentes"
         }
     },
     "DownloadDoc": {
