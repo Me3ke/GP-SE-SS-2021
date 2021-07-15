@@ -19,17 +19,17 @@
             <b-container style="max-width: 100%; margin-top: 1px ; border: .03vw solid var(--dark-grey); border-radius: .33vw" v-if="isOpen && state !== 'CLOSED'
             && getDocumentProgress !== undefined" id="collapseExample" >
                     <b-row>
-                        <b-col style="margin-top: .75em; margin-bottom: .4em" v-if="readers.length > 0" >
-                            <span style="color: var(--not-done)">{{ $t('ProgressBar.document.needToRead') }}</span>
-                            <b-col>
-                                <b-container v-for="(signatory,index) in needToRead" :key="index">
-                                    <b-col>{{signatory.email}}</b-col>
-                                </b-container>
-                            </b-col>
+                        <b-col style="margin-top: .75em; margin-bottom: .4em" v-if="readers.length > 0">
+                          <span v-if="needToRead.length > 0" style="color: var(--not-done)">{{ $t('ProgressBar.document.needToRead') }}</span>
+                          <b-col>
+                            <b-container v-for="(signatory,index) in needToRead" :key="index">
+                              <b-col>{{ signatory.email }}</b-col>
+                            </b-container>
+                          </b-col>
 
 
-                            <b-col  style="margin-top: 1em; margin-bottom: .75em" v-if="alreadyRead.length > 0">
-                                <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
+                          <b-col style="margin-top: 1em; margin-bottom: .75em" v-if="alreadyRead.length > 0">
+                            <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
                                 <b-col>
                                     <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
                                         <b-col>{{signatory.email}}</b-col>
@@ -115,7 +115,7 @@ export default {
         },
 
         needToRead() {
-            return this.readers.filter(x => !this.alreadyRead.includes(x))
+            return this.compareArrays(this.readers, this.alreadyRead)
         },
 
 
