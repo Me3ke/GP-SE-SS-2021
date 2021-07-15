@@ -84,9 +84,6 @@ export default {
 
     mounted() {
         this.$store.dispatch('impressum/fetchImpressum')
-
-        console.log(this.impressumMessage)
-        console.log('test' , this.theme)
     }
 }
 </script>

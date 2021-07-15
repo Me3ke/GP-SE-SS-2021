@@ -102,7 +102,7 @@ public class CorporateDesign {
         impressumsText =  "<p>Das Impressum wurde noch nicht erstellt."
             + " Wenden Sie sich an den Systemadministrator."
             + "</p>\n"
-            + " <p> Kontakt: " + BR
+            + BR + " <p> Kontakt: "
             + BR + firstAdmin.getFirstname() + SPACE + firstAdmin.getLastname()
             + "<br />Telefon: " + data.getPhoneNumber()
             + "<br />E-Mail: " + firstAdmin.getUsername() + BR
