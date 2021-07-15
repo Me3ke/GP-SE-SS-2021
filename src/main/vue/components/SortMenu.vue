@@ -38,7 +38,7 @@
                                     <b-container fluid>
                                         <b-row align-h="end">
                                             <b-col cols="auto">
-                                                <button type="button" class="light-btn" @click="reset(); this.show = false;">
+                                                <button type="button" class="light-btn" @click="reset(); show = false;">
                                                     <h5>
                                                         {{$t('DownloadDoc.cancel')}}
                                                     </h5>

@@ -146,7 +146,7 @@ export default {
             this.selectedEnvelope = envelope;
         },
         updateSettings: function (settings) {
-            this.settings = settings;
+          this.settings = settings;
         },
         close() {
             this.page = 1;

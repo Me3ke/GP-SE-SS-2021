@@ -205,9 +205,9 @@ export default {
             let settings = {endDate: "", orderRelevant: false, signatories: [], showHistory: true, draft: true};
 
             // set end date
-            if (!(this.endTime) && !(this.endDate === null)) {
+            if (!(this.endTime === null) && !(this.endDate === null)) {
                 let time = this.endTime.split(":")
-                settings.endDate = this.settings.endDate + ' ' + time[0] + ':' + time[1];
+                settings.endDate = this.endDate + ' ' + time[0] + ':' + time[1];
             }
             // set signatories
             let i;
@@ -296,8 +296,6 @@ export default {
             this.endTime = time
         }
     }
-
-
 }
 </script>
 
