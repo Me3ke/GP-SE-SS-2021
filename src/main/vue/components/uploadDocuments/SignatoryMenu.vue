@@ -152,6 +152,8 @@ export default {
     },
     methods: {
         addSignatory() {
+            console.log('before add: ', this.signatoryInputs)
+
             for(let i = 0; i < this.signatoryInput.length; i++) {
                 if(this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
                     console.log(this.signatoryInput[i]) // TODO Error
@@ -163,6 +165,7 @@ export default {
                     this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
                 }
             }
+            console.log('after add: ', this.signatoryInputs)
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
@@ -195,6 +198,20 @@ export default {
         save() {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
+            if(!this.noticeNewSignatories) {
+                let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+                const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
+                for (let i = 0; i < results.length; i++) {
+                    if (this.allUser.some(user => user.email === results[i].email)) {
+                        this.noticeNewSignatories = true
+                        break
+                    } else {
+                        this.noticeNewSignatories = false
+                    }
+                }
+            }
+
+
             console.log("After Save: ", this.noticeNewSignatories)
             this.$emit('noticeNewSignatories', this.noticeNewSignatories)
             this.addSignatories = false;
