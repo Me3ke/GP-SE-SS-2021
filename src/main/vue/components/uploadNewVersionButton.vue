@@ -304,10 +304,10 @@ export default {
                 // will route the user to the newUploaded document page (with the new ID)
                 // for now it is working. But it will show before refreshing the new page an unable preview of the file
                 await this.$store.dispatch('envelopes/fetchEnvelopes')
+                await this.$emit("refreshDocument")
                 this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
                     this.$router.go(0)
                 })
-
                 this.close()
             } else {
                 this.page = 7
