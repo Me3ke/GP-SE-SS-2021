@@ -26,7 +26,9 @@ public class DocumentFilter {
                 filteredEnvelopes.add(envelope);
             } else if (userIsAssignedToEnvelope(envelope.getDocuments(), userID)) {
                 envelope.setDocuments(filterDocuments(envelope.getDocuments(), userID));
-                filteredEnvelopes.add(envelope);
+                if (!envelope.getDocuments().isEmpty()) {
+                    filteredEnvelopes.add(envelope);
+                }
             }
         }
         return filteredEnvelopes;
@@ -36,7 +38,9 @@ public class DocumentFilter {
                                                            final String userID) {
         final List<DocumentOverviewResponse> filteredDocuments = new ArrayList<>();
         for (final DocumentOverviewResponse document : documents) {
-            if (userIsAssignedToDocument(document, userID)) {
+            if (userIsAssignedToDocument(document, userID)
+                    && !document.isDraft()
+                || document.getOwner().getUsername().equals(userID)) {
                 filteredDocuments.add(document);
             }
         }

@@ -42,44 +42,80 @@
     height: 10em !important;
 }
 
+/deep/ .ql-editor.ql-blank::before {
+    color: var(--light-grey);
+}
+.modal-body {
+    text-align: left;
+}
+
+.form-control:focus {
+    color: var(--light-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    box-shadow: none;
+}
+
+/deep/ .modal-content {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    text-align: left;
+}
+
+/deep/ .modal-content .modal-header .close {
+    color: var(--dark-grey);
+}
+
+/deep/ .form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
 
 /deep/ .ql-snow .ql-stroke {
     stroke: var(--dark-grey) !important;
 }
 
-/deep/ .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+/deep/ .ql-snow .ql-fill {
     stroke: var(--dark-grey);
 }
 
-/deep/ .ql-snow .ql-picker.ql-header .ql-picker-label::before, .ql-snow .ql-picker.ql-header .ql-picker-item::before {
+/deep/ .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+    color: var(--dark-grey);
+}
+
+/deep/ .ql-snow .ql-picker.ql-font .ql-picker-label::before, .ql-snow .ql-picker.ql-font .ql-picker-item::before {
+    stroke: var(--dark-grey);
+    color: var(--dark-grey);
+}
+
+/deep/ .ql-snow .ql-picker-label {
     color: var(--dark-grey) !important;
 }
 
 /deep/ .ql-snow .ql-picker-options {
-    background-color: var(--whitesmoke);
+    color: var(--dark-grey) !important;
+    background-color: var(--whitesmoke) !important;
 }
 
+/deep/ .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke {
+    stroke: var(--dark-grey);
+    color: var(--dark-grey);
+}
+
+/deep/ .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+    color: var(--dark-grey) !important;
+}
+
+/deep/ .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+    color: var(--dark-grey) !important;
+}
 /deep/ .ql-snow .ql-picker-options .ql-picker-item {
     color: var(--dark-grey) !important;
 }
 
-/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content {
-    margin-top: 1em;
-    padding-left: 4em;
-    text-align: left;
+/deep/ .modal.show .modal-dialog {
+    padding-top: 3em;
 }
-
-/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content .preview  {
-    padding-bottom: 1em;
-}
-
-
-/deep/ .modal-dialog-centered.modal-dialog-scrollable .modal-content .preview p  {
-    margin-bottom: 0;
-}
-
-
-
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {

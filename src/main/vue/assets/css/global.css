@@ -14,6 +14,8 @@
     --closed-doc-hover: #C9C9C9;
     --sign-doc: #FFE3E3;
     --sign-doc-hover: #FFBABA;
+    --draft-doc: #DCEEFC;
+    --draft-doc-hover: #B7D8F1;
     --red: #C93A3A;
 
     --headerFadeOne: rgba(0, 0, 0, 0.1);
@@ -64,6 +66,8 @@
     --closed-doc-hover: #788796;
     --sign-doc: #d25959;
     --sign-doc-hover: #b02f2f;
+    --draft-doc: #09416c;
+    --draft-doc-hover: #113958;
     --red: #651b1b;
 
     --headerFadeOne: rgba(0, 0, 0, 0.5);
@@ -398,26 +402,42 @@ body {
 .popover-body {
     color: var(--dark-grey);
     background-color: var(--popover-back);
-    padding-bottom: 0;
+    padding-bottom: 0.5rem;
 }
 
-.bs-popover-bottom, .bs-popover-auto[x-placement^="bottom"]{
-    margin-top: 0;
+.bs-popover-bottom, .bs-popover-auto[x-placement^="bottom"] {
+    margin-top: 0.5rem;
 }
 
 .popover.b-popover {
     border-color: var(--dark-grey);
 }
 
-.bs-popover-bottom  .arrow {
+.bs-popover-bottom .arrow {
     visibility: hidden;
 }
 
 /* Code Input */
 input.vue-pincode-input {
-    box-shadow:  0 0 3px var(--elsa-blue);
+    box-shadow: 0 0 3px var(--elsa-blue);
 }
 
 input.vue-pincode-input:focus {
-    box-shadow:  0 0 9px var(--elsa-blue);
+    box-shadow: 0 0 9px var(--elsa-blue);
+}
+
+/* Input add button */
+.btn-outline-secondary {
+    visibility: hidden !important;
+}
+
+/* Address book add */
+.input-group > .input-group-prepend > .btn, .input-group > .input-group-prepend > .input-group-text, .input-group:not(.has-validation) > .input-group-append:not(:last-child) > .btn, .input-group:not(.has-validation) > .input-group-append:not(:last-child) > .input-group-text, .input-group.has-validation > .input-group-append:nth-last-child(n+3) > .btn, .input-group.has-validation > .input-group-append:nth-last-child(n+3) > .input-group-text, .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
+    background-color: var(--elsa-blue-transparent);
+    border-color: var(--elsa-blue);
+}
+
+.b-form-tag {
+    background-color: var(--elsa-blue-transparent);
+    color: var(--dark-grey);
 }

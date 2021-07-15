@@ -1,6 +1,6 @@
 <template>
     <div>
-        <WelcomePopUp v-if="!user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
+        <WelcomePopUp v-if="loaded && !user.firstLogin" @welcomeTrigger="setLogin"></WelcomePopUp>
 
         <Header></Header>
 
@@ -28,6 +28,9 @@
                         <b-col>
                             <FilterMenu :filter="filter"></FilterMenu>
                         </b-col>
+                        <b-col>
+                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
+                        </b-col>
                     </b-row>
                 </b-col>
             </b-row>
@@ -39,7 +42,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col>
-                            <UploadButton></UploadButton>
+                            <UploadButton @refreshOverview="refreshPage"></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -49,7 +52,7 @@
                         <b-col>
                             <span>
                                 <FilterButton v-bind:text="$t('Filter.open')"
-                                              :isActive="this.filter.state === 'OPENREAD'"
+                                              :isActive="this.filter.state === 'REVIEWSIGN'"
                                               :switch="true"
                                               @activeChange="filterOpen()"></FilterButton>
                             </span>
@@ -57,7 +60,7 @@
                         <b-col>
                             <span>
                                 <FilterButton v-bind:text="$t('Filter.closed')"
-                                              :isActive="this.filter.state === 'CLOSED'"
+                                              :isActive="this.filter.state === 'ARCHIVED'"
                                               :switch="true"
                                               @activeChange="filterClosed()"></FilterButton>
                             </span>
@@ -91,7 +94,7 @@
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeCard :envelope=envelope></EnvelopeCard>
+                            <EnvelopeCard :envelope=envelope ></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
                             <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"
@@ -121,15 +124,16 @@
 <script>
 import Footer from "@/main/vue/components/Footer";
 import Header from "@/main/vue/components/header/Header";
-import FilterButton from "@/main/vue/components/FilterButton";
-import UploadButton from "@/main/vue/components/UploadMenu";
+import FilterButton from "@/main/vue/components/overviewPage/FilterButton";
+import UploadButton from "@/main/vue/components/uploadDocuments/UploadMenu";
 import {mapGetters} from "vuex";
-import DocumentCard from "@/main/vue/components/DocumentCard";
-import EnvelopeCard from "@/main/vue/components/EnvelopeCard";
+import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
+import EnvelopeCard from "@/main/vue/components/overviewPage/EnvelopeCard";
 import WelcomePopUp from "@/main/vue/components/popUps/WelcomePopUp";
 import VueConfetti from 'vue-confetti'
 import Vue from 'vue'
-import FilterMenu from "@/main/vue/components/FilterMenu";
+import SortMenu from "@/main/vue/components/SortMenu";
+import FilterMenu from "@/main/vue/components/overviewPage/FilterMenu";
 
 Vue.use(VueConfetti)
 export default {
@@ -142,7 +146,8 @@ export default {
         UploadButton,
         EnvelopeCard,
         DocumentCard,
-        FilterMenu
+        FilterMenu,
+        SortMenu
     },
     data() {
         return {
@@ -156,32 +161,46 @@ export default {
                 creationDateMax: "",
                 endDateMin: "",
                 endDateMax: "",
-                dataType: ""
+                dataType: "",
+                sortFirst: "state",
+                sortSecond: "end"
             },
             searchInput: "",
             pageLimit: 10,
             page: 1,
-            sort: null
+            sort: null,
+
+            // needed for WelcomePopUp, so it does not always appear and then instantly disappear
+            // because data has not been completely fetched yet
+            loaded: false,
         }
     },
     methods: {
+        // Refreshing after a document was uploaded
+        async refreshPage() {
+          await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        },
+        updateSort: function(sortFirst, sortSecond) {
+            this.filter.sortFirst = sortFirst;
+            this.filter.sortSecond = sortSecond;
+        },
         // Change filter and make sure closed and open filter is not activated at the same time
         filterOpen() {
-            if (this.filter.state === "" || this.filter.state === "CLOSED") {
-                this.filter.state = "OPENREAD";
+            if (this.filter.state === "" || this.filter.state === "ARCHIVED") {
+                this.filter.state = "REVIEWSIGN";
             } else {
                 this.filter.state = "";
             }
         },
         filterClosed() {
-            if (this.filter.state === "" || this.filter.state === "OPENREAD") {
-                this.filter.state = "CLOSED";
+            if (this.filter.state === "" || this.filter.state === "REVIEWSIGN") {
+                this.filter.state = "ARCHIVED";
             } else {
                 this.filter.state = "";
             }
         },
         filterSignatory() {
-            if ((!this.filter.signatory || !this.filter.reader) && this.filter.state === "CLOSED") {
+            if ((!this.filter.signatory || !this.filter.reader) && this.filter.state === "ARCHIVED") {
                 this.filter.state = "";
                 this.filter.signatory = true;
                 this.filter.reader = true;
@@ -253,17 +272,15 @@ export default {
             await this.$store.dispatch('fetchUser')
         }
     },
-    created() {
-        this.$store.dispatch('envelopes/fetchEnvelopes', {})
-        this.$store.dispatch('fetchUser')
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('fetchUser')
+        await this.$store.dispatch('impressum/fetchImpressum')
+        this.loaded = true
     },
-
-    mounted() {
-        this.$store.dispatch('impressum/fetchImpressum')
-    },
-
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
+        this.loaded = false
     },
 
     // TODO REMINDER:

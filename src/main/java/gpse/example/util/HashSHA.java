@@ -1,6 +1,10 @@
 package gpse.example.util;
 
 
+import gpse.example.domain.security.JwtAuthorizationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +19,7 @@ public class HashSHA implements HashFunction {
     private static final int BASE_SIXTEEN = 16;
     private static final int HASH_LENGTH = 32;
     private static final String SHA_VERSION = "SHA-512";
+    private static final Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
     @Override
     public String computeHash(final String input) {
@@ -24,11 +29,14 @@ public class HashSHA implements HashFunction {
             final BigInteger bigInteger = new BigInteger(1, byteCode);
             String hashText = bigInteger.toString(BASE_SIXTEEN);
             while (hashText.length() < HASH_LENGTH) {
-                hashText = "0" + hashText;
+                final StringBuilder sb = new StringBuilder();
+                sb.append(0);
+                sb.append(hashText);
+                hashText = sb.toString();
             }
             return hashText;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOG.debug("error with the SHA Algorithm", e);
             return null;
         }
     }

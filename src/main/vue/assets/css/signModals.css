@@ -10,6 +10,12 @@
 .button-txt {
     float: left;
 }
+
+h4 {
+    color: var(--elsa-blue);
+    font-weight: 503;
+}
+
 .saved-enter-active, .saved-leave-active {
     transition: opacity .7s
 }
@@ -17,6 +23,7 @@
 .saved-enter, .saved-leave-to {
     opacity: 0
 }
+
 .my-icon {
     fill: var(--elsa-blue);
     height: 1em;
@@ -37,7 +44,6 @@
     height: 1.2em;
     width: auto;
 }
-
 
 .content-div, .step {
     text-align: center;
@@ -71,15 +77,18 @@
     height: 100%;
     max-height: 100%;
     margin-top: 0;
+    text-align: left;
+}
+
+.form-control:focus {
+    color: var(--light-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
 }
 
 .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
-}
-
-.modal-content {
-    background-color: var(--whitesmoke);
 }
 
 .modal-dialog {
@@ -151,8 +160,130 @@
     border: 0.03vw solid var(--dark-grey);
 }
 
+/* Modal  */
+
+.modal-mask {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    max-height: 35em;
+    overflow-y: scroll;
+    background-color: var(--whitesmoke);
+}
+
+.bi-x-square {
+    fill: var(--dark-grey);
+}
+
+.bi-x-square:hover {
+    fill: var(--light-grey);
+    transition: 0.4s;
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
+.grey-btn {
+    background-color: var(--light-grey);
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Progress bar */
+.bar {
+    background-color: var(--elsa-blue-transparent);
+    color: var(--whitesmoke);
+    width: 50%;
+}
+
+.bg-elsaBlue {
+    background-color: var(--elsa-blue);
+    color: var(--whitesmoke);
+    font-size: 0.7em;
+}
+
+/* Heading */
+.big-heading {
+    animation-name: appearing;
+    -webkit-animation-name: appearing;
+    animation-duration: 5s;
+    -webkit-animation-duration: 5s;
+    animation-timing-function: ease;
+    -webkit-animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    color: var(--elsa-blue);
+    font-weight: 503;
+    text-shadow: 4px 3px 0 var(--light-grey), 9px 8px 0 var(--elsa-blue-transparent);
+}
+
+@keyframes appearing {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes appearing {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
+    .bg-elsaBlue {
+        font-size: 0.5em;
+    }
+
+    .big-heading {
+        font-size: 2.12em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.12em;
         text-overflow-mode: ellipse;
@@ -202,6 +333,11 @@
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
+    .big-heading {
+        font-size: 2.12em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.12em;
         text-overflow-mode: ellipse;
@@ -250,6 +386,11 @@
 
 /* Large Phones in landscape mode */
 @media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    .big-heading {
+        font-size: 2.12em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.12em;
         text-overflow-mode: ellipse;
@@ -274,6 +415,11 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    .big-heading {
+        font-size: 2.45em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.45em;
         text-overflow-mode: ellipse;
@@ -302,6 +448,11 @@
 
 /* Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) and (max-width: 1199.98px) {
+    .big-heading {
+        font-size: 2.4em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.4em;
         text-overflow-mode: ellipse;
@@ -326,6 +477,15 @@
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
+    .bg-elsaBlue {
+        font-size: 0.8em;
+    }
+
+    .big-heading {
+        font-size: 2.5em;
+        text-overflow-mode: ellipse;
+    }
+
     h4 {
         font-size: 1.5em;
         text-overflow-mode: ellipse;

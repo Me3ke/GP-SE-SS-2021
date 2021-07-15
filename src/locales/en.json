@@ -26,6 +26,7 @@
         },
         "Avatar": {
             "profile": "Account settings",
+            "addressBook": "Address book",
             "adminSetting": {
                 "settings": "Admin settings",
                 "unlock": "Unlock users",
@@ -81,117 +82,152 @@
         "signatory": "Signatory",
         "readerOrSignatory": "Proofreader or Signatory"
     },
+    "Sort": {
+        "creation": "New - Old",
+        "creation-rev": "Old - New",
+        "end": "Deadline soon",
+        "name": "A - Z",
+        "name-rev": "Z - A",
+        "state": "Open - Closed",
+        "state-rev": "Closed - Open",
+        "role": "Signatory - Owner",
+        "role-rev": "Owner - Signatory",
+        "default": "Importance",
+        "title": "Sort documents and envelopes",
+        "first": "1st sort option",
+        "second": "2nd sort option",
+        "apply": "Apply"
+    },
     "UserGuide": {
         "name": "User Guide",
-        "section-1": "General Information",
-        "section-2": "Signature",
-        "section-3": "Documents",
-        "section-4": "Helpful Controls",
-        "section-5": "Account Management",
+        "section-1": "General information",
+        "section-2": "Account management",
+        "section-3": "Signature",
+        "section-4": "Documents",
+        "section-5": "Filter and search settings",
+        "section-6": "Admin",
         "section0": [
             {
-                "question": "What is ELSA?",
-                "answer": "ELSA is an electronic signature application that enables any document to be electronically signed easily, quickly, and securely"
+                "question": "What exactly is ELSA?",
+                "answer": "The acronym ELSA stands for \"Elektronische Signieranwendung\" (digital signature application). You can use ELSA to upload contracts or any other kind of document that should get signed, to let everyone who relates to the document sign via ELSA. You can depend on ELSA for structuring the process of getting the signatures and for taking care of notification for each party that relates to your documents."
             },
             {
                 "question": "How does ELSA work?",
-                "answer": "Answer 0.2"
+                "answer": "The core function of ELSA would be to enable everyone who works with it to easily give secure signatures. ELSA distingueshes beetween simple and advanced signatures. A simple signature is made by simply saving the e-mailadress of the user for the document, as it isn't necessarily as legaly binding as signing with a Pen on paper. An Advanced signature is more secure, as it uses kryptographic methods like generating a hashcode or encoding via rsa-procedure. If you have more detailed questions, please look some more at our faqs or ask an admin."
             }
         ],
         "section1": [
             {
-                "question": "How do I sign a Document?",
-                "answer": "You can sign the document by clicking the sign button next to the document preview."
+                "question": "Where can I find information regarding my account?",
+                "answer": "If you want to take a look at your userspecific information or maybe even change it, you can find those by clicking the avatar-icon in the upper right corner of the aplication and choosing \"Account seetings\"."
             },
             {
-                "question": "How secure is this method?",
-                "answer": "Answer 2.2"
+                "question": "Is it possible to make adjustments regaring my notifications?",
+                "answer": "It is possible to adjust which kinds of notification-emails you want to receive. To do so, you should click on the avatar-icon in the upper-right corner and choose Account settings. Right at the bottom of your account-settings page, you can choose which kinds of email-reminders you want to receive. If you want more detailed information you can hover over the little 'i' icons on your settings page, or ask an admin."
             },
             {
-                "question": "How does the crytographic Signature work?",
-                "answer": "Answer 2.3"
+                "question": "Is it possible to change the language of the application?",
+                "answer": "By clicking on the flag in the upper-right corner you can choose the language you want the application to be displayed in. At the moment it is only possible to display the application in german or english."
+            },
+            {
+                "question": "How can I change my password?",
+                "answer": "In case you forgot your password and cannot login anymore, you can change your password by choosing \"forgot password\" at the login screen. We will send you a mail with a link and you should be able to choose a different password for your account, after clicking the same link. If you are in fact able to login, but you still want to change your password, you can do so by going to your Account settings and clicking \"Change Password\"."
+            },
+            {
+                "question": "Is it possible to change the e-mail address of my account?",
+                "answer": "In fact it is not possible to do so. If you want an account with a different e-mailadress, you have to register a new one, but even by doing so, you still have your old account with data that you cannot transfer."
+            },
+            {
+                "question": "What does it mean, that my account is locked?",
+                "answer": "To secure the information regarding the documents that are uploaded by users, a newly registered user has to be validated and unlocked by an admin, before he or she can login with the account. It is possible that this is not the case for some users, if an admin has taken care of e-mailadresses that should be filtered. In that case there are e-maildomains, that allow the referring user to unlock his account, by simply validating the e-mailadress. For more information you should ask your admin."
             }
         ],
         "section2": [
             {
-                "question": "How do I upload a Document?",
-                "answer": "Answer 3.1"
+                "question": "How can I sign a document?",
+                "answer": "After your login you can see your overviewpage, there you should click on the document or the envelope that contains the document you want to sign. After navigating to the documentview-page, you see a sidebar on the right with a button for signign the document. If you have to give an advanced signature you will be asked to give your public key for the signature."
             },
             {
-                "question": "What is an Envelope?",
-                "answer": "Answer 3.2"
+                "question": "Which kinds of signatures does ELSA support?",
+                "answer": "ELSA distinguishes between two different forms of digital signatures, which are both defined in the eIDAS regulation. There is the simple signature, which is made by saving the e-mailadress, the date and the time of the signature. This can be used as an indicator for seeing whether the user who should sign has seen the document and is content with it. The second form is the advanced signature, where the application uses the private key to encrypt the hash code of the document, a very long code which is specifically generated for each document. By using this method we can be sure, that we can trace the signature back to the user that made it under normal circumstances by decrypting the signature. An advanced signature is legally binding. If you want to include a picture of your written signature you can upload one or even make one by giving a written signature with your cursor in your account-settings. The picture will be included in the protocol of each document that you sign. Aside from the kinds of signatures you can also ask other users to review your document, which is technically the same as giving a simple signature, but if you ask at least one user to proofread, ELSA will only allow signatures if all reviewers have already done so. This way the process of getting the signatures for any document is structured in an optional proofreading-process and the process of signing the document. After that the document will be archived. Which kind of signature a user has to make is decided by the owner of the document."
             },
             {
-                "question": "Which kind of Document types will be supported?",
-                "answer": "Answer 3.3"
+                "question": "Is it possible to change a signature type in case I made a mistake and chose the wrong one?",
+                "answer": "Yes, you can change all of the settings for a document whenever you want, but under different circumstances it can happen that the signatures that already have been made become invalid. Still this is no reason to worry, because ELSA will take care of that and notify all users that some changes have been made."
             },
             {
-                "question": "Who has access to my Documents?",
-                "answer": "Answer 3.4"
-            },
-            {
-                "question": "How do I add People to sign my Document?",
-                "answer": "Answer 3.5"
-            },
-            {
-                "question": "What are the differences of 'Simple Signature' and 'Advanced Signature'?",
-                "answer": "Answer 3.6"
-            },
-            {
-                "question": "Can I change the signing type afterward?",
-                "answer": "Yes, the signature type can be changed afterward. However, then all signatures are already given expire and must be requested again. But don't worry, ELSA will take care of this and inform your contractual partners."
-            },
-            {
-                "question": "Where do I find Information about my Document?",
-                "answer": "Answer 3.8"
-            },
-            {
-                "question": "Where can I see the Document History?",
-                "answer": "Answer 3.9"
+                "question": "Can I set a date by which all signatures must be made?",
+                "answer": "While uploading a document you are able to set deadline for the process of that document. When the deadline is arrived the process will be terminated if it isn't finished already and the document and all the relating information will be archived. ELSA will remind users that have to sign the document at a given time and if the document is still relevant after the deadline you will still be able to access all relating information."
             }
         ],
         "section3": [
             {
-                "question": "How do I search for Documents",
-                "answer": "Answer 4.1"
+                "question": "How do I upload a document?",
+                "answer": "After logging in you will see the Overview page. Above all the documents that relate to you, or if there aren't any yet on the top-left there should be a button labeled \"Upload\". ELSA will guide you through the uploading process after you click this button."
             },
             {
-                "question": "What are the filter above the Documents?",
-                "answer": "Answer 4.2"
+                "question": "What is an envelope?",
+                "answer": "ELSA saves each document inside of an envelope. This can start with a single document but an envelope can contain any number of documents and has the purpose to bundle those documents that relate to the same issue or to each other."
             },
             {
-                "question": "How can I filter manually?",
-                "answer": "Answer 4.3"
+                "question": "Where do I find information regarding a document?",
+                "answer": "After navigating to a documentpage you will either see the document itself, if it is a PDF or you can always download it to take a look. For more detailed information you should take a look at the sidebar on the right, where you will find the protocoll and more information by clicking \"Show metadata\"."
             },
             {
-                "question": "What does the grey scope next to Documents mean?",
-                "answer": "Answer 4.4"
+                "question": "Where do I find the history of a document?",
+                "answer": "To take a look at the archived versions of a document, you should go to the current documentpage and click \"show history\" in the sidebar."
+            },
+            {
+                "question": "Which kinds of documents does ELSA support?",
+                "answer": "ELSA should be able to support any given type of document. At its current state ELSA can only give a preview for PDF documents."
+            },
+            {
+                "question": "How do I add a user to my document and ask him to sign it?",
+                "answer": "If you didn't upload the document yet, that will be part of the uploading process. If you want to add more users to a document that already has been uploaded you can change the settings of that document by clicking on the gear icon on your overview page or on the \"Settings\" button in the sidebar of the documentpage."
+            },
+            {
+                "question": "Is it possible to upload a new version of the document?",
+                "answer": "To upload a new version for a document you should go to the document page and click the \"New Version\" button in the sidebar. You will be guided through a process that is similar to uploading a new document."
+            },
+            {
+                "question": "What happens to the old document if I upload a new version?",
+                "answer": "Just like documents where the process has been finished or the deadline has been reached, old documents will be archived, but you won't find them in an envelope or on your overviewpage. Instead you can find them in the history of the new document version."
+            },
+            {
+                "question": "Is it possible to delete a document or a whole envelope?",
+                "answer": "You cannot delete anything that you uploaded but it is always possible to archive a document."
+            },
+            {
+                "question": "Who can see my documents?",
+                "answer": "Only you and the users that you added to your documents will be able to see them."
             }
         ],
         "section4": [
             {
-                "question": "Where do I find my Account Information?",
-                "answer": "By a click on the avatar at the top right, a menu opens, click on \"My Account.\" Then, a page opens on which you can view all of your Konoto information and change some of it."
+                "question": "Is there an efficient way to search for a document in the overview page?",
+                "answer": "In the upper-left corner of your overview page you can find a searchbar where you can type in words that match the document you are looking for. If there are documents or envelopes that fit the searchbar, you will find them."
             },
             {
-                "question": "How can I set up my Notifications?",
-                "answer": "Answer 5.2"
+                "question": "What are those buttons above my documents on the overview page?",
+                "answer": "Those are for filtering your overview page. By clicking the different buttons you can filter after documents that are open, closed, your own or needed to be signed by you. By clicking the funnel-icon above the filter-buttons you are even able to filter after more detailed criteria."
             },
             {
-                "question": "Where do I change the language?",
-                "answer": "Clicking on the flag in the top right opens a menu for changing the language. At the moment, ELSA can be operated in German and English."
+                "question": "Is it possible to define my own filter?",
+                "answer": "By clicking the funnel-icon in the top-left corner of your overview page you get to the filter settings. There you can do just that."
+            }
+        ],
+        "section5": [
+            {
+                "question": "How to become an admin?",
+                "answer": "You can only become an admin if another admin selects you as such. If there is no admin in your company yet, there is an initial admin account for it."
             },
             {
-                "question": "How do I change my Password?",
-                "answer": "Answer 5.4"
+                "question": "My company has made me an admin, what does that mean?",
+                "answer": "The role of the admin brings only a few administrative tasks. Beside smaller tasks, like the definition of the appearance of ELSA, or the definition of e-mail domains whose accounts should be activated automatically, an admin has for example also the task to activate new user accounts, which are not activated automatically. The possibility to do this can be found in the user administration, to which only users with the admin role have access. There you will also find other tools for user management, as well as the option, to make other users an admin, if necessary."
             },
             {
-                "question": "Is there an Opportunity to change my Email-Address?",
-                "answer": "It is not possible to change your email address afterward. If you would like to use ELSA under a different e-mail address, you must register again with this address. Your data cannot be transferred to the new account."
-            },
-            {
-                "question": "What does it mean: 'Your Account is not activated by the Admin'?",
-                "answer": "In order to be able to protect company-internal documents, it is necessary for an admin to manually activate company-external e-mail addresses. This ensures the security of confidential information."
+                "question": "What additional rights and tasks do I have as an admin?",
+                "answer": "As an admin, you can not only manage users who want to use ELSE, i.e. unlock, block or make other admins. You can also create email templates that are used for the notifications of ELSA, or define the corporate design, i.e. the appearance of Elsa. In addition, you and the other admins are responsible for deciding which email address a user account must have in order to be used without the validation by an admin."
             }
         ]
     },
@@ -199,7 +235,9 @@
         "owner": "Owner",
         "date": "Created on",
         "open": "Open",
-        "closed": "Closed"
+        "closed": "Closed",
+        "envelope": "Envelope",
+        "draft": "Draft"
     },
     "MessagePage": {
         "heading": "Messages",
@@ -275,6 +313,13 @@
             "twoFacAuthSetUp": "Two-factor authentication set-up",
             "setUp": "Set up"
         },
+        "AddressBookSettings": {
+            "settings": "Address book settings",
+            "all": "Add all emails addresses automatically",
+            "allExp": "All e-mail addresses you add to proofread or sign your documents will be added to your address book.",
+            "domain": "Add domain specific email addresses automatically",
+            "domainExp": "All e-mail addresses, with a specific domain set up by your admin, you add to proofread or sign your documents will be added to your address book."
+        },
         "MessageSettings": {
             "settings": "Message settings",
             "send": "Save",
@@ -302,10 +347,28 @@
         "DocumentSettings": {
             "editAll": "Edit all documents in the envelope",
             "addSignatory": "Add signatories",
-            "placeholderMail": "Signatory@mail.de",
-            "signatory": "Signatory",
+            "placeholderMail": "Signatory@mail.de,...",
+            "signatory": "Signatories",
             "addReader": "Add proofreader",
-            "reader": "Proofreaders"
+            "reader": "Proofreaders",
+            "save": "Save",
+            "chooseDate": "Chose deadline",
+            "orderRelevant": "Order relevant",
+            "endDate": "Deadline",
+            "edit": "Edit",
+            "noSignatories": "There are no signatories",
+            "noReaders": "There are no proofreaders",
+            "saveAll": "Save all changes",
+            "noDocumentSelected": "Please select a document to edit",
+            "confirm": "Confirm",
+            "editAllWarning": "Not all documents share the same settings, please choose the document which settings you want to use as basis.",
+            "error": {
+                "noDateTime": "Please choose a date and a time.",
+                "noDate": "Please choose a date.",
+                "noTime": "Please choose a time.",
+                "alreadyInSignatories": "Signatory has been added already.",
+                "alreadyInReaders": "Proofreader has been added already."
+            }
         }
     },
     "UploadDoc": {
@@ -320,13 +383,35 @@
         "configureDoc": "Configure document",
         "addReaders": "Add proofreaders",
         "skipReview": "Skip review process",
-        "chooseDate": "Chose deadline",
-        "orderRelevant": "Order relevant",
         "selectedDoc": "File: ",
         "chooseFile": "Choose a file or drop it here...",
-        "simple": "simple",
-        "advanced": "advanced",
+        "simple": "Simple",
+        "advanced": "Advanced",
         "signatureType": "Signaturetype",
+        "areYouSure": "Please check the document you want to upload and its settings:",
+        "areYouSureMult": "Please check the documents you want to upload and their settings:",
+        "document": "Document",
+        "documents": "Documents",
+        "envelope": "Envelope",
+        "showHistoryTitle": "Version history",
+        "showHistory": "Visible to everyone",
+        "dontShowHistory": "Hidden from everyone",
+        "error": {
+            "noDocument": "Please choose a document to upload.",
+            "noEnvelope": "Please choose a envelope to upload your document into.",
+            "noNewName": "Please choose a name for the new envelope.",
+            "noReadSig": "Please add at least one proofreader or signatory",
+            "noEndDate": "Please chose a deadline.",
+            "noSignatureType": "Please choose a signature type for each signatory."
+        },
+        "remindSignatories": "Remind Signatories",
+        "remindDaysBefore": "days before the deadline",
+        "reminder": "Reminder:",
+        "reminderShort": "day(s) before deadline",
+        "sendReminderEMails": "Send reminder emails",
+        "startProcess": "Start process",
+        "startProcessLater": "Save as draft",
+        "addMoreFiles": "Add another document",
         "UpdateDocument": {
             "chooseFile": "Choose a file or drag it here...",
             "update1": "update",
@@ -334,7 +419,10 @@
             "selectDocument": "Select the File to replace/update the Document ",
             "replaceDoc": "Update of: ",
             "confirmation": "Are you sure to update {documentTitle}",
-            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+            "signatureResetReminder": "All signatures of the Document will be reset after you uploaded an newer Version of the Document",
+            "errorWhileUpload": "An error occurred. Please contact an admin",
+            "errorUpload": "Error while update document"
+
         }
     },
     "DownloadDoc": {
@@ -372,9 +460,9 @@
             "title": "Title",
             "docType": "File type",
             "state": "Process state",
-            "open": "Open",
-            "read": "Read",
-            "closed": "Closed",
+            "review": "Review",
+            "sign": "Sign",
+            "archived": "Archived",
             "error": "Error: Unknown state",
             "owner": "Owner",
             "created": "Creation date",
@@ -517,6 +605,9 @@
             "setUp": "Set up",
             "keypair": "Step 2: Keypair",
             "keypairExp": "Another key element to keep your identity and signature save, because you are they only one that knows your private key.",
+            "signature": "Step 3: Signature image",
+            "signatureExp": " To keep the spirit of a paper signature you can upload an image of your signature. ELSA will add it to your digital signature. This step is optional.",
+            "skip": "Skip",
             "done": "It is done!",
             "fun": "You have successfully set up everything you need in order to use ELSA to its fullest.",
             "go": "Let's go",
@@ -556,6 +647,15 @@
             "color13": "Setting color",
             "color14": "Pop-Up background",
             "companyDetails": "Company details",
+            "color9": "Document draft",
+            "color10": "Document draft - Hover",
+            "color11": "Document action required",
+            "color12": "Document action required - Hover",
+            "color13": "Light warn color",
+            "color14": "Dark warn color",
+            "color15": "Setting color",
+            "color16": "Pop-Up background",
+            "companyDetails": "Company details",
             "default": "Default"
         },
         "manage": {
@@ -581,6 +681,15 @@
                 "admin": "Make admin"
             },
             "new": "NEW"
+        },
+        "trustedDomain": {
+            "title": "Trusted Domain Settings",
+            "Domain": {
+                "domain": "Trusted Domain:  ",
+                "header": "Trusted Domain (e.g. 'elsa.com')",
+                "save" : "save",
+                "feedback" : "min. 4 characters and a dot."
+            }
         }
     },
     "ProgressBar": {
@@ -616,17 +725,75 @@
         "serverErrorTwo": "Please try again later or talk to an administrator.",
         "serverErrorThree": "The comments could not be loaded."
     },
+    "EmailTemplate": {
+        "emailTemp": "Email template",
+        "createTemp": "Add template",
+        "deleteTemp": "Delete template",
+        "editTemp": "Edit template",
+        "previewTemp": "Preview",
+        "createNewTemplate": "Create a new email template",
+        "saveTemp": "Save template",
+        "enterName": "Type the name of the template",
+        "enterSubject": "Type the subject of the template",
+        "emptySubject": "The subject field should not be empty",
+        "Save": "Save",
+        "subject": "Subject",
+        "editSentence": "To edit the template, just write in the editor and it will be applied automatically.",
+        "unsavedChanged": "Noticed unsaved changes",
+        "unsavedChanged2": "If you want to save the Edited template click on the \"Save template\" button.",
+        "unsavedChanged3": "If it is for single use only click on \"Single use\" button.",
+        "editTemplateTitle": "Edit template: ",
+        "templateName": "Template name",
+        "templateSubject": "Subject",
+        "templateDelete": "Delete email templates",
+        "editorPlaceholder": "Type here the content of your mail template",
+        "updateTemplate": "All signatories will receive a notification via email regarding the update of the document",
+        "forNewSignatories": "Noticed newly added signatories. Please select an email template for the signature invitation. Already defined signatories and guest signatories are getting specifically defined email templates",
+
+
+
+
+        "toolbar": {
+            "addUser": "User",
+            "addOwner": "Owner",
+            "addEndDate": "End date",
+            "documentLink": "Document link",
+            "documentTitle": "Document title"
+
+        }
+    },
     "ResetPasswordPage": {
-      "success" : "Success! Login now!",
-      "fail" : "Failure! Please try to reset again!",
-      "send" : "send"
+        "success": "Success! Login now!",
+        "fail": "Failure! Please try to reset again!",
+        "send": "send"
     },
     "Password": {
-      "change": "Change Password"
+        "change": "Change Password"
     },
     "HistoryPage": {
         "title": "History",
         "abc": "Title A-Z",
-        "cba" : "Title Z-A"
+        "cba": "Title Z-A"
+    },
+    "AddressBook": {
+        "title": "Address book",
+        "filter": {
+            "favorite": "Favorite"
+        },
+        "new": "New Entry",
+        "more": "Show more",
+        "less": "Show less",
+        "name": "Name",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "mail": "E-mail-address",
+        "address": "Address",
+        "bday": "Birthday",
+        "note": "Note",
+        "noNote": "No note present",
+        "number": "Phone number",
+        "save": "Save",
+        "serverErrorTwo": "Your changes could not be processed. Try again later.",
+        "mailMissing": "You have to input an e-mail-address."
     }
 }

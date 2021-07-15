@@ -3,6 +3,7 @@ function filterUser(user, filter) {
     const admin = filter.admin
     const active = filter.active
     const inactive = filter.inactive
+    const completeSearch = filter.completeSearch
     const search = filter.search
 
 
@@ -29,9 +30,15 @@ function filterUser(user, filter) {
 
     // search for keywords
     if (search !== '') {
-        resUser = resUser.filter(user =>
-            [user.firstname, user.lastname].join(' ').toLowerCase().includes(search.toLowerCase())
-            || user.email.toLowerCase().includes(search.toLowerCase()))
+        if (completeSearch) {
+            resUser = resUser.filter(user =>
+                [user.firstname, user.lastname].join(' ').toLowerCase() === search.toLowerCase()
+                || user.email.toLowerCase() === search.toLowerCase())
+        } else {
+            resUser = resUser.filter(user =>
+                [user.firstname, user.lastname].join(' ').toLowerCase().includes(search.toLowerCase())
+                || user.email.toLowerCase().includes(search.toLowerCase()))
+        }
     }
 
     return resUser

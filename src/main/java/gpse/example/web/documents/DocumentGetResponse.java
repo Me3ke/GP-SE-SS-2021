@@ -20,6 +20,8 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     private final SignatureType signatureType;
     private final byte[] data;
     private final List<ProtoSignatory> signatories;
+    private final boolean orderRelevant;
+
 
     /**
      * The default constructor creates the documentGet based on an existing document
@@ -32,8 +34,8 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public DocumentGetResponse(final Document document, final User owner, final String currentUser) {
         super(document, owner, currentUser);
         this.data = document.getData();
-        final List<Signatory> givenSignatories = document.getSignatories();
-
+        this.orderRelevant = document.getSignatureProcessData().isOrderRelevant();
+        final List<Signatory> givenSignatories = document.getSignatoryManagement().getSignatories();
         this.signatories = new ArrayList<>();
 
         SignatureType signatureType = SignatureType.NO_SIGNATURE;
@@ -62,4 +64,9 @@ public class DocumentGetResponse extends DocumentOverviewResponse {
     public List<ProtoSignatory> getSignatories() {
         return signatories;
     }
+
+    public boolean isOrderRelevant() {
+        return orderRelevant;
+    }
+
 }

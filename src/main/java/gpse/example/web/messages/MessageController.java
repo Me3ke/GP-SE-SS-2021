@@ -2,9 +2,9 @@ package gpse.example.web.messages;
 
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
-import gpse.example.util.email.Category;
-import gpse.example.util.email.Message;
-import gpse.example.util.email.MessageService;
+import gpse.example.domain.email.Category;
+import gpse.example.domain.email.Message;
+import gpse.example.domain.email.MessageService;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

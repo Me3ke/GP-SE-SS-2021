@@ -80,7 +80,8 @@ export default {
                 'endDate': newDoc.endDate,
                 'orderRelevant': newDoc.orderRelevant,
                 //'state': newDoc.state,
-                'lastModified': newDoc.lastModified
+                'lastModified': newDoc.lastModified,
+                'emailTemplateId': newDoc.emailTemplateHtml.templateID
             }
         })
     },

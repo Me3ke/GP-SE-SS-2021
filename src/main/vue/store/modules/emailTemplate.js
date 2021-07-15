@@ -23,6 +23,18 @@ export const mutations = {
         state.template.push(progress)
     },
 
+    EDIT_TEMPLATE(state, progress) {
+        for(let i = 0; i < state.template.length; i++) {
+            if(state.template[i].templateID === progress.templateID) {
+                state.template[i] = progress
+            }
+        }
+    },
+
+    DELETE_TEMPLATE(state, templateId) {
+        state.template = state.template.filter(temp => temp.templateID !== templateId)
+    },
+
     SET_TEMPLATE_ERROR(state, error) {
         state.templateError = error
     }
@@ -44,12 +56,34 @@ export const actions = {
         })
     },
 
-    setEmailTemplate({commit}, template) {
-        emailTemplateAPI.createEmailTemplate(template).then(response =>{
+    async setEmailTemplate({commit}, template) {
+        await emailTemplateAPI.createEmailTemplate(template).then(response => {
             commit('SET_TEMPLATE', response.data)
             commit('SET_TEMPLATE_ERROR', {})
         }).catch(error => {
             commit('SET_TEMPLATE_ERROR', error)
+        })
+    },
+
+    editEmailTemplate({commit}, template) {
+            emailTemplateAPI.editEmailTemplate(template).then(response => {
+                commit('EDIT_TEMPLATE', response.data)
+                commit('SET_TEMPLATE_ERROR', {})
+            }).catch(error => {
+                console.error(error)
+                commit('SET_TEMPLATE_ERROR', error)
+
+            })
+    },
+
+    deleteEmailTemplate({commit}, templateId) {
+        emailTemplateAPI.deleteEmailTemplates(templateId).then(response => {
+            commit('EDIT_TEMPLATE', response.data)
+            commit('SET_TEMPLATE_ERROR', {})
+        }).catch(error => {
+            console.error(error)
+            commit('SET_TEMPLATE_ERROR', error)
+
         })
     }
 
@@ -58,7 +92,6 @@ export const actions = {
 export const getters = {
 
     getEmailTemplates: (state) => {
-        console.log(state.template)
         return state.template
     }
 

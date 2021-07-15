@@ -11,14 +11,35 @@ export default {
     },
 
     // TODO add subject, name, system
-    async createEmailTemplate(emailTemp) {
+    async createEmailTemplate(template) {
         return axios({
             method: "post",
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates',
             data: {
-                'htmlTemplateBody': emailTemp,
+                'htmlBody': template.htmlTemplateBody,
+                'subject': template.subject,
+                'name': template.name
             }
 
+        })
+    },
+
+    async editEmailTemplate(template) {
+        return axios({
+            method: 'put',
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + template.templateID,
+            data: {
+                'htmlBody': template.htmlTemplateBody,
+                'subject': template.subject,
+                'name': template.name
+            }
+        })
+    },
+
+    async deleteEmailTemplates(templateId) {
+        return axios({
+            method: 'delete',
+            url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/templates/' + templateId,
         })
     }
 

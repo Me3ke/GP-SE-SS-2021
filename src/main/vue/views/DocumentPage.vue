@@ -251,6 +251,8 @@ export default {
         await this.$store.dispatch('document/resetState')
         await this.$store.dispatch('document/documentProgress', {envId: this.envId, docId: this.docId})
         await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
+        await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
+
         await documentAPI.getDocument(this.envId, this.docId).then(response => {
             this.pdfSrc = response.data.data
             this.dataError = false
@@ -280,12 +282,12 @@ export default {
         },
         // returns state of document as string
         getDocState() {
-            if (this.document.state === 'OPEN') {
-                return 'open'
-            } else if (this.document.state === 'READ') {
-                return 'read'
-            } else if (this.document.state === 'CLOSED') {
-                return 'closed'
+            if (this.document.state === 'REVIEW') {
+                return 'review'
+            } else if (this.document.state === 'SIGN') {
+                return 'sign'
+            } else if (this.document.state === 'ARCHIVED') {
+                return 'archived'
             } else {
                 return 'error'
             }

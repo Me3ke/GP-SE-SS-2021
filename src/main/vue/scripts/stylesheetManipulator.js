@@ -15,27 +15,31 @@ export function constructSheet(sheetInformation) {
         "--closed-doc-hover: " + sheetInformation[7] + ";\n" +
         "--sign-doc: " + sheetInformation[8] + ";\n" +
         "--sign-doc-hover: " + sheetInformation[9] + ";\n" +
-        "--red: " + sheetInformation[10] + ";\n" +
-        "--darkRed: " + sheetInformation[11] + ";\n" +
-        "--user-info: " + sheetInformation[12] + ";\n" +
-        "--modalBackground: " + hexToRgba(sheetInformation[13], 0.5) + ";\n" +
+        "--draft-doc: " + sheetInformation[10] + ";\n" +
+        "--draft-doc-hover: " + sheetInformation[11] + ";\n" +
+        "--red: " + sheetInformation[12] + ";\n" +
+        "--darkRed: " + sheetInformation[13] + ";\n" +
+        "--user-info: " + sheetInformation[14] + ";\n" +
+        "--modalBackground: " + hexToRgba(sheetInformation[15], 0.5) + ";\n" +
         "}\n" +
         "[data-theme=\"darkMode\"]{\n" +
-        "--dark-grey:" + sheetInformation[14] + ";\n" +
-        "--elsa-blue:" + sheetInformation[15] + ";\n" +
-        "--elsa-blue-transparent: " + hexToRgba(sheetInformation[15], 0.1) + ";\n" +
-        "--whitesmoke: " + sheetInformation[16] + ";\n" +
-        "--light-grey: " + sheetInformation[17] + ";\n" +
-        "--shadow-grey: " + sheetInformation[18] + ";\n" +
-        "--open-doc-hover: " + sheetInformation[19] + ";\n" +
-        "--closed-doc: " + sheetInformation[20] + ";\n" +
-        "--closed-doc-hover: " + sheetInformation[21] + ";\n" +
-        "--sign-doc: " + sheetInformation[22] + ";\n" +
-        "--sign-doc-hover: " + sheetInformation[23] + ";\n" +
-        "--red: " + sheetInformation[24] + ";\n" +
-        "--darkRed: " + sheetInformation[25] + ";\n" +
-        "--user-info: " + sheetInformation[26] + ";\n" +
-        "--modalBackground: " + hexToRgba(sheetInformation[27], 0.65) + ";\n" +
+        "--dark-grey:" + sheetInformation[16] + ";\n" +
+        "--elsa-blue:" + sheetInformation[17] + ";\n" +
+        "--elsa-blue-transparent: " + hexToRgba(sheetInformation[17], 0.1) + ";\n" +
+        "--whitesmoke: " + sheetInformation[18] + ";\n" +
+        "--light-grey: " + sheetInformation[19] + ";\n" +
+        "--shadow-grey: " + sheetInformation[20] + ";\n" +
+        "--open-doc-hover: " + sheetInformation[21] + ";\n" +
+        "--closed-doc: " + sheetInformation[22] + ";\n" +
+        "--closed-doc-hover: " + sheetInformation[23] + ";\n" +
+        "--sign-doc: " + sheetInformation[24] + ";\n" +
+        "--sign-doc-hover: " + sheetInformation[25] + ";\n" +
+        "--draft-doc: " + sheetInformation[26] + ";\n" +
+        "--draft-doc-hover: " + sheetInformation[27] + ";\n" +
+        "--red: " + sheetInformation[28] + ";\n" +
+        "--darkRed: " + sheetInformation[29] + ";\n" +
+        "--user-info: " + sheetInformation[30] + ";\n" +
+        "--modalBackground: " + hexToRgba(sheetInformation[31], 0.65) + ";\n" +
         "}\n"
 
     store.dispatch('theme/setStylesheet', sheetString).then(() => loadSheet())

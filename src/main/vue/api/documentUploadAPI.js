@@ -11,11 +11,15 @@ export default {
             headers: {"Content-Type": "application/json"},
             data: {
                 'data': file.data,
-                'title': file.name,
+                'title': file.title,
                 'dataType': file.type,
                 'signatories': settings.signatories,
                 'endDate': settings.endDate,
-                'orderRelevant': settings.orderRelevant
+                'orderRelevant': settings.orderRelevant,
+                'showHistory': settings.showHistory,
+                'draft': settings.draft,
+                'emailTemplateId': settings.emailTemplateHtml.templateID
+
             }
         })
     },

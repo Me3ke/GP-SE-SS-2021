@@ -2,6 +2,7 @@ package gpse.example.web.documents;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -13,9 +14,23 @@ public class DocumentSettingsCMD {
     private boolean orderRelevant;
     private String endDate;
     private boolean showHistory;
+    private boolean draft;
+    private boolean archiveTask;
 
+    /**
+     * the method used to convert the String, that we get from the frontend to LocalDateTime.
+     *
+     * @return the deadline as LocalDateTime
+     */
     public LocalDateTime convertEndDate() {
-        return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        if (endDate.equals("")) {
+            return null;
+        }
+        try {
+            return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } catch (DateTimeParseException dtpe) {
+            return LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
     }
 
     public List<SignatorySetting> getSignatories() {
@@ -46,7 +61,23 @@ public class DocumentSettingsCMD {
         return showHistory;
     }
 
-    public void setShowHistory(boolean showHistory) {
+    public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(final boolean draft) {
+        this.draft = draft;
+    }
+
+    public boolean isArchiveTask() {
+        return archiveTask;
+    }
+
+    public void setArchiveTask(final boolean archiveTask) {
+        this.archiveTask = archiveTask;
     }
 }

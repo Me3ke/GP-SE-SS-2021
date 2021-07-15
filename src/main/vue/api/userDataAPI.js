@@ -9,4 +9,10 @@ export default {
             url: 'http://localhost:8088/api/user/' + store.state.auth.username + '/personal'
         })
     },
+    async getMyUserDataById(id) {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/user/' + id + '/personal'
+        })
+    },
 }
