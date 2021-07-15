@@ -320,8 +320,6 @@ export default {
         }),
         isOwner() {
             if (this.document.owner) {
-                console.log(this.document)
-                console.log(this.$store.state.auth.username)
                 return this.document.owner.username === this.$store.state.auth.username
             }
             return false

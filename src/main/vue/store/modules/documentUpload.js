@@ -25,7 +25,6 @@ export const actions = {
     // makes axios call to upload document
 
     async uploadDocument({commit}, {envID, file, settings}) {
-        console.log(settings)
         await documentUploadAPI.uploadDocumentApi(envID, file, settings).then(() => {
             commit('SET_ERROR_GET_DOCUMENTS', {})
         }).catch(error => {

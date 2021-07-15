@@ -3,8 +3,8 @@
         <div v-if="page === 0">
             <div style="padding-bottom: .2em" class="flex-box-2">
 
-                <p>Hier können Sie sich ein Email Template aussuchen, welches an die
-                    kürzlich neu eingefügten (registrierten) Signatories verschickt werden.
+                <p>
+                    {{ $t('EmailTemplate.forNewSignatories') }}
                 </p>
 
                 <button class="elsa-blue-btn"
@@ -116,17 +116,13 @@
                         </b-col>
                         <b-col cols="auto">
                             <button class="elsa-blue-btn" @click="page = page -1">
-                                {{ $t('UploadDoc.continue') }} 2
+                                {{ $t('UploadDoc.continue') }}
                             </button>
                         </b-col>
                     </b-row>
                 </div>
             </div>
-
-
         </div>
-
-
     </b-container>
 </template>
 
@@ -165,7 +161,6 @@ export default {
         // observe changed value and emmit it
         changedValue(event) {
             this.selectedTemplateObject = event
-            console.log(event)
             this.$emit('saveEmailTemplate', this.selectedTemplateObject)
 
         },

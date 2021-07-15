@@ -272,7 +272,6 @@ export default {
 
       updateNoticeNewSignatories(noticeNewSignatory) {
           this.showEmailTemplate = noticeNewSignatory
-          //this.$emit('showEmailTemplate', noticeNewSignatory)
       }
     },
 
@@ -287,27 +286,15 @@ export default {
             this.orderRelevant = this.settingsCopy.orderRelevant
             this.signatories = this.settingsCopy.signatories
 
-            console.log(this.endDate)
             const [date, time] = this.endDate.split(' ')
-            console.log('---------')
-            console.log(date)
-            console.log(time)
-            console.log('---------')
-
             this.endDate = date
 
             if(date.includes('.')) {
                 const [day, month, year] = date.split('.')
                 this.endDate = year + '-' + month + '-' + day
             }
-
             this.endTime = time
         }
-    },
-
-    beforeDestroy() {
-        console.log(this.endDate)
-        console.log(this.endTime)
     }
 
 

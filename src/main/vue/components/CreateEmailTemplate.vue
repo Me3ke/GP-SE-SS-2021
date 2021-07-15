@@ -1,7 +1,7 @@
 <template>
     <b-container>
-        <b-alert :show="subjectEmpty"> <!--- TODO COLOR--->
-            Subject is empty
+        <b-alert :show="subjectEmpty" :variant="'darkred'">
+            <span style="color: var(--dark-grey)">Subject is empty</span>
         </b-alert>
 
         <b-container style="padding-bottom: .5em">

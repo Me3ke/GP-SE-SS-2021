@@ -63,8 +63,6 @@ export const actions = {
         }).catch(error => {
             commit('SET_TEMPLATE_ERROR', error)
         })
-
-        console.log("Success")
     },
 
     editEmailTemplate({commit}, template) {

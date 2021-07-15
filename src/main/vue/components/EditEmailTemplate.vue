@@ -1,7 +1,7 @@
 <template>
     <b-container>
-        <b-alert :show="subjectEmpty"> <!--- TODO COLOR--->
-            Subject is empty
+        <b-alert :show="subjectEmpty" :variant="'darkred'">
+            <span style="color: var(--dark-grey)">Subject is empty</span>
         </b-alert>
 
         <b-container style="padding-bottom: .5em">
@@ -43,7 +43,9 @@
                         style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.addEndDate') }}</button>
 
                 <button id="docTitle-button" @click="addDocTitle"
-                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
+                        style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px">
+                    {{ $t('EmailTemplate.toolbar.documentTitle') }}
+                </button>
 
                 <button id="link-button" @click="addLink"
                         style="width: auto; padding-left: 2em; line-height: 0; font-size: 15px"> {{ $t('EmailTemplate.toolbar.documentLink') }}</button>
@@ -167,7 +169,6 @@ export default {
 
     created() {
         this.template = this.temp
-
     },
     mounted() {
         this.copyTemplate = Object.assign({}, this.template)

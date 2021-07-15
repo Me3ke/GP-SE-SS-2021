@@ -147,7 +147,6 @@ export default {
         },
         updateSettings: function (settings) {
             this.settings = settings;
-            console.log(this.settings)
         },
         close() {
             this.page = 1;
@@ -187,10 +186,6 @@ export default {
         },
 
         checkInnerPages(innerPage) {
-            console.log('--------------')
-            console.log(innerPage)
-            console.log('--------------')
-
             this.showFooter = innerPage === 0;
         },
 

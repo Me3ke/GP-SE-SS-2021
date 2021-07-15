@@ -736,6 +736,10 @@
         "templateSubject": "Subject",
         "templateDelete": "Delete email templates",
         "editorPlaceholder": "Type here the content of your mail template",
+        "updateTemplate": "All signatories will receive a notification via email regarding the update of the document",
+        "forNewSignatories": "Noticed newly added signatories. Please select an email template for the signature invitation. Already defined signatories and guest signatories are getting specifically defined email templates",
+
+
 
 
         "toolbar": {

@@ -286,7 +286,7 @@
                                         </b-icon>
                                     </h5>
                                 </div>
-                                <!-- Page 1 Choose Document -->
+                                <!-- Page 1: Choose Document -->
                                 <div v-if="page === 1">
                                     <div style="padding-top: 1em; text-align: left">
                                         <FileInput @updateFiles="updateFile"
@@ -329,7 +329,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Page 3 Add signatories/readers-->
+                                <!-- Page 3: Add signatories/readers-->
                                 <div v-if="page === 3">
                                     <UploadSettings :alreadySetSettings="settings"
                                                     @updateSettings="updateSettings"
@@ -338,44 +338,13 @@
                                 </div>
 
 
-                                <!-- Email Template (Replaced Document Email template) -->
-                                <div v-if="page === 5">
-                                    <div>
-                                        <div class="modal-body">
-                                            <div>
-                                                <div>
-                                                    <h3>Update document email </h3>
-                                                    <h5> Due to an Update Request we are sending to all signatories an
-                                                        Update Document Email and to all Guest Signatories an guest
-                                                        signature invitation email</h5>
-                                                </div>
-                                            </div>
 
-                                        </div>
-                                        <div class="modal-footer">
-                                            <b-row align-h="end">
-                                                <b-col cols="auto">
-                                                    <button class="light-btn" @click="page = page - 2;">
-                                                        {{ $t('UploadDoc.back') }}
-                                                    </button>
-                                                </b-col>
-                                                <b-col cols="auto">
-                                                    <button class="elsa-blue-btn" @click="setDefaultTemplate">
-                                                        {{ $t('UploadDoc.continue') }}
-                                                    </button>
-                                                </b-col>
-                                            </b-row>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Email Template (for new User) -->
+
+                                <!-- Page 4: Email Template (for new User) -->
                                 <div v-if="page === 4">
                                     <div class="modal-body">
                                         <div>
-                                            <p>Hier können Sie sich ein Email Template aussuchen, welches an die
-                                                kürzlich neu eingefügten (registrierten) Signatories verschickt werden.
-                                            </p>
                                             <EmailTemplate @saveEmailTemplate="setEmailTemplate"
                                                            @pages="checkInnerPages"></EmailTemplate>
                                         </div>
@@ -397,7 +366,38 @@
                                 </div>
 
 
-                                <!-- Page 4 Upload -->
+                                <!-- Page 5: Email Template (Replaced Document Email template) -->
+                                <div v-if="page === 5">
+                                    <div>
+                                        <div class="modal-body">
+                                            <div>
+                                                <div>
+                                                    <h5> {{ $t('EmailTemplate.updateTemplate') }} </h5>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-row align-h="end">
+                                                <b-col cols="auto">
+                                                    <button class="light-btn" @click="page = page - 2;">
+                                                        {{ $t('UploadDoc.back') }}
+                                                    </button>
+                                                </b-col>
+                                                <b-col cols="auto">
+                                                    <button class="elsa-blue-btn" @click="setDefaultTemplate">
+                                                        {{ $t('UploadDoc.continue') }}
+                                                    </button>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!-- Page 6: Upload -->
                                 <div v-if="page === 6">
                                     <div>
                                         <div class="modal-body">
@@ -425,6 +425,33 @@
                                                     <b-button class="elsa-blue-btn" @click="upload">
                                                         {{ $t('UploadDoc.upload') }}
                                                     </b-button>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Page 7 Error -->
+                                <div v-if="page === 7">
+                                    <div v-if="showAlert">
+                                        <div class="modal-body">
+                                            <div>
+                                                <div>
+                                                    Fehler! Bitte versuchen Sie es später noch einmal
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <b-row align-h="end">
+                                                <b-col cols="auto">
+                                                    <button class="light-btn" @click="close">
+                                                        {{ $t('UploadDoc.back') }}
+                                                    </button>
                                                 </b-col>
                                             </b-row>
                                         </div>
@@ -508,13 +535,7 @@ export default {
             newDocumentId: 'document/getNewDocumentId',
             newDocumentError: 'document/getErrorEditDocument',
             newDocumentStatus: 'document/getEditDocumentStatus'
-        }),
-
-        isoDate(enDate) {
-            const [day, month, year] = enDate.split('.')
-            return year + '-' + month + '-' + day
-        }
-
+        })
     },
 
     methods: {
@@ -526,13 +547,11 @@ export default {
             this.settings.signatories = this.actualDoc.signatories
             this.settings.orderRelevant = this.actualDoc.orderRelevant
             this.newDocumentTitle = this.file.title
-            console.log(this.actualDoc)
         },
 
 
         updateSettings: function (settings) {
             this.settings = settings;
-            console.log(this.settings)
         },
         updateSignatories(newSignatories) {
             this.actualDoc.signatories = newSignatories
@@ -548,7 +567,7 @@ export default {
 
             this.$emit('closePopUp', false)
         },
-        /* NEWWW */
+
         async upload() {
             this.uploadingDocument = true
 
@@ -559,25 +578,28 @@ export default {
             this.actualDoc.dataType = this.file.type
             this.actualDoc.title = this.newDocumentTitle
 
-
             let payload = {newDoc: this.actualDoc, envId: this.envID, docId: this.docID}
             await this.$store.dispatch('document/editDocument', payload)
 
             // here show error
 
-            await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
-            let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
-            console.log(newUrl)
-            console.log(this.actualDoc)
+            if(this.newDocumentError === undefined) {
 
-            // will route the user to the newUploaded document page (with the new ID)
-            // for now it is working. But it will show before refreshing the new page an unable preview of the file
-            await this.$store.dispatch('envelopes/fetchEnvelopes')
-            /*this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
-                this.$router.go(0)
-            })*/
 
-            //this.close()
+                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
+                let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
+
+                // will route the user to the newUploaded document page (with the new ID)
+                // for now it is working. But it will show before refreshing the new page an unable preview of the file
+                await this.$store.dispatch('envelopes/fetchEnvelopes')
+                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                    this.$router.go(0)
+                })
+
+                this.close()
+            } else {
+                this.showAlert = true
+            }
         },
 
         // temp is the selected template
@@ -588,16 +610,11 @@ export default {
 
         setDefaultTemplate() {
             this.actualDoc.emailTemplateHtml = this.actualDoc.owner.emailTemplates[0]
-            console.log('-----')
-            console.log(this.actualDoc.emailTemplateHtml)
-            console.log('-----')
-            console.log(this.page)
             this.page = this.page + 1
 
         },
 
         showEmailTemplate(showTemp) {
-            console.log(showTemp)
             if (showTemp === true) {
                 // new registered signatory is noticed
                 this.showTemplateBoolean = true
@@ -609,10 +626,6 @@ export default {
             }
         },
         checkInnerPages(innerPage) {
-            console.log('--------------')
-            console.log(innerPage)
-            console.log('--------------')
-
             this.showFooter = innerPage === 0;
         }
     }
