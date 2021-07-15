@@ -18,6 +18,7 @@ import * as userManagement from './modules/userManage'
 import * as comments from "./modules/comments";
 import * as emailTemplate from "./modules/emailTemplate.js"
 import guestAuthorization from "@/main/vue/store/modules/guestAuthorization";
+import * as impressum from "@/main/vue/store/modules/impressum"
 import * as addressBook from './modules/addressBook'
 
 
@@ -38,6 +39,7 @@ const store = new Vuex.Store({
         comments,
         emailTemplate,
         userManagement,
+        impressum,
         addressBook,
         auth: authorization,
         guestAuth: guestAuthorization

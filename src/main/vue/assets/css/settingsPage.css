@@ -74,6 +74,7 @@
 /deep/ .ql-snow .ql-stroke {
     stroke: var(--dark-grey) !important;
 }
+
 /deep/ .ql-snow .ql-fill {
     stroke: var(--dark-grey);
 }
@@ -115,10 +116,6 @@
 /deep/ .modal.show .modal-dialog {
     padding-top: 3em;
 }
-
-
-
-
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {

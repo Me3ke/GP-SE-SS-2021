@@ -204,7 +204,7 @@
                     </div>
                 </transition>
 
-                <Sidebar @triggerOverflow="toggleOverflow" @detailTrigger="showDetails = !showDetails"></Sidebar>
+                <Sidebar @refreshDocument="refreshPage" @triggerOverflow="toggleOverflow" @detailTrigger="showDetails = !showDetails"></Sidebar>
             </div>
         </div>
 
@@ -265,6 +265,20 @@ export default {
         this.$store.dispatch('document/resetState')
     },
     methods: {
+        async refreshPage() {
+          await this.$store.dispatch('document/resetState')
+          await this.$store.dispatch('document/documentProgress', {envId: this.envId, docId: this.docId})
+          await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envId, docId: this.docId})
+          await this.$store.dispatch('emailTemplate/fetchEmailTemplate');
+
+          await documentAPI.getDocument(this.envId, this.docId).then(response => {
+            this.pdfSrc = response.data.data
+            this.dataError = false
+          }).catch(() => {
+            this.dataError = true
+          })
+          this.showPdf = true
+        },
         getPDF() {
             let chars = atob(this.pdfSrc);
             let array = new Uint8Array(chars.length);

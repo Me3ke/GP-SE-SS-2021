@@ -275,6 +275,7 @@ export default {
     async mounted() {
         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
         await this.$store.dispatch('fetchUser')
+        await this.$store.dispatch('impressum/fetchImpressum')
         this.loaded = true
     },
     beforeDestroy() {

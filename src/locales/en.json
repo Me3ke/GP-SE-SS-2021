@@ -640,6 +640,13 @@
             "color6": "Open document - hover",
             "color7": "Closed document",
             "color8": "Closed document - hover",
+            "color9": "Document action required",
+            "color10": "Document action required - Hover",
+            "color11": "Light warn color",
+            "color12": "Dark warn color",
+            "color13": "Setting color",
+            "color14": "Pop-Up background",
+            "companyDetails": "Company details",
             "color9": "Document draft",
             "color10": "Document draft - Hover",
             "color11": "Document action required",
@@ -648,6 +655,7 @@
             "color14": "Dark warn color",
             "color15": "Setting color",
             "color16": "Pop-Up background",
+            "companyDetails": "Company details",
             "default": "Default"
         },
         "manage": {

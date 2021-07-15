@@ -72,15 +72,6 @@ public class InitializeDatabase implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        try {
-            corporateDesignService.getCorporateDesign(1L);
-        } catch (CorporateDesignNotFoundException exception) {
-            final CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0]);
-            defaultDesign.setLogo(new byte[0], "");
-            defaultDesign.setLogoDark(new byte[0], "");
-            corporateDesignService.saveCorporateDesign(defaultDesign);
-        }
-
         saveEmailTemplate(BasicHtmlTemplates.ADMIN_VALIDATION_TEMPLATE,
             "ELSA - Nutzer Validierung/ELSA - User Validation", "AdminValidationTemplate");
         saveEmailTemplate(BasicHtmlTemplates.RESET_PASSWORD_TEMPLATE,
@@ -141,6 +132,15 @@ public class InitializeDatabase implements InitializingBean {
         }
         if (domainSetterService.isEmpty()) {
             setDomainSettings();
+        }
+        try {
+            corporateDesignService.getCorporateDesign(1L);
+        } catch (CorporateDesignNotFoundException exception) {
+            final CorporateDesign defaultDesign = new CorporateDesign(DEFAULT_COLORS, new byte[0], new byte[0],
+                userService);
+            defaultDesign.setLogo(new byte[0], "");
+            defaultDesign.setLogoDark(new byte[0], "");
+            corporateDesignService.saveCorporateDesign(defaultDesign);
         }
     }
 

@@ -36,8 +36,8 @@ public class DocumentCreator {
         }
         final Document document = new Document(documentPutRequest, new ArrayList<>(),
             ownerID);
-        setDocumentState(signatories, document);
         setSignatories(signatories, document, documentService);
+        setDocumentState(signatories, document);
         return document;
     }
 
