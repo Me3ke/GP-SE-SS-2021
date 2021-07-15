@@ -46,9 +46,6 @@
                                 <div v-if="page === 4">
                                     <div class="modal-body">
                                         <div>
-                                            <p>Hier können Sie sich ein Email Template aussuchen, welches an die
-                                                kürzlich neu eingefügten (registrierten) Signatories verschickt werden.
-                                            </p>
                                             <EmailTemplate @saveEmailTemplate="setEmailTemplate"
                                                            @pages="checkInnerPages"></EmailTemplate>
                                         </div>
@@ -233,7 +230,7 @@ export default {
 }
 
 .modal-content {
-    max-height: 50em;
+    max-height: 35em;
     overflow-y: scroll;
     background-color: var(--whitesmoke);
 }

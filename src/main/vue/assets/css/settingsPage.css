@@ -42,32 +42,24 @@
     height: 10em !important;
 }
 
-
-#__BVID__167___BV_modal_outer_ {
-    z-index: 10000000 !important;
+/deep/ .ql-editor.ql-blank::before {
+    color: var(--light-grey);
+}
+.modal-body {
+    text-align: left;
 }
 
-#__BVID__168___BV_modal_outer_ {
-    z-index: 10000000 !important;
-}
-
-#__BVID__126___BV_modal_outer_ {
-    z-index: 10000000 !important;
-}
-#modal-editor___BV_modal_outer_ {
-    z-index: 10000000 !important;;
-}
-
-#__BVID__127___BV_modal_outer_ {
-    z-index: 10000000 !important;
-}
-#__BVID__264___BV_modal_outer_ {
-    z-index: 10000000 !important;
+.form-control:focus {
+    color: var(--light-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
+    box-shadow: none;
 }
 
 /deep/ .modal-content {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
+    text-align: left;
 }
 
 /deep/ .modal-content .modal-header .close {

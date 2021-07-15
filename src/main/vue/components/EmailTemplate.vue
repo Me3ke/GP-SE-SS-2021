@@ -3,6 +3,10 @@
         <div v-if="page === 0">
             <div style="padding-bottom: .2em" class="flex-box-2">
 
+                <p>Hier können Sie sich ein Email Template aussuchen, welches an die
+                    kürzlich neu eingefügten (registrierten) Signatories verschickt werden.
+                </p>
+
                 <button class="elsa-blue-btn"
                         style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
                         v-if="selectedTemplateObject !== {}"
@@ -52,7 +56,7 @@
                 </b-row>
             </b-container>
 
-            <b-container style="padding-top: .5em;"><h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
+            <b-container><h4><span>{{ $t('EmailTemplate.previewTemp') }}</span></h4>
                 <b-container> {{ $t('EmailTemplate.subject') }}: {{ selected.subject }}</b-container>
                 <hr>
                 <EmailTemplatePreview :htmlString="selected.htmlTemplateBody"></EmailTemplatePreview>
