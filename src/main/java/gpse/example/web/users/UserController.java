@@ -79,6 +79,7 @@ public class UserController {
      * @param emailTemplateService      used to find the basic template by name
      * @param resetPasswordTokenService Service for the resetPasswordToken
      * @param domainSetterService       Service to store the domain settings
+     * @param emailManagement the emailManagementClass
      */
     @Autowired
     public UserController(final UserService service, final ConfirmationTokenService confService,

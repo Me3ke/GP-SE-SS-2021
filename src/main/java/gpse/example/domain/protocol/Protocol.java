@@ -201,8 +201,8 @@ public class Protocol {
 
             if (document.getSignatureProcessData().getEndDate() != null) {
                 lineCounter.addLines(1);
-                addLine("Offen bis: " + formatter.format(document.getSignatureProcessData().getEndDate()), lineCounter.getCount(),
-                        contentStream);
+                addLine("Offen bis: " + formatter.format(document.getSignatureProcessData().getEndDate()),
+                    lineCounter.getCount(), contentStream);
             }
         }
     }

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * utilitys for DocumentController.
+ */
 @Component
 public class DocumentControllerUtil {
 
@@ -32,6 +35,13 @@ public class DocumentControllerUtil {
     private final GuestTokenService guestTokenService;
     private final SignatureManagement signatureManagement;
 
+    /**
+     * Constructor with services.
+     * @param emailManagement Constructor with services.
+     * @param documentService Constructor with services.
+     * @param guestTokenService Constructor with services.
+     * @param signatureManagement Constructor with services.
+     */
     @Autowired
     public DocumentControllerUtil(final EmailManagement emailManagement, final DocumentService documentService,
                                   final GuestTokenService guestTokenService,

@@ -63,6 +63,7 @@ public class DocumentController {
      * @param userService         the userService
      * @param documentService     the documentService
      * @param guestTokenService   the guestTokenService
+     * @param documentControllerUtil  the utilitys
      */
     @Autowired
     public DocumentController(final EnvelopeServiceImpl envelopeService, final UserServiceImpl userService,
@@ -333,19 +334,23 @@ public class DocumentController {
      *
      * @param userID     the id of the user getting the history.
      * @param documentID the id of the document of which the history is requested.
+     * @param envelopeID the envelope id
      * @return a list of all previous versions and the latest one.
      * @throws DocumentNotFoundException if the document was not found.
      */
     @GetMapping("/user/{userID}/envelopes/{envelopeID:\\d+}/documents/{documentID:\\d+}/history")
     public List<DocumentOverviewResponse> getDocumentHistory(@PathVariable final String userID,
                                                              final @PathVariable(DOCUMENT_ID) long documentID,
-                                                             final @PathVariable(ENVELOPE_ID) String envelopID)
+                                                             final @PathVariable(ENVELOPE_ID) long envelopeID)
         throws DocumentNotFoundException {
-        final List<Document> documentHistory = documentService.getDocument(documentID).getHistory();
+        final Document document = documentService.getDocument(documentID);
+        final List<Document> documentHistory = document.getHistory();
         final List<DocumentOverviewResponse> responseHistory = new ArrayList<>();
-        for (final Document document : documentHistory) {
-            responseHistory.add(new DocumentOverviewResponse(document, userService.getUser(document.getOwner()),
-                userID));
+        if (envelopeService.getEnvelope(envelopeID).getDocumentList().contains(document)) {
+            for (final Document doc : documentHistory) {
+                responseHistory.add(new DocumentOverviewResponse(doc, userService.getUser(doc.getOwner()),
+                    userID));
+            }
         }
         return responseHistory;
     }

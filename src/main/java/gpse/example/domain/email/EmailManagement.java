@@ -38,6 +38,14 @@ public class EmailManagement {
     private final EmailTemplateService emailTemplateService;
     private final GuestTokenService guestTokenService;
 
+    /**
+     * Autowired constructor of Email Management.
+     * @param envelopeService the envelopeService
+     * @param userService the UserService
+     * @param smtpServerHelper  the smtpServerHelper
+     * @param emailTemplateService the emailTemplate service
+     * @param guestTokenService the guesttokenservice
+     */
     @Autowired
     public EmailManagement(final EnvelopeService envelopeService, final UserService userService,
                            final SMTPServerHelper smtpServerHelper, final EmailTemplateService emailTemplateService,

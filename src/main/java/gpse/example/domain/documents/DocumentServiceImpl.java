@@ -70,7 +70,8 @@ public class DocumentServiceImpl implements DocumentService {
                 return addDocument(newDocument);
             }
         }
-        newDocument.getSignatureProcessData().setProcessEmailTemplateId(userService.getUser(ownerID).getEmailTemplates().get(0).getTemplateID());
+        newDocument.getSignatureProcessData().setProcessEmailTemplateId(userService.getUser(ownerID)
+            .getEmailTemplates().get(0).getTemplateID());
         return addDocument(newDocument);
     }
 }

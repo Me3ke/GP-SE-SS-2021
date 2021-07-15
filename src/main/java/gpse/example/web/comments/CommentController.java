@@ -41,8 +41,9 @@ public class CommentController {
 
     /**
      * The default constructor which initialises the services by autowiring.
-     *  @param userService     the userService
+     * @param userService     the userService
      * @param documentService the documentService
+     * @param emailManagement the emailManagement
      */
     @Autowired
     public CommentController(final UserServiceImpl userService,

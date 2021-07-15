@@ -7,8 +7,6 @@ import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,16 +64,19 @@ public class Document {
     @Lob
     protected byte[] data;
 
+    /**
+     * the process data of the documents signature process.
+     */
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL
+    )
+    protected SignatureProcessData signatureProcessData;
+
     @OneToMany(
         orphanRemoval = true,
         cascade = CascadeType.ALL)
     private final List<Comment> commentList = new ArrayList<>();
-
-    @OneToOne(
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
-    protected SignatureProcessData signatureProcessData;
 
     public Document() {
     }

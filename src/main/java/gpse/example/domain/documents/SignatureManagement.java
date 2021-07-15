@@ -30,6 +30,7 @@ public class SignatureManagement {
      * constructor of Signature management.
      *
      * @param givenDocumentService documentservice
+     * @param emailManagement the emailManagementClass
      */
     @Autowired
     public SignatureManagement(final DocumentService givenDocumentService, final EmailManagement emailManagement) {

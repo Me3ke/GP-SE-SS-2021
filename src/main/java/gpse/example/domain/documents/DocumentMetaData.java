@@ -14,6 +14,12 @@ import java.time.LocalDateTime;
 @Entity
 public class DocumentMetaData {
 
+    /**
+     * The datatype of the document.
+     */
+    @Column
+    protected String documentType;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -30,12 +36,6 @@ public class DocumentMetaData {
 
     @Column
     private String identifier;
-
-    /**
-     * The datatype of the document.
-     */
-    @Column
-    protected String documentType;
 
     @Column
     private long size;
