@@ -29,7 +29,7 @@ public class EmailManagement {
     private static final String DOCUMENT_URL = "/document/";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String HTTP_LOCALHOST = "http://localhost:";
-    private final String envelopeUrl = HTTP_LOCALHOST + this.serverPort + "/de/envelope/";
+    private static final String ENVELOPE_URL = "/de/envelope/";
     @Value("${server.port}")
     private int serverPort;
     private final EnvelopeService envelopeService;
@@ -106,7 +106,7 @@ public class EmailManagement {
         } catch (UsernameNotFoundException exception) {
             final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
                 document.getId()));
-            container.setLink(envelopeUrl + envelopeID + DOCUMENT_URL
+            container.setLink(HTTP_LOCALHOST + this.serverPort + ENVELOPE_URL + envelopeID + DOCUMENT_URL
                 + document.getId() + "/" + token.getToken());
             smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), emailTemplate,
                 container, Category.NEW_VERSION, userService.getUser(document.getOwner()));
@@ -288,7 +288,7 @@ public class EmailManagement {
         container.setDocumentTitle(document.getDocumentTitle());
         final GuestToken token = guestTokenService.saveGuestToken(new GuestToken(signatory.getEmail(),
             document.getId()));
-        container.setLink(envelopeUrl + envelopeID + DOCUMENT_URL
+        container.setLink(HTTP_LOCALHOST + this.serverPort + ENVELOPE_URL + envelopeID + DOCUMENT_URL
             + document.getId() + "/" + token.getToken());
         if (signatory.getSignatureType().equals(SignatureType.REVIEW)) {
             smtpServerHelper.sendTemplatedEmail(signatory.getEmail(), template, container, Category.READ, owner);
