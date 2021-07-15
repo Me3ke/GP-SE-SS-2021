@@ -16,6 +16,7 @@ import gpse.example.web.JSONResponseObject;
 import gpse.example.web.envelopes.DocumentOverviewResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,11 @@ public class DocumentController {
     private static final String PROTOCOL_NAME = "Protocol_";
     private static final String ATTACHMENT = "attachment; filename=";
     private static final String TOKEN = "token";
+    private static final String DOCUMENT_URL = "/document/";
+    private static final String HTTP_LOCALHOST = "http://localhost:";
+    private static final String ENVELOPE_URL = "/de/envelope/";
+    @Value("${server.port}")
+    private int serverPort;
     private final EnvelopeServiceImpl envelopeService;
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
@@ -238,6 +244,8 @@ public class DocumentController {
                         userService);
                 envelopeService.updateEnvelope(envelope, newDocument);
                 newDocument.setPreviousVersion(oldDocument);
+                newDocument.setLinkToDocumentView(HTTP_LOCALHOST + serverPort + ENVELOPE_URL + envelope.getId()
+                        + DOCUMENT_URL + newDocument.getId());
                 documentService.addDocument(newDocument);
                 documentControllerUtil.informSignatories(newDocument, envelopeID);
                 return new DocumentPutResponse(oldDocument.getId(), newDocument.getId());
