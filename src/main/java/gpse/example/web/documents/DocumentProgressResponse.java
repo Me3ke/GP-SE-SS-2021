@@ -1,6 +1,7 @@
 package gpse.example.web.documents;
 
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatureType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +37,15 @@ public class DocumentProgressResponse {
                 alreadyRead.add(reader);
             }
         }
-        this.signatories = signatories;
+        final List<Signatory> onlySignatories = new ArrayList<>();
+        for (final Signatory signatory : signatories) {
+            if (signatory.getSignatureType() == SignatureType.SIMPLE_SIGNATURE
+                || signatory.getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
+                onlySignatories.add(signatory);
+            }
+        }
+
+        this.signatories = onlySignatories;
         this.readers = readers;
         this.endDate = endDate;
     }
