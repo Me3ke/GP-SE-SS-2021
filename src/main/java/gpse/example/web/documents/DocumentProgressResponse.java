@@ -27,21 +27,24 @@ public class DocumentProgressResponse {
      */
     public DocumentProgressResponse(final List<Signatory> signatories, final List<Signatory> readers,
                                     final LocalDateTime endDate) {
+        final List<Signatory> onlySignatories = new ArrayList<>();
         for (final Signatory signatory : signatories) {
+
+                if (signatory.getSignatureType() == SignatureType.SIMPLE_SIGNATURE
+                    || signatory.getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
+                    onlySignatories.add(signatory);
+                }
+        }
+
+        for (final Signatory signatory : onlySignatories) {
             if (signatory.isStatus()) {
                 alreadySigned.add(signatory);
             }
         }
+
         for (final Signatory reader : readers) {
             if (reader.isStatus()) {
                 alreadyRead.add(reader);
-            }
-        }
-        final List<Signatory> onlySignatories = new ArrayList<>();
-        for (final Signatory signatory : signatories) {
-            if (signatory.getSignatureType() == SignatureType.SIMPLE_SIGNATURE
-                || signatory.getSignatureType() == SignatureType.ADVANCED_SIGNATURE) {
-                onlySignatories.add(signatory);
             }
         }
 

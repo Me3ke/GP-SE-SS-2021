@@ -20,15 +20,15 @@
             && getDocumentProgress !== undefined" id="collapseExample" >
                     <b-row>
                         <b-col style="margin-top: .75em; margin-bottom: .4em" v-if="readers.length > 0" >
-                            <span style="color: var(--not-done)">{{ $t('ProgressBar.document.needToRead') }}</span>
-                            <b-col>
+                            <b-col style="padding-bottom: .4em" v-if="readers.length !== alreadyRead.length ">
+                                <span style="color: var(--not-done)" v-if="needToRead.length > 0">{{ $t('ProgressBar.document.needToRead') }}</span>
+
                                 <b-container v-for="(signatory,index) in needToRead" :key="index">
                                     <b-col>{{signatory.email}}</b-col>
                                 </b-container>
                             </b-col>
 
-
-                            <b-col  style="margin-top: 1em; margin-bottom: .75em" v-if="alreadyRead.length > 0">
+                            <b-col v-if="alreadyRead.length > 0">
                                 <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
                                 <b-col>
                                     <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
@@ -45,18 +45,18 @@
                         <!--- Document Signature Progress ---->
 
                         <b-col
-                            v-if="needToSign.length > 0"
+                            v-if="signatories.length > 0"
                             style="margin-top: .75em; margin-bottom: .4em">
-                            <span style="color: var(--not-done)">{{ $t('ProgressBar.document.needToSign') }}</span>
-                            <b-col>
+                            <b-col style="padding-bottom: .4em">
+                                <span style="color: var(--not-done)" v-if="needToSign.length > 0">{{ $t('ProgressBar.document.needToSign') }}</span>
                                 <b-container v-for="(signatory,index) in needToSign" :key="index">
                                     <b-col>{{signatory.email}}</b-col>
                                 </b-container>
                             </b-col>
 
-                            <b-col  style="margin-top: 1em; margin-bottom: .75em" v-if="alreadySigned.length > 0">
-                                <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadySigned') }}</span>
+                            <b-col v-if="alreadySigned.length > 0">
                                 <b-col>
+                                    <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadySigned') }}</span>
                                     <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
                                         <b-col>{{signatory.email}}</b-col>
                                     </b-container>
@@ -115,7 +115,9 @@ export default {
         },
 
         needToRead() {
-            return this.readers.filter(x => !this.alreadyRead.includes(x))
+            //return this.readers.filter(x => !this.alreadyRead.includes(x))
+            return this.compareArrays(this.readers, this.alreadyRead)
+
         },
 
 
@@ -150,6 +152,7 @@ export default {
 
                 return arr1.filter((element) => {
                     return arr2.some((x) => {
+                        console.log(x.email !== element.email)
                         return x.email !== element.email;
                     });
                 });
@@ -163,7 +166,6 @@ export default {
                         + this.getDocumentProgress.data.readers.length) * 100).toFixed(2)
             }
         }
-    //}
 }
 </script>
 
