@@ -248,9 +248,12 @@ export default {
                     open: false,
                     img: null,
                 },
-                // Sort my documents todo
-
-
+                // Sort my documents
+                {
+                    key: 3,
+                    open: false,
+                    img: null,
+                }
             ],
             // admin
             sectionData6: [

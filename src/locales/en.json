@@ -214,6 +214,10 @@
             {
                 "question": "Is it possible to define my own filter?",
                 "answer": "By clicking the funnel-icon in the top-left corner of your overview page you get to the filter settings. There you can do just that."
+            },
+            {
+                "question": "How to sort?",
+                "answer": "By clicking the sort-icon on the right of the funnel-icon on the overviewpage you get the sort-dialog where you can choose up to two sort-parameter."
             }
         ],
         "section5": [
