@@ -1,12 +1,11 @@
 <template>
     <b-container>
         <div v-if="page === 0">
+            <p v-if="showText && page === 0">
+                {{ $t('EmailTemplate.forNewSignatories') }}
+            </p>
+
             <div style="padding-bottom: .2em" class="flex-box-2">
-
-                <p>
-                    {{ $t('EmailTemplate.forNewSignatories') }}
-                </p>
-
                 <button class="elsa-blue-btn"
                         style="margin-top: 0.2em; margin-bottom: 0.1em; margin-left: 0.7em; width: auto"
                         v-if="selectedTemplateObject !== {}"
@@ -93,7 +92,7 @@
                     <b-row align-h="end">
                         <b-col cols="auto">
                             <button class="light-btn" @click="goToStartPage">
-                                {{ $t('UploadDoc.back') }} 22
+                                {{ $t('UploadDoc.back') }}
                             </button>
                         </b-col>
                     </b-row>
@@ -135,6 +134,7 @@ import CreateEmailTemplate from "@/main/vue/components/CreateEmailTemplate";
 export default {
     name: "EmailTemplate",
     components: {CreateEmailTemplate, EditEmailTemplate, EmailTemplatePreview},
+    props: ['showText'],
     data() {
         return {
 

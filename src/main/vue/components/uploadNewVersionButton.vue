@@ -83,8 +83,11 @@
                                 <div v-if="page === 4">
                                     <div class="modal-body">
                                         <div>
-                                            <EmailTemplate @saveEmailTemplate="setEmailTemplate"
-                                                           @pages="checkInnerPages"></EmailTemplate>
+                                            <EmailTemplate
+                                                @saveEmailTemplate="setEmailTemplate"
+                                                @pages="checkInnerPages"
+                                                :showText="true"
+                                            ></EmailTemplate>
                                         </div>
                                     </div>
                                     <div class="modal-footer" v-if="showFooter">
@@ -212,7 +215,7 @@ export default {
     components: {EmailTemplate, FileInput, UploadSettings},
     data() {
         return {
-
+            innerPage: null,
             show: true,
             showTemplateBoolean: false,
             showFooter: true,
@@ -339,6 +342,7 @@ export default {
         },
         checkInnerPages(innerPage) {
             this.showFooter = innerPage === 0;
+            this.innerPage = innerPage
         }
     }
 }

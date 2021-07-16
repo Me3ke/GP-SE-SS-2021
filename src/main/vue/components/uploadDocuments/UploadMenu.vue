@@ -47,7 +47,9 @@
                                     <div class="modal-body">
                                         <div>
                                             <EmailTemplate @saveEmailTemplate="setEmailTemplate"
-                                                           @pages="checkInnerPages"></EmailTemplate>
+                                                           @pages="checkInnerPages"
+                                                           :showText="false"
+                                            ></EmailTemplate>
                                         </div>
                                     </div>
                                     <div class="modal-footer" v-if="showFooter">
