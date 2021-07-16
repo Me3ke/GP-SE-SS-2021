@@ -11,4 +11,8 @@ public class ImpressumRequestBody {
     public String getImpressum() {
         return impressum;
     }
+
+    public void setImpressum(String impressum) {
+        this.impressum = impressum;
+    }
 }
