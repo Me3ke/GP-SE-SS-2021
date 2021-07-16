@@ -89,9 +89,6 @@ export default {
             zero: 0,
             isOpen: false,
             stateClosed: false,
-            //percentage: this.getPercentage(),
-
-
         }
     },
     computed: {
@@ -115,9 +112,7 @@ export default {
         },
 
         needToRead() {
-            //return this.readers.filter(x => !this.alreadyRead.includes(x))
             return this.compareArrays(this.readers, this.alreadyRead)
-
         },
 
 
