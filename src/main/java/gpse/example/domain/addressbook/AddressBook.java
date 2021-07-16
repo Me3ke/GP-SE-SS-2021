@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class AddressBook implements Serializable {
 
-    private static final long serialVersionUID = -8187187821150699353L;
+    private static final long serialVersionUID = -8161342822150699353L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

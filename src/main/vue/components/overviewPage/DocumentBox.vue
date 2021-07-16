@@ -105,6 +105,7 @@ export default {
     },
     async mounted() {
         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$forceUpdate()
     },
     computed: {
         ...mapGetters({
