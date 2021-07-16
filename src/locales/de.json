@@ -134,6 +134,10 @@
             {
                 "question": "Wie filtere ich meine Dokumente manuell?",
                 "answer": "Mit dem Trichtersymbol oben rechts auf der Übersichtsseite, gelangen sie zu den erweiterten Filteroptionen. Dort können sie Filter manuell anpassen."
+            },
+            {
+                "question": "Wie kann ich meine Dokumente sortieren?",
+                "answer": "Mit dem Sortiersymbol neben dem Filtersymbol gelangen Sie zu den Sortiereinstellungen. Dort können Sie zwei Sortierkriterien wählen um die gewünschte Reihenfolge zu erzeugen."
             }
         ],
         "section5": [

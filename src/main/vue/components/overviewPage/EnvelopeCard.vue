@@ -17,7 +17,8 @@
                 </div>
             </b-col>
             <b-col cols="1">
-                <settingsButton v-if="envelope.owner.username === user.username" @click.native="settings()"></settingsButton>
+                <settingsButton v-if="envelope.owner.username === user.username"
+                                @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
@@ -29,6 +30,7 @@ import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
 import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
+
 export default {
     name: "EnvelopeCard",
     components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
@@ -72,14 +74,16 @@ export default {
             })
             if (this.documentInfo.signatureType === 'ADVANCED_SIGNATURE') {
                 this.advanced = true
-                break
+            }
+            if (this.documentInfo.state !== 'ARCHIVED') {
+                this.showProgress = true
             }
         }
 
         await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
             envelope: this.envelope
         })
-        this.showProgress = true
+
 
         if (this.counter !== -1) {
             this.showAuth = true
@@ -116,7 +120,10 @@ export default {
         },
         settings() {
             let envelopeId = this.envelope.id;
-            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelope.id}}));
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({
+                name: 'settings',
+                params: {envId: this.envelope.id}
+            }));
         }
     }
 }
