@@ -1,34 +1,69 @@
 <template>
     <div id="container">
-        <router-link :to="$i18n.locale === 'de' ? '/de/impressum' : '/en/impressum' " id="text">{{
+        <span id="text" @click="goToAboutPage()">
+            {{
                 $t('AboutPage.name')
             }}
-        </router-link>
+        </span>
     </div>
 </template>
 
 <script>
 export default {
-    name: "Footer"
+    name: "Footer",
+    methods: {
+        goToAboutPage() {
+            this.$router.push({name: 'impressum'})
+        }
+    }
 }
 </script>
 
 <style scoped>
 #container {
-    background-color: var(--dark-grey);
-    opacity: 65%;
+    background-color: var(--elsa-blue-transparent);
     width: 100%;
     padding-top: 0;
     margin-left: 0;
     position: fixed;
     bottom: 0;
-    font-size: 0.75em;
+    font-size: 1.2em;
+    border: solid 1px var(--dark-grey);
 }
 
 #text {
-    color: var(--whitesmoke);
-    font-size: 0.75em;
+    color: var(--dark-grey);
 }
 
+#text:hover {
+    text-decoration: underline var(--elsa-blue);
+    color: var(--elsa-blue);
+    cursor: pointer;
+}
+
+/* Settings for differently sized screens */
+@media (max-width: 575.98px) {
+    span {
+        font-size: 0.6em;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    span {
+        font-size: 0.7em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (max-height: 499.98px) {
+    span {
+        font-size: 0.7em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
+    span {
+        font-size: 0.7em;
+    }
+}
 
 </style>
