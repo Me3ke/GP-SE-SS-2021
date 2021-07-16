@@ -6,12 +6,14 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -171,11 +173,16 @@ public class Protocol {
                     addIndentedLine(signatory.getEmail() + "    Am: "
                             + formatter.format(signatory.getSignedOn()),
                         lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
-                    if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
-                        lineCounter.addLines(2);
-                        addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
-                            lineCounter.getCount(), contentStream);
+                    try {
+                       final User user = userService.getUser(signatory.getEmail());
+                        if (user.getImageSignature().length != 0) {
+                            lineCounter.addLines(2);
+                            addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
+                                lineCounter.getCount(), contentStream);
+                        }
+                    } catch (UsernameNotFoundException ignored) {
                     }
+
                 } else {
                     addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
                         lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
