@@ -284,7 +284,8 @@ export default {
             this.showReplaceButton = true
             this.endDate = this.settingsCopy.endDate
             this.orderRelevant = this.settingsCopy.orderRelevant
-            this.signatories = this.settingsCopy.signatories
+            this.signatories = this.settingsCopy.signatories.filter(signatory => signatory.type !== 0)
+            this.readers = this.settingsCopy.signatories.filter(signatory => signatory.type === 0)
 
             const [date, time] = this.endDate.split(' ')
             this.endDate = date
