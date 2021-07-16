@@ -8,19 +8,19 @@
                             <div class="modal-content">
                                 <div class="modal-header" style="justify-content: space-between">
                                     <h5 v-if="page === 1" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 2" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2') }}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 3" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 4" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 5" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 6" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.update2')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.update2') }}</h5>
                                     <h5 v-if="page === 7" class="modal-title">
-                                        {{$t('UploadDoc.UpdateDocument.errorUpload')}}</h5>
+                                        {{ $t('UploadDoc.UpdateDocument.errorUpload') }}</h5>
 
                                     <h5>
                                         <b-icon type="button" icon="x-square" @click="show = false; close()">
@@ -143,7 +143,9 @@
                                             <div v-if="!this.uploadingDocument">
                                                 <div>
                                                     <p>
-                                                        {{ $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title}) }}</p>
+                                                        {{
+                                                            $t('UploadDoc.UpdateDocument.confirmation', {documentTitle: document.title})
+                                                        }}</p>
                                                     <p>{{ $t('UploadDoc.UpdateDocument.signatureResetReminder') }}</p>
                                                 </div>
                                             </div>
@@ -298,23 +300,20 @@ export default {
 
             // here show error
 
-            if (this.newDocumentError === undefined) {
 
+            await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
+            let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
 
-                await this.$store.dispatch('document/fetchDocumentInfo', {envId: this.envID, docId: this.newDocumentId})
-                let newUrl = 'envelope/' + this.envID + '/document/' + this.newDocumentId
+            console.log('Update success')
+            // will route the user to the newUploaded document page (with the new ID)
+            // for now it is working. But it will show before refreshing the new page an unable preview of the file
+            await this.$store.dispatch('envelopes/fetchEnvelopes')
+            await this.$emit("refreshDocument")
+            this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
+                this.$router.go(0)
+            })
+            this.close()
 
-                // will route the user to the newUploaded document page (with the new ID)
-                // for now it is working. But it will show before refreshing the new page an unable preview of the file
-                await this.$store.dispatch('envelopes/fetchEnvelopes')
-                await this.$emit("refreshDocument")
-                this.$router.push('/' + this.$i18n.locale + '/' + newUrl).then(() => {
-                    this.$router.go(0)
-                })
-                this.close()
-            } else {
-                this.page = 7
-            }
         },
 
         // temp is the selected template
