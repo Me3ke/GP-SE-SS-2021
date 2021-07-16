@@ -29,7 +29,8 @@
                             <FilterMenu :filter="filter"></FilterMenu>
                         </b-col>
                         <b-col>
-                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
+                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst"
+                                      :second="this.filter.sortSecond"></SortMenu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -94,7 +95,7 @@
                          :key="envelope.id"
                          style="position: static; margin-top: 1vh; margin-left: 0.5vw;">
                         <div v-if="!(envelope.documents.length === 1)">
-                            <EnvelopeCard :envelope=envelope ></EnvelopeCard>
+                            <EnvelopeCard :envelope=envelope></EnvelopeCard>
                         </div>
                         <div v-if="envelope.documents.length === 1">
                             <DocumentCard :document=envelope.documents[0] :envelopeId="envelope.id"
@@ -178,9 +179,9 @@ export default {
     methods: {
         // Refreshing after a document was uploaded
         async refreshPage() {
-          await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+            await this.$store.dispatch('envelopes/fetchEnvelopes')
         },
-        updateSort: function(sortFirst, sortSecond) {
+        updateSort: function (sortFirst, sortSecond) {
             this.filter.sortFirst = sortFirst;
             this.filter.sortSecond = sortSecond;
         },
@@ -273,7 +274,7 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('envelopes/fetchEnvelopes')
         await this.$store.dispatch('fetchUser')
         await this.$store.dispatch('impressum/fetchImpressum')
         this.loaded = true
