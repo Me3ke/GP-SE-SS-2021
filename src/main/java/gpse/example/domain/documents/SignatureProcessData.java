@@ -46,7 +46,6 @@ public class SignatureProcessData {
      */
     public SignatureProcessData(final DocumentPutRequest documentPutRequest) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        this.endDate = LocalDateTime.parse(documentPutRequest.getEndDate(), formatter);
         this.draft = documentPutRequest.isDraft();
         if (this.draft) {
             boolean isValidFormat = true;
