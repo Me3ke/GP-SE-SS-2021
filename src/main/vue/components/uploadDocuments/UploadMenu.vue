@@ -76,7 +76,7 @@
                                                              :files="files"></SettingsPreview>
                                         </div>
 
-                                        <div v-if="this.uploadingDocument">
+                                        <div v-if="this.uploadingDocument" style="text-align: center">
                                             <b-spinner></b-spinner>
                                         </div>
 
@@ -148,7 +148,7 @@ export default {
             this.selectedEnvelope = envelope;
         },
         updateSettings: function (settings) {
-          this.settings = settings;
+            this.settings = settings;
         },
         close() {
             this.page = 1;
@@ -195,17 +195,17 @@ export default {
             this.settings.emailTemplateHtml = temp
         }
     },
-        created() {
-            this.$store.dispatch('envelopes/fetchEnvelopes', {})
-            this.$store.dispatch('emailTemplate/fetchEmailTemplate')
+    created() {
+        this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        this.$store.dispatch('emailTemplate/fetchEmailTemplate')
 
-        },
-        computed: {
-            ...mapGetters({
-                envelopes: 'envelopes/getEnvelopes',
-                getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
-            })
-        }
+    },
+    computed: {
+        ...mapGetters({
+            envelopes: 'envelopes/getEnvelopes',
+            getCreatedEnvelope: "documentUpload/getCreatedEnvelope"
+        })
+    }
 }
 </script>
 
@@ -260,5 +260,13 @@ export default {
     border-radius: 0.33vw;
 }
 
-
+.spinner-border {
+    width: 1.5em;
+    height: 1.5em;
+    border-width: 0.12em;
+    border-left-color: var(--elsa-blue);
+    border-top-color: var(--elsa-blue);
+    border-bottom-color: var(--elsa-blue);
+    text-align: center;
+}
 </style>
