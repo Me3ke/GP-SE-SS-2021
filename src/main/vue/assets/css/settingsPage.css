@@ -33,18 +33,18 @@
 }
 
 
-
 .ql-editor {
     height: 10em !important;
 }
 
-.ql-container .ql-snow{
+.ql-container .ql-snow {
     height: 10em !important;
 }
 
 /deep/ .ql-editor.ql-blank::before {
     color: var(--light-grey);
 }
+
 .modal-body {
     text-align: left;
 }
@@ -109,6 +109,7 @@
 /deep/ .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: var(--dark-grey) !important;
 }
+
 /deep/ .ql-snow .ql-picker-options .ql-picker-item {
     color: var(--dark-grey) !important;
 }
@@ -116,6 +117,7 @@
 /deep/ .modal.show .modal-dialog {
     padding-top: 3em;
 }
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     h4 {
@@ -136,7 +138,7 @@
     }
 
     .responsive-img {
-        font-size: 0.7em;
+        font-size: 0.2em;
     }
 }
 
@@ -160,7 +162,7 @@
     }
 
     .responsive-img {
-        font-size: 0.6em;
+        font-size: 0.4em;
     }
 }
 
@@ -184,7 +186,7 @@
     }
 
     .responsive-img {
-        font-size: 0.9em;
+        font-size: 0.5em;
     }
 }
 
@@ -208,7 +210,7 @@
     }
 
     .responsive-img {
-        font-size: 0.9em;
+        font-size: 0.6em;
     }
 }
 
@@ -232,7 +234,7 @@
     }
 
     .responsive-img {
-        font-size: 1em;
+        font-size: 0.8em;
     }
 }
 
@@ -252,7 +254,7 @@
     }
 
     .responsive-img {
-        font-size: 1em;
+        font-size: 0.8em;
     }
 }
 
