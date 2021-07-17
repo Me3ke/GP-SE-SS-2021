@@ -7,6 +7,7 @@ export function constructSheet(sheetInformation) {
         "--dark-grey: " + sheetInformation[0] + ";\n" +
         "--elsa-blue: " + sheetInformation[1] + ";\n" +
         "--elsa-blue-transparent: " + hexToRgba(sheetInformation[1], 0.1) + ";\n" +
+        "--elsa-blue-lighter: " + LightenDarkenColor(sheetInformation[1], 229.5) + ";\n" +
         "--whitesmoke: " + sheetInformation[2] + ";\n" +
         "--light-grey: " + sheetInformation[3] + ";\n" +
         "--shadow-grey: " + sheetInformation[4] + ";\n" +
@@ -26,6 +27,7 @@ export function constructSheet(sheetInformation) {
         "--dark-grey:" + sheetInformation[16] + ";\n" +
         "--elsa-blue:" + sheetInformation[17] + ";\n" +
         "--elsa-blue-transparent: " + hexToRgba(sheetInformation[17], 0.1) + ";\n" +
+        "--elsa-blue-lighter: " + LightenDarkenColor(sheetInformation[17], -175.75) + ";\n" +
         "--whitesmoke: " + sheetInformation[18] + ";\n" +
         "--light-grey: " + sheetInformation[19] + ";\n" +
         "--shadow-grey: " + sheetInformation[20] + ";\n" +
@@ -74,4 +76,35 @@ function hexToRgba(hex, alpha) {
         g = parseInt(hex.slice(3, 5), 16),
         b = parseInt(hex.slice(5, 7), 16);
     return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+}
+
+// lightens/darkens color: https://css-tricks.com/snippets/javascript/lighten-darken-color/
+function LightenDarkenColor(col, amt) {
+
+    var usePound = false;
+
+    if (col[0] === "#") {
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    var num = parseInt(col, 16);
+
+    var r = (num >> 16) + amt;
+
+    if (r > 255) r = 255;
+    else if (r < 0) r = 0;
+
+    var b = ((num >> 8) & 0x00FF) + amt;
+
+    if (b > 255) b = 255;
+    else if (b < 0) b = 0;
+
+    var g = (num & 0x0000FF) + amt;
+
+    if (g > 255) g = 255;
+    else if (g < 0) g = 0;
+
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+
 }

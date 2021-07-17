@@ -147,7 +147,7 @@ export default {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: var(--dark-grey);
-    background-color: var(--elsa-blue-transparent);
+    background-color: var(--elsa-blue-lighter);
     background-size: cover;
     align-content: center;
     z-index: 1000000000;

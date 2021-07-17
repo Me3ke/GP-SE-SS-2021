@@ -21,7 +21,7 @@ export default {
 
 <style scoped>
 #container {
-    background-color: var(--elsa-blue-transparent);
+    background-color: var(--elsa-blue-lighter);
     width: 100%;
     padding-top: 0;
     margin-left: 0;

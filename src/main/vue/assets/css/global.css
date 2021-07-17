@@ -3,6 +3,7 @@
     --dark-grey: #47525E;
     --elsa-blue: #436495;
     --elsa-blue-transparent: rgba(67, 100, 149, 0.1);
+    --elsa-blue-lighter: #eaeff5;
     --whitesmoke: whitesmoke;
     --light-grey: #D8D8D9;
     --shadow-grey: #ACACAC;
@@ -57,6 +58,7 @@
     --dark-grey: #D8D8D9;
     --elsa-blue: whitesmoke;
     --elsa-blue-transparent: rgba(245, 245, 245, 0.3);
+    --elsa-blue-lighter: #585858;
     --whitesmoke: #23292f;
     --light-grey: #ACACAC;
     --shadow-grey: #D8D8D9;
