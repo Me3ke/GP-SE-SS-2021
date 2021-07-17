@@ -61,7 +61,7 @@
                                     <!-- Page 2 (2FakAuth) -->
                                     <div v-if="page === 2">
                                         <!-- 2FakAuth set up prompt -->
-                                        <h4>
+                                        <h4 style="text-align: center">
                                             {{ $t('wizard.welcome.2FakAuth') }}
                                         </h4>
 
@@ -88,7 +88,7 @@
                                     <!-- Page 3 (keypair) -->
                                     <div v-if="page === 3">
                                         <!-- 2FakAuth set up prompt -->
-                                        <h4>
+                                        <h4 style="text-align: center">
                                             {{ $t('wizard.welcome.keypair') }}
                                         </h4>
 
@@ -115,7 +115,7 @@
                                     <!-- Page 4 (picture) -->
                                     <div v-if="page === 4">
                                         <!-- Signature image set up prompt -->
-                                        <h4>
+                                        <h4 style="text-align: center">
                                             {{ $t('wizard.welcome.signature') }}
                                         </h4>
 

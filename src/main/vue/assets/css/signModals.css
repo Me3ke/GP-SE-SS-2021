@@ -251,6 +251,7 @@ h4 {
     color: var(--elsa-blue);
     font-weight: 503;
     text-shadow: 4px 3px 0 var(--light-grey), 9px 8px 0 var(--elsa-blue-transparent);
+    text-align: center;
 }
 
 @keyframes appearing {
