@@ -75,7 +75,7 @@ export default {
             if (this.documentInfo.signatureType === 'ADVANCED_SIGNATURE') {
                 this.advanced = true
             }
-            if (this.documentInfo.state !== 'ARCHIVED') {
+            if (this.documentInfo.state !== 'ARCHIVED' && !this.documentInfo.draft) {
                 this.showProgress = true
             }
         }
