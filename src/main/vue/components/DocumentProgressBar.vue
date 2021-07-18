@@ -1,9 +1,6 @@
 <template>
-<div v-if="getDocumentProgress !== undefined && docPercentage < 100.00">
-    <div
-        style="padding-bottom: 1em;"
-        @click="clicked"
-    >
+    <div v-if="getDocumentProgress !== undefined && docPercentage < 100.00">
+        <div @click="clicked">
 
             <b-progress max="100" style="background-color: var(--progress-background); cursor: pointer">
                 <b-progress-bar
@@ -14,64 +11,65 @@
             </b-progress>
 
 
-
             <!--- Document Reader Progress ---->
-            <b-container style="max-width: 100%; margin-top: 1px ; border: .03vw solid var(--dark-grey); border-radius: .33vw" v-if="isOpen && state !== 'CLOSED'
-            && getDocumentProgress !== undefined" id="collapseExample" >
-                    <b-row>
-                        <b-col style="margin-top: .75em; margin-bottom: .4em" v-if="readers.length > 0" >
-                            <b-col style="padding-bottom: .4em" v-if="readers.length !== alreadyRead.length ">
-                                <span style="color: var(--not-done)" v-if="needToRead.length > 0">{{ $t('ProgressBar.document.needToRead') }}</span>
+            <b-container
+                style="max-width: 100%; margin-top: 1px ; border: .03vw solid var(--dark-grey); border-radius: .33vw"
+                v-if="isOpen && state !== 'CLOSED'
+            && getDocumentProgress !== undefined" id="collapseExample">
+                <b-row>
+                    <b-col style="margin-top: .75em; margin-bottom: .4em" v-if="readers.length > 0">
+                        <b-col style="padding-bottom: .4em" v-if="readers.length !== alreadyRead.length ">
+                            <span style="color: var(--not-done)"
+                                  v-if="needToRead.length > 0">{{ $t('ProgressBar.document.needToRead') }}</span>
 
-                                <b-container v-for="(signatory,index) in needToRead" :key="index">
-                                    <b-col>{{signatory.email}}</b-col>
+                            <b-container v-for="(signatory,index) in needToRead" :key="index">
+                                <b-col>{{ signatory.email }}</b-col>
+                            </b-container>
+                        </b-col>
+
+                        <b-col v-if="alreadyRead.length > 0">
+                            <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
+                            <b-col>
+                                <b-container v-for="(signatory,index) in alreadyRead" :key="index">
+                                    <b-col>{{ signatory.email }}</b-col>
                                 </b-container>
+
                             </b-col>
+                        </b-col>
+                    </b-col>
 
-                            <b-col v-if="alreadyRead.length > 0">
-                                <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadyRead') }}</span>
-                                <b-col>
-                                    <b-container  v-for="(signatory,index) in alreadyRead" :key="index">
-                                        <b-col>{{signatory.email}}</b-col>
-                                    </b-container>
 
-                                </b-col>
+                    <!--- Document Signature Progress ---->
+
+                    <b-col
+                        v-if="signatories.length > 0"
+                        style="margin-top: .75em; margin-bottom: .4em">
+                        <b-col style="padding-bottom: .4em">
+                            <span style="color: var(--not-done)"
+                                  v-if="needToSign.length > 0">{{ $t('ProgressBar.document.needToSign') }}</span>
+                            <b-container v-for="(signatory,index) in needToSign" :key="index">
+                                <b-col>{{ signatory.email }}</b-col>
+                            </b-container>
+                        </b-col>
+
+                        <b-col v-if="alreadySigned.length > 0">
+                            <b-col>
+                                <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadySigned') }}</span>
+                                <b-container v-for="(signatory,index) in alreadySigned" :key="index">
+                                    <b-col>{{ signatory.email }}</b-col>
+                                </b-container>
+
                             </b-col>
                         </b-col>
 
+                    </b-col>
 
 
-
-                        <!--- Document Signature Progress ---->
-
-                        <b-col
-                            v-if="signatories.length > 0"
-                            style="margin-top: .75em; margin-bottom: .4em">
-                            <b-col style="padding-bottom: .4em">
-                                <span style="color: var(--not-done)" v-if="needToSign.length > 0">{{ $t('ProgressBar.document.needToSign') }}</span>
-                                <b-container v-for="(signatory,index) in needToSign" :key="index">
-                                    <b-col>{{signatory.email}}</b-col>
-                                </b-container>
-                            </b-col>
-
-                            <b-col v-if="alreadySigned.length > 0">
-                                <b-col>
-                                    <span style="color: var(--done)">{{ $t('ProgressBar.document.alreadySigned') }}</span>
-                                    <b-container  v-for="(signatory,index) in alreadySigned" :key="index">
-                                        <b-col>{{signatory.email}}</b-col>
-                                    </b-container>
-
-                                </b-col>
-                            </b-col>
-
-                        </b-col>
-
-
-                    </b-row>
+                </b-row>
 
             </b-container>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -116,11 +114,9 @@ export default {
         },
 
 
-
-
         // calculate th percentage of the document progress (signatories with reader)
         docPercentage() {
-            if(this.state === "CLOSED") {
+            if (this.state === "CLOSED") {
                 return 100.00
             } else {
                 return ((this.getDocumentProgress.data.alreadySigned.length
@@ -129,7 +125,6 @@ export default {
                         + this.getDocumentProgress.data.readers.length) * 100).toFixed(2)
             }
         },
-
 
 
     },
@@ -141,7 +136,7 @@ export default {
 
         // returning the array with only signatories who needs to sign
         compareArrays(arr1, arr2) {
-            if(arr2.length === 0) {
+            if (arr2.length === 0) {
                 return arr1
             } else {
 
@@ -156,11 +151,11 @@ export default {
 
 
         getPercentage() {
-                return ((this.getDocumentProgress.data.alreadySigned.length + this.getDocumentProgress.data.alreadyRead.length)
-                    / (this.getDocumentProgress.data.signatories.length
-                        + this.getDocumentProgress.data.readers.length) * 100).toFixed(2)
-            }
+            return ((this.getDocumentProgress.data.alreadySigned.length + this.getDocumentProgress.data.alreadyRead.length)
+                / (this.getDocumentProgress.data.signatories.length
+                    + this.getDocumentProgress.data.readers.length) * 100).toFixed(2)
         }
+    }
 }
 </script>
 
@@ -176,7 +171,6 @@ export default {
     color: var(--whitesmoke);
 
 }
-
 
 
 </style>

@@ -4,8 +4,8 @@
         <TwoFacAuth v-if="showAuth" :advanced="advanced" @twoFacTrigger="goToEnv"
                     @closeTrigger="closeAuth"></TwoFacAuth>
 
-        <b-row no-gutters>
-            <b-col cols="11">
+        <b-row no-gutters style="padding-bottom: 0.5rem;">
+            <b-col cols="12">
                 <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
                     <div v-if="this.envelope.owner.username === this.$store.state.auth.username && showProgress">
@@ -16,16 +16,11 @@
                     </div>
                 </div>
             </b-col>
-            <b-col cols="1">
-                <settingsButton v-if="envelope.owner.username === user.username"
-                                @click.native="settings()"></settingsButton>
-            </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
 import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
@@ -33,7 +28,7 @@ import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
 
 export default {
     name: "EnvelopeCard",
-    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
+    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox},
     props: {
         envelope: Object
     },
@@ -117,13 +112,6 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
-        },
-        settings() {
-            let envelopeId = this.envelope.id;
-            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({
-                name: 'settings',
-                params: {envId: this.envelope.id}
-            }));
         }
     }
 }

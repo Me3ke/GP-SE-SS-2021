@@ -49,7 +49,7 @@
                                         </div>
                                     </b-col>
                                 </b-row>
-                                <b-row align-h="start">
+                                <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h6>
                                             {{ $t('Document.owner') }}: {{ this.envelope.owner.firstname }}
@@ -60,6 +60,11 @@
                                         <h6>
                                             {{ $t('Document.date') }}: {{ this.envelope.creationDate }}
                                         </h6>
+                                    </b-col>
+                                    <b-col style="text-align: right; margin-bottom: 0.5rem" cols="auto">
+                                        <settingsButton
+                                            v-if="envelope.owner.username === this.$store.state.auth.username"
+                                            @click.native.stop="settings()"></settingsButton>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -72,11 +77,14 @@
 </template>
 
 <script>
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
+
 export default {
     name: "EnvelopeBox",
     props: {
         envelope: Object
     },
+    components: {settingsButton},
     data() {
         let open = false;
         let toSign = false;
@@ -98,6 +106,15 @@ export default {
             }
         }
         return {open: open, toSign: toSign, toRead: toRead, draft: draft}
+    },
+    methods: {
+        settings() {
+            let envelopeId = this.envelope.id;
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({
+                name: 'settings',
+                params: {envId: this.envelope.id}
+            }));
+        }
     }
 }
 </script>
