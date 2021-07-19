@@ -42,7 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
-                    .antMatchers("/api/user/newpassword*").permitAll()
+                .antMatchers("/api/user/newpassword*").permitAll()
+                .antMatchers("/api/corporate/logo").permitAll()
+                .antMatchers("/api/corporate/colors").permitAll()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityConstants))
@@ -57,9 +59,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * configure global mathod.
+     *
      * @param userDetailsService userDetailsservice
-     * @param passwordEncoder passwordEncoder
-     * @param auth authenticationmanager
+     * @param passwordEncoder    passwordEncoder
+     * @param auth               authenticationmanager
      * @throws SecurityConfigException Exception Thrown if authentication failed.
      */
     @Autowired

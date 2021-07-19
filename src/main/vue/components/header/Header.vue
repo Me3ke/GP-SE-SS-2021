@@ -1,6 +1,5 @@
 <template>
     <b-navbar toggleable="sm" id="background" sticky :class="[mobile ? 'mobile' : 'normal']">
-        <!-- To-Do: Add  real Route to Home -->
         <b-navbar-brand @click="goToOverView()" style="cursor:pointer;">
             <b-img v-if="theme === '' " :src="elsaLight" class="responsive-img" :alt="$t('Header.logo')"></b-img>
             <b-img v-else :src="elsaDark" class="responsive-img" :alt="$t('Header.logo')"></b-img>

@@ -1,6 +1,15 @@
 <template>
     <b-navbar toggleable="sm" id="background" sticky>
-        <!-- To-Do: Add  real Route to Home -->
+        <b-navbar-brand>
+            <img v-if="themeColor === '' && !lightEmpty"
+                 :src="getLightSource()" class="responsive-img"
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
+            <img v-if="themeColor === 'darkMode' && !darkEmpty"
+                 :src="getDarkSource()" class="responsive-img"
+                 :alt="$t('Header.logo')"
+                 style="margin-left: 2em">
+        </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav style="height: 4em">
             <b-navbar-nav class="ml-auto">
@@ -15,6 +24,8 @@
 <script>
 import LanguageSwitcher from "@/main/vue/components/header/LanguageSwitcher";
 import ModeSwitch from "@/main/vue/components/header/ModeSwitch";
+import {loadSheet} from "@/main/vue/scripts/stylesheetManipulator";
+import {mapGetters} from "vuex";
 
 export default {
     name: "LandingPageHeader",
@@ -24,25 +35,66 @@ export default {
             'theme': ''
         }
     },
+    async created() {
+        await loadSheet()
+        await this.$store.dispatch('theme/getLogos')
+    },
     methods: {
         toggleTheme() {
             this.theme = this.theme === 'darkMode' ? '' : 'darkMode';
             document.documentElement.setAttribute('data-theme', this.theme);
             localStorage.setItem('theme', this.theme);
         },
-      signalLanguageSwitch() {
-          this.$emit('languageSwitch')
-      }
+        getLightSource() {
+            if (this.logoLightType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoLight
+            } else {
+                return 'data:image/' + this.logoLightType + ';base64,' + this.logoLight
+            }
+        },
+        getDarkSource() {
+            if (this.logoDarkType === 'svg') {
+                return 'data:image/svg+xml;base64,' + this.logoDark
+            } else {
+                return 'data:image/' + this.logoDarkType + ';base64,' + this.logoDark
+            }
+        },
+        signalLanguageSwitch() {
+            this.$emit('languageSwitch')
+        }
+    },
+    computed: {
+        ...mapGetters({
+            themeColor: 'theme/getTheme',
+
+            logoLight: 'theme/getLightLogo',
+            logoDark: 'theme/getDarkLogo',
+            logoLightType: 'theme/getLightLogoType',
+            logoDarkType: 'theme/getDarkLogoType'
+        }),
+        lightEmpty() {
+            return this.logoLight === ""
+        },
+        darkEmpty() {
+            return this.logoDark === ""
+        }
     }
 }
 </script>
 
 <style scoped>
 #background {
-    background-image: linear-gradient(to right,  var(--headerFadeOne), var(--headerFadeTwo),var(--headerFadeThree), var(--headerFadeTwo), var(--headerFadeOne)),
-    url(../../assets/header_background.png);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--dark-grey);
+    background-color: var(--elsa-blue-lighter);
     background-size: cover;
     align-content: center;
+}
+
+.responsive-img {
+    height: 2em;
+    width: auto;
 }
 
 /* Settings for differently sized screens */
