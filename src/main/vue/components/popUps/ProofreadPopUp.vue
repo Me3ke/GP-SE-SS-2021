@@ -162,7 +162,7 @@ export default {
         if (!this.isGuest) {
             await this.$store.dispatch('document/fetchSeen', this.$route.params.docId)
             if (!this.hasSeen) {
-                this.page = -1
+                this.page = 0
             }
         }
     },
