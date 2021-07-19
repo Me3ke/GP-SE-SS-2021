@@ -25,11 +25,21 @@
                 <button class="ql-italic">Italic</button>
                 <button class="ql-underline">Underline</button>
 
-                <select class="ql-size">
-                    <option value="small"></option>
+                <select class="ql-header">
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option value="4"></option>
+                    <option value="5"></option>
+                    <option value="6"></option>
                     <option selected></option>
-                    <option value="large"></option>
-                    <option value="huge"></option>
+                </select>
+
+                <select class="ql-align">
+                    <option value=""></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
                 </select>
 
 
@@ -58,7 +68,7 @@
                     class="ml-1 light-btn"
                     @click="cancel">
                          <span class="button-txt">
-                             {{ $t('EmailTemplate.Save') }} Cancel
+                             {{ $t('EmailTemplate.cancel') }}
                          </span>
             </button>
             <button type="button"

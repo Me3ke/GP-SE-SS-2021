@@ -731,10 +731,13 @@
     },
     "EmailTemplate": {
         "emailTemp": "Email template",
+        "emailTemSettings": "Email template settings",
+
         "createTemp": "Add template",
         "deleteTemp": "Delete template",
         "editTemp": "Edit template",
         "previewTemp": "Preview",
+        "previewTempSmall": "preview",
         "createNewTemplate": "Create a new email template",
         "saveTemp": "Save template",
         "enterName": "Type the name of the template",
@@ -742,6 +745,8 @@
         "emptySubject": "The subject field should not be empty",
         "Save": "Save",
         "subject": "Subject",
+        "cancel": "Cancel",
+
         "editSentence": "To edit the template, just write in the editor and it will be applied automatically.",
         "unsavedChanged": "Noticed unsaved changes",
         "unsavedChanged2": "If you want to save the Edited template click on the \"Save template\" button.",
