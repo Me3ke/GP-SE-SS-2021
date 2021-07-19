@@ -38,6 +38,7 @@ export default {
         ...mapGetters({
             documentProgress: 'document/getDocumentProgressArray',
             documentProgressById: 'document/getDocumentProgressArrayById',
+            envelopeById: 'envelopes/getEnvelope',
 
             auth: 'twoFakAuth/getAuthMust',
             counter: 'twoFakAuth/getLogoutCounter',
@@ -86,6 +87,10 @@ export default {
     },
 
     async mounted() {
+        await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
+            envelope: this.envelopeById(this.envelopeId)
+        })
+
         await this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,
             docId: this.document.id,
