@@ -107,7 +107,7 @@
                     :total-rows="5"
                     :per-page="pageLimit"
                     class="button-txt"
-                    style="margin-top: auto;margin-bottom: auto;"
+                    style="margin-top: auto;margin-bottom: auto; font-size: 0.5em"
                 ></b-pagination>
                 <div>
                     <button type="button" class="elsa-blue-btn white-btn" @click="close()">
