@@ -22,7 +22,7 @@
                 </h4>
             </b-col>
             <b-col>
-                <button :class="{inactive: page > this.envelope(this.envId).documents.length, active: page <= this.envelope(this.envId).documents.length}" @click="next()" style="padding: 0; height:2em; width:2em">
+                <button :class="{inactive: page >= this.envelope(this.envId).documents.length, active: page < this.envelope(this.envId).documents.length}" @click="next()" style="padding: 0; height:2em; width:2em">
                     <b-icon class="icon" icon="arrow-right-short"></b-icon>
                 </button>
             </b-col>
@@ -41,18 +41,6 @@
                     <div v-if="page > 0 && page <= this.envelope(this.envId).documents.length">
                         <DocumentPageReduced :key="page" :envId="envId" :docId="this.envelope(this.envId).documents[this.page - 1].id"></DocumentPageReduced>
                     </div>
-                    <div v-if="page > this.envelope(this.envId).documents.length">
-                        <button class="elsa-blue-btn">
-                            <h5>
-                                {{$t('EnvelopePage.readAll')}}
-                            </h5>
-                        </button>
-                        <button class="elsa-blue-btn">
-                            <h5>
-                                {{$t('EnvelopePage.signAll')}}
-                            </h5>
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -69,9 +57,6 @@ import DocumentPageReduced from "@/main/vue/components/envelopePage/DocumentPage
 
 export default {
     name: "EnvelopePage",
-    props: {
-        envId: [Number, String]
-    },
     components: {Footer, Header, DocumentCard, DocumentPageReduced},
     data() {
         return {
@@ -81,7 +66,7 @@ export default {
     },
     methods: {
         next() {
-            if(this.page <= this.envelope(this.envId).documents.length) {
+            if(this.page < this.envelope(this.envId).documents.length) {
                 this.page = this.page + 1;
             }
         },
@@ -89,6 +74,9 @@ export default {
             if (this.page > 0) {
                 this.page = this.page - 1;
             }
+        },
+        readTrigger: function(bool) {
+            this.showReadAll = bool;
         }
     },
     computed: {
@@ -100,15 +88,13 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('envelopes/fetchEnvelopes')
-        this.loaded = true
+        await this.$store.dispatch('envelopes/fetchEnvelopes');
+        this.loaded = true;
     },
     beforeDestroy() {
         this.$store.dispatch('document/resetState')
         this.loaded = false
     }
-
-
 }
 </script>
 

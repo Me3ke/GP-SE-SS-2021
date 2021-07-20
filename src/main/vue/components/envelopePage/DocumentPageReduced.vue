@@ -221,8 +221,8 @@ export default {
         Footer
     },
     props: {
-        docId: Number,
-        envId: Number,
+        docId: [Number, String],
+        envId: [Number,  String],
     },
     data() {
         return {

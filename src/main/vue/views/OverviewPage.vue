@@ -4,7 +4,6 @@
 
         <Header></Header>
 
-
         <!-- Page Title -->
         <b-container fluid style="margin-top:10vh; margin-right:2vw; text-align: left">
             <b-row align-h="between">
@@ -16,7 +15,6 @@
                 <b-col cols="auto">
                     <b-row>
                         <b-col>
-
                             <!-- Searchbar -->
                             <b-input-group>
                                 <b-input-group-prepend is-text @click="search()">
