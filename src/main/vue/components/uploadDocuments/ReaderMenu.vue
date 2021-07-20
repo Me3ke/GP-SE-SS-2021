@@ -174,8 +174,6 @@ export default {
 
 .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file {
     height: 1.85em;
-    width: 23em;
-    max-width: 24em;
 }
 
 .form-control:focus, .form-control:active, .b-form-tags.focus, .b-form-tags.active {
@@ -204,21 +202,11 @@ export default {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.5em;
     }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 32em;
-        max-width: 32em;
-    }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.7em;
-    }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 34em;
-        max-width: 34em;
     }
 }
 
@@ -226,21 +214,11 @@ export default {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 29.75em;
-        max-width: 29.75em;
-    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
-    }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 29.75em;
-        max-width: 29.75em;
     }
 }
 </style>

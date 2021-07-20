@@ -5,33 +5,30 @@
                     @closeTrigger="closeAuth"></TwoFacAuth>
 
         <b-row no-gutters>
-            <b-col cols="11">
+            <b-col cols="12">
                 <DocumentBox style="cursor: pointer;" @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
                 <div v-if="//documentProgressById(document.id) &&
-                     this.document.owner.email === this.$store.state.auth.username">
+                     this.document.owner.username === this.$store.state.auth.username">
                     <DocumentProgressBar
                         :state="document.state"
                         :docId="document.id"
                         :getDocumentProgress="documentProgressById(document.id)"
-                    ></DocumentProgressBar>
+                        style="margin-bottom: 0; padding-bottom: 0 !important;"></DocumentProgressBar>
                 </div>
-            </b-col>
-            <b-col cols="1">
-                <settingsButton v-if="document.owner.email === user.email" @click.native="settings()"></settingsButton>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
 import DocumentBox from "@/main/vue/components/overviewPage/DocumentBox";
 import {mapGetters} from "vuex";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
 import DocumentProgressBar from "@/main/vue/components/DocumentProgressBar";
+
 export default {
     name: "DocumentCard",
-    components: {DocumentProgressBar, TwoFacAuth, DocumentBox, settingsButton},
+    components: {DocumentProgressBar, TwoFacAuth, DocumentBox},
     props: {
         document: Object,
         envelopeId: [String, Number],
@@ -41,6 +38,7 @@ export default {
         ...mapGetters({
             documentProgress: 'document/getDocumentProgressArray',
             documentProgressById: 'document/getDocumentProgressArrayById',
+            envelopeById: 'envelopes/getEnvelope',
 
             auth: 'twoFakAuth/getAuthMust',
             counter: 'twoFakAuth/getLogoutCounter',
@@ -85,14 +83,14 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
-        },
-        settings() {
-            let envelopeId = this.envelopeId;
-            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelopeId}}));
         }
     },
 
     async mounted() {
+        await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
+            envelope: this.envelopeById(this.envelopeId)
+        })
+
         await this.$store.dispatch('document/documentProgress', {
             envId: this.envelopeId,
             docId: this.document.id,

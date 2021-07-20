@@ -1,6 +1,7 @@
 package gpse.example.domain.addressbook;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import java.util.List;
  * A class for an address book.
  */
 @Entity
-public class AddressBook {
+public class AddressBook implements Serializable {
+
+    private static final long serialVersionUID = -8161342822150699353L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

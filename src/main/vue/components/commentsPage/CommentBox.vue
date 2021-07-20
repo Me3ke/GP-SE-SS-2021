@@ -1,13 +1,16 @@
 <template>
     <div>
         <!-- Write area -->
-        <div style="display: flex; margin-bottom: 1em">
-            <NameBubble :name="user.firstname + ' ' +  user.lastname"></NameBubble>
+        <div style="display: flex; margin-bottom: 1em" v-if="loaded">
+            <NameBubble :name="comment.authorName"></NameBubble>
             <div class="comment-container">
                 <div class="action-text justify-content-between" style="display:flex;">
                     <div>
                         {{ comment.authorName }}
-                        <b-badge v-if="comment.authorID === loggedIn">{{ $t('CommentsPage.owner') }}</b-badge>
+                        <b-badge v-if="comment.authorID === documentInfo.owner.username">{{
+                                $t('CommentsPage.owner')
+                            }}
+                        </b-badge>
                     </div>
                     {{ commentTime }}
                 </div>
@@ -30,13 +33,22 @@ export default {
         comment: Object
     },
     components: {NameBubble},
-    mounted() {
-        this.$store.dispatch('fetchUser')
+    data(){
+        return{
+            loaded: false
+        }
+    },
+    async mounted() {
+        await this.$store.dispatch('fetchUser')
+        await this.$store.dispatch('document/fetchDocumentInfo',
+            {envId: this.$route.params.envId, docId: this.$route.params.docId})
+        this.loaded = true
     },
     computed: {
         ...mapGetters({
             loggedIn: 'getUsername',
-            user: 'getUser'
+            user: 'getUser',
+            documentInfo: 'document/getDocumentInfo'
         }),
         commentTime() {
             var now = new Date().toISOString();

@@ -134,6 +134,10 @@
             {
                 "question": "Wie filtere ich meine Dokumente manuell?",
                 "answer": "Mit dem Trichtersymbol oben rechts auf der Übersichtsseite, gelangen sie zu den erweiterten Filteroptionen. Dort können sie Filter manuell anpassen."
+            },
+            {
+                "question": "Wie kann ich meine Dokumente sortieren?",
+                "answer": "Mit dem Sortiersymbol neben dem Filtersymbol gelangen Sie zu den Sortiereinstellungen. Dort können Sie zwei Sortierkriterien wählen um die gewünschte Reihenfolge zu erzeugen."
             }
         ],
         "section5": [
@@ -426,7 +430,9 @@
             "selectDocument": "Wählen Sie die neue Version des zuersetzenden Dokumentes aus",
             "replaceDoc": "Das Aktualisieren des Dokumentes: ",
             "confirmation": "Sind Sie sich sicher das Dokument {documentTitle} zu ersetzen/aktualisieren",
-            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt"
+            "signatureResetReminder": "Die schon getätigten Signaturen werden nach dem Aktualisieren zurückgesetzt",
+            "errorWhileUpload": "Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Admin",
+            "errorUpload": "Fehler beim aktualisieren des Dokumentes"
         }
     },
     "DownloadDoc": {
@@ -652,6 +658,7 @@
             "color14": "Dunkle Warnfarbe",
             "color15": "Einstellungsfarbe",
             "color16": "Pop-Up Hintergrund",
+            "companyDetails": "Impressum",
             "default": "Standard"
         },
         "manage": {
@@ -721,6 +728,40 @@
         "serverErrorTwo": "Bitte versuchen Sie es später erneut oder wenden Sie sich an einen Administrator.",
         "serverErrorThree": "Es gab Probleme beim Laden der Kommentare."
     },
+    "EmailTemplate": {
+        "emailTemp": "Email Vorlage",
+        "emailTemSettings": "Email Vorlagen-Einstellungen",
+        "createTemp": "Vorlage hinzufügen",
+        "deleteTemp": "Vorlage löschen",
+        "editTemp": "Vorlage bearbeiten",
+        "previewTemp": "Vorschau",
+        "previewTempSmall": "Vorschau",
+        "createNewTemplate": "Eine Neue Vorlage erstellen",
+        "saveTemp": "Vorlage speichern",
+        "Save": "Speichern",
+        "subject": "Betreff",
+        "cancel": "Abbrechen",
+        "enterName": "Name der Vorlage eingeben",
+        "enterSubject": "Betreff der E-Mail eingeben ",
+        "emptySubject": "Das Betreff Feld darf nicht leer sein",
+        "editSentence": "Um ein Template zu bearbeiten, einfach in das entsprechende Feld die Änderungen vornehmen",
+        "unsavedChanged": "Nicht gepeicherte Änderungen",
+        "editTemplateTitle": "Bearbeitung der Vorlage: ",
+        "templateName": "Name der Vorlage",
+        "templateSubject": "Betreff",
+        "templateDelete": "Email Vorlagen löschen",
+        "editorPlaceholder": "Hier den Inhalt der Email eingeben",
+        "updateTemplate": "Alle Unterzeichner bekommen eine entsprechende Benachrichtigung per Email bezüglich der Aktualisierung des Dokumentes",
+        "forNewSignatories": "Bitte suchen Sie sich eine E-Mail Vorlage für die neu eingetragenen Unterzeichner aus. Die schon eingetragenen Unterzeichner und auch neue Gastunterzeichner bekommen eine separate entsprechende E-Mail zur Benachrichtigung der Aktualisierung des Dokumentes.",
+        "toolbar": {
+            "addUser": "User",
+            "addOwner": "Owner",
+            "addEndDate": "Enddatum",
+            "documentLink": "Dokument Link",
+            "documentTitle": "Dokument Titel"
+        }
+    },
+
     "ResetPasswordPage": {
         "success": "Erfolgreich zurückgesetzt. Sie Können sich jetzt einloggen.",
         "fail": "Das Token ist bereits abgelaufen. Bitte versuchen Sie es erneut.",
@@ -756,3 +797,4 @@
         "mailMissing": "Sie müssen eine E-Mail-Adresse eingeben."
     }
 }
+

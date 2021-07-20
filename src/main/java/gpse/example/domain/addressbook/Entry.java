@@ -4,12 +4,15 @@ import gpse.example.domain.users.User;
 import gpse.example.web.addressbook.EntryObject;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * A class for an entry in the AddressBook.
  */
 @Entity
-public class Entry {
+public class Entry implements Serializable {
+
+    private static final long serialVersionUID = -8161342821350699353L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +57,7 @@ public class Entry {
      * @param user the user which will be the contact.
      */
     public Entry(final User user) {
-        this.email = user.getEmail();
+        this.email = user.getUsername();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
         this.favorite = false;

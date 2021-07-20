@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <b-row align-h="center">
+        <b-row align-h="center" v-if="moreFiles === undefined">
             <button class="light-btn" @click="addFile()" v-if="!(fileInputs[fileInputs.length - 1].file === null)">
                 <h5>
                     <b-icon icon="plus-circle"></b-icon>
@@ -78,6 +78,7 @@ export default {
             }
         }
     },
+    props: ['moreFiles'],
     methods: {
         close() {
             this.fileInputs = [null];

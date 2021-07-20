@@ -214,6 +214,10 @@
             {
                 "question": "Is it possible to define my own filter?",
                 "answer": "By clicking the funnel-icon in the top-left corner of your overview page you get to the filter settings. There you can do just that."
+            },
+            {
+                "question": "How to sort?",
+                "answer": "By clicking the sort-icon on the right of the funnel-icon on the overviewpage you get the sort-dialog where you can choose up to two sort-parameter."
             }
         ],
         "section5": [
@@ -424,7 +428,10 @@
             "selectDocument": "Select the File to replace/update the Document ",
             "replaceDoc": "Update of: ",
             "confirmation": "Are you sure to update {documentTitle}",
-            "signatureResetReminder": "All signatures of the Document will be reseted after you uploaded an newer Version of the Document"
+            "signatureResetReminder": "All signatures of the Document will be reset after you uploaded an newer Version of the Document",
+            "errorWhileUpload": "An error occurred. Please contact an admin",
+            "errorUpload": "Error while update document"
+
         }
     },
     "DownloadDoc": {
@@ -642,6 +649,13 @@
             "color6": "Open document - hover",
             "color7": "Closed document",
             "color8": "Closed document - hover",
+            "color9": "Document action required",
+            "color10": "Document action required - Hover",
+            "color11": "Light warn color",
+            "color12": "Dark warn color",
+            "color13": "Setting color",
+            "color14": "Pop-Up background",
+            "companyDetails": "Company details",
             "color9": "Document draft",
             "color10": "Document draft - Hover",
             "color11": "Document action required",
@@ -650,6 +664,7 @@
             "color14": "Dark warn color",
             "color15": "Setting color",
             "color16": "Pop-Up background",
+            "companyDetails": "Company details",
             "default": "Default"
         },
         "manage": {
@@ -718,6 +733,48 @@
         "serverErrorOne": "Your comment could not be posted.",
         "serverErrorTwo": "Please try again later or talk to an administrator.",
         "serverErrorThree": "The comments could not be loaded."
+    },
+    "EmailTemplate": {
+        "emailTemp": "Email template",
+        "emailTemSettings": "Email template settings",
+
+        "createTemp": "Add template",
+        "deleteTemp": "Delete template",
+        "editTemp": "Edit template",
+        "previewTemp": "Preview",
+        "previewTempSmall": "preview",
+        "createNewTemplate": "Create a new email template",
+        "saveTemp": "Save template",
+        "enterName": "Type the name of the template",
+        "enterSubject": "Type the subject of the template",
+        "emptySubject": "The subject field should not be empty",
+        "Save": "Save",
+        "subject": "Subject",
+        "cancel": "Cancel",
+
+        "editSentence": "To edit the template, just write in the editor and it will be applied automatically.",
+        "unsavedChanged": "Noticed unsaved changes",
+        "unsavedChanged2": "If you want to save the Edited template click on the \"Save template\" button.",
+        "unsavedChanged3": "If it is for single use only click on \"Single use\" button.",
+        "editTemplateTitle": "Edit template: ",
+        "templateName": "Template name",
+        "templateSubject": "Subject",
+        "templateDelete": "Delete email templates",
+        "editorPlaceholder": "Type here the content of your mail template",
+        "updateTemplate": "All signatories will receive a notification via email regarding the update of the document",
+        "forNewSignatories": "Noticed newly added signatories. Please select an email template for the signature invitation. Already defined signatories and guest signatories are getting specifically defined email templates",
+
+
+
+
+        "toolbar": {
+            "addUser": "User",
+            "addOwner": "Owner",
+            "addEndDate": "End date",
+            "documentLink": "Document link",
+            "documentTitle": "Document title"
+
+        }
     },
     "ResetPasswordPage": {
         "success": "Success! Login now!",

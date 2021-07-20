@@ -16,20 +16,22 @@
                 <b-col cols="auto">
                     <b-row>
                         <b-col>
+
+                            <!-- Searchbar -->
                             <b-input-group>
-                                <b-form-input v-model="searchInput"
-                                              :placeholder="$t('OverviewPage.search')"></b-form-input>
-                                <h4>
-                                    <b-icon class="searchIcon" icon="search" style="margin: 0 0.5em; cursor: pointer;"
-                                            @click="search(searchInput);"></b-icon>
-                                </h4>
+                                <b-input-group-prepend is-text @click="search()">
+                                    <b-icon icon="search" id="search" style="fill: var(--elsa-blue); margin: 0 0.5em; cursor: pointer;"></b-icon>
+                                </b-input-group-prepend>
+                                <b-form-input v-model="filter.search"
+                                              :placeholder="$t('OverviewPage.search')" type="search"></b-form-input>
                             </b-input-group>
                         </b-col>
                         <b-col>
                             <FilterMenu :filter="filter" style="cursor: pointer;"></FilterMenu>
                         </b-col>
                         <b-col>
-                            <SortMenu style="cursor: pointer;" @updateSort="updateSort" :first="this.filter.sortFirst" :second="this.filter.sortSecond"></SortMenu>
+                            <SortMenu @updateSort="updateSort" style="cursor: pointer;" :first="this.filter.sortFirst"
+                                      :second="this.filter.sortSecond"></SortMenu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -42,7 +44,7 @@
                 <div class="col-auto">
                     <b-row align-h="start">
                         <b-col>
-                            <UploadButton></UploadButton>
+                            <UploadButton @refreshOverview="refreshPage"></UploadButton>
                         </b-col>
                     </b-row>
                 </div>
@@ -165,18 +167,21 @@ export default {
                 sortFirst: "state",
                 sortSecond: "end"
             },
-            searchInput: "",
             pageLimit: 10,
             page: 1,
             sort: null,
 
             // needed for WelcomePopUp, so it does not always appear and then instantly disappear
             // because data has not been completely fetched yet
-            loaded: false
+            loaded: false,
         }
     },
     methods: {
-        updateSort: function(sortFirst, sortSecond) {
+        // Refreshing after a document was uploaded
+        async refreshPage() {
+            await this.$store.dispatch('envelopes/fetchEnvelopes')
+        },
+        updateSort: function (sortFirst, sortSecond) {
             this.filter.sortFirst = sortFirst;
             this.filter.sortSecond = sortSecond;
         },
@@ -211,11 +216,10 @@ export default {
         filterOwn() {
             this.filter.owner = !this.filter.owner
         },
-        search(keyword) {
-            this.filter.search = keyword
-            if (keyword.toLowerCase().includes("schildkröte") || keyword.toLowerCase().includes("maskottchen")) {
+        search() {
+            if (this.filter.search.toLowerCase().includes("schildkröte") || this.filter.search.toLowerCase().includes("maskottchen")) {
                 this.launchMascots();
-            } else if (keyword.toLowerCase().includes("erleben, was verbindet") || (keyword.toLowerCase().includes("magenta") && keyword.toLowerCase().includes("liebe"))) {
+            } else if (this.filter.search.toLowerCase().includes("erleben, was verbindet") || (this.filter.search.toLowerCase().includes("magenta") && this.filter.search.toLowerCase().includes("liebe"))) {
                 this.launchMagenta();
             }
         },
@@ -269,8 +273,9 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$store.dispatch('envelopes/fetchEnvelopes')
         await this.$store.dispatch('fetchUser')
+        await this.$store.dispatch('impressum/fetchImpressum')
         this.loaded = true
     },
     beforeDestroy() {
@@ -305,8 +310,43 @@ export default {
     background-color: var(--whitesmoke);
 }
 
-.searchIcon:hover {
+/* Search bar */
+#search:hover {
+    cursor: pointer;
     fill: var(--light-grey);
     transition-duration: 0.4s;
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+    border: solid 0.1em var(--elsa-blue);
+    border-radius: 0.2em;
+}
+
+.input-group > .input-group-prepend > .input-group-text {
+    fill: var(--elsa-blue);
+    margin-top: 0;
+}
+
+.form-control:focus {
+    color: var(--dark-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--elsa-blue);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem var(--elsa-blue-transparent);
+}
+
+.form-control::placeholder {
+    color: var(--shadow-grey);
+    opacity: 1; /* Firefox */
+}
+
+.form-control:-ms-input-placeholder {
+    color: var(--shadow-grey);
+}
+
+.form-control::-ms-input-placeholder {
+    color: var(--shadow-grey);
 }
 </style>

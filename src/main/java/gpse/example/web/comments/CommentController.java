@@ -4,14 +4,16 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentServiceImpl;
 import gpse.example.domain.documents.comments.Answer;
 import gpse.example.domain.documents.comments.Comment;
-import gpse.example.domain.exceptions.DocumentNotFoundException;
+import gpse.example.domain.email.*;
+import gpse.example.domain.exceptions.*;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
-import gpse.example.util.email.*;
 import gpse.example.web.JSONResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,25 +37,21 @@ public class CommentController {
 
     private final UserServiceImpl userService;
     private final DocumentServiceImpl documentService;
-    private final EmailTemplateService emailTemplateService;
-    private final SMTPServerHelper smtpServerHelper;
+    private final EmailManagement emailManagement;
 
     /**
      * The default constructor which initialises the services by autowiring.
-     *  @param userService     the userService
+     * @param userService     the userService
      * @param documentService the documentService
-     * @param emailTemplateService the emailTemplateservice
-     * @param smtpServerHelper the SMTPServerHelper
+     * @param emailManagement the emailManagement
      */
     @Autowired
     public CommentController(final UserServiceImpl userService,
                              final DocumentServiceImpl documentService,
-                             final EmailTemplateService emailTemplateService,
-                             final SMTPServerHelper smtpServerHelper) {
+                             final EmailManagement emailManagement) {
         this.userService = userService;
         this.documentService = documentService;
-        this.emailTemplateService = emailTemplateService;
-        this.smtpServerHelper = smtpServerHelper;
+        this.emailManagement = emailManagement;
     }
 
     /**
@@ -74,7 +72,7 @@ public class CommentController {
             final User user = userService.getUser(userID);
             document.addComment(new Comment(commentPostRequest.getContent(), userID,
                     user.getFirstname() + SPACE + user.getLastname()));
-            sendNewCommentEmail(user, userService.getUser(document.getOwner()), document);
+            emailManagement.sendNewCommentEmail(user, userService.getUser(document.getOwner()), document);
             documentService.addDocument(document);
 
         } catch (DocumentNotFoundException e) {
@@ -112,7 +110,7 @@ public class CommentController {
                 comment.addAnswer(new Answer(commentPostRequest.getContent(), userID,
                         user.getFirstname() + SPACE + user.getLastname()));
                 documentService.addDocument(document);
-                sendAnswerEmail(user, userService.getUser(comment.getAuthorID()), document);
+                emailManagement.sendAnswerEmail(user, userService.getUser(comment.getAuthorID()), document);
                 jsonResponseObject.setStatus(STATUS_CODE_OK);
                 jsonResponseObject.setMessage(REQUEST_WAS_SUCCESSFUL);
 
@@ -130,46 +128,25 @@ public class CommentController {
 
     /**
      * The Get Request used for getting the comments.
-     * @param userID the ID used for visibility settings
      * @param documentID the ID used for getting the comments
+     * @param userID is the ID of the user
      * @return the comments and their answers
      */
     @GetMapping("/user/{userID}/documents/{documentID:\\d+}/comments")
     public CommentsGetResponse getCommentsFromDocument(
-            final @PathVariable(USER_ID) String userID,
-            final @PathVariable(DOCUMENT_ID) long documentID) {
+        final @PathVariable(DOCUMENT_ID) long documentID, final @PathVariable String userID) {
 
         try {
             final Document document = documentService.getDocument(documentID);
-            return new CommentsGetResponse(document.getCommentList());
+            final List<String> user = new ArrayList<>();
+            user.add(userID);
+
+            if (userID.equals(document.getOwner()) || document.getSignatoryManagement().hasSignatories(user)) {
+                return new CommentsGetResponse(document.getCommentList());
+            }
+            return new CommentsGetResponse();
         } catch (DocumentNotFoundException e) {
             return new CommentsGetResponse();
         }
-    }
-
-    private void sendNewCommentEmail(User author, User documentOwner, Document document)
-        throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("NewCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
-        container.setDocumentTitle(document.getDocumentTitle());
-        container.setFirstNameOwner(author.getFirstname());
-        container.setLastNameOwner(author.getLastname());
-        container.setFirstNameReciever(documentOwner.getFirstname());
-        container.setLastNameReciever(documentOwner.getLastname());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(documentOwner.getEmail(), template, container, Category.SYSTEM, author);
-    }
-
-    private void sendAnswerEmail(User author, User reciever, Document document)
-        throws TemplateNameNotFoundException, MessageGenerationException {
-        EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
-        TemplateDataContainer container = new TemplateDataContainer();
-        container.setFirstNameOwner(author.getFirstname());
-        container.setLastNameOwner(author.getLastname());
-        container.setFirstNameReciever(reciever.getFirstname());
-        container.setLastNameReciever(reciever.getLastname());
-        container.setLink(document.getLinkToDocumentview());
-        smtpServerHelper.sendTemplatedEmail(reciever.getEmail(), template, container, Category.SYSTEM, author);
-
     }
 }

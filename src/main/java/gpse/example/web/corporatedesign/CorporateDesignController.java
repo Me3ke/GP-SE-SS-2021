@@ -92,7 +92,7 @@ public class CorporateDesignController {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
             corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                new byte[0], new byte[0]);
+                new byte[0], new byte[0], userService);
         }
         if (logosRequestBody.isDark()) {
             corporateDesign.setLogoDark(logosRequestBody.getLogo(), logosRequestBody.getLogoType());
@@ -122,7 +122,7 @@ public class CorporateDesignController {
         try {
             corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
         } catch (CorporateDesignNotFoundException e) {
-            corporateDesign = new CorporateDesign(null, new byte[0], new byte[0]);
+            corporateDesign = new CorporateDesign(null, new byte[0], new byte[0], userService);
         }
         corporateDesign.setColors(colorsRequestBody.getColors(), defaultDesign.getColors());
         corporateDesignService.saveCorporateDesign(corporateDesign);
@@ -155,13 +155,13 @@ public class CorporateDesignController {
      * * Request for getting the impressum text.
      *
      * @param token         the user token which is used for validation.
-     * @param impressumText the new impressum text.
+     * @param impressumRequestBody the new impressum text in an transport class.
      * @return a JSONResponseObject with a message and a status code.
      * @throws CorporateDesignNotFoundException if the default corporate Design was not found.
      */
     @PutMapping("impressum")
     public JSONResponseObject updateImpressumsText(@RequestHeader final String token,
-                                                @RequestBody final String impressumText)
+                                                @RequestBody final ImpressumRequestBody impressumRequestBody)
         throws CorporateDesignNotFoundException {
         final JSONResponseObject jsonResponseObject = new JSONResponseObject();
         if (userService.checkIfAdmin(token)) {
@@ -171,9 +171,9 @@ public class CorporateDesignController {
                 corporateDesign = corporateDesignService.getCorporateDesign(CHANGEABLE_DESIGN);
             } catch (CorporateDesignNotFoundException e) {
                 corporateDesign = new CorporateDesign(defaultDesign.getColors().toArray(new String[0]),
-                    defaultDesign.getLogo(), defaultDesign.getLogoDark());
+                    defaultDesign.getLogo(), defaultDesign.getLogoDark(), userService);
             }
-            corporateDesign.setImpressumsText(impressumText);
+            corporateDesign.setImpressumsText(impressumRequestBody.getImpressum());
             corporateDesignService.saveCorporateDesign(corporateDesign);
             jsonResponseObject.setStatus(STATUS_CODE_OK);
             jsonResponseObject.setMessage(SUCCESS_MESSAGE);

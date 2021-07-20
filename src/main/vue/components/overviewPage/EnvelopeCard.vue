@@ -5,10 +5,10 @@
                     @closeTrigger="closeAuth"></TwoFacAuth>
 
         <b-row no-gutters>
-            <b-col cols="11">
+            <b-col cols="12">
                 <EnvelopeBox style="cursor: pointer;" :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
-                    <div v-if="this.envelope.owner.email === this.$store.state.auth.username && showProgress">
+                    <div v-if="this.envelope.owner.username === this.$store.state.auth.username && showProgress">
                         <EnvelopeProgressBar
                             :envelope="envelopeProgress(envelope.documents)"
                             :env="envelope"
@@ -16,22 +16,19 @@
                     </div>
                 </div>
             </b-col>
-            <b-col cols="1">
-                <settingsButton v-if="envelope.owner.email === user.email" @click.native="settings()"></settingsButton>
-            </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
-import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
 import EnvelopeBox from "@/main/vue/components/overviewPage/EnvelopeBox";
 import {mapGetters} from "vuex";
 import TwoFacAuth from "@/main/vue/components/popUps/TwoFacAuth";
 import EnvelopeProgressBar from "@/main/vue/components/EnvelopeProgressBar";
+
 export default {
     name: "EnvelopeCard",
-    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox, settingsButton},
+    components: {EnvelopeProgressBar, TwoFacAuth, EnvelopeBox},
     props: {
         envelope: Object
     },
@@ -72,14 +69,16 @@ export default {
             })
             if (this.documentInfo.signatureType === 'ADVANCED_SIGNATURE') {
                 this.advanced = true
-                break
+            }
+            if (this.documentInfo.state !== 'ARCHIVED' && !this.documentInfo.draft) {
+                this.showProgress = true
             }
         }
 
         await this.$store.dispatch('document/progressOfAllDocumentsInEnv', {
             envelope: this.envelope
         })
-        this.showProgress = true
+
 
         if (this.counter !== -1) {
             this.showAuth = true
@@ -113,10 +112,6 @@ export default {
         // closes 2FacAuth, stays on overview page
         closeAuth() {
             this.showAuth = false
-        },
-        settings() {
-            let envelopeId = this.envelope.id;
-            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({name: 'settings', params: {envId: this.envelope.id}}));
         }
     }
 }

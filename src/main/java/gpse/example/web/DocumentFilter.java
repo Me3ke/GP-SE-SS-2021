@@ -38,7 +38,8 @@ public class DocumentFilter {
                                                            final String userID) {
         final List<DocumentOverviewResponse> filteredDocuments = new ArrayList<>();
         for (final DocumentOverviewResponse document : documents) {
-            if ((userIsAssignedToDocument(document, userID) && !document.isDraft())
+            if (userIsAssignedToDocument(document, userID)
+                    && !document.isDraft()
                 || document.getOwner().getUsername().equals(userID)) {
                 filteredDocuments.add(document);
             }

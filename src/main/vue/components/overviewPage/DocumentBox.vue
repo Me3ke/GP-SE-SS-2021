@@ -9,7 +9,9 @@
                 <div class="media-body">
                     <b-container fluid>
                         <b-row align-h="start">
-                            <b-col style="width: 100%; margin: 0">
+                            <b-col
+                                style="width: 100%; margin-bottom: 0; margin-right: 0; margin-left: 0; margin-top: .45rem"
+                                cols="12">
                                 <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h4>
@@ -52,7 +54,7 @@
                                         </div>
                                     </b-col>
                                 </b-row>
-                                <b-row align-h="start">
+                                <b-row align-h="between">
                                     <b-col cols="auto">
                                         <h6>
                                             {{ $t('Document.owner') }}: {{ this.document.owner.firstname }}
@@ -69,6 +71,11 @@
                                             {{ $t('Document.envelope') }}: {{ this.envelope(this.envelopeId).name }}
                                         </h6>
                                     </b-col>
+                                    <b-col style="text-align: right; margin-bottom: 0.5rem" cols="auto">
+                                        <settingsButton
+                                            v-if="document.owner.username === this.$store.state.auth.username"
+                                            @click.native.stop="settings()"></settingsButton>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                         </b-row>
@@ -81,6 +88,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import settingsButton from "@/main/vue/components/overviewPage/envSettingsButton";
 
 export default {
     name: "DocumentBox",
@@ -88,6 +96,7 @@ export default {
         envelopeId: [Number, String],
         document: Object
     },
+    components: {settingsButton},
     data() {
         let open = false;
         let toSign = false;
@@ -105,6 +114,16 @@ export default {
     },
     async mounted() {
         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
+        await this.$forceUpdate()
+    },
+    methods: {
+        settings() {
+            let envelopeId = this.envelopeId;
+            this.$store.dispatch('documentSettings/fetchEnvelopeSettings', {envId: envelopeId}).then(() => this.$router.push({
+                name: 'settings',
+                params: {envId: this.envelopeId}
+            }));
+        }
     },
     computed: {
         ...mapGetters({

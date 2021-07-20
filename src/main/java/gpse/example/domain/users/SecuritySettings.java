@@ -1,7 +1,7 @@
 package gpse.example.domain.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.samstevens.totp.code.*;
-import dev.samstevens.totp.exceptions.CodeGenerationException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -13,7 +13,8 @@ import dev.samstevens.totp.time.TimeProvider;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class responsible for storing the security settings.
@@ -32,7 +33,19 @@ public class SecuritySettings implements Serializable {
     private long id;
 
     @Column
-    private PublicKey publicKey;
+    private boolean seenByAdmin;
+
+    @Column
+    // false: user has not had a first login yet; true: user has had a first login
+    private boolean firstLogin;
+
+    @ElementCollection
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private List<String> archivedPublicKeys = new ArrayList<>();
+
+    @Lob
+    private String publicKey;
 
     @Column
     private String secret;
@@ -41,6 +54,7 @@ public class SecuritySettings implements Serializable {
     private boolean twoFactorLogin;
 
     public SecuritySettings() {
+        this.firstLogin = false;
         this.twoFactorLogin = false;
     }
 
@@ -75,7 +89,7 @@ public class SecuritySettings implements Serializable {
      * @param code the given code
      * @return true if code is valid, else false.
      */
-    public boolean verifyCode(final String code) throws CodeGenerationException {
+    public boolean verifyCode(final String code) {
         final TimeProvider timeProvider = new SystemTimeProvider();
         final CodeGenerator codeGenerator = new DefaultCodeGenerator();
         final DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
@@ -91,7 +105,7 @@ public class SecuritySettings implements Serializable {
         return secret;
     }
 
-    public PublicKey getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 
@@ -101,5 +115,33 @@ public class SecuritySettings implements Serializable {
 
     public void setTwoFactorLogin(final boolean twoFactorLogin) {
         this.twoFactorLogin = twoFactorLogin;
+    }
+
+    public boolean isSeenByAdmin() {
+        return seenByAdmin;
+    }
+
+    public void setToSeenByAdmin() {
+        this.seenByAdmin = true;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(final boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
+
+    public List<String> getArchivedPublicKeys() {
+        return archivedPublicKeys;
+    }
+
+    public void setArchivedPublicKeys(final List<String> archivedPublicKeys) {
+        this.archivedPublicKeys = archivedPublicKeys;
+    }
+
+    public void setPublicKey(final String publicKey) {
+        this.publicKey = publicKey;
     }
 }

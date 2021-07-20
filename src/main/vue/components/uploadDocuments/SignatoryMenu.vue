@@ -62,7 +62,7 @@
             </b-row>
 
             <!-- List of Signatories -->
-            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)">
+            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)" v-if="signatories">
                 <draggable v-model="signatoryInputs">
                     <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email"
                          style="padding:0.25em">
@@ -114,6 +114,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import {mapGetters} from "vuex";
 
 export default {
     name: "SignatoryMenu",
@@ -128,6 +129,7 @@ export default {
             signatoryInputs: [],
             orderRelevantInput: false,
             addSignatories: false,
+            noticeNewSignatories: false,
             signatureTypes: [{
                 name: 'UploadDoc.simple',
                 value: 1
@@ -137,22 +139,45 @@ export default {
             }]
         }
     },
+
     mounted() {
-        this.signatoryInputs = this.signatories
+        this.signatoryInputs = this.signatories;
     },
     methods: {
         addSignatory() {
             for (let i = 0; i < this.signatoryInput.length; i++) {
-                if (this.signatoryInputs.includes(this.signatoryInput[i])) {
-                    // TODO: Error
+                if (this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
+                    return;
                 } else {
+                    // if cause for the search after new added signatories
+                    if (this.allUser.some(user => user.email === this.signatoryInput[i])) {
+                        this.noticeNewSignatories = true;
+                    }
                     this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
                 }
             }
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
-            this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1)
+            let progressBeforeDelete = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
+            const resultBeforeDelete = this.signatoryInputs.filter(({email: id1}) => !progressBeforeDelete.data.signatories.some(({email: id2}) => id2 === id1));
+
+            if (resultBeforeDelete.some(user => user.email === signatory.email)) {
+                this.noticeNewSignatories = false;
+            }
+
+            this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1); // delete selected signatory
+            let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
+            const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
+            for (let i = 0; i < results.length; i++) {
+                if (this.allUser.some(user => user.email === results[i].email)) {
+                    this.noticeNewSignatories = true;
+                    break;
+                } else {
+                    this.noticeNewSignatories = false;
+                }
+            }
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
         },
         cancel() {
             this.addSignatories = false;
@@ -163,11 +188,53 @@ export default {
         save() {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
+            if (!this.noticeNewSignatories && this.documentProgress.length > 0) {
+                let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
+                const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
+                for (let i = 0; i < results.length; i++) {
+                    if (this.allUser.some(user => user.email === results[i].email)) {
+                        this.noticeNewSignatories = true;
+                        break;
+                    } else {
+                        this.noticeNewSignatories = false;
+                    }
+                }
+            }
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
             this.addSignatories = false;
         },
         addressBook() {
-            this.$emit('showAddressBook')
+            this.$emit('showAddressBook');
+        },
+
+        async fetchAllUser() {
+            await this.$store.dispatch('userManagement/fetchAllUsers');
         }
+    },
+    beforeMount() {
+        this.fetchAllUser();
+        if (this.signatories.length !== 0) {
+            this.addSignatories = false;
+            this.signatoryInputs = this.signatories;
+            let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
+            const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
+            for (let i = 0; i < results.length; i++) {
+                if (this.allUser.some(user => user.email === results[i].email)) {
+                    this.noticeNewSignatories = true;
+                    break;
+                } else {
+                    this.noticeNewSignatories = false;
+                }
+            }
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
+        }
+    },
+    computed: {
+        ...mapGetters({
+            allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
+            documentProgress: 'document/getDocumentProgressArray',
+            document: 'document/getDocumentInfo'
+        })
     }
 }
 </script>
@@ -207,8 +274,6 @@ export default {
 
 .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file {
     height: 1.85em;
-    width: 23em;
-    max-width: 24em;
 }
 
 .form-control:focus, .form-control:active, .b-form-tags.focus, .b-form-tags.active {
@@ -247,21 +312,11 @@ export default {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.5em;
     }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 32em;
-        max-width: 32em;
-    }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.7em;
-    }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 34em;
-        max-width: 34em;
     }
 }
 
@@ -269,22 +324,11 @@ export default {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 29.75em;
-        max-width: 29.75em;
-    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) and (min-height: 500px) {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
-
-    .input-group > .form-control, .input-group > .form-control-plaintext, .input-group > .custom-select, .input-group > .custom-file, #search {
-        width: 29.75em;
-        max-width: 29.75em;
-    }
 }
-
 </style>

@@ -14,6 +14,7 @@
                 <SignatureSettingsBox @uploadTrigger="toggleOverflow"></SignatureSettingsBox>
                 <AddressBookSettingsBox></AddressBookSettingsBox>
                 <MessageSettingsBox></MessageSettingsBox>
+                <EmailTemplateSettingsBox></EmailTemplateSettingsBox>
             </div>
         </b-container>
     </div>
@@ -27,10 +28,13 @@ import MessageSettingsBox from "@/main/vue/components/settingsPage/MessageSettin
 import SecuritySettingsBox from "@/main/vue/components/settingsPage/SecuritySettingsBox";
 import SignatureSettingsBox from "@/main/vue/components/settingsPage/SignatureSettingsBox";
 import AddressBookSettingsBox from "@/main/vue/components/settingsPage/AddressBookSettingsBox";
+import EmailTemplateSettingsBox from "@/main/vue/components/EmailTemplateSettingsBox";
+
 
 export default {
     name: "UserPage",
     components: {
+        EmailTemplateSettingsBox,
         AddressBookSettingsBox,
         SignatureSettingsBox, SecuritySettingsBox, MessageSettingsBox, Header, UserInfoBox
     },

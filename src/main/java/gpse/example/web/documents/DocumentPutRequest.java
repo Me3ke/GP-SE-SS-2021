@@ -91,7 +91,6 @@ public class DocumentPutRequest {
     }
 
     public long getEmailTemplateId() {
-        this.emailTemplateId = 0;
         return emailTemplateId;
     }
 

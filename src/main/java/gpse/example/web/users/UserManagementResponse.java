@@ -24,7 +24,7 @@ public class UserManagementResponse extends UserResponseObject {
         this.adminValidated = user.isAccountNonLocked();
         this.emailConfirmed = user.isEnabled();
         this.roles = user.getRoles();
-        this.seen = user.isSeenByAdmin();
+        this.seen = user.getSecuritySettings().isSeenByAdmin();
     }
 
     public boolean isAdminValidated() {
@@ -55,7 +55,7 @@ public class UserManagementResponse extends UserResponseObject {
         return seen;
     }
 
-    public void setSeen(boolean seen) {
+    public void setSeen(final boolean seen) {
         this.seen = seen;
     }
 }

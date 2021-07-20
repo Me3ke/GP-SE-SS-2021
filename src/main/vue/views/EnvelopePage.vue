@@ -2,7 +2,7 @@
     <div style="background-color: var(--whitesmoke); height: 100vh;">
         <Header></Header>
 
-        <BaseHeading :name="this.envelope(envId).name" :translate="false"></BaseHeading>
+        <BaseHeading v-if="loaded" :name="envelope(envId).name" :translate="false"></BaseHeading>
 
         <b-row align-h="center">
             <b-col>
@@ -29,7 +29,7 @@
         </b-row>
 
         <!-- Documents -->
-        <div class="container-fluid">
+        <div class="container-fluid" v-if="loaded">
             <div style="margin-top:5.5vh">
                 <div class="overflow-auto" style="height: 85.25vh">
                     <div v-if="page === 0">
@@ -65,7 +65,7 @@ import Header from "@/main/vue/components/header/Header";
 import Footer from "@/main/vue/components/Footer";
 import {mapGetters} from "vuex";
 import DocumentCard from "@/main/vue/components/overviewPage/DocumentCard";
-import DocumentPageReduced from "@/main/vue/components/DocumentPageReduced";
+import DocumentPageReduced from "@/main/vue/components/envelopePage/DocumentPageReduced";
 
 export default {
     name: "EnvelopePage",
@@ -76,6 +76,7 @@ export default {
     data() {
         return {
             page: 0,
+            loaded: false
         }
     },
     methods: {
@@ -85,7 +86,7 @@ export default {
             }
         },
         prev() {
-            if(this.page > 0) {
+            if (this.page > 0) {
                 this.page = this.page - 1;
             }
         }
@@ -93,13 +94,18 @@ export default {
     computed: {
         ...mapGetters({
             envelope: 'envelopes/getEnvelope',
-        })
+        }),
+        envId() {
+            return this.$route.params.envId;
+        }
     },
-     async created() {
-         await this.$store.dispatch('envelopes/fetchEnvelopes', {})
-     },
-     beforeDestroy() {
+    async mounted() {
+        await this.$store.dispatch('envelopes/fetchEnvelopes')
+        this.loaded = true
+    },
+    beforeDestroy() {
         this.$store.dispatch('document/resetState')
+        this.loaded = false
     }
 
 

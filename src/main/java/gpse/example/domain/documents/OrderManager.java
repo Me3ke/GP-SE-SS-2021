@@ -19,7 +19,7 @@ public class OrderManager {
      */
     public boolean manageSignatoryTurn(final String reader, final Document document,
                                        final SignatureType signatureType) {
-        if (document.isOrderRelevant()) {
+        if (document.getSignatureProcessData().isOrderRelevant()) {
             return manageSignatureInOrder(reader, document, signatureType);
         } else {
             return manageSignatureWithoutOrder(reader, document, signatureType);
@@ -31,14 +31,14 @@ public class OrderManager {
         List<Signatory> signatories;
         switch (signatureType) {
             case REVIEW:
-                signatories = document.getReaders();
+                signatories = document.getSignatoryManagement().getReaders();
                 return findSignatoryInList(signatories, reader, signatureType)
-                        && document.getState().equals(DocumentState.REVIEW);
+                        && document.getSignatureProcessData().getState().equals(DocumentState.REVIEW);
             case SIMPLE_SIGNATURE:
             case ADVANCED_SIGNATURE:
-                signatories = document.getSignatories();
+                signatories = document.getSignatoryManagement().getSignatories();
                 return findSignatoryInList(signatories, reader, signatureType)
-                        && document.getState().equals(DocumentState.SIGN);
+                        && document.getSignatureProcessData().getState().equals(DocumentState.SIGN);
             default:
                 return false;
         }
@@ -59,7 +59,7 @@ public class OrderManager {
 
     private boolean manageSignatureInOrder(final String reader, final Document document,
                                            final SignatureType signatureType) {
-        final Signatory currentReader = document.getCurrentSignatory();
+        final Signatory currentReader = document.getSignatoryManagement().getCurrentSignatory();
         return matchesSignatory(reader, currentReader, signatureType);
     }
 

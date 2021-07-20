@@ -1,5 +1,5 @@
 <template>
-    <div class="background" style="background-color: var(--whitesmoke);">
+    <div style="background-color: var(--whitesmoke);">
         <Header></Header>
         <BaseHeading :name="this.envelope(envId).name" :translate="false" style="position: fixed"></BaseHeading>
 
@@ -13,7 +13,7 @@
             </div>
 
             <!-- Individual Settings -->
-            <div v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh">
+            <b-container fluid v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh; padding:0 0.5em">
                 <b-row>
                     <b-col cols="2">
                         <b-row v-for="document in this.envelope(envId).documents" :key="document.id">
@@ -48,7 +48,6 @@
                         </div>
                     </b-col>
                 </b-row>
-
 
                 <div v-if="showWarning">
                     <transition>
@@ -88,7 +87,7 @@
                         </div>
                     </transition>
                 </div>
-            </div>
+            </b-container>
            <!-- Global settings -->
             <div v-if="(sameSettings(this.envelopeSettings) && editAll === null) || editAll === true">
                 <SettingsMenu
@@ -148,29 +147,28 @@ export default {
             let initial = settings[0];
             let i;
             for(i = 1; i < settings.length; i++) {
-                if(!(initial.signatories === settings[i].signatories)) {
+                let setting = settings[i];
+                if(!(initial.signatories.length === setting.signatories.length)
+                    || !(initial.orderRelevant === setting.orderRelevant)
+                    || !(initial.endDate === setting.endDate)
+                    || !(initial.showHistory === setting.showHistory)
+                    || !(initial.draft === setting.draft)) {
                     if(this.editAllInput === null) {
                         this.editAllInput = false
                     }
                     return false;
                 }
-                if(!(initial.orderRelevant === settings[i].orderRelevant)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
+                for( let j = 0; j < initial.signatories.length; j++) {
+                    if(!(initial.signatories[j].email === setting.signatories[j].email)
+                        || !(initial.signatories[j].signatureType === setting.signatories[j].signatureType)
+                        || !(initial.signatories[j].remind === setting.signatories[j].remind)
+                        || !(initial.signatories[j].reminderTiming === setting.signatories[j].reminderTiming)
+                        || !(initial.signatories[j].status === setting.signatories[j].status)) {
+                        if(this.editAllInput === null) {
+                            this.editAllInput = false
+                        }
+                        return false;
                     }
-                    return false;
-                }
-                if(!(initial.endDate === settings[i].endDate)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
-                    }
-                    return false;
-                }
-                if(!(initial.showHistory === settings[i].showHistory)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
-                    }
-                    return false;
                 }
             }
             if(this.editAllInput === null) {
@@ -244,16 +242,6 @@ export default {
 </script>
 
 <style scoped>
-.background {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-image: linear-gradient(to bottom, var(--background-fade-one) 0%, var(--background-fade-two) 30%, var(--background-fade-three) 100%), url(../assets/background.png);
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-}
-
 .list-group-item {
     height: 2.5em;
     padding: 0.5em;
@@ -301,5 +289,4 @@ export default {
     overflow-y: scroll;
     background-color: var(--whitesmoke);
 }
-
 </style>

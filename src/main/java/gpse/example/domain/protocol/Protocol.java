@@ -6,18 +6,19 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.exceptions.CorporateDesignNotFoundException;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -31,10 +32,6 @@ public class Protocol {
      * vertical position of first line.
      */
     private static final int TOP_OF_PAGE = 700;
-
-    //distance between to regular lines.
-    // private static final int LINE_DIST = 25;
-
     /**
      * Text margin to left side.
      */
@@ -60,8 +57,10 @@ public class Protocol {
     private static final float SPACING_ONE_FIVE = 1.5f;
     private static final float SPACING_TWO = 2.0f;
     private static final String SIGNATURE_OF = "Signiert von: ";
-    private static final int LINE_LENGTH = 50;
+    private static final int LINE_LENGTH = 60;
+    private static final int MARGIN_BOTTOM = 100;
     private static final int LEFT_SIDE = 450;
+
 
     private final Document document;
 
@@ -74,7 +73,7 @@ public class Protocol {
     /**
      * printing the protocol with specified user data.
      *
-     * @param userService the userService that is used to get the userObjects that signatories refer to.
+     * @param userService            the userService that is used to get the userObjects that signatories refer to.
      * @param corporateDesignService the service is used to get the logo for the protocol.
      * @return a stream which contains the written pdf protocol.
      * @throws IOException throws an IO-Exception if something goes wrong with the outputStream
@@ -83,7 +82,7 @@ public class Protocol {
                                                final CorporateDesignService corporateDesignService)
         throws IOException, CorporateDesignNotFoundException {
 
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         final LineCounter lineCounter = new LineCounter();
         final String title = document.getDocumentTitle();
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -91,40 +90,32 @@ public class Protocol {
         try (PDDocument protocol = new PDDocument()) {
             final PDPage page = new PDPage();
             protocol.addPage(page);
-            try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount))) {
-                // (x|y) = (0|0) bottom left; new line forbidden
-                addLogo(corporateDesignService, lineCounter, protocol, contentStream);
-                addTitle(lineCounter, title, contentStream);
-                lineCounter.addLines(2);
-                addLine("DokumentenID:  " + document.getId(), lineCounter.getCount(), contentStream);
-                lineCounter.addLines(1);
-                addLine("Dokumenteneigentümer: " + document.getOwner(), lineCounter.getCount(), contentStream);
-                if (document.getEndDate() != null) {
-                    lineCounter.addLines(1);
-                    addLine("Offen bis: " + formatter.format(document.getEndDate()),
-                        lineCounter.getCount(), contentStream);
-                }
-            }
-            addSignatories(userService, formatter, lineCounter, protocol);
-            addHistory(formatter, lineCounter, protocol);
-            addAdvancedSignatures(lineCounter, protocol);
+
+            writeProtocolHead(lineCounter, title, protocol, corporateDesignService);
+
+            writeSignatures(userService, formatter, lineCounter, protocol);
+
+            writeHistory(formatter, lineCounter, protocol);
+
+            writeAdvancedSignatureHashes(lineCounter, protocol);
+
             protocol.save(output);
         }
         return output;
     }
 
-    private void addAdvancedSignatures(final LineCounter lineCounter,
-                                       final PDDocument protocol) throws IOException {
+    private void writeAdvancedSignatureHashes(final LineCounter lineCounter, final PDDocument protocol)
+                throws IOException {
         try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
             lineCounter.addLines(1);
-            addLine("Signatur-Hashes für erweiterte Signaturen:", lineCounter.getCount(), contentStream);
+            addLine("Signatur-Hashes für erweiterte Signaturen", lineCounter.getCount(), contentStream);
         }
         for (final AdvancedSignature signature : document.getAdvancedSignatures()) {
             try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                 lineCounter.addLines(1);
                 addIndentedLine(signature.getUserEmail(), lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
             }
-            final String hash = new String(signature.getSignature());
+            final String hash = byteArrayToString(signature.getSignature());
             final String[] hashLines = getSubStrings(hash);
             for (final String hashline : hashLines) {
                 try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
@@ -135,8 +126,8 @@ public class Protocol {
         }
     }
 
-    private void addHistory(final DateTimeFormatter formatter, final LineCounter lineCounter,
-                            final PDDocument protocol) throws IOException {
+    private void writeHistory(final DateTimeFormatter formatter, final LineCounter lineCounter,
+                              final PDDocument protocol) throws IOException {
         try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
             lineCounter.addLines(1);
             addLine("Historie: ", lineCounter.getCount(), contentStream);
@@ -153,7 +144,7 @@ public class Protocol {
                 lineCounter.addLines(1);
                 addIndentedLine(SIGNATURE_OF, lineCounter.getCount(), SPACING_TWO, contentStream);
             }
-            for (final Signatory signatory : document.getSignatories()) {
+            for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
                 try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                     lineCounter.addLines(1);
                     if (signatory.isStatus()) {
@@ -169,28 +160,56 @@ public class Protocol {
         }
     }
 
-    private void addSignatories(final UserService userService, final DateTimeFormatter formatter,
-                                final LineCounter lineCounter, final PDDocument protocol) throws IOException {
+    private void writeSignatures(final UserService userService, final DateTimeFormatter formatter,
+                                 final LineCounter lineCounter, final PDDocument protocol) throws IOException {
         try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
             lineCounter.addLines(1);
             addLine(SIGNATURE_OF, lineCounter.getCount(), contentStream);
         }
-        for (final Signatory signatory : document.getSignatories()) {
+        for (final Signatory signatory : document.getSignatoryManagement().getSignatories()) {
             try (PDPageContentStream contentStream = newPageIfNeeded(lineCounter, protocol)) {
                 lineCounter.addLines(1);
                 if (signatory.isStatus()) {
                     addIndentedLine(signatory.getEmail() + "    Am: "
                             + formatter.format(signatory.getSignedOn()),
                         lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
-                    if (userService.getUser(signatory.getEmail()).getImageSignature().length != 0) {
-                        lineCounter.addLines(2);
-                        addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
-                            lineCounter.getCount(), contentStream);
+                    try {
+                       final User user = userService.getUser(signatory.getEmail());
+                        if (user.getImageSignature().length != 0) {
+                            lineCounter.addLines(2);
+                            addImageLine(userService.getUser(signatory.getEmail()).getImageSignature(), protocol,
+                                lineCounter.getCount(), contentStream);
+                        }
+                    } catch (UsernameNotFoundException ignored) {
                     }
+
                 } else {
                     addIndentedLine(signatory.getEmail() + "    noch nicht signiert",
                         lineCounter.getCount(), SPACING_ONE_FIVE, contentStream);
                 }
+            }
+        }
+    }
+
+    private void writeProtocolHead(final LineCounter lineCounter, final String title,
+                                   final PDDocument protocol, final CorporateDesignService corporateDesignService)
+                throws IOException {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        try (PDPageContentStream contentStream = new PDPageContentStream(protocol, protocol.getPage(pageCount))) {
+            // (x|y) = (0|0) bottom left; new line forbidden
+            addLogo(corporateDesignService, lineCounter, protocol, contentStream);
+            addTitle(lineCounter, title, contentStream);
+
+            lineCounter.addLines(2);
+            addLine("DokumentenID:  " + document.getId(), lineCounter.getCount(), contentStream);
+
+            lineCounter.addLines(1);
+            addLine("Dokumenteneigentümer: " + document.getOwner(), lineCounter.getCount(), contentStream);
+
+            if (document.getSignatureProcessData().getEndDate() != null) {
+                lineCounter.addLines(1);
+                addLine("Offen bis: " + formatter.format(document.getSignatureProcessData().getEndDate()),
+                    lineCounter.getCount(), contentStream);
             }
         }
     }
@@ -225,8 +244,7 @@ public class Protocol {
                 IMAGE_WIDTH, NEW_LOGO_HEIGHT);
             lineCounter.addLines(2);
         } catch (CorporateDesignNotFoundException e) {
-            final File file = new File("src/main/vue/assets/logos/ELSA_medium.png");
-            logo = Files.readAllBytes(file.toPath());
+            logo = Base64.getUrlDecoder().decode(StandardLogos.getBaseLogo());
             final PDImageXObject pdImage = PDImageXObject.createFromByteArray(protocol, logo, null);
             contentStream.drawImage(pdImage, LEFT_SIDE, lineCounter.getCount(),
                 IMAGE_WIDTH, LOGO_HEIGHT);
@@ -268,7 +286,7 @@ public class Protocol {
 
     private PDPageContentStream newPageIfNeeded(final LineCounter lineCounter,
                                                 final PDDocument protocol) throws IOException {
-        if (lineCounter.isNewPage()) {
+        if (lineCounter.getCount() <= MARGIN_BOTTOM) {
             final PDPage newPage = new PDPage();
             protocol.addPage(newPage);
             pageCount++;
@@ -289,5 +307,13 @@ public class Protocol {
             subStrings[0] = string;
         }
         return subStrings;
+    }
+
+    private String byteArrayToString(final byte[] hash) {
+        final StringBuilder sb = new StringBuilder();
+        for (final byte temp : hash) {
+            sb.append((char) temp);
+        }
+        return sb.toString();
     }
 }

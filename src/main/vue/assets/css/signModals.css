@@ -45,7 +45,6 @@ h4 {
     width: auto;
 }
 
-
 .content-div, .step {
     text-align: center;
     margin-top: 1vh;
@@ -78,15 +77,18 @@ h4 {
     height: 100%;
     max-height: 100%;
     margin-top: 0;
+    text-align: left;
+}
+
+.form-control:focus {
+    color: var(--light-grey);
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey);
 }
 
 .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
-}
-
-.modal-content {
-    background-color: var(--whitesmoke);
 }
 
 .modal-dialog {
@@ -158,6 +160,71 @@ h4 {
     border: 0.03vw solid var(--dark-grey);
 }
 
+/* Modal  */
+
+.modal-mask {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    max-height: 35em;
+    overflow-y: scroll;
+    background-color: var(--whitesmoke);
+}
+
+.bi-x-square {
+    fill: var(--dark-grey);
+}
+
+.bi-x-square:hover {
+    fill: var(--light-grey);
+    transition: 0.4s;
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
+.grey-btn {
+    background-color: var(--light-grey);
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+    color: var(--dark-grey);
+    border-radius: 0.33vw;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Progress bar */
 .bar {
     background-color: var(--elsa-blue-transparent);
@@ -184,6 +251,7 @@ h4 {
     color: var(--elsa-blue);
     font-weight: 503;
     text-shadow: 4px 3px 0 var(--light-grey), 9px 8px 0 var(--elsa-blue-transparent);
+    text-align: center;
 }
 
 @keyframes appearing {

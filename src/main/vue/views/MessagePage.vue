@@ -226,12 +226,9 @@ export default {
     components: {MessageContentBox, Footer, MessageBox, Header},
     methods: {
         async selectMsg(msg) {
-            var status = msg.watched
             await this.$store.dispatch('messages/patchChangeSelectedMsg', msg)
             await this.$store.dispatch('messages/patchChangeWatchedStatus', msg)
-            if (status !== msg.watched) {
-                await this.$store.dispatch('messages/fetchMessages')
-            }
+            await this.$store.dispatch('messages/fetchMessages')
         },
         isSelected() {
             return !_.isEmpty(this.selectedMsg);

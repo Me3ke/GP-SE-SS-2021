@@ -34,7 +34,6 @@ public class EnvelopeGetResponse {
         this.creationDate = envelope.getCreationDate().format(formatter);
         this.documents = new ArrayList<>();
         for (final Document document : envelope.getDocumentList()) {
-            //rework soon to not mix up owners
             this.documents.add(new DocumentOverviewResponse(document, owner, currentUser));
         }
     }

@@ -102,9 +102,11 @@
                 <div v-for="(user,index) in allUsers(filter, pageLimit,page)" :key="index" style="display: flex">
                     <UserBox :user="user" :deactivated="!user.adminValidated"
                              :admin="user.roles.includes('ROLE_ADMIN')" :seen="user.seen"></UserBox>
-                    <b-icon v-if="!selected.includes(index)" icon="circle" class="my-icon checker"
+                    <b-icon v-if="!selected.includes(index) && !user.roles.includes('ROLE_ADMIN')" icon="circle"
+                            class="my-icon checker"
                             @click="changeSelected(index)"></b-icon>
-                    <b-icon v-else icon="check-circle" class="my-icon checker"
+                    <b-icon v-if="selected.includes(index) && !user.roles.includes('ROLE_ADMIN')" icon="check-circle"
+                            class="my-icon checker"
                             @click="changeSelected(index)"></b-icon>
                 </div>
             </div>

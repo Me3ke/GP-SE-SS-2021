@@ -1,8 +1,6 @@
 <template>
     <div>
-        <div
-            @click="clicked"
-        >
+        <div @click="clicked">
             <b-progress max="100" style="background-color: var(--progress-background); cursor: pointer">
                 <b-progress-bar
                     :value="percentage"
@@ -10,7 +8,6 @@
                     :label="percentage + '%'"
                 ></b-progress-bar>
             </b-progress>
-
 
 
             <b-container
@@ -85,9 +82,9 @@ export default {
             let arr = []
             this.envelope.forEach(document => {
 
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length)
-                    / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) >= 100.00) {
-                    const docTitle = this.findFinishedDocTitle(this.env,document)
+                if ((((document.data.alreadySigned.length + document.data.alreadyRead.length)
+                    / (document.data.signatories.length + document.data.readers.length)) * 100).toFixed(2) >= 100.00) {
+                    const docTitle = this.findFinishedDocTitle(this.env, document)
                     arr.push(docTitle)
                 }
             })
@@ -97,9 +94,9 @@ export default {
         calculateNotFinishedDocuments() {
             let arr = []
             this.envelope.forEach(document => {
-                if((((document.data.alreadySigned.length + document.data.alreadyRead.length)
-                    / (document.data.signatories.length + document.data.readers.length))* 100).toFixed(2) < 100.00) {
-                    const docTitle = this.findFinishedDocTitle(this.env,document)
+                if ((((document.data.alreadySigned.length + document.data.alreadyRead.length)
+                    / (document.data.signatories.length + document.data.readers.length)) * 100).toFixed(2) < 100.00) {
+                    const docTitle = this.findFinishedDocTitle(this.env, document)
                     arr.push(docTitle)
                 }
 
@@ -107,7 +104,7 @@ export default {
             return arr
         },
 
-        findFinishedDocTitle(envelope,doc) {
+        findFinishedDocTitle(envelope, doc) {
             for (let a = 0; a < envelope.documents.length; a++) {
                 if (envelope.documents[a].id === doc.docId) {
                     return envelope.documents[a].title
@@ -116,22 +113,22 @@ export default {
         },
 
         getPercentage() {
-                let documentPercentages = []
-                let envelopeLength = this.env.documents.length
+            let documentPercentages = []
+            let envelopeLength = this.env.documents.length
 
-                this.env.documents.forEach(document => {
-                    if(document.state === 'CLOSED') {
-                        documentPercentages.push(document)
-                    }
-                })
+            this.env.documents.forEach(document => {
+                if (document.state === 'CLOSED') {
+                    documentPercentages.push(document)
+                }
+            })
 
-                return ((documentPercentages.length / envelopeLength) * 100).toFixed(2)
-                /*this.envelope.forEach(progress => {
-                    documentPercentages.push((((progress.data.alreadySigned.length + progress.data.alreadyRead.length)
-                        / (progress.data.signatories.length + progress.data.readers.length)) * 100).toFixed(2))
-                })
-                return ((documentPercentages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.documents.length * 100)) * 100)
-                    .toFixed(2)*/
+            return ((documentPercentages.length / envelopeLength) * 100).toFixed(2)
+            /*this.envelope.forEach(progress => {
+                documentPercentages.push((((progress.data.alreadySigned.length + progress.data.alreadyRead.length)
+                    / (progress.data.signatories.length + progress.data.readers.length)) * 100).toFixed(2))
+            })
+            return ((documentPercentages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / (this.env.documents.length * 100)) * 100)
+                .toFixed(2)*/
         }
 
     }

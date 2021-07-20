@@ -61,7 +61,7 @@ public class DocumentSettingsCMD {
         return showHistory;
     }
 
-    public void setShowHistory(boolean showHistory) {
+    public void setShowHistory(final boolean showHistory) {
         this.showHistory = showHistory;
     }
 
@@ -69,7 +69,7 @@ public class DocumentSettingsCMD {
         return draft;
     }
 
-    public void setDraft(boolean draft) {
+    public void setDraft(final boolean draft) {
         this.draft = draft;
     }
 
@@ -77,7 +77,7 @@ public class DocumentSettingsCMD {
         return archiveTask;
     }
 
-    public void setArchiveTask(boolean archiveTask) {
+    public void setArchiveTask(final boolean archiveTask) {
         this.archiveTask = archiveTask;
     }
 }
