@@ -41,6 +41,10 @@
     height: 10em !important;
 }
 
+.form-control:focus {
+    color: var(--dark-grey) !important;
+}
+
 /deep/ .ql-editor.ql-blank::before {
     color: var(--light-grey);
 }
@@ -116,6 +120,11 @@
 
 /deep/ .modal.show .modal-dialog {
     padding-top: 3em;
+}
+
+
+/deep/ .preview.container p {
+    margin-bottom: 0
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

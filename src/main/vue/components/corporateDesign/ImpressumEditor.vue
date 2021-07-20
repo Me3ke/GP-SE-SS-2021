@@ -22,7 +22,7 @@
                 style="margin-top: 0.2em; margin-bottom: 0.1em; margin-right: 1em;"
             >
                 <span class="button-txt">
-                    Preview
+                    {{ $t('EmailTemplate.previewTemp') }}
                 </span>
             </b-button>
 
@@ -32,7 +32,7 @@
 
             >
                         <span class="button-txt">
-                            Save
+                            {{ $t('EmailTemplate.Save') }}
                         </span>
             </b-button>
         </b-list-group-item>
@@ -43,14 +43,14 @@
             class="modal-class"
             :id="'modal-preview'"
             centered scrollable
-            :title="'Impressum Preview'"
+            :title="this.$i18n.t('AdminSettings.corporate.companyDetails') + ' ' + this.$i18n.t('EmailTemplate.previewTempSmall')"
             hide-footer ok-only
             v-if="text"
             style="margin-top: 2em;"
         >
 
             <b-container>
-                <b-container class="preview" v-html="text"></b-container>
+                <b-container class="preview" v-html="text" style="text-align: left"></b-container>
             </b-container>
 
 
@@ -101,32 +101,30 @@ export default {
             }
         }
     },
-        computed: {
-            ...mapGetters({
-                impressumMessage: 'impressum/getImpressumResponse',
-                impressumPutResponse: 'impressum/getImpressumPutResponse'
-            })
-        },
+    computed: {
+        ...mapGetters({
+            impressumMessage: 'impressum/getImpressumResponse',
+            impressumPutResponse: 'impressum/getImpressumPutResponse'
+        })
+    },
 
-        async created() {
-            await this.fetchImpressumMessage()
-        },
+    async created() {
+        await this.fetchImpressumMessage()
+    },
 
-        async beforeMount() {
-            await this.fetchImpressumMessage()
-            this.$forceUpdate()
-        },
+    async beforeMount() {
+        await this.fetchImpressumMessage()
+        this.$forceUpdate()
+    },
 
-     mounted() {
-            this.fetchImpressumMessage()
-            this.$forceUpdate()
-            this.text = this.impressumMessage
-        }
+    mounted() {
+        this.fetchImpressumMessage()
+        this.$forceUpdate()
+        this.text = this.impressumMessage
+    }
 }
 </script>
 
 <style scoped src="../../assets/css/settingsPage.css">
-
-
 
 </style>

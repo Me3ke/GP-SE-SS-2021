@@ -20,16 +20,25 @@
             style="width: auto; padding-bottom: .5em"
         >
             <div id="toolbar" slot="toolbar" style="width: auto">
-                <!-- Add a bold button -->
                 <button class="ql-bold">Bold</button>
                 <button class="ql-italic">Italic</button>
                 <button class="ql-underline">Underline</button>
-                <!-- Add font size dropdown -->
-                <select class="ql-size">
-                    <option value="small"></option>
+
+                <select class="ql-header">
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option value="4"></option>
+                    <option value="5"></option>
+                    <option value="6"></option>
                     <option selected></option>
-                    <option value="large"></option>
-                    <option value="huge"></option>
+                </select>
+
+                <select class="ql-align">
+                    <option value=""></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
                 </select>
 
                 <!-- You can also add your own -->
