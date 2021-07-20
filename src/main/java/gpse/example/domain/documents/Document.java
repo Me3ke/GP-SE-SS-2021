@@ -113,8 +113,8 @@ public class Document {
     public void advancedSignature(final String user, final String signature) {
         final List<Signatory> signatories = signatoryManagement.getSignatories();
         for (int i = 0; i < signatories.size(); i++) {
-            if (signatories.get(i).getEmail().equals(user) &&
-                signatories.get(i).getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+            if (signatories.get(i).getEmail().equals(user)
+                && signatories.get(i).getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
                 advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
                 signatoryManagement.setSigned(i);
             }

@@ -75,24 +75,26 @@
             <!-- PDF -->
             <b-row cols="1" style="margin-top: 1vh">
                 <b-col>
-                    <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-if="pageMode">
-                        <pdf :page="currentPage"
-                             :src="src"
-                             @page-loaded="currentPage = $event"
-                             @page-progress="loading = $event"
-                             :style="style">
-                        </pdf>
-                    </div>
+                    <div>
+                        <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-if="pageMode">
+                            <pdf :page="currentPage"
+                                 :src="src"
+                                 @page-loaded="currentPage = $event"
+                                 @page-progress="loading = $event"
+                                 :style="style">
+                            </pdf>
+                        </div>
 
-                    <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-else>
-                        <pdf
-                            v-for="page in pageCount"
-                            :key="page"
-                            :src="src"
-                            :page="page"
-                            @page-progress="loading = $event"
-                            :style="style"
-                        ></pdf>
+                        <div :class="[overflow ? 'overflow-auto' : '']" style="height: 80vh" v-else>
+                            <pdf
+                                v-for="page in pageCount"
+                                :key="page"
+                                :src="src"
+                                :page="page"
+                                @page-progress="loading = $event"
+                                :style="style"
+                            ></pdf>
+                        </div>
                     </div>
                 </b-col>
             </b-row>
@@ -143,7 +145,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.zoom + '%'
+            return 'width: ' + this.zoom + '%; border: 2px solid var(--elsa-blue-transparent)'
         }
     },
     beforeDestroy() {

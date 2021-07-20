@@ -1,7 +1,6 @@
 package gpse.example.domain.signature;
 
 import javax.persistence.*;
-import java.util.Arrays;
 
 /**
  * the class that models an advanced signature with all necessary information.
