@@ -3,6 +3,7 @@ package gpse.example.domain.documents;
 import gpse.example.domain.documents.comments.Comment;
 import gpse.example.domain.signature.AdvancedSignature;
 import gpse.example.domain.signature.Signatory;
+import gpse.example.domain.signature.SignatureType;
 import gpse.example.web.documents.DocumentPutRequest;
 
 import javax.persistence.*;
@@ -110,12 +111,12 @@ public class Document {
      * @param signature the signature that has been made
      */
     public void advancedSignature(final String user, final String signature) {
-        if (!signatureProcessData.getState().equals(DocumentState.ARCHIVED)) {
-            for (int i = 0; i < signatoryManagement.getSignatories().size(); i++) {
-                if (signatoryManagement.getSignatories().get(i).getEmail().equals(user)) {
-                    advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
-                    signatoryManagement.setSigned(i);
-                }
+        final List<Signatory> signatories = signatoryManagement.getSignatories();
+        for (int i = 0; i < signatories.size(); i++) {
+            if (signatories.get(i).getEmail().equals(user)
+                && signatories.get(i).getSignatureType().equals(SignatureType.ADVANCED_SIGNATURE)) {
+                advancedSignatures.add(new AdvancedSignature(user, signature.getBytes()));
+                signatoryManagement.setSigned(i);
             }
         }
     }

@@ -101,13 +101,13 @@ export default {
         let open = false;
         let toSign = false;
         let toRead = false;
-        if (this.document.state === "REVIEW" || this.document.state === "SIGN") {
+        if(this.document.state === "REVIEW" || this.document.state === "SIGN") {
             open = true;
         }
-        if (this.document.turnToSign === true) {
+        if(this.document.turnToSign && this.document.signatory && !this.document.signed) {
             toSign = true;
         }
-        if (this.document.turnToReview === true) {
+        if(this.document.turnToReview && this.document.reader && !this.document.read) {
             toRead = true;
         }
         return {open: open, toSign: toSign, toRead: toRead, draft: this.document.draft};

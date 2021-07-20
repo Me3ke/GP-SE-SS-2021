@@ -243,6 +243,11 @@
         "envelope": "Envelope",
         "draft": "Draft"
     },
+    "Envelope": {
+        "readAndSign": "Proofread and sign",
+        "readAll": "Proofread all documents",
+        "signAll": "Sign all documents"
+    },
     "MessagePage": {
         "heading": "Messages",
         "sentBy": "From",

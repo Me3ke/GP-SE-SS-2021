@@ -31,6 +31,7 @@ export const actions = {
         })
     },
     changeDocumentSettings({commit}, {envId, docId, settings}) {
+        console.log(settings);
         return documentSettingsAPI.changeDocumentSettings(envId, docId, settings).then(() => {
             commit('SET_ERROR_CHANGE_DOCUMENT_SETTINGS', {})
         }).catch(error => {

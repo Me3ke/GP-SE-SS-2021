@@ -47,30 +47,30 @@
                             {{ $t('UploadDoc.error.noSignatureType') }}
                         </b-alert>
 
-                        <h6>{{ $t('Settings.DocumentSettings.signatory') }}</h6>
-                        <transition-group name="slide" mode="out-in">
-                            <SignatoryMenu :address-book-closed="showSignatoryMenu" :signatories="signatories"
-                                           @updateSignatories="updateSignatories"
-                                           @updateOrderRelevant="updateOrderRelevant"
-                                           @noticeNewSignatories = updateNoticeNewSignatories
-                                           @showAddressBook="addressBookToggle(true)" key="3"></SignatoryMenu>
+            <!-- Add signatories -->
+            <b-alert :show="this.error.noSignatureType">
+                {{ $t('UploadDoc.error.noSignatureType') }}
+            </b-alert>
 
-                            <!-- Select from AddressBook -->
-                            <AddressBookSelection v-if="showAddressBook && addressBookMode" :signatories="signatories"
-                                                  :readers="readers"
-                                                  :sign="addressBookMode" style="margin-bottom: 0.5rem;"
-                                                  @showAddressBook="addressBookToggle(true)"
-                                                  key="4"></AddressBookSelection>
-                        </transition-group>
+            <h6>{{ $t('Settings.DocumentSettings.signatory') }}</h6>
+            <transition-group name="slide" mode="out-in">
+                <SignatoryMenu :address-book-closed="showSignatoryMenu" :signatories="signatories"
+                               @updateSignatories="updateSignatories"
+                               @updateOrderRelevant="updateOrderRelevant"
+                               @showAddressBook="addressBookToggle(true)" key="3"></SignatoryMenu>
 
-                        <!-- Show History -->
-                        <h6 style="margin-top: 1em">{{ $t('UploadDoc.showHistoryTitle') }}</h6>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="showHistory" v-model="showHistory">
-                            <label class="custom-control-label" for="showHistory">
-                                {{ $t('UploadDoc.showHistory') }} </label>
-                        </div>
-                    </div>
+                <!-- Select from AddressBook -->
+                <AddressBookSelection v-if="showAddressBook && addressBookMode" :signatories="signatories"
+                                      :readers="readers"
+                                      :sign="addressBookMode" style="margin-bottom: 0.5rem;"
+                                      @showAddressBook="addressBookToggle(true)" key="4"></AddressBookSelection>
+            </transition-group>
+
+            <!-- Show History -->
+            <h6 style="margin-top: 1em">{{$t('UploadDoc.showHistoryTitle')}}</h6>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="showHistory" v-model="showHistory">
+                <label class="custom-control-label" style="cursor: pointer" for="showHistory"> {{$t('UploadDoc.showHistory')}} </label>
                     <div class="modal-footer" v-if="!showReplaceButton">
                         <b-container fluid>
                             <b-row align-h="end">
@@ -128,6 +128,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
     </div>
 </template>
 
@@ -319,4 +321,15 @@ export default {
 .slide-leave-to {
     transform: translate(-100%, 0);
 }
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
+}
+
 </style>

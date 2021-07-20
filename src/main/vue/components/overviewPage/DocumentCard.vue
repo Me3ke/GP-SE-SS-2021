@@ -4,9 +4,9 @@
         <TwoFacAuth v-if="showAuth" :advanced="advanced" @twoFacTrigger="goToDoc"
                     @closeTrigger="closeAuth"></TwoFacAuth>
 
-        <b-row no-gutters style="padding-bottom: 0.5rem;">
+        <b-row no-gutters>
             <b-col cols="12">
-                <DocumentBox @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
+                <DocumentBox style="cursor: pointer;" @click.native="checkDoc" :document=document :envelopeId="envelopeId"></DocumentBox>
                 <div v-if="//documentProgressById(document.id) &&
                      this.document.owner.username === this.$store.state.auth.username">
                     <DocumentProgressBar

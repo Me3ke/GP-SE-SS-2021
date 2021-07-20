@@ -13,7 +13,7 @@
                     </button>
                 </b-col>
                 <b-col cols="11">
-                    <b-form-file style="margin-bottom: 1em"
+                    <b-form-file style="margin-bottom: 1em; cursor: pointer"
                                  v-model="fileInput.file"
                                  :state="Boolean(fileInput.file)"
                                  v-bind:placeholder="$t('UploadDoc.chooseFile')"
@@ -21,7 +21,7 @@
                 </b-col>
             </b-row>
             <div v-else>
-                <b-form-file style="margin-bottom: 1em"
+                <b-form-file style="margin-bottom: 1em; cursor: pointer"
                              v-model="fileInput.file"
                              :state="Boolean(fileInput.file)"
                              v-bind:placeholder="$t('UploadDoc.chooseFile')"

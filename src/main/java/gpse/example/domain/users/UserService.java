@@ -4,6 +4,7 @@ package gpse.example.domain.users;
 import gpse.example.domain.email.EmailManagement;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.web.tokens.ConfirmationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -39,4 +40,7 @@ public interface UserService extends UserDetailsService {
     User saveUser(User user);
 
     boolean checkIfAdmin(final String token);
+
+    void addIntoAddressBook(final String ownerID, final List<Signatory> signatories,
+                                   final String trustedMailDomain);
 }

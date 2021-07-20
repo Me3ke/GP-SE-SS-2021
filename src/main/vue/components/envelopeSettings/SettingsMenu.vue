@@ -1,29 +1,29 @@
 <template>
     <div>
         <!-- End Date -->
-        <div class="card">
+        <div class="card" style="background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.endDate')}}
             </div>
 
             <EndDateSettings
                 @updateEndDate="updateEndDate"
-                :endDate="this.endDate"></EndDateSettings>
+                :endDate="this.endDate" :state="this.document.state"></EndDateSettings>
         </div>
 
         <!-- Reader -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.reader')}}
             </div>
 
             <ReaderSettings
                 @updateReader="updateReader"
-                :readers="readers"></ReaderSettings>
+                :readers="readers" :state="this.document.state"></ReaderSettings>
         </div>
 
         <!-- Signatories -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('Settings.DocumentSettings.signatory')}}
             </div>
@@ -31,17 +31,17 @@
             <SignatorySettings
                 @updateSignatories="updateSignatories"
                 :orderRelevant="orderRelevant"
-                :signatories="signatories"
+                :signatories="signatories" :state="this.document.state"
                 ></SignatorySettings>
         </div>
 
         <!-- History -->
-        <div class="card" style="margin-top:3vh">
+        <div class="card" style="margin-top:3vh; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
             <div class="card-header" style="background-color: var(--elsa-blue); color: var(--whitesmoke);">
                 {{$t('UploadDoc.showHistoryTitle')}}
             </div>
 
-            <HistorySettings @updateHistory="updateHistory" :showHistory="showHistory"></HistorySettings>
+            <HistorySettings @updateHistory="updateHistory" :state="this.document.state" :showHistory="showHistory"></HistorySettings>
         </div>
 
     </div>
@@ -135,5 +135,15 @@ export default {
 .list-group-item {
     height: 2.5em;
     padding: 0.5em;
+}
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.form-control:focus {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
 }
 </style>

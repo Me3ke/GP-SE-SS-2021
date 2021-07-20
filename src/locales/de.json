@@ -244,6 +244,11 @@
         "envelope": "Verbund",
         "draft": "Entwurf"
     },
+    "EnvelopePage": {
+        "readAndSign": "Gegenlesen und Signieren",
+        "readAll": "Alle Dokumente gegenlesen",
+        "signAll": "Alle Dokumente signieren"
+    },
     "MessagePage": {
         "heading": "Benachrichtigungen",
         "sentBy": "Von",

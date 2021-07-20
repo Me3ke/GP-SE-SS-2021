@@ -85,12 +85,16 @@
                                         <b-row align-h="end">
                                             <b-col cols="auto">
                                                 <button class="light-btn" @click="page = page - 1;">
-                                                    {{ $t('UploadDoc.back') }}
+                                                    <h5>
+                                                        {{$t('UploadDoc.back')}}
+                                                    </h5>
                                                 </button>
                                             </b-col>
                                             <b-col cols="auto">
                                                 <button class="elsa-blue-btn" @click="upload()">
-                                                    {{ $t('UploadDoc.upload') }}
+                                                    <h5>
+                                                        {{$t('UploadDoc.upload')}}
+                                                    </h5>
                                                 </button>
                                             </b-col>
                                         </b-row>
@@ -227,7 +231,7 @@ export default {
 }
 
 .modal-content {
-    max-height: 35em;
+    max-height: 75vh;
     overflow-y: scroll;
     background-color: var(--whitesmoke);
 }
@@ -258,6 +262,15 @@ export default {
     margin: 0.25vh 0.25vw;
     color: var(--dark-grey);
     border-radius: 0.33vw;
+}
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }
 
 .spinner-border {

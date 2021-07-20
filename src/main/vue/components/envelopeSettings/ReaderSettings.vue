@@ -5,11 +5,11 @@
                 <SignatoryListItem v-for="reader in readers" :key="reader.email" :signatory="reader"></SignatoryListItem>
             </div>
 
-            <b-list-group-item v-if="readers.length === 0">
+            <b-list-group-item v-if="readers.length === 0" style="height: 2.5em; padding: 0.5em; background-color: var(--whitesmoke); border-color: var(--dark-grey)">
                 {{$t('Settings.DocumentSettings.noReaders')}}
             </b-list-group-item>
 
-            <b-row align-h="end" >
+            <b-row align-h="end" v-if="!(this.state === 'ARCHIVED')">
                 <button class="elsa-blue-btn" style="width:10em; margin: 0.5em 2.5em" @click="editReaders = true;">
                     <b-icon icon="pencil-fill"></b-icon>
                     {{$t('Settings.DocumentSettings.edit')}}
@@ -36,7 +36,7 @@
                     <b-row align-h="between">
                         <h6>
                             <b-col cols="auto">
-                                <b-icon class="icon-hover" icon="trash" @click="deleteReader(reader)"></b-icon>
+                                <b-icon class="icon-hover" style="cursor:pointer;" icon="trash" @click="deleteReader(reader)"></b-icon>
                                 {{reader.email}}
                             </b-col>
                         </h6>
@@ -58,7 +58,8 @@ import SignatoryListItem from "@/main/vue/components/envelopeSettings/SignatoryL
 export default {
     name: "ReaderSettings",
     props: {
-        readers: Array
+        readers: Array,
+        state: String
     },
     components: {
         SignatoryListItem
@@ -149,5 +150,15 @@ export default {
     background-color: var(--sign-doc-hover);
     color: var(--red);
     border-color: var(--red);
+}
+
+.elsa-blue-btn, .light-btn {
+    padding: 0.5vh 1vw 0;
+    border: 0.03vw solid var(--dark-grey);
+    margin: 0.25vh 0.25vw;
+}
+
+.elsa-blue-btn:focus, .light-btn:focus {
+    border: 0.03vw solid var(--dark-grey);
 }
 </style>

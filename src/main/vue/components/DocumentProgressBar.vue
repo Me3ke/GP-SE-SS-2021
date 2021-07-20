@@ -1,7 +1,6 @@
 <template>
     <div v-if="getDocumentProgress !== undefined && docPercentage < 100.00">
         <div @click="clicked">
-
             <b-progress max="100" style="background-color: var(--progress-background); cursor: pointer">
                 <b-progress-bar
                     :value="docPercentage"

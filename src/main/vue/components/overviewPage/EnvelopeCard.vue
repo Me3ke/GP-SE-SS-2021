@@ -4,9 +4,9 @@
         <TwoFacAuth v-if="showAuth" :advanced="advanced" @twoFacTrigger="goToEnv"
                     @closeTrigger="closeAuth"></TwoFacAuth>
 
-        <b-row no-gutters style="padding-bottom: 0.5rem;">
+        <b-row no-gutters>
             <b-col cols="12">
-                <EnvelopeBox :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
+                <EnvelopeBox style="cursor: pointer;" :envelope="envelope" @click.native="checkEnv"></EnvelopeBox>
                 <div>
                     <div v-if="this.envelope.owner.username === this.$store.state.auth.username && showProgress">
                         <EnvelopeProgressBar

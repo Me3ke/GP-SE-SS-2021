@@ -22,7 +22,7 @@
         <div v-if="newEnv === false">
             <div class="form-group">
                 <label for="selectEnvelope"> {{$t('UploadDoc.selectEnv')}} </label>
-                <select class="form-control" id="selectEnvelope" v-model="envelope.id">
+                <select class="form-control" id="selectEnvelope" style="cursor: pointer;" v-model="envelope.id">
                     <option v-for="envelope in this.envelopes" :key="envelope.id" :value="envelope.id"> {{envelope.name}} </option>
                 </select>
             </div>

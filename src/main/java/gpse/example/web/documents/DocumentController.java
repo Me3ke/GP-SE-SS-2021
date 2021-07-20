@@ -5,6 +5,7 @@ import gpse.example.domain.documents.Document;
 import gpse.example.domain.documents.DocumentServiceImpl;
 import gpse.example.domain.documents.DocumentState;
 import gpse.example.domain.documents.SignatoryManagement;
+import gpse.example.domain.email.trusteddomain.DomainSetterService;
 import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
@@ -61,6 +62,9 @@ public class DocumentController {
 
     @Autowired
     private CorporateDesignService corporateDesignService;
+
+    @Autowired
+    private DomainSetterService domainSetterService;
 
     /**
      * The default constructor which initialises the services by autowiring.
@@ -247,6 +251,8 @@ public class DocumentController {
                 newDocument.setLinkToDocumentView(HTTP_LOCALHOST + serverPort + ENVELOPE_URL + envelope.getId()
                         + DOCUMENT_URL + newDocument.getId());
                 documentService.addDocument(newDocument);
+                userService.addIntoAddressBook(ownerID, newDocument.getSignatoryManagement().getSignatories(),
+                    domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
                 documentControllerUtil.informSignatories(newDocument, envelopeID);
                 return new DocumentPutResponse(oldDocument.getId(), newDocument.getId());
             } else {
@@ -395,7 +401,7 @@ public class DocumentController {
             // TODO Document Title is null after updated Document
             final byte[] protocolBytes = protocol.writeProtocol(userService, corporateDesignService).toByteArray();
             return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ATTACHMENT + PROTOCOL_NAME + documentID + ".pdf")
                 .body(protocolBytes);
         } catch (IOException e) {
             throw new CreatingFileException(e);
@@ -463,7 +469,7 @@ public class DocumentController {
                 signatory.setSignedOn(signatorySetting.convertSignedOn());
                 signatories.add(signatory);
             }
-            document.getSignatoryManagement().setSignatories(signatories);
+            document.setSignatories(signatories);
             documentControllerUtil.setDocumentState(document);
             documentService.addDocument(document);
 

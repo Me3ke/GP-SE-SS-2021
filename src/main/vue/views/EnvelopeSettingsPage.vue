@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-color: var(--whitesmoke);">
         <Header></Header>
         <BaseHeading :name="this.envelope(envId).name" :translate="false" style="position: fixed"></BaseHeading>
 
@@ -8,16 +8,16 @@
             <div style="margin-top:15vh">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="allEditAllSwitch" v-model="editAllInput" @click="changeEditAll()">
-                    <label class="custom-control-label" for="allEditAllSwitch"> {{$t('Settings.DocumentSettings.editAll')}} </label>
+                    <label class="custom-control-label" for="allEditAllSwitch" style="cursor:pointer;"> {{$t('Settings.DocumentSettings.editAll')}} </label>
                 </div>
             </div>
 
             <!-- Individual Settings -->
-            <div v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh">
+            <b-container fluid v-if="(!sameSettings(this.envelopeSettings) && editAll === null) || editAll === false" style="margin-top:3vh; padding:0 0.5em">
                 <b-row>
                     <b-col cols="2">
                         <b-row v-for="document in this.envelope(envId).documents" :key="document.id">
-                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id" style=" margin-bottom: 0.5em;">
+                            <button :class="{inactive: !(selectedId === document.id), active: selectedId === document.id}" @click="selectedId = document.id" style=" margin-bottom: 0.5em; max-width:25em; overflow:hidden">
                                 <h5>
                                     <b-row style="padding: 0.5em 1em 0;">
                                         <b-icon icon="file-earmark-text" style="margin-right: 0.5em; fill:var(--elsa-blue)"></b-icon>
@@ -49,7 +49,6 @@
                     </b-col>
                 </b-row>
 
-
                 <div v-if="showWarning">
                     <transition>
                         <div class="modal-mask">
@@ -67,13 +66,17 @@
                                         <div class="modal-footer">
                                             <b-row align-h="end">
                                                 <b-col cols="auto">
-                                                    <button class="light-btn" @click="selectedIdInput = null; showWarning = false;">
-                                                        {{$t('DownloadDoc.cancel')}}
+                                                    <button class="light-btn" @click="selectedIdInput = null; showWarning = false; editAllInput = false">
+                                                        <h5>
+                                                            {{$t('DownloadDoc.cancel')}}
+                                                        </h5>
                                                     </button>
                                                 </b-col>
                                                 <b-col cols="auto">
                                                     <button class="elsa-blue-btn" @click="confirmSelectedID()">
-                                                        {{$t('Settings.DocumentSettings.confirm')}}
+                                                        <h5>
+                                                            {{$t('Settings.DocumentSettings.confirm')}}
+                                                        </h5>
                                                     </button>
                                                 </b-col>
                                             </b-row>
@@ -84,7 +87,7 @@
                         </div>
                     </transition>
                 </div>
-            </div>
+            </b-container>
            <!-- Global settings -->
             <div v-if="(sameSettings(this.envelopeSettings) && editAll === null) || editAll === true">
                 <SettingsMenu
@@ -144,29 +147,28 @@ export default {
             let initial = settings[0];
             let i;
             for(i = 1; i < settings.length; i++) {
-                if(!(initial.signatories === settings[i].signatories)) {
+                let setting = settings[i];
+                if(!(initial.signatories.length === setting.signatories.length)
+                    || !(initial.orderRelevant === setting.orderRelevant)
+                    || !(initial.endDate === setting.endDate)
+                    || !(initial.showHistory === setting.showHistory)
+                    || !(initial.draft === setting.draft)) {
                     if(this.editAllInput === null) {
                         this.editAllInput = false
                     }
                     return false;
                 }
-                if(!(initial.orderRelevant === settings[i].orderRelevant)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
+                for( let j = 0; j < initial.signatories.length; j++) {
+                    if(!(initial.signatories[j].email === setting.signatories[j].email)
+                        || !(initial.signatories[j].signatureType === setting.signatories[j].signatureType)
+                        || !(initial.signatories[j].remind === setting.signatories[j].remind)
+                        || !(initial.signatories[j].reminderTiming === setting.signatories[j].reminderTiming)
+                        || !(initial.signatories[j].status === setting.signatories[j].status)) {
+                        if(this.editAllInput === null) {
+                            this.editAllInput = false
+                        }
+                        return false;
                     }
-                    return false;
-                }
-                if(!(initial.endDate === settings[i].endDate)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
-                    }
-                    return false;
-                }
-                if(!(initial.showHistory === settings[i].showHistory)) {
-                    if(this.editAllInput === null) {
-                        this.editAllInput = false
-                    }
-                    return false;
                 }
             }
             if(this.editAllInput === null) {
@@ -248,7 +250,7 @@ export default {
 .active {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
     box-shadow: 0 0 0 0.05em var(--elsa-blue);
 }
@@ -256,7 +258,7 @@ export default {
 .inactive {
     background-color: var(--whitesmoke);
     color: var(--dark-grey);
-    border: 0.13vw solid var(--dark-grey);
+    border: 0.03vw solid var(--dark-grey);
     border-radius: 0.33vw;
 }
 
@@ -287,5 +289,4 @@ export default {
     overflow-y: scroll;
     background-color: var(--whitesmoke);
 }
-
 </style>

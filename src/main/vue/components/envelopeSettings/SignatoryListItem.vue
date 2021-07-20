@@ -33,11 +33,12 @@ export default {
 
 <style scoped>
 .signed {
-    background-color: var(--closed-doc);
-    color: var(--dark-grey);
-    border: 0.03vw solid var(--dark-grey);
+    background-color: var(--closed-doc-hover);
+    border-color: var(--dark-grey)
 }
 
 .toSign {
+    background-color: var(--whitesmoke);
+    border-color: var(--dark-grey)
 }
 </style>

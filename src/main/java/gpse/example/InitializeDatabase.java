@@ -109,7 +109,7 @@ public class InitializeDatabase implements InitializingBean {
             user.setEnabled(true);
             user.setAccountNonLocked(true);
             user.addEmailTemplate(new EmailTemplate(template.getHtmlTemplateBody(), template.getSubject(),
-                template.getName(), false));
+                template.getName(), true));
             user.getSecuritySettings().setToSeenByAdmin();
             userService.saveUser(user);
         }

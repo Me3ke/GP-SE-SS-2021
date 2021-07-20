@@ -9,7 +9,7 @@
             </button>
         </div>
         <div v-if="!addSignatories && !(signatoryInputs.length === 0) && addressBookClosed">
-            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em" v-for="signatory in signatories"
+            <b-list-group-item style="height:2.5em; padding: 0.25em 0.75em; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)" v-for="signatory in signatories"
                                :key="signatory.email"> {{ signatory.email }}
             </b-list-group-item>
             <b-row align-h="end">
@@ -56,13 +56,13 @@
                 <b-col class="custom-control custom-switch" style="margin-left:1em">
                     <input type="checkbox" class="custom-control-input" id="orderRelevantSwitch"
                            v-model="orderRelevantInput">
-                    <label class="custom-control-label" for="orderRelevantSwitch">
+                    <label class="custom-control-label" style="cursor: pointer;" for="orderRelevantSwitch">
                         {{ $t('Settings.DocumentSettings.orderRelevant') }} </label>
                 </b-col>
             </b-row>
 
             <!-- List of Signatories -->
-            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden" v-if="signatories">
+            <div class="card" style="height:15em; overflow-y: auto; overflow-x: hidden; background-color: var(--whitesmoke); color: var(--dark-grey); border-color: var(--dark-grey)" v-if="signatories">
                 <draggable v-model="signatoryInputs">
                     <div class="drag-drop-element" v-for="signatory in signatoryInputs" :key="signatory.email"
                          style="padding:0.25em">
@@ -71,7 +71,7 @@
                             <h6>
                                 <b-col cols="auto">
                                     <b-icon class="icon-hover" icon="trash"
-                                            @click="deleteSignatory(signatory)"></b-icon>
+                                            @click="deleteSignatory(signatory)" style="cursor: pointer;"></b-icon>
                                     {{ signatory.email }}
                                 </b-col>
                             </h6>
@@ -79,7 +79,7 @@
                                 <b-row align-h="end">
                                     <!-- signature type -->
                                     <b-col cols="auto">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1"
+                                        <select style="cursor:pointer;" class="form-control form-control-sm" id="exampleFormControlSelect1"
                                                 v-model="signatory.type">
                                             <option v-for="signatureType in signatureTypes" :key="signatureType.value"
                                                     :value="signatureType.value"> {{ $t(signatureType.name) }}
@@ -87,7 +87,7 @@
                                         </select>
                                     </b-col>
                                     <b-col cols="auto">
-                                        <b-icon icon="list" class="icon"></b-icon>
+                                        <b-icon icon="list" style="cursor: pointer;" class="icon"></b-icon>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -123,14 +123,7 @@ export default {
         addressBookClosed: Boolean
     },
     components: {draggable},
-    computed: {
-      ...mapGetters({
-          allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
-          allUsernames: 'userManagement/getAllUserNames',
-          documentProgress: 'document/getDocumentProgressArray',
-          document: 'document/getDocumentInfo'
-      })
-    },
+
     data() {
         return {
             signatoryInput: [],
@@ -149,13 +142,13 @@ export default {
     },
 
     mounted() {
-        this.signatoryInputs = this.signatories
+        this.signatoryInputs = this.signatories;
     },
     methods: {
         addSignatory() {
             for (let i = 0; i < this.signatoryInput.length; i++) {
                 if (this.signatoryInputs.some(signatory => signatory.email === this.signatoryInput[i])) {
-                    return
+                    return;
                 } else {
                     // if cause for the search after new added signatories
                     //if(this.allUsernames.some(user => user.email === this.signatoryInput[i]))
@@ -168,13 +161,12 @@ export default {
             this.signatoryInput = [];
         },
         deleteSignatory(signatory) {
-            let progressBeforeDelete = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+            let progressBeforeDelete = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
             const resultBeforeDelete = this.signatoryInputs.filter(({email: id1}) => !progressBeforeDelete.data.signatories.some(({email: id2}) => id2 === id1));
 
             if (resultBeforeDelete.some(user => user.email === signatory.email)) {
-                this.noticeNewSignatories = false
+                this.noticeNewSignatories = false;
             }
-
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1) // delete selected signatory
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
@@ -184,10 +176,10 @@ export default {
                     this.noticeNewSignatories = true
                     break
                 } else {
-                    this.noticeNewSignatories = false
+                    this.noticeNewSignatories = false;
                 }
             }
-            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
         },
         cancel() {
             this.addSignatories = false;
@@ -198,24 +190,23 @@ export default {
         save() {
             this.$emit('updateOrderRelevant', this.orderRelevantInput);
             this.$emit('updateSignatories', this.signatoryInputs);
-
             if (!this.noticeNewSignatories && this.documentProgress.length > 0) {
-                let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
+                let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id);
                 const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
                 for (let i = 0; i < results.length; i++) {
                     if (this.allUser.some(user => user.email === results[i].email)) {
-                        this.noticeNewSignatories = true
-                        break
+                        this.noticeNewSignatories = true;
+                        break;
                     } else {
-                        this.noticeNewSignatories = false
+                        this.noticeNewSignatories = false;
                     }
                 }
             }
-            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
             this.addSignatories = false;
         },
         addressBook() {
-            this.$emit('showAddressBook')
+            this.$emit('showAddressBook');
         },
 
         async fetchAllUser() {
@@ -227,23 +218,29 @@ export default {
          this.fetchAllUser()
 
         if (this.signatories.length !== 0) {
-            this.addSignatories = false
+            this.addSignatories = false;
             this.signatoryInputs = this.signatories;
-
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
             const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
-
             for(let i = 0; i < results.length; i++) {
                 //if(this.allUsernames.some(user => user.email === results[i].email))
                 if(this.allUsernames.includes(results[i].email)) {
                     this.noticeNewSignatories = true
                     break
                 } else {
-                    this.noticeNewSignatories = false
+                    this.noticeNewSignatories = false;
                 }
             }
-            this.$emit('noticeNewSignatories', this.noticeNewSignatories)
+            this.$emit('noticeNewSignatories', this.noticeNewSignatories);
         }
+    },
+    computed: {
+        ...mapGetters({
+            allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
+            allUsernames: 'userManagement/getAllUserNames',
+            documentProgress: 'document/getDocumentProgressArray',
+            document: 'document/getDocumentInfo'
+        })
     }
 }
 </script>
@@ -306,6 +303,16 @@ export default {
     color: var(--shadow-grey);
 }
 
+.icon-hover:hover {
+    fill: var(--light-grey);
+    transition-duration: 0.4s;
+}
+.icon, .icon-hover {
+    fill: var(--dark-grey);
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+}
+
 /* Settings for differently sized screens */
 @media (max-width: 575.98px) {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
@@ -329,7 +336,5 @@ export default {
     .form-control, .input-group > .input-group-prepend > .input-group-text, .input-group-append {
         font-size: 0.8em;
     }
-
 }
-
 </style>

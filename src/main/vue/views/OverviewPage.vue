@@ -4,7 +4,6 @@
 
         <Header></Header>
 
-
         <!-- Page Title -->
         <b-container fluid style="margin-top:10vh; margin-right:2vw; text-align: left">
             <b-row align-h="between">
@@ -16,21 +15,20 @@
                 <b-col cols="auto">
                     <b-row>
                         <b-col>
-
                             <!-- Searchbar -->
                             <b-input-group>
                                 <b-input-group-prepend is-text @click="search()">
-                                    <b-icon icon="search" id="search" style="fill: var(--elsa-blue);"></b-icon>
+                                    <b-icon icon="search" id="search" style="fill: var(--elsa-blue); margin: 0 0.5em; cursor: pointer;"></b-icon>
                                 </b-input-group-prepend>
                                 <b-form-input v-model="filter.search"
                                               :placeholder="$t('OverviewPage.search')" type="search"></b-form-input>
                             </b-input-group>
                         </b-col>
                         <b-col>
-                            <FilterMenu :filter="filter"></FilterMenu>
+                            <FilterMenu :filter="filter" style="cursor: pointer;"></FilterMenu>
                         </b-col>
                         <b-col>
-                            <SortMenu @updateSort="updateSort" :first="this.filter.sortFirst"
+                            <SortMenu @updateSort="updateSort" style="cursor: pointer;" :first="this.filter.sortFirst"
                                       :second="this.filter.sortSecond"></SortMenu>
                         </b-col>
                     </b-row>
@@ -53,7 +51,7 @@
                         <!-- Filter Buttons -->
                         <b-col>
                             <span>
-                                <FilterButton v-bind:text="$t('Filter.open')"
+                                <FilterButton v-bind:text="$t('Filter.open')" style="cursor: pointer;"
                                               :isActive="this.filter.state === 'REVIEWSIGN'"
                                               :switch="true"
                                               @activeChange="filterOpen()"></FilterButton>
@@ -61,7 +59,7 @@
                         </b-col>
                         <b-col>
                             <span>
-                                <FilterButton v-bind:text="$t('Filter.closed')"
+                                <FilterButton v-bind:text="$t('Filter.closed')" style="cursor: pointer;"
                                               :isActive="this.filter.state === 'ARCHIVED'"
                                               :switch="true"
                                               @activeChange="filterClosed()"></FilterButton>
@@ -69,14 +67,14 @@
                         </b-col>
                         <b-col>
                             <span>
-                                <FilterButton v-bind:text="$t('Filter.owned')"
+                                <FilterButton v-bind:text="$t('Filter.owned')" style="cursor: pointer;"
                                               :isActive="this.filter.owner"
                                               @activeChange="filterOwn()"></FilterButton>
                             </span>
                         </b-col>
                         <b-col>
                             <span>
-                                <FilterButton v-bind:text="$t('Filter.toSign')"
+                                <FilterButton v-bind:text="$t('Filter.toSign')" style="cursor: pointer;"
                                               :isActive="this.filter.signatory && this.filter.reader"
                                               @activeChange="filterSignatory()"></FilterButton>
                             </span>

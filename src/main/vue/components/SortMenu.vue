@@ -132,4 +132,14 @@ export default {
     fill: var(--light-grey);
     transition-duration: 0.4s;
 }
+
+.form-control {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
+
+.form-control:focus {
+    background-color: var(--whitesmoke);
+    color: var(--dark-grey);
+}
 </style>
