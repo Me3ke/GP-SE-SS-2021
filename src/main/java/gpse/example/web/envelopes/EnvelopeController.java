@@ -1,6 +1,5 @@
 package gpse.example.web.envelopes;
 
-import gpse.example.domain.addressbook.*;
 import gpse.example.domain.documents.*;
 import gpse.example.domain.email.*;
 import gpse.example.domain.email.trusteddomain.DomainSetterService;
@@ -8,7 +7,6 @@ import gpse.example.domain.envelopes.Envelope;
 import gpse.example.domain.envelopes.EnvelopeServiceImpl;
 import gpse.example.domain.exceptions.*;
 import gpse.example.domain.security.JwtAuthorizationFilter;
-import gpse.example.domain.signature.Signatory;
 import gpse.example.domain.users.User;
 import gpse.example.domain.users.UserServiceImpl;
 import gpse.example.web.DocumentFilter;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The envelopeController class handles the request from the frontend and
@@ -144,7 +141,8 @@ public class EnvelopeController {
                     }
                 }
             }
-            addIntoAddressBook(ownerID, savedDocument.getSignatoryManagement().getSignatories());
+            userService.addIntoAddressBook(ownerID, savedDocument.getSignatoryManagement().getSignatories(),
+                domainSetterService.getDomainSettings().get(0).getTrustedMailDomain());
 
             envelopeService.saveEnvelope(savedEnvelope);
             response.setStatus(STATUS_CODE_OK);
@@ -156,31 +154,6 @@ public class EnvelopeController {
             response.setMessage("The document could not be uploaded.");
             return response;
         }
-    }
-
-    private void addIntoAddressBook(final String ownerID, final List<Signatory> signatories) {
-        final User currentUser = userService.getUser(ownerID);
-        final AddressBook addressBook = currentUser.getAddressBook();
-        List<Signatory> filteredSignatories = signatories;
-        if (addressBook.isAddAllAutomatically() || addressBook.isAddDomainAutomatically()) {
-            if (!addressBook.isAddAllAutomatically() && addressBook.isAddDomainAutomatically()) {
-                filteredSignatories = signatories.stream().filter(signatory ->
-                    signatory.getEmail()
-                        .matches(domainSetterService.getDomainSettings().get(0).getTrustedMailDomain()))
-                    .collect(Collectors.toList());
-            }
-            for (final Signatory signatory : filteredSignatories) {
-                try {
-                    final User user = userService.getUser(signatory.getEmail());
-                    addressBook.addEntry(new Entry(user));
-                } catch (UsernameNotFoundException e) {
-                    final Entry entry = new Entry();
-                    entry.setEmail(signatory.getEmail());
-                    addressBook.addEntry(entry);
-                }
-            }
-        }
-        userService.saveUser(currentUser);
     }
 
     /**
