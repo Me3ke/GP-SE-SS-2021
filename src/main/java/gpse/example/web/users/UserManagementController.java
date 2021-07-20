@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The controller used for user management operations.
  */
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserManagementController {
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_USER = "ROLE_USER";
     private static final String USERID = "userid";
     private static final int STATUS_CODE_WRONG_ROLE = 227;
     private static final int STATUS_CODE_USER_DOESNT_EXIST = 228;
@@ -60,6 +64,40 @@ public class UserManagementController {
             return null;
         }
     }
+
+    /**
+     * The method is for the Owner to getting all usernames of all registered
+     * users for checking if the owner is adding a new signatory for a document afterwards.
+     * @param token jwt token to check if the user is an owner to get the information
+     * @return list of all users usernames which are registered
+     */
+    @GetMapping("/admin/allusernames")
+    public List<String> getAllUsernames(final @RequestHeader String token) {
+        final byte[] signingKey = securityConstants.getJwtSecret().getBytes();
+        final Jws<Claims> parsedToken = Jwts.parserBuilder()
+            .setSigningKey(signingKey).build()
+            .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
+
+        try {
+            final User user = userService.getUser(parsedToken.getBody().getSubject());
+            if (user.getRoles().contains(ROLE_USER)) {
+                final List<String> allUsersMail = new ArrayList<>();
+                for (int i = 0; i < userService.getAllUsers().size(); i++) {
+                    allUsersMail.add(userService.getAllUsers().get(i).getUsername());
+                }
+                return allUsersMail;
+            } else {
+                return null;
+            }
+
+        } catch (UsernameNotFoundException unfe) {
+            return null;
+        }
+
+    }
+
+
+
 
     /**
      * The method used to validate a userAccount. It is called by an admin via api-request.
@@ -123,13 +161,14 @@ public class UserManagementController {
 
     /**
      * makes user seen.
+     *
      * @param userID userid
-     * @param token jwt Token
+     * @param token  jwt Token
      * @return jsonResponseObject
      */
     @PutMapping("admin/userseen")
     public JSONResponseObject changeUserToSeen(@RequestParam(USERID) final String userID,
-                                                @RequestHeader final String token) {
+                                               @RequestHeader final String token) {
         final JSONResponseObject response = checkUserAndRole(userID, token);
         if (response.getStatus() == STATUS_CODE) {
             final User user = userService.getUser(userID);

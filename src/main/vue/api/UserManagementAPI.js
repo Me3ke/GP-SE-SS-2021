@@ -14,6 +14,17 @@ export default {
         })
     },
 
+
+    async getAllUsernames() {
+        return axios({
+            method: "get",
+            url: 'http://localhost:8088/api/admin/allusernames',
+            headers: {
+                'token': store.state.auth.token
+            }
+        })
+    },
+
     async makeAdmin(userID) {
         return axios({
             method: 'put',

@@ -5,6 +5,7 @@ export const namespaced = true
 
 export const state = {
     allUsers: [],
+    allUsernames: [],
     userValidateStatus: {},
     userMakeAdminStatus: {},
     lockUserStatus: {},
@@ -16,6 +17,10 @@ export const state = {
 export const mutations = {
     FETCH_ALL_USERS(state, users) {
         state.allUsers = users
+    },
+
+    FETCH_ALL_USERNAMES(state, users) {
+        state.allUsernames = users
     },
 
     SET_USER_VALIDATE(state, progress) {
@@ -40,6 +45,7 @@ export const mutations = {
 
     EMPTY_EVERYTHING(state) {
         state.allUsers = []
+        state.allUsernames = []
         state.userValidateStatus = {}
         state.userMakeAdminStatus = {}
         state.lockUserStatus = {}
@@ -57,6 +63,15 @@ export const actions = {
     fetchAllUsers({commit}) {
         return UserManagementAPI.getAllUser().then(response => {
             commit('FETCH_ALL_USERS', response.data)
+            commit('SET_USER_MANAGEMENT_ERROR', {})
+        }).catch(error => {
+            commit('SET_USER_MANAGEMENT_ERROR', error)
+        })
+    },
+
+    fetchAllUsernames({commit}) {
+        return UserManagementAPI.getAllUsernames().then(response => {
+            commit('FETCH_ALL_USERNAMES', response.data)
             commit('SET_USER_MANAGEMENT_ERROR', {})
         }).catch(error => {
             commit('SET_USER_MANAGEMENT_ERROR', error)
@@ -105,6 +120,10 @@ export const actions = {
 export const getters = {
     getAllUsers: (state) => {
         return state.allUsers.allUsers
+    },
+
+    getAllUserNames: (state) => {
+        return state.allUsernames;
     },
 
     getFilteredPagesUsers: (state) => (filters, pageLimit, page) => {

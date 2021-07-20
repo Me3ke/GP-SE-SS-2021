@@ -12,7 +12,7 @@ public class ImpressumRequestBody {
         return impressum;
     }
 
-    public void setImpressum(String impressum) {
+    public void setImpressum(final String impressum) {
         this.impressum = impressum;
     }
 }

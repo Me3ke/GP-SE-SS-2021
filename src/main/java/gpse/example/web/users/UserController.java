@@ -124,7 +124,7 @@ public class UserController {
                 final EmailTemplate standardTemplate =
                     emailTemplateService.findSystemTemplateByName("SignatureInvitationTemplate");
                 final EmailTemplate newTemplate = new EmailTemplate(standardTemplate.getHtmlTemplateBody(),
-                    standardTemplate.getSubject(), standardTemplate.getName(), false);
+                    standardTemplate.getSubject(), standardTemplate.getName(), true);
                 user.addEmailTemplate(newTemplate);
                 user.setPersonalData(personalData);
                 try {

@@ -124,11 +124,12 @@ export default {
     },
     components: {draggable},
     computed: {
-        ...mapGetters({
-            allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
-            documentProgress: 'document/getDocumentProgressArray',
-            document: 'document/getDocumentInfo'
-        })
+      ...mapGetters({
+          allUser: 'userManagement/getAllUsers', // for checking if new registered signatories are getting added for the email templates
+          allUsernames: 'userManagement/getAllUserNames',
+          documentProgress: 'document/getDocumentProgressArray',
+          document: 'document/getDocumentInfo'
+      })
     },
     data() {
         return {
@@ -157,7 +158,8 @@ export default {
                     return
                 } else {
                     // if cause for the search after new added signatories
-                    if (this.allUser.some(user => user.email === this.signatoryInput[i])) {
+                    //if(this.allUsernames.some(user => user.email === this.signatoryInput[i]))
+                    if(this.allUsernames.includes(this.signatoryInput[i])) {
                         this.noticeNewSignatories = true
                     }
                     this.signatoryInputs.push({email: this.signatoryInput[i], type: 1});
@@ -175,9 +177,10 @@ export default {
 
             this.signatoryInputs.splice(this.signatoryInputs.indexOf(signatory), 1) // delete selected signatory
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
-            const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
-            for (let i = 0; i < results.length; i++) {
-                if (this.allUser.some(user => user.email === results[i].email)) {
+            const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
+            for(let i = 0; i < results.length; i++) {
+                //if(this.allUsernames.some(user => user.email === results[i].email))
+                if(this.allUsernames.includes(results[i].email)) {
                     this.noticeNewSignatories = true
                     break
                 } else {
@@ -217,19 +220,22 @@ export default {
 
         async fetchAllUser() {
             await this.$store.dispatch('userManagement/fetchAllUsers')
+            await this.$store.dispatch('userManagement/fetchAllUsernames')
         }
     },
-    beforeMount() {
-        this.fetchAllUser()
+     beforeMount() {
+         this.fetchAllUser()
 
         if (this.signatories.length !== 0) {
             this.addSignatories = false
             this.signatoryInputs = this.signatories;
 
             let progress = this.documentProgress.find(user => parseInt(user.docId) === this.document.id)
-            const results = this.signatoryInputs.filter(({email: id1}) => !progress.data.signatories.some(({email: id2}) => id2 === id1));
-            for (let i = 0; i < results.length; i++) {
-                if (this.allUser.some(user => user.email === results[i].email)) {
+            const results = this.signatoryInputs.filter(({ email: id1 }) => !progress.data.signatories.some(({ email: id2 }) => id2 === id1));
+
+            for(let i = 0; i < results.length; i++) {
+                //if(this.allUsernames.some(user => user.email === results[i].email))
+                if(this.allUsernames.includes(results[i].email)) {
                     this.noticeNewSignatories = true
                     break
                 } else {
