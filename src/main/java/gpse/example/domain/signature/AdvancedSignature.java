@@ -53,4 +53,5 @@ public class AdvancedSignature {
     public void setSignature(final byte[] signature) {
         this.signature = signature.clone();
     }
+
 }

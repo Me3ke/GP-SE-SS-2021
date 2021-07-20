@@ -1,9 +1,12 @@
 package gpse.example.domain.users;
 
+import gpse.example.domain.addressbook.AddressBook;
+import gpse.example.domain.addressbook.Entry;
 import gpse.example.domain.email.*;
 import gpse.example.domain.exceptions.MessageGenerationException;
 import gpse.example.domain.exceptions.TemplateNameNotFoundException;
 import gpse.example.domain.security.SecurityConstants;
+import gpse.example.domain.signature.Signatory;
 import gpse.example.web.tokens.ConfirmationToken;
 import gpse.example.web.tokens.ConfirmationTokenService;
 import io.jsonwebtoken.Claims;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * the class that implements the UserService interface for communication with the database.
@@ -156,5 +160,32 @@ public class UserServiceImpl implements UserService {
             .parseClaimsJws(token.replace(securityConstants.getTokenPrefix(), "").strip());
         final User user = getUser(parsedToken.getBody().getSubject());
         return user.getRoles().contains(ROLE_ADMIN);
+    }
+
+    @Override
+    public void addIntoAddressBook(final String ownerID, final List<Signatory> signatories,
+                                   final String trustedMailDomain) {
+        final User currentUser = getUser(ownerID);
+        final AddressBook addressBook = currentUser.getAddressBook();
+        List<Signatory> filteredSignatories = signatories;
+        if (addressBook.isAddAllAutomatically() || addressBook.isAddDomainAutomatically()) {
+            if (!addressBook.isAddAllAutomatically() && addressBook.isAddDomainAutomatically()) {
+                filteredSignatories = signatories.stream().filter(signatory ->
+                    signatory.getEmail()
+                        .matches(trustedMailDomain))
+                    .collect(Collectors.toList());
+            }
+            for (final Signatory signatory : filteredSignatories) {
+                try {
+                    final User user = getUser(signatory.getEmail());
+                    addressBook.addEntry(new Entry(user));
+                } catch (UsernameNotFoundException e) {
+                    final Entry entry = new Entry();
+                    entry.setEmail(signatory.getEmail());
+                    addressBook.addEntry(entry);
+                }
+            }
+        }
+        saveUser(currentUser);
     }
 }
