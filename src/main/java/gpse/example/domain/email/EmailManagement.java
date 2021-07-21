@@ -213,7 +213,8 @@ public class EmailManagement {
         final TemplateDataContainer container = new TemplateDataContainer();
         container.setDocumentTitle(document.getDocumentTitle());
         setupCommentContainer(author, documentOwner, document, container);
-        smtpServerHelper.sendTemplatedEmail(documentOwner.getUsername(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(documentOwner.getUsername(), template, container, Category.PROGRESS,
+            author);
     }
 
     /**
@@ -229,7 +230,7 @@ public class EmailManagement {
         final EmailTemplate template = emailTemplateService.findSystemTemplateByName("AnswerCommentTemplate");
         final TemplateDataContainer container = new TemplateDataContainer();
         setupCommentContainer(author, reciever, document, container);
-        smtpServerHelper.sendTemplatedEmail(reciever.getUsername(), template, container, Category.SYSTEM, author);
+        smtpServerHelper.sendTemplatedEmail(reciever.getUsername(), template, container, Category.PROGRESS, author);
     }
 
     /**
